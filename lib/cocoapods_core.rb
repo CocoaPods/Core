@@ -12,10 +12,9 @@ unless Gem::Version::Requirement.new('>= 1.4.0').satisfied_by?(Gem::Version.new(
 end
 
 module Pod
-  VERSION = '0.16.0.rc2'
+  require 'version'
 
-  class StandardError < ::StandardError
-  end
+  class StandardError < ::StandardError; end
 
   # TODO: delete
   class Informative < ::StandardError
