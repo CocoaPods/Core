@@ -93,9 +93,7 @@ module Pod
       version = pods_versions[name]
       raise Informative, "Attempt to lock a Pod without an known version." unless version
       dependency = Dependency.new(name, version)
-      if external_source = external_sources[name]
-        dependency.external_source = Dependency::ExternalSources.from_params(dependency.name, external_source)
-      end
+      dependency.external_source = external_sources[name]
       dependency
     end
 
@@ -188,7 +186,7 @@ module Pod
         dependency = deps_to_install.find { |d| d.name == pod_name }
         deps_to_install.delete(dependency)
         version = pods_versions[pod_name]
-        external_source = Dependency::ExternalSources.from_params(pod_name, external_sources[pod_name])
+        external_source = external_sources[pod_name]
 
         if dependency.nil?
           result[:removed] << pod_name
@@ -256,7 +254,7 @@ module Pod
 
       external_sources = {}
       deps = podfile.dependencies.select(&:external?).sort{ |d, other| d.name <=> other.name}
-      deps.each{ |d| external_sources[d.name] = d.external_source.params }
+      deps.each{ |d| external_sources[d.name] = d.external_source }
       hash["EXTERNAL SOURCES"] = external_sources unless external_sources.empty?
 
       checksums = {}

@@ -7,7 +7,7 @@ module Pod
 
       def message
         if podfile_line
-          super + " (#{podfile_line})\n".red
+          super + " (#{podfile_line})\n"#.red
         else
           super
         end
@@ -15,7 +15,7 @@ module Pod
     end
 
     class UserProject
-      include Config::Mixin
+      # include Config::Mixin
 
       DEFAULT_BUILD_CONFIGURATIONS = { 'Debug' => :debug, 'Release' => :release }.freeze
 
@@ -27,24 +27,26 @@ module Pod
       def path=(path)
         path  = path.to_s
         @path = Pathname.new(File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj")
-        @path = config.project_root + @path unless @path.absolute?
+        # @path = config.project_root + @path unless @path.absolute?
         @path
       end
 
-      def path
-        if @path
-          @path
-        else
-          xcodeprojs = Pathname.glob(config.project_root + '*.xcodeproj')
-          if xcodeprojs.size == 1
-            @path = xcodeprojs.first
-          end
-        end
-      end
+      attr_reader :path
 
-      def project
-        Xcodeproj::Project.new(path) if path && path.exist?
-      end
+      # def path
+      #   if @path
+      #     @path
+      #   else
+      #     xcodeprojs = Pathname.glob(config.project_root + '*.xcodeproj')
+      #     if xcodeprojs.size == 1
+      #       @path = xcodeprojs.first
+      #     end
+      #   end
+      # end
+
+      # def project
+      #   Xcodeproj::Project.new(path) if path && path.exist?
+      # end
 
       def build_configurations
         if project
@@ -58,7 +60,6 @@ module Pod
     end
 
     class TargetDefinition
-      include Config::Mixin
 
       attr_reader :name, :target_dependencies
 
@@ -112,23 +113,29 @@ module Pod
       end
 
       def acknowledgements_path
-        config.project_pods_root + "#{label}-Acknowledgements"
+        # config.project_pods_root + "#{label}-Acknowledgements"
+        "#{label}-Acknowledgements"
       end
 
       # Returns a path, which is relative to the project_root, relative to the
       # `$(SRCROOT)` of the user's project.
-      def relative_to_srcroot(path)
-        if user_project.path.nil?
-          # TODO this is not in the right place
-          raise Informative, "[!] Unable to find an Xcode project to integrate".red if config.integrate_targets
-          path
-        else
-          (config.project_root + path).relative_path_from(user_project.path.dirname)
-        end
-      end
+      # def relative_to_srcroot(path)
+      #   # TODO: needs review
+      #   Pathname.new(user_project.path ? user_project.path : path)
 
-      def relative_pods_root
-        "${SRCROOT}/#{relative_to_srcroot "Pods"}"
+      #   # if user_project.path.nil?
+      #   #   # TODO this is not in the right place
+      #   #   raise Informative, "[!] Unable to find an Xcode project to integrate".red if config.integrate_targets
+      #   #   path
+      #   # else
+      #   #   (config.project_root + path).relative_path_from(user_project.path.dirname)
+      #   # end
+      # end
+
+      # TODO: move
+      def pods_root
+        # "${SRCROOT}/#{relative_to_srcroot "Pods"}"
+        "Pods"
       end
 
       def lib_name
@@ -139,8 +146,8 @@ module Pod
         "#{label}.xcconfig"
       end
 
-      def xcconfig_relative_path
-        relative_to_srcroot("Pods/#{xcconfig_name}").to_s
+      def xcconfig_path
+        "Pods/#{xcconfig_name}"
       end
 
       attr_accessor :xcconfig
@@ -149,8 +156,9 @@ module Pod
         "#{label}-resources.sh"
       end
 
-      def copy_resources_script_relative_path
-        "${SRCROOT}/#{relative_to_srcroot("Pods/#{copy_resources_script_name}")}"
+      def copy_resources_script_path
+        # "${SRCROOT}/#{relative_to_srcroot("Pods/#{copy_resources_script_name}")}"
+        "Pods/#{copy_resources_script_name}"
       end
 
       def prefix_header_name
@@ -187,8 +195,6 @@ module Pod
       podfile.validate!
       podfile
     end
-
-    include Config::Mixin
 
     def initialize(&block)
       @target_definition = TargetDefinition.new(:default, :exclusive => true)
@@ -243,13 +249,15 @@ module Pod
     #
     def workspace(path = nil)
       if path
-        @workspace = config.project_root + (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
+        @workspace = (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
+        # @workspace = config.project_root + (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
       elsif @workspace
         @workspace
       else
         projects = @target_definitions.map { |_, td| td.user_project.path }.uniq
         if projects.size == 1 && (xcodeproj = @target_definitions[:default].user_project.path)
-          config.project_root + "#{xcodeproj.basename('.xcodeproj')}.xcworkspace"
+          # config.project_root + "#{xcodeproj.basename('.xcodeproj')}.xcworkspace"
+          "#{xcodeproj.basename('.xcodeproj')}.xcworkspace"
         end
       end
     end
@@ -415,9 +423,9 @@ module Pod
         file = Pathname.new(File.expand_path(path))
       elsif options && name = options[:name]
         name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
-        file = config.project_root + name
+        # file = config.project_root + name
       else
-        file = config.project_root.glob('*.podspec').first
+        # file = config.project_root.glob('*.podspec').first
       end
 
       spec = Specification.from_file(file)

@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../spec_helper', __FILE__)
 
 describe "Pod::Source" do
   before do
@@ -34,22 +34,25 @@ describe "Pod::Source" do
     set.sources.map(&:name).should == %w| test_repo |
   end
 
-  describe "Pod::Source::Aggregate" do
+  describe Pod::Source::Aggregate do
+    before do
+      @aggregate = Pod::Source::Aggregate.new(fixture('spec-repos'))
+    end
     # BananaLib is available only in test_repo.
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
 
     it "returns all the sources" do
-      Pod::Source.all.map(&:name).should == %w| master test_repo |
+      @aggregate.all.map(&:name).should == %w| master test_repo |
     end
 
     it "returns the name of all the available pods" do
-      pod_names = Pod::Source::Aggregate.new.all_pods
+      pod_names = @aggregate.all_pods
       pod_names.should.include('JSONKit')
       pod_names.should.include('BananaLib')
     end
 
     it "returns all the available sets with the sources configured" do
-      sets = Pod::Source.all_sets
+      sets = @aggregate.all_sets
       banana_sets = sets.select{ |set| set.name == 'BananaLib' }
       banana_sets.count.should == 1
       banana_sets.first.sources.map(&:name).should == %w| test_repo |
@@ -61,14 +64,14 @@ describe "Pod::Source" do
 
     it "searches the sets by dependency" do
       dep = Pod::Dependency.new('JSONKit')
-      set = Pod::Source.search(dep)
+      set = @aggregate.search(dep)
       set.name.should == 'JSONKit'
       set.sources.map(&:name).should == %w| master test_repo |
     end
 
     it "searches the sets specifing a dependency on a subspec" do
       dep = Pod::Dependency.new('RestKit/JSON')
-      set = Pod::Source.search(dep)
+      set = @aggregate.search(dep)
       set.name.should == 'RestKit'
       set.sources.map(&:name).should == %w| master |
     end
@@ -76,19 +79,19 @@ describe "Pod::Source" do
     it "raises if a specification set can't be found" do
       lambda {
         dep = Pod::Dependency.new('DoesNotExist')
-        set = Pod::Source.search(dep)
+        set = @aggregate.search(dep)
       }.should.raise Pod::Informative
     end
 
     it "raises if a subspec can't be found" do
       lambda {
         dep = Pod::Dependency.new('RestKit/DoesNotExist')
-        set = Pod::Source.search(dep)
+        set = @aggregate.search(dep)
       }.should.raise Pod::Informative
     end
 
     it "searches the sets by name" do
-      sets = Pod::Source.search_by_name('JSONKit')
+      sets = @aggregate.search_by_name('JSONKit')
       sets.count.should == 1
       set = sets.first
       set.name.should == 'JSONKit'
@@ -96,7 +99,7 @@ describe "Pod::Source" do
     end
 
     it "properly configures the sources of a set in search by name" do
-      sets = Pod::Source.search_by_name('BananaLib')
+      sets = @aggregate.search_by_name('BananaLib')
       sets.count.should == 1
       set = sets.first
       set.name.should == 'BananaLib'

@@ -13,37 +13,16 @@ require 'cocoapods'
 
 $:.unshift((ROOT + 'spec').to_s)
 require 'spec_helper/bacon'
-require 'spec_helper/command'
 require 'spec_helper/fixture'
-require 'spec_helper/github'
 require 'spec_helper/temporary_directory'
 require 'spec_helper/temporary_repos'
-require 'spec_helper/user_interface'
-require 'spec_helper/pre_flight'
-
-module Bacon
-  class Context
-    include Pod::Config::Mixin
-    include SpecHelper::Fixture
-
-    def argv(*argv)
-      Pod::Command::ARGV.new(argv)
-    end
-  end
-end
-
-config = Pod::Config.instance
-config.silent       = true
-config.repos_dir    = SpecHelper.tmp_repos_path
-config.project_root = SpecHelper.temporary_directory
-Pod::Specification::Statistics.instance.cache_file = nil
 
 require 'tmpdir'
 
-# TODO why is this no longer using SpecHelper::TemporaryDirectory ?
-def temporary_sandbox
-  Pod::Sandbox.new(Pathname.new(Dir.mktmpdir + "/Pods"))
-  #Pod::Sandbox.new(temporary_directory + "Pods")
+module Bacon
+  class Context
+    include SpecHelper::Fixture
+  end
 end
 
 def fixture_spec(name)

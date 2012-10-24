@@ -6,15 +6,12 @@ module SpecHelper
   end
 
   module TemporaryRepos
-    extend Pod::Executable
-    executable :git
 
     def tmp_repos_path
       SpecHelper.temporary_directory + 'cocoapods'
     end
     module_function :tmp_repos_path
 
-    alias_method :git_super, :git
     def git(repo, command)
       Dir.chdir(tmp_repos_path + repo) do
         if output = git_super(command)

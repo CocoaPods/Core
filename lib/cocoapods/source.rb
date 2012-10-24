@@ -110,9 +110,19 @@ module Pod
       end.compact
     end
 
-    # The {Source::Aggregate} manages all the sources available to CocoaPods.
+    # The {Aggregate} manages a directory of sources repositories.
     #
     class Aggregate
+
+      # @return [Pathname] the directory were the repositories are stored.
+      #
+      attr_reader :repos_dir
+
+      # @param [Pathname] repos_dir @see repos_dir.
+      #
+      def initialize(repos_dir)
+        @repos_dir = repos_dir
+      end
 
       # @return [Array<Source>] All the sources.
       #
@@ -156,7 +166,8 @@ module Pod
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        raise(Informative, "[!] Unable to find a pod named `#{dependency.name}'".red) if sources.empty?
+        # TODO : move to the search command
+        raise(Informative, "Unable to find a pod named `#{dependency.name}'") if sources.empty?
         Specification::Set.new(dependency.top_level_spec_name, sources)
       end
 
@@ -189,16 +200,7 @@ module Pod
       # @raises If the repos dir doesn't exits.
       #
       def dirs
-        if ENV['CP_MASTER_REPO_DIR']
-          [Pathname.new(ENV['CP_MASTER_REPO_DIR'])]
-        else
-          repos_dir = Config.instance.repos_dir
-          unless repos_dir.exist?
-            raise Informative, "No spec repos found in `#{repos_dir}'. " \
-              "To fetch the `master' repo run: $ pod setup"
-          end
-          repos_dir.children.select(&:directory?)
-        end
+        repos_dir.children.select(&:directory?)
       end
     end
 

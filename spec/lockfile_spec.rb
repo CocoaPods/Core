@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../spec_helper', __FILE__)
 
 describe "Pod::Lockfile" do
 
@@ -153,7 +153,8 @@ COCOAPODS: #{Pod::VERSION}
       d.name.should == "BananaLib"
       d.requirement.should.be.none?
       d.external?.should.be.true
-      d.external_source.description.should == "from `www.example.com', tag `1.0'"
+      d.external_source[:git].should == "www.example.com"
+      d.external_source[:tag].should == '1.0'
     end
   end
 

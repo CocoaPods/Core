@@ -1,8 +1,7 @@
-require 'xcodeproj/config'
+# require 'xcodeproj/config'
 require 'active_support/core_ext/string/strip.rb'
 
 module Pod
-  extend Config::Mixin
 
   def self._eval_podspec(path)
     string = File.open(path, 'r:utf-8')  { |f| f.read }
@@ -52,7 +51,8 @@ module Pod
           compiler_flags ].each do |attr|
         instance_variable_set( "@#{attr}", { :ios => [], :osx => [] } )
       end
-      @xcconfig     = { :ios => Xcodeproj::Config.new, :osx => Xcodeproj::Config.new }
+      @xcconfig     = { :ios => {}, :osx => {} }
+      # @xcconfig     = { :ios => Xcodeproj::Config.new, :osx => Xcodeproj::Config.new }
       @header_dir   = { :ios => nil, :osx => nil }
       @requires_arc = { :ios => nil, :osx => nil }
       @header_mappings_dir = { :ios => nil, :osx => nil }
@@ -304,18 +304,23 @@ module Pod
     # @!method xcconfig=
     #
     platform_attr_writer :xcconfig, lambda {|value, current| current.tap { |c| c.merge!(value) } }
+    pltf_first_defined_attr_reader :xcconfig
 
+    # TODO: use metaprogramming
     def xcconfig
-      result = raw_xconfig.dup
-      result.libraries.merge(libraries)
-      result.frameworks.merge(frameworks)
-      result.weak_frameworks.merge(weak_frameworks)
-      result
+      @parent ? @parent.xcconfig.merge(@xcconfig[active_platform]) : @xcconfig[active_platform]
     end
 
-    def raw_xconfig
-      @parent ? @parent.raw_xconfig.merge(@xcconfig[active_platform]) : @xcconfig[active_platform]
-    end
+    # TODO: This will be handled by the localPod
+    #
+    # def xcconfig
+    #   result = raw_xconfig.dup
+    #   result.libraries.merge(libraries)
+    #   result.frameworks.merge(frameworks)
+    #   result.weak_frameworks.merge(weak_frameworks)
+    #   result
+    # end
+
 
 
     def recursive_compiler_flags
@@ -363,8 +368,6 @@ module Pod
       external_dependencies + subspec_dependencies
     end
 
-    include Config::Mixin
-
     def top_level_parent
       @parent ? @parent.top_level_parent : self
     end
@@ -411,9 +414,11 @@ module Pod
       !source.nil? && !source[:local].nil?
     end
 
-    def pod_destroot
-      config.project_pods_root + top_level_parent.name
-    end
+    # TODO: this should be handled by the local pod class or by the sandbox
+
+    # def pod_destroot
+    #   config.project_pods_root + top_level_parent.name
+    # end
 
     def self.pattern_list(patterns)
       if patterns.is_a?(Array) && (!defined?(Rake) || !patterns.is_a?(Rake::FileList))

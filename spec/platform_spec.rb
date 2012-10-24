@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../spec_helper', __FILE__)
 
 describe Pod::Platform do
   describe "by default" do
