@@ -7,8 +7,6 @@ group :development do
   gem "bacon"
   gem "mocha-on-bacon"
   gem "rake"
-  gem "vcr"
-  gem "webmock"
 end
 
 group :debugging do

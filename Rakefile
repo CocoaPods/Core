@@ -1,42 +1,14 @@
 # Travis support
-def on_rvm?
-  `which ruby`.strip.include?('.rvm')
-end
 
 def rvm_ruby_dir
   @rvm_ruby_dir ||= File.expand_path('../..', `which ruby`.strip)
 end
 
 namespace :travis do
-  # Used to create the deb package.
-  #
-  # Known to work with opencflite rev 248.
-  task :prepare_deb do
-    sh "sudo apt-get install subversion libicu-dev"
-    sh "svn co https://opencflite.svn.sourceforge.net/svnroot/opencflite/trunk opencflite"
-    sh "cd opencflite && ./configure --target=linux --with-uuid=/usr --with-tz-includes=./include --prefix=/usr/local && make && sudo make install"
-    sh "sudo /sbin/ldconfig"
-  end
-
-  task :install_opencflite_debs do
-    sh "mkdir -p debs"
-    Dir.chdir("debs") do
-      sh "wget http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu44_4.4.2-2ubuntu0.11.04.1_i386.deb" unless File.exist?("libicu44_4.4.2-2ubuntu0.11.04.1_i386.deb")
-      base_url = "https://github.com/downloads/CocoaPods/OpenCFLite"
-      %w{ opencflite1_248-1_i386.deb opencflite-dev_248-1_i386.deb }.each do |deb|
-        sh "wget #{File.join(base_url, deb)}" unless File.exist?(deb)
-      end
-      sh "sudo dpkg -i *.deb"
-    end
-  end
-
-  task :install do
+  task :setup do
     sh "git submodule update --init"
-    sh "sudo apt-get install subversion"
     sh "env CFLAGS='-I#{rvm_ruby_dir}/include' bundle install --without debugging documentation"
   end
-
-  task :setup => [:install_opencflite_debs, :install]
 end
 
 namespace :gem do
@@ -46,12 +18,12 @@ namespace :gem do
   end
 
   def gem_filename
-    "cocoapods-#{gem_version}.gem"
+    "cocoapods-core-#{gem_version}.gem"
   end
 
   desc "Build a gem for the current version"
   task :build do
-    sh "gem build cocoapods.gemspec"
+    sh "gem build cocoapods-core.gemspec"
   end
 
   desc "Install a gem version of the current code"
@@ -181,29 +153,8 @@ namespace :spec do
     exec "bundle exec kicker -c"
   end
 
-  desc "Run the unit specs"
-  task :unit => :unpack_fixture_tarballs do
-    sh "bundle exec bacon #{specs('unit/**')} -q"
-  end
-
-  desc "Run the functional specs"
-  task :functional => :unpack_fixture_tarballs do
-    sh "bundle exec bacon #{specs('functional/**')}"
-  end
-
-  desc "Run the integration spec"
-  task :integration => :unpack_fixture_tarballs do
-    sh "bundle exec bacon spec/integration_spec.rb"
-  end
-
   task :all => :unpack_fixture_tarballs do
     sh "bundle exec bacon #{specs('**')}"
-  end
-
-  desc "Run all specs and build all examples"
-  task :ci => :all do
-    sh "./bin/pod setup" # ensure the spec repo is up-to-date
-    Rake::Task['examples:build'].invoke
   end
 
   desc "Rebuild all the fixture tarballs"
@@ -232,55 +183,6 @@ namespace :spec do
   end
 
   task :clean_env => [:clean_vcr, :unpack_fixture_tarballs, "ext:cleanbuild"]
-end
-
-namespace :examples do
-  def examples
-    require 'pathname'
-    result = []
-    examples = Pathname.new(File.expand_path('../examples', __FILE__))
-    return [examples + ENV['example']] if ENV['example']
-    examples.entries.each do |example|
-      next if %w{ . .. }.include?(example.basename.to_s)
-      example = examples + example
-      next unless example.directory?
-      result << example
-    end
-    result
-  end
-
-  desc "Open all example workspaced in Xcode, which recreates the schemes."
-  task :recreate_workspace_schemes do
-    examples.each do |example|
-      Dir.chdir(example.to_s) do
-        # TODO we need to open the workspace in Xcode at least once, otherwise it might not contain schemes.
-        # The schemes do not seem to survive a SCM round-trip.
-        sh "open '#{example.basename}.xcworkspace'"
-        sleep 5
-      end
-    end
-  end
-
-  desc "Build all examples"
-  task :build do
-    sh "rm -rf ~/Library/Developer/Shared/Documentation/DocSets/org.cocoapods.*"
-    examples.entries.each do |example|
-      puts "Building example: #{example}"
-      puts
-      Dir.chdir(example.to_s) do
-        sh "rm -rf Pods DerivedData"
-        sh "#{'../../bin/' unless ENV['FROM_GEM']}pod install --verbose --no-update"
-        command = "xcodebuild -workspace '#{example.basename}.xcworkspace' -scheme '#{example.basename}'"
-        if (example + 'Podfile').read.include?('platform :ios')
-          # Specifically build against the simulator SDK so we don't have to deal with code signing.
-          command << " -sdk "
-          command << Dir.glob("#{`xcode-select -print-path`.chomp}/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk").last
-        end
-        sh command
-      end
-      puts
-    end
-  end
 end
 
 desc "Initializes your working copy to run the specs"
