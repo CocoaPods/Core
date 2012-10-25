@@ -167,7 +167,7 @@ module Pod
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
         # TODO : move to the search command
-        raise(Informative, "Unable to find a pod named `#{dependency.name}'") if sources.empty?
+        Pod.raise "Unable to find a pod named `#{dependency.name}`" if sources.empty?
         Specification::Set.new(dependency.top_level_spec_name, sources)
       end
 

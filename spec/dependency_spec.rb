@@ -39,7 +39,7 @@ module Pod
     end
 
     it 'raises if created without either valid name/version/external requirements or a block' do
-      lambda { Dependency.new }.should.raise Informative
+      lambda { Dependency.new }.should.raise Pod::StandardError
     end
 
     describe "defined with a block" do
@@ -77,7 +77,7 @@ module Pod
       end
 
       it "only supports the `:head' option on the last version of a pod" do
-        should.raise Informative do
+        should.raise Pod::StandardError do
           Dependency.new("cocoapods", "1.2.3", :head)
         end
       end

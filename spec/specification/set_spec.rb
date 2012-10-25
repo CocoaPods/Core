@@ -24,12 +24,12 @@ describe "Pod::Specification::Set" do
       @set.required_by(Pod::Dependency.new('CocoaLumberjack'), 'Spec')
       lambda {
         @set.required_by(Pod::Dependency.new('CocoaLumberjack', '< 1.0' ), 'Spec')
-      }.should.raise Pod::Informative
+      }.should.raise Pod::StandardError
     end
 
     it "raises if the required version doesn't exist" do
       @set.required_by(Pod::Dependency.new('CocoaLumberjack', '< 1.0'), 'Spec')
-      lambda { @set.required_version }.should.raise Pod::Informative
+      lambda { @set.required_version }.should.raise Pod::StandardError
     end
 
     it "can test if it is equal to another set" do
@@ -56,7 +56,7 @@ describe "Pod::Specification::Set" do
 
     it "raises if a version is incompatible with the activated version" do
       spec = Pod::Dependency.new('CocoaLumberjack', '1.2.1')
-      lambda { @set.required_by(spec, 'Spec') }.should.raise Pod::Informative
+      lambda { @set.required_by(spec, 'Spec') }.should.raise Pod::StandardError
     end
   end
 

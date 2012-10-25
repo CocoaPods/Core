@@ -80,14 +80,14 @@ describe "Pod::Source" do
       lambda {
         dep = Pod::Dependency.new('DoesNotExist')
         set = @aggregate.search(dep)
-      }.should.raise Pod::Informative
+      }.should.raise Pod::StandardError
     end
 
     it "raises if a subspec can't be found" do
       lambda {
         dep = Pod::Dependency.new('RestKit/DoesNotExist')
         set = @aggregate.search(dep)
-      }.should.raise Pod::Informative
+      }.should.raise Pod::StandardError
     end
 
     it "searches the sets by name" do

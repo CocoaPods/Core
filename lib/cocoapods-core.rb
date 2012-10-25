@@ -15,12 +15,8 @@ module Pod
 
   class StandardError < ::StandardError; end
 
-  # TODO: delete
-  class Informative < ::StandardError
-    def message
-      # TODO: remove formatting from raise calls and remove conditional
-      super !~ /\[!\]/ ? "[!] #{super}\n" : super
-    end
+  def self.raise(message)
+   Kernel.raise StandardError, message
   end
 
   require 'version'

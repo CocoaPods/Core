@@ -225,18 +225,18 @@ describe "A Pod::Specification, in general," do
 
   it "can be activated for a supported platorm" do
     @spec.platform = :ios
-    lambda {@spec.activate_platform(:ios)}.should.not.raise Pod::Informative
+    lambda {@spec.activate_platform(:ios)}.should.not.raise Pod::StandardError
   end
 
   it "raised if attempted to be activated for an unsupported platform" do
     @spec.platform = :osx, '10.7'
-    lambda {@spec.activate_platform(:ios)}.should.raise Pod::Informative
-    lambda {@spec.activate_platform(:ios, '10.6')}.should.raise Pod::Informative
+    lambda {@spec.activate_platform(:ios)}.should.raise Pod::StandardError
+    lambda {@spec.activate_platform(:ios, '10.6')}.should.raise Pod::StandardError
   end
 
   it "raises if not activated for a platform before accessing a multiplatform value" do
     @spec.platform = :ios
-    lambda {@spec.source_files}.should.raise Pod::Informative
+    lambda {@spec.source_files}.should.raise Pod::StandardError
   end
 
   it "returns self on activation for method chainablity" do
@@ -286,8 +286,8 @@ describe "A Pod::Specification, hierarchy" do
   end
 
   it "raises if it has dependecy on a self or on an upstream subspec" do
-    lambda { @subspec.dependency('MainSpec/SubSpec.0') }.should.raise Pod::Informative
-    lambda { @subspec.dependency('MainSpec') }.should.raise Pod::Informative
+    lambda { @subspec.dependency('MainSpec/SubSpec.0') }.should.raise Pod::StandardError
+    lambda { @subspec.dependency('MainSpec') }.should.raise Pod::StandardError
   end
 
   it "inherits external dependecies from the parent" do
@@ -428,7 +428,7 @@ describe "A Pod::Specification subspec" do
   end
 
   it "raises a top level attribute is assigned to a spec with a parent" do
-    lambda { @subspec.version = '0.0.1' }.should.raise Pod::Informative
+    lambda { @subspec.version = '0.0.1' }.should.raise Pod::StandardError
   end
 
   it "returns subspecs by name" do

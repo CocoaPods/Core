@@ -1,6 +1,9 @@
 module Pod
   class Podfile
-    class Informative < ::Pod::Informative
+
+    # TODO: how to handle this?
+
+    class StandardError < Pod::StandardError
       def podfile_line
         @podfile_line ||= self.backtrace.find {|t| t =~ /Podfile/}
       end
@@ -125,7 +128,7 @@ module Pod
 
       #   # if user_project.path.nil?
       #   #   # TODO this is not in the right place
-      #   #   raise Informative, "[!] Unable to find an Xcode project to integrate".red if config.integrate_targets
+      #   #   Pod.raise "Unable to find an Xcode project to integrate" if config.integrate_targets
       #   #   path
       #   # else
       #   #   (config.project_root + path).relative_path_from(user_project.path.dirname)
@@ -188,7 +191,7 @@ module Pod
         begin
           eval(string, nil, path.to_s)
         rescue Exception => e
-          raise Informative, "Podfile syntax error:  #{e.inspect}"
+          raise Pod::Podfile::StandardError, "Podfile syntax error:  #{e.inspect}"
         end
       end
       podfile.defined_in_file = path
@@ -231,7 +234,7 @@ module Pod
         when :osx
           target = '10.6'
         else
-          raise ::Pod::Podfile::Informative, "Unsupported platform: platform must be one of [:ios, :osx]"
+          raise Pod::Podfile::StandardError, "Unsupported platform: platform must be one of [:ios, :osx]"
         end
       end
       @target_definition.platform = Platform.new(name, target)

@@ -11,7 +11,7 @@ module Pod
       begin
         hash = YAML.load(File.open(path))
       rescue Exception => e
-        raise Informative, "Podfile.lock syntax error:  #{e.inspect}"
+        Pod.raise "Podfile.lock syntax error:  #{e.inspect}"
       end
       lockfile = Lockfile.new(hash)
       lockfile.defined_in_file = path
@@ -91,7 +91,7 @@ module Pod
     #
     def dependency_for_installed_pod_named(name)
       version = pods_versions[name]
-      raise Informative, "Attempt to lock a Pod without an known version." unless version
+      Pod.raise "Attempt to lock a Pod without an known version." unless version
       dependency = Dependency.new(name, version)
       dependency.external_source = external_sources[name]
       dependency
