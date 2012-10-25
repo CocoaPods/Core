@@ -1,5 +1,7 @@
 # require 'xcodeproj/config'
 require 'active_support/core_ext/string/strip.rb'
+require 'cocoapods-core/specification/set'
+# require 'cocoapods-core/specification/statistics'
 
 module Pod
 
@@ -11,8 +13,6 @@ module Pod
   end
 
   class Specification
-    autoload :Set,        'cocoapods/specification/set'
-    autoload :Statistics, 'cocoapods/specification/statistics'
 
     ### Initalization
 

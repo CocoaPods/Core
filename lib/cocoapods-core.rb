@@ -26,14 +26,15 @@ module Pod
 
   require 'pathname'
 
-  require 'cocoapods/dependency'
-  require 'cocoapods/platform'
-  require 'cocoapods/source'
-  require 'cocoapods/specification'
-  require 'cocoapods/specification'
-  require 'cocoapods/version'
-  require 'cocoapods/podfile'
-  require 'cocoapods/lockfile'
+  require 'cocoapods-core/dependency'
+  require 'cocoapods-core/platform'
+  require 'cocoapods-core/source'
+  require 'cocoapods-core/specification'
+  require 'cocoapods-core/version'
+  require 'cocoapods-core/podfile'
+  require 'cocoapods-core/lockfile'
+
+  require 'cocoapods-core/user_interface/ui_pod'
 end
 
 if ENV['COCOA_PODS_ENV'] == 'development'

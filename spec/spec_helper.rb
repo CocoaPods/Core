@@ -9,7 +9,7 @@ require 'pathname'
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 
 $:.unshift((ROOT + 'lib').to_s)
-require 'cocoapods_core'
+require 'cocoapods-core'
 
 $:.unshift((ROOT + 'spec').to_s)
 require 'spec_helper/bacon'
