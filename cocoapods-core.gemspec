@@ -26,6 +26,9 @@ Gem::Specification.new do |s|
   s.require_paths = %w{ lib }
 
   s.add_runtime_dependency 'activesupport', '~> 3.2.6'
+  s.add_runtime_dependency 'faraday',       '~> 0.8.1'
+  s.add_runtime_dependency 'octokit',       '~> 1.7'
+
   s.add_development_dependency 'bacon', '~> 1.1'
 
   ## Make sure you can build the gem on older versions of RubyGems too:

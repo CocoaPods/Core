@@ -12,7 +12,6 @@ unless Gem::Version::Requirement.new('>= 1.4.0').satisfied_by?(Gem::Version.new(
 end
 
 module Pod
-  require 'version'
 
   class StandardError < ::StandardError; end
 
@@ -24,6 +23,7 @@ module Pod
     end
   end
 
+  require 'version'
   require 'pathname'
 
   require 'cocoapods-core/dependency'
@@ -33,8 +33,6 @@ module Pod
   require 'cocoapods-core/version'
   require 'cocoapods-core/podfile'
   require 'cocoapods-core/lockfile'
-
-  require 'cocoapods-core/user_interface/ui_pod'
 end
 
 if ENV['COCOA_PODS_ENV'] == 'development'

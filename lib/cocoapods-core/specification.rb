@@ -1,24 +1,22 @@
-# require 'xcodeproj/config'
 require 'active_support/core_ext/string/strip.rb'
+
+require 'cocoapods-core/specification/attributes'
 require 'cocoapods-core/specification/set'
-# require 'cocoapods-core/specification/statistics'
+require 'cocoapods-core/specification/statistics'
 
 module Pod
 
-  def self._eval_podspec(path)
-    string = File.open(path, 'r:utf-8')  { |f| f.read }
-    # TODO: work around for Rubinius incomplete encoding in 1.9 mode
-    string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-    eval(string, nil, path.to_s)
-  end
 
   class Specification
+
+    extend Pod::Specification::Attributes
 
     ### Initalization
 
     # The file is expected to define and return a Pods::Specification.
     # If name is equals to nil it returns the top level Specification,
     # otherwise it returned the specification with the name that matches
+    #
     def self.from_file(path, subspec_name = nil)
       unless path.exist?
         raise Informative, "No podspec exists at path `#{path}'."
@@ -60,74 +58,6 @@ module Pod
       yield self if block_given?
     end
 
-    ### Meta programming
-
-    # Creates a top level attribute reader. A lambda can
-    # be passed to process the ivar before returning it
-    def self.top_attr_reader(attr, read_lambda = nil)
-      define_method(attr) do
-        ivar = instance_variable_get("@#{attr}")
-        @parent ? top_level_parent.send(attr) : ( read_lambda ? read_lambda.call(self, ivar) : ivar )
-      end
-    end
-
-    # Creates a top level attribute writer. A lambda can
-    # be passed to initalize the value
-    def self.top_attr_writer(attr, init_lambda = nil)
-      define_method("#{attr}=") do |value|
-        raise Informative, "#{self.inspect} Can't set `#{attr}' for subspecs." if @parent
-        instance_variable_set("@#{attr}",  init_lambda ? init_lambda.call(value) : value);
-      end
-    end
-
-    # Creates a top level attribute accessor. A lambda can
-    # be passed to initialize the value in the attribute writer.
-    def self.top_attr_accessor(attr, writer_labmda = nil)
-      top_attr_reader attr
-      top_attr_writer attr, writer_labmda
-    end
-
-    # Returns the value of the attribute for the active platform
-    # chained with the upstream specifications. The ivar must store
-    # the platform specific values as an array.
-    #
-    def self.pltf_chained_attr_reader(attr)
-      define_method(attr) do
-        active_plaform_check
-        ivar_value = instance_variable_get("@#{attr}")[active_platform]
-        @parent ? @parent.send(attr) + ivar_value : ( ivar_value )
-      end
-    end
-
-    # Returns the first value defined of the attribute traversing the chain
-    # upwards.
-    #
-    def self.pltf_first_defined_attr_reader(attr)
-      define_method(attr) do
-        active_plaform_check
-        ivar_value = instance_variable_get("@#{attr}")[active_platform]
-        ivar_value.nil? ? (@parent.send(attr) if @parent) : ivar_value
-      end
-    end
-
-    def active_plaform_check
-      raise Informative, "#{self.inspect} not activated for a platform before consumption." unless active_platform
-    end
-
-    # Attribute writer that works in conjuction with the PlatformProxy.
-    def self.platform_attr_writer(attr, block = nil)
-      define_method("#{attr}=") do |value|
-        current = instance_variable_get("@#{attr}")
-        @define_for_platforms.each do |platform|
-          block ?  current[platform] = block.call(value, current[platform]) : current[platform] = value
-        end
-      end
-    end
-
-    def self.pltf_chained_attr_accessor(attr, block = nil)
-      pltf_chained_attr_reader(attr)
-      platform_attr_writer(attr, block)
-    end
 
     # The PlatformProxy works in conjuction with Specification#_on_platform.
     # It allows a syntax like `spec.ios.source_files = file`
@@ -543,5 +473,13 @@ module Pod
       @deployment_target[platform] || ( @parent ? @parent.deployment_target(platform) : nil )
     end
   end
+
   Spec = Specification
+
+  def self._eval_podspec(path)
+    string = File.open(path, 'r:utf-8')  { |f| f.read }
+    # TODO: work around for Rubinius incomplete encoding in 1.9 mode
+    string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+    eval(string, nil, path.to_s)
+  end
 end

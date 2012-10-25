@@ -1,4 +1,5 @@
 require 'active_support/core_ext/array/conversions'
+require 'cocoapods-core/specification/set/presenter'
 
 module Pod
   class Specification
