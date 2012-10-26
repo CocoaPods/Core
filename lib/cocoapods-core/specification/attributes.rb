@@ -4,10 +4,10 @@ module Pod
     # Checks that specification has been activated for platform as it is
     # necessary to read multi-platform attributes.
     #
-    # @Pod.raise It the specification has not been activated for a platform.
+    # @raise It the specification has not been activated for a platform.
     #
     def active_plaform_check
-      Pod.raise "#{self.inspect} not activated for a platform before consumption." unless active_platform
+      raise StandardError, "#{self.inspect} not activated for a platform before consumption." unless active_platform
     end
 
     module Attributes
@@ -27,7 +27,7 @@ module Pod
       #
       def top_attr_writer(attr, init_lambda = nil)
         define_method("#{attr}=") do |value|
-          Pod.raise "#{self.inspect} Can't set `#{attr}' for subspecs." if @parent
+          raise StandardError, "#{self.inspect} Can't set `#{attr}' for subspecs." if @parent
           instance_variable_set("@#{attr}",  init_lambda ? init_lambda.call(value) : value);
         end
       end

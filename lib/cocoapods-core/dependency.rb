@@ -52,11 +52,11 @@ module Pod
         super(*name_and_version_requirements)
 
         if head? && !latest_version?
-          Pod.raise "A `:head' dependency may not specify version requirements."
+          raise StandardError, "A `:head' dependency may not specify version requirements."
         end
 
       else
-        Pod.raise "A dependency needs either a name and version requirements, " \
+        raise StandardError, "A dependency needs either a name and version requirements, " \
           "a source hash, or a block which defines a podspec."
       end
     end
@@ -252,7 +252,7 @@ module Pod
       #
       def merge(other)
         unless name == other.name then
-          Pod.raise ArgumentError, "#{self} and #{other} have different names"
+          raise StandardError, ArgumentError, "#{self} and #{other} have different names"
         end
 
         default = Gem::Requirement.default
@@ -285,7 +285,7 @@ module Pod
     #     elsif params.key?(:local)
     #       LocalSource.new(name, params)
     #     else
-    #       Pod.raise "Unknown external source parameters for #{name}: #{params}"
+    #       raise StandardError, "Unknown external source parameters for #{name}: #{params}"
     #     end
     #   end
 
@@ -310,7 +310,7 @@ module Pod
     #     def specification_from_external(sandbox, platform)
     #       podspec = copy_external_source_into_sandbox(sandbox, platform)
     #       spec = specification_from_local(sandbox, platform)
-    #       Pod.raise "No podspec found for `#{name}' in #{description}" unless spec
+    #       raise StandardError, "No podspec found for `#{name}' in #{description}" unless spec
     #       spec
     #     end
 
@@ -320,10 +320,10 @@ module Pod
     #       output_path = sandbox.root + "Local Podspecs/#{name}.podspec"
     #       output_path.dirname.mkpath
     #       if podspec.is_a?(String)
-    #         Pod.raise "No podspec found for `#{name}' in #{description}" unless podspec.include?('Spec.new')
+    #         raise StandardError, "No podspec found for `#{name}' in #{description}" unless podspec.include?('Spec.new')
     #         output_path.open('w') { |f| f.puts(podspec) }
     #       else
-    #         Pod.raise "No podspec found for `#{name}' in #{description}" unless podspec.exist?
+    #         raise StandardError, "No podspec found for `#{name}' in #{description}" unless podspec.exist?
     #         FileUtils.copy(podspec, output_path)
     #       end
     #     end
@@ -376,7 +376,7 @@ module Pod
     #     def pod_spec_path
     #       path = Pathname.new(@params[:local]).expand_path
     #       path += "#{name}.podspec"# unless path.to_s.include?("#{name}.podspec")
-    #       Pod.raise "No podspec found for `#{name}' in `#{@params[:local]}'" unless path.exist?
+    #       raise StandardError, "No podspec found for `#{name}' in `#{@params[:local]}'" unless path.exist?
     #       path
     #     end
 

@@ -17,12 +17,6 @@ module Pod
 
   class StandardError < ::StandardError; end
 
-  # Raises a {Pod::StandardError} exception.
-  #
-  def self.raise(message)
-   Kernel.raise Pod::StandardError, message
-  end
-
   require 'version'
   require 'pathname'
 

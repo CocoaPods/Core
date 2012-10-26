@@ -22,7 +22,7 @@ module Pod
     #
     def self.from_file(path, subspec_name = nil)
       unless path.exist?
-        Pod.raise "No podspec exists at path `#{path}'."
+        raise StandardError, "No podspec exists at path `#{path}'."
       end
       spec = ::Pod._eval_podspec(path)
       spec.defined_in_file = path
@@ -270,8 +270,8 @@ module Pod
 
     def dependency(*name_and_version_requirements)
       name, *version_requirements = name_and_version_requirements.flatten
-      Pod.raise "A specification can't require self as a subspec" if name == self.name
-      Pod.raise "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+      raise StandardError, "A specification can't require self as a subspec" if name == self.name
+      raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
       dep = Dependency.new(name, *version_requirements)
       @define_for_platforms.each do |platform|
         @dependencies[platform] << dep
@@ -333,10 +333,10 @@ module Pod
       # and take the first component from the remainder, which is the spec we need
       # to find now.
       remainder = name[self.name.size+1..-1]
-      Pod.raise "Unable to find a specification named `#{name}' in `#{pod_name}'." unless remainder
+      raise StandardError, "Unable to find a specification named `#{name}' in `#{pod_name}'." unless remainder
       subspec_name = remainder.split('/').shift
       subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
-      Pod.raise "Unable to find a specification named `#{name}' in `#{pod_name}'." unless subspec
+      raise StandardError, "Unable to find a specification named `#{name}' in `#{pod_name}'." unless subspec
       # If this was the last component in the name, then return the subspec,
       # otherwise we recursively keep calling subspec_by_name until we reach the
       # last one and return that
@@ -443,7 +443,7 @@ module Pod
     # that are inherited can be correctly resolved.
     def activate_platform(*platform)
       platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
-      Pod.raise "#{to_s} is not compatible with #{platform}." unless supports_platform?(platform)
+      raise StandardError, "#{to_s} is not compatible with #{platform}." unless supports_platform?(platform)
       top_level_parent.active_platform = platform.to_sym
       self
     end
@@ -468,7 +468,7 @@ module Pod
     # subspecs with different platforms is is resolved as the
     # first non nil value accross the chain.
     def deployment_target=(version)
-      Pod.raise "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`." unless @define_for_platforms.count == 1
+      raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`." unless @define_for_platforms.count == 1
       @deployment_target[@define_for_platforms.first] = version
     end
 

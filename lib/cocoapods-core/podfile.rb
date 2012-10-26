@@ -141,7 +141,7 @@ module Pod
 
       #   # if user_project.path.nil?
       #   #   # TODO this is not in the right place
-      #   #   Pod.raise "Unable to find an Xcode project to integrate" if config.integrate_targets
+      #   #   raise StandardError, "Unable to find an Xcode project to integrate" if config.integrate_targets
       #   #   path
       #   # else
       #   #   (config.project_root + path).relative_path_from(user_project.path.dirname)
