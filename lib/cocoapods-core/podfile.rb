@@ -1,7 +1,21 @@
 module Pod
+
+  # The {Podfile} is a specification that describes the dependencies of the
+  # targets of an Xcode project.
+  #
+  # It supports its own DSL and generally is stored in files named
+  # `CocoaPods.podfile` or `Podfile`.
+  #
+  # @example
+  #
+  #   platform :ios, "6.0"
+  #   target :my_app do
+  #     pod "AFNetworking", "~> 1.0"
+  #   end
+  #
   class Podfile
 
-    # TODO: how to handle this?
+    # TODO: implement Podfile.raise with the given message and adds the line it occurs on by using #caller
 
     class StandardError < Pod::StandardError
       def podfile_line
@@ -18,7 +32,6 @@ module Pod
     end
 
     class UserProject
-      # include Config::Mixin
 
       DEFAULT_BUILD_CONFIGURATIONS = { 'Debug' => :debug, 'Release' => :release }.freeze
 

@@ -75,6 +75,8 @@ module Pod
         File.open(cache_file, 'w') { |f| f.write(YAML::dump(cache)) } if cache_file
       end
 
+      # @return [Time]
+      #
       def compute_creation_date(set, save = true)
         date = get_value(set, :creation_date)
         unless date

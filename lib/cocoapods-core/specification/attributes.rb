@@ -2,7 +2,7 @@ module Pod
   class Specification
 
     # Checks that specification has been activated for platform as it is
-    # necessary to read multiplatform attributes.
+    # necessary to read multi-platform attributes.
     #
     # @Pod.raise It the specification has not been activated for a platform.
     #
@@ -23,7 +23,7 @@ module Pod
       end
 
       # Creates a top level attribute writer. A lambda can be passed to
-      # initalize the value
+      # initialize the value
       #
       def top_attr_writer(attr, init_lambda = nil)
         define_method("#{attr}=") do |value|
@@ -64,7 +64,7 @@ module Pod
       end
 
 
-      # Attribute writer that works in conjuction with the PlatformProxy.
+      # Attribute writer that works in conjunction with the PlatformProxy.
       #
       def platform_attr_writer(attr, block = nil)
         define_method("#{attr}=") do |value|

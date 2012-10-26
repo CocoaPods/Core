@@ -7,19 +7,19 @@ describe "Pod::Lockfile" do
 
     def sample
       text = <<-LOCKFILE.strip_heredoc
-PODS:
-- BananaLib (1.0):
-  - monkey (< 1.0.9, ~> 1.0.1)
-- monkey (1.0.8)
+        PODS:
+        - BananaLib (1.0):
+          - monkey (< 1.0.9, ~> 1.0.1)
+        - monkey (1.0.8)
 
-DEPENDENCIES:
-- BananaLib (~> 1.0)
+        DEPENDENCIES:
+        - BananaLib (~> 1.0)
 
-SPEC CHECKSUMS:
-  BananaLib: !binary |-
-    MjI2Y2RkMTJkMzBhMWU4ZWM4OGM1ZmRkZWU2MDcwZDg0YTI1MGZjMQ==
+        SPEC CHECKSUMS:
+          BananaLib: !binary |-
+            MjI2Y2RkMTJkMzBhMWU4ZWM4OGM1ZmRkZWU2MDcwZDg0YTI1MGZjMQ==
 
-COCOAPODS: #{Pod::VERSION}
+        COCOAPODS: #{Pod::CORE_VERSION}
       LOCKFILE
     end
 

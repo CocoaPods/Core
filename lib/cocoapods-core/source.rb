@@ -3,36 +3,36 @@ module Pod
   # The {Source} class is responsible to manage a collection of podspecs.
   #
   # @note The backing store of the podspecs collection is an implementation detail
-  # abstraced from the rest of CocoaPods.
+  # abstracted from the rest of CocoaPods.
   #
   # @note The default implementation uses a git repo as a backing store, where the
-  # podspecs are namespaces as:
+  # podspecs are namespaced as:
   #
   #     #{POD_NAME}/#{VERSION}/#{POD_NAME}.podspec
   #
-  # @todo For better abstranction the sources should be responsible to update themselves.
-  #
   class Source
 
-    # @return [Pathname] The location of the repo.
+    # @return [Pathname] the location of the repo of the source.
     #
     attr_reader :repo
 
-    # @param [Pathname] repo @see repo.
+    # @param  [Pathname] repo @see #repo.
     #
     def initialize(repo)
       @repo = repo
     end
 
-    # @return [String] the name of the repo.
+    # @return [String] the name of the source.
     #
     def name
       @repo.basename.to_s
     end
 
-    # @!group Quering the source
+    #---------------------------------------------------------------------------#
 
-    # @return [Array<String>] The name of all the Pods.
+    # @!group Queering the source
+
+    # @return [Array<String>] the list of the name of all the Pods.
     #
     def pods
       @repo.children.map do |child|
@@ -40,16 +40,17 @@ module Pod
       end.compact
     end
 
-    # @return [Array<Sets>] The sets of all the Pods.
+    # @return [Array<Sets>] the sets of all the Pods.
     #
     def pod_sets
       pods.map { |pod| Specification::Set.new(pod, self) }
     end
 
-    # @return [Array<Version>] All the available versions for the Pod, sorted
-    #                          from highest to lowest.
+    # @return [Array<Version>] all the available versions for the Pod, sorted
+    #         from highest to lowest.
     #
-    # @param [String] name     The name of the Pod.
+    # @param  [String] name
+    #         the name of the Pod.
     #
     def versions(name)
       pod_dir = repo + name
@@ -59,21 +60,24 @@ module Pod
       end.compact.sort.reverse
     end
 
-    # @return [Specification]  The specification for a given version of Pod.
+    # @return [Specification] the specification for a given version of Pod.
     #
-    # @param [String] name     The name of the Pod.
+    # @param  [String] name
+    #         the name of the Pod.
     #
-    # @param [Version,String] version
-    #                          The version for the specification.
+    # @param  [Version,String] version
+    #         the version for the specification.
     #
     def specification(name, version)
       specification_path = repo + name + version.to_s + "#{name}.podspec"
       Specification.from_file(specification_path)
     end
 
+    #---------------------------------------------------------------------------#
+
     # @!group Searching the source
 
-    # @return [Set] A set for a given dependency. The set is identified by the
+    # @return [Set] a set for a given dependency. The set is identified by the
     #               name of the dependency and takes into account subspecs.
     #
     def search(dependency)
@@ -86,17 +90,17 @@ module Pod
       end
     end
 
-    # @return [Array<Set>] The sets that contain the search term.
+    # @return [Array<Set>] The list of the sets that contain the search term.
     #
-    # @param [String] query           The search term.
+    # @param  [String] query
+    #         the search term.
     #
-    # @param [Bool] full_text_search  Whether the search should be limited to
-    #                                 the name of the Pod or should include
-    #                                 also the author, the summary, and the
-    #                                 description.
+    # @param  [Bool] full_text_search
+    #         whether the search should be limited to the name of the Pod or
+    #         should include also the author, the summary, and the description.
     #
-    # @note Full text search requires to load the specification for each pod,
-    #       hence is considerably slower.
+    # @note   full text search requires to load the specification for each pod,
+    #         hence is considerably slower.
     #
     def search_by_name(query, full_text_search = false)
       pod_sets.map do |set|
@@ -124,24 +128,24 @@ module Pod
         @repos_dir = repos_dir
       end
 
-      # @return [Array<Source>] All the sources.
+      # @return [Array<Source>] all the sources.
       #
       def all
         @sources ||= dirs.map { |repo| Source.new(repo) }.sort_by(&:name)
       end
 
-      # @return [Array<String>] The names of all the pods available.
+      # @return [Array<String>] the names of all the pods available.
       #
       def all_pods
         all.map(&:pods).flatten.uniq
       end
 
-      # @return [Array<Set>] The sets for all the pods available.
+      # @return [Array<Set>] the sets for all the pods available.
       #
-      # @note Implementation detail: The sources don't cache their values
-      #       because they might change in response to an update. Therefore
-      #       this method to prevent slowness caches the values before
-      #       processing them.
+      # @note   Implementation detail: The sources don't cache their values
+      #         because they might change in response to an update. Therefore
+      #         this method to prevent slowness caches the values before
+      #         processing them.
       #
       def all_sets
         pods_by_source = {}
@@ -157,25 +161,25 @@ module Pod
         end
       end
 
-      # @return [Set] A set for a given dependency including all the Sources
-      #               that countain the Pod.
+      # @return [Set] a set for a given dependency including all the Sources
+      #               that contain the Pod.
       #
-      # @raises       If no source including the set can be foud.
+      # @raises       If no source including the set can be found.
       #
       # @see          Source#search
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        # TODO : move to the search command
+        # TODO : move the exception to the search command
         Pod.raise "Unable to find a pod named `#{dependency.name}`" if sources.empty?
         Specification::Set.new(dependency.top_level_spec_name, sources)
       end
 
-      # @return [Array<Set>]  The sets that contain the search term.
+      # @return [Array<Set>]  the sets that contain the search term.
       #
-      # @raises               If no source including the set can be foud.
+      # @raise  If no source including the set can be found.
       #
-      # @see                  Source#search_by_name
+      # @see    Source#search_by_name
       #
       def search_by_name(query, full_text_search = false)
         pods_by_source = {}
@@ -195,16 +199,20 @@ module Pod
         result
       end
 
-      # @return [Array<Pathname>] The directories where the sources are stored.
+      # @return [Array<Pathname>] the directories where the sources are stored.
       #
-      # @raises If the repos dir doesn't exits.
+      # @raise  If the repos dir doesn't exits.
       #
       def dirs
         repos_dir.children.select(&:directory?)
       end
     end
 
+    #---------------------------------------------------------------------------#
+
     # @!group Shortcuts
+
+    # TODO: move to the cocoapods gem
 
     def self.all
       Aggregate.new.all

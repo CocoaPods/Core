@@ -6,12 +6,15 @@ require 'cocoapods-core/specification/statistics'
 
 module Pod
 
-
+  # The {Specification} provides a DSL to describe a Pod. A pod is defined as a
+  # library originating from a source. A specification can support detailed
+  # attributes for modules of code  through subspecs.
+  #
+  # Usually it is stored in files with `podspec` extension.
+  #
   class Specification
 
     extend Pod::Specification::Attributes
-
-    ### Initalization
 
     # The file is expected to define and return a Pods::Specification.
     # If name is equals to nil it returns the top level Specification,
@@ -236,12 +239,12 @@ module Pod
     platform_attr_writer :xcconfig, lambda {|value, current| current.tap { |c| c.merge!(value) } }
     pltf_first_defined_attr_reader :xcconfig
 
-    # TODO: use metaprogramming
+    # TODO: use meta-programming
     def xcconfig
       @parent ? @parent.xcconfig.merge(@xcconfig[active_platform]) : @xcconfig[active_platform]
     end
 
-    # TODO: This will be handled by the localPod
+    # TODO: This will be handled by the LocalPod
     #
     # def xcconfig
     #   result = raw_xconfig.dup
