@@ -31,55 +31,11 @@ module Pod
       end
     end
 
-    class UserProject
-
-      DEFAULT_BUILD_CONFIGURATIONS = { 'Debug' => :debug, 'Release' => :release }.freeze
-
-      def initialize(path = nil, build_configurations = {})
-        self.path = path if path
-        @build_configurations = build_configurations.merge(DEFAULT_BUILD_CONFIGURATIONS)
-      end
-
-      def path=(path)
-        path  = path.to_s
-        @path = Pathname.new(File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj")
-        # @path = config.project_root + @path unless @path.absolute?
-        @path
-      end
-
-      attr_reader :path
-
-      # def path
-      #   if @path
-      #     @path
-      #   else
-      #     xcodeprojs = Pathname.glob(config.project_root + '*.xcodeproj')
-      #     if xcodeprojs.size == 1
-      #       @path = xcodeprojs.first
-      #     end
-      #   end
-      # end
-
-      # def project
-      #   Xcodeproj::Project.new(path) if path && path.exist?
-      # end
-
-      def build_configurations
-        if project
-          project.build_configurations.map(&:name).inject({}) do |hash, name|
-            hash[name] = :release; hash
-          end.merge(@build_configurations)
-        else
-          @build_configurations
-        end
-      end
-    end
-
     class TargetDefinition
 
       attr_reader :name, :target_dependencies
 
-      attr_accessor :user_project, :link_with, :platform, :parent, :exclusive, :inhibit_all_warnings
+      attr_accessor :link_with, :platform, :parent, :exclusive, :inhibit_all_warnings
 
       def initialize(name, options = {})
         @name, @target_dependencies = name, []
@@ -100,10 +56,6 @@ module Pod
         end
       end
       alias_method :exclusive?, :exclusive
-
-      def user_project
-        @user_project || @parent.user_project
-      end
 
       def link_with=(targets)
         @link_with = targets.is_a?(Array) ? targets : [targets]
@@ -126,63 +78,6 @@ module Pod
         else
           "#{@parent.label}-#{name}"
         end
-      end
-
-      def acknowledgements_path
-        # config.project_pods_root + "#{label}-Acknowledgements"
-        "#{label}-Acknowledgements"
-      end
-
-      # Returns a path, which is relative to the project_root, relative to the
-      # `$(SRCROOT)` of the user's project.
-      # def relative_to_srcroot(path)
-      #   # TODO: needs review
-      #   Pathname.new(user_project.path ? user_project.path : path)
-
-      #   # if user_project.path.nil?
-      #   #   # TODO this is not in the right place
-      #   #   raise StandardError, "Unable to find an Xcode project to integrate" if config.integrate_targets
-      #   #   path
-      #   # else
-      #   #   (config.project_root + path).relative_path_from(user_project.path.dirname)
-      #   # end
-      # end
-
-      # TODO: move
-      def pods_root
-        # "${SRCROOT}/#{relative_to_srcroot "Pods"}"
-        "Pods"
-      end
-
-      def lib_name
-        "lib#{label}.a"
-      end
-
-      def xcconfig_name
-        "#{label}.xcconfig"
-      end
-
-      def xcconfig_path
-        "Pods/#{xcconfig_name}"
-      end
-
-      attr_accessor :xcconfig
-
-      def copy_resources_script_name
-        "#{label}-resources.sh"
-      end
-
-      def copy_resources_script_path
-        # "${SRCROOT}/#{relative_to_srcroot("Pods/#{copy_resources_script_name}")}"
-        "Pods/#{copy_resources_script_name}"
-      end
-
-      def prefix_header_name
-        "#{label}-prefix.pch"
-      end
-
-      def bridge_support_name
-        "#{label}.bridgesupport"
       end
 
       # Returns *all* dependencies of this target, not only the target specific
@@ -214,7 +109,6 @@ module Pod
 
     def initialize(&block)
       @target_definition = TargetDefinition.new(:default, :exclusive => true)
-      @target_definition.user_project = UserProject.new
       @target_definitions = { :default => @target_definition }
       instance_eval(&block)
     end
@@ -297,7 +191,8 @@ module Pod
     #   end
     #
     def xcodeproj(path, build_configurations = {})
-      @target_definition.user_project = UserProject.new(path, build_configurations)
+      # TODO
+      # @target_definition.user_project = UserProject.new(path, build_configurations)
     end
 
     # Specifies the target(s) in the user’s project that this Pods library
@@ -567,7 +462,7 @@ module Pod
     end
 
     def user_build_configurations
-      configs_array = @target_definitions.values.map { |td| td.user_project.build_configurations }
+      # configs_array = @target_definitions.values.map { |td| td.user_project.build_configurations }
       configs_array.inject({}) { |hash, config| hash.merge(config) }
     end
 
