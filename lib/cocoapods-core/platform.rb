@@ -33,30 +33,31 @@ module Pod
     # Constructs a platform from either another platform or by
     # specifying the symbolic name and optionally the deployment target.
     #
-    # @overload initialize(name, deployment_target)
+    # @overload   initialize(name, deployment_target)
     #
-    #   @param  [Symbol] name
-    #           the name of platform.
+    #   @param    [Symbol] name
+    #             the name of platform.
     #
-    #   @param  [String, Version] deployment_target
-    #           the optional deployment.
+    #   @param    [String, Version] deployment_target
+    #             the optional deployment.
     #
-    #   @note   If the deployment target is not provided a default deployment
-    #           target will not be assigned.
+    #   @note     If the deployment target is not provided a default deployment
+    #             target will not be assigned.
     #
-    #   @example
+    #   @example  Initialization with symbol
     #
-    #     Platform.new(:ios)
-    #     Platform.new(:ios, '4.3')
+    #             Platform.new(:ios)
+    #             Platform.new(:ios, '4.3')
     #
-    # @overload initialize(platform)
+    # @overload   initialize(platform)
     #
-    #   @param  [Platform] platform Another {Platform}.
+    #   @param    [Platform] platform
+    #             Another {Platform}.
     #
-    #   @example
+    #   @example  Initialization with another platform
     #
-    #     platform = Platform.new(:ios)
-    #     Platform.new(platform)
+    #             platform = Platform.new(:ios)
+    #             Platform.new(platform)
     #
     def initialize(input, target = nil)
       if input.is_a? Platform

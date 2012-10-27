@@ -124,18 +124,19 @@ module Pod
       dependency
     end
 
-    # @param  [String] The string that describes a {Specification} generated
-    #         from {Specification#to_s}.
+    # @param    [String] string
+    #           the string that describes a {Specification} generated from
+    #           {Specification#to_s}.
     #
-    # @example Strings examples
+    # @example  Strings examples
     #
-    #   "libPusher"
-    #   "libPusher (1.0)"
-    #   "libPusher (HEAD based on 1.0)"
-    #   "RestKit/JSON"
+    #           "libPusher"
+    #           "libPusher (1.0)"
+    #           "libPusher (HEAD based on 1.0)"
+    #           "RestKit/JSON"
     #
-    # @return [String, Version] the name and the version of a
-    #         pod.
+    # @return   [String, Version] the name and the version of a
+    #           pod.
     #
     def name_and_version_for_pod(string)
       match_data = string.match(/(\S*) \((.*)\)/)
@@ -144,21 +145,21 @@ module Pod
       [name, vers]
     end
 
-    # @param  [String] The string that describes a {Dependency} generated
-    #         from {Dependency#to_s}.
+    # @param    [String] The string that describes a {Dependency} generated
+    #           from {Dependency#to_s}.
     #
-    # @example Strings examples
+    # @example  Strings examples
     #
-    #   "libPusher"
-    #   "libPusher (= 1.0)"
-    #   "libPusher (~> 1.0.1)"
-    #   "libPusher (> 1.0, < 2.0)"
-    #   "libPusher (HEAD)"
-    #   "libPusher (from `www.example.com')"
-    #   "libPusher (defined in Podfile)"
-    #   "RestKit/JSON"
+    #           "libPusher"
+    #           "libPusher (= 1.0)"
+    #           "libPusher (~> 1.0.1)"
+    #           "libPusher (> 1.0, < 2.0)"
+    #           "libPusher (HEAD)"
+    #           "libPusher (from `www.example.com')"
+    #           "libPusher (defined in Podfile)"
+    #           "RestKit/JSON"
     #
-    # @return [Dependency] the dependency described by the string.
+    # @return   [Dependency] the dependency described by the string.
     #
     def dependency_from_string(string)
       match_data = string.match(/(\S*)( (.*))?/)

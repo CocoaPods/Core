@@ -8,11 +8,11 @@ module Pod
     # a Pod. This class stores the information of the dependencies that required
     # a Pod in the resolution process.
     #
-    # @note The alphabetical order of the sets is used to select a specification
-    #       if multiple are available for a given version.
+    # @note   The alphabetical order of the sets is used to select a
+    #         specification if multiple are available for a given version.
     #
-    # @note The set class is not and should be not aware of the backing store
-    #       of a Source.
+    # @note   The set class is not and should be not aware of the backing store
+    #         of a Source.
     #
     class Set
 
@@ -54,6 +54,7 @@ module Pod
       # @return [void]
       #
       def required_by(dependency, dependent_name)
+        #TODO: this should simply return a boolean. Is cocoaPods that should raise.
         unless @required_by.empty? || dependency.requirement.satisfied_by?(Gem::Version.new(required_version.to_s))
           raise StandardError, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
         end
@@ -106,6 +107,7 @@ module Pod
       #
       def required_version
         versions.find { |v| dependency.match?(name, v) } ||
+          #TODO: this should simply return nil. Is cocoaPods that should raise.
           (raise StandardError, "Required version (#{dependency}) not found for `#{name}'.\nAvailable versions: #{versions.join(', ')}")
       end
 
@@ -135,6 +137,8 @@ module Pod
         "#<#{self.class.name} for `#{name}' with required version `#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
       end
       alias_method :inspect, :to_s
+
+      #-------------------------------------------------------------------------#
 
       # The Set::External class handles Pods from external sources. Pods from
       # external sources don't use the {Pod::Sources} and are initialized by a

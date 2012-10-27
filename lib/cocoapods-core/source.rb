@@ -114,6 +114,8 @@ module Pod
       end.compact
     end
 
+    #---------------------------------------------------------------------------#
+
     # The {Aggregate} manages a directory of sources repositories.
     #
     class Aggregate
@@ -162,11 +164,11 @@ module Pod
       end
 
       # @return [Set] a set for a given dependency including all the Sources
-      #               that contain the Pod.
+      #         that contain the Pod.
       #
-      # @raises       If no source including the set can be found.
+      # @raise  If no source including the set can be found.
       #
-      # @see          Source#search
+      # @see    Source#search
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }

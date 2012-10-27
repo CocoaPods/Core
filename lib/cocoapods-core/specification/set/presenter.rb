@@ -9,11 +9,11 @@ module Pod
       #
       class Presenter
 
-        # @return [Set] the set that should be presented.
+        # @return   [Set] the set that should be presented.
         #
         attr_accessor :set
 
-        # @param  [Set] set @see #set.
+        # @param    [Set] set @see #set.
         #
         def initialize(set)
           @set = set
@@ -23,31 +23,31 @@ module Pod
 
         # @!group Set Information
 
-        # @return [String] the name of the Pod.
+        # @return   [String] the name of the Pod.
         #
         def name
           @set.name
         end
 
-        # @return [Version] the highest version of available for the Pod.
+        # @return   [Version] the highest version of available for the Pod.
         #
         def version
           @set.versions.first
         end
 
-        # @return [Array<Version>] all the versions available sorted
-        #         ascendingly.
+        # @return   [Array<Version>] all the versions available sorted
+        #           ascendingly.
         #
         def versions
           @set.versions.sort.reverse
         end
 
-        # @return [String] all the versions available sorted from the highest
-        #         to the lowest.
+        # @return   [String] all the versions available sorted from the highest
+        #           to the lowest.
         #
-        # @example
+        # @example  Return example
         #
-        #   "1.5pre, 1.4 [master repo] - 999.999.999, 1.4 [test_repo repo]"
+        #           "1.5pre, 1.4 [master repo] - 1.4 [test_repo repo]"
         #
         def verions_by_source
           result = []
@@ -191,16 +191,16 @@ module Pod
 
         # Computes the distance of time
         #
-        # @param [Time]
+        # @param    [Time]
         #
-        # @example
+        # @example  Output examples
         #
-        #   "less than a week ago"
-        #   "15 days ago"
-        #   "1 month ago"
-        #   "more than a year ago"
+        #           "less than a week ago"
+        #           "15 days ago"
+        #           "1 month ago"
+        #           "more than a year ago"
         #
-        # @return [String] the dis
+        # @return   [String] the dis
         #
         def distance_from_now_in_words(from_time)
           return nil unless from_time

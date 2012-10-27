@@ -116,6 +116,18 @@ module Pod
       subspec_dependency? ? @name.split('/').first : @name
     end
 
+    # Checks if a dependency would be satisfied by the given {Version} of a
+    # {Specification} with the same name.
+    #
+    # @param  [String] version
+    #         the version to check.
+    #
+    # @return [Bool] whether the dependency matches the given version.
+    #
+    def match_version?(version)
+      match?(name, version) && (version.head? == head?)
+    end
+
     # @return [Bool] whether the dependency is equal to another taking into
     #                account the loaded specification, the head options and the
     #                external source.
@@ -131,20 +143,20 @@ module Pod
     # Creates a string representation of the dependency suitable for
     # serialization and de-serialization without loss of information.
     #
-    # @note This representation is used by the {Lockfile}.
+    # @note     This representation is used by the {Lockfile}.
     #
-    # @example Output examples
+    # @example  Output examples
     #
-    #   "libPusher"
-    #   "libPusher (= 1.0)"
-    #   "libPusher (~> 1.0.1)"
-    #   "libPusher (> 1.0, < 2.0)"
-    #   "libPusher (HEAD)"
-    #   "libPusher (from `www.example.com')"
-    #   "libPusher (defined in Podfile)"
-    #   "RestKit/JSON"
+    #           "libPusher"
+    #           "libPusher (= 1.0)"
+    #           "libPusher (~> 1.0.1)"
+    #           "libPusher (> 1.0, < 2.0)"
+    #           "libPusher (HEAD)"
+    #           "libPusher (from `www.example.com')"
+    #           "libPusher (defined in Podfile)"
+    #           "RestKit/JSON"
     #
-    # @return [String] the representation of the dependency.
+    # @return   [String] the representation of the dependency.
     #
     def to_s
       version = ''
@@ -164,15 +176,15 @@ module Pod
 
     # Creates a string representation of the external source.
     #
-    # @note This representation is used by the {Lockfile}.
+    # @note     This representation is used by the {Lockfile}.
     #
-    # @example Output examples
+    # @example  Output examples
     #
-    #   "from `www.example.com/libPusher.git', tag `v0.0.1'"
-    #   "from `www.example.com/libPusher.podspec'"
-    #   "from `~/path/to/libPusher'"
+    #           "from `www.example.com/libPusher.git', tag `v0.0.1'"
+    #           "from `www.example.com/libPusher.podspec'"
+    #           "from `~/path/to/libPusher'"
     #
-    # @return [String] the description of the external source.
+    # @return   [String] the description of the external source.
     #
     def external_source_description
       source = external_source
@@ -189,18 +201,6 @@ module Pod
         desc = "`#{source.to_s}'"
       end
       "from #{desc}"
-    end
-
-    # Checks if a dependency would be satisfied by the given {Version} of a
-    # {Specification} with the same name.
-    #
-    # @param  [String] version
-    #         the version to check.
-    #
-    # @return [Bool] whether the dependency matches the given version.
-    #
-    def match_version?(version)
-      match?(name, version) && (version.head? == head?)
     end
   end
 end
