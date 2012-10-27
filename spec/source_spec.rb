@@ -76,11 +76,10 @@ describe "Pod::Source" do
       set.sources.map(&:name).should == %w| master |
     end
 
-    it "raises if a specification set can't be found" do
-      lambda {
-        dep = Pod::Dependency.new('DoesNotExist')
-        set = @aggregate.search(dep)
-      }.should.raise Pod::StandardError
+    it "returns nil if a specification can't be found" do
+      dep = Pod::Dependency.new('DoesNotExist')
+      set = @aggregate.search(dep)
+      set.should == nil
     end
 
     it "raises if a subspec can't be found" do

@@ -117,30 +117,29 @@ module Pod
     # Creates a new dependency with the name of the top level spec and the same
     # version requirements.
     #
-    # This is used by the {Set} class to merge dependencies and resolve the
-    # required version of a Pod regardless what particular specification
-    # (subspecs or top level) is required.
+    # @note   This is used by the {Set} class to merge dependencies and resolve
+    #         the required version of a Pod regardless what particular
+    #         specification (subspecs or top level) is required.
     #
     # @return [Dependency] a dependency with the same versions requirements
     #         that is guaranteed to point to a top level specification.
     #
-    def to_top_level_spec_dependency
+    def to_pod_dependency
       dep = dup
-      dep.name = top_level_spec_name
+      dep.name = pod_name
       dep
     end
 
     # Returns the name of the Pod that the dependency is pointing to.
     #
-    # In case this is a dependency for a subspec, e.g. 'RestKit/Networking',
-    # this returns 'RestKit', which is what the Pod::Source needs to know to
-    # retrieve the correct Set from disk.
+    # @note   In case this is a dependency for a subspec, e.g.
+    #         'RestKit/Networking', this returns 'RestKit', which is what the
+    #         Pod::Source needs to know to retrieve the correct {Specification}
+    #         from disk.
     #
     # @return [String] the name of the Pod.
     #
-    # TODO: this should be handled by the specification class.
-    #
-    def top_level_spec_name
+    def pod_name
       subspec_dependency? ? @name.split('/').first : @name
     end
 
@@ -157,8 +156,8 @@ module Pod
     end
 
     # @return [Bool] whether the dependency is equal to another taking into
-    #                account the loaded specification, the head options and the
-    #                external source.
+    #         account the loaded specification, the head options and the
+    #         external source.
     #
     def ==(other)
       super && head? == other.head? && @external_source == other.external_source

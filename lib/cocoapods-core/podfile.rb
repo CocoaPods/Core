@@ -39,7 +39,7 @@ module Pod
       podfile
     end
 
-    # @param  [TODO] block
+    # @param  [Proc] block
     #         a block that configures the podfile through its DSL.
     #
     # @example
@@ -87,7 +87,7 @@ module Pod
     # TODO: why is this needed?
     #
     def dependency_by_top_level_spec_name(name)
-      dependencies.find { |d| d.top_level_spec_name == name }
+      dependencies.find { |d| d.pod_name == name }
     end
 
     # @return [Bool] whether the podfile should generate a BridgeSupport

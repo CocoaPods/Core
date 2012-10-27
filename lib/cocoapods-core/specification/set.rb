@@ -68,7 +68,7 @@ module Pod
       #
       def dependency
         @dependencies.inject(Dependency.new(name)) do |previous, dependency|
-          previous.merge(dependency.to_top_level_spec_dependency)
+          previous.merge(dependency.to_pod_dependency)
         end
       end
 
