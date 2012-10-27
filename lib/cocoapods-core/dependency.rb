@@ -22,8 +22,8 @@ module Pod
     #         highest know version but force the downloader to checkout the
     #         `head` of the source repository.
     #
-    attr_reader :head
-    alias :head? :head
+    attr_reader  :head
+    alias_method :head?, :head
 
     # @return [Specification] the specification loaded for the dependency.
     #

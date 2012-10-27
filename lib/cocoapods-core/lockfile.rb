@@ -1,5 +1,3 @@
-require 'digest'
-
 module Pod
 
   # The {Lockfile} stores information about the pods that were installed by
@@ -13,6 +11,9 @@ module Pod
   # need to be installed or removed.
   #
   class Lockfile
+
+    # TODO: find a way to serialize from the Downloader the information
+    #       necessary to restore a head version.
 
     # Loads a lockfile form the given path.
     #
@@ -173,8 +174,6 @@ module Pod
         external_source_info = external_sources[name]
         Dependency.new(name, external_source_info)
       when /HEAD/
-        # @TODO: find a way to serialize from the Downloader the information
-        #        necessary to restore a head version.
         Dependency.new(name, :head)
       else
         Dependency.new(name, version)
@@ -300,6 +299,7 @@ module Pod
       deps.each{ |d| external_sources[d.name] = d.external_source }
       hash["EXTERNAL SOURCES"] = external_sources unless external_sources.empty?
 
+      require 'digest'
       checksums = {}
       specs.select { |spec| !spec.defined_in_file.nil? }.each do |spec|
         checksum = Digest::SHA1.hexdigest(File.read(spec.defined_in_file))

@@ -8,12 +8,11 @@ module Pod
   # It supports its own DSL and generally is stored in files named
   # `CocoaPods.podfile` or `Podfile`.
 
-  #
-  # TODO: Implement Podfile.raise with the given message and adds the line it
-  #       occurs on by using #caller This will not work to highlight errors in
-  #       the user Podfile.
-  #
   class Podfile
+
+    # TODO: Implement Podfile.raise with the given message and adds the line it
+    #       occurs on by using #caller This will not work to highlight errors in
+    #       the user Podfile.
 
     class Pod::Podfile::StandardError < StandardError; end
 
