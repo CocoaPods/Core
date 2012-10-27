@@ -163,8 +163,9 @@ module Pod
         end
       end
 
-      # @return [Set] a set for a given dependency including all the Sources
-      #         that contain the Pod.
+      # @return [Set, nil] a set for a given dependency including all the
+      #         {Sources} that contain the Pod. If no sources containing the
+      #         Pod where found it returns nil.
       #
       # @raise  If no source including the set can be found.
       #
@@ -172,9 +173,7 @@ module Pod
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        # TODO : move the exception to the search command
-        raise StandardError, "Unable to find a pod named `#{dependency.name}`" if sources.empty?
-        Specification::Set.new(dependency.top_level_spec_name, sources)
+        Specification::Set.new(dependency.top_level_spec_name, sources) unless sources.empty?
       end
 
       # @return [Array<Set>]  the sets that contain the search term.
