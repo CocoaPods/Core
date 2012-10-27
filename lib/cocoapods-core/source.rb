@@ -209,27 +209,5 @@ module Pod
         repos_dir.children.select(&:directory?)
       end
     end
-
-    #---------------------------------------------------------------------------#
-
-    # @!group Shortcuts
-
-    # TODO: move to the cocoapods gem
-
-    def self.all
-      Aggregate.new.all
-    end
-
-    def self.all_sets
-      Aggregate.new.all_sets
-    end
-
-    def self.search(dependency)
-      Aggregate.new.search(dependency)
-    end
-
-    def self.search_by_name(name, full_text_search = false)
-      Aggregate.new.search_by_name(name, full_text_search)
-    end
   end
 end
