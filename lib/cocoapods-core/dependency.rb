@@ -29,42 +29,70 @@ module Pod
     #
     attr_accessor :specification
 
-    # TODO: Inline podspecs will be deprecated
+    # @overload   initialize(name, requirements)
     #
-    # TODO: External Sources should be handled by the Sandbox
+    #   @param    [String] name
+    #             the name of the Pod.
     #
-    def initialize(*name_and_version_requirements, &block)
-      if name_and_version_requirements.empty? && block
-        @inline_podspec = true
-        @specification  = Specification.new(&block)
-        super(@specification.name, @specification.version)
-
-      elsif !name_and_version_requirements.empty? && block.nil?
-        version = name_and_version_requirements.last
-        if name_and_version_requirements.last.is_a?(Hash)
-          @external_source = name_and_version_requirements.pop
-          # @external_source = ExternalSources.from_params(name_and_version_requirements[0].split('/').first, name_and_version_requirements.pop)
-        elsif version.is_a?(Symbol) && version == :head || version.is_a?(Version) && version.head?
-          name_and_version_requirements.pop
-          @head = true
-        end
-
-        super(*name_and_version_requirements)
-
-        if head? && !latest_version?
-          raise StandardError, "A `:head' dependency may not specify version requirements."
-        end
-
-      else
-        raise StandardError, "A dependency needs either a name and version requirements, " \
-          "a source hash, or a block which defines a podspec."
+    #   @param    [Array] requirements
+    #             an array specifying the version requirements of the
+    #             dependency.
+    #
+    #   @example  Initialization with version requirements.
+    #
+    #             Dependency.new('AFNetworking')
+    #             Dependency.new('AFNetworking', '~> 1.0')
+    #             Dependency.new('AFNetworking', '>= 0.5', '< 0.7')
+    #
+    # @overload   initialize(name, external_source)
+    #
+    #   @param    [String] name
+    #             the name of the Pod.
+    #
+    #   @param    [Hash] external_source
+    #             a hash describing the external source.
+    #
+    #   @example  Initialization with an external source.
+    #
+    #             Dependency.new('libPusher', {:git     => 'example.com/repo.git'})
+    #             Dependency.new('libPusher', {:local   => 'path/to/folder'})
+    #             Dependency.new('libPusher', {:podspec => 'example.com/libPusher.podspec'})
+    #
+    # @overload   initialize(name, is_head)
+    #
+    #   @param    [String] name
+    #             the name of the Pod.
+    #
+    #   @param    [Symbol] is_head
+    #             a symbol that can be `:head` or nil.
+    #
+    #   @example  Initialization with the head option
+    #
+    #             Dependency.new('RestKit', :head)
+    #
+    # @note       This method allow a nil name and the raises to be more
+    #             informative.
+    #
+    # @note       Support for inline podspecs has been deprecated.
+    #
+    def initialize(name = nil, *requirements, &block)
+      if block
+        raise StandardError, "Inline specifications are deprecated. " \
+          "Please store the specification in a `podspec` file."
       end
-    end
+      unless name
+        raise StandardError, "A dependency requires a name."
+      end
 
-    # TODO: Inline podspecs will be deprecated
-    #
-    def inline?
-      @inline_podspec
+      if requirements.last.is_a?(Hash)
+        @external_source = requirements.pop
+      elsif requirements.last == :head
+        @head = true
+        requirements.pop
+        raise StandardError, "A `:head' dependency may not specify version requirements." unless requirements.empty?
+      end
+
+      super(name, *requirements)
     end
 
     # @return [Bool] whether the dependency wants the latest version of a Pod.
@@ -133,11 +161,7 @@ module Pod
     #                external source.
     #
     def ==(other)
-      super &&
-        (head? == other.head?) &&
-        # TODO: Inline podspecs will be deprecated so the comparison with the
-        #       external sources should suffice.
-        (@specification ? @specification == other.specification : @external_source == other.external_source)
+      super && head? == other.head? && @external_source == other.external_source
     end
 
     # Creates a string representation of the dependency suitable for
@@ -162,8 +186,6 @@ module Pod
       version = ''
       if external?
         version << external_source_description
-      elsif inline?
-        version << 'defined in Podfile'
       elsif head?
         version << 'HEAD'
       elsif @version_requirements != Gem::Requirement.default

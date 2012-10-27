@@ -169,9 +169,6 @@ module Pod
       case version
       when nil
         Dependency.new(name)
-      when /defined in Podfile/
-        # @TODO: inline podspecs are deprecated
-        Dependency.new(name)
       when /from `(.*)'/
         external_source_info = external_sources[name]
         Dependency.new(name, external_source_info)

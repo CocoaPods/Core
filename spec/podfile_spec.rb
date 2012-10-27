@@ -61,16 +61,6 @@ describe Pod::Podfile do
     dep.external_source.should == { :podspec => 'http://gist/SomeExternalPod.podspec' }
   end
 
-  it "adds a dependency on a library by specifying the podspec inline" do
-    podfile = Pod::Podfile.new do
-      pod do |s|
-        s.name = 'SomeExternalPod'
-      end
-    end
-    dep = podfile.dependency_by_top_level_spec_name('SomeExternalPod')
-    dep.specification.name.should == 'SomeExternalPod'
-  end
-
   it "specifies that BridgeSupport metadata should be generated" do
     Pod::Podfile.new {}.should.not.generate_bridge_support
     Pod::Podfile.new { generate_bridge_support! }.should.generate_bridge_support

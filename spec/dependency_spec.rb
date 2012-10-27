@@ -30,33 +30,16 @@ module Pod
       dep1.should == dep3
     end
 
-    it "is equal to another dependency if `specification' is equal" do
-      dep1 = Dependency.new { |s| s.name = 'bananas'; s.version = '1' }
-      dep2 = Dependency.new('bananas')
-      dep1.should.not == dep2
-      dep2 = Dependency.new { |s| s.name = 'bananas'; s.version = '1' }
+    it "takes into account the `head` option to check for equality" do
+      dep1 = Dependency.new('bananas', :head)
+      dep2 = Dependency.new('bananas', :head)
+      dep3 = Dependency.new('bananas')
       dep1.should == dep2
+      dep1.should.not == dep3
     end
 
     it 'raises if created without either valid name/version/external requirements or a block' do
       lambda { Dependency.new }.should.raise Pod::StandardError
-    end
-
-    describe "defined with a block" do
-      before do
-        @dependency = Dependency.new do |spec|
-          spec.name    = "my-custom-spec"
-          spec.version = "1.0.3"
-        end
-      end
-
-      it 'it identifies itself as an inline dependency' do
-        @dependency.should.be.inline
-      end
-
-      it 'attaches a custom spec to the dependency, configured by the block' do
-        @dependency.specification.name.should == "my-custom-spec"
-      end
     end
 
     describe "with a hash of external source settings" do
