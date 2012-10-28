@@ -1,7 +1,8 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 describe Pod::Platform do
-  describe "by default" do
+  describe "In general" do
+
     it "returns a new Platform instance" do
       Pod::Platform.ios.should == Pod::Platform.new(:ios)
       Pod::Platform.osx.should == Pod::Platform.new(:osx)
@@ -57,7 +58,7 @@ describe Pod::Platform do
 
   end
 
-  describe "regarding supporting platforms" do
+  describe "Supporting other platforms" do
     it "supports platforms with the same operating system" do
       p1 = Pod::Platform.new(:ios)
       p2 = Pod::Platform.new(:ios)

@@ -27,7 +27,7 @@ GEM
     coderay (1.0.8)
     faraday (0.8.4)
       multipart-post (~> 1.1)
-    faraday_middleware (0.8.8)
+    faraday_middleware (0.9.0)
       faraday (>= 0.7.4, < 0.9)
     github-markup (0.7.4)
     hashie (1.2.0)

@@ -158,7 +158,7 @@ describe "Pod::Lockfile" do
     end
   end
 
-  describe "Concerning initialization from a file" do
+  describe "Initialization from a file" do
     extend SpecHelper::TemporaryDirectory
 
     it "returns nil if it can't find the initialization file" do
@@ -167,7 +167,7 @@ describe "Pod::Lockfile" do
     end
   end
 
-  describe "Concerning the identification of changes in the Podfile" do
+  describe "Comparison with a Podfile" do
     before do
       @podfile = Pod::Podfile.new do
         platform :ios

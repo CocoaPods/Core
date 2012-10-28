@@ -2,7 +2,6 @@ require 'active_support/core_ext/string/strip.rb'
 
 require 'cocoapods-core/specification/attributes'
 require 'cocoapods-core/specification/set'
-require 'cocoapods-core/specification/statistics'
 
 module Pod
 

@@ -1,6 +1,8 @@
 require File.expand_path('../spec_helper', __FILE__)
 
-describe "A Pod::Specification loaded from a podspec" do
+describe Pod::Specification do
+
+  describe " loaded from a podspec" do
   before do
     fixture('banana-lib') # ensure the archive is unpacked
     @spec = Pod::Specification.from_file(fixture('banana-lib/BananaLib.podspec'))
@@ -18,7 +20,7 @@ describe "A Pod::Specification loaded from a podspec" do
     @spec.defined_in_file.should == fixture('banana-lib/BananaLib.podspec')
   end
 
-  xit "returns the directory where the pod should be checked out to" do
+  xit "[MOVE: Sandbox] returns the directory where the pod should be checked out to" do
     @spec.pod_destroot.should == config.project_pods_root + 'BananaLib'
   end
 
@@ -614,5 +616,6 @@ describe "A Pod::Specification, concerning its attributes that support different
       @spec.activate_platform(:ios).dependencies.should == [Pod::Dependency.new('JSONKit')]
       @spec.activate_platform(:osx).dependencies.should == [Pod::Dependency.new('SSZipArchive')]
     end
+  end
   end
 end
