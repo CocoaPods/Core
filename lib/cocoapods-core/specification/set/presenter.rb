@@ -114,7 +114,7 @@ module Pod
         # TODO: improve support for non git sources.
         #
         def source_url
-          spec.source.reject {|k,_| k == :commit || k == :tag }.values.first
+          spec.source.reject { |k, _| k == :commit || k == :tag }.values.first
         end
 
         # @return [String] the platforms supported by the Pod.
@@ -152,59 +152,49 @@ module Pod
         #         Pod.
         #
         def creation_date
-          Pod::Specification::Statistics.instance.creation_date(@set)
+          Statistics.instance.creation_date(@set)
         end
 
         # @return [Integer] the GitHub likes of the repo of the Pod.
         #
         def github_watchers
-          Pod::Specification::Statistics.instance.github_watchers(@set)
+          Statistics.instance.github_watchers(@set)
         end
 
         # @return [Integer] the GitHub forks of the repo of the Pod.
         #
         def github_forks
-          Pod::Specification::Statistics.instance.github_forks(@set)
+          Statistics.instance.github_forks(@set)
         end
 
         # @return [String] the relative time of the last push of the repo the Pod.
         #
         def github_last_activity
-          distance_from_now_in_words(Pod::Specification::Statistics.instance.github_pushed_at(@set))
+          distance_from_now_in_words(Statistics.instance.github_pushed_at(@set))
         end
 
         #-----------------------------------------------------------------------#
 
-        def ==(other)
-          self.class === other && @set == other.set
-        end
-
-        def eql?(other)
-          self.class === other && name.eql?(other.name)
-        end
-
-        def hash
-          name.hash
-        end
-
         private
 
-        # Computes the distance of time
+        # Computes a human readable string that represents a past date in
+        # relative terms.
         #
-        # @param    [Time]
+        # @param    [Time, String] time
+        #           the date that should be represented.
         #
-        # @example  Output examples
+        # @example  Possible outputs
         #
         #           "less than a week ago"
         #           "15 days ago"
-        #           "1 month ago"
+        #           "3 month ago"
         #           "more than a year ago"
         #
-        # @return   [String] the dis
+        # @return   [String] a string that represents a past date.
         #
         def distance_from_now_in_words(from_time)
           return nil unless from_time
-          from_time = Time.parse(from_time)
+          from_time = Time.parse(from_time) unless from_time.is_a?(Time)
           to_time = Time.now
           distance_in_days = (((to_time - from_time).abs)/60/60/24).round
 

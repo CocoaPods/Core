@@ -47,10 +47,12 @@ describe Pod::Specification::Set::Presenter do
       @presenter.spec.name.should == 'CocoaLumberjack'
     end
 
-    xit "returns the specification authors" do
+    it "returns the specification authors" do
       @presenter.authors.should == "Robbie Hanson"
-      @presenter.spec.authors = ["Author 1, Author 2, Author 3"]
-      @presenter.authors.should == "Author 1, Author 2 and Author 3"
+      @presenter.spec.authors = ["Author 1", "Author 2"]
+      @presenter.authors.should == "Author 1 and Author 2"
+      @presenter.spec.authors = ["Author 1", "Author 2", "Author 3"]
+      @presenter.authors.should == "Author 1, Author 2, and Author 3"
     end
 
     it "returns the homepage" do
@@ -97,25 +99,29 @@ describe Pod::Specification::Set::Presenter do
 
   describe "Statistics" do
     before do
+      Pod::Spec::Set::Statistics.instance = nil
       @source = Pod::Source.new(fixture('spec-repos/master'))
       set = Pod::Spec::Set.new('CocoaLumberjack', @source)
       @presenter = Pod::Spec::Set::Presenter.new(set)
     end
 
-    xit "returns the creation date" do
-      @presenter.creation_date.should == ""
+    it "returns the creation date" do
+      @presenter.creation_date.should == Time.parse('2011-10-06 17:37:56 +0200')
     end
 
-    xit "returns the GitHub likes" do
-      @presenter.github_watchers.should == ""
+    it "returns the GitHub likes" do
+      Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'watchers' => 731 })
+      @presenter.github_watchers.should == 731
     end
 
-    xit "returns the GitHub forks" do
-      @presenter.github_forks.should == ""
+    it "returns the GitHub forks" do
+      Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'forks' => 109 })
+      @presenter.github_forks.should == 109
     end
 
-    xit "returns the GitHub last activity" do
-      @presenter.github_last_activity.should == ""
+    it "returns the GitHub last activity" do
+      Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'pushed_at' => "2012-08-01T15:54:18Z" })
+      @presenter.github_last_activity.should == "3 months ago"
     end
   end
 
@@ -124,7 +130,7 @@ describe Pod::Specification::Set::Presenter do
       @presenter = Pod::Spec::Set::Presenter.new(nil)
     end
 
-    it "returns the distance from now in words of a Time" do
+    it "represents a past date with a relative description" do
       time = (Time.now - 60 * 60 * 24).to_s
       @presenter.send(:distance_from_now_in_words, time).should == "less than a week ago"
       time = (Time.now - 60 * 60 * 24 * 15).to_s
