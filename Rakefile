@@ -153,36 +153,9 @@ namespace :spec do
     exec "bundle exec kicker -c"
   end
 
-  task :all => :unpack_fixture_tarballs do
+  task :all do
     sh "bundle exec bacon #{specs('**')}"
   end
-
-  desc "Rebuild all the fixture tarballs"
-  task :rebuild_fixture_tarballs do
-    tarballs = FileList['spec/fixtures/**/*.tar.gz']
-    tarballs.each do |tarball|
-      basename = File.basename(tarball)
-      sh "cd #{File.dirname(tarball)} && rm #{basename} && tar -zcf #{basename} #{basename[0..-8]}"
-    end
-  end
-
-  desc "Unpacks all the fixture tarballs"
-  task :unpack_fixture_tarballs do
-    tarballs = FileList['spec/fixtures/**/*.tar.gz']
-    tarballs.each do |tarball|
-      basename = File.basename(tarball)
-      Dir.chdir(File.dirname(tarball)) do
-        sh "rm -rf #{basename[0..-8]} && tar zxf #{basename}"
-      end
-    end
-  end
-
-  desc "Removes the stored VCR fixture"
-  task :clean_vcr do
-    sh "rm -f spec/fixtures/vcr/tarballs.yml"
-  end
-
-  task :clean_env => [:clean_vcr, :unpack_fixture_tarballs, "ext:cleanbuild"]
 end
 
 desc "Initializes your working copy to run the specs"
