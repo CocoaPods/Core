@@ -1,6 +1,6 @@
 require File.expand_path('../spec_helper', __FILE__)
 
-describe "Pod::Lockfile" do
+describe Pod::Lockfile do
 
   describe "In general" do
     extend SpecHelper::TemporaryDirectory

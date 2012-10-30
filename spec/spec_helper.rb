@@ -15,7 +15,6 @@ $:.unshift((ROOT + 'spec').to_s)
 require 'spec_helper/bacon'
 require 'spec_helper/fixture'
 require 'spec_helper/temporary_directory'
-require 'spec_helper/temporary_repos'
 
 require 'tmpdir'
 
