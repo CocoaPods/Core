@@ -70,20 +70,7 @@ module Pod
     #
     #             Dependency.new('RestKit', :head)
     #
-    # @note       This method allow a nil name and the raises to be more
-    #             informative.
-    #
-    # @note       Support for inline podspecs has been deprecated.
-    #
-    def initialize(name = nil, *requirements, &block)
-      if block
-        raise StandardError, "Inline specifications are deprecated. " \
-          "Please store the specification in a `podspec` file."
-      end
-      unless name
-        raise StandardError, "A dependency requires a name."
-      end
-
+    def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
         @external_source = requirements.pop
       elsif requirements.last == :head

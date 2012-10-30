@@ -34,6 +34,10 @@ module Pod
         @target_dependencies = []
       end
 
+      #-------------------------------------------------------------------------#
+
+      # !@group Attributes
+
       # @return [Array] the list of the dependencies of the target definition,
       #         excluding inherited ones.
       #
@@ -72,6 +76,10 @@ module Pod
       #
       attr_accessor :link_with
 
+      #-------------------------------------------------------------------------#
+
+      # !@group Inheritable attributes
+
       # Sets the {Platform} of the target definition.
       #
       attr_writer :platform
@@ -94,10 +102,17 @@ module Pod
         @inhibit_all_warnings || (@parent.inhibit_all_warnings? if @parent)
       end
 
+      # Sets the path of the user project this target definition should link
+      # with.
+      #
+      attr_writer :user_project_path
+
       # @return [String] the path of the project this target definition should
       #         link with.
       #
-      attr_accessor :project_path
+      def user_project_path
+        @user_project_path || (@parent.user_project_path if @parent)
+      end
 
       # @return [Hash{String => symbol}] a hash where the keys are the name of
       #         the build configurations and the values a symbol that
@@ -116,6 +131,10 @@ module Pod
         else
           "#{parent.label}-#{name}"
         end
+      end
+
+      def to_s
+        "TargetDefinition for `#{label}`"
       end
     end
   end

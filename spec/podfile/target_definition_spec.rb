@@ -75,10 +75,10 @@ describe Pod::Podfile::TargetDefinition do
       @test_def.inhibit_all_warnings?.should == true
     end
 
-    it "returns the project path" do
-      @app_def.project_path.should.be.nil
-      @app_def.project_path = 'some/path/project.xcodeproj'
-      @app_def.project_path.should == 'some/path/project.xcodeproj'
+    it "returns the user project path if specified" do
+      @app_def.user_project_path.should.be.nil
+      @app_def.user_project_path = 'some/path/project.xcodeproj'
+      @app_def.user_project_path.should == 'some/path/project.xcodeproj'
     end
 
     it "returns the project build configurations" do
@@ -89,6 +89,11 @@ describe Pod::Podfile::TargetDefinition do
 
     it "returns its label" do
       @app_def.label.should == 'Pods-MyApp'
+    end
+
+    it "returns `Pods` as the label if its name is default" do
+      target_def = Pod::Podfile::TargetDefinition.new(:default, nil)
+      target_def.label.should == 'Pods'
     end
 
     it "includes the name of the parent in the label if any" do

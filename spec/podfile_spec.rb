@@ -3,155 +3,41 @@ require File.expand_path('../spec_helper', __FILE__)
 describe Pod::Podfile do
   describe "In general" do
 
-    it "loads from a file" do
+    it "stores the path of the file it is loaded from" do
       podfile = Pod::Podfile.from_file(fixture('Podfile'))
       podfile.defined_in_file.should == fixture('Podfile')
     end
 
-    it "assigns the platform attribute to the current target" do
-      podfile = Pod::Podfile.new { platform :ios }
-      podfile.target_definitions[:default].platform.should == :ios
-    end
-
-    it "provides a default deployment target if not specified" do
-      podfile = Pod::Podfile.new { platform :ios }
-      podfile.target_definitions[:default].platform.deployment_target.should == Pod::Version.new('4.3')
-    end
-
-    xit "raise error if unsupported platform is supplied" do
-      lambda {
-        Pod::Podfile.new { platform :iOS }
-      }.should.raise Pod::Podfile::StandardError
-
-      begin
-        Pod::Podfile.new { platform :iOS }
-      rescue Pod::Podfile::StandardError => e
-        e.stubs(:podfile_line).returns("./podfile_spec.rb:1")
-        e.message.should.be =~ /podfile_spec\.rb:1/
-      end
-    end
-
-    it "adds dependencies" do
-      podfile = Pod::Podfile.new { pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1' }
-      podfile.dependencies.size.should == 2
-      podfile.dependency_by_top_level_spec_name('ASIHTTPRequest').should == Pod::Dependency.new('ASIHTTPRequest')
-      podfile.dependency_by_top_level_spec_name('SSZipArchive').should == Pod::Dependency.new('SSZipArchive', '>= 0.1')
-    end
-
-    it "adds a dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
-      podfile = Pod::Podfile.new do
-        pod 'SomeExternalPod', :git => 'GIT-URL', :commit => '1234'
-      end
-      dep = podfile.dependency_by_top_level_spec_name('SomeExternalPod')
-      dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
-    end
-
-    it "adds a subspec dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
-      podfile = Pod::Podfile.new do
-        pod 'MainSpec/FirstSubSpec', :git => 'GIT-URL', :commit => '1234'
-      end
-      dep = podfile.dependency_by_top_level_spec_name('MainSpec')
-      dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
-    end
-
-    it "adds a dependency on a library outside of a spec repo (the repo does not need to contain a podspec)" do
-      podfile = Pod::Podfile.new do
-        pod 'SomeExternalPod', :podspec => 'http://gist/SomeExternalPod.podspec'
-      end
-      dep = podfile.dependency_by_top_level_spec_name('SomeExternalPod')
-      dep.external_source.should == { :podspec => 'http://gist/SomeExternalPod.podspec' }
-    end
-
-    xit "returns all dependencies of all targets combined, which is used during resolving to ensure compatible dependencies" do
-      @podfile.dependencies.map(&:name).sort.should == %w{ ASIHTTPRequest JSONKit Reachability SSZipArchive }
-    end
-
-    it "specifies that BridgeSupport metadata should be generated" do
-      Pod::Podfile.new {}.should.not.generate_bridge_support
-      Pod::Podfile.new { generate_bridge_support! }.should.generate_bridge_support
-    end
-
-    it 'specifies that ARC compatibility flag should be generated' do
-      Pod::Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
-    end
-
-    it "stores a block that will be called with the Installer before the target integration" do
-      yielded = nil
-      Pod::Podfile.new do
-        pre_install do |installer|
-          yielded = installer
+    before do
+      @podfile = Pod::Podfile.new do
+        pod 'ASIHTTPRequest'
+        pod 'JSONKit'
+        target "sub-target" do
+          pod 'JSONKit'
+          pod 'Reachability'
+          pod 'SSZipArchive'
         end
-      end.pre_install!(:an_installer)
-      yielded.should == :an_installer
-    end
-
-    it "stores a block that will be called with the Installer instance once installation is finished (but the project is not written to disk yet)" do
-      yielded = nil
-      Pod::Podfile.new do
-        post_install do |installer|
-          yielded = installer
-        end
-      end.post_install!(:an_installer)
-      yielded.should == :an_installer
-    end
-
-    # TODO: Move to target installer, UserProjectIntegrator or Installer.
-    xit "assumes the xcode project is the only existing project in the root" do
-      podfile = Pod::Podfile.new do
-        target(:another_target) {}
       end
-
-      path = config.project_root + 'MyProject.xcodeproj'
-      Pathname.expects(:glob).with(config.project_root + '*.xcodeproj').returns([path])
-
-      podfile.target_definitions[:default].user_project.path.should == path
-      podfile.target_definitions[:another_target].user_project.path.should == path
     end
 
-    # TODO: Move to target installer, UserProjectIntegrator or Installer.
-    xit "assumes the basename of the workspace is the same as the default target's project basename" do
-      path = config.project_root + 'MyProject.xcodeproj'
-      Pathname.expects(:glob).with(config.project_root + '*.xcodeproj').returns([path])
-      Pod::Podfile.new {}.workspace.should == config.project_root + 'MyProject.xcworkspace'
-
-      Pod::Podfile.new do
-        xcodeproj 'AnotherProject.xcodeproj'
-      end.workspace.should == config.project_root + 'AnotherProject.xcworkspace'
+    it "returns the target definitions" do
+      @podfile.target_definitions.count.should == 2
+      @podfile.target_definitions[:default].name.should == :default
+      @podfile.target_definitions["sub-target"].name.should == "sub-target"
     end
 
-    xit "does not base the workspace name on the default target's project if there are multiple projects specified" do
-      Pod::Podfile.new do
-        xcodeproj 'MyProject'
-        target :another_target do
-          xcodeproj 'AnotherProject'
-        end
-      end.workspace.should == nil
+    it "returns all dependencies of all targets combined" do
+      @podfile.dependencies.map(&:name).sort.should == %w[ ASIHTTPRequest JSONKit Reachability SSZipArchive ]
     end
 
-    it "specifies the Xcode workspace to use" do
-      Pod::Podfile.new do
-        xcodeproj 'AnotherProject'
-        workspace 'MyWorkspace.xcworkspace'
-      end.workspace_path.should == 'MyWorkspace.xcworkspace'
-    end
-
-    it "appends the extension to workspaces if neede" do
-      Pod::Podfile.new do
-        xcodeproj 'AnotherProject'
-        workspace 'MyWorkspace'
-      end.workspace_path.should == 'MyWorkspace.xcworkspace'
+    it "returns the string representation" do
+      @podfile.to_s.should == 'Podfile'
     end
   end
 
-  describe "Generated from a Podfile" do
+  #-----------------------------------------------------------------------------#
 
-    it "returns whether it is empty" do
-      Pod::Podfile.new do
-      end.target_definitions[:default].should.be.empty
-      Pod::Podfile.new do
-        pod 'JSONKit'
-      end.target_definitions[:default].should.not.be.empty
-    end
+  describe "Nested target definitions" do
 
     before do
       @podfile = Pod::Podfile.new do
@@ -211,31 +97,6 @@ describe Pod::Podfile do
       target.dependencies.should == [Pod::Dependency.new('Reachability'), Pod::Dependency.new('JSONKit')]
     end
 
-    xit "returns the Xcode project that contains the target to link with" do
-      [:default, :debug, :test, :subtarget].each do |target_name|
-        target = @podfile.target_definitions[target_name]
-        target.user_project.path.to_s.should == 'iOS Project.xcodeproj'
-      end
-      [:osx_target, :nested_osx_target].each do |target_name|
-        target = @podfile.target_definitions[target_name]
-        target.user_project.path.to_s.should == 'OSX Project.xcodeproj'
-      end
-    end
-
-    # TODO: Move to target installer, UserProjectIntegrator or Installer.
-    xit "returns a Xcode project found in the working dir when no explicit project is specified" do
-      xcodeproj1 = config.project_root + '1.xcodeproj'
-      Pathname.expects(:glob).with(config.project_root + '*.xcodeproj').returns([xcodeproj1])
-      Pod::Podfile::UserProject.new.path.should == xcodeproj1
-    end
-
-    # TODO: Move to target installer, UserProjectIntegrator or Installer.
-    xit "returns `nil' if more than one Xcode project was found in the working when no explicit project is specified" do
-      xcodeproj1, xcodeproj2 = config.project_root + '1.xcodeproj', config.project_root + '2.xcodeproj'
-      Pathname.expects(:glob).with(config.project_root + '*.xcodeproj').returns([xcodeproj1, xcodeproj2])
-      Pod::Podfile::UserProject.new.path.should == nil
-    end
-
     it "leaves the name of the target, to link with, to be automatically resolved" do
       target = @podfile.target_definitions[:default]
       target.link_with.should == nil
@@ -246,66 +107,21 @@ describe Pod::Podfile do
       target.link_with.should == ['TestRunner']
     end
 
-    xit "returns the name of the Pods static library" do
-      @podfile.target_definitions[:default].lib_name.should == 'libPods.a'
-      @podfile.target_definitions[:test].lib_name.should == 'libPods-test.a'
-    end
-
-    xit "returns the name of the xcconfig file for the target" do
-      @podfile.target_definitions[:default].xcconfig_name.should == 'Pods.xcconfig'
-      @podfile.target_definitions[:default].xcconfig_path.should == 'Pods/Pods.xcconfig'
-      @podfile.target_definitions[:test].xcconfig_name.should == 'Pods-test.xcconfig'
-      @podfile.target_definitions[:test].xcconfig_path.should == 'Pods/Pods-test.xcconfig'
-    end
-
-    xit "returns the name of the 'copy resources script' file for the target" do
-      @podfile.target_definitions[:default].copy_resources_script_name.should == 'Pods-resources.sh'
-      @podfile.target_definitions[:default].copy_resources_script_path.should == 'Pods/Pods-resources.sh'
-      @podfile.target_definitions[:test].copy_resources_script_name.should == 'Pods-test-resources.sh'
-      @podfile.target_definitions[:test].copy_resources_script_path.should == 'Pods/Pods-test-resources.sh'
-    end
-
-    xit "returns the name of the 'prefix header' file for the target" do
-      @podfile.target_definitions[:default].prefix_header_name.should == 'Pods-prefix.pch'
-      @podfile.target_definitions[:test].prefix_header_name.should == 'Pods-test-prefix.pch'
-    end
-
-    xit "returns the name of the BridgeSupport file for the target" do
-      @podfile.target_definitions[:default].bridge_support_name.should == 'Pods.bridgesupport'
-      @podfile.target_definitions[:test].bridge_support_name.should == 'Pods-test.bridgesupport'
-    end
-
     it "returns the platform of the target" do
       @podfile.target_definitions[:default].platform.should == :ios
       @podfile.target_definitions[:test].platform.should == :ios
       @podfile.target_definitions[:osx_target].platform.should == :osx
     end
 
-    it "assigs a deployment target to the platforms if not specified" do
+    it "assigns a deployment target to the platforms if not specified" do
       @podfile.target_definitions[:default].platform.deployment_target.to_s.should == '4.3'
       @podfile.target_definitions[:test].platform.deployment_target.to_s.should == '4.3'
       @podfile.target_definitions[:osx_target].platform.deployment_target.to_s.should == '10.6'
     end
 
-    it "autmatically marks a target as exclusive if the parent platform doesn't match" do
+    it "automatically marks a target as exclusive if the parent platform doesn't match" do
       @podfile.target_definitions[:osx_target].should.be.exclusive
       @podfile.target_definitions[:nested_osx_target].should.not.be.exclusive
-    end
-
-    xit "returns the specified configurations and wether it should be based on a debug or a release build" do
-      Pod::Podfile::UserProject.any_instance.stubs(:project)
-      all = { 'Release' => :release, 'Debug' => :debug, 'Test' => :debug }
-      @podfile.target_definitions[:default].user_project.build_configurations.should == all.merge('iOS App Store' => :release)
-      @podfile.target_definitions[:test].user_project.build_configurations.should == all.merge('iOS App Store' => :release)
-      @podfile.target_definitions[:osx_target].user_project.build_configurations.should == all.merge('Mac App Store' => :release)
-      @podfile.target_definitions[:nested_osx_target].user_project.build_configurations.should == all.merge('Mac App Store' => :release)
-      @podfile.user_build_configurations.should == all.merge('iOS App Store' => :release, 'Mac App Store' => :release)
-    end
-
-    # TODO: this check should not be here
-    xit "defaults, for unspecified configurations, to a release build" do
-      project = Pod::Podfile::UserProject.new(fixture('SampleProject/SampleProject.xcodeproj'), 'Test' => :debug)
-      project.build_configurations.should == { 'Release' => :release, 'Debug' => :debug, 'Test' => :debug, 'App Store' => :release }
     end
 
     it "specifies that the inhibit all warnings flag should be added to the target's build settings" do
@@ -313,51 +129,233 @@ describe Pod::Podfile do
       @podfile.target_definitions[:test].should.inhibit_all_warnings
       @podfile.target_definitions[:subtarget].should.inhibit_all_warnings
     end
+
+    it "returns the Xcode project that contains the target to link with" do
+      [:default, :debug, :test, :subtarget].each do |target_name|
+        target = @podfile.target_definitions[target_name]
+        target.user_project_path.to_s.should == 'iOS Project.xcodeproj'
+      end
+      [:osx_target, :nested_osx_target].each do |target_name|
+        target = @podfile.target_definitions[target_name]
+        target.user_project_path.to_s.should == 'OSX Project.xcodeproj'
+      end
+    end
   end
 
-  describe "with an Xcode project that's not in the project_root" do
+  #-----------------------------------------------------------------------------#
+
+  describe "DSL - Podfile attributes" do
+
+    it "allows to specify a target definition" do
+      podfile = Pod::Podfile.new do
+        target :tests do
+          pod 'OCMock'
+        end
+      end
+      podfile.target_definitions[:tests].name.should == :tests
+    end
+
+    it "specifies the Xcode workspace to use" do
+      Pod::Podfile.new do
+        workspace 'MyWorkspace.xcworkspace'
+      end.workspace_path.should == 'MyWorkspace.xcworkspace'
+    end
+
+    it "appends the extension to the specified workspaces if needed" do
+      Pod::Podfile.new do
+        workspace 'MyWorkspace'
+      end.workspace_path.should == 'MyWorkspace.xcworkspace'
+    end
+
+    it "stores a block that will be called before integrating the targets" do
+      yielded = nil
+      Pod::Podfile.new do
+        pre_install do |installer|
+          yielded = installer
+        end
+      end.pre_install!(:an_installer)
+      yielded.should == :an_installer
+    end
+
+    it "indicates if the pre install hook was executed" do
+      Pod::Podfile.new {}.pre_install!(:an_installer).should.be == false
+      result = Pod::Podfile.new { pre_install { |installer| } }.pre_install!(:an_installer)
+      result.should.be == true
+    end
+
+    it "stores a block that will be called with the Installer instance once installation is finished" do
+      yielded = nil
+      Pod::Podfile.new do
+        post_install do |installer|
+          yielded = installer
+        end
+      end.post_install!(:an_installer)
+      yielded.should == :an_installer
+    end
+
+    it "indicates if the pod install hook was executed" do
+      Pod::Podfile.new {}.post_install!(:an_installer).should.be == false
+      result = Pod::Podfile.new { post_install { |installer| } }.post_install!(:an_installer)
+      result.should.be == true
+    end
+
+    it "specifies that BridgeSupport metadata should be generated" do
+      Pod::Podfile.new {}.should.not.generate_bridge_support
+      Pod::Podfile.new { generate_bridge_support! }.should.generate_bridge_support
+    end
+
+    it 'specifies that ARC compatibility flag should be generated' do
+      Pod::Podfile.new {}.should.not.set_arc_compatibility_flag
+      Pod::Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
+    end
+  end
+
+  #-----------------------------------------------------------------------------#
+
+  describe "DSL - Target definition attributes" do
+
+    it "allows to specify a platform" do
+      podfile = Pod::Podfile.new do
+        platform :ios, "6.0"
+        target :osx_target do
+          platform :osx, "10.8"
+        end
+      end
+      podfile.target_definitions[:default].platform.should == Pod::Platform.new(:ios, "6.0")
+      podfile.target_definitions[:osx_target].platform.should == Pod::Platform.new(:osx, "10.8")
+    end
+
+    it "provides a default deployment target if not specified" do
+      podfile = Pod::Podfile.new { platform :ios }
+      podfile.target_definitions[:default].platform.deployment_target.should == Pod::Version.new('4.3')
+      podfile = Pod::Podfile.new { platform :osx }
+      podfile.target_definitions[:default].platform.deployment_target.should == Pod::Version.new('10.6')
+    end
+
+
+    it "adds dependencies" do
+      podfile = Pod::Podfile.new do
+        pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
+      end
+      podfile.dependencies.size.should == 2
+      podfile.dependencies.find {|d| d.pod_name == 'ASIHTTPRequest'}.should == Pod::Dependency.new('ASIHTTPRequest')
+      podfile.dependencies.find {|d| d.pod_name == 'SSZipArchive'}.should   == Pod::Dependency.new('SSZipArchive', '>= 0.1')
+    end
+
+    it "adds a dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
+      podfile = Pod::Podfile.new { pod 'SomeExternalPod', :git => 'GIT-URL', :commit => '1234' }
+      dep = podfile.dependencies.find {|d| d.pod_name == 'SomeExternalPod'}
+      dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
+    end
+
+    it "adds a subspec dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
+      podfile = Pod::Podfile.new { pod 'MainSpec/FirstSubSpec', :git => 'GIT-URL', :commit => '1234' }
+      dep = podfile.dependencies.find {|d| d.pod_name == 'MainSpec'}
+      dep.name.should == 'MainSpec/FirstSubSpec'
+      dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
+    end
+
+    it "adds a dependency on a library outside of a spec repo (the repo does not need to contain a podspec)" do
+      podfile = Pod::Podfile.new do
+        pod 'SomeExternalPod', :podspec => 'http://gist/SomeExternalPod.podspec'
+      end
+      dep = podfile.dependencies.find {|d| d.pod_name == 'SomeExternalPod'}
+      dep.external_source.should == { :podspec => 'http://gist/SomeExternalPod.podspec' }
+    end
+
+    it "returns whether a target definition it is empty" do
+      Pod::Podfile.new do
+      end.target_definitions[:default].should.be.empty
+      Pod::Podfile.new do
+        pod 'JSONKit'
+      end.target_definitions[:default].should.not.be.empty
+    end
+
+    it "it can use use the dependencies of the first podspec in the directory of the podfile" do
+      podfile = Pod::Podfile.new(fixture('banana-lib/Podfile')) do
+        platform :ios
+        podspec
+      end
+      podfile.dependencies.map(&:name).should == %w[ monkey ]
+    end
+
+    it "it can use use the dependencies of the podspec with the given path" do
+      banalib_path = fixture('banana-lib/BananaLib.podspec').to_s
+      podfile = Pod::Podfile.new do
+        platform :ios
+        podspec :path => banalib_path
+      end
+      podfile.dependencies.map(&:name).should == %w[ monkey ]
+    end
+
+    it "it can use use the dependencies of the podspec with the given name" do
+      podfile = Pod::Podfile.new(fixture('banana-lib/Podfile')) do
+        platform :ios
+        podspec :name => 'BananaLib'
+      end
+      podfile.dependencies.map(&:name).should == %w[ monkey ]
+    end
+  end
+
+  #-----------------------------------------------------------------------------#
+
+  describe "Exceptions" do
+
+    extend SpecHelper::TemporaryDirectory
+
     before do
-      @target_definition = @podfile.target_definitions[:default]
-      @target_definition.user_project.stubs(:path).returns('subdir/iOS Project.xcodeproj')
+      @podfile_file = temporary_directory + 'Podfile'
+      @podfile_content = [ "platform :ios" ]
     end
 
-    # TODO: This should be moved
-    xit "returns the $(PODS_ROOT) relative to the project's $(SRCROOT)" do
-      @target_definition.pods_root.should == 'Pods'
+    def write_podfile
+      @podfile_content * "\n"
+      File.open(@podfile_file, 'w') { |f| f.write(@podfile_content * "\n") }
     end
 
-    # TODO: This should be moved
-    xit "simply returns the $(PODS_ROOT) path if no xcodeproj file is available and doesn't needs to integrate" do
-      # config.integrate_targets.should.equal true
-      # config.integrate_targets = false
-      @target_definition.pods_root.should == 'Pods'
-      @target_definition.user_project.stubs(:path).returns(nil)
-      @target_definition.pods_root.should == 'Pods'
-      # config.integrate_targets = true
+    it "includes the line of the podfile that generated the exception" do
+      @podfile_content = [ "platform :windows", "pod 'libPusher'" ]
+      write_podfile
+      begin
+        Pod::Podfile.from_file(@podfile_file)
+      rescue Pod::Podfile::StandardError => e
+        e.message.should.be =~ /from .*\/tmp\/Podfile:1/
+        e.message.should.be =~ /platform :windows/
+        e.message.should.be =~ /pod 'libPusher'/
+      end
     end
 
-    # TODO: This should be moved
-    xit "returns the xcconfig file path relative to the project's $(SRCROOT)" do
-      @target_definition.xcconfig_relative_path.should == '../Pods/Pods.xcconfig'
+    it "informs if a platform is unsupported" do
+      @podfile_content = [ "platform :windows" ]
+      write_podfile
+      begin
+        Pod::Podfile.from_file(@podfile_file)
+      rescue Pod::Podfile::StandardError => e
+        e.message.should.be =~ /Unsupported platform `windows`/
+        e.message.should.be =~ /Podfile:1/
+      end
     end
 
-    # TODO: This should be moved
-    xit "returns the 'copy resources script' path relative to the project's $(SRCROOT)" do
-      @target_definition.copy_resources_script_relative_path.should == '${SRCROOT}/../Pods/Pods-resources.sh'
-    end
-  end
-
-  describe "Podspec method" do
-    xit "it can use use the dependencies of a podspec" do
-
-    end
-
-    xit "it allows to specify the name of a podspec" do
-
+    it "informs that inline podspecs are deprecated" do
+      @podfile_content << "pod do |s|" << "  s.name = 'mypod'" << "end"
+      write_podfile
+      begin
+        Pod::Podfile.from_file(@podfile_file)
+      rescue Pod::Podfile::StandardError => e
+        e.message.should.be =~ /Inline specifications are deprecated/
+        e.message.should.be =~ /Podfile:2/
+      end
     end
 
-    xit "it allows to specify the path of a podspec" do
-
+    it "informs that a dependency needs a name" do
+      @podfile_content << "pod"
+      write_podfile
+      begin
+        Pod::Podfile.from_file(@podfile_file)
+      rescue Pod::Podfile::StandardError => e
+        e.message.should.be =~ /A dependency requires a name/
+        e.message.should.be =~ /Podfile:2/
+      end
     end
   end
 end

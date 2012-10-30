@@ -39,10 +39,6 @@ module Pod
         dep1.should == dep2
         dep1.should.not == dep3
       end
-
-      it 'raises if created without either valid name/version/external requirements or a block' do
-        lambda { Dependency.new }.should.raise Pod::StandardError
-      end
     end
 
     describe "External source" do
