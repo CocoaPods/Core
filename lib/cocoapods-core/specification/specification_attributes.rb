@@ -23,15 +23,15 @@ module Pod
 
       # @param    [Symbol] name @see name
       #
-      # @options  options [String] :description
-      # @options  options [String] :type
-      # @options  options [String] :is_required
-      # @options  options [String] :root_only
-      # @options  options [String] :multi_platform
-      # @options  options [String] :singularize
-      # @options  options [String] :inheritance
-      # @options  options [String] :example
-      # @options  options [String] :examples
+      # @option  options [String] :description
+      # @option  options [String] :type
+      # @option  options [String] :is_required
+      # @option  options [String] :root_only
+      # @option  options [String] :multi_platform
+      # @option  options [String] :singularize
+      # @option  options [String] :inheritance
+      # @option  options [String] :example
+      # @option  options [String] :examples
       #
       def initialize(name, options)
         @name = name
@@ -41,13 +41,19 @@ module Pod
         @inheritance          = options.delete(:inheritance)
         @keys                 = options.delete(:keys)
 
+        @default_value        = options.delete(:default_value)
+        @ios_default          = options.delete(:ios_default)
+        @osx_default          = options.delete(:osx_default)
+        @initial_value        = options.delete(:initial_value) {[]}
+
+        @reader_name          = options.delete(:reader_name)
+        @writer_name          = options.delete(:writer_name)
+        @ivar_name            = options.delete(:ivar_name)
+
+        @file_patterns         = options.delete(:file_patterns) {false}
+
         @root_only            = options.delete(:root_only) { false }
         @multi_platform       = options.delete(:multi_platform) { true }
-
-        @examples = []
-        @examples << (options.delete(:example))
-        @examples.concat(options.delete(:examples) || [])
-        @examples = @examples.compact
 
         raise StandardError, "Unrecognized options for specification attribute: #{options}" unless options.empty?
       end
@@ -58,36 +64,41 @@ module Pod
       attr_reader :multi_platform
       attr_reader :singularize
       attr_reader :inheritance
-      attr_reader :examples
       attr_reader :keys
+      attr_reader :initial_value
+      attr_reader :default_value
+
+      def file_patterns?
+        @file_patterns
+      end
 
       # Initializes the attribute with the initial value or the defaul in the
       # given specification.
       #
       def initialize_on(spec)
         if multi_platform
-          default_value = []
-          initial_value = Spec::PLATFORMS.inject(Hash.new) { | memo, platform | memo[platform] = default_value; memo }
-          spec.instance_variable_set(ivar, initial_value)
+          default_value = default_value || initial_value
+          initial_value_per_platform = Spec::PLATFORMS.inject(Hash.new) { | memo, platform | memo[platform] = default_value; memo }
+          spec.instance_variable_set(ivar, initial_value_per_platform)
         end
       end
 
       # @return [String] the instance variable associated with the attribute.
       #
       def ivar
-        "@#{name}"
+        @ivar_name || "@#{name}"
       end
 
       # @return [Symbol] the name of the getter method for the attribute.
       #
       def reader_name
-        name
+        @reader_name || name
       end
 
       # @return [String] the name of the setter method for the attribute.
       #
       def writer_name
-        "#{name}="
+        @writer_name || "#{name}="
       end
 
       # @return [String] an alised attribute writer offered for convenience on
@@ -108,36 +119,46 @@ module Pod
 
     module Attributes
 
+      #
+      #
       def attribute(name, options)
-
         attrb = Attribute.new(name, options)
         @attributes << attrb
 
         # reader
         define_method(attrb.reader_name) do
-          # multi-platform
           if attrb.multi_platform
             active_plaform_check
-            # first defined
             if attrb.inheritance == :first_defined
-              ivar_value = instance_variable_get("@#{attr}")[active_platform]
+              ivar_value = instance_variable_get(attrb.ivar)[active_platform]
+              ivar_value || (@parent.send(attrb.reader_name) if @parent)
+            elsif attrb.inheritance == :merge
+              ivar_value = instance_variable_get(attrb.ivar)[active_platform]
               ivar_value.nil? ? (@parent.send(attr) if @parent) : ivar_value
-            # inherited
-            elsif attrb.inheritance == :inherited
-              ivar_value = instance_variable_get("@#{attr}")[active_platform]
-              @parent ? @parent.send(attr) + ivar_value : ( ivar_value )
+            else
+              instance_variable_get(attrb.ivar)[active_platform]
             end
-          # no multi-platform
           else
-            instance_variable_get(attrb.ivar)
-            # @parent ? top_level_parent.send(attr) : ( read_lambda ? read_lambda.call(self, ivar) : ivar )
+            if attrb.inheritance == :first_defined
+              ivar_value = instance_variable_get(attrb.ivar)
+              ivar_value || (@parent.send(attrb.reader_name) if @parent)
+            else
+              instance_variable_get(attrb.ivar)
+            end
           end
         end
 
         # writer
         define_method(attrb.writer_name) do |value|
-          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attrb.root_only && parent
-          instance_variable_set(attrb.ivar, value);
+          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attrb.root_only && !root_spec
+          if attrb.multi_platform
+            ivar_value = instance_variable_get(attrb.ivar)
+            @define_for_platforms.each do |platform|
+              ivar_value[platform] = value
+            end
+          else
+            instance_variable_set(attrb.ivar, value);
+          end
         end
 
         alias_method(attrb.writer_alias, attrb.writer_name) if attrb.writer_alias

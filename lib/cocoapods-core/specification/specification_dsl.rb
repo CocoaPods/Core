@@ -19,7 +19,7 @@ module Pod
       :type           => String,
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
 
     # @return [String] the name of the specification including the names of the
@@ -44,7 +44,7 @@ module Pod
       :type           => String,
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
 
     # @return [Version] the version of the Pod.
@@ -72,10 +72,10 @@ module Pod
     #   @param [String, Hash{String=>String}] authors
     #
     attribute :authors, {
-      :type           => [ String, Hash ],
+      :type           => [ String, Array, Hash ],
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
       :singularize    => true,
     }
 
@@ -83,16 +83,21 @@ module Pod
     #         address as the values.
     #
     def authors
-      list = @authors.flatten
-      unless list.first.is_a?(Hash)
-        @authors = list.last.is_a?(Hash) ? list.pop : {}
-        list.each { |name| @authors[name] = nil }
+      if @authors.is_a?(Hash)
+        @authors
+      elsif @authors.is_a?(Array)
+        result = {}
+        @authors.each { |name| result[name] = nil }
+        result
+      elsif @authors.is_a?(String)
+        { @authors => nil }
       end
-      @authors || list.first
     end
 
     #------------------#
 
+    # The keys accepted by the license attribute.
+    #
     LICENSE_KEYS = [ :type, :file, :text ]
 
     # @!method license=(license)
@@ -121,7 +126,7 @@ module Pod
       :keys           => LICENSE_KEYS,
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
 
     # @return [Hash] a hash containing information about the license of the
@@ -129,7 +134,7 @@ module Pod
     #
     def license
       license = ( @license.kind_of? String ) ? { :type => @license } : @license
-      license[:text] = license[:text].strip_heredoc if license[:text]
+      license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '') if license[:text]
       license
     end
 
@@ -152,7 +157,7 @@ module Pod
       :type           => String,
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
 
     #------------------#
@@ -186,10 +191,10 @@ module Pod
     #   @return [Hash{Symbol=>String}]
     #
     attribute :source, {
-      :type           => String,
+      :type           => Hash,
       :keys           => SOURCE_KEYS,
       :is_required    => true,
-      :root_only      => false,
+      :root_only      => true,
       :multi_platform => false,
     }
 
@@ -212,7 +217,7 @@ module Pod
       :type           => String,
       :is_required    => true,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
 
     #------------------#
@@ -238,8 +243,12 @@ module Pod
     attribute :description, {
       :type           => String,
       :multi_platform => false,
-      :root_only      => false,
+      :root_only      => true,
     }
+
+    def description
+      @description.strip_heredoc
+    end
 
     #------------------#
 
@@ -260,7 +269,7 @@ module Pod
     #
     attribute :documentation, {
       :type           => Hash,
-      :root_only      => false,
+      :root_only      => true,
       :multi_platform => false,
     }
 
@@ -299,9 +308,11 @@ module Pod
     # @param  [String] deployment_target
     #         The deployment target of platform.
     #
-    def platform=(name, deployment_target = nil)
+    def platform=(name_and_deployment_target)
+      name = name_and_deployment_target.first
+      deployment_target = name_and_deployment_target.last
       unless PLATFORMS.include?(name)
-        raise StandardError, "Unsupported platform `#{name}` the available values are `#{PLATFORMS}`"
+        raise StandardError, "Unsupported platform `#{name}` the available names are `#{PLATFORMS}`"
       end
       @platform = Platform.new(name, deployment_target)
     end
@@ -313,6 +324,7 @@ module Pod
     attribute :deployment_target, {
       :type        => String,
       :inheritance => :first_defined,
+      :initial_value => nil,
     }
 
     # The deployment targets for the platforms of the specification.
@@ -336,6 +348,20 @@ module Pod
       @deployment_target[@define_for_platforms.first] = version
     end
 
+    # @return [Hash{Symbol=>String}] the deployment targets for each available
+    #         platform.
+    #
+    # @note   If a platform is specified for the subspec it takes the
+    #         precedence over any other values. If not platform is specified,
+    #         first is checked if any deployment target is specified by the
+    #         spec, and if needed the call is forwarded to the parent.
+    #
+    def deployment_targets
+      targets = { @platform.name => @platform.deployment_target } if @platform && @platform.deployment_target
+      targets ||= @deployment_target unless @deployment_target == { :osx=>nil, :ios=>nil }
+      targets || (parent.deployment_targets if parent) || {}
+    end
+
     # @return [Array<Platform>] the platforms where the module of code
     #         described by the specification is supported on.
     #
@@ -343,161 +369,45 @@ module Pod
     #         platforms.
     #
     def available_platforms
-      if platform
-        [ platform ]
-      else
-        PLATFORMS.map { |name| Platform.new(name, deployment_target[name]) }
-      end
+      names = platform ? [ platform.name ] : PLATFORMS
+      names.map { |name| Platform.new(name, deployment_targets[name]) }
     end
 
     #---------------------------------------------------------------------------#
 
     # !@group DSL: Regular attributes
 
-    # TODO
-    attr_accessor :preferred_dependency
 
-    #---------------------------------------------------------------------------#
-
-    # !@group DSL: File patterns attributes
-
-    def self.pattern_list(patterns)
-      if patterns.is_a?(Array) && (!defined?(Rake) || !patterns.is_a?(Rake::FileList))
-        patterns
-      else
-        [patterns]
-      end
-    end
-
-    def pattern_list(patterns)
-      if patterns.is_a?(Array) && (!defined?(Rake) || !patterns.is_a?(Rake::FileList))
-        patterns
-      else
-        [patterns]
-      end
-    end
-
-    #------------------#
-
-    # @!method source_files=(source_files)
+    # A list of frameworks that the client application needs to link against.
     #
-    #   The source files of the specification.
-    #
-    #   @example
-    #     "Classes/**/*.{h,m}"
-    #
-    #   @example
-    #     "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
-    #
-    #   @param  [String, Array<String>] source_files
-    #
-    # @!method source_files
-    #
-    #   @return [Array<String>, FileList]
-    #
-    attribute :source_files, {
+    attribute :frameworks, {
       :inheritance => :merge,
-      :type        => String,
-      # :default     => 'Classes/**/*.{h,m}',
+      :singularize => true
     }
-
-    def set_source_files(pattern)
-      @source_files = pattern_list(pattern)
-    end
 
     #------------------#
 
-    # @!method exclude_source_files=(exclude_source_files)
+    # A list of frameworks that the client application needs to weakly link against.
     #
-    #   The pattern to ignore source files.
-    #
-    #   @example iOS
-    #     "Classes/osx"
-    #
-    #   @example
-    #     "Classes/**/unused.{h,m}"
-    #
-    #   @param  [String, Array<String>] exclude_source_files
-    #
-    # @!method exclude_source_files
-    #
-    #   @return [Array<String>, FileList]
-    #
-    attribute :exclude_source_files, {
+    attribute :weak_frameworks, {
       :inheritance => :merge,
-      :type        => String,
-      # :description          => 'A patter of files that should be excluded from the source files.',
-      :example        => '"Classes/**/unused.{h,m}"',
-      # :ios_default    => 'Classes/osx',
-      # :osx_default    => 'Classes/ios',
-      :multi_platform => true,
+      :singularize => true
     }
-
-    def set_exclude_source_files(pattern)
-      @set_exclude_source_files = pattern_list(pattern)
-    end
 
     #------------------#
 
-    attribute :public_header_files, {
-      :inheritance          => :merge,
-      :type                 => String,
-      # :description          => 'A pattern of files that should be used as public headers.',
-      :example              => '"Classes/{public_header,other_public_header}.h"',
-      :multi_platform       => true,
+    # A list of libraries that the client application needs to link against.
+    #
+    attribute :libraries, {
+      :inheritance => :merge,
+      :singularize => true
     }
 
-    def set_public_header_files(pattern)
-      @public_header_files = pattern_list(pattern)
-    end
-
     #------------------#
-
-    # @todo allow for subspecs?
-    #
-    pltf_chained_attr_accessor  :resources,                   lambda {|value, current| pattern_list(value) }
-    pltf_chained_attr_accessor  :preserve_paths,              lambda {|value, current| pattern_list(value) } # Paths that should not be cleaned
-    pltf_chained_attr_accessor  :exclude_header_search_paths, lambda {|value, current| pattern_list(value) } # Headers to be excluded from being added to search paths (RestKit)
-    pltf_chained_attr_accessor  :frameworks,                  lambda {|value, current| (current << value).flatten }
-    pltf_chained_attr_accessor  :weak_frameworks,             lambda {|value, current| (current << value).flatten }
-    pltf_chained_attr_accessor  :libraries,                   lambda {|value, current| (current << value).flatten }
-
-    alias_method :resource=,        :resources=
-    alias_method :preserve_path=,   :preserve_paths=
-    alias_method :framework=,       :frameworks=
-    alias_method :weak_framework=,  :weak_frameworks=
-    alias_method :library=,         :libraries=
-
-    top_attr_accessor :prefix_header_file,  lambda { |file| Pathname.new(file) }
-    top_attr_accessor :prefix_header_contents
-
-
-    # @!method requires_arc=
-    #
-    # @abstract Wether the `-fobjc-arc' flag should be added to the compiler
-    #   flags.
-    #
-    # @param [Bool] Wether the source files require ARC.
-    #
-    platform_attr_writer :requires_arc
-    pltf_first_defined_attr_reader :requires_arc
-
-    # @!method header_dir=
-    #
-    # @abstract The directory where to name space the headers files of
-    #   the specification.
-    #
-    # @param [String] The headers directory.
-    #
-    platform_attr_writer           :header_dir, lambda { |dir, _| Pathname.new(dir) }
-    pltf_first_defined_attr_reader :header_dir
-
-    # If not provided the headers files are flattened
-    #
-    platform_attr_writer           :header_mappings_dir, lambda { |file, _| Pathname.new(file) }
-    pltf_first_defined_attr_reader :header_mappings_dir
 
     # @!method xcconfig=
+    #
+    # Any flag to add to final xcconfig file.
     #
     platform_attr_writer :xcconfig, lambda {|value, current| current.tap { |c| c.merge!(value) } }
     pltf_first_defined_attr_reader :xcconfig
@@ -535,26 +445,169 @@ module Pod
 
     platform_attr_writer :compiler_flags, lambda {|value, current| current << value }
 
-    attribute :dependency, {
-      :inheritance          => :merge,
-      :type                 => [ String, Array ],
-      :multi_platform       => true,
+    #------------------#
+
+    # TODO allow for subspecs
+    top_attr_accessor :prefix_header_file,  lambda { |file| Pathname.new(file) }
+    top_attr_accessor :prefix_header_contents
+
+    #------------------#
+
+    # @!method requires_arc=
+    #
+    # @abstract Wether the `-fobjc-arc' flag should be added to the compiler
+    #   flags.
+    #
+    # @param [Bool] Wether the source files require ARC.
+    #
+    platform_attr_writer :requires_arc
+    pltf_first_defined_attr_reader :requires_arc
+
+    #------------------#
+
+    # @!method header_dir=
+    #
+    # @abstract The directory where to name space the headers files of
+    #   the specification.
+    #
+    # @param [String] The headers directory.
+    #
+    platform_attr_writer           :header_dir, lambda { |dir, _| Pathname.new(dir) }
+    pltf_first_defined_attr_reader :header_dir
+
+    #------------------#
+
+    # If not provided the headers files are flattened
+    #
+    platform_attr_writer           :header_mappings_dir, lambda { |file, _| Pathname.new(file) }
+    pltf_first_defined_attr_reader :header_mappings_dir
+
+    #---------------------------------------------------------------------------#
+
+    # !@group DSL: File patterns attributes
+
+    # @!method source_files=(source_files)
+    #
+    #   The source files of the specification.
+    #
+    #   @example
+    #     "Classes/**/*.{h,m}"
+    #
+    #   @example
+    #     "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
+    #
+    #   @param  [String, Array<String>] source_files
+    #
+    # @!method source_files
+    #
+    #   @return [Array<String>, FileList]
+    #
+    attribute :source_files, {
+      :file_patterns => true,
+      :default_value => 'Classes/**/*.{h,m}',
     }
 
-    def dependency(*name_and_version_requirements)
-      name, *version_requirements = name_and_version_requirements.flatten
-      raise StandardError, "A specification can't require self as a subspec" if name == self.name
-      raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
-      dep = Dependency.new(name, *version_requirements)
-      @define_for_platforms.each do |platform|
-        @dependencies[platform] << dep
-      end
-      dep
-    end
+    #------------------#
+
+    # @!method exclude_source_files=(exclude_source_files)
+    #
+    #   A pattern of files that should be excluded from the source files.
+    #
+    #   @example iOS
+    #     "Classes/osx"
+    #
+    #   @example
+    #     "Classes/**/unused.{h,m}"
+    #
+    #   @param  [String, Array<String>] exclude_source_files
+    #
+    # @!method exclude_source_files
+    #
+    #   @return [Array<String>, Rake::FileList]
+    #
+    attribute :exclude_source_files, {
+      :file_patterns => true,
+      :ios_default   => 'Classes/osx',
+      :osx_default   => 'Classes/ios',
+    }
+
+    #------------------#
+
+    # @!method public_header_files=(public_header_files)
+    #
+    #   A pattern of files that should be used as public headers.
+    #
+    #   @example
+    #     "Resources/*.png"
+    #
+    #   @param  [String, Array<String>] public_header_files
+    #
+    # @!method public_header_files
+    #
+    #   @return [Array<String>, FileList]
+    #
+    attribute :public_header_files, {
+      :file_patterns => true,
+    }
+
+    #------------------#
+
+    # @!method resources=(resources)
+    #
+    #   A list of resources. These are copied into the target bundle with a
+    #   build phase script.
+    #
+    #   @example
+    #     "Resources/*.png"
+    #
+    #   @param  [String, Array<String>] resources
+    #
+    # @!method resources
+    #
+    #   @return [Array<String>, FileList]
+    #
+    attribute :resources, {
+      :file_patterns => true,
+      :default_value => 'Resources/**/*',
+      :singularize   => true
+    }
+
+    #------------------#
+
+    # @!method preserve_paths=(preserve_paths)
+    #
+    #   Any file that should not be cleaned (CocoaPods cleans all the unused
+    #   files by default).
+    #
+    #   @example
+    #     "IMPORTANT.txt"
+    #
+    #   @param  [String, Array<String>] preserve_paths
+    #
+    # @!method preserve_paths
+    #
+    #   @return [Array<String>, FileList]
+    #
+    attribute :preserve_paths, {
+      :file_patterns => true,
+      :singularize   => true
+    }
+
+    #------------------#
+
+    # Headers that should not be visible to the Pods project.
+    #
+    # TODO: should this be called exclude headers?
+    #
+    attribute :exclude_header_search_paths, {
+      :file_patterns => true,
+    }
 
     #---------------------------------------------------------------------------#
 
     # !@group Hooks
+
+    # TODO: hooks should appear in the documentation as well.
 
     # This method takes a header path and returns the location it should have
     # in the pod's header dir.
@@ -605,9 +658,43 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Subspecs
+    # !@group Dependencies & Subspecs
 
+    # @!method subspecs
     #
+    #   @return [Array<Specification>] the list of the children subspecs of the
+    #           Specification.
+    #
+    attribute :subspec, {
+      :inheritance    => :merge,
+      :type           => String,
+      :writer_name    => :subspec,
+      :reader_name    => :subspecs,
+      :ivar_name      => "@subspecs"
+    }
+
+    # Specification for a module of the Pod. A specification automaically
+    # iherits as a dependency all it children subspecs.
+    #
+    # Subspec also inherits values from their parents so common values for
+    # attributes can be specified in the ancestors.
+    #
+    # @example
+    #
+    #   subspec "core" do |sp|
+    #     sp.source_files = "Classes/Core"
+    #   end
+    #
+    #   subspec "optional" do |sp|
+    #     sp.source_files = "Classes/BloatedClassesThatNobodyUses"
+    #   end
+    #
+    # @example
+    #
+    #   subspec "Subspec" do |sp|
+    #     sp.subspec "resources" do |ssp|
+    #     end
+    #   end
     #
     def subspec(name, &block)
       subspec = Specification.new(self, name, &block)
@@ -615,9 +702,55 @@ module Pod
       subspec
     end
 
+    # @!method preferred_dependency=(subspec_name)
+    #
+    #   The name of the subspec that should be used as preferred dependency.
+    #   This is useful in case there are incompatible subspecs or a subspec
+    #   provides components that are rarely used.
+    #
+    #   @example
+    #     'Pod/default_subspec'
+    #
+    #   @param  [String] subspec_name
+    #
+    # @!method preferred_dependency
+    #
+    #   @return [String] the name of the subspec that should be inherited as
+    #           dependency.
+    #
+    attribute :preferred_dependency, {
+      :type => String,
+      :initial_value => nil,
+    }
+
+    #------------------#
+
+    # @!method dependency
+    #
+    attribute :dependency, {
+      :inheritance    => :merge,
+      :type           => [ String, Array ],
+      :writer_name    => :dependency,
+      :reader_name    => :dependencies,
+      :ivar_name      => "@dependencies"
+    }
+
     #
     #
-    attr_reader :subspecs
+    def dependency(*name_and_version_requirements)
+      name, *version_requirements = name_and_version_requirements.flatten
+      raise StandardError, "A specification can't require self as a subspec" if name == self.name
+      raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+      dep = Dependency.new(name, *version_requirements)
+      @define_for_platforms.each do |platform|
+        @dependencies[platform] << dep
+      end
+      dep
+    end
+
+    #---------------------------------------------------------------------------#
+
+    # !@group DSL: Multi-Platform support
 
     # Provides support for specifying iOS attributes.
     #

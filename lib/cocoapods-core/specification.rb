@@ -1,21 +1,8 @@
 require 'active_support/core_ext/string/strip.rb'
 
-require 'cocoapods-core/specification/attributes'
 require 'cocoapods-core/specification/set'
 
 module Pod
-
-  # Evaluates the file at the given path in the namespace of the Pod module.
-  #
-  # @return [Object] it can return any object but, is expected to be called on
-  #         `podspec` files that should return a #{Specification}.
-  #
-  def self._eval_podspec(path)
-    string = File.open(path, 'r:utf-8')  { |f| f.read }
-    # Work around for Rubinius incomplete encoding in 1.9 mode
-    string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-    eval(string, nil, path.to_s)
-  end
 
   # The {Specification} provides a DSL to describe a Pod. A pod is defined as a
   # library originating from a source. A specification can support detailed
@@ -25,8 +12,9 @@ module Pod
   #
   class Specification
 
-    extend Pod::Specification::Attributes
-    require 'cocoapods-core/specification/dsl'
+    require 'cocoapods-core/specification/specification_attributes'
+    extend   Pod::Specification::Attributes
+    require 'cocoapods-core/specification/specification_dsl'
 
     # @return [Specification] parent the parent of the specification unless the
     #         specification is a root.
@@ -131,7 +119,7 @@ module Pod
     # @return [String] A string suitable for debugging.
     #
     def inspect
-      "#<#{self.class.name} for #{to_s}>"
+      "#<#{self.class.name} for `#{to_s}`>"
     end
 
     # Compares a specification to another. The comparison is based only on the
@@ -213,7 +201,7 @@ module Pod
         remainder = relative_name[self.name.size+1..-1] || ''
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
-        raise StandardError, "Unable to find a specification named `#{relative_name}' in `#{root_spec_name}'." unless subspec
+        raise StandardError, "Unable to find a specification named `#{relative_name}` in `#{root_spec_name}`." unless subspec
         if remainder.empty?
           subspec
         else
@@ -325,13 +313,13 @@ module Pod
     #
     # @raise      If the platform is not supported by the specification.
     #
-    # @return     [Specification] the receiver.
+    # @return     [void]
     #
     def activate_platform(*platform)
+      raise StandardError, "A specification needs to be activated at the root level." unless root_spec?
       platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
       raise StandardError, "#{to_s} is not compatible with #{platform.to_s}." unless supports_platform?(platform)
-      root_spec.active_platform = platform.to_sym
-      self
+      @active_platform = platform.to_sym
     end
 
     # @return [Symbol] The name of the platform this specification was
@@ -341,9 +329,9 @@ module Pod
       root_spec? ? @active_platform : root_spec.active_platform
     end
 
-    private
-
     # Instructs multi-platform attribute writers to use a single platform.
+    #
+    # @visibility private
     #
     # @note   Used by PlatformProxy to assign attributes for the scoped
     #         platform.
@@ -357,5 +345,18 @@ module Pod
       @define_for_platforms = before
     end
   end
+
   Spec = Specification
+
+  # Evaluates the file at the given path in the namespace of the Pod module.
+  #
+  # @return [Object] it can return any object but, is expected to be called on
+  #         `podspec` files that should return a #{Specification}.
+  #
+  def self._eval_podspec(path)
+    string = File.open(path, 'r:utf-8')  { |f| f.read }
+    # Work around for Rubinius incomplete encoding in 1.9 mode
+    string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+    eval(string, nil, path.to_s)
+  end
 end
