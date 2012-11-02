@@ -20,5 +20,5 @@ spec/fixtures/mercurial-repo/.hg/*cache
 .hg
 spec/fixtures/vcr
 .yardoc
-/doc
+/documentation
 .rbx/

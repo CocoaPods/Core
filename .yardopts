@@ -1,2 +1,3 @@
+--output-dir documentation
 --markup markdown
 --private

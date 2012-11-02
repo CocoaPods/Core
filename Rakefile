@@ -167,6 +167,101 @@ task :bootstrap do
   `bundle install`
 end
 
+# Generates markdown files for the documentation of the DSLs.
+#
+# Currently only the Specification DSL is supported.
+#
+# This task uses the comments and the attributes for genenarting the markdown.
+#
+desc "Genereates the documentation"
+task :doc do
+  ROOT = Pathname.new(File.expand_path('../../', __FILE__))
+  $:.unshift((ROOT + 'lib').to_s)
+  require 'cocoapods-core'
+  attributes = Pod::Specification.attributes
+
+  require 'yard'
+  YARD::Registry.load(['lib/cocoapods-core/specification/specification_dsl.rb'], true)
+
+  markdown = []
+  attributes = Pod::Specification.attributes
+  root_spec_attributes = attributes.select { |a| a.root_only }
+  subspec_attributes   = attributes - root_spec_attributes
+
+  attributes.each do |attrb|
+    yard_object = YARD::Registry.at("Pod::Specification##{attrb.writer_name}")
+    if yard_object
+      puts "#{attrb.name} - #{yard_object.group}"
+    end
+  end
+
+  attributes_by_type = {
+    "Root specification attributes" => root_spec_attributes,
+    "Regular attributes" => subspec_attributes,
+  }
+
+  markdown << "\n# Podspec attributes"
+
+  # Overview
+  markdown << "\n## Overview"
+  attributes_by_type.each do |type, attributes|
+    markdown << "\n#### #{type}"
+    markdown << "<table><tr>"
+    attributes.each_with_index do |attrb, idx|
+      markdown << "  <td>#{attrb.name}</td>"
+      markdown << "</tr>\n<tr>" if (idx + 1)% 3 == 0
+    end
+    markdown << "</table></tr>"
+  end
+
+  # Attributes details
+  attributes_by_type.each do |type, attributes|
+    markdown << "\n## #{type}"
+    attributes.each do |attrb|
+      yard_object = YARD::Registry.at("Pod::Specification##{attrb.writer_name}")
+      if yard_object
+        description = yard_object.docstring
+        examples = yard_object.docstring.tags(:example)
+        markdown << "#### #{attrb.name.to_s.gsub('_', '\_')}"
+        desc = attrb.required ? "[Required] " : " "
+        markdown << desc + "#{description}\n"
+
+        markdown << "This attribute supports multi-platform values.\n" if attrb.multi_platform
+        if attrb.keys.is_a?(Array)
+          markdown << "This attribute supports the following keys: `#{attrb.keys * '`, `'}`.\n"
+        elsif attrb.keys.is_a?(Hash)
+          string = "This attribute supports the following keys: "
+          attrb.keys.each do |key, subkeys|
+            string << "\n- `#{key}`"
+            string << ": `#{subkeys * '`, `'}`\n" if subkeys
+          end
+          markdown << string
+        end
+
+        # markdown << "###### Default Value\n"
+
+        markdown << "###### Examples\n"
+        examples.each do |example|
+          markdown << "```"
+          indent = "\n" << " " * (attrb.writer_name.length + 4)
+          example_text = example.text.gsub("\n", indent)
+          writer_name = attrb.writer_name.to_s.gsub('=', ' =')
+          on_platform = ''
+          on_platform = 'ios.' if example.name.include?('iOS')
+          on_platform = 'osx.' if example.name.include?('OS X')
+          markdown << "s.#{on_platform}#{writer_name} #{example_text}"
+          markdown << "```\n"
+        end
+      else
+        puts "Unable to find documentation for `Pod::Specification##{attrb.writer_name}`"
+      end
+    end
+  end
+
+  doc = markdown * "\n"
+  File.open('doc/specification.md', 'w') {|f| f.write(doc) }
+end
+
 desc "Run all specs"
 task :spec => 'spec:all'
 
