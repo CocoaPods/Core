@@ -188,17 +188,20 @@ task :doc do
   root_spec_attributes = attributes.select { |a| a.root_only }
   subspec_attributes   = attributes - root_spec_attributes
 
+  attributes_by_type = {}
   attributes.each do |attrb|
     yard_object = YARD::Registry.at("Pod::Specification##{attrb.writer_name}")
     if yard_object
-      puts "#{attrb.name} - #{yard_object.group}"
+      group = yard_object.group.gsub('DSL: ','')
+      attributes_by_type[group] ||= []
+      attributes_by_type[group] << attrb
     end
   end
 
-  attributes_by_type = {
-    "Root specification attributes" => root_spec_attributes,
-    "Regular attributes" => subspec_attributes,
-  }
+  # attributes_by_type = {
+  #   "Root specification attributes" => root_spec_attributes,
+  #   "Regular attributes" => subspec_attributes,
+  # }
 
   markdown << "\n# Podspec attributes"
 

@@ -22,30 +22,30 @@
 <tr>
 </table></tr>
 
-#### Regular attributes
+#### Platform attributes
 <table><tr>
   <td>platform</td>
   <td>deployment_target</td>
-  <td>frameworks</td>
-</tr>
-<tr>
-  <td>weak_frameworks</td>
-  <td>libraries</td>
+</table></tr>
+
+#### File patterns attributes
+<table><tr>
   <td>source_files</td>
-</tr>
-<tr>
   <td>exclude_source_files</td>
   <td>public_header_files</td>
+</tr>
+<tr>
   <td>resources</td>
-</tr>
-<tr>
   <td>preserve_paths</td>
-  <td>exclude_header_search_paths</td>
+</table></tr>
+
+#### Dependencies & Subspecs
+<table><tr>
   <td>subspec</td>
-</tr>
-<tr>
   <td>preferred_dependency</td>
   <td>dependency</td>
+</tr>
+<tr>
 </table></tr>
 
 ## Root specification attributes
@@ -179,7 +179,7 @@ s.documentation = :appledoc => ['--no-repeat-first-par',
 ```
 
 
-## Regular attributes
+## Platform attributes
 #### platform
  The platform where this specification is supported.
 
@@ -212,6 +212,8 @@ s.ios.deployment_target = "6.0"
 s.osx.deployment_target = "10.8"
 ```
 
+
+## File patterns attributes
 #### source\_files
  The source files of the specification.
 
@@ -277,6 +279,8 @@ This attribute supports multi-platform values.
 s.preserve_paths = "IMPORTANT.txt"
 ```
 
+
+## Dependencies & Subspecs
 #### subspec
  Specification for a module of the Pod. A specification automaically
 iherits as a dependency all it children subspecs.
