@@ -113,7 +113,7 @@ module Pod
     #
     def to_pod_dependency
       dep = dup
-      dep.name = pod_name
+      dep.name = root_spec_name
       dep
     end
 
@@ -126,7 +126,7 @@ module Pod
     #
     # @return [String] the name of the Pod.
     #
-    def pod_name
+    def root_spec_name
       subspec_dependency? ? @name.split('/').first : @name
     end
 

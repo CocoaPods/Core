@@ -12,9 +12,9 @@ module Pod
 
       it "returns the name of the dependency, or the name of the pod of which this is a subspec" do
         dep = Dependency.new('RestKit')
-        dep.pod_name.should == 'RestKit'
+        dep.root_spec_name.should == 'RestKit'
         dep = Dependency.new('RestKit/Networking')
-        dep.pod_name.should == 'RestKit'
+        dep.root_spec_name.should == 'RestKit'
       end
 
       it "returns a copy of the dependency but for the top level spec, if it's a subspec" do

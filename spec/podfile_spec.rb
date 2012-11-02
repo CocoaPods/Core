@@ -238,19 +238,19 @@ describe Pod::Podfile do
         pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
       end
       podfile.dependencies.size.should == 2
-      podfile.dependencies.find {|d| d.pod_name == 'ASIHTTPRequest'}.should == Pod::Dependency.new('ASIHTTPRequest')
-      podfile.dependencies.find {|d| d.pod_name == 'SSZipArchive'}.should   == Pod::Dependency.new('SSZipArchive', '>= 0.1')
+      podfile.dependencies.find {|d| d.root_spec_name == 'ASIHTTPRequest'}.should == Pod::Dependency.new('ASIHTTPRequest')
+      podfile.dependencies.find {|d| d.root_spec_name == 'SSZipArchive'}.should   == Pod::Dependency.new('SSZipArchive', '>= 0.1')
     end
 
     it "adds a dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
       podfile = Pod::Podfile.new { pod 'SomeExternalPod', :git => 'GIT-URL', :commit => '1234' }
-      dep = podfile.dependencies.find {|d| d.pod_name == 'SomeExternalPod'}
+      dep = podfile.dependencies.find {|d| d.root_spec_name == 'SomeExternalPod'}
       dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
     end
 
     it "adds a subspec dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
       podfile = Pod::Podfile.new { pod 'MainSpec/FirstSubSpec', :git => 'GIT-URL', :commit => '1234' }
-      dep = podfile.dependencies.find {|d| d.pod_name == 'MainSpec'}
+      dep = podfile.dependencies.find {|d| d.root_spec_name == 'MainSpec'}
       dep.name.should == 'MainSpec/FirstSubSpec'
       dep.external_source.should == { :git => 'GIT-URL', :commit => '1234' }
     end
@@ -259,7 +259,7 @@ describe Pod::Podfile do
       podfile = Pod::Podfile.new do
         pod 'SomeExternalPod', :podspec => 'http://gist/SomeExternalPod.podspec'
       end
-      dep = podfile.dependencies.find {|d| d.pod_name == 'SomeExternalPod'}
+      dep = podfile.dependencies.find {|d| d.root_spec_name == 'SomeExternalPod'}
       dep.external_source.should == { :podspec => 'http://gist/SomeExternalPod.podspec' }
     end
 

@@ -117,7 +117,7 @@ module Pod
     # @return [Dependency] a dependency that requires the exact version
     #         of a Pod that was installed.
     #
-    def dependency_for_installed_pod_named(name)
+    def dependency_for_installed_root_spec_named(name)
       version = pods_versions[name]
       raise StandardError, "Attempt to lock a Pod without an known version." unless version
       dependency = Dependency.new(name, version)
@@ -209,18 +209,18 @@ module Pod
       result[:removed]    = []
       result[:unchanged]  = []
 
-      user_installed_pods.each do |pod_name|
-        dependency = deps_to_install.find { |d| d.name == pod_name }
+      user_installed_pods.each do |root_spec_name|
+        dependency = deps_to_install.find { |d| d.name == root_spec_name }
         deps_to_install.delete(dependency)
-        version = pods_versions[pod_name]
-        external_source = external_sources[pod_name]
+        version = pods_versions[root_spec_name]
+        external_source = external_sources[root_spec_name]
 
         if dependency.nil?
-          result[:removed] << pod_name
+          result[:removed] << root_spec_name
         elsif !dependency.match_version?(version) || dependency.external_source != external_source
-          result[:changed] << pod_name
+          result[:changed] << root_spec_name
         else
-          result[:unchanged] << pod_name
+          result[:unchanged] << root_spec_name
         end
       end
 
