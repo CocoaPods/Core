@@ -4,22 +4,6 @@ module Pod
   #
   class Platform
 
-    # Convenience method to initialize an iOS platform.
-    #
-    # @return [Platform] an iOS platform.
-    #
-    def self.ios
-      new :ios
-    end
-
-    # Convenience method to initialize an OS X platform.
-    #
-    # @return [Platform] an OS X platform.
-    #
-    def self.osx
-      new :osx
-    end
-
     # @return [Symbol] the name of the SDK represented by the platform.
     #
     def name
@@ -68,6 +52,22 @@ module Pod
         target = target[:deployment_target] if target.is_a?(Hash)
         @deployment_target = Version.create(target)
       end
+    end
+
+    # Convenience method to initialize an iOS platform.
+    #
+    # @return [Platform] an iOS platform.
+    #
+    def self.ios
+      new :ios
+    end
+
+    # Convenience method to initialize an OS X platform.
+    #
+    # @return [Platform] an OS X platform.
+    #
+    def self.osx
+      new :osx
     end
 
     # Checks if a platform is equivalent to another one or to a symbol
