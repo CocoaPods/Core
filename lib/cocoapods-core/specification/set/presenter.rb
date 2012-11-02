@@ -193,7 +193,7 @@ module Pod
         # Computes a human readable string that represents a past date in
         # relative terms.
         #
-        # @param    [Time, String] time
+        # @param    [Time, String] from_time
         #           the date that should be represented.
         #
         # @example  Possible outputs

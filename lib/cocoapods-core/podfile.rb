@@ -18,7 +18,7 @@ module Pod
     #
     attr_accessor :defined_in_file
 
-    # @param    [Pathname] path
+    # @param    [Pathname] defined_in_file
     #           the path of the podfile.
     #
     # @param    [Proc] block
@@ -40,7 +40,8 @@ module Pod
 
     # Initializes a podfile from the file with the given path.
     #
-    # @param  [Pathname] the path from where the podfile should be loaded.
+    # @param  [Pathname] path
+    #         the path from where the podfile should be loaded.
     #
     # @return [Podfile] the generated podfile.
     #
@@ -96,7 +97,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Working with a podfile
+    # @!group Working with a podfile
 
     # @return [Hash{Symbol,String => TargetDefinition}] the target definitions
     #         of the podfile stored by their name.
@@ -182,7 +183,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL - Podfile
+    # @!group DSL - Podfile
 
     # Defines a new static library target and scopes dependencies defined from
     # the given block. The target will by default include the dependencies
@@ -310,7 +311,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL - Target definitions
+    # @!group DSL - Target definitions
 
     # Specifies the platform for which a static library should be build.
     #

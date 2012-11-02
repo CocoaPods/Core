@@ -104,9 +104,10 @@ module Pod
     # Creates a new dependency with the name of the top level spec and the same
     # version requirements.
     #
-    # @note   This is used by the {Set} class to merge dependencies and resolve
-    #         the required version of a Pod regardless what particular
-    #         specification (subspecs or top level) is required.
+    # @note   This is used by the {Specification::Set} class to merge
+    #         dependencies and resolve the required version of a Pod regardless
+    #         what particular specification (subspecs or top level) is
+    #         required.
     #
     # @return [Dependency] a dependency with the same versions requirements
     #         that is guaranteed to point to a top level specification.

@@ -4,7 +4,7 @@ module Pod
 
   class Specification
 
-    # !@group DSL: Root specification attributes
+    # @!group DSL: Root specification attributes
 
     # @!method name=(name)
     #
@@ -275,7 +275,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL: Platform attributes
+    # @!group DSL: Platform attributes
 
     # The name of the platforms supported by the specification class.
     #
@@ -302,11 +302,9 @@ module Pod
     # @example
     #   :osx, "10.8"
     #
-    # @param  [Symbol] name
-    #         The name of the platform, either `:ios` or `:osx`.
-    #
-    # @param  [String] deployment_target
-    #         The deployment target of platform.
+    # @param  [Array<Symbol, String>] name_and_deployment_target
+    #         A tuple where the first value is the name of the platform,
+    #         (either `:ios` or `:osx`) and the second is deployment target.
     #
     def platform=(name_and_deployment_target)
       name = name_and_deployment_target.first
@@ -375,7 +373,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL: Regular attributes
+    # @!group DSL: Regular attributes
 
 
     # A list of frameworks that the client application needs to link against.
@@ -484,7 +482,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL: File patterns attributes
+    # @!group DSL: File patterns attributes
 
     # @!method source_files=(source_files)
     #
@@ -605,7 +603,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Hooks
+    # @!group DSL: Hooks
 
     # TODO: hooks should appear in the documentation as well.
 
@@ -627,6 +625,8 @@ module Pod
     # Pod::Podfile::TargetDefinition instance for the current target.) Override
     # this to, for instance, to run any build script:
     #
+    # @example
+    #
     #   Pod::Spec.new do |s|
     #     def s.pre_install(pod, target_definition)
     #       Dir.chdir(pod.root){ `sh make.sh` }
@@ -643,6 +643,8 @@ module Pod
     # the current target.) Override this to, for instance, add to the prefix
     # header:
     #
+    # @example
+    #
     #   Pod::Spec.new do |s|
     #     def s.post_install(target_installer)
     #       prefix_header = config.project_pods_root + target_installer.prefix_header_filename
@@ -658,7 +660,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Dependencies & Subspecs
+    # @!group DSL: Dependencies & Subspecs
 
     # @!method subspecs
     #
@@ -750,7 +752,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group DSL: Multi-Platform support
+    # @!group DSL: Multi-Platform support
 
     # Provides support for specifying iOS attributes.
     #

@@ -137,7 +137,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Working with a hierarchy of specifications
+    # @!group Working with a hierarchy of specifications
 
     # @return [Specification] The root specification or itself if it is root.
     #
@@ -165,7 +165,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Working with dependencies
+    # @!group Working with dependencies
 
     # @return [Array<Specifications>] the recursive list of all the subspecs of
     #         a specification.
@@ -290,7 +290,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # !@group Support for Multi-platform attributes
+    # @!group Support for Multi-platform attributes
 
     # Defines the active platform for consumption of the specification.
     #

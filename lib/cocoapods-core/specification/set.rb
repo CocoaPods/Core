@@ -76,7 +76,7 @@ module Pod
       end
 
       # @return [Specification] the specification for the given subspec name,
-      #         from {specification}.
+      #         from {Specification}.
       #
       # @param  [String] name
       #         the name of the specification. It can be the name of the top
@@ -89,10 +89,10 @@ module Pod
       end
 
       # @return [Specification] the top level specification of the Pod for the
-      #         {required_version}.
+      #         {#required_version}.
       #
       # @note   If multiple sources have a specification for the
-      #         {required_version} The alphabetical order of their names is
+      #         {#required_version} The alphabetical order of their names is
       #         used to disambiguate.
       #
       def specification
@@ -144,8 +144,8 @@ module Pod
       #-------------------------------------------------------------------------#
 
       # The Set::External class handles Pods from external sources. Pods from
-      # external sources don't use the {Pod::Sources} and are initialized by a
-      # given specification.
+      # external sources don't use the {Source} and are initialized by a given
+      # specification.
       #
       # @note External sources *don't* support subspecs.
       #

@@ -181,7 +181,7 @@ module Pod
       end
 
       # @return [Set, nil] a set for a given dependency including all the
-      #         {Sources} that contain the Pod. If no sources containing the
+      #         {Source} that contain the Pod. If no sources containing the
       #         Pod where found it returns nil.
       #
       # @raise  If no source including the set can be found.

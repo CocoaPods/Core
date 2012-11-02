@@ -36,7 +36,7 @@ module Pod
       lockfile
     end
 
-    # Generates a lockfile from a {Podfile} and the list of {Specifications}
+    # Generates a lockfile from a {Podfile} and the list of {Specification}
     # that were installed.
     #
     # @param  [Podfile] podfile
@@ -146,8 +146,9 @@ module Pod
       [name, vers]
     end
 
-    # @param    [String] The string that describes a {Dependency} generated
-    #           from {Dependency#to_s}.
+    # @param    [String] string
+    #           The string that describes a {Dependency} generated from
+    #           {Dependency#to_s}.
     #
     # @example  Strings examples
     #

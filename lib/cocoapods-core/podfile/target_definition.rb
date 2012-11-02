@@ -36,7 +36,7 @@ module Pod
 
       #-------------------------------------------------------------------------#
 
-      # !@group Attributes
+      # @!group Attributes
 
       # @return [Array] the list of the dependencies of the target definition,
       #         excluding inherited ones.
@@ -78,7 +78,7 @@ module Pod
 
       #-------------------------------------------------------------------------#
 
-      # !@group Inheritable attributes
+      # @!group Inheritable attributes
 
       # Sets the {Platform} of the target definition.
       #

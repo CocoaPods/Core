@@ -35,7 +35,8 @@ module Pod
 
         # Allows to set the shared instance.
         #
-        # @param  [Statistics] the new shared instance or nil.
+        # @param  [Statistics] instance
+        #         the new shared instance or nil.
         #
         # @return [Statistics] the shared statistics instance.
         #
