@@ -27,13 +27,20 @@ describe Pod::Source do
       spec.version.should.to_s == '3.0.0'
     end
 
-    it "properly configures the sources of a set in seach by name" do
+    it "properly configures the sources of a set in search by name" do
       source = Pod::Source.new(fixture('spec-repos/test_repo'))
       sets = source.search_by_name('monkey', true)
       sets.count.should == 1
       set = sets.first
       set.name.should == 'BananaLib'
       set.sources.map(&:name).should == %w| test_repo |
+    end
+
+    it "can be ordered according to its name" do
+      s1 = Pod::Source.new(Pathname.new 'customized')
+      s2 = Pod::Source.new(Pathname.new 'master')
+      s3 = Pod::Source.new(Pathname.new 'private')
+      [s3, s1, s2].sort.should == [s1, s2, s3]
     end
   end
 end
@@ -52,9 +59,9 @@ describe Pod::Source::Aggregate do
     end
 
     it "returns the name of all the available pods" do
-      pod_names = @aggregate.all_pods
-      pod_names.should.include('JSONKit')
-      pod_names.should.include('BananaLib')
+      root_spec_names = @aggregate.all_pods
+      root_spec_names.should.include('JSONKit')
+      root_spec_names.should.include('BananaLib')
     end
 
     it "returns all the available sets with the sources configured" do
@@ -75,7 +82,7 @@ describe Pod::Source::Aggregate do
       set.sources.map(&:name).should == %w| master test_repo |
     end
 
-    it "searches the sets specifing a dependency on a subspec" do
+    it "searches the sets specifying a dependency on a subspec" do
       dep = Pod::Dependency.new('RestKit/JSON')
       set = @aggregate.search(dep)
       set.name.should == 'RestKit'

@@ -49,9 +49,13 @@ module Pod
         #
         #           "1.5pre, 1.4 [master repo] - 1.4 [test_repo repo]"
         #
+        # @note     This method orders the sources by name.
+        #
         def verions_by_source
           result = []
-          @set.versions_by_source.each do |source, versions|
+          versions_by_source = @set.versions_by_source
+          @set.sources.sort.each do |source|
+            versions = versions_by_source[source]
             result << "#{versions.map(&:to_s) * ', '} [#{source.name} repo]"
           end
           result * ' - '
@@ -76,15 +80,24 @@ module Pod
           @set.specification
         end
 
-        # @return [String] the list of the authors of the Pod in sentence
-        #         format.
+        # @return   [String] the list of the authors of the Pod in sentence
+        #           format.
         #
-        # @example
+        # @example  Output example
         #
-        #   "Author 1, Author 2 and Author 3"
+        #           "Author 1, Author 2 and Author 3"
+        #
+        # @note     In ruby 1.8.7 the authors are sorted by name because the
+        #           hash doesn't preserve the order in which they are defined
+        #           in the podspec.
         #
         def authors
-          spec.authors ? spec.authors.keys.to_sentence : ''
+          return '' unless spec.authors
+          if RUBY_VERSION == '1.8.7'
+            spec.authors.keys.sort.to_sentence
+          else
+            spec.authors.keys.to_sentence
+          end
         end
 
         # @return [String] the homepage of the pod.

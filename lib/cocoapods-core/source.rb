@@ -8,7 +8,7 @@ module Pod
   # @note The default implementation uses a git repo as a backing store, where the
   # podspecs are namespaced as:
   #
-  #     #{POD_NAME}/#{VERSION}/#{POD_NAME}.podspec
+  #     #{root_spec_name}/#{VERSION}/#{root_spec_name}.podspec
   #
   class Source
 
@@ -26,6 +26,23 @@ module Pod
     #
     def name
       @repo.basename.to_s
+    end
+
+    # @return [Integer] compares a source with another one for sorting
+    #         purposes.
+    #
+    # @note   Source are compared by the alphabeical order of their name, and
+    #         this convention should be used in any case where sources need to
+    #         be disambiguated.
+    #
+    def <=> (other)
+      name <=> other.name
+    end
+
+    # @return [String] the string reppresentation of a source.
+    #
+    def to_s
+      "Source `#{name}`"
     end
 
     #---------------------------------------------------------------------------#
@@ -83,7 +100,7 @@ module Pod
     def search(dependency)
       pod_sets.find do |set|
         # First match the (top level) name, which does not yet load the spec from disk
-        set.name == dependency.pod_name &&
+        set.name == dependency.root_spec_name &&
           # Now either check if it's a dependency on the top level spec, or if it's not
           # check if the requested subspec exists in the top level spec.
           set.specification.subspec_by_name(dependency.name)
@@ -173,7 +190,7 @@ module Pod
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        Specification::Set.new(dependency.pod_name, sources) unless sources.empty?
+        Specification::Set.new(dependency.root_spec_name, sources) unless sources.empty?
       end
 
       # @return [Array<Set>]  the sets that contain the search term.
@@ -186,8 +203,8 @@ module Pod
         pods_by_source = {}
         result = []
         all.each { |s| pods_by_source[s] = s.search_by_name(query, full_text_search).map(&:name) }
-        pod_names = pods_by_source.values.flatten.uniq
-        pod_names.each do |pod|
+        root_spec_names = pods_by_source.values.flatten.uniq
+        root_spec_names.each do |pod|
           sources = []
           pods_by_source.each{ |source, pods| sources << source if pods.include?(pod) }
           result << Specification::Set.new(pod, sources)

@@ -110,7 +110,7 @@ module Pod
       #
       def required_version
         versions.find { |v| dependency.match?(name, v) } ||
-          #TODO: this should simply return nil. Is cocoaPods that should raise.
+          # TODO: this should simply return nil. Is CocoaPods that should raise.
           (raise StandardError, "Required version (#{dependency}) not found for `#{name}'.\nAvailable versions: #{versions.join(', ')}")
       end
 
