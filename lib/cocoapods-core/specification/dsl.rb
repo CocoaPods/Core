@@ -677,16 +677,6 @@ module Pod
       :singularize   => true
     }
 
-    #------------------#
-
-    # Headers that should not be visible to the Pods project.
-    #
-    # TODO: should this be called exclude headers?
-    #
-    attribute :exclude_header_search_paths, {
-      :file_patterns => true,
-    }
-
     #---------------------------------------------------------------------------#
 
     # @!group DSL: Hooks
