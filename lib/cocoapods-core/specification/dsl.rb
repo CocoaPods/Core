@@ -5,6 +5,13 @@ module Pod
   class Specification
 
     # @!group DSL: Root specification attributes
+    #
+    #   A ‘root’ specification is a specification that holds other
+    #   ‘sub-specifications’.
+    #
+    #   These attributes can only be written to on the ‘root’ specification,
+    #   **not** on the ‘sub-specifications’.
+    #
 
     # @!method name=(name)
     #
@@ -482,7 +489,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # @!group DSL: File patterns attributes
+    # @!group DSL: File pattern attributes
 
     # @!method source_files=(source_files)
     #

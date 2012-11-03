@@ -4,51 +4,75 @@
 ## Overview
 
 #### Root specification attributes
-<table><tr>
-  <td>name</td>
-  <td>version</td>
-  <td>authors</td>
-</tr>
-<tr>
-  <td>license</td>
-  <td>homepage</td>
-  <td>source</td>
-</tr>
-<tr>
-  <td>summary</td>
-  <td>description</td>
-  <td>documentation</td>
-</tr>
-<tr>
-</table></tr>
+
+A ‘root’ specification is a specification that holds other
+‘sub-specifications’.
+
+These attributes can only be written to on the ‘root’ specification,
+**not** on the ‘sub-specifications’.
+
+<table>
+  <tr>
+    <td><a href='#name'>name</a></td>
+    <td><a href='#version'>version</a></td>
+    <td><a href='#authors'>authors</a></td>
+  </tr>
+  <tr>
+    <td><a href='#license'>license</a></td>
+    <td><a href='#homepage'>homepage</a></td>
+    <td><a href='#source'>source</a></td>
+  </tr>
+  <tr>
+    <td><a href='#summary'>summary</a></td>
+    <td><a href='#description'>description</a></td>
+    <td><a href='#documentation'>documentation</a></td>
+  </tr>
+  <tr>
+  </tr>
+</table>
 
 #### Platform attributes
-<table><tr>
-  <td>platform</td>
-  <td>deployment_target</td>
-</table></tr>
 
-#### File patterns attributes
-<table><tr>
-  <td>source_files</td>
-  <td>exclude_source_files</td>
-  <td>public_header_files</td>
-</tr>
-<tr>
-  <td>resources</td>
-  <td>preserve_paths</td>
-</table></tr>
+<table>
+  <tr>
+    <td><a href='#platform'>platform</a></td>
+    <td><a href='#deployment_target'>deployment_target</a></td>
+  </tr>
+</table>
+
+#### File pattern attributes
+
+<table>
+  <tr>
+    <td><a href='#source_files'>source_files</a></td>
+    <td><a href='#exclude_source_files'>exclude_source_files</a></td>
+    <td><a href='#public_header_files'>public_header_files</a></td>
+  </tr>
+  <tr>
+    <td><a href='#resources'>resources</a></td>
+    <td><a href='#preserve_paths'>preserve_paths</a></td>
+  </tr>
+</table>
 
 #### Dependencies & Subspecs
-<table><tr>
-  <td>subspec</td>
-  <td>preferred_dependency</td>
-  <td>dependency</td>
-</tr>
-<tr>
-</table></tr>
+
+<table>
+  <tr>
+    <td><a href='#subspec'>subspec</a></td>
+    <td><a href='#preferred_dependency'>preferred_dependency</a></td>
+    <td><a href='#dependency'>dependency</a></td>
+  </tr>
+  <tr>
+  </tr>
+</table>
 
 ## Root specification attributes
+
+A ‘root’ specification is a specification that holds other
+‘sub-specifications’.
+
+These attributes can only be written to on the ‘root’ specification,
+**not** on the ‘sub-specifications’.
 #### name
 [Required] The name of the Pod.
 
@@ -213,7 +237,7 @@ s.osx.deployment_target = "10.8"
 ```
 
 
-## File patterns attributes
+## File pattern attributes
 #### source\_files
  The source files of the specification.
 

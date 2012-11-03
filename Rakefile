@@ -175,13 +175,14 @@ end
 #
 desc "Genereates the documentation"
 task :doc do
-  ROOT = Pathname.new(File.expand_path('../../', __FILE__))
+  require 'pathname'
+  ROOT = Pathname.new(File.expand_path('../', __FILE__))
   $:.unshift((ROOT + 'lib').to_s)
   require 'cocoapods-core'
   attributes = Pod::Specification.attributes
 
   require 'yard'
-  YARD::Registry.load(['lib/cocoapods-core/specification/specification_dsl.rb'], true)
+  YARD::Registry.load(['lib/cocoapods-core/specification/dsl.rb'], true)
 
   markdown = []
   attributes = Pod::Specification.attributes
@@ -208,13 +209,15 @@ task :doc do
   # Overview
   markdown << "\n## Overview"
   attributes_by_type.each do |type, attributes|
-    markdown << "\n#### #{type}"
-    markdown << "<table><tr>"
+    markdown << "\n#### #{type}\n"
+    markdown << "<table>"
+    markdown << "  <tr>"
     attributes.each_with_index do |attrb, idx|
-      markdown << "  <td>#{attrb.name}</td>"
-      markdown << "</tr>\n<tr>" if (idx + 1)% 3 == 0
+      markdown << "    <td><a href='##{attrb.name}'>#{attrb.name}</a></td>"
+      markdown << "  </tr>\n  <tr>" if (idx + 1)% 3 == 0
     end
-    markdown << "</table></tr>"
+    markdown << "  </tr>"
+    markdown << "</table>"
   end
 
   # Attributes details
