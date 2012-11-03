@@ -1,24 +1,10 @@
-
 # The Pod modules name-spaces all the classes of CocoaPods.
 #
 module Pod
-
   class StandardError < ::StandardError; end
-
-  require 'rubygems'
-  require 'version'
-  require 'pathname'
-
-  require 'cocoapods-core/version'
-  require 'cocoapods-core/dependency'
-  require 'cocoapods-core/platform'
-  require 'cocoapods-core/source'
-
-  require 'cocoapods-core/specification'
-  require 'cocoapods-core/podfile'
-  require 'cocoapods-core/lockfile'
-
 end
+
+require 'rubygems'
 
 # Better to fail early and clearly than during installation of pods.
 #
@@ -35,3 +21,15 @@ unless Gem::Version::Requirement.new('>= 1.6.0').satisfied_by?(Gem::Version.new(
   STDERR.puts "\e[1;31m#{message}\e[0m" # Print in red
   exit 1
 end
+
+require 'version'
+require 'pathname'
+
+require 'cocoapods-core/version'
+require 'cocoapods-core/dependency'
+require 'cocoapods-core/platform'
+require 'cocoapods-core/source'
+
+require 'cocoapods-core/specification'
+require 'cocoapods-core/podfile'
+require 'cocoapods-core/lockfile'
