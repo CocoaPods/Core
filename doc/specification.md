@@ -78,60 +78,62 @@ These attributes can only be written to on the ‘root’ specification,
 
 ###### Examples
 
-```
-s.name = 'MyPod'
+```ruby
+spec.name = 'AFNetworking'
 ```
 
 #### version
-[Required] The version of the Pod (see [Semver](http://semver.org)).
+[Required] The version of the Pod. CocoaPods follows
+[semantic versioning](http://semver.org).
 
 ###### Examples
 
-```
-s.version = '0.0.1'
+```ruby
+spec.version = '0.0.1'
 ```
 
 #### authors
-[Required] The email and the name of the authors of the library.
+[Required] The name and email address of each of the library’s the authors.
 
 ###### Examples
 
-```
-s.authors = 'Darth Vader'
-```
-
-```
-s.authors = 'Darth Vader', 'Wookiee'
+```ruby
+spec.author = 'Darth Vader'
 ```
 
+```ruby
+spec.authors = 'Darth Vader', 'Wookiee'
 ```
-s.authors = { 'Darth Vader' => 'darthvader@darkside.com',
-              'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
+
+```ruby
+spec.authors = { 'Darth Vader' => 'darthvader@darkside.com',
+                 'Wookiee'     => 'wookiee@aggrrttaaggrrt.com' }
 ```
 
 #### license
-[Required] The license of the Pod, unless the source contains a file named
-`LICENSE.*` or `LICENCE.*` the path of the file containing the license
-or the text of the license should be specified.
+[Required] The license of the Pod.
+
+Unless the source contains a file named `LICENSE.*` or `LICENCE.*`, the
+path of the license file _or_ license text must be specified.
 
 This attribute supports the following keys: `type`, `file`, `text`.
 
 ###### Examples
 
-```
-s.license = 'MIT'
-```
-
-```
-s.license = { :type => 'MIT', :file => 'MIT-LICENSE.txt' }
+```ruby
+spec.license = 'MIT'
 ```
 
+```ruby
+spec.license = { :type => 'MIT', :file => 'MIT-LICENSE.txt' }
 ```
-s.license = { :type => 'MIT', :text => <<-LICENSE
-                Copyright 2012
-                Permission is granted to...
-              LICENSE
-            }
+
+```ruby
+spec.license = { :type => 'MIT', :text => <<-LICENSE
+                   Copyright 2012
+                   Permission is granted to...
+                 LICENSE
+               }
 ```
 
 #### homepage
@@ -139,8 +141,8 @@ s.license = { :type => 'MIT', :text => <<-LICENSE
 
 ###### Examples
 
-```
-s.homepage = 'www.example.com'
+```ruby
+spec.homepage = 'www.example.com'
 ```
 
 #### source
@@ -156,84 +158,89 @@ This attribute supports the following keys:
 - `http`
 ###### Examples
 
-```
-s.source = :git => www.example.com/repo.git
-```
-
-```
-s.source = :git => www.example.com/repo.git, :tag => 'v0.0.1'
+```ruby
+spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git" }
 ```
 
+```ruby
+spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
+                        :tag => 'v0.0.1' }
 ```
-s.source = :git => www.example.com/repo.git, :tag => "v#{s.version}"
+
+```ruby
+spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
+                :tag => "v#{spec.version}" }
 ```
 
 #### summary
-[Required] A short description (max 140 characters).
+[Required] A short description of the Pod. It should have a maximum of 140
+characters.
 
 ###### Examples
 
-```
-s.summary = 'A library that computes the meaning of life.'
+```ruby
+spec.summary = 'A library that computes the meaning of life.'
 ```
 
 #### description
- An optional longer description that can be used in place of the summary.
+ A (optional) longer description of the Pod.
 
 ###### Examples
 
-```
-s.description = <<-DESC
-                  A library that computes the meaning of life. Features:
-                  1. Is self aware
-                  ...
-                  42. Likes candies.
-                DESC
+```ruby
+spec.description = <<-DESC
+                     A library that computes the meaning of life. Features:
+                     1. Is self aware
+                     ...
+                     42. Likes candies.
+                   DESC
 ```
 
 #### documentation
- Any additional option to pass to the
+ Additional options to pass to the
 [appledoc](http://gentlebytes.com/appledoc/) tool.
 
 ###### Examples
 
-```
-s.documentation = :appledoc => ['--no-repeat-first-par',
-                                '--no-warn-invalid-crossref']
+```ruby
+spec.documentation = { :appledoc => ['--no-repeat-first-par',
+                                     '--no-warn-invalid-crossref'] }
 ```
 
 
 ## Platform attributes
 #### platform
- The platform where this specification is supported.
+ The platform on which this Pod is supported.
+
+Leaving this blank means the Pod is supported on all platforms.
 
 ###### Examples
 
-```
-s.platform = :ios
-```
-
-```
-s.platform = :osx
+```ruby
+spec.platform = :ios
 ```
 
+```ruby
+spec.platform = :osx
 ```
-s.platform = :osx, "10.8"
+
+```ruby
+spec.platform = :osx, "10.8"
 ```
 
 #### deployment\_target
- The deployment targets for the platforms of the specification.
+ The deployment targets of the supported platforms.
 
 This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.ios.deployment_target = "6.0"
+```ruby
+spec.ios.deployment_target = "6.0"
 ```
 
-```
-s.osx.deployment_target = "10.8"
+```ruby
+spec.osx.deployment_target = "10.8"
 ```
 
 
@@ -245,12 +252,12 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.source_files = "Classes/**/*.{h,m}"
+```ruby
+"Classes/**/*.{h,m}"
 ```
 
-```
-s.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
+```ruby
+"Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
 ```
 
 #### exclude\_source\_files
@@ -260,12 +267,12 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.ios.exclude_source_files = "Classes/osx"
+```ruby
+"Classes/osx"
 ```
 
-```
-s.exclude_source_files = "Classes/**/unused.{h,m}"
+```ruby
+"Classes/**/unused.{h,m}"
 ```
 
 #### public\_header\_files
@@ -275,8 +282,8 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.public_header_files = "Resources/*.png"
+```ruby
+"Resources/*.png"
 ```
 
 #### resources
@@ -287,8 +294,8 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.resources = "Resources/*.png"
+```ruby
+"Resources/*.png"
 ```
 
 #### preserve\_paths
@@ -299,8 +306,8 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.preserve_paths = "IMPORTANT.txt"
+```ruby
+"IMPORTANT.txt"
 ```
 
 
@@ -316,23 +323,21 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.subspec 
-           subspec "core" do |sp|
-             sp.source_files = "Classes/Core"
-           end
-           
-           subspec "optional" do |sp|
-             sp.source_files = "Classes/BloatedClassesThatNobodyUses"
-           end
+```ruby
+subspec "core" do |sp|
+  sp.source_files = "Classes/Core"
+end
+
+subspec "optional" do |sp|
+  sp.source_files = "Classes/BloatedClassesThatNobodyUses"
+end
 ```
 
-```
-s.subspec 
-           subspec "Subspec" do |sp|
-             sp.subspec "resources" do |ssp|
-             end
-           end
+```ruby
+subspec "Subspec" do |sp|
+  sp.subspec "resources" do |ssp|
+  end
+end
 ```
 
 #### preferred\_dependency
@@ -344,8 +349,8 @@ This attribute supports multi-platform values.
 
 ###### Examples
 
-```
-s.preferred_dependency = 'Pod/default_subspec'
+```ruby
+'Pod/default_subspec'
 ```
 
 #### dependency

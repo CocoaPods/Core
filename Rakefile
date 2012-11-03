@@ -248,14 +248,8 @@ task :doc do
 
         markdown << "###### Examples\n"
         examples.each do |example|
-          markdown << "```"
-          indent = "\n" << " " * (attrb.writer_name.length + 4)
-          example_text = example.text.gsub("\n", indent)
-          writer_name = attrb.writer_name.to_s.gsub('=', ' =')
-          on_platform = ''
-          on_platform = 'ios.' if example.name.include?('iOS')
-          on_platform = 'osx.' if example.name.include?('OS X')
-          markdown << "s.#{on_platform}#{writer_name} #{example_text}"
+          markdown << "```ruby"
+          markdown << example.text.strip
           markdown << "```\n"
         end
       else

@@ -18,7 +18,8 @@ module Pod
     #   The name of the Pod.
     #
     #   @example
-    #     'MyPod'
+    #
+    #     spec.name = 'AFNetworking'
     #
     #   @param [String] name
     #
@@ -29,8 +30,8 @@ module Pod
       :root_only      => true,
     }
 
-    # @return [String] the name of the specification including the names of the
-    #         parents for subspecs.
+    # @return [String] The name of the specification _including_ the names of
+    #   the parents, in case of ‘sub-specifications’.
     #
     def name
       @parent ? "#{@parent.name}/#{@name}" : @name
@@ -40,10 +41,12 @@ module Pod
 
     # @!method version=(version)
     #
-    #   The version of the Pod (see [Semver](http://semver.org)).
+    #   The version of the Pod. CocoaPods follows
+    #   [semantic versioning](http://semver.org).
     #
     #   @example
-    #     '0.0.1'
+    #
+    #     spec.version = '0.0.1'
     #
     #   @param [String] version
     #
@@ -54,7 +57,7 @@ module Pod
       :root_only      => true,
     }
 
-    # @return [Version] the version of the Pod.
+    # @return [Version] The version of the Pod.
     #
     def version
       Version.new(@version)
@@ -64,17 +67,20 @@ module Pod
 
     # @!method authors=(authors)
     #
-    #   The email and the name of the authors of the library.
+    #   The name and email address of each of the library’s the authors.
     #
     #   @example
-    #     'Darth Vader'
+    #
+    #     spec.author = 'Darth Vader'
     #
     #   @example
-    #     'Darth Vader', 'Wookiee'
+    #
+    #     spec.authors = 'Darth Vader', 'Wookiee'
     #
     #   @example
-    #     { 'Darth Vader' => 'darthvader@darkside.com',
-    #       'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
+    #
+    #     spec.authors = { 'Darth Vader' => 'darthvader@darkside.com',
+    #                      'Wookiee'     => 'wookiee@aggrrttaaggrrt.com' }
     #
     #   @param [String, Hash{String=>String}] authors
     #
@@ -109,22 +115,26 @@ module Pod
 
     # @!method license=(license)
     #
-    #   The license of the Pod, unless the source contains a file named
-    #   `LICENSE.*` or `LICENCE.*` the path of the file containing the license
-    #   or the text of the license should be specified.
+    #   The license of the Pod.
+    #
+    #   Unless the source contains a file named `LICENSE.*` or `LICENCE.*`, the
+    #   path of the license file _or_ license text must be specified.
     #
     #   @example
-    #     'MIT'
+    #
+    #     spec.license = 'MIT'
     #
     #   @example
-    #     { :type => 'MIT', :file => 'MIT-LICENSE.txt' }
+    #
+    #     spec.license = { :type => 'MIT', :file => 'MIT-LICENSE.txt' }
     #
     #   @example
-    #     { :type => 'MIT', :text => <<-LICENSE
-    #         Copyright 2012
-    #         Permission is granted to...
-    #       LICENSE
-    #     }
+    #
+    #     spec.license = { :type => 'MIT', :text => <<-LICENSE
+    #                        Copyright 2012
+    #                        Permission is granted to...
+    #                      LICENSE
+    #                    }
     #
     #   @param [String, Hash{Symbol=>String}] license
     #
@@ -136,12 +146,13 @@ module Pod
       :root_only      => true,
     }
 
-    # @return [Hash] a hash containing information about the license of the
-    #         Pod.
+    # @return [Hash] A hash containing the license information of the Pod.
     #
     def license
-      license = ( @license.kind_of? String ) ? { :type => @license } : @license
-      license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '') if license[:text]
+      license = @license.is_a?(String) ? { :type => @license } : @license
+      if license[:text]
+        license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '')
+      end
       license
     end
 
@@ -152,13 +163,15 @@ module Pod
     #   The URL of the homepage of the Pod.
     #
     #   @example
-    #     'www.example.com'
+    #
+    #     spec.homepage = 'www.example.com'
     #
     #   @param  [String] homepage
     #
+    #
     # @!method homepage
     #
-    #   @return [String] a string containing the URL of the homepage of the Pod.
+    #   @return [String] The URL of the homepage of the Pod.
     #
     attribute :homepage, {
       :type           => String,
@@ -183,19 +196,26 @@ module Pod
     #   The location from where the library should be retrieved.
     #
     #   @example
-    #     :git => www.example.com/repo.git
+    #
+    #     spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git" }
     #
     #   @example
-    #     :git => www.example.com/repo.git, :tag => 'v0.0.1'
+    #
+    #     spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
+    #                             :tag => 'v0.0.1' }
     #
     #   @example
-    #     :git => www.example.com/repo.git, :tag => "v#{s.version}"
+    #
+    #     spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
+    #                     :tag => "v#{spec.version}" }
     #
     #   @param  [Hash{Symbol=>String}] source
     #
+    #
     # @!method source
     #
-    #   @return [Hash{Symbol=>String}]
+    #   @return [Hash{Symbol=>String}] The location from where the library
+    #     should be retrieved.
     #
     attribute :source, {
       :type           => Hash,
@@ -209,16 +229,19 @@ module Pod
 
     # @!method summary=(summary)
     #
-    #   A short description (max 140 characters).
+    #   A short description of the Pod. It should have a maximum of 140
+    #   characters.
     #
     #   @example
-    #     'A library that computes the meaning of life.'
+    #
+    #     spec.summary = 'A library that computes the meaning of life.'
     #
     #   @param  [String] summary
     #
+    #
     # @!method summary
     #
-    #   @return [String] a short description for the library.
+    #   @return [String] A short description of the Pod.
     #
     attribute :summary, {
       :type           => String,
@@ -231,21 +254,23 @@ module Pod
 
     # @!method description=(description)
     #
-    #   An optional longer description that can be used in place of the summary.
+    #   A (optional) longer description of the Pod.
     #
     #   @example
-    #     <<-DESC
-    #       A library that computes the meaning of life. Features:
-    #       1. Is self aware
-    #       ...
-    #       42. Likes candies.
-    #     DESC
+    #
+    #     spec.description = <<-DESC
+    #                          A library that computes the meaning of life. Features:
+    #                          1. Is self aware
+    #                          ...
+    #                          42. Likes candies.
+    #                        DESC
     #
     #   @param  [String] description
     #
+    #
     # @!method description
     #
-    #   @return [String] a short description for the library.
+    #   @return [String] A longer description of the Pod.
     #
     attribute :description, {
       :type           => String,
@@ -261,14 +286,16 @@ module Pod
 
     # @!method documentation=(documentation)
     #
-    #   Any additional option to pass to the
+    #   Additional options to pass to the
     #   [appledoc](http://gentlebytes.com/appledoc/) tool.
     #
     #   @example
-    #     :appledoc => ['--no-repeat-first-par',
-    #                   '--no-warn-invalid-crossref']
+    #
+    #     spec.documentation = { :appledoc => ['--no-repeat-first-par',
+    #                                          '--no-warn-invalid-crossref'] }
     #
     #   @param  [Hash{Symbol=>Array<String>}] documentation
+    #
     #
     # @!method documentation
     #
@@ -280,17 +307,41 @@ module Pod
       :multi_platform => false,
     }
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL: Platform attributes
 
-    # The name of the platforms supported by the specification class.
+    # The names of the platforms supported by the specification class.
     #
     PLATFORMS = [:osx, :ios].freeze
 
+    # @!method platform=(name_and_deployment_target)
+    #
+    #   The platform on which this Pod is supported.
+    #
+    #   Leaving this blank means the Pod is supported on all platforms.
+    #
+    #   @example
+    #
+    #     spec.platform = :ios
+    #
+    #   @example
+    #
+    #     spec.platform = :osx
+    #
+    #   @example
+    #
+    #     spec.platform = :osx, "10.8"
+    #
+    #   @param  [Array<Symbol, String>] name_and_deployment_target
+    #           A tuple where the first value is the name of the platform,
+    #           (either `:ios` or `:osx`) and the second is the deployment
+    #           target.
+    #
+    #
     # @!method platform
     #
-    #   @return [Platform] the platform of the specification.
+    #   @return [Platform] The platform of the specification.
     #
     attribute :platform, {
       :type           => Array,
@@ -298,33 +349,38 @@ module Pod
       :multi_platform => false,
     }
 
-    # The platform where this specification is supported.
-    #
-    # @example
-    #   :ios
-    #
-    # @example
-    #   :osx
-    #
-    # @example
-    #   :osx, "10.8"
-    #
-    # @param  [Array<Symbol, String>] name_and_deployment_target
-    #         A tuple where the first value is the name of the platform,
-    #         (either `:ios` or `:osx`) and the second is deployment target.
-    #
     def platform=(name_and_deployment_target)
       name = name_and_deployment_target.first
       deployment_target = name_and_deployment_target.last
       unless PLATFORMS.include?(name)
-        raise StandardError, "Unsupported platform `#{name}` the available names are `#{PLATFORMS}`"
+        raise StandardError, "Unsupported platform `#{name}`. The available " \
+                             "names are `#{PLATFORMS}`"
       end
       @platform = Platform.new(name, deployment_target)
     end
 
+    # @!method deployment_target=(version)
+    #
+    #   The deployment targets of the supported platforms.
+    #
+    #   @example
+    #
+    #     spec.ios.deployment_target = "6.0"
+    #
+    #   @example
+    #
+    #     spec.osx.deployment_target = "10.8"
+    #
+    #   @param    [String] version
+    #             The deployment target of the platform.
+    #
+    #   @raise    If there is an attempt to set the deployment target for more
+    #             than one platform.
+    #
+    #
     # @!method deployment_target
     #
-    #   @return [String] the deployment target of each platform.
+    #   @return [String] The deployment target of each supported platform.
     #
     attribute :deployment_target, {
       :type        => String,
@@ -332,20 +388,6 @@ module Pod
       :initial_value => nil,
     }
 
-    # The deployment targets for the platforms of the specification.
-    #
-    # @example  iOS
-    #           "6.0"
-    #
-    # @example  OS X
-    #           "10.8"
-    #
-    # @param    [String] version
-    #           The deployment target of the platform.
-    #
-    # @raise    If the there is an attempt to set the deployment target for
-    #           more than one platform.
-    #
     def deployment_target=(version)
       unless @define_for_platforms.count == 1
         raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
@@ -353,24 +395,27 @@ module Pod
       @deployment_target[@define_for_platforms.first] = version
     end
 
-    # @return [Hash{Symbol=>String}] the deployment targets for each available
+    # @return [Hash{Symbol=>String}] The deployment targets of each supported
     #         platform.
     #
-    # @note   If a platform is specified for the subspec it takes the
-    #         precedence over any other values. If not platform is specified,
-    #         first is checked if any deployment target is specified by the
-    #         spec, and if needed the call is forwarded to the parent.
+    # @note   If a platform is specified for a subspec, it takes precedence
+    #         over any other values. Unless a deployment target has been
+    #         specified, this will return the value of the parent spec.
     #
     def deployment_targets
-      targets = { @platform.name => @platform.deployment_target } if @platform && @platform.deployment_target
-      targets ||= @deployment_target unless @deployment_target == { :osx=>nil, :ios=>nil }
+      targets = nil
+      if @platform && @platform.deployment_target
+        targets = { @platform.name => @platform.deployment_target }
+      end
+      unless targets || @deployment_target == { :osx => nil, :ios => nil }
+        targets = @deployment_target
+      end
       targets || (parent.deployment_targets if parent) || {}
     end
 
-    # @return [Array<Platform>] the platforms where the module of code
-    #         described by the specification is supported on.
+    # @return [Array<Platform>] The platforms that the Pod is supported on.
     #
-    # @note   If no platform is specified this method returns all the known
+    # @note   If no platform is specified, this method returns all known
     #         platforms.
     #
     def available_platforms
@@ -378,7 +423,7 @@ module Pod
       names.map { |name| Platform.new(name, deployment_targets[name]) }
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL: Regular attributes
 
