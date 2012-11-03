@@ -12,9 +12,9 @@ module Pod
   #
   class Specification
 
-    require 'cocoapods-core/specification/specification_attributes'
+    require 'cocoapods-core/specification/attribute'
     extend   Pod::Specification::Attributes
-    require 'cocoapods-core/specification/specification_dsl'
+    require 'cocoapods-core/specification/dsl'
 
     # @return [Specification] parent the parent of the specification unless the
     #         specification is a root.
