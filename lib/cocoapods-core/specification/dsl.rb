@@ -359,6 +359,18 @@ module Pod
       @platform = Platform.new(name, deployment_target)
     end
 
+    # @return [Array<Platform>] The platforms that the Pod is supported on.
+    #
+    # @note   If no platform is specified, this method returns all known
+    #         platforms.
+    #
+    def available_platforms
+      names = platform ? [ platform.name ] : PLATFORMS
+      names.map { |name| Platform.new(name, deployment_targets[name]) }
+    end
+
+    #------------------#
+
     # @!method deployment_target=(version)
     #
     #   The deployment targets of the supported platforms.
@@ -411,16 +423,6 @@ module Pod
         targets = @deployment_target
       end
       targets || (parent.deployment_targets if parent) || {}
-    end
-
-    # @return [Array<Platform>] The platforms that the Pod is supported on.
-    #
-    # @note   If no platform is specified, this method returns all known
-    #         platforms.
-    #
-    def available_platforms
-      names = platform ? [ platform.name ] : PLATFORMS
-      names.map { |name| Platform.new(name, deployment_targets[name]) }
     end
 
     #-------------------------------------------------------------------------#
@@ -532,21 +534,28 @@ module Pod
     platform_attr_writer           :header_mappings_dir, lambda { |file, _| Pathname.new(file) }
     pltf_first_defined_attr_reader :header_mappings_dir
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL: File pattern attributes
+    #
+    #   These should be specified relative to the root of the source root and
+    #   may contain [wildcard patterns](http://ruby-doc.org/core/Dir.html#method-c-glob).
+    #
 
     # @!method source_files=(source_files)
     #
-    #   The source files of the specification.
+    #   The source files of the Pod.
     #
     #   @example
-    #     "Classes/**/*.{h,m}"
+    #
+    #     spec.source_files = "Classes/**/*.{h,m}"
     #
     #   @example
-    #     "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
+    #
+    #     spec.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
     #
     #   @param  [String, Array<String>] source_files
+    #
     #
     # @!method source_files
     #
@@ -561,15 +570,18 @@ module Pod
 
     # @!method exclude_source_files=(exclude_source_files)
     #
-    #   A pattern of files that should be excluded from the source files.
-    #
-    #   @example iOS
-    #     "Classes/osx"
+    #   A list of file patterns that should be excluded from the source files.
     #
     #   @example
-    #     "Classes/**/unused.{h,m}"
+    #
+    #     spec.ios.exclude_source_files = "Classes/osx"
+    #
+    #   @example
+    #
+    #     spec.exclude_source_files = "Classes/**/unused.{h,m}"
     #
     #   @param  [String, Array<String>] exclude_source_files
+    #
     #
     # @!method exclude_source_files
     #
@@ -585,12 +597,20 @@ module Pod
 
     # @!method public_header_files=(public_header_files)
     #
-    #   A pattern of files that should be used as public headers.
+    #   A list of file patterns that should be used as public headers.
+    #
+    #   These are the headers that will be exposed to the user’s project and
+    #   from which documentation will be generated.
+    #
+    #   If no public headers are specified then _all_ the headers are
+    #   considered public.
     #
     #   @example
-    #     "Resources/*.png"
+    #
+    #     spec.public_header_files = "Headers/Public/*.h"
     #
     #   @param  [String, Array<String>] public_header_files
+    #
     #
     # @!method public_header_files
     #
@@ -604,13 +624,19 @@ module Pod
 
     # @!method resources=(resources)
     #
-    #   A list of resources. These are copied into the target bundle with a
+    #   A list of resources that should be copied into the target bundle with a
     #   build phase script.
     #
     #   @example
-    #     "Resources/*.png"
+    #
+    #     spec.resource = "Resources/HockeySDK.bundle"
+    #
+    #   @example
+    #
+    #     spec.resources = "Resources/*.png"
     #
     #   @param  [String, Array<String>] resources
+    #
     #
     # @!method resources
     #
@@ -626,13 +652,21 @@ module Pod
 
     # @!method preserve_paths=(preserve_paths)
     #
-    #   Any file that should not be cleaned (CocoaPods cleans all the unused
-    #   files by default).
+    #   Any file that should **not** be removed after being downloaded.
+    #
+    #   By default, CocoaPods removes all files that are not matched by any of
+    #   the other file pattern attributes.
     #
     #   @example
-    #     "IMPORTANT.txt"
+    #
+    #     spec.preserve_path = "IMPORTANT.txt"
+    #
+    #   @example
+    #
+    #     spec.perserve_paths = "Frameworks/*.framework"
     #
     #   @param  [String, Array<String>] preserve_paths
+    #
     #
     # @!method preserve_paths
     #

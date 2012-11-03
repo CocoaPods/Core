@@ -42,6 +42,9 @@ These attributes can only be written to on the ‘root’ specification,
 
 #### File pattern attributes
 
+These should be specified relative to the root of the source root and
+may contain [wildcard patterns](http://apidock.com/ruby/Dir/glob/class).
+
 <table>
   <tr>
     <td><a href='#source_files'>source_files</a></td>
@@ -245,19 +248,22 @@ spec.osx.deployment_target = "10.8"
 
 
 ## File pattern attributes
+
+These should be specified relative to the root of the source root and
+may contain [wildcard patterns](http://apidock.com/ruby/Dir/glob/class).
 #### source\_files
- The source files of the specification.
+ The source files of the Pod.
 
 This attribute supports multi-platform values.
 
 ###### Examples
 
 ```ruby
-"Classes/**/*.{h,m}"
+spec.source_files = "Classes/**/*.{h,m}"
 ```
 
 ```ruby
-"Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
+spec.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
 ```
 
 #### exclude\_source\_files
