@@ -24,10 +24,8 @@
   /* color: #888; */
   color: hsl(16, 10%, 50%);;
 }
-#methods_list p.active {
+#methods_list .active {
   background-color: rgb(245, 218, 176);
-}
-#methods_list p.active a {
   color: rgb(114, 61, 42);
 }
 
@@ -154,9 +152,9 @@ pre {
         <div class="row" id="methods_list">
           <% groups.each do |group| %>
             <div class="span3">
-            <h2><%=group.name%></h2>
+            <h2><a href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
             <% group.methods.each do |method| %>
-              <p><a href="#tab_<%= method.name %>"><%= method.name %></a></p>
+              <p><a href="#tab_<%= method.to_param %>"><%= method.name %></a></p>
           <% end %>
           </div>
         <% end %>
@@ -171,23 +169,30 @@ pre {
       <!-- TABS **************************************************************-->
 
       <div class="tab-content">
-        <% methods.each do |method| %>
-          <div id="tab_<%= method.name %>" class="tab-pane">
-          <h2><%= method.name %></h2>
-          <p><%= method.description %></p>
-          <!-- Defaul values -->
-          <% if method.attribute && method.attribute.default_value %>
-            <h3>Defaults to:</h3>
-            <pre><%= attribute.default_value %></pre>
-          <% end %>
-          <!-- Examples -->
-          <% unless method.examples.empty? %>
-            <h3>Examples:</h3>
-            <% method.examples.each do |example| %>
-              <%= example %>
-            <% end %>
-          <% end %>
+        <% groups.each do |group| %>
+          <div id="tab_<%= group.to_param %>" class="tab-pane">
+            <h2><%= group.name %></h2>
+            <p><%= group.description %></p>
           </div>
+
+          <% group.methods.each do |method| %>
+            <div id="tab_<%= method.to_param %>" class="tab-pane">
+              <h2><%= method.name %></h2>
+              <p><%= method.description %></p>
+              <!-- Defaul values -->
+              <% if method.attribute && method.attribute.default_value %>
+                <h3>Defaults to:</h3>
+                <pre><%= attribute.default_value %></pre>
+              <% end %>
+              <!-- Examples -->
+              <% unless method.examples.empty? %>
+                <h3>Examples:</h3>
+                <% method.examples.each do |example| %>
+                  <%= example %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
       </div>
 
@@ -207,9 +212,9 @@ pre {
   <script>
     function selectTab(tabLink) {
       // de-select previous
-      $('#methods_list p.active').removeClass('active');
+      $('#methods_list .active').removeClass('active');
       // select new
-      tabLink.parent('p').addClass('active')
+      tabLink.parent().addClass('active')
       tabLink.tab('show');
       document.location.hash = tabLink.attr("href").replace("#tab_", "")
     }

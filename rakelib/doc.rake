@@ -1,19 +1,3 @@
-
-class DSLMethod
-  attr_accessor :name
-  attr_accessor :description
-  attr_accessor :examples
-  attr_accessor :group
-  attr_accessor :group_description
-  attr_accessor :attribute
-end
-
-class DSLGroup
-  attr_accessor :name
-  attr_accessor :description
-  attr_accessor :methods
-end
-
 require 'pathname'
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 $:.unshift((ROOT + 'lib').to_s)
@@ -46,6 +30,10 @@ module Pod
           @name ||= @yard_group.lines.first.chomp.gsub('DSL: ','').gsub(' attributes','')
         end
 
+        def to_param
+          "#{name.parameterize}-group"
+        end
+
         def description
           Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@yard_group.lines.drop(1) * "\n")
         end
@@ -65,6 +53,10 @@ module Pod
 
         def name
           @name ||= @yard_method.name.to_s.sub('=','')
+        end
+
+        def to_param
+          name
         end
 
         def description
@@ -109,10 +101,6 @@ module Pod
         @groups
       end
 
-      def methods
-        groups.map(&:methods).flatten
-      end
-
       def render(output_file)
         require 'erb'
         template = ERB.new(File.read(ROOT + 'doc/template.erb'))
@@ -129,7 +117,9 @@ task :doc do
   require 'pygments'
 
   dsl_file = (ROOT + 'lib/cocoapods-core/specification/dsl.rb').to_s
-  Pod::Doc::DSL.new(dsl_file).render(ROOT + 'doc/specification.html')
+  html_file = ROOT + 'doc/specification.html'
+  Pod::Doc::DSL.new(dsl_file).render(html_file)
+  sh "open #{html_file}"
 end
 
 #-------------------------------------------------------------------------------#
