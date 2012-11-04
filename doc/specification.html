@@ -690,8 +690,8 @@ end</p>
         
           <div id="tab_file-pattern-group" class="tab-pane">
             <h2>File pattern</h2>
-            <p><p>These should be specified relative to the root of the source root and
-may contain the following wildcard patterns:</p>
+            <p><p>These paths should be specified <strong>relative</strong> to the <strong>root</strong> of the
+source and may contain the following wildcard patterns:</p>
 
 <hr>
 
@@ -754,27 +754,14 @@ two literals may be specified.</p>
 <hr>
 
 <h3>Examples</h3>
-<div class="highlight"><pre><span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;config.?&quot;</span><span class="o">]</span>                     <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;config.?&quot;</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.[a-z][a-z]&quot;</span><span class="p">)</span>            <span class="c1">#=&gt; [&quot;main.rb&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.[^r]*&quot;</span><span class="p">)</span>                 <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.{rb,h}&quot;</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;main.rb&quot;, &quot;config.h&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>                       <span class="c1">#=&gt; [&quot;config.h&quot;, &quot;main.rb&quot;]</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">::</span><span class="no">FNM_DOTMATCH</span><span class="p">)</span>   <span class="c1">#=&gt; [&quot;.&quot;, &quot;..&quot;, &quot;config.h&quot;, &quot;main.rb&quot;]</span>
 
-<span class="n">rbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">rbfiles</span><span class="p">)</span>                   <span class="c1">#=&gt; [&quot;main.rb&quot;,</span>
-                                    <span class="c1">#    &quot;lib/song.rb&quot;,</span>
-                                    <span class="c1">#    &quot;lib/song/karaoke.rb&quot;]</span>
-<span class="n">libdirs</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">)</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">libdirs</span><span class="p">)</span>                   <span class="c1">#=&gt; [&quot;lib&quot;]</span>
-
-<span class="n">librbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">librbfiles</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;lib/song.rb&quot;,</span>
-                                    <span class="c1">#    &quot;lib/song/karaoke.rb&quot;]</span>
-
-<span class="n">librbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
-<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">librbfiles</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;lib/song.rb&quot;]</span>
+<p>Consider these to be evaluated in the source root of
+<a href="https://github.com/johnezang/JSONKit">JSONKit</a>.</p>
+<div class="highlight"><pre><span class="s2">&quot;JSONKit.?&quot;</span>    <span class="c1">#=&gt; [&quot;JSONKit.h&quot;, &quot;JSONKit.m&quot;]</span>
+<span class="s2">&quot;*.[a-z][a-z]&quot;</span> <span class="c1">#=&gt; [&quot;CHANGELOG.md&quot;, &quot;README.md&quot;]</span>
+<span class="s2">&quot;*.[^m]*&quot;</span>      <span class="c1">#=&gt; [&quot;JSONKit.h&quot;]</span>
+<span class="s2">&quot;*.{h,m}&quot;</span>      <span class="c1">#=&gt; [&quot;JSONKit.h&quot;, &quot;JSONKit.m&quot;]</span>
+<span class="s2">&quot;*&quot;</span>            <span class="c1">#=&gt; [&quot;CHANGELOG.md&quot;, &quot;JSONKit.h&quot;, &quot;JSONKit.m&quot;, &quot;README.md&quot;]</span>
 </pre></div></p>
           </div>
 

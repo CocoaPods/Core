@@ -594,8 +594,8 @@ module Pod
 
     # @!group DSL: File pattern attributes
     #
-    #   These should be specified relative to the root of the source root and
-    #   may contain the following wildcard patterns:
+    #   These paths should be specified **relative** to the **root** of the
+    #   source and may contain the following wildcard patterns:
     #
     #   ------------------
     #
@@ -657,27 +657,14 @@ module Pod
     #
     #   ### Examples
     #
-    #       Dir["config.?"]                     #=> ["config.h"]
-    #       Dir.glob("config.?")                #=> ["config.h"]
-    #       Dir.glob("*.[a-z][a-z]")            #=> ["main.rb"]
-    #       Dir.glob("*.[^r]*")                 #=> ["config.h"]
-    #       Dir.glob("*.{rb,h}")                #=> ["main.rb", "config.h"]
-    #       Dir.glob("*")                       #=> ["config.h", "main.rb"]
-    #       Dir.glob("*", File::FNM_DOTMATCH)   #=> [".", "..", "config.h", "main.rb"]
+    #   Consider these to be evaluated in the source root of
+    #   [JSONKit](https://github.com/johnezang/JSONKit).
     #
-    #       rbfiles = File.join("**", "*.rb")
-    #       Dir.glob(rbfiles)                   #=> ["main.rb",
-    #                                           #    "lib/song.rb",
-    #                                           #    "lib/song/karaoke.rb"]
-    #       libdirs = File.join("**", "lib")
-    #       Dir.glob(libdirs)                   #=> ["lib"]
-    #
-    #       librbfiles = File.join("**", "lib", "**", "*.rb")
-    #       Dir.glob(librbfiles)                #=> ["lib/song.rb",
-    #                                           #    "lib/song/karaoke.rb"]
-    #
-    #       librbfiles = File.join("**", "lib", "*.rb")
-    #       Dir.glob(librbfiles)                #=> ["lib/song.rb"]
+    #       "JSONKit.?"    #=> ["JSONKit.h", "JSONKit.m"]
+    #       "*.[a-z][a-z]" #=> ["CHANGELOG.md", "README.md"]
+    #       "*.[^m]*"      #=> ["JSONKit.h"]
+    #       "*.{h,m}"      #=> ["JSONKit.h", "JSONKit.m"]
+    #       "*"            #=> ["CHANGELOG.md", "JSONKit.h", "JSONKit.m", "README.md"]
     #
 
     # @!method source_files=(source_files)
