@@ -21,7 +21,8 @@
   line-height: 22px;
   font-size: 12px;
   margin: 0px;
-  color: #888;
+  /* color: #888; */
+  color: hsl(16, 10%, 50%);;
 }
 
 #methods_list h2 {
@@ -59,11 +60,7 @@ h4 {
   margin: -10px 0px 4px;
 }
 
-pre {
-  margin:20px 0;
-  color: #AAA;
-  background-color: #424242;
-}
+
 
 .modal-body > p {
   color: #555;
@@ -108,6 +105,35 @@ body {
  background-color: #222;
 }
 
+/* Syntax Highlighting */
+
+pre {
+  margin:20px 0;
+  color: #AAA;
+  background-color: #424242;
+}
+
+.n {
+  color: #AAA;
+}
+
+.o {
+  color: #AAA;
+}
+
+.s1, .s2, .ss, .sh,
+.nf, .no
+{
+  color:#E6A33C;
+}
+
+.k {
+  font-weight: bold;
+  color: #CCC;
+}
+
+
+
 
 </style>
 </head>
@@ -125,105 +151,105 @@ body {
             <div class="span3">
             <h2>Root specification</h2>
             
-              <p><a href="#name" data-toggle="tab">name</a></p>
+              <p><a href="#tab_name">name</a></p>
           
-              <p><a href="#version" data-toggle="tab">version</a></p>
+              <p><a href="#tab_version">version</a></p>
           
-              <p><a href="#authors" data-toggle="tab">authors</a></p>
+              <p><a href="#tab_authors">authors</a></p>
           
-              <p><a href="#license" data-toggle="tab">license</a></p>
+              <p><a href="#tab_license">license</a></p>
           
-              <p><a href="#homepage" data-toggle="tab">homepage</a></p>
+              <p><a href="#tab_homepage">homepage</a></p>
           
-              <p><a href="#source" data-toggle="tab">source</a></p>
+              <p><a href="#tab_source">source</a></p>
           
-              <p><a href="#summary" data-toggle="tab">summary</a></p>
+              <p><a href="#tab_summary">summary</a></p>
           
-              <p><a href="#description" data-toggle="tab">description</a></p>
+              <p><a href="#tab_description">description</a></p>
           
-              <p><a href="#documentation" data-toggle="tab">documentation</a></p>
+              <p><a href="#tab_documentation">documentation</a></p>
           
           </div>
         
             <div class="span3">
             <h2>Regular</h2>
             
-              <p><a href="#frameworks" data-toggle="tab">frameworks</a></p>
+              <p><a href="#tab_frameworks">frameworks</a></p>
           
-              <p><a href="#weak_frameworks" data-toggle="tab">weak_frameworks</a></p>
+              <p><a href="#tab_weak_frameworks">weak_frameworks</a></p>
           
-              <p><a href="#libraries" data-toggle="tab">libraries</a></p>
+              <p><a href="#tab_libraries">libraries</a></p>
           
-              <p><a href="#xcconfig" data-toggle="tab">xcconfig</a></p>
+              <p><a href="#tab_xcconfig">xcconfig</a></p>
           
-              <p><a href="#recursive_compiler_flags" data-toggle="tab">recursive_compiler_flags</a></p>
+              <p><a href="#tab_recursive_compiler_flags">recursive_compiler_flags</a></p>
           
-              <p><a href="#compiler_flags" data-toggle="tab">compiler_flags</a></p>
+              <p><a href="#tab_compiler_flags">compiler_flags</a></p>
           
-              <p><a href="#requires_arc" data-toggle="tab">requires_arc</a></p>
+              <p><a href="#tab_requires_arc">requires_arc</a></p>
           
-              <p><a href="#header_dir" data-toggle="tab">header_dir</a></p>
+              <p><a href="#tab_header_dir">header_dir</a></p>
           
           </div>
         
             <div class="span3">
             <h2>Platform</h2>
             
-              <p><a href="#platform" data-toggle="tab">platform</a></p>
+              <p><a href="#tab_platform">platform</a></p>
           
-              <p><a href="#available_platforms" data-toggle="tab">available_platforms</a></p>
+              <p><a href="#tab_available_platforms">available_platforms</a></p>
           
-              <p><a href="#deployment_target" data-toggle="tab">deployment_target</a></p>
+              <p><a href="#tab_deployment_target">deployment_target</a></p>
           
-              <p><a href="#deployment_targets" data-toggle="tab">deployment_targets</a></p>
+              <p><a href="#tab_deployment_targets">deployment_targets</a></p>
           
           </div>
         
             <div class="span3">
             <h2>File pattern</h2>
             
-              <p><a href="#source_files" data-toggle="tab">source_files</a></p>
+              <p><a href="#tab_source_files">source_files</a></p>
           
-              <p><a href="#exclude_source_files" data-toggle="tab">exclude_source_files</a></p>
+              <p><a href="#tab_exclude_source_files">exclude_source_files</a></p>
           
-              <p><a href="#public_header_files" data-toggle="tab">public_header_files</a></p>
+              <p><a href="#tab_public_header_files">public_header_files</a></p>
           
-              <p><a href="#resources" data-toggle="tab">resources</a></p>
+              <p><a href="#tab_resources">resources</a></p>
           
-              <p><a href="#preserve_paths" data-toggle="tab">preserve_paths</a></p>
+              <p><a href="#tab_preserve_paths">preserve_paths</a></p>
           
           </div>
         
             <div class="span3">
             <h2>Hooks</h2>
             
-              <p><a href="#copy_header_mapping" data-toggle="tab">copy_header_mapping</a></p>
+              <p><a href="#tab_copy_header_mapping">copy_header_mapping</a></p>
           
-              <p><a href="#pre_install" data-toggle="tab">pre_install</a></p>
+              <p><a href="#tab_pre_install">pre_install</a></p>
           
-              <p><a href="#post_install" data-toggle="tab">post_install</a></p>
+              <p><a href="#tab_post_install">post_install</a></p>
           
           </div>
         
             <div class="span3">
             <h2>Dependencies & Subspecs</h2>
             
-              <p><a href="#subspecs" data-toggle="tab">subspecs</a></p>
+              <p><a href="#tab_subspecs">subspecs</a></p>
           
-              <p><a href="#subspec" data-toggle="tab">subspec</a></p>
+              <p><a href="#tab_subspec">subspec</a></p>
           
-              <p><a href="#preferred_dependency" data-toggle="tab">preferred_dependency</a></p>
+              <p><a href="#tab_preferred_dependency">preferred_dependency</a></p>
           
-              <p><a href="#dependency" data-toggle="tab">dependency</a></p>
+              <p><a href="#tab_dependency">dependency</a></p>
           
           </div>
         
             <div class="span3">
             <h2>Multi-Platform support</h2>
             
-              <p><a href="#ios" data-toggle="tab">ios</a></p>
+              <p><a href="#tab_ios">ios</a></p>
           
-              <p><a href="#osx" data-toggle="tab">osx</a></p>
+              <p><a href="#tab_osx">osx</a></p>
           
           </div>
         
@@ -239,7 +265,7 @@ body {
 
       <div class="tab-content">
         
-          <div id="name" class="tab-pane">
+          <div id="tab_name" class="tab-pane">
           <h2>name</h2>
           <p><p>The name of the Pod.</p>
 </p>
@@ -249,12 +275,13 @@ body {
           
             <h3>Examples:</h3>
             
-              <pre>spec.name = 'AFNetworking'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;AFNetworking&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="version" class="tab-pane">
+          <div id="tab_version" class="tab-pane">
           <h2>version</h2>
           <p><p>The version of the Pod. CocoaPods follows
 <a href="http://semver.org">semantic versioning</a>.</p>
@@ -265,12 +292,13 @@ body {
           
             <h3>Examples:</h3>
             
-              <pre>spec.version = '0.0.1'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;0.0.1&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="authors" class="tab-pane">
+          <div id="tab_authors" class="tab-pane">
           <h2>authors</h2>
           <p><p>The name and email address of each of the library’s the authors.</p>
 </p>
@@ -280,17 +308,20 @@ body {
           
             <h3>Examples:</h3>
             
-              <pre>spec.author = 'Darth Vader'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">author</span> <span class="o">=</span> <span class="s1">&#39;Darth Vader&#39;</span>
+</pre></div>
             
-              <pre>spec.authors = 'Darth Vader', 'Wookiee'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="s1">&#39;Darth Vader&#39;</span><span class="p">,</span> <span class="s1">&#39;Wookiee&#39;</span>
+</pre></div>
             
-              <pre>spec.authors = { 'Darth Vader' => 'darthvader@darkside.com',
-                 'Wookiee'     => 'wookiee@aggrrttaaggrrt.com' }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;Darth Vader&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;darthvader@darkside.com&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;Wookiee&#39;</span>     <span class="o">=&gt;</span> <span class="s1">&#39;wookiee@aggrrttaaggrrt.com&#39;</span> <span class="p">}</span>
+</pre></div>
             
           
           </div>
         
-          <div id="license" class="tab-pane">
+          <div id="tab_license" class="tab-pane">
           <h2>license</h2>
           <p><p>The license of the Pod.</p>
 
@@ -303,20 +334,23 @@ path of the license file <em>or</em> license text must be specified.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.license = 'MIT'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="s1">&#39;MIT&#39;</span>
+</pre></div>
             
-              <pre>spec.license = { :type => 'MIT', :file => 'MIT-LICENSE.txt' }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;MIT&#39;</span><span class="p">,</span> <span class="ss">:file</span> <span class="o">=&gt;</span> <span class="s1">&#39;MIT-LICENSE.txt&#39;</span> <span class="p">}</span>
+</pre></div>
             
-              <pre>spec.license = { :type => 'MIT', :text => <<-LICENSE
-                   Copyright 2012
-                   Permission is granted to...
-                 LICENSE
-               }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">license</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;MIT&#39;</span><span class="p">,</span> <span class="ss">:text</span> <span class="o">=&gt;</span> <span class="o">&lt;&lt;-</span><span class="no">LICENSE</span>
+<span class="sh">                   Copyright 2012</span>
+<span class="sh">                   Permission is granted to...</span>
+<span class="no">                 LICENSE</span>
+               <span class="p">}</span>
+</pre></div>
             
           
           </div>
         
-          <div id="homepage" class="tab-pane">
+          <div id="tab_homepage" class="tab-pane">
           <h2>homepage</h2>
           <p><p>The URL of the homepage of the Pod.</p>
 </p>
@@ -326,12 +360,13 @@ path of the license file <em>or</em> license text must be specified.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.homepage = 'www.example.com'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">homepage</span> <span class="o">=</span> <span class="s1">&#39;www.example.com&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="source" class="tab-pane">
+          <div id="tab_source" class="tab-pane">
           <h2>source</h2>
           <p><p>The location from where the library should be retrieved.</p>
 </p>
@@ -341,18 +376,21 @@ path of the license file <em>or</em> license text must be specified.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git" }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;git://github.com/AFNetworking/AFNetworking.git&quot;</span> <span class="p">}</span>
+</pre></div>
             
-              <pre>spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
-                        :tag => 'v0.0.1' }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;git://github.com/AFNetworking/AFNetworking.git&quot;</span><span class="p">,</span>
+                        <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s1">&#39;v0.0.1&#39;</span> <span class="p">}</span>
+</pre></div>
             
-              <pre>spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
-                :tag => "v#{spec.version}" }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;git://github.com/AFNetworking/AFNetworking.git&quot;</span><span class="p">,</span>
+                <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s2">&quot;v</span><span class="si">#{</span><span class="n">spec</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+</pre></div>
             
           
           </div>
         
-          <div id="summary" class="tab-pane">
+          <div id="tab_summary" class="tab-pane">
           <h2>summary</h2>
           <p><p>A short description of the Pod. It should have a maximum of 140
 characters.</p>
@@ -363,12 +401,13 @@ characters.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.summary = 'A library that computes the meaning of life.'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="s1">&#39;A library that computes the meaning of life.&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="description" class="tab-pane">
+          <div id="tab_description" class="tab-pane">
           <h2>description</h2>
           <p><p>A (optional) longer description of the Pod.</p>
 </p>
@@ -378,17 +417,18 @@ characters.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.description = <<-DESC
-                     A library that computes the meaning of life. Features:
-                     1. Is self aware
-                     ...
-                     42. Likes candies.
-                   DESC</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="o">&lt;&lt;-</span><span class="no">DESC</span>
+<span class="sh">                     A library that computes the meaning of life. Features:</span>
+<span class="sh">                     1. Is self aware</span>
+<span class="sh">                     ...</span>
+<span class="sh">                     42. Likes candies.</span>
+<span class="no">                   DESC</span>
+</pre></div>
             
           
           </div>
         
-          <div id="documentation" class="tab-pane">
+          <div id="tab_documentation" class="tab-pane">
           <h2>documentation</h2>
           <p><p>Additional options to pass to the
 <a href="http://gentlebytes.com/appledoc/">appledoc</a> tool.</p>
@@ -399,13 +439,14 @@ characters.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.documentation = { :appledoc => ['--no-repeat-first-par',
-                                     '--no-warn-invalid-crossref'] }</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">documentation</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:appledoc</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s1">&#39;--no-repeat-first-par&#39;</span><span class="p">,</span>
+                                     <span class="s1">&#39;--no-warn-invalid-crossref&#39;</span><span class="o">]</span> <span class="p">}</span>
+</pre></div>
             
           
           </div>
         
-          <div id="platform" class="tab-pane">
+          <div id="tab_platform" class="tab-pane">
           <h2>platform</h2>
           <p><p>The platform on which this Pod is supported.</p>
 
@@ -417,16 +458,19 @@ characters.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.platform = :ios</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:ios</span>
+</pre></div>
             
-              <pre>spec.platform = :osx</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span>
+</pre></div>
             
-              <pre>spec.platform = :osx, "10.8"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span><span class="p">,</span> <span class="s2">&quot;10.8&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="available_platforms" class="tab-pane">
+          <div id="tab_available_platforms" class="tab-pane">
           <h2>available_platforms</h2>
           <p></p>
           <!-- Defaul values -->
@@ -435,7 +479,7 @@ characters.</p>
           
           </div>
         
-          <div id="deployment_target" class="tab-pane">
+          <div id="tab_deployment_target" class="tab-pane">
           <h2>deployment_target</h2>
           <p><p>The deployment targets of the supported platforms.</p>
 </p>
@@ -445,14 +489,16 @@ characters.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.ios.deployment_target = "6.0"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;6.0&quot;</span>
+</pre></div>
             
-              <pre>spec.osx.deployment_target = "10.8"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;10.8&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="deployment_targets" class="tab-pane">
+          <div id="tab_deployment_targets" class="tab-pane">
           <h2>deployment_targets</h2>
           <p></p>
           <!-- Defaul values -->
@@ -461,7 +507,7 @@ characters.</p>
           
           </div>
         
-          <div id="frameworks" class="tab-pane">
+          <div id="tab_frameworks" class="tab-pane">
           <h2>frameworks</h2>
           <p><p>A list of frameworks that the user’s target (application) needs to link
 against.</p>
@@ -472,14 +518,16 @@ against.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.ios.framework = 'CFNetwork'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">framework</span> <span class="o">=</span> <span class="s1">&#39;CFNetwork&#39;</span>
+</pre></div>
             
-              <pre>spec.frameworks = 'QuartzCore', 'CoreData'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">frameworks</span> <span class="o">=</span> <span class="s1">&#39;QuartzCore&#39;</span><span class="p">,</span> <span class="s1">&#39;CoreData&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="weak_frameworks" class="tab-pane">
+          <div id="tab_weak_frameworks" class="tab-pane">
           <h2>weak_frameworks</h2>
           <p><p>A list of frameworks that the user’s target (application) needs to
 <strong>weakly</strong> link against.</p>
@@ -490,12 +538,13 @@ against.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.framework = 'Twitter'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">framework</span> <span class="o">=</span> <span class="s1">&#39;Twitter&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="libraries" class="tab-pane">
+          <div id="tab_libraries" class="tab-pane">
           <h2>libraries</h2>
           <p><p>A list of libraries that the user’s target (application) needs to link
 against.</p>
@@ -506,14 +555,16 @@ against.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.ios.library = 'xml2'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">library</span> <span class="o">=</span> <span class="s1">&#39;xml2&#39;</span>
+</pre></div>
             
-              <pre>spec.libraries = 'xml2', 'z'</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">libraries</span> <span class="o">=</span> <span class="s1">&#39;xml2&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="xcconfig" class="tab-pane">
+          <div id="tab_xcconfig" class="tab-pane">
           <h2>xcconfig</h2>
           <p><p>Any flag to add to final xcconfig file.</p>
 </p>
@@ -523,7 +574,7 @@ against.</p>
           
           </div>
         
-          <div id="recursive_compiler_flags" class="tab-pane">
+          <div id="tab_recursive_compiler_flags" class="tab-pane">
           <h2>recursive_compiler_flags</h2>
           <p><p>TODO: This will be handled by the LocalPod</p>
 
@@ -541,7 +592,7 @@ end</p>
           
           </div>
         
-          <div id="compiler_flags" class="tab-pane">
+          <div id="tab_compiler_flags" class="tab-pane">
           <h2>compiler_flags</h2>
           <p></p>
           <!-- Defaul values -->
@@ -550,7 +601,7 @@ end</p>
           
           </div>
         
-          <div id="requires_arc" class="tab-pane">
+          <div id="tab_requires_arc" class="tab-pane">
           <h2>requires_arc</h2>
           <p></p>
           <!-- Defaul values -->
@@ -559,7 +610,7 @@ end</p>
           
           </div>
         
-          <div id="header_dir" class="tab-pane">
+          <div id="tab_header_dir" class="tab-pane">
           <h2>header_dir</h2>
           <p></p>
           <!-- Defaul values -->
@@ -568,7 +619,7 @@ end</p>
           
           </div>
         
-          <div id="source_files" class="tab-pane">
+          <div id="tab_source_files" class="tab-pane">
           <h2>source_files</h2>
           <p><p>The source files of the Pod.</p>
 </p>
@@ -578,14 +629,16 @@ end</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.source_files = "Classes/**/*.{h,m}"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/**/*.{h,m}&quot;</span>
+</pre></div>
             
-              <pre>spec.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/**/*.{h,m}&quot;</span><span class="p">,</span> <span class="s2">&quot;More_Classes/**/*.{h,m}&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="exclude_source_files" class="tab-pane">
+          <div id="tab_exclude_source_files" class="tab-pane">
           <h2>exclude_source_files</h2>
           <p><p>A list of file patterns that should be excluded from the source files.</p>
 </p>
@@ -595,14 +648,16 @@ end</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.ios.exclude_source_files = "Classes/osx"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/osx&quot;</span>
+</pre></div>
             
-              <pre>spec.exclude_source_files = "Classes/**/unused.{h,m}"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/**/unused.{h,m}&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="public_header_files" class="tab-pane">
+          <div id="tab_public_header_files" class="tab-pane">
           <h2>public_header_files</h2>
           <p><p>A list of file patterns that should be used as public headers.</p>
 
@@ -618,12 +673,13 @@ considered public.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.public_header_files = "Headers/Public/*.h"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">public_header_files</span> <span class="o">=</span> <span class="s2">&quot;Headers/Public/*.h&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="resources" class="tab-pane">
+          <div id="tab_resources" class="tab-pane">
           <h2>resources</h2>
           <p><p>A list of resources that should be copied into the target bundle with a
 build phase script.</p>
@@ -634,14 +690,16 @@ build phase script.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.resource = "Resources/HockeySDK.bundle"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">resource</span> <span class="o">=</span> <span class="s2">&quot;Resources/HockeySDK.bundle&quot;</span>
+</pre></div>
             
-              <pre>spec.resources = "Resources/*.png"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="s2">&quot;Resources/*.png&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="preserve_paths" class="tab-pane">
+          <div id="tab_preserve_paths" class="tab-pane">
           <h2>preserve_paths</h2>
           <p><p>Any file that should <strong>not</strong> be removed after being downloaded.</p>
 
@@ -654,14 +712,16 @@ the other file pattern attributes.</p>
           
             <h3>Examples:</h3>
             
-              <pre>spec.preserve_path = "IMPORTANT.txt"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">preserve_path</span> <span class="o">=</span> <span class="s2">&quot;IMPORTANT.txt&quot;</span>
+</pre></div>
             
-              <pre>spec.perserve_paths = "Frameworks/*.framework"</pre>
+              <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">perserve_paths</span> <span class="o">=</span> <span class="s2">&quot;Frameworks/*.framework&quot;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="copy_header_mapping" class="tab-pane">
+          <div id="tab_copy_header_mapping" class="tab-pane">
           <h2>copy_header_mapping</h2>
           <p><p>This method takes a header path and returns the location it should have
 in the pod&#39;s header dir.</p>
@@ -676,7 +736,7 @@ is specified the namespacing will be preserved from that directory.</p>
           
           </div>
         
-          <div id="pre_install" class="tab-pane">
+          <div id="tab_pre_install" class="tab-pane">
           <h2>pre_install</h2>
           <p><p>This is a convenience method which gets called after all pods have been
 downloaded but before they have been installed, and the Xcode project and
@@ -691,16 +751,17 @@ this to, for instance, to run any build script:</p>
           
             <h3>Examples:</h3>
             
-              <pre>Pod::Spec.new do |s|
-  def s.pre_install(pod, target_definition)
-    Dir.chdir(pod.root){ `sh make.sh` }
-  end
-end</pre>
+              <div class="highlight"><pre><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="k">def</span> <span class="nc">s</span><span class="o">.</span><span class="nf">pre_install</span><span class="p">(</span><span class="n">pod</span><span class="p">,</span> <span class="n">target_definition</span><span class="p">)</span>
+    <span class="no">Dir</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">pod</span><span class="o">.</span><span class="n">root</span><span class="p">){</span> <span class="sb">`sh make.sh`</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
             
           
           </div>
         
-          <div id="post_install" class="tab-pane">
+          <div id="tab_post_install" class="tab-pane">
           <h2>post_install</h2>
           <p><p>This is a convenience method which gets called after all pods have been
 downloaded, installed, and the Xcode project and related files have been
@@ -714,19 +775,20 @@ header:</p>
           
             <h3>Examples:</h3>
             
-              <pre>Pod::Spec.new do |s|
-  def s.post_install(target_installer)
-    prefix_header = config.project_pods_root + target_installer.prefix_header_filename
-    prefix_header.open('a') do |file|
-      file.puts(%{#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif})
-    end
-  end
-end</pre>
+              <div class="highlight"><pre><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+  <span class="k">def</span> <span class="nc">s</span><span class="o">.</span><span class="nf">post_install</span><span class="p">(</span><span class="n">target_installer</span><span class="p">)</span>
+    <span class="n">prefix_header</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">project_pods_root</span> <span class="o">+</span> <span class="n">target_installer</span><span class="o">.</span><span class="n">prefix_header_filename</span>
+    <span class="n">prefix_header</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="sx">%{#ifdef __OBJC__</span><span class="se">\n</span><span class="sx">#import &quot;SSToolkitDefines.h&quot;</span><span class="se">\n</span><span class="sx">#endif}</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
             
           
           </div>
         
-          <div id="subspecs" class="tab-pane">
+          <div id="tab_subspecs" class="tab-pane">
           <h2>subspecs</h2>
           <p></p>
           <!-- Defaul values -->
@@ -735,7 +797,7 @@ end</pre>
           
           </div>
         
-          <div id="subspec" class="tab-pane">
+          <div id="tab_subspec" class="tab-pane">
           <h2>subspec</h2>
           <p><p>Specification for a module of the Pod. A specification automaically
 iherits as a dependency all it children subspecs.</p>
@@ -749,23 +811,25 @@ attributes can be specified in the ancestors.</p>
           
             <h3>Examples:</h3>
             
-              <pre>subspec "core" do |sp|
-  sp.source_files = "Classes/Core"
-end
+              <div class="highlight"><pre><span class="n">subspec</span> <span class="s2">&quot;core&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">sp</span><span class="o">|</span>
+  <span class="n">sp</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/Core&quot;</span>
+<span class="k">end</span>
 
-subspec "optional" do |sp|
-  sp.source_files = "Classes/BloatedClassesThatNobodyUses"
-end</pre>
+<span class="n">subspec</span> <span class="s2">&quot;optional&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">sp</span><span class="o">|</span>
+  <span class="n">sp</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/BloatedClassesThatNobodyUses&quot;</span>
+<span class="k">end</span>
+</pre></div>
             
-              <pre>subspec "Subspec" do |sp|
-  sp.subspec "resources" do |ssp|
-  end
-end</pre>
+              <div class="highlight"><pre><span class="n">subspec</span> <span class="s2">&quot;Subspec&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">sp</span><span class="o">|</span>
+  <span class="n">sp</span><span class="o">.</span><span class="n">subspec</span> <span class="s2">&quot;resources&quot;</span> <span class="k">do</span> <span class="o">|</span><span class="n">ssp</span><span class="o">|</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
             
           
           </div>
         
-          <div id="preferred_dependency" class="tab-pane">
+          <div id="tab_preferred_dependency" class="tab-pane">
           <h2>preferred_dependency</h2>
           <p><p>The name of the subspec that should be used as preferred dependency.
 This is useful in case there are incompatible subspecs or a subspec
@@ -777,12 +841,13 @@ provides components that are rarely used.</p>
           
             <h3>Examples:</h3>
             
-              <pre>'Pod/default_subspec'</pre>
+              <div class="highlight"><pre><span class="s1">&#39;Pod/default_subspec&#39;</span>
+</pre></div>
             
           
           </div>
         
-          <div id="dependency" class="tab-pane">
+          <div id="tab_dependency" class="tab-pane">
           <h2>dependency</h2>
           <p></p>
           <!-- Defaul values -->
@@ -791,7 +856,7 @@ provides components that are rarely used.</p>
           
           </div>
         
-          <div id="ios" class="tab-pane">
+          <div id="tab_ios" class="tab-pane">
           <h2>ios</h2>
           <p><p>Provides support for specifying iOS attributes.</p>
 </p>
@@ -801,7 +866,7 @@ provides components that are rarely used.</p>
           
           </div>
         
-          <div id="osx" class="tab-pane">
+          <div id="tab_osx" class="tab-pane">
           <h2>osx</h2>
           <p><p>Provides support for specifying OS X attributes.</p>
 </p>
@@ -830,5 +895,16 @@ provides components that are rarely used.</p>
     $(function () {
       $('#methods_list a:first').tab('show');
     })
+    $('#methods_list a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+      document.location.hash = $(this).attr("href").replace("#tab_", "")
+    })
+
+    $(function () {
+      var activeTab = $('[href=#tab_' + location.hash.replace("#", "") + ']');
+      activeTab && activeTab.tab('show');
+    });
+
   </script>
 </body>

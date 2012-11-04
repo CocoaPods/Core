@@ -21,7 +21,8 @@
   line-height: 22px;
   font-size: 12px;
   margin: 0px;
-  color: #888;
+  /* color: #888; */
+  color: hsl(16, 10%, 50%);;
 }
 
 #methods_list h2 {
@@ -59,11 +60,7 @@ h4 {
   margin: -10px 0px 4px;
 }
 
-pre {
-  margin:20px 0;
-  color: #AAA;
-  background-color: #424242;
-}
+
 
 .modal-body > p {
   color: #555;
@@ -108,6 +105,35 @@ body {
  background-color: #222;
 }
 
+/* Syntax Highlighting */
+
+pre {
+  margin:20px 0;
+  color: #AAA;
+  background-color: #424242;
+}
+
+.n {
+  color: #AAA;
+}
+
+.o {
+  color: #AAA;
+}
+
+.s1, .s2, .ss, .sh,
+.nf, .no
+{
+  color:#E6A33C;
+}
+
+.k {
+  font-weight: bold;
+  color: #CCC;
+}
+
+
+
 
 </style>
 </head>
@@ -125,7 +151,7 @@ body {
             <div class="span3">
             <h2><%=group.name%></h2>
             <% group.methods.each do |method| %>
-              <p><a href="#<%= method.name %>" data-toggle="tab"><%= method.name %></a></p>
+              <p><a href="#tab_<%= method.name %>"><%= method.name %></a></p>
           <% end %>
           </div>
         <% end %>
@@ -141,7 +167,7 @@ body {
 
       <div class="tab-content">
         <% methods.each do |method| %>
-          <div id="<%= method.name %>" class="tab-pane">
+          <div id="tab_<%= method.name %>" class="tab-pane">
           <h2><%= method.name %></h2>
           <p><%= method.description %></p>
           <!-- Defaul values -->
@@ -153,7 +179,7 @@ body {
           <% unless method.examples.empty? %>
             <h3>Examples:</h3>
             <% method.examples.each do |example| %>
-              <pre><%= example %></pre>
+              <%= example %>
             <% end %>
           <% end %>
           </div>
@@ -177,5 +203,16 @@ body {
     $(function () {
       $('#methods_list a:first').tab('show');
     })
+    $('#methods_list a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+      document.location.hash = $(this).attr("href").replace("#tab_", "")
+    })
+
+    $(function () {
+      var activeTab = $('[href=#tab_' + location.hash.replace("#", "") + ']');
+      activeTab && activeTab.tab('show');
+    });
+
   </script>
 </body>

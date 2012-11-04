@@ -10,6 +10,14 @@ module Pod
       raise StandardError, "#{self.inspect} not activated for a platform before consumption." unless active_platform
     end
 
+    def transform_value_to_file_patterns(patterns)
+      if patterns.is_a?(Array) && (!defined?(Rake) || !patterns.is_a?(Rake::FileList))
+        patterns
+      else
+        [ patterns ]
+      end
+    end
+
     # A Specification attribute stores the information of an attribute. It also
     # provides logic to implement any required logic.
     #

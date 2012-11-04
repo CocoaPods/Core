@@ -18,8 +18,7 @@ require 'pathname'
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 $:.unshift((ROOT + 'lib').to_s)
 require 'cocoapods-core'
-require 'yard'
-require 'redcarpet'
+
 
 #-----------------------------------------------------------------------------#
 
@@ -35,9 +34,11 @@ require 'redcarpet'
 desc "Genereates the documentation"
 task :doc do
 
-  attributes = Pod::Specification.attributes
-
   #-----------------------------------------------------------------------------#
+
+  require 'yard'
+  require 'redcarpet'
+  require 'pygments'
 
   dsl_file = (ROOT + 'lib/cocoapods-core/specification/dsl.rb').to_s
   YARD::Registry.load([dsl_file], true)
@@ -66,8 +67,10 @@ task :doc do
       method.name        = name
       method.group       = group
       method.description = markdown.render(yard_method.docstring)
-      method.examples    = yard_method.docstring.tags(:example).map {|e| e.text.strip }
       method.attribute   = attributes.find { |a| a.writer_name == yard_method.name }
+      method.examples    = yard_method.docstring.tags(:example).map do |e|
+       Pygments.highlight(e.text.strip, :lexer => 'ruby')
+      end
     end
   end
 
