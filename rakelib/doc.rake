@@ -35,7 +35,7 @@ module Pod
         end
 
         def description
-          Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@yard_group.lines.drop(1) * "\n")
+          @yard_group.lines.drop(1).join
         end
 
         def add_method(yard_method)
@@ -60,13 +60,11 @@ module Pod
         end
 
         def description
-          Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@yard_method.docstring)
+          @yard_method.docstring
         end
 
         def examples
-          @yard_method.docstring.tags(:example).map do |e|
-            Pygments.highlight(e.text.strip, :lexer => 'ruby')
-          end
+          @yard_method.docstring.tags(:example).map { |e| e.text.strip }
         end
 
         def attribute
@@ -105,6 +103,17 @@ module Pod
         require 'erb'
         template = ERB.new(File.read(ROOT + 'doc/template.erb'))
         File.open(output_file, 'w') { |f| f.puts(template.result(binding)) }
+      end
+
+      # Helpers
+
+      def markdown(input)
+        @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+        @markdown.render(input)
+      end
+
+      def syntax_highlight(code)
+        Pygments.highlight(code, :lexer => 'ruby')
       end
     end
   end

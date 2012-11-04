@@ -172,13 +172,13 @@ pre {
         <% groups.each do |group| %>
           <div id="tab_<%= group.to_param %>" class="tab-pane">
             <h2><%= group.name %></h2>
-            <p><%= group.description %></p>
+            <p><%= markdown group.description %></p>
           </div>
 
           <% group.methods.each do |method| %>
             <div id="tab_<%= method.to_param %>" class="tab-pane">
               <h2><%= method.name %></h2>
-              <p><%= method.description %></p>
+              <p><%= markdown method.description %></p>
               <!-- Defaul values -->
               <% if method.attribute && method.attribute.default_value %>
                 <h3>Defaults to:</h3>
@@ -188,7 +188,7 @@ pre {
               <% unless method.examples.empty? %>
                 <h3>Examples:</h3>
                 <% method.examples.each do |example| %>
-                  <%= example %>
+                  <%= syntax_highlight example %>
                 <% end %>
               <% end %>
             </div>
