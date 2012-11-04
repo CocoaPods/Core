@@ -279,7 +279,7 @@ module Pod
       # that forwards the message to the {#specification} using the
       # {Specification#on_platform} method.
       #
-      Specification.attributes.select { |a| a.multi_platform }.each do |a|
+      Specification.attributes.select { |a| a.multi_platform? }.each do |a|
         define_method(a.writer_name) do |args|
           @specification._on_platform(@platform) do
             @specification.send(a.writer_name, args)

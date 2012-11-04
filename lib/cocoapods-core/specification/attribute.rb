@@ -33,7 +33,7 @@ module Pod
       #
       # @option  options [String] :description
       # @option  options [String] :type
-      # @option  options [String] :is_required
+      # @option  options [String] :required
       # @option  options [String] :root_only
       # @option  options [String] :multi_platform
       # @option  options [String] :singularize
@@ -44,7 +44,7 @@ module Pod
       def initialize(name, options)
         @name = name
         @type                 = options.delete(:type)
-        @required             = options.delete(:is_required)
+        @required             = options.delete(:required)
         @singularize          = options.delete(:singularize)
         @inheritance          = options.delete(:inheritance)
         @keys                 = options.delete(:keys)
@@ -67,14 +67,16 @@ module Pod
       end
 
       attr_reader :type
-      attr_reader :required
-      attr_reader :root_only
-      attr_reader :multi_platform
-      attr_reader :singularize
       attr_reader :inheritance
       attr_reader :keys
       attr_reader :initial_value
       attr_reader :default_value
+
+      %w{ required root_only multi_platform singularize }.each do |attr|
+        define_method("#{attr}?") do
+          instance_variable_get("@#{attr}")
+        end
+      end
 
       def file_patterns?
         @file_patterns
@@ -84,7 +86,7 @@ module Pod
       # given specification.
       #
       def initialize_on(spec)
-        if multi_platform
+        if multi_platform?
           default_value = default_value || initial_value
           initial_value_per_platform = Spec::PLATFORMS.inject(Hash.new) { | memo, platform | memo[platform] = default_value; memo }
           spec.instance_variable_set(ivar, initial_value_per_platform)
@@ -113,7 +115,7 @@ module Pod
       # the DSL.
       #
       def writer_alias
-        "#{name.to_s.singularize}=" if singularize
+        "#{name.to_s.singularize}=" if singularize?
       end
 
     end
@@ -135,7 +137,7 @@ module Pod
 
         # reader
         define_method(attrb.reader_name) do
-          if attrb.multi_platform
+          if attrb.multi_platform?
             active_plaform_check
             if attrb.inheritance == :first_defined
               ivar_value = instance_variable_get(attrb.ivar)[active_platform]
@@ -158,8 +160,8 @@ module Pod
 
         # writer
         define_method(attrb.writer_name) do |value|
-          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attrb.root_only && !root_spec
-          if attrb.multi_platform
+          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attrb.root_only? && !root_spec
+          if attrb.multi_platform?
             ivar_value = instance_variable_get(attrb.ivar)
             @define_for_platforms.each do |platform|
               ivar_value[platform] = value

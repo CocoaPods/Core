@@ -25,7 +25,7 @@ module Pod
     #
     attribute :name, {
       :type           => String,
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
     }
@@ -52,7 +52,7 @@ module Pod
     #
     attribute :version, {
       :type           => String,
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
     }
@@ -86,7 +86,7 @@ module Pod
     #
     attribute :authors, {
       :type           => [ String, Array, Hash ],
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
       :singularize    => true,
@@ -141,7 +141,7 @@ module Pod
     attribute :license, {
       :type           => [ String, Hash ],
       :keys           => LICENSE_KEYS,
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
     }
@@ -175,7 +175,7 @@ module Pod
     #
     attribute :homepage, {
       :type           => String,
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
     }
@@ -220,7 +220,7 @@ module Pod
     attribute :source, {
       :type           => Hash,
       :keys           => SOURCE_KEYS,
-      :is_required    => true,
+      :required       => true,
       :root_only      => true,
       :multi_platform => false,
     }
@@ -245,7 +245,7 @@ module Pod
     #
     attribute :summary, {
       :type           => String,
-      :is_required    => true,
+      :required       => true,
       :multi_platform => false,
       :root_only      => true,
     }
