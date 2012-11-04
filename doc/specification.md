@@ -40,10 +40,22 @@ These attributes can only be written to on the ‘root’ specification,
   </tr>
 </table>
 
+#### Regular attributes
+
+<table>
+  <tr>
+    <td><a href='#frameworks'>frameworks</a></td>
+    <td><a href='#weak_frameworks'>weak_frameworks</a></td>
+    <td><a href='#libraries'>libraries</a></td>
+  </tr>
+  <tr>
+  </tr>
+</table>
+
 #### File pattern attributes
 
 These should be specified relative to the root of the source root and
-may contain [wildcard patterns](http://apidock.com/ruby/Dir/glob/class).
+may contain [wildcard patterns](http://ruby-doc.org/core/Dir.html#method-c-glob).
 
 <table>
   <tr>
@@ -247,10 +259,56 @@ spec.osx.deployment_target = "10.8"
 ```
 
 
+## Regular attributes
+#### frameworks
+ A list of frameworks that the user’s target (application) needs to link
+against.
+
+This attribute supports multi-platform values.
+
+###### Examples
+
+```ruby
+spec.ios.framework = 'CFNetwork'
+```
+
+```ruby
+spec.frameworks = 'QuartzCore', 'CoreData'
+```
+
+#### weak\_frameworks
+ A list of frameworks that the user’s target (application) needs to
+**weakly** link against.
+
+This attribute supports multi-platform values.
+
+###### Examples
+
+```ruby
+spec.framework = 'Twitter'
+```
+
+#### libraries
+ A list of libraries that the user’s target (application) needs to link
+against.
+
+This attribute supports multi-platform values.
+
+###### Examples
+
+```ruby
+spec.ios.library = 'xml2'
+```
+
+```ruby
+spec.libraries = 'xml2', 'z'
+```
+
+
 ## File pattern attributes
 
 These should be specified relative to the root of the source root and
-may contain [wildcard patterns](http://apidock.com/ruby/Dir/glob/class).
+may contain [wildcard patterns](http://ruby-doc.org/core/Dir.html#method-c-glob).
 #### source\_files
  The source files of the Pod.
 
@@ -267,33 +325,39 @@ spec.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
 ```
 
 #### exclude\_source\_files
- A pattern of files that should be excluded from the source files.
+ A list of file patterns that should be excluded from the source files.
 
 This attribute supports multi-platform values.
 
 ###### Examples
 
 ```ruby
-"Classes/osx"
+spec.ios.exclude_source_files = "Classes/osx"
 ```
 
 ```ruby
-"Classes/**/unused.{h,m}"
+spec.exclude_source_files = "Classes/**/unused.{h,m}"
 ```
 
 #### public\_header\_files
- A pattern of files that should be used as public headers.
+ A list of file patterns that should be used as public headers.
+
+These are the headers that will be exposed to the user’s project and
+from which documentation will be generated.
+
+If no public headers are specified then _all_ the headers are
+considered public.
 
 This attribute supports multi-platform values.
 
 ###### Examples
 
 ```ruby
-"Resources/*.png"
+spec.public_header_files = "Headers/Public/*.h"
 ```
 
 #### resources
- A list of resources. These are copied into the target bundle with a
+ A list of resources that should be copied into the target bundle with a
 build phase script.
 
 This attribute supports multi-platform values.
@@ -301,19 +365,29 @@ This attribute supports multi-platform values.
 ###### Examples
 
 ```ruby
-"Resources/*.png"
+spec.resource = "Resources/HockeySDK.bundle"
+```
+
+```ruby
+spec.resources = "Resources/*.png"
 ```
 
 #### preserve\_paths
- Any file that should not be cleaned (CocoaPods cleans all the unused
-files by default).
+ Any file that should **not** be removed after being downloaded.
+
+By default, CocoaPods removes all files that are not matched by any of
+the other file pattern attributes.
 
 This attribute supports multi-platform values.
 
 ###### Examples
 
 ```ruby
-"IMPORTANT.txt"
+spec.preserve_path = "IMPORTANT.txt"
+```
+
+```ruby
+spec.perserve_paths = "Frameworks/*.framework"
 ```
 
 

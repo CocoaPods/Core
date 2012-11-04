@@ -430,7 +430,27 @@ module Pod
     # @!group DSL: Regular attributes
 
 
-    # A list of frameworks that the client application needs to link against.
+    # @!method frameworks=(*frameworks)
+    #
+    #   A list of frameworks that the user’s target (application) needs to link
+    #   against.
+    #
+    #   @example
+    #
+    #     spec.ios.framework = 'CFNetwork'
+    #
+    #   @example
+    #
+    #     spec.frameworks = 'QuartzCore', 'CoreData'
+    #
+    #   @param  [String, Array<String>] frameworks
+    #           A list of framework names.
+    #
+    #
+    # @!method frameworks
+    #
+    #   @return [Array<String>] A list of frameworks that the user’s target
+    #     needs to link against
     #
     attribute :frameworks, {
       :inheritance => :merge,
@@ -439,7 +459,23 @@ module Pod
 
     #------------------#
 
-    # A list of frameworks that the client application needs to weakly link against.
+    # @!method weak_frameworks=(*frameworks)
+    #
+    #   A list of frameworks that the user’s target (application) needs to
+    #   **weakly** link against.
+    #
+    #   @example
+    #
+    #     spec.framework = 'Twitter'
+    #
+    #   @param  [String, Array<String>] weak_frameworks
+    #           A list of frameworks names.
+    #
+    #
+    # @!method weak_frameworks
+    #
+    #   @return [Array<String>] A list of frameworks that the user’s target
+    #     needs to **weakly** link against
     #
     attribute :weak_frameworks, {
       :inheritance => :merge,
@@ -448,7 +484,27 @@ module Pod
 
     #------------------#
 
-    # A list of libraries that the client application needs to link against.
+    # @!method libraries=(*libraries)
+    #
+    #   A list of libraries that the user’s target (application) needs to link
+    #   against.
+    #
+    #   @example
+    #
+    #     spec.ios.library = 'xml2'
+    #
+    #   @example
+    #
+    #     spec.libraries = 'xml2', 'z'
+    #
+    #   @param  [String, Array<String>] libraries
+    #           A list of library names.
+    #
+    #
+    # @!method libraries
+    #
+    #   @return [Array<String>] A list of libraries that the user’s target
+    #     needs to link against
     #
     attribute :libraries, {
       :inheritance => :merge,
