@@ -67,8 +67,13 @@ module Pod
           @yard_method.docstring.tags(:example).map { |e| e.text.strip }
         end
 
+        def required?
+          attribute.required? if attribute
+        end
+
+        # Might return `nil` in case this is a normal method, not an attribute.
         def attribute
-          @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name == name }
+          @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name.to_s == name }
         end
       end
 

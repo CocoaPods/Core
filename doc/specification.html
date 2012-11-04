@@ -22,7 +22,10 @@
   font-size: 12px;
   margin: 0px;
   /* color: #888; */
-  color: hsl(16, 10%, 50%);;
+  color: hsl(16, 10%, 50%);
+}
+#methods_list a span.required {
+  font-size: 11px;
 }
 #methods_list .active {
   background-color: rgb(245, 218, 176);
@@ -33,6 +36,13 @@
   padding-bottom:0px;
   line-height: 20px;
   font-size: 14px;
+}
+
+.required {
+  float: right;
+  font-weight: bold;
+  font-style: italic;
+  color: hsl(16, 10%, 70%);
 }
 
 p {
@@ -154,19 +164,19 @@ pre {
             <div class="span3">
             <h2><a href="#tab_root-specification-group">Root specification</a></h2>
             
-              <p><a href="#tab_name">name</a></p>
+              <p><a href="#tab_name">name <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_version">version</a></p>
+              <p><a href="#tab_version">version <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_authors">authors</a></p>
+              <p><a href="#tab_authors">authors <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_license">license</a></p>
+              <p><a href="#tab_license">license <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_homepage">homepage</a></p>
+              <p><a href="#tab_homepage">homepage <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_source">source</a></p>
+              <p><a href="#tab_source">source <span class="required">(required)</span></a></p>
           
-              <p><a href="#tab_summary">summary</a></p>
+              <p><a href="#tab_summary">summary <span class="required">(required)</span></a></p>
           
               <p><a href="#tab_description">description</a></p>
           
@@ -280,7 +290,7 @@ pre {
 
           
             <div id="tab_name" class="tab-pane">
-              <h2>name</h2>
+              <h2>name <span class="required">Required</span></h2>
               <p><p>The name of the Pod.</p>
 </p>
               <!-- Defaul values -->
@@ -296,7 +306,7 @@ pre {
             </div>
           
             <div id="tab_version" class="tab-pane">
-              <h2>version</h2>
+              <h2>version <span class="required">Required</span></h2>
               <p><p>The version of the Pod. CocoaPods follows
 <a href="http://semver.org">semantic versioning</a>.</p>
 </p>
@@ -313,7 +323,7 @@ pre {
             </div>
           
             <div id="tab_authors" class="tab-pane">
-              <h2>authors</h2>
+              <h2>authors <span class="required">Required</span></h2>
               <p><p>The name and email address of each of the library’s the authors.</p>
 </p>
               <!-- Defaul values -->
@@ -336,7 +346,7 @@ pre {
             </div>
           
             <div id="tab_license" class="tab-pane">
-              <h2>license</h2>
+              <h2>license <span class="required">Required</span></h2>
               <p><p>The license of the Pod.</p>
 
 <p>Unless the source contains a file named <code>LICENSE.*</code> or <code>LICENCE.*</code>, the
@@ -365,7 +375,7 @@ path of the license file <em>or</em> license text must be specified.</p>
             </div>
           
             <div id="tab_homepage" class="tab-pane">
-              <h2>homepage</h2>
+              <h2>homepage <span class="required">Required</span></h2>
               <p><p>The URL of the homepage of the Pod.</p>
 </p>
               <!-- Defaul values -->
@@ -381,7 +391,7 @@ path of the license file <em>or</em> license text must be specified.</p>
             </div>
           
             <div id="tab_source" class="tab-pane">
-              <h2>source</h2>
+              <h2>source <span class="required">Required</span></h2>
               <p><p>The location from where the library should be retrieved.</p>
 </p>
               <!-- Defaul values -->
@@ -405,7 +415,7 @@ path of the license file <em>or</em> license text must be specified.</p>
             </div>
           
             <div id="tab_summary" class="tab-pane">
-              <h2>summary</h2>
+              <h2>summary <span class="required">Required</span></h2>
               <p><p>A short description of the Pod. It should have a maximum of 140
 characters.</p>
 </p>
@@ -662,6 +672,9 @@ may contain <a href="http://ruby-doc.org/core/Dir.html#method-c-glob">wildcard p
 </p>
               <!-- Defaul values -->
               
+                <h3>Defaults to:</h3>
+                <pre>Classes/**/*.{h,m}</pre>
+              
               <!-- Examples -->
               
                 <h3>Examples:</h3>
@@ -722,6 +735,9 @@ considered public.</p>
 build phase script.</p>
 </p>
               <!-- Defaul values -->
+              
+                <h3>Defaults to:</h3>
+                <pre>Resources/**/*</pre>
               
               <!-- Examples -->
               

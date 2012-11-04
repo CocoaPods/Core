@@ -22,7 +22,10 @@
   font-size: 12px;
   margin: 0px;
   /* color: #888; */
-  color: hsl(16, 10%, 50%);;
+  color: hsl(16, 10%, 50%);
+}
+#methods_list a span.required {
+  font-size: 11px;
 }
 #methods_list .active {
   background-color: rgb(245, 218, 176);
@@ -33,6 +36,13 @@
   padding-bottom:0px;
   line-height: 20px;
   font-size: 14px;
+}
+
+.required {
+  float: right;
+  font-weight: bold;
+  font-style: italic;
+  color: hsl(16, 10%, 70%);
 }
 
 p {
@@ -154,7 +164,7 @@ pre {
             <div class="span3">
             <h2><a href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
             <% group.methods.each do |method| %>
-              <p><a href="#tab_<%= method.to_param %>"><%= method.name %></a></p>
+              <p><a href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="required">(required)</span>' if method.required? %></a></p>
           <% end %>
           </div>
         <% end %>
@@ -177,12 +187,12 @@ pre {
 
           <% group.methods.each do |method| %>
             <div id="tab_<%= method.to_param %>" class="tab-pane">
-              <h2><%= method.name %></h2>
+              <h2><%= method.name %><%= ' <span class="required">Required</span>' if method.required? %></h2>
               <p><%= markdown method.description %></p>
               <!-- Defaul values -->
               <% if method.attribute && method.attribute.default_value %>
                 <h3>Defaults to:</h3>
-                <pre><%= attribute.default_value %></pre>
+                <pre><%= method.attribute.default_value %></pre>
               <% end %>
               <!-- Examples -->
               <% unless method.examples.empty? %>
