@@ -117,7 +117,12 @@ module Pod
       # Helpers
 
       def markdown(input)
-        @markdown ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+        @markdown ||= Redcarpet::Markdown.new(Class.new(Redcarpet::Render::HTML) do
+          def block_code(code, lang)
+            lang ||= 'ruby'
+            Pygments.highlight(code, :lexer => lang, :options => { :encoding => 'utf-8' })
+          end
+        end)
         @markdown.render(input)
       end
 

@@ -48,10 +48,6 @@
   color: hsl(16, 10%, 70%);
 }
 
-p {
-  color: #888;
-}
-
 p.multi-platform {
   font-weight: bold;
 }
@@ -122,7 +118,8 @@ h4 {
 }
 
 body {
- background-color:rgb(64, 22, 0);
+  color: #888;
+  background-color:rgb(64, 22, 0);
 }
 
 /* Syntax Highlighting */
@@ -694,8 +691,74 @@ end</p>
           <div id="tab_file-pattern-group" class="tab-pane">
             <h2>File pattern</h2>
             <p><p>These should be specified relative to the root of the source root and
-may contain <a href="http://ruby-doc.org/core/Dir.html#method-c-glob">wildcard patterns</a>.</p>
-</p>
+may contain the following wildcard patterns:</p>
+
+<h3>Pattern: *</h3>
+
+<p>Matches any file. Can be restricted by other values in the glob.</p>
+
+<ul>
+<li><code>*</code> will match all files</li>
+<li><code>c*</code> will match all files beginning with <code>c</code></li>
+<li><code>*c</code> will match all files ending with <code>c</code></li>
+<li><code>*c*</code> will match all files that have <code>c</code> in them (including at the
+beginning or end)</li>
+</ul>
+
+<p>Equivalent to <code>/.*/x</code> in regexp.</p>
+
+<p><strong>Note</strong> this will not match Unix-like hidden files (dotfiles). In
+order to include those in the match results, you must use something
+like <code>{*,.*}</code>.</p>
+
+<h3>Pattern: **</h3>
+
+<p>Matches directories recursively.</p>
+
+<h3>Pattern: ?</h3>
+
+<p>Matches any one character. Equivalent to <code>/.{1}/</code> in regexp.</p>
+
+<h3>Pattern: [set]</h3>
+
+<p>Matches any one character in set. Behaves exactly like character sets
+in Regexp, including set negation (<code>[^a-z]</code>).</p>
+
+<h3>Pattern: {p,q}</h3>
+
+<p>Matches either literal <code>p</code> or literal <code>q</code>. Matching literals may be
+more than one character in length. More than two literals may be
+specified.</p>
+
+<p>Equivalent to pattern alternation in regexp.</p>
+
+<h3>Pattern: \</h3>
+
+<p>Escapes the next metacharacter.</p>
+
+<h3>Examples</h3>
+<div class="highlight"><pre><span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;config.?&quot;</span><span class="o">]</span>                     <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;config.?&quot;</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.[a-z][a-z]&quot;</span><span class="p">)</span>            <span class="c1">#=&gt; [&quot;main.rb&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.[^r]*&quot;</span><span class="p">)</span>                 <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.{rb,h}&quot;</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;main.rb&quot;, &quot;config.h&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span>                       <span class="c1">#=&gt; [&quot;config.h&quot;, &quot;main.rb&quot;]</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="no">File</span><span class="o">::</span><span class="no">FNM_DOTMATCH</span><span class="p">)</span>   <span class="c1">#=&gt; [&quot;.&quot;, &quot;..&quot;, &quot;config.h&quot;, &quot;main.rb&quot;]</span>
+
+<span class="n">rbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">rbfiles</span><span class="p">)</span>                   <span class="c1">#=&gt; [&quot;main.rb&quot;,</span>
+                                    <span class="c1">#    &quot;lib/song.rb&quot;,</span>
+                                    <span class="c1">#    &quot;lib/song/karaoke.rb&quot;]</span>
+<span class="n">libdirs</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">)</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">libdirs</span><span class="p">)</span>                   <span class="c1">#=&gt; [&quot;lib&quot;]</span>
+
+<span class="n">librbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">librbfiles</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;lib/song.rb&quot;,</span>
+                                    <span class="c1">#    &quot;lib/song/karaoke.rb&quot;]</span>
+
+<span class="n">librbfiles</span> <span class="o">=</span> <span class="no">File</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;lib&quot;</span><span class="p">,</span> <span class="s2">&quot;*.rb&quot;</span><span class="p">)</span>
+<span class="no">Dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">librbfiles</span><span class="p">)</span>                <span class="c1">#=&gt; [&quot;lib/song.rb&quot;]</span>
+</pre></div></p>
           </div>
 
           
