@@ -597,6 +597,8 @@ module Pod
     #   These should be specified relative to the root of the source root and
     #   may contain the following wildcard patterns:
     #
+    #   ------------------
+    #
     #   ### Pattern: *
     #
     #   Matches any file. Can be restricted by other values in the glob.
@@ -613,31 +615,45 @@ module Pod
     #   order to include those in the match results, you must use something
     #   like `{*,.*}`.
     #
+    #   ------------------
+    #
     #   ### Pattern: **
     #
     #   Matches directories recursively.
+    #
+    #   ------------------
     #
     #   ### Pattern: ?
     #
     #   Matches any one character. Equivalent to `/.{1}/` in regexp.
     #
+    #   ------------------
+    #
     #   ### Pattern: [set]
     #
-    #   Matches any one character in set. Behaves exactly like character sets
-    #   in Regexp, including set negation (`[^a-z]`).
+    #   Matches any one character in set.
+    #
+    #   Behaves exactly like character sets in Regexp, including set negation
+    #   (`[^a-z]`).
+    #
+    #   ------------------
     #
     #   ### Pattern: {p,q}
     #
-    #   Matches either literal `p` or literal `q`. Matching literals may be
-    #   more than one character in length. More than two literals may be
-    #   specified.
+    #   Matches either literal `p` or literal `q`.
+    #
+    #   Matching literals may be more than one character in length. More than
+    #   two literals may be specified.
     #
     #   Equivalent to pattern alternation in regexp.
+    #
+    #   ------------------
     #
     #   ### Pattern: \
     #
     #   Escapes the next metacharacter.
     #
+    #   ------------------
     #
     #   ### Examples
     #

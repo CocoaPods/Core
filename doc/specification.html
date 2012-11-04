@@ -693,6 +693,8 @@ end</p>
             <p><p>These should be specified relative to the root of the source root and
 may contain the following wildcard patterns:</p>
 
+<hr>
+
 <h3>Pattern: *</h3>
 
 <p>Matches any file. Can be restricted by other values in the glob.</p>
@@ -711,30 +713,45 @@ beginning or end)</li>
 order to include those in the match results, you must use something
 like <code>{*,.*}</code>.</p>
 
+<hr>
+
 <h3>Pattern: **</h3>
 
 <p>Matches directories recursively.</p>
+
+<hr>
 
 <h3>Pattern: ?</h3>
 
 <p>Matches any one character. Equivalent to <code>/.{1}/</code> in regexp.</p>
 
+<hr>
+
 <h3>Pattern: [set]</h3>
 
-<p>Matches any one character in set. Behaves exactly like character sets
-in Regexp, including set negation (<code>[^a-z]</code>).</p>
+<p>Matches any one character in set.</p>
+
+<p>Behaves exactly like character sets in Regexp, including set negation
+(<code>[^a-z]</code>).</p>
+
+<hr>
 
 <h3>Pattern: {p,q}</h3>
 
-<p>Matches either literal <code>p</code> or literal <code>q</code>. Matching literals may be
-more than one character in length. More than two literals may be
-specified.</p>
+<p>Matches either literal <code>p</code> or literal <code>q</code>.</p>
+
+<p>Matching literals may be more than one character in length. More than
+two literals may be specified.</p>
 
 <p>Equivalent to pattern alternation in regexp.</p>
+
+<hr>
 
 <h3>Pattern: \</h3>
 
 <p>Escapes the next metacharacter.</p>
+
+<hr>
 
 <h3>Examples</h3>
 <div class="highlight"><pre><span class="no">Dir</span><span class="o">[</span><span class="s2">&quot;config.?&quot;</span><span class="o">]</span>                     <span class="c1">#=&gt; [&quot;config.h&quot;]</span>
