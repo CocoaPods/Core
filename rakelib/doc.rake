@@ -31,62 +31,105 @@ require 'cocoapods-core'
 
 #-----------------------------------------------------------------------------#
 
+module Pod
+  module Doc
+    class DSL
+      class Group
+        attr_reader :methods
+
+        def initialize(yard_group)
+          @yard_group = yard_group
+          @methods = []
+        end
+
+        def name
+          @name ||= @yard_group.lines.first.chomp.gsub('DSL: ','').gsub(' attributes','')
+        end
+
+        def description
+          Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@yard_group.lines.drop(1) * "\n")
+        end
+
+        def add_method(yard_method)
+          method = Method.new(self, yard_method)
+          @methods << method unless @methods.find { |m| m.name == method.name }
+        end
+      end
+
+      class Method
+        attr_accessor :group
+
+        def initialize(group, yard_method)
+          @group, @yard_method = group, yard_method
+        end
+
+        def name
+          @name ||= @yard_method.name.to_s.sub('=','')
+        end
+
+        def description
+          Redcarpet::Markdown.new(Redcarpet::Render::HTML).render(@yard_method.docstring)
+        end
+
+        def examples
+          @yard_method.docstring.tags(:example).map do |e|
+            Pygments.highlight(e.text.strip, :lexer => 'ruby')
+          end
+        end
+
+        def attribute
+          @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name == name }
+        end
+      end
+
+      attr_reader :source_file
+
+      def initialize(source_file)
+        @source_file = source_file
+      end
+
+      def groups
+        unless @groups
+          YARD::Registry.load([@source_file], true)
+          @groups = []
+
+          YARD::Registry.all(:method).each do |yard_method|
+            group = Group.new(yard_method.group)
+            if existing = @groups.find { |g| g.name == group.name }
+              group = existing
+            else
+              @groups << group
+            end
+            method = group.add_method(yard_method)
+          end
+
+          @groups.unshift(@groups.delete(@groups.find { |g| g.name == 'Regular' }))
+          @groups.unshift(@groups.delete(@groups.find { |g| g.name == 'Root specification' }))
+        end
+        @groups
+      end
+
+      def methods
+        groups.map(&:methods).flatten
+      end
+
+      def render(output_file)
+        require 'erb'
+        template = ERB.new(File.read(ROOT + 'doc/template.erb'))
+        File.open(output_file, 'w') { |f| f.puts(template.result(binding)) }
+      end
+    end
+  end
+end
+
 desc "Genereates the documentation"
 task :doc do
-
-  #-----------------------------------------------------------------------------#
-
   require 'yard'
   require 'redcarpet'
   require 'pygments'
 
   dsl_file = (ROOT + 'lib/cocoapods-core/specification/dsl.rb').to_s
-  YARD::Registry.load([dsl_file], true)
-
-  yard_methods = YARD::Registry.all(:method)
-  attributes = Pod::Specification.attributes
-  markdown   = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
-  groups     = []
-  methods    = []
-
-  yard_methods.each do |yard_method|
-    group_name = yard_method.group.lines.first.chomp.gsub('DSL: ','').gsub(' attributes','')
-    group = groups.find { |g| g.name == group_name }
-    unless group
-      groups << group = DSLGroup.new
-      group.methods = []
-      group.name = group_name
-      group.description = markdown.render(yard_method.group.lines.drop(1) * "\n")
-    end
-
-    # filter attribute readers
-    name = yard_method.name.to_s.gsub('=','')
-    unless methods.find {|m| m.name == name }
-      methods << method = DSLMethod.new
-      group.methods << method
-      method.name        = name
-      method.group       = group
-      method.description = markdown.render(yard_method.docstring)
-      method.attribute   = attributes.find { |a| a.writer_name == yard_method.name }
-      method.examples    = yard_method.docstring.tags(:example).map do |e|
-       Pygments.highlight(e.text.strip, :lexer => 'ruby')
-      end
-    end
-  end
-
-  groups.unshift(groups.delete(groups.find { |g| g.name == 'Regular' }))
-  groups.unshift(groups.delete(groups.find { |g| g.name == 'Root specification' }))
-
-  cocoapods_core_version = Pod::CORE_VERSION
-
-  #-----------------------------------------------------------------------------#
-
-  require 'erb'
-  html_file = ROOT + 'doc/specification.html'
-  template  = ERB.new(File.open(ROOT + 'doc/template.erb', 'rb').read)
-  File.open(html_file, 'w+') { |f| f.puts(template.result(binding)) }
-  `open #{html_file}`
-
+  Pod::Doc::DSL.new(dsl_file).render(ROOT + 'doc/specification.html')
 end
 
 #-------------------------------------------------------------------------------#
