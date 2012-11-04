@@ -52,6 +52,10 @@ p {
   color: #888;
 }
 
+p.multi-platform {
+  font-weight: bold;
+}
+
 a {
   color:#E6A33C;
 }
@@ -148,9 +152,6 @@ pre {
   color: #CCC;
 }
 
-
-
-
 </style>
 </head>
 
@@ -165,9 +166,9 @@ pre {
         <div class="row" id="methods_list">
           <% groups.each do |group| %>
             <div class="span3">
-            <h2><a href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
+            <h2><a class="select-tab" href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
             <% group.methods.each do |method| %>
-              <p><a href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="required">(required)</span>' if method.required? %></a></p>
+              <p><a class="select-tab" href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="required">(required)</span>' if method.required? %></a></p>
           <% end %>
           </div>
         <% end %>
@@ -191,6 +192,9 @@ pre {
           <% group.methods.each do |method| %>
             <div id="tab_<%= method.to_param %>" class="tab-pane">
               <h2><%= method.name %><%= ' <span class="required">Required</span>' if method.required? %></h2>
+              <% if method.multi_platform? %>
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              <% end %>
               <p><%= markdown method.description %></p>
               <!-- Defaul values -->
               <% if method.attribute && method.attribute.default_value %>
@@ -223,24 +227,33 @@ pre {
   <!-- SCRIPTS *************************************************************-->
 
   <script>
-    function selectTab(tabLink) {
+    function tabLinkByName(name) {
+      return $('#methods_list a[href=#tab_' + name.replace('#', '') + ']');
+    }
+
+    function selectTabByName(name) {
       // de-select previous
       $('#methods_list .active').removeClass('active');
       // select new
+      var tabLink = tabLinkByName(name);
       tabLink.parent().addClass('active')
       tabLink.tab('show');
-      document.location.hash = tabLink.attr("href").replace("#tab_", "")
+      document.location.hash = name;
     }
 
-    $('#methods_list a').click(function (e) {
+    function selectTab(clickedLink) {
+      selectTabByName(clickedLink.attr("href").replace('#tab_', ''));
+    }
+
+    $('a.select-tab').click(function (e) {
       e.preventDefault();
       selectTab($(this));
     })
 
     $(function () {
-      var tab = $('a[href=#tab_' + location.hash.replace("#", "") + ']');
-      if (tab.size() == 1) {
-        selectTab(tab);
+      var tabLink = tabLinkByName(document.location.hash);
+      if (tabLink.size() == 1) {
+        selectTab(tabLink);
       } else {
         selectTab($('#methods_list a:first'));
       }

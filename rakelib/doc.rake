@@ -71,6 +71,10 @@ module Pod
           attribute.required? if attribute
         end
 
+        def multi_platform?
+          attribute.multi_platform? if attribute
+        end
+
         # Might return `nil` in case this is a normal method, not an attribute.
         def attribute
           @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name.to_s == name }
