@@ -91,6 +91,7 @@ h4 {
 }
 
 .tab-content {
+  font-weight: 300;
   min-height:400px;
 }
 
@@ -101,10 +102,11 @@ h4 {
   /* match cocoapods.org */
   width:1024px;
   background-color:rgb(253, 250, 242);
+  border-top: 1px solid #F0E7DD;
   border-bottom: 1px solid #F0E7DD;
 }
 
-#content-outer-container {
+.content-outer-container {
   margin: 0 auto;
   padding-top:40px;
   padding-bottom:40px;
@@ -149,12 +151,72 @@ pre {
   color: #CCC;
 }
 
+div.sections {
+  padding: 0;
+  background-color: rgb(211, 188, 172);
+  border-bottom: 1px solid hsl(25, 31%, 70%);
+}
+
+.sections ul {
+  margin: 0;
+  background-color: rgb(227, 216, 212);
+}
+
+.sections li {
+  padding: 10px;
+  display: inline-block;
+  border-bottom: 1px solid hsl(25, 31%, 70%);
+}
+
+.sections li.current {
+  background-color: rgb(211, 188, 172);
+  border-left: 1px solid hsl(25, 31%, 70%);
+  border-right: 1px solid hsl(25, 31%, 70%);
+  border-bottom: 1px solid rgb(211, 188, 172); /* don't show border under current section */
+}
+
+.sections li h1 a {
+  text-decoration: none;
+}
+
+.sections li.current h1 a {
+  color: rgb(69, 46, 0);
+}
+
+.sections p {
+  font-weight: 300;
+  color: rgb(69, 46, 0);
+  margin: 0 40px;
+  padding: 10px 0;
+}
+
 </style>
 </head>
 
 <!-- BODY ******************************************************************-->
 
 <body>
+
+  <div class="content-outer-container sections">
+    <ul>
+      <li>
+        <h1><a href="podfile.html">Podfile</a></h1>
+      </li>
+      <li class="current">
+        <h1><a href="specification.html">Specification</a></h1>
+      </li>
+      <li>
+        <h1><a href="commands.html">Commands</a></h1>
+      </li>
+      <li>
+        <h1><a href="commands.html">Commands</a></h1>
+      </li>
+    </ul>
+    <p><p>A specification describes a Pod. It includes details about where the source
+should be fetched from, what files to use, the build settings to apply, and
+other general metadata; such as its name, version, and description.</p>
+</p>
+  </div>
 
   <!-- HEADER **************************************************************-->
   <div id="header-outer-container">
@@ -272,7 +334,7 @@ pre {
     </div>
   </div>
 
-  <div id="content-outer-container">
+  <div class="content-outer-container">
     <div class="container">
 
       <!-- TABS **************************************************************-->

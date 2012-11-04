@@ -2,6 +2,10 @@ module Pod
 
   # For readability the DSL is stored in this file.
 
+  # A specification describes a Pod. It includes details about where the source
+  # should be fetched from, what files to use, the build settings to apply, and
+  # other general metadata; such as its name, version, and description.
+  #
   class Specification
 
     # @!group DSL: Root specification attributes

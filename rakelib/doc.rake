@@ -87,12 +87,15 @@ module Pod
         @source_file = source_file
       end
 
+      def description
+        yard_registry.at('Pod::Specification').docstring
+      end
+
       def groups
         unless @groups
-          YARD::Registry.load([@source_file], true)
           @groups = []
 
-          YARD::Registry.all(:method).each do |yard_method|
+          yard_registry.all(:method).each do |yard_method|
             group = Group.new(yard_method.group)
             if existing = @groups.find { |g| g.name == group.name }
               group = existing
@@ -132,6 +135,15 @@ module Pod
 
       def self.syntax_highlight(code, lang = 'ruby')
         Pygments.highlight(code, :lexer => lang, :options => { :encoding => 'utf-8' })
+      end
+
+      private
+
+      def yard_registry
+        @registry ||= begin
+          YARD::Registry.load([@source_file], true)
+          YARD::Registry
+        end
       end
     end
   end
