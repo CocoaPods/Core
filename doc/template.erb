@@ -24,6 +24,12 @@
   /* color: #888; */
   color: hsl(16, 10%, 50%);;
 }
+#methods_list p.active {
+  background-color: rgb(245, 218, 176);
+}
+#methods_list p.active a {
+  color: rgb(114, 61, 42);
+}
 
 #methods_list h2 {
   padding-bottom:0px;
@@ -200,19 +206,27 @@ pre {
   <!-- SCRIPTS *************************************************************-->
 
   <script>
-    $(function () {
-      $('#methods_list a:first').tab('show');
-    })
+    function selectTab(tabLink) {
+      // de-select previous
+      $('#methods_list p.active').removeClass('active');
+      // select new
+      tabLink.parent('p').addClass('active')
+      tabLink.tab('show');
+      document.location.hash = tabLink.attr("href").replace("#tab_", "")
+    }
+
     $('#methods_list a').click(function (e) {
       e.preventDefault();
-      $(this).tab('show');
-      document.location.hash = $(this).attr("href").replace("#tab_", "")
+      selectTab($(this));
     })
 
     $(function () {
-      var activeTab = $('[href=#tab_' + location.hash.replace("#", "") + ']');
-      activeTab && activeTab.tab('show');
+      var tab = $('a[href=#tab_' + location.hash.replace("#", "") + ']');
+      if (tab.size() == 1) {
+        selectTab(tab);
+      } else {
+        selectTab($('#methods_list a:first'));
+      }
     });
-
   </script>
 </body>
