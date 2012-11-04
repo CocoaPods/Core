@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<head>
+<meta charset="utf-8">
+<title>Podspec Format</title>
+<link type="text/css" rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- CSS *******************************************************************-->
+
+<style type="text/css">
+
+.note {
+  margin-top:60px;
+  font-size: 12px;
+}
+
+#methods_list p,
+#methods_list a {
+  line-height: 22px;
+  font-size: 12px;
+  margin: 0px;
+  color: #888;
+}
+
+#methods_list h2 {
+  padding-bottom:0px;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+p {
+  color: #888;
+}
+
+a {
+  color:#E6A33C;
+}
+
+
+h2, h3 {
+  color:#E6A33C;
+}
+
+h2 {
+  padding-bottom:20px
+}
+
+
+h3 {
+  margin:20px 0;
+  font-size: 14px
+}
+
+h4 {
+  font-size:12px;
+  color: #CCC;
+  margin: -10px 0px 4px;
+}
+
+pre {
+  margin:20px 0;
+  color: #AAA;
+  background-color: #424242;
+}
+
+.modal-body > p {
+  color: #555;
+  font-size: 14px;
+  margin-top:20px;
+}
+
+.modal {
+  width:800px;
+  margin-left:-470px;
+}
+
+.tab-content {
+  min-height:400px;
+}
+
+#header-outer-container {
+  margin: 0 auto;
+  padding-top:40px;
+  padding-bottom:40px;
+  /* match cocoapods.org */
+  width:1024px;
+  background-color:rgb(253, 250, 242);
+  border-bottom: 1px solid #F0E7DD;
+}
+
+#content-outer-container {
+  margin: 0 auto;
+  padding-top:40px;
+  padding-bottom:40px;
+  /* match cocoapods.org */
+  width:1024px;
+  background-color:rgb(255, 255, 255);
+}
+
+#header {
+
+}
+
+body {
+ background-color:rgb(64, 22, 0);
+ background-color: #222;
+}
+
+
+</style>
+</head>
+
+<!-- BODY ******************************************************************-->
+
+<body>
+
+  <!-- HEADER **************************************************************-->
+  <div id="header-outer-container">
+    <div class="container">
+      <div id="header">
+        <div class="row" id="methods_list">
+          <% groups.each do |group| %>
+            <div class="span3">
+            <h2><%=group.name%></h2>
+            <% group.methods.each do |method| %>
+              <p><a href="#<%= method.name %>" data-toggle="tab"><%= method.name %></a></p>
+          <% end %>
+          </div>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="content-outer-container">
+    <div class="container">
+
+      <!-- TABS **************************************************************-->
+
+      <div class="tab-content">
+        <% methods.each do |method| %>
+          <div id="<%= method.name %>" class="tab-pane">
+          <h2><%= method.name %></h2>
+          <p><%= method.description %></p>
+          <!-- Defaul values -->
+          <% if method.attribute && method.attribute.default_value %>
+            <h3>Defaults to:</h3>
+            <pre><%= attribute.default_value %></pre>
+          <% end %>
+          <!-- Examples -->
+          <% unless method.examples.empty? %>
+            <h3>Examples:</h3>
+            <% method.examples.each do |example| %>
+              <pre><%= example %></pre>
+            <% end %>
+          <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- FOOTER ************************************************************-->
+
+      <div class="row">
+        <div class="span12">
+          <p class="note">Generated for CocoaPods Core v<%= cocoapods_core_version %></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPTS *************************************************************-->
+
+  <script>
+    $(function () {
+      $('#methods_list a:first').tab('show');
+    })
+  </script>
+</body>
