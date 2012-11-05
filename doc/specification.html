@@ -88,6 +88,8 @@
               
                 <p><a class="select-tab" href="#tab_resources">resources</a></p>
               
+                <p><a class="select-tab" href="#tab_copy_resources">copy_resources</a></p>
+              
                 <p><a class="select-tab" href="#tab_preserve_paths">preserve_paths</a></p>
               
             
@@ -1030,6 +1032,36 @@ build phase script.</p>
 </pre></div>
                 
                   <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="s2">&quot;Resources/*.png&quot;</span>
+</pre></div>
+                
+              
+            </div>
+          
+            <div id="tab_copy_resources" class="tab-pane">
+              <h2>
+                copy_resources
+                
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+              </h2>
+              <p><p>A list of resources that should be copied to the given location of the
+target bundle.</p>
+
+<hr>
+
+<p>This attribute is a more general alternative to <code>resources</code>.</p>
+</p>
+
+              <!-- Defaul values ******************************************* -->
+
+              
+
+              <!-- Examples *************************************************-->
+
+              
+                <hr>
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">copy_resources</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:frameworks</span> <span class="o">=&gt;</span> <span class="s1">&#39;frameworks/CrashReporter.framework&#39;</span> <span class="p">}</span>
 </pre></div>
                 
               

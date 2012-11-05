@@ -141,7 +141,7 @@ module Pod
 
     # The keys accepted by the license attribute.
     #
-    LICENSE_KEYS = [ :type, :file, :text ]
+    LICENSE_KEYS = [ :type, :file, :text ].freeze
 
     # @!method license=(license)
     #
@@ -219,7 +219,7 @@ module Pod
       :svn  => [:folder, :tag, :revision],
       :hg   => [:revision],
       :http => nil
-    }
+    }.freeze
 
     # @!method source=(source)
     #
@@ -939,6 +939,52 @@ module Pod
       :file_patterns => true,
       :default_value => 'Resources/**/*',
       :singularize   => true
+    }
+
+    #------------------#
+
+    # The possible destinations for the `copy_resources` attribute. Extracted
+    # form `Xcodeproj::Constants`.
+    #
+    COPY_FILES_BUILD_PHASE_DESTINATIONS = [
+      :absolute_path,
+      :products_directory,
+      :wrapper,
+      :resources,
+      :executables,
+      :java_resources,
+      :frameworks,
+      :shared_frameworks,
+      :shared_support,
+      :plug_ins,
+    ].freeze
+
+    # @!method copy_resources=(copy_resources)
+    #
+    #   A list of resources that should be copied to the given location of the
+    #   target bundle.
+    #
+    #   ------------------
+    #
+    #   This attribute is a more general alternative to `resources`.
+    #
+    #   @example
+    #
+    #     spec.copy_resources = { :frameworks => 'frameworks/CrashReporter.framework' }
+    #
+    #   @param  [Hash{String=>String}] copy_resources
+    #
+    #
+    # @!method copy_resources
+    #
+    #   @return [Hash{String=>String}] A hash where the key represents the
+    #           paths of the resources to copy and the values the paths of the
+    #           resources that should be copied.
+    #
+    attribute :copy_resources, {
+      :type => Hash,
+      :singularize   => true,
+      :keys          => COPY_FILES_BUILD_PHASE_DESTINATIONS,
     }
 
     #------------------#
