@@ -284,7 +284,7 @@ module Pod
 
     # @!method description=(description)
     #
-    #   A (optional) longer description of the Pod.
+    #   A longer description of the Pod.
     #
     #   @example
     #
@@ -309,8 +309,32 @@ module Pod
     }
 
     def description
-      @description.strip_heredoc
+      @description.strip_heredoc if @description
     end
+
+    #------------------#
+
+    # @!method screenshot=(screenshot)
+    #
+    #   An URL to an image showcasing the Pod. Intended for UI oriented
+    #   libraries.
+    #
+    #   @example
+    #
+    #     spec.screenshot = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
+    #
+    #   @param  [String] screenshot
+    #
+    #
+    # @!method description
+    #
+    #   @return [String] An URL for the screenshot of the Pod.
+    #
+    attribute :screenshot, {
+      :type           => String,
+      :multi_platform => false,
+      :root_only      => true,
+    }
 
     #------------------#
 
