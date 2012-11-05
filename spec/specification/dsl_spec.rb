@@ -341,11 +341,96 @@ describe Pod::Specification do
   #-----------------------------------------------------------------------------#
 
   describe "DSL - File patterns attributes" do
+    before do
+      @spec = Pod::Spec.new do |s|
+        s.name = "Pod"
+        s.subspec 'Subspec' do |sp|
+        end
+      end
+      @subspec = @spec.subspecs.first
+      @spec.activate_platform(:ios)
+    end
+
+    it "returns the source files" do
+      @spec.source_files = [ "lib_classes/**/*.{h,m}" ]
+      @spec.source_files.should == [ "lib_classes/**/*.{h,m}" ]
+    end
+
+    it "inherits the source files from the parent" do
+      @spec.source_files = [ "lib_classes/**/*.{h,m}" ]
+      @subspec.source_files = [ "subspec_classes/**/*.{h,m}" ]
+      @subspec.source_files.should == [ "lib_classes/**/*.{h,m}", "subspec_classes/**/*.{h,m}" ]
+    end
+
+    xit "has a default value for the source files" do
+      @spec.source_files.should == [ "classes/**/*.{h,m}" ]
+    end
+
+    #------------------#
+
+    xit "returns the source files to exclude" do
+
+    end
+
+    xit "inherits the source files to exclude from the parent" do
+
+    end
+
+    xit "has a default value for the source files to exclude" do
+
+    end
+
+    #------------------#
+
+    xit "returns the public headers files" do
+
+    end
+
+    xit "inherits the public headers files from the parent" do
+
+    end
+
+    #------------------#
+
+    xit "returns the path of the resources" do
+
+    end
+
+    xit "can accept the path of a single resource" do
+
+    end
+
+    xit "inherits the path of the resources form the parent" do
+
+    end
+
+    #------------------#
+
+    xit "returns the paths to preserve" do
+
+    end
+
+    xit "can accept a single path to preserve" do
+
+    end
+
+    xit "returns the path of the resources form the parent" do
+
+    end
   end
 
   #-----------------------------------------------------------------------------#
 
   describe "DSL - Hooks" do
+
+    xit "returns false if the pre install hook was not executed" do
+
+    end
+
+    xit "returns false if the post install hook was not executed" do
+
+    end
+
   end
 
   #-----------------------------------------------------------------------------#
@@ -362,17 +447,41 @@ describe Pod::Specification do
       @subspec = @spec.subspecs.first
     end
 
+    xit "allows to specify as subspec" do
+
+    end
+
+    xit "returns the subspecs" do
+
+    end
 
     it "allows to specify a preferred dependency" do
       @spec.preferred_dependency = 'Preferred-Subspec'
       @spec.activate_platform(:ios)
       @spec.preferred_dependency.should == 'Preferred-Subspec'
     end
+
+    xit "allows to specify a dependency" do
+
+    end
+
+    xit "returns the dependencies" do
+
+    end
   end
 
   #-----------------------------------------------------------------------------#
 
   describe "DSL - Multi-Platform" do
+
+    xit "allows to specify iOS attributes" do
+
+    end
+
+    xit "allows to specify OS X attributes" do
+
+    end
+
   end
 
 end
