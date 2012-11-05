@@ -361,19 +361,9 @@ module Pod
       deployment_target = name_and_deployment_target.last
       unless PLATFORMS.include?(name)
         raise StandardError, "Unsupported platform `#{name}`. The available " \
-                             "names are `#{PLATFORMS}`"
+                             "names are `#{PLATFORMS.inspect}`"
       end
       @platform = Platform.new(name, deployment_target)
-    end
-
-    # @return [Array<Platform>] The platforms that the Pod is supported on.
-    #
-    # @note   If no platform is specified, this method returns all known
-    #         platforms.
-    #
-    def available_platforms
-      names = platform ? [ platform.name ] : PLATFORMS
-      names.map { |name| Platform.new(name, deployment_targets[name]) }
     end
 
     #------------------#
@@ -414,28 +404,29 @@ module Pod
       @deployment_target[@define_for_platforms.first] = version
     end
 
-    # @return [Hash{Symbol=>String}] The deployment targets of each supported
-    #         platform.
-    #
-    # @note   If a platform is specified for a subspec, it takes precedence
-    #         over any other values. Unless a deployment target has been
-    #         specified, this will return the value of the parent spec.
-    #
-    def deployment_targets
-      targets = nil
-      if @platform && @platform.deployment_target
-        targets = { @platform.name => @platform.deployment_target }
-      end
-      unless targets || @deployment_target == { :osx => nil, :ios => nil }
-        targets = @deployment_target
-      end
-      targets || (parent.deployment_targets if parent) || {}
-    end
-
     #-------------------------------------------------------------------------#
 
     # @!group DSL: Regular attributes
 
+    # @!method requires_arc=(flag)
+    #
+    #   Wether the `-fobjc-arc' flag should be added to the compiler
+    #   flags.
+    #
+    #   @example
+    #
+    #     spec.requires_arc = true
+    #
+    #   @param [Bool] flag
+    #           whether the source files require ARC.
+    #
+    attribute :requires_arc, {
+      :type        => [TrueClass, FalseClass],
+      :inheritance => :first_defined,
+      :initial_value => nil,
+    }
+
+    #------------------#
 
     # @!method frameworks=(*frameworks)
     #
@@ -460,6 +451,8 @@ module Pod
     #     needs to link against
     #
     attribute :frameworks, {
+      :type        => [ String, Array ],
+      :wrapper     => Array,
       :inheritance => :merge,
       :singularize => true
     }
@@ -485,6 +478,8 @@ module Pod
     #     needs to **weakly** link against
     #
     attribute :weak_frameworks, {
+      :type        => [ String, Array ],
+      :wrapper     => Array,
       :inheritance => :merge,
       :singularize => true
     }
@@ -514,20 +509,77 @@ module Pod
     #     needs to link against
     #
     attribute :libraries, {
+      :type        => [ String, Array ],
+      :wrapper     => Array,
       :inheritance => :merge,
       :singularize => true
     }
 
     #------------------#
 
-    # @!method xcconfig=
+    # @!method libraries=(*libraries)
     #
-    # Any flag to add to final xcconfig file.
+    #   A list of libraries that the user’s target (application) needs to link
+    #   against.
     #
-    platform_attr_writer :xcconfig, lambda {|value, current| current.tap { |c| c.merge!(value) } }
-    pltf_first_defined_attr_reader :xcconfig
+    #   @example
+    #
+    #     spec.ios.library = 'xml2'
+    #
+    #   @example
+    #
+    #     spec.libraries = 'xml2', 'z'
+    #
+    #   @param  [String, Array<String>] libraries
+    #           A list of library names.
+    #
+    #
+    # @!method libraries
+    #
+    #   @return [Array<String>] A list of libraries that the user’s target
+    #     needs to link against
+    #
+    attribute :compiler_flags, {
+      :type        => [ String, Array ],
+      :wrapper     => Array,
+      :inheritance => :merge,
+      :singularize => true
+    }
 
-    # TODO: use meta-programming
+    #------------------#
+
+    # TODO: use meta-programming?
+
+    # @!method xcconfig=(value)
+    #
+    #   Any flag to add to final xcconfig file.
+    #
+    #   @example
+    #
+    #     spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+    #
+    #   @param  [Hash{String => String}] value
+    #           A representing an xcconfig.
+    #
+    #
+    # @!method xcconfig
+    #
+    #   @return [Hash{String => String}] the xcconfig flags for the current
+    #           specification.
+    #
+    attribute :xcconfig, {
+      :type        => Hash,
+      :inheritance => :first_defined,
+      :initial_value => {},
+    }
+
+    def xcconfig=(value)
+      @define_for_platforms.each do |platform|
+        @xcconfig[platform].merge!(value)
+      end
+    end
+
+
     def xcconfig
       if @parent
         @parent.xcconfig.merge(@xcconfig[active_platform]) do |_, parent_val, self_val|
@@ -538,64 +590,126 @@ module Pod
       end
     end
 
-    # TODO: This will be handled by the LocalPod
-    #
-    # def xcconfig
-    #   result = raw_xconfig.dup
-    #   result.libraries.merge(libraries)
-    #   result.frameworks.merge(frameworks)
-    #   result.weak_frameworks.merge(weak_frameworks)
-    #   result
-    # end
+    #------------------#
 
-    def recursive_compiler_flags
-      @parent ? @parent.recursive_compiler_flags | @compiler_flags[active_platform] : @compiler_flags[active_platform]
+    # TODO: decide inheritance policy
+
+    # @!method prefix_header_contents=(content)
+    #
+    #   Any content to inject in the prefix header of the pod project.
+    #
+    #   This attribute is not recommended as Pods should not pollute the prefix
+    #   header of other libraries or of the user project.
+    #
+    #   @example
+    #
+    #     spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
+    #
+    #   @param  [String] content
+    #           The contents of the prefix header.
+    #
+    #
+    # @!method prefix_header_contents
+    #
+    #   @return [String] The contents of the prefix header.
+    #
+    attribute :prefix_header_contents, {
+      :type        => [ String],
+      :inheritance => :first_defined,
+      :initial_value => nil,
+    }
+
+    #------------------#
+
+    # TODO: decide inheritance policy
+
+    # @!method prefix_header_file=(path)
+    #
+    #   A path to a prefix header file to inject in the prefix header of the pod project.
+    #
+    #   This attribute is not recommended as Pods should not pollute the prefix
+    #   header of other libraries or of the user project.
+    #
+    #   @example
+    #
+    #     s.prefix_header_file = 'iphone/include/prefix.pch'
+    #
+    #   @param  [String] path
+    #           The path to the prefix header file.
+    #
+    #
+    # @!method prefix_header_file
+    #
+    #   @return [Pathname] The path of the prefix header file.
+    #
+    attribute :prefix_header_file, {
+      :type          => [ String],
+      :inheritance   => :first_defined,
+      :initial_value => '',
+    }
+
+    def prefix_header_file
+      Pathname.new(@prefix_header_file[active_platform])
     end
 
-    def compiler_flags
-      flags = recursive_compiler_flags.dup
-      flags << '-fobjc-arc' if requires_arc
-      flags.join(' ')
+    #------------------#
+
+    # @!method header_dir=(dir)
+    #
+    #   The directory where to store the headers files so they don't break includes.
+    #
+    #   @example
+    #
+    #     s.header_dir = 'Three20Core'
+    #
+    #   @param  [String] dir
+    #           the headers directory.
+    #
+    #
+    # @!method header_dir
+    #
+    #   @return [Pathname] the headers directory.
+    #
+    attribute :header_dir, {
+      :type => String,
+      :initial_value => nil,
+      :inheritance   => :first_defined,
+    }
+
+    def header_dir
+      Pathname.new(@header_dir[active_platform])
     end
 
-    platform_attr_writer :compiler_flags, lambda {|value, current| current << value }
-
     #------------------#
 
-    # TODO allow for subspecs
-    top_attr_accessor :prefix_header_file,  lambda { |file| Pathname.new(file) }
-    top_attr_accessor :prefix_header_contents
+    # @!method header_mappings_dir=(dir)
+    #
+    #   If not provided the headers files are flattened. Otherwise if a
+    #   directory is provided the folder structure is preserved from it.
+    #
+    #   @example
+    #
+    #     s.header_mappings_dir = 'src/include'
+    #
+    #   @param  [String] dir
+    #           the directory from where to preserve the headers namespacing.
+    #
+    #
+    # @!method header_mappings_dir
+    #
+    #   @return [Pathname] the directory from where to preserve the headers
+    #           namespacing.
+    #
+    attribute :header_mappings_dir, {
+      :type => String,
+      :initial_value => nil,
+      :inheritance   => :first_defined,
+    }
 
-    #------------------#
+    def header_mappings_dir
+      Pathname.new(@header_mappings_dir[active_platform])
+    end
 
-    # @!method requires_arc=
-    #
-    # @abstract Wether the `-fobjc-arc' flag should be added to the compiler
-    #   flags.
-    #
-    # @param [Bool] Wether the source files require ARC.
-    #
-    platform_attr_writer :requires_arc
-    pltf_first_defined_attr_reader :requires_arc
-
-    #------------------#
-
-    # @!method header_dir=
-    #
-    # @abstract The directory where to name space the headers files of
-    #   the specification.
-    #
-    # @param [String] The headers directory.
-    #
-    platform_attr_writer           :header_dir, lambda { |dir, _| Pathname.new(dir) }
-    pltf_first_defined_attr_reader :header_dir
-
-    #------------------#
-
-    # If not provided the headers files are flattened
-    #
-    platform_attr_writer           :header_mappings_dir, lambda { |file, _| Pathname.new(file) }
-    pltf_first_defined_attr_reader :header_mappings_dir
 
     #-------------------------------------------------------------------------#
 
@@ -813,19 +927,6 @@ module Pod
 
     # @!group DSL: Hooks
 
-    # TODO: hooks should appear in the documentation as well.
-
-    # This method takes a header path and returns the location it should have
-    # in the pod's header dir.
-    #
-    # By default all headers are copied to the pod's header dir without any
-    # namespacing. However if the top level attribute accessor header_mappings_dir
-    # is specified the namespacing will be preserved from that directory.
-    #
-    def copy_header_mapping(from)
-      header_mappings_dir ? from.relative_path_from(header_mappings_dir) : from.basename
-    end
-
     # This is a convenience method which gets called after all pods have been
     # downloaded but before they have been installed, and the Xcode project and
     # related files have been generated. (It receives the Pod::LocalPod
@@ -857,7 +958,7 @@ module Pod
     #     def s.post_install(target_installer)
     #       prefix_header = config.project_pods_root + target_installer.prefix_header_filename
     #       prefix_header.open('a') do |file|
-    #         file.puts(%{#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif})
+    #         file.puts('#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif')
     #       end
     #     end
     #   end
@@ -880,7 +981,8 @@ module Pod
       :type           => String,
       :writer_name    => :subspec,
       :reader_name    => :subspecs,
-      :ivar_name      => "@subspecs"
+      :ivar_name      => "@subspecs",
+      :multi_platform => false,
     }
 
     # Specification for a module of the Pod. A specification automaically

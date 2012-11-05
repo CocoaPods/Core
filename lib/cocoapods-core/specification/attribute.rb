@@ -43,7 +43,11 @@ module Pod
       #
       def initialize(name, options)
         @name = name
-        @type                 = options.delete(:type)
+
+        @types                = [ options.delete(:type) ]
+        @types                = options.delete(:types)
+        @wrapper              = options.delete(:wrapper)
+
         @required             = options.delete(:required)
         @singularize          = options.delete(:singularize)
         @inheritance          = options.delete(:inheritance)
@@ -67,6 +71,7 @@ module Pod
       end
 
       attr_reader :type
+      attr_reader :wrapper
       attr_reader :inheritance
       attr_reader :keys
       attr_reader :initial_value
@@ -132,113 +137,128 @@ module Pod
       #
       #
       def attribute(name, options)
-        attrb = Attribute.new(name, options)
-        @attributes << attrb
+        attr = Attribute.new(name, options)
+        @attributes << attr
 
         # reader
-        define_method(attrb.reader_name) do
-          if attrb.multi_platform?
+        define_method(attr.reader_name) do
+          if attr.multi_platform?
             active_plaform_check
-            if attrb.inheritance == :first_defined
-              ivar_value = instance_variable_get(attrb.ivar)[active_platform]
-              ivar_value || (@parent.send(attrb.reader_name) if @parent)
-            elsif attrb.inheritance == :merge
-              ivar_value = instance_variable_get(attrb.ivar)[active_platform]
-              ivar_value.nil? ? (@parent.send(attr) if @parent) : ivar_value
+            if attr.inheritance == :first_defined
+              ivar_value = instance_variable_get(attr.ivar)[active_platform]
+              ivar_value || (@parent.send(attr.reader_name) if @parent)
+            elsif attr.inheritance == :merge
+              value = instance_variable_get(attr.ivar)[active_platform]
+              if parent
+                parent_value = @parent.send(attr.reader_name)
+                value = case parent_value
+                        when Array
+                          (parent_value || []) + value
+                        when Hash
+                        end
+              end
+              value
             else
-              instance_variable_get(attrb.ivar)[active_platform]
+              instance_variable_get(attr.ivar)[active_platform]
             end
           else
-            if attrb.inheritance == :first_defined
-              ivar_value = instance_variable_get(attrb.ivar)
-              ivar_value || (@parent.send(attrb.reader_name) if @parent)
+            if attr.inheritance == :first_defined
+              ivar_value = instance_variable_get(attr.ivar)
+              ivar_value || (@parent.send(attr.reader_name) if @parent)
             else
-              instance_variable_get(attrb.ivar)
+              instance_variable_get(attr.ivar)
             end
           end
         end
 
         # writer
-        define_method(attrb.writer_name) do |value|
-          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attrb.root_only? && !root_spec
-          if attrb.multi_platform?
-            ivar_value = instance_variable_get(attrb.ivar)
+        define_method(attr.writer_name) do |value|
+          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attr.root_only? && !root_spec
+
+          if attr.wrapper
+            if attr.wrapper ==  Array
+              value = [ value ] unless value.is_a?(Array)
+            end
+          end
+
+          if attr.multi_platform?
+            ivar_value = instance_variable_get(attr.ivar)
             @define_for_platforms.each do |platform|
               ivar_value[platform] = value
             end
           else
-            instance_variable_set(attrb.ivar, value);
+            instance_variable_set(attr.ivar, value);
           end
         end
 
-        alias_method(attrb.writer_alias, attrb.writer_name) if attrb.writer_alias
+        alias_method(attr.writer_alias, attr.writer_name) if attr.writer_alias
       end
 
-      # Creates a top level attribute reader. A lambda can be passed to process
-      # the ivar before returning it
-      #
-      def top_attr_reader(attr, read_lambda = nil)
-        define_method(attr) do
-          ivar = instance_variable_get("@#{attr}")
-          @parent ? top_level_parent.send(attr) : ( read_lambda ? read_lambda.call(self, ivar) : ivar )
-        end
-      end
+      # # Creates a top level attribute reader. A lambda can be passed to process
+      # # the ivar before returning it
+      # #
+      # def top_attr_reader(attr, read_lambda = nil)
+      #   define_method(attr) do
+      #     ivar = instance_variable_get("@#{attr}")
+      #     @parent ? root_spec.send(attr) : ( read_lambda ? read_lambda.call(self, ivar) : ivar )
+      #   end
+      # end
 
-      # Creates a top level attribute writer. A lambda can be passed to
-      # initialize the value
-      #
-      def top_attr_writer(attr, init_lambda = nil)
-        define_method("#{attr}=") do |value|
-          raise StandardError, "#{self.inspect} Can't set `#{attr}' for subspecs." if @parent
-          instance_variable_set("@#{attr}",  init_lambda ? init_lambda.call(value) : value);
-        end
-      end
+      # # Creates a top level attribute writer. A lambda can be passed to
+      # # initialize the value
+      # #
+      # def top_attr_writer(attr, init_lambda = nil)
+      #   define_method("#{attr}=") do |value|
+      #     raise StandardError, "#{self.inspect} Can't set `#{attr}' for subspecs." if @parent
+      #     instance_variable_set("@#{attr}",  init_lambda ? init_lambda.call(value) : value);
+      #   end
+      # end
 
-      # Creates a top level attribute accessor. A lambda can be passed to
-      # initialize the value in the attribute writer.
-      #
-      def top_attr_accessor(attr, writer_labmda = nil)
-        top_attr_reader attr
-        top_attr_writer attr, writer_labmda
-      end
+      # # Creates a top level attribute accessor. A lambda can be passed to
+      # # initialize the value in the attribute writer.
+      # #
+      # def top_attr_accessor(attr, writer_labmda = nil)
+      #   top_attr_reader attr
+      #   top_attr_writer attr, writer_labmda
+      # end
 
-      # Returns the value of the attribute for the active platform chained with
-      # the upstream specifications. The ivar must store the platform specific
-      # values as an array.
-      #
-      def pltf_chained_attr_reader(attr)
-        define_method(attr) do
-          active_plaform_check
-        end
-      end
+      # # Returns the value of the attribute for the active platform chained with
+      # # the upstream specifications. The ivar must store the platform specific
+      # # values as an array.
+      # #
+      # def pltf_chained_attr_reader(attr)
+      #   define_method(attr) do
+      #     active_plaform_check
+      #   end
+      # end
 
-      # Returns the first value defined of the attribute traversing the chain
-      # upwards.
-      #
-      def pltf_first_defined_attr_reader(attr)
-        define_method(attr) do
-          active_plaform_check
-          ivar_value = instance_variable_get("@#{attr}")[active_platform]
-          ivar_value.nil? ? (@parent.send(attr) if @parent) : ivar_value
-        end
-      end
+      # # Returns the first value defined of the attribute traversing the chain
+      # # upwards.
+      # #
+      # def pltf_first_defined_attr_reader(attr)
+      #   define_method(attr) do
+      #     active_plaform_check
+      #     ivar_value = instance_variable_get("@#{attr}")[active_platform]
+      #     ivar_value.nil? ? (@parent.send(attr) if @parent) : ivar_value
+      #   end
+      # end
 
 
-      # Attribute writer that works in conjunction with the PlatformProxy.
-      #
-      def platform_attr_writer(attr, block = nil)
-        define_method("#{attr}=") do |value|
-          current = instance_variable_get("@#{attr}")
-          @define_for_platforms.each do |platform|
-            block ?  current[platform] = block.call(value, current[platform]) : current[platform] = value
-          end
-        end
-      end
+      # # Attribute writer that works in conjunction with the PlatformProxy.
+      # #
+      # def platform_attr_writer(attr, block = nil)
+      #   define_method("#{attr}=") do |value|
+      #     current = instance_variable_get("@#{attr}")
+      #     @define_for_platforms.each do |platform|
+      #       block ?  current[platform] = block.call(value, current[platform]) : current[platform] = value
+      #     end
+      #   end
+      # end
 
-      def pltf_chained_attr_accessor(attr, block = nil)
-        pltf_chained_attr_reader(attr)
-        platform_attr_writer(attr, block)
-      end
+      # def pltf_chained_attr_accessor(attr, block = nil)
+      #   pltf_chained_attr_reader(attr)
+      #   platform_attr_writer(attr, block)
+      # end
 
     end
   end

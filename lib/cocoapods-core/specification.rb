@@ -261,6 +261,59 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
+    # @!group DSL helpers
+
+
+    # TODO: This will be handled by the LocalPod
+
+    # def xcconfig
+    #   result = raw_xconfig.dup
+    #   result.libraries.merge(libraries)
+    #   result.frameworks.merge(frameworks)
+    #   result.weak_frameworks.merge(weak_frameworks)
+    #   result
+    # end
+
+    # def recursive_compiler_flags
+    #   @parent ? @parent.recursive_compiler_flags | @compiler_flags[active_platform] : @compiler_flags[active_platform]
+    # end
+
+    # def compiler_flags
+    #   flags = recursive_compiler_flags.dup
+    #   flags << '-fobjc-arc' if requires_arc
+    #   flags.join(' ')
+    # end
+
+    # @return [Array<Platform>] The platforms that the Pod is supported on.
+    #
+    # @note   If no platform is specified, this method returns all known
+    #         platforms.
+    #
+    def available_platforms
+      names = platform ? [ platform.name ] : PLATFORMS
+      names.map { |name| Platform.new(name, deployment_targets[name]) }
+    end
+
+    # @return [Hash{Symbol=>String}] The deployment targets of each supported
+    #         platform.
+    #
+    # @note   If a platform is specified for a subspec, it takes precedence
+    #         over any other values. Unless a deployment target has been
+    #         specified, this will return the value of the parent spec.
+    #
+    def deployment_targets
+      targets = nil
+      if @platform && @platform.deployment_target
+        targets = { @platform.name => @platform.deployment_target }
+      end
+      unless targets || @deployment_target == { :osx => nil, :ios => nil }
+        targets = @deployment_target
+      end
+      targets || (parent.deployment_targets if parent) || {}
+    end
+
+    #---------------------------------------------------------------------------#
+
     # The PlatformProxy works in conjunction with Specification#_on_platform.
     # It provides support for a syntax like `spec.ios.source_files = 'file'`.
     #
@@ -285,6 +338,8 @@ module Pod
             @specification.send(a.writer_name, args)
           end
         end
+
+        alias_method(a.writer_alias, a.writer_name) if a.writer_alias
       end
     end
 

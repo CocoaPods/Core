@@ -250,6 +250,8 @@ other general metadata such as its name, version, and description.</p>
             <div class="span3">
             <h2><a class="select-tab" href="#tab_regular-group">Regular</a></h2>
             
+              <p><a class="select-tab" href="#tab_requires_arc">requires_arc</a></p>
+          
               <p><a class="select-tab" href="#tab_frameworks">frameworks</a></p>
           
               <p><a class="select-tab" href="#tab_weak_frameworks">weak_frameworks</a></p>
@@ -258,13 +260,13 @@ other general metadata such as its name, version, and description.</p>
           
               <p><a class="select-tab" href="#tab_xcconfig">xcconfig</a></p>
           
-              <p><a class="select-tab" href="#tab_recursive_compiler_flags">recursive_compiler_flags</a></p>
+              <p><a class="select-tab" href="#tab_prefix_header_contents">prefix_header_contents</a></p>
           
-              <p><a class="select-tab" href="#tab_compiler_flags">compiler_flags</a></p>
-          
-              <p><a class="select-tab" href="#tab_requires_arc">requires_arc</a></p>
+              <p><a class="select-tab" href="#tab_prefix_header_file">prefix_header_file</a></p>
           
               <p><a class="select-tab" href="#tab_header_dir">header_dir</a></p>
+          
+              <p><a class="select-tab" href="#tab_header_mappings_dir">header_mappings_dir</a></p>
           
           </div>
         
@@ -273,11 +275,7 @@ other general metadata such as its name, version, and description.</p>
             
               <p><a class="select-tab" href="#tab_platform">platform</a></p>
           
-              <p><a class="select-tab" href="#tab_available_platforms">available_platforms</a></p>
-          
               <p><a class="select-tab" href="#tab_deployment_target">deployment_target</a></p>
-          
-              <p><a class="select-tab" href="#tab_deployment_targets">deployment_targets</a></p>
           
           </div>
         
@@ -299,8 +297,6 @@ other general metadata such as its name, version, and description.</p>
             <div class="span3">
             <h2><a class="select-tab" href="#tab_hooks-group">Hooks</a></h2>
             
-              <p><a class="select-tab" href="#tab_copy_header_mapping">copy_header_mapping</a></p>
-          
               <p><a class="select-tab" href="#tab_pre_install">pre_install</a></p>
           
               <p><a class="select-tab" href="#tab_post_install">post_install</a></p>
@@ -549,6 +545,26 @@ characters.</p>
           </div>
 
           
+            <div id="tab_requires_arc" class="tab-pane">
+              <h2>requires_arc</h2>
+              
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
+              <p><p>Wether the `-fobjc-arc&#39; flag should be added to the compiler
+flags.</p>
+</p>
+              <!-- Defaul values -->
+              
+              <!-- Examples -->
+              
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">requires_arc</span> <span class="o">=</span> <span class="kp">true</span>
+</pre></div>
+                
+              
+            </div>
+          
             <div id="tab_frameworks" class="tab-pane">
               <h2>frameworks</h2>
               
@@ -618,60 +634,102 @@ against.</p>
             <div id="tab_xcconfig" class="tab-pane">
               <h2>xcconfig</h2>
               
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
               <p><p>Any flag to add to final xcconfig file.</p>
 </p>
               <!-- Defaul values -->
               
               <!-- Examples -->
               
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">xcconfig</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;OTHER_LDFLAGS&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;-lObjC&#39;</span> <span class="p">}</span>
+</pre></div>
+                
+              
             </div>
           
-            <div id="tab_recursive_compiler_flags" class="tab-pane">
-              <h2>recursive_compiler_flags</h2>
+            <div id="tab_prefix_header_contents" class="tab-pane">
+              <h2>prefix_header_contents</h2>
               
-              <p><p>TODO: This will be handled by the LocalPod</p>
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
+              <p><p>Any content to inject in the prefix header of the pod project.</p>
 
-<p>def xcconfig
-  result = raw<em>xconfig.dup
-  result.libraries.merge(libraries)
-  result.frameworks.merge(frameworks)
-  result.weak</em>frameworks.merge(weak_frameworks)
-  result
-end</p>
+<p>This attribute is not recommended as Pods should not pollute the prefix
+header of other libraries or of the user project.</p>
 </p>
               <!-- Defaul values -->
               
               <!-- Examples -->
               
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">prefix_header_contents</span> <span class="o">=</span> <span class="s1">&#39;#import &lt;UIKit/UIKit.h&gt;&#39;</span>
+</pre></div>
+                
+              
             </div>
           
-            <div id="tab_compiler_flags" class="tab-pane">
-              <h2>compiler_flags</h2>
+            <div id="tab_prefix_header_file" class="tab-pane">
+              <h2>prefix_header_file</h2>
               
-              <p></p>
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
+              <p><p>A path to a prefix header file to inject in the prefix header of the pod project.</p>
+
+<p>This attribute is not recommended as Pods should not pollute the prefix
+header of other libraries or of the user project.</p>
+</p>
               <!-- Defaul values -->
               
               <!-- Examples -->
               
-            </div>
-          
-            <div id="tab_requires_arc" class="tab-pane">
-              <h2>requires_arc</h2>
-              
-              <p></p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">prefix_header_file</span> <span class="o">=</span> <span class="s1">&#39;iphone/include/prefix.pch&#39;</span>
+</pre></div>
+                
               
             </div>
           
             <div id="tab_header_dir" class="tab-pane">
               <h2>header_dir</h2>
               
-              <p></p>
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
+              <p><p>The directory where to store the headers files so they don&#39;t break includes.</p>
+</p>
               <!-- Defaul values -->
               
               <!-- Examples -->
+              
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">header_dir</span> <span class="o">=</span> <span class="s1">&#39;Three20Core&#39;</span>
+</pre></div>
+                
+              
+            </div>
+          
+            <div id="tab_header_mappings_dir" class="tab-pane">
+              <h2>header_mappings_dir</h2>
+              
+                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
+              
+              <p><p>If not provided the headers files are flattened. Otherwise if a
+directory is provided the folder structure is preserved from it.</p>
+</p>
+              <!-- Defaul values -->
+              
+              <!-- Examples -->
+              
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">header_mappings_dir</span> <span class="o">=</span> <span class="s1">&#39;src/include&#39;</span>
+</pre></div>
+                
               
             </div>
           
@@ -707,16 +765,6 @@ end</p>
               
             </div>
           
-            <div id="tab_available_platforms" class="tab-pane">
-              <h2>available_platforms</h2>
-              
-              <p></p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
-              
-            </div>
-          
             <div id="tab_deployment_target" class="tab-pane">
               <h2>deployment_target</h2>
               
@@ -736,16 +784,6 @@ end</p>
                   <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;10.8&quot;</span>
 </pre></div>
                 
-              
-            </div>
-          
-            <div id="tab_deployment_targets" class="tab-pane">
-              <h2>deployment_targets</h2>
-              
-              <p></p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
               
             </div>
           
@@ -958,22 +996,6 @@ the other file pattern attributes.</p>
           </div>
 
           
-            <div id="tab_copy_header_mapping" class="tab-pane">
-              <h2>copy_header_mapping</h2>
-              
-              <p><p>This method takes a header path and returns the location it should have
-in the pod&#39;s header dir.</p>
-
-<p>By default all headers are copied to the pod&#39;s header dir without any
-namespacing. However if the top level attribute accessor header<em>mappings</em>dir
-is specified the namespacing will be preserved from that directory.</p>
-</p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
-              
-            </div>
-          
             <div id="tab_pre_install" class="tab-pane">
               <h2>pre_install</h2>
               
@@ -1019,7 +1041,7 @@ header:</p>
   <span class="k">def</span> <span class="nc">s</span><span class="o">.</span><span class="nf">post_install</span><span class="p">(</span><span class="n">target_installer</span><span class="p">)</span>
     <span class="n">prefix_header</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">project_pods_root</span> <span class="o">+</span> <span class="n">target_installer</span><span class="o">.</span><span class="n">prefix_header_filename</span>
     <span class="n">prefix_header</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">file</span><span class="o">|</span>
-      <span class="n">file</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="sx">%{#ifdef __OBJC__</span><span class="se">\n</span><span class="sx">#import &quot;SSToolkitDefines.h&quot;</span><span class="se">\n</span><span class="sx">#endif}</span><span class="p">)</span>
+      <span class="n">file</span><span class="o">.</span><span class="n">puts</span><span class="p">(</span><span class="s1">&#39;#ifdef __OBJC__\n#import &quot;SSToolkitDefines.h&quot;\n#endif&#39;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -1037,8 +1059,6 @@ header:</p>
           
             <div id="tab_subspecs" class="tab-pane">
               <h2>subspecs</h2>
-              
-                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
               
               <p></p>
               <!-- Defaul values -->

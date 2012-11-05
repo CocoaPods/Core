@@ -61,6 +61,10 @@ describe Pod::Specification do
       @spec.license.should == { :type => 'MIT', :text => "Copyright\nMIT-LICENSE" }
     end
 
+    xit "checks for unknown keys in the license" do
+
+    end
+
     it "returns the homepage" do
       @spec.homepage = 'www.example.com'
       @spec.homepage.should == 'www.example.com'
@@ -160,17 +164,178 @@ describe Pod::Specification do
         s.name = "Pod"
         s.subspec 'Subspec' do |sp|
         end
-        s.subspec 'Preferred-Subspec' do |sp|
-        end
       end
       @subspec = @spec.subspecs.first
+      @spec.activate_platform(:ios)
     end
 
-    it "allows to specify a preferred dependency" do
-      @spec.preferred_dependency = 'Preferred-Subspec'
-      @spec.activate_platform(:ios)
-      @spec.preferred_dependency.should == 'Preferred-Subspec'
+    #------------------#
+
+    it "allows to specify whether the specification requires ARC" do
+      @spec.requires_arc = true
+      @spec.requires_arc.should.be.true
     end
+
+    it "doesn't requires arc by default" do
+      @spec.requires_arc.should == nil
+    end
+
+    it "inherits where it requires arc from the parent" do
+      @spec.requires_arc = true
+      @subspec.requires_arc.should.be.true
+    end
+
+    #------------------#
+
+    it "allows to specify the frameworks" do
+      @spec.framework = %w[ QuartzCore CoreData ]
+      @spec.frameworks.should == %w[ QuartzCore CoreData ]
+    end
+
+    it "allows to specify a single framework" do
+      @spec.framework = 'QuartzCore'
+      @spec.frameworks.should == %w[ QuartzCore ]
+    end
+
+    it "inherits the frameworks of the parent" do
+      @spec.framework = 'QuartzCore'
+      @subspec.framework = 'CoreData'
+      @subspec.frameworks.should == %w[ QuartzCore CoreData ]
+    end
+
+    #------------------#
+
+    it "allows to specify the weak frameworks" do
+      @spec.weak_frameworks = %w[ Twitter iAd ]
+      @spec.weak_frameworks.should == %w[ Twitter iAd ]
+    end
+
+    it "allows to specify a single weak framework" do
+      @spec.weak_framework = 'Twitter'
+      @spec.weak_frameworks.should == %w[ Twitter ]
+    end
+
+    it "inherits the weak frameworks of the parent" do
+      @spec.framework    = 'Twitter'
+      @subspec.framework = 'iAd'
+      @subspec.frameworks.should == %w[ Twitter iAd ]
+    end
+
+    #------------------#
+
+    it "allows to specify the libraries" do
+      @spec.libraries = 'z', 'xml2'
+      @spec.libraries.should  == %w[ z xml2 ]
+    end
+
+    it "allows to specify a single library" do
+      @spec.library = 'z'
+      @spec.libraries.should  == %w[ z ]
+    end
+
+    it "inherits the libraries from the parent" do
+      @spec.library    = 'z'
+      @subspec.library = 'xml2'
+      @subspec.libraries.should == %w[ z xml2 ]
+    end
+
+    #------------------#
+
+    it "allows to specify compiler flags" do
+      @spec.compiler_flags = %w[ -Wdeprecated-implementations -Wunused-value ]
+      @spec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+    end
+
+    it "allows to specify a single compiler flag" do
+      @spec.compiler_flag = '-Wdeprecated-implementations'
+      @spec.compiler_flags.should == %w[ -Wdeprecated-implementations ]
+    end
+
+    it "inherits the compiler flags from the parent" do
+      @spec.compiler_flag = '-Wdeprecated-implementations'
+      @subspec.compiler_flag = '-Wunused-value'
+      @subspec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+    end
+
+    xit "merges the compiler flags so values for platforms can be specified" do
+      @spec.compiler_flags = '-Wdeprecated-implementations'
+      @spec.ios.compiler_flags = '-Wunused-value'
+      @spec.activate_platform(:ios)
+      @spec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+      @spec.activate_platform(:osx)
+      @spec.compiler_flags.should == %w[ -Wdeprecated-implementations ]
+    end
+
+    #------------------#
+
+    it "allows to specify xcconfig settings" do
+      @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+      @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
+    end
+
+    xit "inherits the xcconfig values from the parent" do
+      @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+      @subspec.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
+      @subspec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
+    end
+
+    xit "merges the xcconfig values so values for platforms can be specified" do
+      @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+      @spec.ios.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
+      @spec.activate_platform(:ios)
+      @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
+      @spec.activate_platform(:osx)
+      @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
+    end
+
+    #------------------#
+
+    it "allows to specify the contents of the prefix header" do
+      @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
+      @spec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
+    end
+
+    it "inherits the contents of the prefix header" do
+      @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
+      @subspec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
+    end
+
+    #------------------#
+
+    it "allows to specify the path of compiler header file" do
+      @spec.prefix_header_file = 'iphone/include/prefix.pch'
+      @spec.prefix_header_file.should == Pathname.new('iphone/include/prefix.pch')
+    end
+
+    xit "inherits the path of compiler header file from the parent" do
+      @spec.prefix_header_file = 'iphone/include/prefix.pch'
+      @subspec.prefix_header_file.should == Pathname.new('iphone/include/prefix.pch')
+    end
+
+    #------------------#
+
+    it "allows to specify a directory to use for the headers" do
+      @spec.header_dir = 'Three20Core'
+      @spec.header_dir.should == Pathname.new('Three20Core')
+    end
+
+    xit "inherits the directory to use for the headers from the parent" do
+      @spec.header_dir = 'Three20Core'
+      @subspec.header_dir.should == Pathname.new('Three20Core')
+    end
+
+    #------------------#
+
+    it "allows to specify a directory to preserver the namespacing of the headers" do
+      @spec.header_mappings_dir = 'src/include'
+      @spec.header_mappings_dir.should == Pathname.new('src/include')
+    end
+
+    xit "inherits the directory to use for the headers from the parent" do
+      @spec.header_mappings_dir = 'src/include'
+      @subspec.header_mappings_dir.should == Pathname.new('src/include')
+    end
+
   end
 
   #-----------------------------------------------------------------------------#
@@ -185,7 +350,24 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Subspecs" do
+  describe "DSL - Dependencies & Subspecs" do
+    before do
+      @spec = Pod::Spec.new do |s|
+        s.name = "Pod"
+        s.subspec 'Subspec' do |sp|
+        end
+        s.subspec 'Preferred-Subspec' do |sp|
+        end
+      end
+      @subspec = @spec.subspecs.first
+    end
+
+
+    it "allows to specify a preferred dependency" do
+      @spec.preferred_dependency = 'Preferred-Subspec'
+      @spec.activate_platform(:ios)
+      @spec.preferred_dependency.should == 'Preferred-Subspec'
+    end
   end
 
   #-----------------------------------------------------------------------------#
