@@ -129,6 +129,22 @@ module Pod
         yard_registry.at("Pod::#{name}").docstring
       end
 
+      def group_sort_order
+        []
+      end
+
+      def columns
+        group_sort_order.map do |column|
+          column.map do |group_name|
+            if group = groups.find { |g| g.name == group_name }
+              group
+            else
+              raise "Unable to find group with name: #{group_name}"
+            end
+          end
+        end
+      end
+
       def groups
         unless @groups
           @groups = []
@@ -142,9 +158,6 @@ module Pod
             end
             method = group.add_method(yard_method)
           end
-
-          @groups.unshift(@groups.delete(@groups.find { |g| g.name == 'Regular' }))
-          @groups.unshift(@groups.delete(@groups.find { |g| g.name == 'Root specification' }))
         end
         @groups
       end
@@ -163,6 +176,14 @@ module Pod
     end
 
     class Specification < DSL
+      def group_sort_order
+        [
+          ['Root specification'],
+          ['File pattern', 'Dependencies & Subspecs'],
+          ['Regular'],
+          ['Platform', 'Multi-Platform support', 'Hooks']
+        ]
+      end
     end
 
     class Commands < Base

@@ -40,6 +40,9 @@
     <div class="container">
       <div id="header">
         <div class="row" id="methods_list">
+          <%# columns.each do |groups| %>
+            <%# add groups for one column %>
+          <%# end %>
           <% groups.each do |group| %>
             <div class="span3">
             <h2><a class="select-tab" href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>

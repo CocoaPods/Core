@@ -49,6 +49,9 @@
       <div id="header">
         <div class="row" id="methods_list">
           
+            
+          
+          
             <div class="span3">
             <h2><a class="select-tab" href="#tab_root-specification-group">Root specification</a></h2>
             
@@ -73,6 +76,15 @@
           </div>
         
             <div class="span3">
+            <h2><a class="select-tab" href="#tab_platform-group">Platform</a></h2>
+            
+              <p><a class="select-tab" href="#tab_platform">platform</a></p>
+          
+              <p><a class="select-tab" href="#tab_deployment_target">deployment_target</a></p>
+          
+          </div>
+        
+            <div class="span3">
             <h2><a class="select-tab" href="#tab_regular-group">Regular</a></h2>
             
               <p><a class="select-tab" href="#tab_requires_arc">requires_arc</a></p>
@@ -92,15 +104,6 @@
               <p><a class="select-tab" href="#tab_header_dir">header_dir</a></p>
           
               <p><a class="select-tab" href="#tab_header_mappings_dir">header_mappings_dir</a></p>
-          
-          </div>
-        
-            <div class="span3">
-            <h2><a class="select-tab" href="#tab_platform-group">Platform</a></h2>
-            
-              <p><a class="select-tab" href="#tab_platform">platform</a></p>
-          
-              <p><a class="select-tab" href="#tab_deployment_target">deployment_target</a></p>
           
           </div>
         
@@ -402,6 +405,64 @@ characters.</p>
             </div>
           
         
+          <div id="tab_platform-group" class="tab-pane">
+            <h2>Platform</h2>
+            <p></p>
+          </div>
+
+          
+            <div id="tab_platform" class="tab-pane">
+              <h2>
+                platform
+                
+                
+              </h2>
+              <p><p>The platform on which this Pod is supported.</p>
+
+<p>Leaving this blank means the Pod is supported on all platforms.</p>
+</p>
+              <!-- Defaul values -->
+              
+              <!-- Examples -->
+              
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:ios</span>
+</pre></div>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span>
+</pre></div>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span><span class="p">,</span> <span class="s2">&quot;10.8&quot;</span>
+</pre></div>
+                
+              
+            </div>
+          
+            <div id="tab_deployment_target" class="tab-pane">
+              <h2>
+                deployment_target
+                
+                <span class="label label-big">multi-platform</span>
+              </h2>
+              <p><p>The deployment targets of the supported platforms.</p>
+</p>
+              <!-- Defaul values -->
+              
+              <!-- Examples -->
+              
+                <h3>Examples:</h3>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;6.0&quot;</span>
+</pre></div>
+                
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;10.8&quot;</span>
+</pre></div>
+                
+              
+            </div>
+          
+        
           <div id="tab_regular-group" class="tab-pane">
             <h2>Regular</h2>
             <p></p>
@@ -600,64 +661,6 @@ directory is provided the folder structure is preserved from it.</p>
                 <h3>Examples:</h3>
                 
                   <div class="highlight"><pre><span class="n">s</span><span class="o">.</span><span class="n">header_mappings_dir</span> <span class="o">=</span> <span class="s1">&#39;src/include&#39;</span>
-</pre></div>
-                
-              
-            </div>
-          
-        
-          <div id="tab_platform-group" class="tab-pane">
-            <h2>Platform</h2>
-            <p></p>
-          </div>
-
-          
-            <div id="tab_platform" class="tab-pane">
-              <h2>
-                platform
-                
-                
-              </h2>
-              <p><p>The platform on which this Pod is supported.</p>
-
-<p>Leaving this blank means the Pod is supported on all platforms.</p>
-</p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
-              
-                <h3>Examples:</h3>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:ios</span>
-</pre></div>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span>
-</pre></div>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">platform</span> <span class="o">=</span> <span class="ss">:osx</span><span class="p">,</span> <span class="s2">&quot;10.8&quot;</span>
-</pre></div>
-                
-              
-            </div>
-          
-            <div id="tab_deployment_target" class="tab-pane">
-              <h2>
-                deployment_target
-                
-                <span class="label label-big">multi-platform</span>
-              </h2>
-              <p><p>The deployment targets of the supported platforms.</p>
-</p>
-              <!-- Defaul values -->
-              
-              <!-- Examples -->
-              
-                <h3>Examples:</h3>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;6.0&quot;</span>
-</pre></div>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">deployment_target</span> <span class="o">=</span> <span class="s2">&quot;10.8&quot;</span>
 </pre></div>
                 
               
