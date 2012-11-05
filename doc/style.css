@@ -43,19 +43,6 @@ h4 {
   margin: -10px 0px 4px;
 }
 
-
-
-.modal-body > p {
-  color: #555;
-  font-size: 14px;
-  margin-top:20px;
-}
-
-.modal {
-  width:800px;
-  margin-left:-470px;
-}
-
 .tab-content {
   font-weight: 300;
   min-height:400px;
@@ -168,6 +155,7 @@ span.label a {
 }
 
 span.label.label-big {
+  color: white;
   background-color: #8C7A73;
   float: right;
   line-height: 32px;
@@ -203,13 +191,13 @@ code {
 
 div.sections {
   padding: 0;
-  background-color: rgb(211, 188, 172);
+  background-color: #fcf3e5;
   border-bottom: 1px solid hsl(25, 31%, 70%);
 }
 
 .sections ul {
   margin: 0;
-  border-bottom: 1px solid hsl(25, 31%, 70%);
+  /* border-bottom: 1px solid hsl(25, 31%, 70%); */
 }
 
 .sections li {
@@ -228,16 +216,16 @@ div.sections {
 }
 
 #current_section {
-  background-color: #FDFAF2;
+  background-color: #E6A33C;
 }
 
 .sections li h3 a {
   text-decoration: none;
-  color: rgb(69, 46, 0);
+  color: #8C7A73;
 }
 
 #current_section h3 a {
-  color #CAAF9B
+  color: #FDFAF2;
 }
 
 
