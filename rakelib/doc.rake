@@ -17,7 +17,49 @@ require 'cocoapods-core'
 
 module Pod
   module Doc
-    class DSL
+    class Base
+      attr_reader :source_file
+
+      def initialize(source_file)
+        @source_file = source_file
+      end
+
+      def sections
+        %w{ Podfile Specification Commands }
+      end
+
+      def name
+        self.class.name.split('::').last
+      end
+
+      def render(output_file)
+        require 'erb'
+        template = ERB.new(File.read(ROOT + 'doc/template.erb'))
+        File.open(output_file, 'w') { |f| f.puts(template.result(binding)) }
+      end
+
+      # Helpers
+
+      def markdown(input)
+        @markdown ||= Redcarpet::Markdown.new(Class.new(Redcarpet::Render::HTML) do
+          def block_code(code, lang)
+            lang ||= 'ruby'
+            Pod::Doc::DSL.syntax_highlight(code, lang)
+          end
+        end)
+        @markdown.render(input)
+      end
+
+      def syntax_highlight(code)
+        self.class.syntax_highlight(code)
+      end
+
+      def self.syntax_highlight(code, lang = 'ruby')
+        Pygments.highlight(code, :lexer => lang, :options => { :encoding => 'utf-8' })
+      end
+    end
+
+    class DSL < Base
       class Group
         attr_reader :methods
 
@@ -76,27 +118,15 @@ module Pod
         end
 
         # Might return `nil` in case this is a normal method, not an attribute.
+        #
+        # TODO fix for Podfile
         def attribute
           @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name.to_s == name }
         end
       end
 
-      attr_reader :source_file
-
-      def initialize(source_file)
-        @source_file = source_file
-      end
-
-      def sections
-        %w{ Podfile Specification Commands }
-      end
-
-      def name
-        'Specification'
-      end
-
       def description
-        yard_registry.at('Pod::Specification').docstring
+        yard_registry.at("Pod::#{name}").docstring
       end
 
       def groups
@@ -119,32 +149,6 @@ module Pod
         @groups
       end
 
-      def render(output_file)
-        require 'erb'
-        template = ERB.new(File.read(ROOT + 'doc/template.erb'))
-        File.open(output_file, 'w') { |f| f.puts(template.result(binding)) }
-      end
-
-      # Helpers
-
-      def markdown(input)
-        @markdown ||= Redcarpet::Markdown.new(Class.new(Redcarpet::Render::HTML) do
-          def block_code(code, lang)
-            lang ||= 'ruby'
-            Pod::Doc::DSL.syntax_highlight(code, lang)
-          end
-        end)
-        @markdown.render(input)
-      end
-
-      def syntax_highlight(code)
-        self.class.syntax_highlight(code)
-      end
-
-      def self.syntax_highlight(code, lang = 'ruby')
-        Pygments.highlight(code, :lexer => lang, :options => { :encoding => 'utf-8' })
-      end
-
       private
 
       def yard_registry
@@ -153,6 +157,15 @@ module Pod
           YARD::Registry
         end
       end
+    end
+
+    class Podfile < DSL
+    end
+
+    class Specification < DSL
+    end
+
+    class Commands < Base
     end
   end
 end
@@ -165,7 +178,7 @@ task :doc do
 
   dsl_file = (ROOT + 'lib/cocoapods-core/specification/dsl.rb').to_s
   html_file = ROOT + 'doc/specification.html'
-  Pod::Doc::DSL.new(dsl_file).render(html_file)
+  Pod::Doc::Specification.new(dsl_file).render(html_file)
   sh "open #{html_file}"
 end
 
