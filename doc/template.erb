@@ -40,17 +40,16 @@
     <div class="container">
       <div id="header">
         <div class="row" id="methods_list">
-          <%# columns.each do |groups| %>
-            <%# add groups for one column %>
-          <%# end %>
-          <% groups.each do |group| %>
+          <% columns.each do |groups| %>
             <div class="span3">
-            <h2><a class="select-tab" href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
-            <% group.methods.each do |method| %>
-              <p><a class="select-tab" href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="label label-small">R</span>' if method.required? %></a></p>
+            <% groups.each do |group| %>
+              <h2><a class="select-tab" href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
+              <% group.methods.each do |method| %>
+                <p><a class="select-tab" href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="label label-small">R</span>' if method.required? %></a></p>
+              <% end %>
+            <% end %>
+            </div>
           <% end %>
-          </div>
-        <% end %>
         </div>
       </div>
     </div>
