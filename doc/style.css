@@ -1,0 +1,213 @@
+.note {
+  margin-top:60px;
+  font-size: 12px;
+}
+
+p.multi-platform {
+  font-weight: bold;
+}
+
+a {
+  color:#E6A33C;
+}
+
+
+h2, h3 {
+  color:#E6A33C;
+}
+
+h2 {
+  padding-bottom:20px
+}
+
+
+h3 {
+  margin:20px 0;
+  font-size: 14px
+}
+
+h4 {
+  font-size:12px;
+  color: #CCC;
+  margin: -10px 0px 4px;
+}
+
+
+
+.modal-body > p {
+  color: #555;
+  font-size: 14px;
+  margin-top:20px;
+}
+
+.modal {
+  width:800px;
+  margin-left:-470px;
+}
+
+.tab-content {
+  font-weight: 300;
+  min-height:400px;
+}
+
+#header-outer-container {
+  margin: 0 auto;
+  padding:20px 0;
+  /* match cocoapods.org */
+  width:1024px;
+  background-color:rgb(253, 250, 242);
+  border-top: 1px solid #F0E7DD;
+  border-bottom: 1px solid #F0E7DD;
+}
+
+.content-outer-container {
+  margin: 0 auto;
+  padding-top:40px;
+  padding-bottom:40px;
+  /* match cocoapods.org */
+  width:1024px;
+  background-color:rgb(255, 255, 255);
+}
+
+#header {
+
+}
+
+body {
+  color: #8C7A73;
+  background-color:rgb(64, 22, 0);
+}
+
+/* Methods List ***************************************************************/
+
+#methods_list p,
+#methods_list a {
+  line-height: 22px;
+  font-size: 12px;
+  margin: 0px;
+  /* color: #888; */
+  color: hsl(16, 10%, 50%);
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 2px;
+}
+
+#methods_list .active {
+  background-color: #D3BCAC;
+}
+
+#methods_list .active a {
+  color: #FDFAF2;
+}
+
+#methods_list h2 {
+  padding-bottom:0px;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+#methods_list h2 a {
+  color:#CAAF9B;
+}
+
+/* Labels *********************************************************************/
+
+span.label {
+  background-color: #D3BCAC;
+  color: #FDFAF2;
+  text-shadow: 0 0px;
+  font-weight: normal;
+}
+
+span.label.label-small {
+  float: left;
+  border-radius: 4px;
+  line-height: 16px;
+  width: 16px;
+  text-align: center;
+  margin: 3px 4px 0px -1px;
+  padding: 0;
+}
+
+span.label.label-big {
+  background-color: #8C7A73;
+  float: right;
+  line-height: 32px;
+  font-size: 14px;
+  margin: 0px 0;
+  padding: 0 10px;
+}
+
+/* Syntax Highlighting ********************************************************/
+
+pre {
+  margin:20px 0;
+  color: #AAA;
+  background-color: #424242;
+}
+
+.n {
+  color: #AAA;
+}
+
+.o, si {
+  color: #AAA;
+}
+
+.s1, .s2, .ss, .sh,
+.nf, .no
+{
+  color:#E6A33C;
+}
+
+.si {
+  color: #CCC;
+}
+
+.k {
+  font-weight: bold;
+  color: #CCC;
+}
+
+/* SECTIONS *******************************************************************/
+
+div.sections {
+  padding: 0;
+  background-color: rgb(211, 188, 172);
+  border-bottom: 1px solid hsl(25, 31%, 70%);
+}
+
+.sections ul {
+  margin: 0;
+  border-bottom: 1px solid hsl(25, 31%, 70%);
+}
+
+.sections li {
+  padding: 0 10px;
+  display: inline-block;
+}
+
+.sections li h3 {
+  margin: 0;
+}
+
+.sections p {
+  font-weight: 300;
+  color: rgb(69, 46, 0);
+  padding: 10px 0;
+}
+
+#current_section {
+  background-color: #FDFAF2;
+}
+
+.sections li h3 a {
+  text-decoration: none;
+  color: rgb(69, 46, 0);
+}
+
+#current_section h3 a {
+  color #CAAF9B
+}
+
+

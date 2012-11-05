@@ -3,194 +3,13 @@
 <head>
 <meta charset="utf-8">
 <title>Podspec Format</title>
+
 <link type="text/css" rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+<link type="text/css" rel="stylesheet" href="style.css">
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
-<!-- CSS *******************************************************************-->
-
-<style type="text/css">
-
-.note {
-  margin-top:60px;
-  font-size: 12px;
-}
-
-#methods_list p,
-#methods_list a {
-  line-height: 22px;
-  font-size: 12px;
-  margin: 0px;
-  /* color: #888; */
-  color: hsl(16, 10%, 50%);
-  padding-left: 4px;
-  padding-right: 4px;
-  border-radius: 2px;
-}
-#methods_list a span.required {
-  font-size: 11px;
-}
-#methods_list .active {
-  background-color: rgb(245, 218, 176);
-  color: rgb(114, 61, 42);
-}
-
-#methods_list h2 {
-  padding-bottom:0px;
-  line-height: 20px;
-  font-size: 14px;
-}
-
-.required {
-  float: right;
-  font-weight: bold;
-  font-style: italic;
-  color: hsl(16, 10%, 70%);
-}
-
-p.multi-platform {
-  font-weight: bold;
-}
-
-a {
-  color:#E6A33C;
-}
-
-
-h2, h3 {
-  color:#E6A33C;
-}
-
-h2 {
-  padding-bottom:20px
-}
-
-
-h3 {
-  margin:20px 0;
-  font-size: 14px
-}
-
-h4 {
-  font-size:12px;
-  color: #CCC;
-  margin: -10px 0px 4px;
-}
-
-
-
-.modal-body > p {
-  color: #555;
-  font-size: 14px;
-  margin-top:20px;
-}
-
-.modal {
-  width:800px;
-  margin-left:-470px;
-}
-
-.tab-content {
-  font-weight: 300;
-  min-height:400px;
-}
-
-#header-outer-container {
-  margin: 0 auto;
-  padding-top:40px;
-  padding-bottom:40px;
-  /* match cocoapods.org */
-  width:1024px;
-  background-color:rgb(253, 250, 242);
-  border-top: 1px solid #F0E7DD;
-  border-bottom: 1px solid #F0E7DD;
-}
-
-.content-outer-container {
-  margin: 0 auto;
-  padding-top:40px;
-  padding-bottom:40px;
-  /* match cocoapods.org */
-  width:1024px;
-  background-color:rgb(255, 255, 255);
-}
-
-#header {
-
-}
-
-body {
-  color: #888;
-  background-color:rgb(64, 22, 0);
-}
-
-/* Syntax Highlighting */
-
-pre {
-  margin:20px 0;
-  color: #AAA;
-  background-color: #424242;
-}
-
-.n {
-  color: #AAA;
-}
-
-.o {
-  color: #AAA;
-}
-
-.s1, .s2, .ss, .sh,
-.nf, .no
-{
-  color:#E6A33C;
-}
-
-.k {
-  font-weight: bold;
-  color: #CCC;
-}
-
-div.sections {
-  padding: 0;
-  background-color: rgb(211, 188, 172);
-  border-bottom: 1px solid hsl(25, 31%, 70%);
-}
-
-.sections ul {
-  margin: 0;
-  background-color: rgb(227, 216, 212);
-  border-bottom: 1px solid hsl(25, 31%, 70%);
-}
-
-.sections li {
-  padding: 10px;
-  display: inline-block;
-}
-
-.sections li.current {
-  background-color: rgb(211, 188, 172);
-  border-left: 1px solid hsl(25, 31%, 70%);
-  border-right: 1px solid hsl(25, 31%, 70%);
-  border-bottom: 1px solid rgb(211, 188, 172); /* don't show border under current section */
-}
-
-.sections li h1 a {
-  text-decoration: none;
-}
-
-.sections li.current h1 a {
-  color: rgb(69, 46, 0);
-}
-
-.sections p {
-  font-weight: 300;
-  color: rgb(69, 46, 0);
-  margin: 0 40px;
-  padding: 10px 0;
-}
-
-</style>
 </head>
 
 <!-- BODY ******************************************************************-->
@@ -198,19 +17,21 @@ div.sections {
 <body>
 
   <div class="content-outer-container sections">
-    <ul>
-      <li>
-        <h1><a href="podfile.html">Podfile</a></h1>
-      </li>
-      <li class="current">
-        <h1><a href="specification.html">Specification</a></h1>
-      </li>
-      <li>
-        <h1><a href="commands.html">Commands</a></h1>
-      </li>
-    </ul>
-    <p><%= markdown description %></p>
+    <div class="container">
+      <ul>
+        <li>
+        <h3><a href="podfile.html">Podfile</a></h1>
+        </li>
+        <li id="current_section">
+        <h3><a href="#tab_<%= name %>">Specification</a></h1>
+        </li>
+        <li>
+        <h3><a href="commands.html">Commands</a></h1>
+        </li>
+      </ul>
+    </div>
   </div>
+
 
   <!-- HEADER **************************************************************-->
   <div id="header-outer-container">
@@ -221,7 +42,7 @@ div.sections {
             <div class="span3">
             <h2><a class="select-tab" href="#tab_<%= group.to_param %>"><%= group.name %></a></h2>
             <% group.methods.each do |method| %>
-              <p><a class="select-tab" href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="required">(required)</span>' if method.required? %></a></p>
+              <p><a class="select-tab" href="#tab_<%= method.to_param %>"><%= method.name %><%= ' <span class="label label-small">R</span>' if method.required? %></a></p>
           <% end %>
           </div>
         <% end %>
@@ -236,6 +57,11 @@ div.sections {
       <!-- TABS **************************************************************-->
 
       <div class="tab-content">
+        <div id="tab_<%= name %>" class="tab-pane">
+          <h2><%= name %></h2>
+          <p><%= markdown description %></p>
+        </div>
+
         <% groups.each do |group| %>
           <div id="tab_<%= group.to_param %>" class="tab-pane">
             <h2><%= group.name %></h2>
@@ -244,10 +70,11 @@ div.sections {
 
           <% group.methods.each do |method| %>
             <div id="tab_<%= method.to_param %>" class="tab-pane">
-              <h2><%= method.name %><%= ' <span class="required">Required</span>' if method.required? %></h2>
-              <% if method.multi_platform? %>
-                <p class="multi-platform">This attribute supports <a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a> values.</p>
-              <% end %>
+              <h2>
+                <%= method.name %>
+                <%= '<span class="label label-big">required</span>' if method.required? %>
+                <%= '<span class="label label-big">multi-platform</span>' if method.multi_platform? %>
+              </h2>
               <p><%= markdown method.description %></p>
               <!-- Defaul values -->
               <% if method.attribute && method.attribute.default_value %>
@@ -303,12 +130,22 @@ div.sections {
       selectTab($(this));
     })
 
+    $('#current_section a:first').click(function (e) {
+      e.preventDefault();
+      $('#methods_list .active').removeClass('active');
+      $(this).tab('show');
+      document.location.hash = '';
+    })
+
+    // Shows the tab associated with the current fragment or the description of
+    // the sections on page load.
+    //
     $(function () {
       var tabLink = tabLinkByName(document.location.hash);
       if (tabLink.size() == 1) {
         selectTab(tabLink);
       } else {
-        selectTab($('#methods_list a:first'));
+        $('#current_section a:first').tab('show');
       }
     });
   </script>

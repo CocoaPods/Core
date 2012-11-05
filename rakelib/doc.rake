@@ -87,6 +87,10 @@ module Pod
         @source_file = source_file
       end
 
+      def name
+        'Specification'
+      end
+
       def description
         yard_registry.at('Pod::Specification').docstring
       end
