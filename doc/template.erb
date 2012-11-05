@@ -58,7 +58,7 @@
   <div class="content-outer-container">
     <div class="container">
 
-      <!-- TABS **************************************************************-->
+      <!-- TABS *************************************************************-->
 
       <div class="tab-content">
         <div id="tab_<%= name.parameterize %>" class="tab-pane">
@@ -81,7 +81,8 @@
               </h2>
               <p><%= markdown method.description %></p>
 
-              <!-- Defaul values -->
+              <!-- Defaul values ******************************************* -->
+
               <% unless method.default_values.empty? %>
                 <h3>Defaults to:</h3>
                 <% method.default_values.each do |default_value| %>
@@ -89,7 +90,8 @@
                 <% end %>
               <% end %>
 
-              <!-- Examples -->
+              <!-- Examples *************************************************-->
+
               <% unless method.examples.empty? %>
                 <h3>Examples:</h3>
                 <% method.examples.each do |example| %>

@@ -8,7 +8,18 @@ p.multi-platform {
 }
 
 a {
-  color:#E6A33C;
+  color: #CA8A29;
+  font-weight: bold;
+}
+
+a:hover, a:hover code {
+  text-decoration: none;
+  color: #A06D20;
+}
+
+a code {
+  color: #CA8A29;
+  font-weight: bold;
 }
 
 
@@ -87,6 +98,7 @@ body {
   margin: 0px;
   color: hsl(16, 10%, 50%);
   text-decoration: none;
+  font-weight: normal;
 }
 
 #methods_list p,
@@ -108,6 +120,7 @@ body {
 
 #methods_list h2 a {
   color:#CAAF9B;
+  font-weight: bold;
 }
 
 
