@@ -76,8 +76,8 @@
             <div id="tab_<%= method.to_param %>" class="tab-pane">
               <h2>
                 <%= method.name %>
-                <%= '<span class="label label-big">required</span>' if method.required? %>
-                <%= '<span class="label label-big"><a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a></span>' if method.multi_platform? %>
+                <%= '<a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>' if method.required? %>
+                <%= '<a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>' if method.multi_platform? %>
               </h2>
               <p><%= markdown method.description %></p>
 
