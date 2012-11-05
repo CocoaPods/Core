@@ -19,15 +19,17 @@
   <div class="content-outer-container sections">
     <div class="container">
       <ul>
-        <li>
-        <h3><a href="podfile.html">Podfile</a></h1>
-        </li>
-        <li id="current_section">
-        <h3><a href="#tab_<%= name %>">Specification</a></h1>
-        </li>
-        <li>
-        <h3><a href="commands.html">Commands</a></h1>
-        </li>
+        <% sections.each do |section| %>
+          <% if section == name %>
+            <li id="current_section">
+            <h3><a href="#tab_<%= section.parameterize %>"><%= section %></a></h1>
+            </li>
+          <% else %>
+            <li>
+            <h3><a href="<%= section.underscore %>.html"><%= section %></a></h1>
+            </li>
+          <% end %>
+        <% end %>
       </ul>
     </div>
   </div>
@@ -57,7 +59,7 @@
       <!-- TABS **************************************************************-->
 
       <div class="tab-content">
-        <div id="tab_<%= name %>" class="tab-pane">
+        <div id="tab_<%= name.parameterize %>" class="tab-pane">
           <h2><%= name %></h2>
           <p><%= markdown description %></p>
         </div>

@@ -87,6 +87,10 @@ module Pod
         @source_file = source_file
       end
 
+      def sections
+        %w{ Podfile Specification Commands }
+      end
+
       def name
         'Specification'
       end
