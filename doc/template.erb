@@ -84,6 +84,7 @@
               <!-- Defaul values ******************************************* -->
 
               <% unless method.default_values.empty? %>
+                <hr>
                 <h3>Defaults to:</h3>
                 <% method.default_values.each do |default_value| %>
                   <%= syntax_highlight default_value %>
@@ -93,6 +94,7 @@
               <!-- Examples *************************************************-->
 
               <% unless method.examples.empty? %>
+                <hr>
                 <h3>Examples:</h3>
                 <% method.examples.each do |example| %>
                   <%= syntax_highlight example %>
