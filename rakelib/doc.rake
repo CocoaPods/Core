@@ -109,6 +109,15 @@ module Pod
           @yard_method.docstring.tags(:example).map { |e| e.text.strip }
         end
 
+        def default_values
+          return [] unless attribute
+          r = []
+          r << %Q|spec.#{attribute.writer_name.gsub('=',' =')} "#{attribute.default_value}"| if attribute.default_value
+          r << %Q|spec.ios.#{attribute.writer_name.gsub('=',' =')} "#{attribute.ios_default}"| if attribute.ios_default
+          r << %Q|spec.osx.#{attribute.writer_name.gsub('=',' =')} "#{attribute.osx_default}"| if attribute.osx_default
+          r
+        end
+
         def required?
           attribute.required? if attribute
         end

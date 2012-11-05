@@ -76,6 +76,8 @@ module Pod
       attr_reader :keys
       attr_reader :initial_value
       attr_reader :default_value
+      attr_reader :ios_default
+      attr_reader :osx_default
 
       %w{ required root_only multi_platform singularize }.each do |attr|
         define_method("#{attr}?") do

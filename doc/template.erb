@@ -77,14 +77,18 @@
               <h2>
                 <%= method.name %>
                 <%= '<span class="label label-big">required</span>' if method.required? %>
-                <%= '<span class="label label-big">multi-platform</span>' if method.multi_platform? %>
+                <%= '<span class="label label-big"><a class="select-tab" href="#tab_multi-platform-support-group">multi-platform</a></span>' if method.multi_platform? %>
               </h2>
               <p><%= markdown method.description %></p>
+
               <!-- Defaul values -->
-              <% if method.attribute && method.attribute.default_value %>
+              <% unless method.default_values.empty? %>
                 <h3>Defaults to:</h3>
-                <pre><%= method.attribute.default_value %></pre>
+                <% method.default_values.each do |default_value| %>
+                  <%= syntax_highlight default_value %>
+                <% end %>
               <% end %>
+
               <!-- Examples -->
               <% unless method.examples.empty? %>
                 <h3>Examples:</h3>
