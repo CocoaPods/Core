@@ -95,6 +95,9 @@ namespace :gem do
     puts "* Running specs"
     silent_sh('rake spec:all')
 
+    puts "* Checking compatibility with the master repo"
+    silent_sh('rake spec:repo')
+
     tmp = File.expand_path('../tmp', __FILE__)
     tmp_gems = File.join(tmp, 'gems')
 
@@ -155,6 +158,42 @@ namespace :spec do
 
   task :all do
     sh "bundle exec bacon #{specs('**')}"
+  end
+
+  desc "Checks that the gem is campable of loading all the specs of the master repo."
+  task :repo do
+    puts "Checking compatibility with master repo"
+    require 'pathname'
+    ROOT = Pathname.new(File.expand_path('../', __FILE__))
+    $:.unshift((ROOT + 'lib').to_s)
+    require 'cocoapods-core'
+
+    glob_pattern = (ROOT + "spec/fixtures/spec-repos/master/**/*.podspec").to_s
+    total_count = 0
+    incompatible_count = 0
+    Dir.glob(glob_pattern).each do |filename|
+      Pathname(filename)
+      begin
+        total_count += 1
+        Pod::Specification.from_file(Pathname(filename))
+      rescue Exception => e
+        incompatible_count += 1
+        puts
+        puts filename
+        puts e
+        puts e.backtrace
+        clean = FALSE
+      end
+    end
+    puts
+    if incompatible_count.zero?
+      message = "#{total_count} podspecs analyzed. All compatible."
+      puts "\e[1;32m#{message}\e[0m" # Print in green
+    else
+      message = "#{incompatible_count} podspecs out of #{total_count} are NOT compatible with the master repo."
+      STDERR.puts "\e[1;31m#{message}\e[0m" # Print in red
+      exit 1
+    end
   end
 end
 

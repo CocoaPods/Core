@@ -413,14 +413,19 @@ module Pod
     #   @return [Platform] The platform of the specification.
     #
     attribute :platform, {
-      :type           => Array,
+      :type           => [Array, Symbol],
       :inheritance    => :first_defined,
       :multi_platform => false,
     }
 
     def platform=(name_and_deployment_target)
-      name = name_and_deployment_target.first
-      deployment_target = name_and_deployment_target.last
+      if name_and_deployment_target.is_a?(Array)
+        name = name_and_deployment_target.first
+        deployment_target = name_and_deployment_target.last
+      else
+        name = name_and_deployment_target
+        deployment_target = nil
+      end
       unless PLATFORMS.include?(name)
         raise StandardError, "Unsupported platform `#{name}`. The available " \
                              "names are `#{PLATFORMS.inspect}`"

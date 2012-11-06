@@ -18,7 +18,7 @@ describe Pod::Source do
     end
 
     it "returns the available versions of a Pod" do
-      @source.versions('Reachability').map(&:to_s).should == %w| 3.0.0 2.0.5 2.0.4 |
+      @source.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
     end
 
     it "returns the specification of a given version of a Pod" do
