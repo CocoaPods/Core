@@ -40,6 +40,7 @@ body {
   padding: 0 42px;
   background-color: #fcf3e5;
   border-bottom: 1px solid hsl(25, 31%, 70%);
+  background-image: -webkit-linear-gradient(top, #FCF3E5, #EEE2D0);
 }
 
 #methods-container {
