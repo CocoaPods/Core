@@ -88,8 +88,6 @@
               
                 <p><a class="select-tab" href="#tab_resources">resources</a></p>
               
-                <p><a class="select-tab" href="#tab_copy_resources">copy_resources</a></p>
-              
                 <p><a class="select-tab" href="#tab_preserve_paths">preserve_paths</a></p>
               
             
@@ -1108,7 +1106,8 @@ two literals may be specified.</p>
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
                 
               </h2>
-              <p><p>A list of file patterns that should be excluded from the source files.</p>
+              <p><p>A list of file patterns that should be excluded from the other
+attributes.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1189,8 +1188,9 @@ considered public.</p>
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
-              <p><p>A list of resources that should be copied into the target bundle with a
-build phase script.</p>
+              <p><p>A list of resources that should be copied into the target bundle. It is
+possible to specify a destination, if not specified the files are
+copied to the <code>resources</code> folder of the bundle.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1216,82 +1216,13 @@ build phase script.</p>
                   <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="s2">&quot;Resources/*.png&quot;</span>
 </pre></div>
                 
-              
-
-              <!-- Keys *****************************************************-->
-
-              
-
-            </div>
-          
-            <div id="tab_copy_resources" class="tab-pane">
-              <h2>
-                copy_resources
-                
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
-              </h2>
-              <p><p>A list of resources that should be copied to the given location of the
-target bundle.</p>
-
-<hr>
-
-<p>This attribute is a more general alternative to <code>resources</code>.</p>
-</p>
-
-              <!-- Defaul values ******************************************* -->
-
-              
-
-              <!-- Examples *************************************************-->
-
-              
-                <hr>
-                <h3>Examples:</h3>
-                
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">copy_resources</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:frameworks</span> <span class="o">=&gt;</span> <span class="s1">&#39;frameworks/CrashReporter.framework&#39;</span> <span class="p">}</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:frameworks</span> <span class="o">=&gt;</span> <span class="s1">&#39;frameworks/CrashReporter.framework&#39;</span> <span class="p">}</span>
 </pre></div>
                 
               
 
               <!-- Keys *****************************************************-->
 
-              
-                <hr>
-                <h3>Supported Keys:</h3>
-                <ul class="method_keys">
-                  
-                    <li><p><code>:absolute_path</code></p>
-</li>
-                  
-                    <li><p><code>:products_directory</code></p>
-</li>
-                  
-                    <li><p><code>:wrapper</code></p>
-</li>
-                  
-                    <li><p><code>:resources</code></p>
-</li>
-                  
-                    <li><p><code>:executables</code></p>
-</li>
-                  
-                    <li><p><code>:java_resources</code></p>
-</li>
-                  
-                    <li><p><code>:frameworks</code></p>
-</li>
-                  
-                    <li><p><code>:shared_frameworks</code></p>
-</li>
-                  
-                    <li><p><code>:shared_support</code></p>
-</li>
-                  
-                    <li><p><code>:plug_ins</code></p>
-</li>
-                  
-                </ul>
               
 
             </div>

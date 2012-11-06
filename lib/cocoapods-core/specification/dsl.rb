@@ -923,39 +923,10 @@ module Pod
 
     #------------------#
 
-    # @!method resources=(resources)
+    # The possible destinations for the `resources` attribute. Extracted form
+    # `Xcodeproj::Constants.COPY_FILES_BUILD_PHASE_DESTINATIONS`.
     #
-    #   A list of resources that should be copied into the target bundle with a
-    #   build phase script.
-    #
-    #   @example
-    #
-    #     spec.resource = "Resources/HockeySDK.bundle"
-    #
-    #   @example
-    #
-    #     spec.resources = "Resources/*.png"
-    #
-    #   @param  [String, Array<String>] resources
-    #
-    #
-    # @!method resources
-    #
-    #   @return [Array<String>, FileList]
-    #
-    attribute :resources, {
-      :file_patterns => true,
-      :default_value => 'Resources/**/*',
-      :singularize   => true
-    }
-
-    #------------------#
-
-    # The possible destinations for the `copy_resources` attribute. Extracted
-    # form `Xcodeproj::Constants`.
-    #
-    COPY_FILES_BUILD_PHASE_DESTINATIONS = [
-      :absolute_path,
+    RESORUCES_DESTINATIONS = [
       :products_directory,
       :wrapper,
       :resources,
@@ -967,32 +938,38 @@ module Pod
       :plug_ins,
     ].freeze
 
-    # @!method copy_resources=(copy_resources)
+    # @!method resources=(resources)
     #
-    #   A list of resources that should be copied to the given location of the
-    #   target bundle.
-    #
-    #   ------------------
-    #
-    #   This attribute is a more general alternative to `resources`.
+    #   A list of resources that should be copied into the target bundle. It is
+    #   possible to specify a destination, if not specified the files are
+    #   copied to the `resources` folder of the bundle.
     #
     #   @example
     #
-    #     spec.copy_resources = { :frameworks => 'frameworks/CrashReporter.framework' }
+    #     spec.resource = "Resources/HockeySDK.bundle"
     #
-    #   @param  [Hash{String=>String}] copy_resources
+    #   @example
+    #
+    #     spec.resources = "Resources/*.png"
+    #
+    #   @example
+    #
+    #     spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
+    #
+    #   @param  [Hash, String, Array<String>] resources
     #
     #
-    # @!method copy_resources
+    # @!method resources
     #
-    #   @return [Hash{String=>String}] A hash where the key represents the
+    #   @return [Array<String>, FileList] A hash where the key represents the
     #           paths of the resources to copy and the values the paths of the
     #           resources that should be copied.
     #
-    attribute :copy_resources, {
-      :type => Hash,
-      :singularize   => true,
-      :keys          => COPY_FILES_BUILD_PHASE_DESTINATIONS,
+    attribute :resources, {
+      :file_patterns => true,
+      :type => [Hash, String, Array],
+      :default_value => 'Resources/**/*',
+      :singularize   => true
     }
 
     #------------------#
