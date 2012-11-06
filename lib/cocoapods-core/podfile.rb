@@ -82,7 +82,7 @@ module Pod
       if defined_in_file
         podfile_file_trace_line = caller.find { |l| l =~ /#{defined_in_file.basename}/ }
         line_numer    = podfile_file_trace_line.split(':')[1].to_i - 1
-        podfile_lines = File.readlines(defined_in_file)
+        podfile_lines = File.readlines(defined_in_file.to_s)
         indent        = "    "
         indicator     = indent.dup.insert(1, ">")[0..-2]
 
