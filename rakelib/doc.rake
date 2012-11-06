@@ -6,7 +6,12 @@ require 'cocoapods-core'
 
 #-----------------------------------------------------------------------------#
 
-  # TODO: some methods should be moved out of the dsl.rb class
+  # TODO: how `header_dir` and `header_mappings_dir` needs proper explanation.
+  # TODO: `requires_arc` should default to true
+  # TODO: Add a single dedicated tab for the labels?
+  # TODO: Requires ARC should default to true
+
+  # TODO: Add the Podfile DSL.
 
 #-----------------------------------------------------------------------------#
 
