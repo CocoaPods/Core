@@ -1057,20 +1057,6 @@ module Pod
 
     # @!group DSL: Dependencies & Subspecs
 
-    # @!method subspecs
-    #
-    #   @return [Array<Specification>] the list of the children subspecs of the
-    #           Specification.
-    #
-    attribute :subspec, {
-      :inheritance    => :merge,
-      :type           => String,
-      :writer_name    => :subspec,
-      :reader_name    => :subspecs,
-      :ivar_name      => "@subspecs",
-      :multi_platform => false,
-    }
-
     # Specification for a module of the Pod. A specification automaically
     # iherits as a dependency all it children subspecs.
     #
@@ -1100,14 +1086,18 @@ module Pod
       subspec
     end
 
+    #------------------#
+
     # @!method default_subspec=(subspec_name)
     #
-    #   The name of the subspec that should be used as preferred dependency.
+    #   The name of the subspec that should be used as preferred dependency. If
+    #   not specified a specifications requires all its subspecs as
+    #   dependencies.
     #
     #   ------------------
     #
     #   A Pod should make available the full library by default. Users can fine
-    #   tune their requirements once their requirements are knwon. Therefore,
+    #   tune their dependencies once their requirements are knwon. Therefore,
     #   This attribute is rarely needed and is intenteded to be used in cases
     #   where there are subspecs incompatible with each other. In can be also
     #   used to exlcude modules that interface other libraries and would
@@ -1133,17 +1123,30 @@ module Pod
 
     #------------------#
 
-    # @!method dependency
+    #
     #
     attribute :dependency, {
-      :inheritance    => :merge,
-      :type           => [ String, Array ],
-      :writer_name    => :dependency,
-      :reader_name    => :dependencies,
-      :ivar_name      => "@dependencies"
+      :multi_platform => true,
+      :skip_definitions => true,
     }
 
+    # Any dependency on other Pods.
     #
+    # ------------------
+    #
+    # Dependencies can specify versions requirements. The use of the spermy
+    # indicator `~>` is recommended because it provides a good compromise
+    # between control on the version without being too restrictive.
+    #
+    # Pods with too restrictive dependencies, limit their compatiblity with
+    # other Pods.
+    #
+    # @example
+    #   spec.dependency = 'AFNetworking', '~> 1.0'
+    #   spec.dependency = 'MagicalRecord', '~> 2.0.8'
+    #
+    # @example
+    #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
     #
     def dependency(*name_and_version_requirements)
       name, *version_requirements = name_and_version_requirements.flatten

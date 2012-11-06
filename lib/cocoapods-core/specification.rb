@@ -167,6 +167,8 @@ module Pod
 
     # @!group Working with dependencies
 
+    attr_reader :subspecs
+
     # @return [Array<Specifications>] the recursive list of all the subspecs of
     #         a specification.
     #

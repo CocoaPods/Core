@@ -58,6 +58,7 @@ module Pod
         @osx_default          = options.delete(:osx_default)
         @initial_value        = options.delete(:initial_value) {[]}
 
+        @skip_definitions     = options.delete(:skip_definitions)
         @reader_name          = options.delete(:reader_name)
         @writer_name          = options.delete(:writer_name)
         @ivar_name            = options.delete(:ivar_name)
