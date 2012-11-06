@@ -232,7 +232,7 @@ module Pod
     #   @example
     #
     #     spec.source = { :git => "git://github.com/AFNetworking/AFNetworking.git",
-    #                             :tag => 'v0.0.1' }
+    #                     :tag => 'v0.0.1' }
     #
     #   @example
     #
