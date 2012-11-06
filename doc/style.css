@@ -115,10 +115,6 @@ body {
 
 #methods_list h2 {
   margin-top: 18px;
-}
-
-
-#methods_list h2 {
   padding-bottom:0px;
   line-height: 20px;
   font-size: 14px;
@@ -196,7 +192,6 @@ h4 {
 
 .tab-content {
   font-weight: 300;
-  /* min-height:400px; */
 }
 
 .method_keys code {
@@ -237,10 +232,10 @@ span.label.label-big {
   color: white;
   /* background-color: #8C7A73; */
   float: right;
-  line-height: 32px;
   font-size: 14px;
-  margin: 0px 12px 0px 0px;
-  padding: 0 10px;
+  line-height: 18px;
+  margin: 6px 12px 0px 0px;
+  padding: 8px 10px;
 }
 
 /* Syntax Highlighting *****************/
