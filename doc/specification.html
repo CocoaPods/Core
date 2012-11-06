@@ -97,7 +97,7 @@
               
                 <p><a class="select-tab" href="#tab_subspec">subspec</a></p>
               
-                <p><a class="select-tab" href="#tab_preferred_dependency">preferred_dependency</a></p>
+                <p><a class="select-tab" href="#tab_default_subspec">default_subspec</a></p>
               
                 <p><a class="select-tab" href="#tab_dependency">dependency</a></p>
               
@@ -1437,16 +1437,23 @@ attributes can be specified in the ancestors.</p>
 
             </div>
           
-            <div id="tab_preferred_dependency" class="tab-pane">
+            <div id="tab_default_subspec" class="tab-pane">
               <h2>
-                preferred_dependency
+                default_subspec
                 
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
                 
               </h2>
-              <p><p>The name of the subspec that should be used as preferred dependency.
-This is useful in case there are incompatible subspecs or a subspec
-provides components that are rarely used.</p>
+              <p><p>The name of the subspec that should be used as preferred dependency.</p>
+
+<hr>
+
+<p>A Pod should make available the full library by default. Users can fine
+tune their requirements once their requirements are knwon. Therefore,
+This attribute is rarely needed and is intenteded to be used in cases
+where there are subspecs incompatible with each other. In can be also
+used to exlcude modules that interface other libraries and would
+trigger those dependencies.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1459,7 +1466,7 @@ provides components that are rarely used.</p>
                 <hr>
                 <h3>Examples:</h3>
                 
-                  <div class="highlight"><pre><span class="s1">&#39;Pod/default_subspec&#39;</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">default_subspec</span> <span class="o">=</span> <span class="s1">&#39;Pod/Core&#39;</span>
 </pre></div>
                 
               

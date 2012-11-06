@@ -1100,26 +1100,36 @@ module Pod
       subspec
     end
 
-    # @!method preferred_dependency=(subspec_name)
+    # @!method default_subspec=(subspec_name)
     #
     #   The name of the subspec that should be used as preferred dependency.
-    #   This is useful in case there are incompatible subspecs or a subspec
-    #   provides components that are rarely used.
+    #
+    #   ------------------
+    #
+    #   A Pod should make available the full library by default. Users can fine
+    #   tune their requirements once their requirements are knwon. Therefore,
+    #   This attribute is rarely needed and is intenteded to be used in cases
+    #   where there are subspecs incompatible with each other. In can be also
+    #   used to exlcude modules that interface other libraries and would
+    #   trigger those dependencies.
     #
     #   @example
-    #     'Pod/default_subspec'
+    #     spec.default_subspec = 'Pod/Core'
     #
     #   @param  [String] subspec_name
     #
-    # @!method preferred_dependency
+    # @!method default_subspec
     #
     #   @return [String] the name of the subspec that should be inherited as
     #           dependency.
     #
-    attribute :preferred_dependency, {
+    attribute :default_subspec, {
       :type => String,
       :initial_value => nil,
     }
+
+    # TODO
+    # alias :preferred_dependency= :default_subspec= 
 
     #------------------#
 
