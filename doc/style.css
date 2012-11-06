@@ -83,11 +83,16 @@ body {
 
 #current_section {
   background-color: #E6A33C;
+  /* Experimental */
+  background-image: -webkit-linear-gradient(top, #FAA420, #FFB749);
+  background-image: -webkit-linear-gradient(top, #E9B16A, #DDA358);
 }
 
 
 #current_section a {
   color: #FDFAF2;
+  /* Experimental */
+  color: white;
 }
 
 /* METHODS LIST **************************************************************/
@@ -125,19 +130,11 @@ body {
 }
 
 
-span.label.label-small {
-  float: left;
-  border-radius: 2px;
-  line-height: 16px;
-  width: 16px;
-  text-align: center;
-  margin: 3px 2px 0px -26px;
-  padding: 0;
-  font-size: 10px;
-}
-
 #methods_list .active {
   background-color: #E6A33C;
+  /* Experimental */
+  /* background-image: -webkit-linear-gradient(top, #FAA420, #FFB749); */
+  background-image: -webkit-linear-gradient(top, #BEAA89, #CAB79B);
   border-radius: 2px;
 }
 
@@ -146,6 +143,8 @@ span.label.label-small {
 }
 
 #methods_list .active span.label.label-small {
+  /* Experimental */
+  /* background-image: none; */
   background-color: #E6A33C;
   line-height: 22px;
   margin: 0px 2px 0px -26px;
@@ -211,6 +210,10 @@ span.label {
   color: #FDFAF2;
   text-shadow: 0 0px;
   font-weight: normal;
+
+  /* Experimental */
+  background-image: -webkit-linear-gradient(top, #BEAA89, #CAB79B);
+  background-color: none;
 }
 
 span.label a {
@@ -218,9 +221,21 @@ span.label a {
   text-decoration: none;
 }
 
+span.label.label-small {
+  float: left;
+  border-radius: 2px;
+  line-height: 16px;
+  width: 16px;
+  text-align: center;
+  margin: 3px 2px 0px -26px;
+  padding: 0;
+  font-size: 10px;
+}
+
+
 span.label.label-big {
   color: white;
-  background-color: #8C7A73;
+  /* background-color: #8C7A73; */
   float: right;
   line-height: 32px;
   font-size: 14px;
