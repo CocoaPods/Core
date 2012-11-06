@@ -7,7 +7,7 @@ namespace :doc do
   task :load do
     unless (ROOT + 'rakelib/doc').exist?
       Dir.chdir(ROOT + 'rakelib') do
-        sh "git clone https://github.com/CocoaPods/cocoapods.github.com doc"
+        sh "git clone git@github.com:CocoaPods/cocoapods.github.com.git doc"
       end
     end
     require ROOT + 'rakelib/doc/lib/doc'
