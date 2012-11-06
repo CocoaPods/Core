@@ -272,7 +272,7 @@ describe Pod::Podfile do
     end
 
     it "it can use use the dependencies of the first podspec in the directory of the podfile" do
-      podfile = Pod::Podfile.new(fixture('banana-lib/Podfile')) do
+      podfile = Pod::Podfile.new(fixture('Podfile')) do
         platform :ios
         podspec
       end
@@ -280,7 +280,7 @@ describe Pod::Podfile do
     end
 
     it "it can use use the dependencies of the podspec with the given path" do
-      banalib_path = fixture('banana-lib/BananaLib.podspec').to_s
+      banalib_path = fixture('BananaLib.podspec').to_s
       podfile = Pod::Podfile.new do
         platform :ios
         podspec :path => banalib_path
@@ -289,7 +289,7 @@ describe Pod::Podfile do
     end
 
     it "it can use use the dependencies of the podspec with the given name" do
-      podfile = Pod::Podfile.new(fixture('banana-lib/Podfile')) do
+      podfile = Pod::Podfile.new(fixture('Podfile')) do
         platform :ios
         podspec :name => 'BananaLib'
       end

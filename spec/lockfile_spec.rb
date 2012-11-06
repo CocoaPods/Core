@@ -31,7 +31,7 @@ describe Pod::Lockfile do
 
     def specs
       specs = [
-        Pod::Specification.from_file(fixture('banana-lib/BananaLib.podspec')),
+        Pod::Specification.from_file(fixture('BananaLib.podspec')),
         Pod::Specification.new do |s|
           s.name = "monkey"
           s.version = "1.0.8"
