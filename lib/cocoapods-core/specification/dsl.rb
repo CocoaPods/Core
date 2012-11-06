@@ -314,26 +314,33 @@ module Pod
 
     #------------------#
 
-    # @!method screenshot=(screenshot)
+    # @!method screenshots=(screenshots)
     #
-    #   An URL to an image showcasing the Pod. Intended for UI oriented
+    #   A list of URLs to images showcasing the Pod. Intended for UI oriented
     #   libraries.
     #
     #   @example
     #
-    #     spec.screenshot = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
+    #     spec.screenshot  = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
     #
-    #   @param  [String] screenshot
+    #   @example
+    #
+    #     spec.screenshots = [ "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png",
+    #                          "http://dl.dropbox.com/u/378729/MBProgressHUD/2.png" ]
+    #
+    #   @param  [String] screenshots
     #
     #
-    # @!method description
+    # @!method screenshots
     #
     #   @return [String] An URL for the screenshot of the Pod.
     #
-    attribute :screenshot, {
-      :type           => String,
+    attribute :screenshots, {
+      :type           => [Array, String],
       :multi_platform => false,
       :root_only      => true,
+      :singularize    => true,
+      :wrapper        => Array,
     }
 
     #------------------#
