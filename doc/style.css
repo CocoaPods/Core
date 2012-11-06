@@ -45,27 +45,9 @@ h4 {
 
 .tab-content {
   font-weight: 300;
-  min-height:400px;
+  /* min-height:400px; */
 }
 
-#header-outer-container {
-  margin: 0 auto;
-  padding:20px 0;
-  /* match cocoapods.org */
-  width:1024px;
-  background-color:rgb(253, 250, 242);
-  border-top: 1px solid #F0E7DD;
-  border-bottom: 1px solid #F0E7DD;
-}
-
-.content-outer-container {
-  margin: 0 auto;
-  padding-top:40px;
-  padding-bottom:40px;
-  /* match cocoapods.org */
-  width:1024px;
-  background-color:rgb(255, 255, 255);
-}
 
 #header {
 
@@ -76,7 +58,7 @@ body {
   background-color:rgb(64, 22, 0);
 }
 
-/* Methods List ***************************************************************/
+/* Methods List **************************************************************/
 
 #methods_list p,
 #methods_list a {
@@ -144,7 +126,7 @@ span.label.label-small {
 }
 
 
-/* Labels *********************************************************************/
+/* Labels ********************************************************************/
 
 span.label {
   background-color: #D3BCAC;
@@ -168,7 +150,7 @@ span.label.label-big {
   padding: 0 10px;
 }
 
-/* Syntax Highlighting ********************************************************/
+/* Syntax Highlighting *******************************************************/
 
 pre {
   margin:20px 0;
@@ -193,7 +175,7 @@ code {
   background-color: #fdfaf2;
 }
 
-/* SECTIONS *******************************************************************/
+/* SECTIONS ******************************************************************/
 
 div.sections {
   padding: 0;
@@ -203,7 +185,7 @@ div.sections {
 
 .sections ul {
   /* Align with the first colum of the methods. */
-  margin: 0 20px;
+  margin: 0 60px;
 }
 
 .sections li {
@@ -236,3 +218,48 @@ div.sections {
 }
 
 
+/* FILL THE PAGE *************************************************************/
+
+/* Bootstrap has a 940px container and cocoapods.org is 1024px. The container
+ * is enlarged and padding is added to compensate in the sub-containers so the
+ * available space to rows is 940px. */
+
+html,
+body {
+   padding:0;
+   height:100%;
+}
+
+.container {
+  min-height: 100%;
+  width: 1024px;
+  position: relative;
+  background-color:rgb(255, 255, 255);
+}
+
+#body {
+   padding-bottom:100px;   /* > Height of the footer */
+}
+
+.footer {
+   position:absolute;
+   bottom:0;
+   width:100%;
+   height:100px;   /* Height of the footer */
+}
+
+#header-container {
+  margin: 0;
+  padding:20px 42px;
+  /* match cocoapods.org */
+  background-color:rgb(253, 250, 242);
+  border-top: 1px solid #F0E7DD;
+  border-bottom: 1px solid #F0E7DD;
+}
+
+.content-outer-container {
+  margin: 0;
+  padding:40px 42px;
+  /* match cocoapods.org */
+  background-color:rgb(255, 255, 255);
+}

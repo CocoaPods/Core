@@ -15,9 +15,10 @@
 <!-- BODY ******************************************************************-->
 
 <body>
+<div class="container">
+<div id="body">
 
   <div class="content-outer-container sections">
-    <div class="container">
       <ul>
         <% sections.each do |section| %>
           <% if section == name %>
@@ -31,13 +32,12 @@
           <% end %>
         <% end %>
       </ul>
-    </div>
   </div>
 
 
   <!-- HEADER **************************************************************-->
-  <div id="header-outer-container">
-    <div class="container">
+
+  <div id="header-container">
       <div id="header">
         <div class="row" id="methods_list">
           <% columns.each do |groups| %>
@@ -52,11 +52,9 @@
           <% end %>
         </div>
       </div>
-    </div>
   </div>
 
   <div class="content-outer-container">
-    <div class="container">
 
       <!-- TABS *************************************************************-->
 
@@ -124,12 +122,12 @@
       <div class="row footer">
         <div class="span12">
           <hr>
-          <p class="note">Generated for CocoaPods Core v<%= Pod::CORE_VERSION %></p>
+          <p class="note">Documentation preview generated for CocoaPods Core v<%= Pod::CORE_VERSION %> (unreleased)</p>
         </div>
       </div>
 
-    </div>
-  </div>
+    </div><!-- .container -->
+  </div><!-- #body -->
 
   <!-- SCRIPTS *************************************************************-->
 

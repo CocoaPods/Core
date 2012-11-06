@@ -6,12 +6,17 @@ require 'cocoapods-core'
 
 #-----------------------------------------------------------------------------#
 
-  # TODO: how `header_dir` and `header_mappings_dir` needs proper explanation.
-  # TODO: `requires_arc` should default to true
-  # TODO: Add a single dedicated tab for the labels?
-  # TODO: Requires ARC should default to true
+# TODO: how `header_dir` and `header_mappings_dir` needs proper explanation.
+# TODO: `requires_arc` should default to true
+# TODO: Add a single dedicated tab for the labels?
+# TODO: Requires ARC should default to true
+# TODO: Inheritance and merge polices should be explained.
+#     - When a subspec inherits an attribute as first defined?
+#     - When a subspec inherits an attribute by merging?
+#     - When a platform value is merged with the general one and when it
+#       replaces it?
 
-  # TODO: Add the Podfile DSL.
+# TODO: Add the Podfile DSL.
 
 #-----------------------------------------------------------------------------#
 
