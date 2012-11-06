@@ -147,8 +147,11 @@ module Pod
     #
     #   The license of the Pod.
     #
+    #   ------------------
+    #
     #   Unless the source contains a file named `LICENSE.*` or `LICENCE.*`, the
-    #   path of the license file _or_ license text must be specified.
+    #   path of the license file **or** the integral text of the grant must be
+    #   specified.
     #
     #   @example
     #

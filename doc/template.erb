@@ -18,7 +18,7 @@
 <div class="container">
 <div id="body">
 
-  <div class="content-outer-container sections">
+  <div id="sections-container">
       <ul>
         <% sections.each do |section| %>
           <% if section == name %>
@@ -37,7 +37,7 @@
 
   <!-- HEADER **************************************************************-->
 
-  <div id="header-container">
+  <div id="methods-container">
       <div id="header">
         <div class="row" id="methods_list">
           <% columns.each do |groups| %>
@@ -54,7 +54,7 @@
       </div>
   </div>
 
-  <div class="content-outer-container">
+  <div id="content-container">
 
       <!-- TABS *************************************************************-->
 
@@ -119,11 +119,9 @@
 
       <!-- FOOTER ************************************************************-->
 
-      <div class="row footer">
-        <div class="span12">
-          <hr>
-          <p class="note">Documentation preview generated for CocoaPods Core v<%= Pod::CORE_VERSION %> (unreleased)</p>
-        </div>
+      <div id="footer">
+        <hr>
+        <p class="note">Generated for CocoaPods Core HEAD.</p>
       </div>
 
     </div><!-- .container -->

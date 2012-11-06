@@ -1,56 +1,14 @@
-.footer {
-  margin-top:60px;
-  font-size: 12px;
-}
 
-p.multi-platform {
-  font-weight: bold;
-}
+/* PAGE **********************************************************************/
 
-a {
-  color: #CA8A29;
-  font-weight: bold;
-}
+/* Bootstrap has a 940px container and cocoapods.org is 1024px. The container
+ * is enlarged and padding is added to compensate in the sub-containers so the
+ * available space to rows is 940px. */
 
-a:hover, a:hover code {
-  text-decoration: none;
-  color: #A06D20;
-}
-
-a code {
-  color: #CA8A29;
-  font-weight: bold;
-}
-
-
-h2, h3 {
-  color:#E6A33C;
-}
-
-h2 {
-  padding-bottom:20px
-}
-
-
-h3 {
-  margin:20px 0;
-  font-size: 14px
-}
-
-h4 {
-  font-size:12px;
-  color: #CCC;
-  margin: -10px 0px 4px;
-}
-
-.tab-content {
-  font-weight: 300;
-  /* min-height:400px; */
-}
-
-
-#header {
-
+html,
+body {
+   padding:0;
+   height:100%;
 }
 
 body {
@@ -58,7 +16,81 @@ body {
   background-color:rgb(64, 22, 0);
 }
 
-/* Methods List **************************************************************/
+.container {
+  min-height: 100%;
+  width: 1024px;
+  position: relative;
+  background-color:rgb(255, 255, 255);
+}
+
+#body {
+   padding-bottom:60px;   /* > Height of the footer */
+}
+
+#footer {
+   position:absolute;
+   bottom:0;
+   width:940px;
+   height:80px;   /* Height of the footer */
+
+  font-size: 12px;
+}
+
+#sections-container {
+  padding: 0 42px;
+  background-color: #fcf3e5;
+  border-bottom: 1px solid hsl(25, 31%, 70%);
+}
+
+#methods-container {
+  margin: 0;
+  padding:20px 42px;
+  /* match cocoapods.org */
+  background-color:rgb(253, 250, 242);
+  border-top: 1px solid #F0E7DD;
+  border-bottom: 1px solid #F0E7DD;
+}
+
+#content-container {
+  border-top: 1px solid #F7F7F7;
+  margin: 0;
+  padding:40px 42px;
+  /* match cocoapods.org */
+  background-color:rgb(255, 255, 255);
+}
+
+/* SECTIONS ******************************************************************/
+
+#sections-container ul {
+  /* Align with the first column of the methods. */
+  margin: 0 20px;
+}
+
+#sections-container li {
+  padding: 0 10px;
+  display: inline-block;
+  margin-right: 12px;
+}
+
+#sections-container h3 {
+  margin: 0;
+}
+
+#sections-container a {
+  text-decoration: none;
+  color: #8C7A73;
+}
+
+#current_section {
+  background-color: #E6A33C;
+}
+
+
+#current_section a {
+  color: #FDFAF2;
+}
+
+/* METHODS LIST **************************************************************/
 
 #methods_list p,
 #methods_list a {
@@ -121,12 +153,58 @@ span.label.label-small {
   padding-right: 6px;
 }
 
+/* CONTENT *******************************************************************/
+
+p.multi-platform {
+  font-weight: bold;
+}
+
+a {
+  color: #CA8A29;
+  font-weight: bold;
+}
+
+a:hover, a:hover code {
+  text-decoration: none;
+  color: #A06D20;
+}
+
+a code {
+  color: #CA8A29;
+  font-weight: bold;
+}
+
+
+h2, h3 {
+  color:#E6A33C;
+}
+
+h2 {
+  padding-bottom:20px
+}
+
+
+h3 {
+  margin:20px 0;
+  font-size: 14px
+}
+
+h4 {
+  font-size:12px;
+  color: #CCC;
+  margin: -10px 0px 4px;
+}
+
+.tab-content {
+  font-weight: 300;
+  /* min-height:400px; */
+}
+
 .method_keys code {
   background:none;
 }
 
-
-/* Labels ********************************************************************/
+/* Labels ******************************/
 
 span.label {
   background-color: #D3BCAC;
@@ -150,7 +228,7 @@ span.label.label-big {
   padding: 0 10px;
 }
 
-/* Syntax Highlighting *******************************************************/
+/* Syntax Highlighting *****************/
 
 pre {
   margin:20px 0;
@@ -172,93 +250,4 @@ pre {
 code {
   color: #8C7A73;
   background-color: #fdfaf2;
-}
-
-/* SECTIONS ******************************************************************/
-
-div.sections {
-  padding: 0;
-  background-color: #fcf3e5;
-  border-bottom: 1px solid hsl(25, 31%, 70%);
-}
-
-.sections ul {
-  /* Align with the first colum of the methods. */
-  margin: 0 60px;
-}
-
-.sections li {
-  padding: 0 10px;
-  display: inline-block;
-  margin-right: 12px;
-}
-
-.sections li h3 {
-  margin: 0;
-}
-
-.sections p {
-  font-weight: 300;
-  color: rgb(69, 46, 0);
-  padding: 10px 0;
-}
-
-#current_section {
-  background-color: #E6A33C;
-}
-
-.sections li h3 a {
-  text-decoration: none;
-  color: #8C7A73;
-}
-
-#current_section h3 a {
-  color: #FDFAF2;
-}
-
-
-/* FILL THE PAGE *************************************************************/
-
-/* Bootstrap has a 940px container and cocoapods.org is 1024px. The container
- * is enlarged and padding is added to compensate in the sub-containers so the
- * available space to rows is 940px. */
-
-html,
-body {
-   padding:0;
-   height:100%;
-}
-
-.container {
-  min-height: 100%;
-  width: 1024px;
-  position: relative;
-  background-color:rgb(255, 255, 255);
-}
-
-#body {
-   padding-bottom:100px;   /* > Height of the footer */
-}
-
-.footer {
-   position:absolute;
-   bottom:0;
-   width:100%;
-   height:100px;   /* Height of the footer */
-}
-
-#header-container {
-  margin: 0;
-  padding:20px 42px;
-  /* match cocoapods.org */
-  background-color:rgb(253, 250, 242);
-  border-top: 1px solid #F0E7DD;
-  border-bottom: 1px solid #F0E7DD;
-}
-
-.content-outer-container {
-  margin: 0;
-  padding:40px 42px;
-  /* match cocoapods.org */
-  background-color:rgb(255, 255, 255);
 }

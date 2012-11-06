@@ -18,7 +18,7 @@
 <div class="container">
 <div id="body">
 
-  <div class="content-outer-container sections">
+  <div id="sections-container">
       <ul>
         
           
@@ -45,7 +45,7 @@
 
   <!-- HEADER **************************************************************-->
 
-  <div id="header-container">
+  <div id="methods-container">
       <div id="header">
         <div class="row" id="methods_list">
           
@@ -156,7 +156,7 @@
       </div>
   </div>
 
-  <div class="content-outer-container">
+  <div id="content-container">
 
       <!-- TABS *************************************************************-->
 
@@ -317,8 +317,11 @@ the podspec and follow a convention over configuration approach.</p>
               </h2>
               <p><p>The license of the Pod.</p>
 
+<hr>
+
 <p>Unless the source contains a file named <code>LICENSE.*</code> or <code>LICENCE.*</code>, the
-path of the license file <em>or</em> license text must be specified.</p>
+path of the license file <strong>or</strong> the integral text of the grant must be
+specified.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1578,11 +1581,9 @@ iOS projects.</p>
 
       <!-- FOOTER ************************************************************-->
 
-      <div class="row footer">
-        <div class="span12">
-          <hr>
-          <p class="note">Documentation preview generated for CocoaPods Core v0.16.0.rc2 (unreleased)</p>
-        </div>
+      <div id="footer">
+        <hr>
+        <p class="note">Generated for CocoaPods Core HEAD.</p>
       </div>
 
     </div><!-- .container -->
