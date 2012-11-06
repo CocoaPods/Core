@@ -112,9 +112,9 @@ module Pod
         def default_values
           return [] unless attribute
           r = []
-          r << %Q|spec.#{attribute.writer_name.gsub('=',' =')} "#{attribute.default_value}"| if attribute.default_value
-          r << %Q|spec.ios.#{attribute.writer_name.gsub('=',' =')} "#{attribute.ios_default}"| if attribute.ios_default
-          r << %Q|spec.osx.#{attribute.writer_name.gsub('=',' =')} "#{attribute.osx_default}"| if attribute.osx_default
+          r << "spec.#{attribute.writer_name.gsub('=',' =')} #{attribute.default_value.inspect}" if attribute.default_value
+          r << "spec.ios.#{attribute.writer_name.gsub('=',' =')} #{attribute.ios_default.inspect}" if attribute.ios_default
+          r << "spec.osx.#{attribute.writer_name.gsub('=',' =')} #{attribute.osx_default.inspect}" if attribute.osx_default
           r
         end
 

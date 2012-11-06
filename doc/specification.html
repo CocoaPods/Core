@@ -82,7 +82,7 @@
               
                 <p><a class="select-tab" href="#tab_source_files">source_files</a></p>
               
-                <p><a class="select-tab" href="#tab_exclude_source_files">exclude_source_files</a></p>
+                <p><a class="select-tab" href="#tab_exclude_files">exclude_files</a></p>
               
                 <p><a class="select-tab" href="#tab_public_header_files">public_header_files</a></p>
               
@@ -1101,9 +1101,9 @@ two literals may be specified.</p>
 
             </div>
           
-            <div id="tab_exclude_source_files" class="tab-pane">
+            <div id="tab_exclude_files" class="tab-pane">
               <h2>
-                exclude_source_files
+                exclude_files
                 
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
                 
@@ -1117,10 +1117,10 @@ two literals may be specified.</p>
                 <hr>
                 <h3>Defaults to:</h3>
                 
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/osx&quot;</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">exclude_files</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;Classes/osx/**/*&quot;</span><span class="p">,</span> <span class="s2">&quot;Resources/osx/**/*&quot;</span><span class="o">]</span>
 </pre></div>
                 
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/ios&quot;</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">osx</span><span class="o">.</span><span class="n">exclude_files</span> <span class="o">=</span> <span class="o">[</span><span class="s2">&quot;Classes/ios/**/*&quot;</span><span class="p">,</span> <span class="s2">&quot;Resources/ios/**/*&quot;</span><span class="o">]</span>
 </pre></div>
                 
               
@@ -1131,10 +1131,10 @@ two literals may be specified.</p>
                 <hr>
                 <h3>Examples:</h3>
                 
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/osx&quot;</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">ios</span><span class="o">.</span><span class="n">exclude_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/osx&quot;</span>
 </pre></div>
                 
-                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">exclude_source_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/**/unused.{h,m}&quot;</span>
+                  <div class="highlight"><pre><span class="n">spec</span><span class="o">.</span><span class="n">exclude_files</span> <span class="o">=</span> <span class="s2">&quot;Classes/**/unused.{h,m}&quot;</span>
 </pre></div>
                 
               

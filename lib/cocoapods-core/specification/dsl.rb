@@ -868,29 +868,30 @@ module Pod
 
     #------------------#
 
-    # @!method exclude_source_files=(exclude_source_files)
+    # @!method exclude_files=(exclude_files)
     #
-    #   A list of file patterns that should be excluded from the source files.
-    #
-    #   @example
-    #
-    #     spec.ios.exclude_source_files = "Classes/osx"
+    #   A list of file patterns that should be excluded from the other
+    #   attributes.
     #
     #   @example
     #
-    #     spec.exclude_source_files = "Classes/**/unused.{h,m}"
+    #     spec.ios.exclude_files = "Classes/osx"
     #
-    #   @param  [String, Array<String>] exclude_source_files
+    #   @example
+    #
+    #     spec.exclude_files = "Classes/**/unused.{h,m}"
+    #
+    #   @param  [String, Array<String>] exclude_files
     #
     #
-    # @!method exclude_source_files
+    # @!method exclude_files
     #
     #   @return [Array<String>, Rake::FileList]
     #
-    attribute :exclude_source_files, {
+    attribute :exclude_files, {
       :file_patterns => true,
-      :ios_default   => 'Classes/osx',
-      :osx_default   => 'Classes/ios',
+      :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
+      :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
     }
 
     #------------------#
