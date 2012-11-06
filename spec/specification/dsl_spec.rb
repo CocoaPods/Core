@@ -132,7 +132,7 @@ describe Pod::Specification do
     end
 
     it "returns the list of the available platforms" do
-      @spec.available_platforms.sort_by(&:name).should == [
+      @spec.available_platforms.sort_by{ |p| p.name.to_s }.should == [
         Pod::Platform.new(:ios),
         Pod::Platform.new(:osx),
       ]
