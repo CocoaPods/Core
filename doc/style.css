@@ -173,7 +173,8 @@ span.label.label-big {
 pre {
   margin:20px 0;
   background-color: #424242;
-  color: #AAA;
+  background-color: #52433E;
+  color: #DFCCAC;
 }
 
 .s1, .s2, .ss, .sh,
@@ -201,13 +202,14 @@ div.sections {
 }
 
 .sections ul {
-  margin: 0;
-  /* border-bottom: 1px solid hsl(25, 31%, 70%); */
+  /* Align with the first colum of the methods. */
+  margin: 0 20px;
 }
 
 .sections li {
   padding: 0 10px;
   display: inline-block;
+  margin-right: 12px;
 }
 
 .sections li h3 {
