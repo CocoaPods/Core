@@ -135,7 +135,7 @@ body {
 }
 
 #methods_list .active a {
-  color: #FDFAF2;
+  color: white;
 }
 
 #methods_list .active span.label.label-small {
