@@ -16,8 +16,7 @@ describe Pod::Lockfile do
         - BananaLib (~> 1.0)
 
         SPEC CHECKSUMS:
-          BananaLib: !binary |-
-            MjI2Y2RkMTJkMzBhMWU4ZWM4OGM1ZmRkZWU2MDcwZDg0YTI1MGZjMQ==
+          BananaLib: 9906b267592664126923875ce2c8d03824372c79
 
         COCOAPODS: #{Pod::CORE_VERSION}
       LOCKFILE

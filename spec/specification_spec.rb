@@ -121,7 +121,7 @@ describe Pod::Specification do
     end
 
     it "raises if it can't find a subspec with the given name" do
-      lambda { @spec.subspec_by_name('Pod/Subspec') }.should.raise Pod::StandardError
+      lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise Pod::StandardError
     end
 
     xit "returns the dependencies on specification of other Pods" do

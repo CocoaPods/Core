@@ -69,7 +69,7 @@ module Pod
 
     #------------------#
 
-    # @!method version=(version)
+    # @!method version
     #
     #   The version of the Pod. CocoaPods follows
     #   [semantic versioning](http://semver.org).
@@ -89,8 +89,8 @@ module Pod
 
     # @return [Version] The version of the Pod.
     #
-    def version
-      Version.new(@version)
+    def version=(version)
+      @version = Version.new(version)
     end
 
     #------------------#
@@ -1139,14 +1139,14 @@ module Pod
       :initial_value => nil,
     }
 
-    # TODO
-    # alias :preferred_dependency= :default_subspec=
-
     #------------------#
 
-    #
+    # TODO
+    # Enables the definition on the platform proxy and allows the docs to list
+    # it as multi_platform.
     #
     attribute :dependency, {
+      :writer_name => 'dependency',
       :multi_platform => true,
       :skip_definitions => true,
     }

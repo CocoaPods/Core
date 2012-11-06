@@ -356,7 +356,7 @@ describe Pod::Specification do
       @spec.source_files.should == [ "lib_classes/**/*.{h,m}" ]
     end
 
-    it "inherits the source files from the parent" do
+    xit "inherits the source files from the parent" do
       @spec.source_files = [ "lib_classes/**/*.{h,m}" ]
       @subspec.source_files = [ "subspec_classes/**/*.{h,m}" ]
       @subspec.source_files.should == [ "lib_classes/**/*.{h,m}", "subspec_classes/**/*.{h,m}" ]
@@ -456,9 +456,9 @@ describe Pod::Specification do
     end
 
     it "allows to specify a preferred dependency" do
-      @spec.preferred_dependency = 'Preferred-Subspec'
+      @spec.default_subspec = 'Preferred-Subspec'
       @spec.activate_platform(:ios)
-      @spec.preferred_dependency.should == 'Preferred-Subspec'
+      @spec.default_subspec.should == 'Preferred-Subspec'
     end
 
     xit "allows to specify a dependency" do

@@ -29,13 +29,15 @@ module Pod
     def initialize(parent = nil, name = nil)
       @parent   = parent
       @name     = name
+
       @subspecs = []
       @define_for_platforms = PLATFORMS
-
       @deployment_target = {}
-      unless parent
-        @source = {:git => ''}
+      @dependencies = {}
+      PLATFORMS.each do |platform|
+        @dependencies[platform] = []
       end
+
       self.class.attributes.each { |a| a.initialize_on(self) }
 
       yield self if block_given?
@@ -197,17 +199,18 @@ module Pod
     # @return   [Specification] the subspec with the given name or self.
     #
     def subspec_by_name(relative_name)
+      # TODO: the implementation of this method should be cleaner.
       if relative_name.nil? || relative_name == self.name
         self
       else
         remainder = relative_name[self.name.size+1..-1] || ''
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
-        raise StandardError, "Unable to find a specification named `#{relative_name}` in `#{root_spec_name}`." unless subspec
+        raise StandardError, "Unable to find a specification named `#{relative_name}` in `#{self.name}`." unless subspec
         if remainder.empty?
           subspec
         else
-          subspec.subspec_by_name(name)
+          subspec.subspec_by_name(relative_name)
         end
       end
     end
@@ -232,14 +235,14 @@ module Pod
     # Returns the dependencies on subspecs.
     #
     # @note   A specification has a dependency on either the
-    #         {#preferred_dependency} or each of its children subspecs that are
+    #         {#default_subspec} or each of its children subspecs that are
     #         compatible with its platform.
     #
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies
       active_plaform_check
-      specs = preferred_dependency ? [subspec_by_name("#{name}/#{preferred_dependency}")] : subspecs
+      specs = default_subspec ? [subspec_by_name("#{name}/#{default_subspec}")] : subspecs
       specs = specs.compact
       specs = specs.select { |s| s.supports_platform?(active_platform) }
       specs = specs.map { |s| Dependency.new(s.name, version) }
@@ -264,6 +267,10 @@ module Pod
     #---------------------------------------------------------------------------#
 
     # @!group DSL helpers
+
+    # TODO
+    alias :preferred_dependency= :default_subspec=
+
 
 
     # TODO: This will be handled by the LocalPod
