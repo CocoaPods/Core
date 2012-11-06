@@ -216,7 +216,8 @@ the podspec and follow a convention over configuration approach.</p>
             <div id="tab_name" class="tab-pane">
               <h2>
                 name
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>The name of the Pod.</p>
@@ -246,7 +247,8 @@ the podspec and follow a convention over configuration approach.</p>
             <div id="tab_version" class="tab-pane">
               <h2>
                 version
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>The version of the Pod. CocoaPods follows
@@ -277,8 +279,9 @@ the podspec and follow a convention over configuration approach.</p>
             <div id="tab_authors" class="tab-pane">
               <h2>
                 authors
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
                 
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>The name and email address of each of the library’s the authors.</p>
 </p>
@@ -314,7 +317,8 @@ the podspec and follow a convention over configuration approach.</p>
             <div id="tab_license" class="tab-pane">
               <h2>
                 license
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>The license of the Pod.</p>
@@ -372,7 +376,8 @@ path of the license file <em>or</em> license text must be specified.</p>
             <div id="tab_homepage" class="tab-pane">
               <h2>
                 homepage
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>The URL of the homepage of the Pod.</p>
@@ -402,7 +407,8 @@ path of the license file <em>or</em> license text must be specified.</p>
             <div id="tab_source" class="tab-pane">
               <h2>
                 source
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>The location from where the library should be retrieved.</p>
@@ -458,7 +464,8 @@ path of the license file <em>or</em> license text must be specified.</p>
             <div id="tab_summary" class="tab-pane">
               <h2>
                 summary
-                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>
+                <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
+                
                 
               </h2>
               <p><p>A short description of the Pod. It should have a maximum of 140
@@ -489,6 +496,7 @@ characters.</p>
             <div id="tab_description" class="tab-pane">
               <h2>
                 description
+                
                 
                 
               </h2>
@@ -526,6 +534,7 @@ characters.</p>
                 screenshot
                 
                 
+                
               </h2>
               <p><p>An URL to an image showcasing the Pod. Intended for UI oriented
 libraries.</p>
@@ -555,6 +564,7 @@ libraries.</p>
             <div id="tab_documentation" class="tab-pane">
               <h2>
                 documentation
+                
                 
                 
               </h2>
@@ -596,6 +606,7 @@ libraries.</p>
                 platform
                 
                 
+                
               </h2>
               <p><p>The platform on which this Pod is supported.</p>
 
@@ -633,7 +644,8 @@ libraries.</p>
               <h2>
                 deployment_target
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>The deployment targets of the supported platforms.</p>
 </p>
@@ -673,7 +685,8 @@ libraries.</p>
               <h2>
                 requires_arc
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>Wether the `-fobjc-arc&#39; flag should be added to the compiler
 flags.</p>
@@ -704,7 +717,8 @@ flags.</p>
               <h2>
                 frameworks
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>A list of frameworks that the user’s target (application) needs to link
 against.</p>
@@ -738,7 +752,8 @@ against.</p>
               <h2>
                 weak_frameworks
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>A list of frameworks that the user’s target (application) needs to
 <strong>weakly</strong> link against.</p>
@@ -769,7 +784,8 @@ against.</p>
               <h2>
                 libraries
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>A list of libraries that the user’s target (application) needs to link
 against.</p>
@@ -803,7 +819,8 @@ against.</p>
               <h2>
                 xcconfig
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>Any flag to add to final xcconfig file.</p>
 </p>
@@ -833,7 +850,8 @@ against.</p>
               <h2>
                 prefix_header_contents
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>Any content to inject in the prefix header of the pod project.</p>
 
@@ -866,7 +884,8 @@ header of other libraries or of the user project.</p>
               <h2>
                 prefix_header_file
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>A path to a prefix header file to inject in the prefix header of the pod project.</p>
 
@@ -899,7 +918,8 @@ header of other libraries or of the user project.</p>
               <h2>
                 header_dir
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>The directory where to store the headers files so they don&#39;t break includes.</p>
 </p>
@@ -929,7 +949,8 @@ header of other libraries or of the user project.</p>
               <h2>
                 header_mappings_dir
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>If not provided the headers files are flattened. Otherwise if a
 directory is provided the folder structure is preserved from it.</p>
@@ -1039,7 +1060,8 @@ two literals may be specified.</p>
               <h2>
                 source_files
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>The source files of the Pod.</p>
 </p>
@@ -1079,7 +1101,8 @@ two literals may be specified.</p>
               <h2>
                 exclude_source_files
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>A list of file patterns that should be excluded from the source files.</p>
 </p>
@@ -1122,7 +1145,8 @@ two literals may be specified.</p>
               <h2>
                 public_header_files
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>A list of file patterns that should be used as public headers.</p>
 
@@ -1158,7 +1182,8 @@ considered public.</p>
               <h2>
                 resources
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>A list of resources that should be copied into the target bundle with a
 build phase script.</p>
@@ -1199,7 +1224,8 @@ build phase script.</p>
               <h2>
                 copy_resources
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>A list of resources that should be copied to the given location of the
 target bundle.</p>
@@ -1270,7 +1296,8 @@ target bundle.</p>
               <h2>
                 preserve_paths
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>
               </h2>
               <p><p>Any file that should <strong>not</strong> be removed after being downloaded.</p>
 
@@ -1316,6 +1343,7 @@ when a Pod is installed.</p>
                 pre_install
                 
                 
+                
               </h2>
               <p><p>This is a convenience method which gets called after all pods have been
 downloaded but before they have been installed, and the Xcode project and
@@ -1355,6 +1383,7 @@ and the <code>Pod::Podfile::TargetDefinition</code> instance for the current tar
             <div id="tab_post_install" class="tab-pane">
               <h2>
                 post_install
+                
                 
                 
               </h2>
@@ -1408,6 +1437,7 @@ target.</p>
                 subspecs
                 
                 
+                
               </h2>
               <p></p>
 
@@ -1428,6 +1458,7 @@ target.</p>
             <div id="tab_subspec" class="tab-pane">
               <h2>
                 subspec
+                
                 
                 
               </h2>
@@ -1475,7 +1506,8 @@ attributes can be specified in the ancestors.</p>
               <h2>
                 preferred_dependency
                 
-                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>
+                <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
+                
               </h2>
               <p><p>The name of the subspec that should be used as preferred dependency.
 This is useful in case there are incompatible subspecs or a subspec
@@ -1506,6 +1538,7 @@ provides components that are rarely used.</p>
             <div id="tab_dependency" class="tab-pane">
               <h2>
                 dependency
+                
                 
                 
               </h2>
@@ -1545,6 +1578,7 @@ iOS projects.</p>
                 ios
                 
                 
+                
               </h2>
               <p><p>Provides support for specifying iOS attributes.</p>
 </p>
@@ -1573,6 +1607,7 @@ iOS projects.</p>
             <div id="tab_osx" class="tab-pane">
               <h2>
                 osx
+                
                 
                 
               </h2>

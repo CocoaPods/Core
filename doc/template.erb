@@ -76,8 +76,9 @@
             <div id="tab_<%= method.to_param %>" class="tab-pane">
               <h2>
                 <%= method.name %>
-                <%= '<a class="select-tab" href="#tab_root-specification-group"><span class="label label-big">required</span></a>' if method.required? %>
-                <%= '<a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big">multi-platform</span></a>' if method.multi_platform? %>
+                <%= '<a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>' if method.required? %>
+                <%= '<a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>' if method.multi_platform? %>
+                <%= '<a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> singular variant </span></a>' if method.attribute && method.attribute.singularize? %>
               </h2>
               <p><%= markdown method.description %></p>
 
