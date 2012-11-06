@@ -262,8 +262,11 @@ module Pod
 
     # @!method summary=(summary)
     #
-    #   A short description of the Pod. It should have a maximum of 140
-    #   characters.
+    #   A short description of the Pod.
+    #
+    #   ------------------
+    #
+    #   It should have a maximum of 140 characters.
     #
     #   @example
     #
@@ -382,6 +385,8 @@ module Pod
     # @!method platform=(name_and_deployment_target)
     #
     #   The platform on which this Pod is supported.
+    #
+    #   ------------------
     #
     #   Leaving this blank means the Pod is supported on all platforms.
     #
@@ -655,6 +660,8 @@ module Pod
     #
     #   Any content to inject in the prefix header of the pod project.
     #
+    #   ------------------
+    #
     #   This attribute is not recommended as Pods should not pollute the prefix
     #   header of other libraries or of the user project.
     #
@@ -683,6 +690,8 @@ module Pod
     # @!method prefix_header_file=(path)
     #
     #   A path to a prefix header file to inject in the prefix header of the pod project.
+    #
+    #   ------------------
     #
     #   This attribute is not recommended as Pods should not pollute the prefix
     #   header of other libraries or of the user project.
@@ -741,8 +750,12 @@ module Pod
 
     # @!method header_mappings_dir=(dir)
     #
-    #   If not provided the headers files are flattened. Otherwise if a
-    #   directory is provided the folder structure is preserved from it.
+    #   A directory from where to preserve the folder structure for the headers
+    #   files.
+    #
+    #   ------------------
+    #
+    #   If not provided the headers files are flattened.
     #
     #   @example
     #
@@ -903,11 +916,11 @@ module Pod
     #
     #   A list of file patterns that should be used as public headers.
     #
-    #   These are the headers that will be exposed to the user’s project and
-    #   from which documentation will be generated.
+    #   ------------------
     #
-    #   If no public headers are specified then _all_ the headers are
-    #   considered public.
+    #   These are the headers that will be exposed to the user’s project and
+    #   from which documentation will be generated. If no public headers are
+    #   specified then **all** the headers are considered public.
     #
     #   @example
     #
@@ -943,8 +956,11 @@ module Pod
 
     # @!method resources=(resources)
     #
-    #   A list of resources that should be copied into the target bundle. It is
-    #   possible to specify a destination, if not specified the files are
+    #   A list of resources that should be copied into the target bundle.
+    #
+    #   ------------------
+    #
+    #   It is possible to specify a destination, if not specified the files are
     #   copied to the `resources` folder of the bundle.
     #
     #   @example
@@ -980,6 +996,8 @@ module Pod
     # @!method preserve_paths=(preserve_paths)
     #
     #   Any file that should **not** be removed after being downloaded.
+    #
+    #   ------------------
     #
     #   By default, CocoaPods removes all files that are not matched by any of
     #   the other file pattern attributes.
@@ -1060,8 +1078,8 @@ module Pod
 
     # @!group DSL: Dependencies & Subspecs
 
-    # Specification for a module of the Pod. A specification automaically
-    # iherits as a dependency all it children subspecs.
+    # Specification for a module of the Pod. A specification automatically
+    # inherits as a dependency all it children subspecs.
     #
     # Subspec also inherits values from their parents so common values for
     # attributes can be specified in the ancestors.
@@ -1122,7 +1140,7 @@ module Pod
     }
 
     # TODO
-    # alias :preferred_dependency= :default_subspec= 
+    # alias :preferred_dependency= :default_subspec=
 
     #------------------#
 

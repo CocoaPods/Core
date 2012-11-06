@@ -458,8 +458,11 @@ specified.</p>
                 <a class="select-tab" href="#tab_root-specification-group"><span class="label label-big"> required </span></a>
                 
               </h2>
-              <p><p>A short description of the Pod. It should have a maximum of 140
-characters.</p>
+              <p><p>A short description of the Pod.</p>
+
+<hr>
+
+<p>It should have a maximum of 140 characters.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -599,6 +602,8 @@ libraries.</p>
                 
               </h2>
               <p><p>The platform on which this Pod is supported.</p>
+
+<hr>
 
 <p>Leaving this blank means the Pod is supported on all platforms.</p>
 </p>
@@ -838,6 +843,8 @@ against.</p>
               </h2>
               <p><p>Any content to inject in the prefix header of the pod project.</p>
 
+<hr>
+
 <p>This attribute is not recommended as Pods should not pollute the prefix
 header of other libraries or of the user project.</p>
 </p>
@@ -870,6 +877,8 @@ header of other libraries or of the user project.</p>
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
               </h2>
               <p><p>A path to a prefix header file to inject in the prefix header of the pod project.</p>
+
+<hr>
 
 <p>This attribute is not recommended as Pods should not pollute the prefix
 header of other libraries or of the user project.</p>
@@ -932,8 +941,12 @@ header of other libraries or of the user project.</p>
                 
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
               </h2>
-              <p><p>If not provided the headers files are flattened. Otherwise if a
-directory is provided the folder structure is preserved from it.</p>
+              <p><p>A directory from where to preserve the folder structure for the headers
+files.</p>
+
+<hr>
+
+<p>If not provided the headers files are flattened.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1128,11 +1141,11 @@ attributes.</p>
               </h2>
               <p><p>A list of file patterns that should be used as public headers.</p>
 
-<p>These are the headers that will be exposed to the user’s project and
-from which documentation will be generated.</p>
+<hr>
 
-<p>If no public headers are specified then <em>all</em> the headers are
-considered public.</p>
+<p>These are the headers that will be exposed to the user’s project and
+from which documentation will be generated. If no public headers are
+specified then <strong>all</strong> the headers are considered public.</p>
 </p>
 
               <!-- Defaul values ******************************************* -->
@@ -1162,8 +1175,11 @@ considered public.</p>
                 
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
               </h2>
-              <p><p>A list of resources that should be copied into the target bundle. It is
-possible to specify a destination, if not specified the files are
+              <p><p>A list of resources that should be copied into the target bundle.</p>
+
+<hr>
+
+<p>It is possible to specify a destination, if not specified the files are
 copied to the <code>resources</code> folder of the bundle.</p>
 </p>
 
@@ -1208,6 +1224,8 @@ copied to the <code>resources</code> folder of the bundle.</p>
                 <a class="select-tab" href="#tab_multi-platform-support-group"><span class="label label-big"> multi-platform </span></a>
               </h2>
               <p><p>Any file that should <strong>not</strong> be removed after being downloaded.</p>
+
+<hr>
 
 <p>By default, CocoaPods removes all files that are not matched by any of
 the other file pattern attributes.</p>
@@ -1344,8 +1362,8 @@ target.</p>
                 
                 
               </h2>
-              <p><p>Specification for a module of the Pod. A specification automaically
-iherits as a dependency all it children subspecs.</p>
+              <p><p>Specification for a module of the Pod. A specification automatically
+inherits as a dependency all it children subspecs.</p>
 
 <p>Subspec also inherits values from their parents so common values for
 attributes can be specified in the ancestors.</p>
