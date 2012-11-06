@@ -100,6 +100,19 @@
                   <%= syntax_highlight example %>
                 <% end %>
               <% end %>
+
+              <!-- Keys *****************************************************-->
+
+              <% unless method.keys.empty? %>
+                <hr>
+                <h3>Supported Keys:</h3>
+                <ul class="method_keys">
+                  <% method.keys.each do |key| %>
+                    <li><%= markdown key %></li>
+                  <% end %>
+                </ul>
+              <% end %>
+
             </div>
           <% end %>
         <% end %>

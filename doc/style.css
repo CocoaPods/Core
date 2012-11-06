@@ -139,6 +139,10 @@ span.label.label-small {
   padding-right: 6px;
 }
 
+.method_keys code {
+  background:none;
+}
+
 
 /* Labels *********************************************************************/
 

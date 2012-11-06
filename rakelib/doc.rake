@@ -6,12 +6,7 @@ require 'cocoapods-core'
 
 #-----------------------------------------------------------------------------#
 
-  # TODO: the header needs better stacking
   # TODO: some methods should be moved out of the dsl.rb class
-  # TODO: not all attribute readers could have been filtered
-  # TODO: show default values
-  # TODO: indicate if the attribute is multi-platform
-  # TODO: indicate if the attribute is required
 
 #-----------------------------------------------------------------------------#
 
@@ -60,6 +55,9 @@ module Pod
     end
 
     class DSL < Base
+
+      #------------------------------------------------------------------------#
+
       class Group
         attr_reader :methods
 
@@ -85,6 +83,8 @@ module Pod
           @methods << method unless @methods.find { |m| m.name == method.name }
         end
       end
+
+      #------------------------------------------------------------------------#
 
       class Method
         attr_accessor :group
@@ -118,6 +118,26 @@ module Pod
           r
         end
 
+        def keys
+          keys = attribute.keys if attribute
+          keys ||= []
+          if keys.is_a?(Hash)
+            new_keys = []
+            keys.each do |key, subkeys|
+              if subkeys && !subkeys.empty?
+                subkeys = subkeys.map { |key| "`:#{key.to_s}`" }
+                new_keys << "`:#{key.to_s}` #{subkeys * " "}"
+              else
+                new_keys << "`:#{key.to_s}`"
+              end
+            end
+            keys = new_keys
+          else
+            keys = keys.map { |key| "`:#{key.to_s}`" }
+          end
+          keys
+        end
+
         def required?
           attribute.required? if attribute
         end
@@ -133,6 +153,8 @@ module Pod
           @attribute ||= Pod::Specification.attributes.find { |attr| attr.reader_name.to_s == name }
         end
       end
+
+      #------------------------------------------------------------------------#
 
       def description
         yard_registry.at("Pod::#{name}").docstring
