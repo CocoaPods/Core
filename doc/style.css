@@ -63,7 +63,7 @@ body {
 
 #sections-container ul {
   /* Align with the first column of the methods. */
-  margin: 0 20px;
+  margin: 0 38px;
 }
 
 #sections-container li {
@@ -97,7 +97,6 @@ body {
 
 /* METHODS LIST **************************************************************/
 
-#methods_list p,
 #methods_list a {
   line-height: 22px;
   font-size: 12px;
@@ -109,7 +108,7 @@ body {
 
 #methods_list p,
 #methods_list h2 {
-  margin: 0px 24px;
+  margin: 0px 24px 0px 44px;
   padding: 0 6px;
 }
 
@@ -141,11 +140,13 @@ body {
 #methods_list .active span.label.label-small {
   /* Experimental */
   /* background-image: none; */
+  background-image: -webkit-linear-gradient(top, #BEAA89, #CAB79B);
   background-color: #E6A33C;
   line-height: 22px;
   margin: 0px 2px 0px -26px;
   border-radius: 2px;
   padding-right: 6px;
+  color:white;
 }
 
 /* CONTENT *******************************************************************/

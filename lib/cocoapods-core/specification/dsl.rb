@@ -1076,7 +1076,7 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
-    # @!group DSL: Dependencies & Subspecs
+    # @!group DSL: Dependencies
 
     # Specification for a module of the Pod. A specification automatically
     # inherits as a dependency all it children subspecs.

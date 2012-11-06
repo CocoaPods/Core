@@ -220,7 +220,7 @@ module Pod
       def group_sort_order
         [
           ['Root specification'],
-          ['File patterns', 'Dependencies & Subspecs'],
+          ['File patterns', 'Dependencies'],
           ['Build configuration'],
           ['Platform', 'Multi-Platform support', 'Hooks']
         ]
