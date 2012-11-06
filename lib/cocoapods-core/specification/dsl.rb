@@ -29,7 +29,7 @@ module Pod
   #
   class Specification
 
-    # @!group DSL: Root specification attributes
+    # @!group DSL: Root specification
     #
     #   A ‘root’ specification is a specification that holds other
     #   ‘sub-specifications’.
@@ -373,7 +373,7 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @!group DSL: Platform attributes
+    # @!group DSL: Platform
 
     # The names of the platforms supported by the specification class.
     #
@@ -463,7 +463,7 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @!group DSL: Regular attributes
+    # @!group DSL: Build configuration
 
     # @!method requires_arc=(flag)
     #
@@ -770,7 +770,7 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @!group DSL: File pattern attributes
+    # @!group DSL: File patterns
     #
     #   These paths should be specified **relative** to the **root** of the
     #   source and may contain the following wildcard patterns:

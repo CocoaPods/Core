@@ -77,7 +77,7 @@ module Pod
         end
 
         def name
-          @name ||= @yard_group.lines.first.chomp.gsub('DSL: ','').gsub(' attributes','')
+          @name ||= @yard_group.lines.first.chomp.gsub('DSL: ','')
         end
 
         def to_param
@@ -220,8 +220,8 @@ module Pod
       def group_sort_order
         [
           ['Root specification'],
-          ['File pattern', 'Dependencies & Subspecs'],
-          ['Regular'],
+          ['File patterns', 'Dependencies & Subspecs'],
+          ['Build configuration'],
           ['Platform', 'Multi-Platform support', 'Hooks']
         ]
       end
