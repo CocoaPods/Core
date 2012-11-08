@@ -8,47 +8,6 @@ module Pod
 
       # @!group Dependencies
 
-      # Defines a new static library target and scopes dependencies defined from
-      # the given block. The target will by default include the dependencies
-      # defined outside of the block, unless the `:exclusive => true` option is
-      # given.
-      #
-      # ---
-      #
-      # The Podfile creates a global target named `:default` which produces the
-      # `libPods.a` file. This target is linked with the first target of user
-      # project if not value is specified for the `link_with` attribute.
-      #
-      # @param    [Symbol, String] name
-      #           the name of the target definition.
-      #
-      # @option   options [Bool] :exclusive
-      #           whether the target should inherit the dependencies of its
-      #           parent. by default targets are inclusive.
-      #
-      # @example  Defining a target
-      #
-      #           target :debug do
-      #             pod 'SSZipArchive'
-      #           end
-      #
-      # @example  Defining an exclusive target
-      #
-      #           target :test, :exclusive => true do
-      #             pod 'JSONKit'
-      #           end
-      #
-      # @return   [void]
-      #
-      def target(name, options = {})
-        parent = @target_definition
-        @target_definitions[name] = @target_definition = TargetDefinition.new(name, parent, options)
-        yield
-      ensure
-        @target_definition = parent
-      end
-
-
       # Specifies a dependency of the project.
       #
       # A dependency requirement is defined by the name of the Pod and optionally
@@ -56,55 +15,77 @@ module Pod
       #
       # ------
       #
-      # External sources (except `:podspec`) require a podspec in the root of
-      # the library.
+      # When starting out with a project it is likely that you will want to use the
+      # latest version of a Pod. If this is the case, simply omit the version
+      # requirements.
+      #
+      #     pod 'SSZipArchive'
       #
       #
-      # @example    Defining a dependency
+      # Later on in the project you may want to freeze to a specific version of a
+      # Pod, in which case you can specify that version number.
       #
-      #             pod 'SSZipArchive'
+      #     pod 'Objection', '0.9'
       #
-      # @example  Initialization with version requirements.
       #
-      #           pod 'Objection', '>  0.9'
-      #           pod 'Objection', '~> 0.9'
-      #           pod 'Objection', '>= 0.5', '< 0.9'
+      # Besides no version, or a specific one, it is also possible to use operators:
       #
-      # @example  Initialization with an external source.
+      # * `> 0.1`    Any version higher than 0.1
+      # * `>= 0.1`   Version 0.1 and any higher version
+      # * `< 0.1`    Any version lower than 0.1
+      # * `<= 0.1`   Version 0.1 and any lower version
+      # * `~> 0.1.2` Version 0.1.2 and the versions upto 0.2, not including 0.2
       #
-      #           pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git'
-      #           pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
-      #           pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
-      #           pod 'JSONKit', :local => 'path/to/JSONKit'
+      # A list of version requirements can be specified for even more fine
+      # grained control.
       #
-      # @example  Initialization with the head option
+      # For more information, regarding versioning policy, see:
       #
-      #           pod 'TTTFormatterKit', :head
+      # * [Semantic Versioning](http://semver.org)
+      # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
       #
-      # @overload   pod(name, requirements)
+      # Finally, instead of a version, you can specify the `:head` flag. This will
+      # use the pod’s latest version spec version, but force the download of the
+      # ‘bleeding edge’ version. Use this with caution, as the spec might not be
+      # compatible anymore.
       #
-      #   @param    [String] name
-      #             the name of the Pod.
+      #     pod 'Objection', :head
       #
-      #   @param    [Array] requirements
-      #             an array specifying the version requirements of the
-      #             dependency.
+      # ------
       #
-      # @overload   pod(name, external_source)
+      # Dependencies can be obtained also from external sources.
       #
-      #   @param    [String] name
-      #             the name of the Pod.
+      # ### From a podspec in the root of a library repo.
       #
-      #   @param    [Hash] external_source
-      #             a hash describing the external source.
+      # Sometimes you may want to use the bleeding edge version of a Pod. Or a
+      # specific revision. If this is the case, you can specify that with your
+      # pod declaration.
       #
-      # @overload   initialize(name, is_head)
+      # To use the `master` branch of the repo:
       #
-      #   @param    [String] name
-      #             the name of the Pod.
+      #   pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git'
       #
-      #   @param    [Symbol] is_head
-      #             a symbol that can be `:head` or nil.
+      #
+      # Or specify a commit:
+      #
+      #     pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
+      #
+      #
+      # It is important to note, though, that this means that the version will
+      # have to satisfy any other dependencies on the Pod by other Pods.
+      #
+      #
+      # The `podspec` file is expected to be in the root of the repo, if this
+      # library does not have a `podspec` file in its repo yet, you will have to
+      # use one of the approaches outlined in the sections below.
+      #
+      #
+      # ### From a podspec outside a spec repo, for a library without podspec.
+      #
+      # If a podspec is available from another source outside of the library’s
+      # repo. Consider, for instance, a podpsec available via HTTP:
+      #
+      #     pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
       #
       # @note       This method allow a nil name and the raises to be more
       #             informative.
@@ -126,6 +107,20 @@ module Pod
       end
 
       # Use the dependencies of a Pod defined in the given podspec file.
+      #
+      # ---
+      #
+      # If no arguments are passed the first podspec in the root of the Podfile
+      # is used.
+      #
+      # @example
+      #   podspec
+      #
+      # @example
+      #   podspec :name => 'QuickDialog'
+      #
+      # @example
+      #   podspec :path => '/Documents/PrettyKit/PrettyKit.podspec'
       #
       # @param    [Hash {Symbol=>String}] options
       #           the path where to load the {Specification}. If not provided the
@@ -159,6 +154,57 @@ module Pod
         deps = deps.flatten.uniq
         @target_definition.target_dependencies.concat(deps)
       end
+
+      # Defines a new static library target and scopes dependencies defined from
+      # the given block. The target will by default include the dependencies
+      # defined outside of the block, unless the `:exclusive => true` option is
+      # given.
+      #
+      # ---
+      #
+      # The Podfile creates a global target named `:default` which produces the
+      # `libPods.a` file. This target is linked with the first target of user
+      # project if not value is specified for the `link_with` attribute.
+      #
+      # @param    [Symbol, String] name
+      #           the name of the target definition.
+      #
+      # @option   options [Bool] :exclusive
+      #           whether the target should inherit the dependencies of its
+      #           parent. by default targets are inclusive.
+      #
+      # @example  Defining a target
+      #
+      #           target :ZipApp do
+      #             pod 'SSZipArchive'
+      #           end
+      #
+      # @example  Defining an exclusive target
+      #
+      #           target :test, :exclusive => true do
+      #             pod 'JSONKit'
+      #           end
+      #
+      # @example  Defining an exclusive target
+      #
+      #           target :ZipApp do
+      #             pod 'SSZipArchive'
+      #             target :test, :exclusive => true do
+      #               pod 'JSONKit'
+      #             end
+      #           end
+      #
+      # @return   [void]
+      #
+      def target(name, options = {})
+        parent = @target_definition
+        @target_definitions[name] = @target_definition = TargetDefinition.new(name, parent, options)
+        yield
+      ensure
+        @target_definition = parent
+      end
+
+
 
       #---------------------------------------------------------------------------#
 
