@@ -84,33 +84,6 @@ module Pod
       @defined_in_file = file
     end
 
-    # @return [Bool] whether the specification should use a directory as it
-    #         source.
-    #
-    def local?
-      !source.nil? && !source[:local].nil?
-    end
-
-    # @return     [Bool] whether the specification is supported in the given platform.
-    #
-    # @overload   supports_platform?(platform)
-    #
-    #   @param    [Platform] platform
-    #             the platform which is checked for support.
-    #
-    # @overload   supports_platform?(symbolic_name, deployment_target)
-    #
-    #   @param    [Symbol] symbolic_name
-    #             the name of the platform which is checked for support.
-    #
-    #   @param    [String] deployment_target
-    #             the deployment target which is checked for support.
-    #
-    def supports_platform?(*platform)
-      platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
-      available_platforms.any? { |p| platform.supports?(p) }
-    end
-
     # @return [String] A string suitable for representing the specification in
     #         clients.
     #
@@ -228,8 +201,8 @@ module Pod
     def external_dependencies(all_platforms = false)
       active_plaform_check unless all_platforms
       result = all_platforms ? @dependencies.values.flatten : @dependencies[active_platform]
-      result += parent.external_dependencies if parent
-      result
+      result = parent.external_dependencies + result if parent
+      result.uniq
     end
 
     # Returns the dependencies on subspecs.
@@ -244,7 +217,7 @@ module Pod
       active_plaform_check
       specs = default_subspec ? [subspec_by_name("#{name}/#{default_subspec}")] : subspecs
       specs = specs.compact
-      specs = specs.select { |s| s.supports_platform?(active_platform) }
+      specs = specs.select { |s| s.supported_on_platform?(active_platform) }
       specs = specs.map { |s| Dependency.new(s.name, version) }
     end
 
@@ -268,30 +241,36 @@ module Pod
 
     # @!group DSL helpers
 
-    # TODO
+    # TODO: Convert master repo.
+    #
     alias :preferred_dependency= :default_subspec=
 
+    # @return [Bool] whether the specification should use a directory as it
+    #         source.
+    #
+    def local?
+      !source.nil? && !source[:local].nil?
+    end
 
-
-    # TODO: This will be handled by the LocalPod
-
-    # def xcconfig
-    #   result = raw_xconfig.dup
-    #   result.libraries.merge(libraries)
-    #   result.frameworks.merge(frameworks)
-    #   result.weak_frameworks.merge(weak_frameworks)
-    #   result
-    # end
-
-    # def recursive_compiler_flags
-    #   @parent ? @parent.recursive_compiler_flags | @compiler_flags[active_platform] : @compiler_flags[active_platform]
-    # end
-
-    # def compiler_flags
-    #   flags = recursive_compiler_flags.dup
-    #   flags << '-fobjc-arc' if requires_arc
-    #   flags.join(' ')
-    # end
+    # @return     [Bool] whether the specification is supported in the given platform.
+    #
+    # @overload   supported_on_platform?(platform)
+    #
+    #   @param    [Platform] platform
+    #             the platform which is checked for support.
+    #
+    # @overload   supported_on_platform?(symbolic_name, deployment_target)
+    #
+    #   @param    [Symbol] symbolic_name
+    #             the name of the platform which is checked for support.
+    #
+    #   @param    [String] deployment_target
+    #             the deployment target which is checked for support.
+    #
+    def supported_on_platform?(*platform)
+      platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
+      available_platforms.any? { |p| platform.supports?(p) }
+    end
 
     # @return [Array<Platform>] The platforms that the Pod is supported on.
     #
@@ -300,25 +279,24 @@ module Pod
     #
     def available_platforms
       names = platform ? [ platform.name ] : PLATFORMS
-      names.map { |name| Platform.new(name, deployment_targets[name]) }
+      names.map { |name| Platform.new(name, deployment_target(name)) }
     end
 
-    # @return [Hash{Symbol=>String}] The deployment targets of each supported
-    #         platform.
+    # Returns the deployment target for the specified platform.
     #
-    # @note   If a platform is specified for a subspec, it takes precedence
-    #         over any other values. Unless a deployment target has been
-    #         specified, this will return the value of the parent spec.
+    # @param  [String] the symbolic name of the platform.
     #
-    def deployment_targets
-      targets = nil
-      if @platform && @platform.deployment_target
-        targets = { @platform.name => @platform.deployment_target }
+    # @return [Version] the version of the deployment target or nil if not
+    #         specified or the platform is not supported.
+    #
+    def deployment_target(platform_name)
+      if @platform
+        platform.deployment_target if platform.name == platform_name
+      elsif target = @deployment_target[platform_name]
+        target
+      elsif parent
+        parent.deployment_target(platform_name)
       end
-      unless targets || @deployment_target == { :osx => nil, :ios => nil }
-        targets = @deployment_target
-      end
-      targets || (parent.deployment_targets if parent) || {}
     end
 
     #---------------------------------------------------------------------------#
@@ -358,6 +336,9 @@ module Pod
 
     # Defines the active platform for consumption of the specification.
     #
+    # This method is provided as a convenience so there is no need to specify
+    # the symbolic name of a platform while accessing the multi-platform attributes.
+    #
     # @overload   activate_platform(platform)
     #
     #   @param    [Platform] platform
@@ -380,10 +361,14 @@ module Pod
     # @return     [void]
     #
     def activate_platform(*platform)
-      raise StandardError, "A specification needs to be activated at the root level." unless root_spec?
-      platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
-      raise StandardError, "#{to_s} is not compatible with #{platform.to_s}." unless supports_platform?(platform)
-      @active_platform = platform.to_sym
+      if root_spec?
+        raise StandardError, "A specification needs to be activated at the root level." unless root_spec?
+        platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
+        raise StandardError, "#{to_s} is not compatible with #{platform.to_s}." unless supported_on_platform?(platform)
+        @active_platform = platform.to_sym
+      else
+        root_spec.activate_platform(*platform)
+      end
     end
 
     # @return [Symbol] The name of the platform this specification was
@@ -393,11 +378,16 @@ module Pod
       root_spec? ? @active_platform : root_spec.active_platform
     end
 
-    # Instructs multi-platform attribute writers to use a single platform.
+    # Alters the `@define_for_platforms` instance variable to point to the
+    # given platform during the execution of the given block.
     #
     # @visibility private
     #
-    # @note   Used by PlatformProxy to assign attributes for the scoped
+    # @note   Multi-platform attribute writers should use the
+    #         `@define_for_platforms` instance variable to infer the platforms
+    #         for which the attribute should be defined.
+    #
+    # @note   This is used by PlatformProxy to assign attributes for the scoped
     #         platform.
     #
     # @return [void]

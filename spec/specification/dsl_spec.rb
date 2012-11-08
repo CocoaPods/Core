@@ -128,7 +128,7 @@ describe Pod::Specification do
     it "allows to specify a deployment target for each platform" do
       @spec.ios.deployment_target = '4.3'
       @spec.activate_platform(:ios)
-      @spec.deployment_target.should == '4.3'
+      @spec.deployment_target(:ios).should == Pod::Version.new('4.3')
     end
 
     it "returns the list of the available platforms" do
@@ -1072,3 +1072,34 @@ end
 #   end
 # end
 
+
+    #     xit "does not cache platform attributes and can activate another platform" do
+    #       @spec.stubs(:platform).returns nil
+    #       @spec.activate_platform(:ios)
+    #       @subsubspec.source_files.map { |f| f.to_s }.should == %w[ spec.m  subspec_ios.m subsubspec.m ]
+    #       @spec.activate_platform(:osx)
+    #       @subsubspec.source_files.map { |f| f.to_s }.should == %w[ spec.m  subspec_osx.m subsubspec.m ]
+    #     end
+
+    #     xit "returns the top level parent spec" do
+    #       @spec.subspecs.first.top_level_parent.should == @spec
+    #       @spec.subspecs.first.subspecs.first.top_level_parent.should == @spec
+    #     end
+    #
+
+    #     xit "returns the platform that the static library should be build for" do
+    #       @spec.platform = :ios
+    #       @spec.platform.should == :ios
+    #     end
+    #
+    #     xit "returns the platform and the deployment target" do
+    #       @spec.platform = :ios, '4.0'
+    #       @spec.platform.should == :ios
+    #       @spec.platform.deployment_target.should == Pod::Version.new('4.0')
+    #     end
+    #
+    #     xit "raises if not activated for a platform before accessing a multi-platform value" do
+    #       @spec.platform = :ios
+    #       lambda {@spec.source_files}.should.raise Pod::StandardError
+    #     end
+    #

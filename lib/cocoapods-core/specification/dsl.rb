@@ -435,7 +435,7 @@ module Pod
 
     #------------------#
 
-    # @!method deployment_target=(version)
+    # @!method deployment_target=(deployment_target)
     #
     #   The deployment targets of the supported platforms.
     #
@@ -447,7 +447,7 @@ module Pod
     #
     #     spec.osx.deployment_target = "10.8"
     #
-    #   @param    [String] version
+    #   @param    [String] deployment_target
     #             The deployment target of the platform.
     #
     #   @raise    If there is an attempt to set the deployment target for more
@@ -456,7 +456,7 @@ module Pod
     #
     # @!method deployment_target
     #
-    #   @return [String] The deployment target of each supported platform.
+    #   @return [Version] The deployment target of each supported platform.
     #
     attribute :deployment_target, {
       :type        => String,
@@ -464,11 +464,11 @@ module Pod
       :initial_value => nil,
     }
 
-    def deployment_target=(version)
+    def deployment_target=(deployment_target)
       unless @define_for_platforms.count == 1
         raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
       end
-      @deployment_target[@define_for_platforms.first] = version
+      @deployment_target[@define_for_platforms.first] = Version.new(deployment_target)
     end
 
     #-------------------------------------------------------------------------#

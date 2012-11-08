@@ -80,7 +80,7 @@ module Pod
       attr_reader :ios_default
       attr_reader :osx_default
 
-      %w{ required root_only multi_platform singularize }.each do |attr|
+      %w{ required root_only multi_platform singularize skip_definitions }.each do |attr|
         define_method("#{attr}?") do
           instance_variable_get("@#{attr}")
         end
@@ -143,58 +143,60 @@ module Pod
         attr = Attribute.new(name, options)
         @attributes << attr
 
-        # reader
-        define_method(attr.reader_name) do
-          if attr.multi_platform?
-            active_plaform_check
-            if attr.inheritance == :first_defined
-              ivar_value = instance_variable_get(attr.ivar)[active_platform]
-              ivar_value || (@parent.send(attr.reader_name) if @parent)
-            elsif attr.inheritance == :merge
-              value = instance_variable_get(attr.ivar)[active_platform]
-              if parent
-                parent_value = @parent.send(attr.reader_name)
-                value = case parent_value
-                        when Array
-                          (parent_value || []) + value
-                        when Hash
-                        end
+        unless attr.skip_definitions?
+          # reader
+          define_method(attr.reader_name) do
+            if attr.multi_platform?
+              active_plaform_check
+              if attr.inheritance == :first_defined
+                ivar_value = instance_variable_get(attr.ivar)[active_platform]
+                ivar_value || (@parent.send(attr.reader_name) if @parent)
+              elsif attr.inheritance == :merge
+                value = instance_variable_get(attr.ivar)[active_platform]
+                if parent
+                  parent_value = @parent.send(attr.reader_name)
+                  value = case parent_value
+                          when Array
+                            (parent_value || []) + value
+                          when Hash
+                          end
+                end
+                value
+              else
+                instance_variable_get(attr.ivar)[active_platform]
               end
-              value
             else
-              instance_variable_get(attr.ivar)[active_platform]
+              if attr.inheritance == :first_defined
+                ivar_value = instance_variable_get(attr.ivar)
+                ivar_value || (@parent.send(attr.reader_name) if @parent)
+              else
+                instance_variable_get(attr.ivar)
+              end
             end
-          else
-            if attr.inheritance == :first_defined
+          end
+
+          # writer
+          define_method(attr.writer_name) do |value|
+            raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attr.root_only? && !root_spec
+
+            if attr.wrapper
+              if attr.wrapper ==  Array
+                value = [ value ] unless value.is_a?(Array)
+              end
+            end
+
+            if attr.multi_platform?
               ivar_value = instance_variable_get(attr.ivar)
-              ivar_value || (@parent.send(attr.reader_name) if @parent)
+              @define_for_platforms.each do |platform|
+                ivar_value[platform] = value
+              end
             else
-              instance_variable_get(attr.ivar)
+              instance_variable_set(attr.ivar, value);
             end
           end
+
+          alias_method(attr.writer_alias, attr.writer_name) if attr.writer_alias
         end
-
-        # writer
-        define_method(attr.writer_name) do |value|
-          raise StandardError, "#{self.inspect} Can't set `#{name}' for subspecs." if attr.root_only? && !root_spec
-
-          if attr.wrapper
-            if attr.wrapper ==  Array
-              value = [ value ] unless value.is_a?(Array)
-            end
-          end
-
-          if attr.multi_platform?
-            ivar_value = instance_variable_get(attr.ivar)
-            @define_for_platforms.each do |platform|
-              ivar_value[platform] = value
-            end
-          else
-            instance_variable_set(attr.ivar, value);
-          end
-        end
-
-        alias_method(attr.writer_alias, attr.writer_name) if attr.writer_alias
       end
 
       # # Creates a top level attribute reader. A lambda can be passed to process
