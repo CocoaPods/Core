@@ -181,8 +181,8 @@ module Pod
 
     # @return [Hash] A hash containing the license information of the Pod.
     #
-    def license
-      license = @license.is_a?(String) ? { :type => @license } : @license
+    def prepare_license(value)
+      license = value.is_a?(String) ? { :type => value } : value
       if license[:text]
         license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '')
       end
@@ -218,10 +218,11 @@ module Pod
     # The keys accepted by the hash of the source attribute.
     #
     SOURCE_KEYS = {
-      :git  => [:tag, :branch, :commit, :submodules],
-      :svn  => [:folder, :tag, :revision],
-      :hg   => [:revision],
-      :http => nil
+      :git   => [:tag, :branch, :commit, :submodules],
+      :svn   => [:folder, :tag, :revision],
+      :hg    => [:revision],
+      :http  => nil,
+      :local => nil
     }.freeze
 
     # @!method source=(source)
@@ -884,35 +885,7 @@ module Pod
     #
     attribute :source_files, {
       :file_patterns => true,
-      :default_value => 'Classes/**/*.{h,m}',
-    }
-
-    #------------------#
-
-    # @!method exclude_files=(exclude_files)
-    #
-    #   A list of file patterns that should be excluded from the other
-    #   attributes.
-    #
-    #   @example
-    #
-    #     spec.ios.exclude_files = "Classes/osx"
-    #
-    #   @example
-    #
-    #     spec.exclude_files = "Classes/**/unused.{h,m}"
-    #
-    #   @param  [String, Array<String>] exclude_files
-    #
-    #
-    # @!method exclude_files
-    #
-    #   @return [Array<String>, Rake::FileList]
-    #
-    attribute :exclude_files, {
-      :file_patterns => true,
-      :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
-      :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
+      :default_value => [ 'Classes/**/*.{h,m}' ],
     }
 
     #------------------#
@@ -991,9 +964,49 @@ module Pod
     #
     attribute :resources, {
       :file_patterns => true,
-      :type => [Hash, String, Array],
-      :default_value => 'Resources/**/*',
-      :singularize   => true
+      :type          => [Hash, String, Array],
+      :default_value => { :resources => [ 'Resources/**/*' ] },
+      :singularize   => true,
+      :keys          => RESORUCES_DESTINATIONS,
+      :wrapper       => Hash,
+    }
+
+    def prepare_resources(value)
+      value = { :resources => value } unless value.is_a?(Hash)
+      result = {}
+      value.each do |key, patterns|
+        patterns = [ patterns ] if patterns.is_a?(String)
+        result[key] = patterns
+      end
+      result
+    end
+
+    #------------------#
+
+    # @!method exclude_files=(exclude_files)
+    #
+    #   A list of file patterns that should be excluded from the other
+    #   attributes.
+    #
+    #   @example
+    #
+    #     spec.ios.exclude_files = "Classes/osx"
+    #
+    #   @example
+    #
+    #     spec.exclude_files = "Classes/**/unused.{h,m}"
+    #
+    #   @param  [String, Array<String>] exclude_files
+    #
+    #
+    # @!method exclude_files
+    #
+    #   @return [Array<String>, Rake::FileList]
+    #
+    attribute :exclude_files, {
+      :file_patterns => true,
+      :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
+      :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
     }
 
     #------------------#

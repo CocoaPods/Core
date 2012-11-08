@@ -61,8 +61,8 @@ describe Pod::Specification do
       @spec.license.should == { :type => 'MIT', :text => "Copyright\nMIT-LICENSE" }
     end
 
-    xit "checks for unknown keys in the license" do
-
+    it "checks for unknown keys in the license" do
+      lambda { @spec.license = { :name => 'MIT' } }.should.raise Pod::StandardError
     end
 
     it "returns the homepage" do
@@ -75,7 +75,7 @@ describe Pod::Specification do
       @spec.source.should == { :git => 'www.example.com/repo.git' }
     end
 
-    xit "checks the source for unknown keys" do
+    it "checks the source for unknown keys" do
       call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
       call.should.raise Pod::StandardError
     end
@@ -351,72 +351,91 @@ describe Pod::Specification do
       @spec.activate_platform(:ios)
     end
 
+    it "inherits the files patterns from the parent" do
+      @spec.source_files = [ "lib_classes/**/*" ]
+      @subspec.source_files = [ "subspec_classes/**/*" ]
+      @subspec.source_files.should == [ "lib_classes/**/*", "subspec_classes/**/*" ]
+    end
+
+    it "wraps strings in an array" do
+      @spec.source_files = "lib_classes/**/*"
+      @spec.source_files.should == [ "lib_classes/**/*" ]
+    end
+
+    #------------------#
+
     it "returns the source files" do
-      @spec.source_files = [ "lib_classes/**/*.{h,m}" ]
-      @spec.source_files.should == [ "lib_classes/**/*.{h,m}" ]
+      @spec.source_files = [ "lib_classes/**/*" ]
+      @spec.source_files.should == [ "lib_classes/**/*" ]
     end
 
-    xit "inherits the source files from the parent" do
-      @spec.source_files = [ "lib_classes/**/*.{h,m}" ]
-      @subspec.source_files = [ "subspec_classes/**/*.{h,m}" ]
-      @subspec.source_files.should == [ "lib_classes/**/*.{h,m}", "subspec_classes/**/*.{h,m}" ]
+    it "has a default value for the source files" do
+      @spec.source_files.should == [ "Classes/**/*.{h,m}" ]
     end
 
-    xit "has a default value for the source files" do
-      @spec.source_files.should == [ "classes/**/*.{h,m}" ]
+
+    #------------------#
+
+    it "returns the public headers files" do
+      @spec.public_header_files = [ "include/**/*" ]
+      @spec.public_header_files.should == [ "include/**/*" ]
     end
 
     #------------------#
 
-    xit "returns the source files to exclude" do
-
+    it "returns the resources files" do
+      @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
+      @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
     end
 
-    xit "inherits the source files to exclude from the parent" do
-
+    it "wrap to arrays resources specified as a string with a destination" do
+      @spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
+      @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
     end
 
-    xit "has a default value for the source files to exclude" do
-
+    it "assigns the `:resources` destination if resources are not specified with one" do
+      @spec.resources = 'frameworks/CrashReporter.framework'
+      @spec.resources.should == { :resources => ['frameworks/CrashReporter.framework'] }
     end
 
-    #------------------#
-
-    xit "returns the public headers files" do
-
+    it "has a default value for the resources files" do
+      @spec.resources.should == { :resources => [ 'Resources/**/*' ] }
     end
 
-    xit "inherits the public headers files from the parent" do
-
+    it "has a singular form for resources" do
+      @spec.resource = [ "lib_resources/**/*" ]
+      @spec.resources.should == {:resources=>["lib_resources/**/*"]}
     end
 
-    #------------------#
-
-    xit "returns the path of the resources" do
-
-    end
-
-    xit "can accept the path of a single resource" do
-
-    end
-
-    xit "inherits the path of the resources form the parent" do
-
+    it "checks for unknown destinations in the resources" do
+      lambda { @spec.resources = { :my_custom_folder => 'Resources/**/*' } }.should.raise Pod::StandardError
     end
 
     #------------------#
 
-    xit "returns the paths to preserve" do
-
+    it "returns the paths to exclude" do
+      @spec.exclude_files = "Classes/**/unused.{h,m}"
+      @spec.exclude_files.should == ["Classes/**/unused.{h,m}"]
     end
 
-    xit "can accept a single path to preserve" do
-
+    it "has a default value for the paths to exclude" do
+      @spec.exclude_files.should ==  ["Classes/osx/**/*", "Resources/osx/**/*"]
+      @spec.activate_platform(:osx)
+      @spec.exclude_files.should ==  ["Classes/ios/**/*", "Resources/ios/**/*"]
     end
 
-    xit "returns the path of the resources form the parent" do
+    #------------------#
 
+    it "returns the paths to preserve" do
+      @spec.preserve_paths = ["Frameworks/*.framework"]
+      @spec.preserve_paths.should == ["Frameworks/*.framework"]
     end
+
+    it "can accept a single path to preserve" do
+      @spec.preserve_path = "Frameworks/*.framework"
+      @spec.preserve_paths.should == ["Frameworks/*.framework"]
+    end
+
   end
 
   #-----------------------------------------------------------------------------#

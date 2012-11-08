@@ -63,10 +63,16 @@ module Pod
         @writer_name          = options.delete(:writer_name)
         @ivar_name            = options.delete(:ivar_name)
 
-        @file_patterns         = options.delete(:file_patterns) {false}
 
         @root_only            = options.delete(:root_only) { false }
         @multi_platform       = options.delete(:multi_platform) { true }
+
+        @file_patterns = options.delete(:file_patterns) {false}
+        if @file_patterns
+          @multi_platform ||= true
+          @inheritance ||= :merge
+          @wrapper ||= Array
+        end
 
         raise StandardError, "Unrecognized options for specification attribute: #{options}" unless options.empty?
       end
@@ -95,8 +101,10 @@ module Pod
       #
       def initialize_on(spec)
         if multi_platform?
-          default_value = default_value || initial_value
-          initial_value_per_platform = Spec::PLATFORMS.inject(Hash.new) { | memo, platform | memo[platform] = default_value; memo }
+          initialization_value = default_value || initial_value
+          initial_value_per_platform = Spec::PLATFORMS.inject(Hash.new) { | memo, platform | memo[platform] = initialization_value; memo }
+          initial_value_per_platform[:ios] = ios_default if ios_default
+          initial_value_per_platform[:osx] = osx_default if osx_default
           spec.instance_variable_set(ivar, initial_value_per_platform)
         end
       end
@@ -125,10 +133,11 @@ module Pod
       def writer_alias
         "#{name.to_s.singularize}=" if singularize?
       end
-
     end
 
 
+    # @return [Array<Attribute>] The attributes of the class.
+    #
     def self.attributes
       @attributes
     end
@@ -182,6 +191,17 @@ module Pod
             if attr.wrapper
               if attr.wrapper ==  Array
                 value = [ value ] unless value.is_a?(Array)
+              end
+            end
+
+            if respond_to?("prepare_#{attr.name}")
+              value = self.send("prepare_#{attr.name}", value)
+            end
+
+            if attr.keys
+              value.keys.each do |key|
+                attr_keys = attr.keys.is_a?(Hash) ? (attr.keys.keys.concat(attr.keys.values.flatten.compact)) : attr.keys
+                raise StandardError, "Unknown key `#{key}` for attribute `#{attr.name}`. Allowed keys: `#{attr_keys}`" unless attr_keys.include?(key)
               end
             end
 

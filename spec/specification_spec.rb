@@ -291,10 +291,10 @@ describe Pod::Specification::PlatformProxy do
     end
 
     it "works correctly with the specification multi platform attributes" do
-      @proxy.source_files = 'SomeFile'
-      @spec.instance_variable_get('@source_files').should == {
+      @proxy.preserve_paths = ['SomeFile']
+      @spec.instance_variable_get('@preserve_paths').should == {
         :osx => [],
-        :ios => 'SomeFile'
+        :ios => ['SomeFile']
       }
     end
   end
