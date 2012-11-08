@@ -6,12 +6,18 @@ module Pod
     #
     module DSL
 
-      # @!group DSL - Podfile
+      # @!group Dependencies
 
       # Defines a new static library target and scopes dependencies defined from
       # the given block. The target will by default include the dependencies
       # defined outside of the block, unless the `:exclusive => true` option is
       # given.
+      #
+      # ---
+      #
+      # The Podfile creates a global target named `:default` which produces the
+      # `libPods.a` file. This target is linked with the first target of user
+      # project if not value is specified for the `link_with` attribute.
       #
       # @param    [Symbol, String] name
       #           the name of the target definition.
@@ -32,11 +38,6 @@ module Pod
       #             pod 'JSONKit'
       #           end
       #
-      # @note     The Podfile creates a global target named `:default` which
-      #           produces the `libPods.a` file. This target is linked with the
-      #           first target of user project if not value is specified for the
-      #           {#link_with} attribute.
-      #
       # @return   [void]
       #
       def target(name, options = {})
@@ -47,199 +48,81 @@ module Pod
         @target_definition = parent
       end
 
-      # Specifies the Xcode workspace that should contain all the projects.
-      #
-      # @param    [String] path
-      #           path of the workspace.
-      #
-      # @note     If no explicit Xcode workspace is specified and only **one**
-      #           project exists in the same directory as the Podfile, then the
-      #           name of that project is used as the workspace’s name.
-      #
-      # @example  Specifying a workspace
-      #
-      #           workspace 'MyWorkspace'
-      #
-      # @return   [void]
-      #
-      def workspace(path)
-        @workspace_path = (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
-      end
 
-      # This hook allows you to make any changes to the Pods after they have been
-      # downloaded but before they are installed.
+      # Specifies a dependency of the project.
       #
-      # @example  Defining a pre install hook in a Podfile.
+      # A dependency requirement is defined by the name of the Pod and optionally
+      # a list of version requirements.
       #
-      #           pre_install do |installer|
-      #             # Do something fancy!
-      #           end
+      # ------
       #
-      # @note     Hooks are global and not stored per target definition.
+      # External sources (except `:podspec`) require a podspec in the root of
+      # the library.
       #
-      # @return   [void]
       #
-      def pre_install(&block)
-        @pre_install_callback = block
-      end
-
-      # This hook allows you to make any last changes to the generated Xcode project
-      # before it is written to disk, or any other tasks you might want to perform.
+      # @example    Defining a dependency
       #
-      # @example  Customizing the `OTHER_LDFLAGS` of all targets
+      #             pod 'SSZipArchive'
       #
-      #           post_install do |installer|
-      #             installer.project.targets.each do |target|
-      #               target.build_configurations.each do |config|
-      #                 config.build_settings['GCC_ENABLE_OBJC_GC'] = 'supported'
-      #               end
-      #             end
-      #           end
+      # @example  Initialization with version requirements.
       #
-      # @note     Hooks are global and not stored per target definition.
+      #           pod 'Objection', '>  0.9'
+      #           pod 'Objection', '~> 0.9'
+      #           pod 'Objection', '>= 0.5', '< 0.9'
       #
-      # @return   [void]
+      # @example  Initialization with an external source.
       #
-      def post_install(&block)
-        @post_install_callback = block
-      end
-
-      # Specifies that a BridgeSupport metadata document should be generated from
-      # the headers of all installed Pods.
+      #           pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git'
+      #           pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
+      #           pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
+      #           pod 'JSONKit', :local => 'path/to/JSONKit'
       #
-      # @note     This is for scripting languages such as MacRuby, Nu, and
-      #           JSCocoa, which use it to bridge types, functions, etc better.
+      # @example  Initialization with the head option
       #
-      # @return   [void]
+      #           pod 'TTTFormatterKit', :head
       #
-      def generate_bridge_support!
-        @generate_bridge_support = true
-      end
-
-      # Specifies that the -fobjc-arc flag should be added to the OTHER_LD_FLAGS.
+      # @overload   pod(name, requirements)
       #
-      # @note     This is used as a workaround for a compiler bug with non-ARC
-      #           projects (see #142). This was originally done automatically
-      #           but libtool as of Xcode 4.3.2 no longer seems to support the
-      #           -fobjc-arc flag. Therefore it now has to be enabled explicitly
-      #           using this method.
+      #   @param    [String] name
+      #             the name of the Pod.
       #
-      # @note     This may be removed in a future release.
+      #   @param    [Array] requirements
+      #             an array specifying the version requirements of the
+      #             dependency.
       #
-      # @return   [void]
+      # @overload   pod(name, external_source)
       #
-      def set_arc_compatibility_flag!
-        @set_arc_compatibility_flag = true
-      end
-
-      #---------------------------------------------------------------------------#
-
-      # @!group DSL - Target definitions
-
-      # Specifies the platform for which a static library should be build.
+      #   @param    [String] name
+      #             the name of the Pod.
       #
-      # @param    [Symbol] name
-      #           the name of platform, can be either `:osx` for OS X or `:ios`
-      #           for iOS.
+      #   @param    [Hash] external_source
+      #             a hash describing the external source.
       #
-      # @param    [String, Version] target
-      #           The optional deployment.  If not provided a default value
-      #           according to the platform name will be assigned.
+      # @overload   initialize(name, is_head)
       #
-      # @note     If the deployment target requires it (iOS < 4.3), armv6 will be
-      #           added to ARCHS.
+      #   @param    [String] name
+      #             the name of the Pod.
       #
-      # @example  Specifying the platform
+      #   @param    [Symbol] is_head
+      #             a symbol that can be `:head` or nil.
       #
-      #           platform :ios, "4.0"
-      #           platform :ios
+      # @note       This method allow a nil name and the raises to be more
+      #             informative.
       #
-      # @return   [void]
+      # @note       Support for inline podspecs has been deprecated.
       #
-      def platform(name, target = nil)
-        unless [:ios, :osx].include?(name)
-          raise "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
+      # @return     [void]
+      #
+      def pod(name = nil, *requirements, &block)
+        if block
+          raise "Inline specifications are deprecated. Please store the specification in a `podspec` file."
         end
 
-        # Support for deprecated options parameter
-        target = target[:deployment_target] if target.is_a?(Hash)
-
-        unless target
-          target = (name == :ios ? '4.3' : '10.6')
+        unless name
+          raise "A dependency requires a name."
         end
-        @target_definition.platform = Platform.new(name, target)
-      end
 
-      # Specifies the Xcode project that contains the target that the Pods library
-      # should be linked with.
-      #
-      # @param    [String] path
-      #           the path of the project to link with
-      #
-      # @param    [Hash{String => symbol}] build_configurations
-      #           a hash where the keys are the name of the build configurations
-      #           and the values a symbol that represents their type (`:debug` or
-      #           `:release`).
-      #
-      # @note     If no explicit project is specified, it will use the Xcode
-      #           project of the parent target. If none of the target definitions
-      #           specify an explicit project and there is only **one** project
-      #           in the same directory as the Podfile then that project will be
-      #           used.
-      #
-      # @example  Specifying the user project
-      #
-      #           # Look for target to link with in an Xcode project called
-      #           # ‘MyProject.xcodeproj’.
-      #           xcodeproj 'MyProject'
-      #
-      #           target :test do
-      #             # This Pods library links with a target in another project.
-      #             xcodeproj 'TestProject'
-      #           end
-      #
-      # @return   [void]
-      #
-      def xcodeproj(path, build_configurations = {})
-        path = File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
-        @target_definition.user_project_path = path
-        @target_definition.build_configurations = build_configurations
-      end
-
-      # Specifies the target(s) in the user’s project that this Pods library
-      # should be linked in.
-      #
-      # @param    [String, Array<String>] targets
-      #           the target or the targets to link with.
-      #
-      # @note     If no explicit target is specified, then the Pods target will
-      #           be linked with the first target in your project. So if you only
-      #           have one target you do not need to specify the target to link
-      #           with.
-      #
-      # @example  Link with an user project target
-      #
-      #           link_with 'MyApp'
-      #
-      # @example  Link with a more user project targets
-      #
-      #           link_with ['MyApp', 'MyOtherApp']
-      #
-      # @return   [void]
-      #
-      def link_with(targets)
-        targets = [targets] unless targets.is_a?(Array)
-        @target_definition.link_with = targets
-      end
-
-      # Inhibits **all** the warnings from the CocoaPods libraries.
-      #
-      # @note this attribute is inherited by child target definitions.
-      #
-      # @return   [void]
-      #
-      def inhibit_all_warnings!
-        @target_definition.inhibit_all_warnings = true
+        @target_definition.target_dependencies << Dependency.new(name, *requirements)
       end
 
       # Use the dependencies of a Pod defined in the given podspec file.
@@ -277,77 +160,226 @@ module Pod
         @target_definition.target_dependencies.concat(deps)
       end
 
-      # Specifies a dependency of the project.
+      #---------------------------------------------------------------------------#
+
+      # @!group Target configuration
+
+      # Specifies the platform for which a static library should be build.
       #
-      # A dependency requirement is defined by the name of the Pod and _optionally_
-      # a list of version requirements.
+      # -----
       #
-      # @example    Defining a dependency
+      # CocoaPods provides a default deployment target if one is not specified.
+      # The current default values are `4.3` for iOS and `10.6` for OS X.
       #
-      #             pod 'SSZipArchive'
+      # -----
       #
-      # @overload   pod(name, requirements)
+      # If the deployment target requires it (iOS < `4.3`), `armv6`
+      # architecture will be added to `ARCHS`.
       #
-      #   @param    [String] name
-      #             the name of the Pod.
+      # @param    [Symbol] name
+      #           the name of platform, can be either `:osx` for OS X or `:ios`
+      #           for iOS.
       #
-      #   @param    [Array] requirements
-      #             an array specifying the version requirements of the
-      #             dependency.
+      # @param    [String, Version] target
+      #           The optional deployment.  If not provided a default value
+      #           according to the platform name will be assigned.
       #
-      #   @example  Initialization with version requirements.
+      # @example  Specifying the platform
       #
-      #             pod 'Objection', '>  0.9'
-      #             pod 'Objection', '~> 0.9'
-      #             pod 'Objection', '>= 0.5', '< 0.9'
+      #           platform :ios, "4.0"
+      #           platform :ios
       #
-      # @overload   pod(name, external_source)
+      # @return   [void]
       #
-      #   @param    [String] name
-      #             the name of the Pod.
-      #
-      #   @param    [Hash] external_source
-      #             a hash describing the external source.
-      #
-      #   @example  Initialization with an external source.
-      #
-      #             pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git'
-      #             pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
-      #             pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
-      #             pod 'JSONKit', :local => 'path/to/JSONKit'
-      #
-      #   @note     External sources (except `:podspec`) require a podspec in the
-      #             root of the library.
-      #
-      # @overload   initialize(name, is_head)
-      #
-      #   @param    [String] name
-      #             the name of the Pod.
-      #
-      #   @param    [Symbol] is_head
-      #             a symbol that can be `:head` or nil.
-      #
-      #   @example  Initialization with the head option
-      #
-      #             pod 'TTTFormatterKit', :head
-      #
-      # @note       This method allow a nil name and the raises to be more
-      #             informative.
-      #
-      # @note       Support for inline podspecs has been deprecated.
-      #
-      # @return     [void]
-      #
-      def pod(name = nil, *requirements, &block)
-        if block
-          raise "Inline specifications are deprecated. Please store the specification in a `podspec` file."
+      def platform(name, target = nil)
+        unless [:ios, :osx].include?(name)
+          raise "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
         end
 
-        unless name
-          raise "A dependency requires a name."
-        end
+        # Support for deprecated options parameter
+        target = target[:deployment_target] if target.is_a?(Hash)
 
-        @target_definition.target_dependencies << Dependency.new(name, *requirements)
+        unless target
+          target = (name == :ios ? '4.3' : '10.6')
+        end
+        @target_definition.platform = Platform.new(name, target)
+      end
+
+      # Specifies the Xcode project that contains the target that the Pods library
+      # should be linked with.
+      #
+      # -----
+      #
+      # If no explicit project is specified, it will use the Xcode project of
+      # the parent target. If none of the target definitions specify an
+      # explicit project and there is only **one** project in the same
+      # directory as the Podfile then that project will be used.
+      #
+      # @param    [String] path
+      #           the path of the project to link with
+      #
+      # @param    [Hash{String => symbol}] build_configurations
+      #           a hash where the keys are the name of the build configurations
+      #           and the values a symbol that represents their type (`:debug` or
+      #           `:release`).
+      #
+      # @example  Specifying the user project
+      #
+      #           # Look for target to link with in an Xcode project called
+      #           # `MyProject.xcodeproj`.
+      #           xcodeproj `MyProject`
+      #
+      #           target :test do
+      #             # This Pods library links with a target in another project.
+      #             xcodeproj `TestProject`
+      #           end
+      #
+      # @return   [void]
+      #
+      def xcodeproj(path, build_configurations = {})
+        path = File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
+        @target_definition.user_project_path = path
+        @target_definition.build_configurations = build_configurations
+      end
+
+      # Specifies the target(s) in the user’s project that this Pods library
+      # should be linked in.
+      #
+      # -----
+      #
+      # If no explicit target is specified, then the Pods target will be linked
+      # with the first target in your project. So if you only have one target
+      # you do not need to specify the target to link with.
+      #
+      # @param    [String, Array<String>] targets
+      #           the target or the targets to link with.
+      #
+      # @example  Link with an user project target
+      #
+      #           link_with 'MyApp'
+      #
+      # @example  Link with a more user project targets
+      #
+      #           link_with ['MyApp', 'MyOtherApp']
+      #
+      # @return   [void]
+      #
+      def link_with(targets)
+        targets = [targets] unless targets.is_a?(Array)
+        @target_definition.link_with = targets
+      end
+
+      # Inhibits **all** the warnings from the CocoaPods libraries.
+      #
+      # ------
+      #
+      # This attribute is inherited by child target definitions.
+      #
+      def inhibit_all_warnings!
+        @target_definition.inhibit_all_warnings = true
+      end
+
+      #---------------------------------------------------------------------------#
+
+      # @!group Workspace
+
+      # Specifies the Xcode workspace that should contain all the projects.
+      #
+      # -----
+      #
+      # If no explicit Xcode workspace is specified and only **one** project
+      # exists in the same directory as the Podfile, then the name of that
+      # project is used as the workspace’s name.
+      #
+      # @param    [String] path
+      #           path of the workspace.
+      #
+      # @example  Specifying a workspace
+      #
+      #           workspace 'MyWorkspace'
+      #
+      # @return   [void]
+      #
+      def workspace(path)
+        @workspace_path = (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
+      end
+
+      # Specifies that a BridgeSupport metadata document should be generated from
+      # the headers of all installed Pods.
+      #
+      # -----
+      #
+      # This is for scripting languages such as [MacRuby](http://macruby.org),
+      # [Nu](http://programming.nu/index), and
+      # [JSCocoa](http://inexdo.com/JSCocoa), which use it to bridge types,
+      # functions, etc better.
+      #
+      # @return   [void]
+      #
+      def generate_bridge_support!
+        @generate_bridge_support = true
+      end
+
+      # Specifies that the -fobjc-arc flag should be added to the `OTHER_LD_FLAGS`.
+      #
+      # -----
+      #
+      # This is used as a workaround for a compiler bug with non-ARC projects
+      # (see #142). This was originally done automatically but libtool as of
+      # Xcode 4.3.2 no longer seems to support the `-fobjc-arc` flag. Therefore
+      # it now has to be enabled explicitly using this method.
+      #
+      # Support for this method might be dropped in a future release.
+      #
+      # @return   [void]
+      #
+      def set_arc_compatibility_flag!
+        @set_arc_compatibility_flag = true
+      end
+
+      #---------------------------------------------------------------------------#
+
+      # @!group Hooks
+
+      # This hook allows you to make any changes to the Pods after they have been
+      # downloaded but before they are installed.
+      #
+      # ------
+      #
+      # Hooks are global and not stored per target definition.
+      #
+      # @example  Defining a pre install hook in a Podfile.
+      #
+      #           pre_install do |installer|
+      #             # Do something fancy!
+      #           end
+      #
+      #
+      def pre_install(&block)
+        @pre_install_callback = block
+      end
+
+      # This hook allows you to make any last changes to the generated Xcode project
+      # before it is written to disk, or any other tasks you might want to perform.
+      #
+      # ------
+      #
+      # Hooks are global and not stored per target definition.
+      #
+      # @example  Customizing the `OTHER_LDFLAGS` of all targets
+      #
+      #           post_install do |installer|
+      #             installer.project.targets.each do |target|
+      #               target.build_configurations.each do |config|
+      #                 config.build_settings['GCC_ENABLE_OBJC_GC'] = 'supported'
+      #               end
+      #             end
+      #           end
+      #
+      # @return   [void]
+      #
+      def post_install(&block)
+        @post_install_callback = block
       end
     end
   end

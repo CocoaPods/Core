@@ -2,7 +2,7 @@ require 'pathname'
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 $:.unshift((ROOT + 'lib').to_s)
 require 'cocoapods-core'
-
+require 'active_support'
 namespace :doc do
   task :load do
     unless (ROOT + 'rakelib/doc').exist?
@@ -45,13 +45,33 @@ namespace :doc do
           end
         end
 
+        class Podfile < DSL
+          def group_sort_order
+            [
+              ['Dependencies'],
+              ['Target configuration'],
+              ['Workspace'],
+              ['Hooks'],
+            ]
+          end
+        end
+
       end
     end
 
+    # Specification
     dsl_file = (ROOT + 'lib/cocoapods-core/specification/dsl.rb').to_s
     generator = Pod::Doc::Specification.new(dsl_file)
     generator.render
+
+    # Podfile
+    dsl_file = (ROOT + 'lib/cocoapods-core/podfile/dsl.rb').to_s
+    generator = Pod::Doc::Podfile.new(dsl_file)
+    generator.render
+
     sh "open '#{generator.output_file}'"
+
+
   end
 end
 
