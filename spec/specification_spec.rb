@@ -274,7 +274,7 @@ describe Pod::Specification::PlatformProxy do
     end
 
     it "declares the writer methods of the multi-platform attributes" do
-      attributes = Pod::Specification.attributes.select(&:multi_platform?)
+      attributes = Pod::Specification::DSL.attributes.select(&:multi_platform?)
       attributes.each do |attr|
         @proxy.should.respond_to?(attr.writer_name)
       end

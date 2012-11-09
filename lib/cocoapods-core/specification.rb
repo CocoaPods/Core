@@ -1,6 +1,6 @@
 require 'active_support/core_ext/string/strip.rb'
-
 require 'cocoapods-core/specification/set'
+require 'cocoapods-core/specification/dsl'
 
 module Pod
 
@@ -12,9 +12,7 @@ module Pod
   #
   class Specification
 
-    require 'cocoapods-core/specification/attribute'
-    extend   Pod::Specification::Attributes
-    require 'cocoapods-core/specification/dsl'
+    include Pod::Specification::DSL
 
     # @return [Specification] parent the parent of the specification unless the
     #         specification is a root.
@@ -38,7 +36,7 @@ module Pod
         @dependencies[platform] = []
       end
 
-      self.class.attributes.each { |a| a.initialize_on(self) }
+      DSL.attributes.each { |a| a.initialize_on(self) }
 
       yield self if block_given?
     end
@@ -319,7 +317,7 @@ module Pod
       # that forwards the message to the {#specification} using the
       # {Specification#on_platform} method.
       #
-      Specification.attributes.select { |a| a.multi_platform? }.each do |a|
+      DSL.attributes.select { |a| a.multi_platform? }.each do |a|
         define_method(a.writer_name) do |args|
           @specification._on_platform(@platform) do
             @specification.send(a.writer_name, args)
