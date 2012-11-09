@@ -273,7 +273,7 @@ describe Pod::Specification do
       @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
     end
 
-    xit "inherits the xcconfig values from the parent" do
+    it "inherits the xcconfig values from the parent" do
       @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
       @subspec.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
       @subspec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
@@ -295,6 +295,11 @@ describe Pod::Specification do
       @spec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
     end
 
+    it "allows to specify the contents of the prefix header as an array" do
+      @spec.prefix_header_contents = '#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>'
+      @spec.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
+    end
+
     it "inherits the contents of the prefix header" do
       @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
       @subspec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
@@ -307,7 +312,7 @@ describe Pod::Specification do
       @spec.prefix_header_file.should == 'iphone/include/prefix.pch'
     end
 
-    xit "inherits the path of compiler header file from the parent" do
+    it "inherits the path of compiler header file from the parent" do
       @spec.prefix_header_file = 'iphone/include/prefix.pch'
       @subspec.prefix_header_file.should == 'iphone/include/prefix.pch'
     end
@@ -319,7 +324,7 @@ describe Pod::Specification do
       @spec.header_dir.should == 'Three20Core'
     end
 
-    xit "inherits the directory to use for the headers from the parent" do
+    it "inherits the directory to use for the headers from the parent" do
       @spec.header_dir = 'Three20Core'
       @subspec.header_dir.should == 'Three20Core'
     end
@@ -331,7 +336,7 @@ describe Pod::Specification do
       @spec.header_mappings_dir.should == 'src/include'
     end
 
-    xit "inherits the directory to use for the headers from the parent" do
+    it "inherits the directory to use for the headers from the parent" do
       @spec.header_mappings_dir = 'src/include'
       @subspec.header_mappings_dir.should == 'src/include'
     end
@@ -388,10 +393,10 @@ describe Pod::Specification do
       @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
     end
 
-    xit "inherit resources from the parent" do
+    it "inherit resources from the parent" do
       @spec.resources = {
         :frameworks => ['frameworks/*'],
-        :resources => ['parent_resources/*']
+        :resources => 'parent_resources/*'
       }
       @subspec.resources = {
         :shared_support => ['shared_support/*'],
