@@ -97,8 +97,8 @@ module Pod
 
       # @return [Version] The version of the Pod.
       #
-      def version=(version)
-        @version = Version.new(version)
+      def _prepare_version(version)
+        Version.new(version)
       end
 
       #------------------#
@@ -133,15 +133,15 @@ module Pod
       # @return [Hash] a hash containing the authors as the keys and their
       #         email address as the values.
       #
-      def authors
-        if @authors.is_a?(Hash)
-          @authors
-        elsif @authors.is_a?(Array)
+      def _prepare_authors(authors)
+        if authors.is_a?(Hash)
+          authors
+        elsif authors.is_a?(Array)
           result = {}
-          @authors.each { |name| result[name] = nil }
+          authors.each { |name| result[name] = nil }
           result
-        elsif @authors.is_a?(String)
-          { @authors => nil }
+        elsif authors.is_a?(String)
+          { authors => nil }
         end
       end
 
@@ -189,7 +189,7 @@ module Pod
 
       # @return [Hash] A hash containing the license information of the Pod.
       #
-      def prepare_license(value)
+      def _prepare_license(value)
         license = value.is_a?(String) ? { :type => value } : value
         if license[:text]
           license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '')
@@ -323,8 +323,8 @@ module Pod
         :root_only      => true,
       }
 
-      def description
-        @description.strip_heredoc if @description
+      def _prepare_description(description)
+        description.strip_heredoc
       end
 
       #------------------#
@@ -427,7 +427,7 @@ module Pod
         :multi_platform => false,
       }
 
-      def platform=(name_and_deployment_target)
+      def _prepare_platform(name_and_deployment_target)
         if name_and_deployment_target.is_a?(Array)
           name = name_and_deployment_target.first
           deployment_target = name_and_deployment_target.last
@@ -439,7 +439,7 @@ module Pod
           raise StandardError, "Unsupported platform `#{name}`. The available " \
             "names are `#{PLATFORMS.inspect}`"
         end
-        @platform = Platform.new(name, deployment_target)
+        Platform.new(name, deployment_target)
       end
 
       #------------------#
@@ -473,11 +473,11 @@ module Pod
         :initial_value => nil,
       }
 
-      def deployment_target=(deployment_target)
+      def _prepare_deployment_target(deployment_target)
         unless @define_for_platforms.count == 1
           raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
         end
-        @deployment_target[@define_for_platforms.first] = Version.new(deployment_target)
+        Version.new(deployment_target)
       end
 
       #-----------------------------------------------------------------------#
@@ -649,22 +649,26 @@ module Pod
         :initial_value => {},
       }
 
-      def xcconfig=(value)
-        @define_for_platforms.each do |platform|
-          @xcconfig[platform].merge!(value)
-        end
-      end
+      # TODO: the xcconfig was merged on multiple definitions. Important to
+      # support multi-platform variants.
 
+      # def _prepare_xcconfig(value)
+      #   result = {}
+      #   @define_for_platforms.each do |platform|
+      #     result[platform] = @xcconfig[platform].merge(value)
+      #   end
+      #   result
+      # end
 
-      def xcconfig
-        if @parent
-          @parent.xcconfig.merge(@xcconfig[active_platform]) do |_, parent_val, self_val|
-            parent_val + ' ' + self_val
-          end
-        else
-          @xcconfig[active_platform]
-        end
-      end
+      # def xcconfig
+      #   if @parent
+      #     @parent.xcconfig.merge(@xcconfig[active_platform]) do |_, parent_val, self_val|
+      #       parent_val + ' ' + self_val
+      #     end
+      #   else
+      #     @xcconfig[active_platform]
+      #   end
+      # end
 
       #------------------#
 
@@ -726,12 +730,7 @@ module Pod
       attribute :prefix_header_file, {
         :type          => [ String],
         :inheritance   => :first_defined,
-        :initial_value => '',
       }
-
-      def prefix_header_file
-        Pathname.new(@prefix_header_file[active_platform])
-      end
 
       #------------------#
 
@@ -757,10 +756,6 @@ module Pod
         :initial_value => nil,
         :inheritance   => :first_defined,
       }
-
-      def header_dir
-        Pathname.new(@header_dir[active_platform])
-      end
 
       #------------------#
 
@@ -791,11 +786,6 @@ module Pod
         :initial_value => nil,
         :inheritance   => :first_defined,
       }
-
-      def header_mappings_dir
-        Pathname.new(@header_mappings_dir[active_platform])
-      end
-
 
       #-----------------------------------------------------------------------#
 
@@ -981,7 +971,7 @@ module Pod
         :wrapper       => Hash,
       }
 
-      def prepare_resources(value)
+      def _prepare_resources(value)
         value = { :resources => value } unless value.is_a?(Hash)
         result = {}
         value.each do |key, patterns|

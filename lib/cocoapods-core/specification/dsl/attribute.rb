@@ -134,6 +134,10 @@ module Pod
         def writer_alias
           "#{name.to_s.singularize}=" if singularize?
         end
+
+        def prepare_hook_name
+          "_prepare_#{name}"
+        end
       end
 
 
@@ -195,8 +199,8 @@ module Pod
                 end
               end
 
-              if respond_to?("prepare_#{attr.name}")
-                value = self.send("prepare_#{attr.name}", value)
+              if respond_to?(attr.prepare_hook_name)
+                value = self.send(attr.prepare_hook_name, value)
               end
 
               if attr.keys

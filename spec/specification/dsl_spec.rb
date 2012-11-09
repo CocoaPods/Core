@@ -304,36 +304,36 @@ describe Pod::Specification do
 
     it "allows to specify the path of compiler header file" do
       @spec.prefix_header_file = 'iphone/include/prefix.pch'
-      @spec.prefix_header_file.should == Pathname.new('iphone/include/prefix.pch')
+      @spec.prefix_header_file.should == 'iphone/include/prefix.pch'
     end
 
     xit "inherits the path of compiler header file from the parent" do
       @spec.prefix_header_file = 'iphone/include/prefix.pch'
-      @subspec.prefix_header_file.should == Pathname.new('iphone/include/prefix.pch')
+      @subspec.prefix_header_file.should == 'iphone/include/prefix.pch'
     end
 
     #------------------#
 
     it "allows to specify a directory to use for the headers" do
       @spec.header_dir = 'Three20Core'
-      @spec.header_dir.should == Pathname.new('Three20Core')
+      @spec.header_dir.should == 'Three20Core'
     end
 
     xit "inherits the directory to use for the headers from the parent" do
       @spec.header_dir = 'Three20Core'
-      @subspec.header_dir.should == Pathname.new('Three20Core')
+      @subspec.header_dir.should == 'Three20Core'
     end
 
     #------------------#
 
     it "allows to specify a directory to preserver the namespacing of the headers" do
       @spec.header_mappings_dir = 'src/include'
-      @spec.header_mappings_dir.should == Pathname.new('src/include')
+      @spec.header_mappings_dir.should == 'src/include'
     end
 
     xit "inherits the directory to use for the headers from the parent" do
       @spec.header_mappings_dir = 'src/include'
-      @subspec.header_mappings_dir.should == Pathname.new('src/include')
+      @subspec.header_mappings_dir.should == 'src/include'
     end
 
   end
