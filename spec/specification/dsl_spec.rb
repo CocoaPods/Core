@@ -388,6 +388,24 @@ describe Pod::Specification do
       @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
     end
 
+    xit "inherit resources from the parent" do
+      @spec.resources = {
+        :frameworks => ['frameworks/*'],
+        :resources => ['parent_resources/*']
+      }
+      @subspec.resources = {
+        :shared_support => ['shared_support/*'],
+        :resources => ['subspec_resources/*']
+      }
+
+      @subspec.resources.should == {
+        :frameworks => ['frameworks/*'],
+        :shared_support => ['shared_support/*'],
+        :resources => ['parent_resources/*', 'subspec_resources/*'],
+      }
+
+    end
+
     it "wrap to arrays resources specified as a string with a destination" do
       @spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
       @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
@@ -441,13 +459,17 @@ describe Pod::Specification do
   #-----------------------------------------------------------------------------#
 
   describe "DSL - Hooks" do
-
-    xit "returns false if the pre install hook was not executed" do
-
+    before do
+      @spec = Pod::Spec.new do |s|
+      end
     end
 
-    xit "returns false if the post install hook was not executed" do
+    it "returns false if the pre install hook was not executed" do
+      @spec.pre_install(nil, nil).should == FALSE
+    end
 
+    it "returns false if the post install hook was not executed" do
+      @spec.post_install(nil).should == FALSE
     end
 
   end
@@ -457,21 +479,19 @@ describe Pod::Specification do
   describe "DSL - Dependencies & Subspecs" do
     before do
       @spec = Pod::Spec.new do |s|
-        s.name = "Pod"
+      end
+    end
+
+    it "allows to specify as subspec" do
+      @spec = Pod::Spec.new do |s|
+        s.name = 'Spec'
         s.subspec 'Subspec' do |sp|
         end
-        s.subspec 'Preferred-Subspec' do |sp|
-        end
       end
-      @subspec = @spec.subspecs.first
-    end
-
-    xit "allows to specify as subspec" do
-
-    end
-
-    xit "returns the subspecs" do
-
+      subspec = @spec.subspecs.first
+      subspec.parent.should == @spec
+      subspec.class.should == Pod::Specification
+      subspec.name.should == 'Spec/Subspec'
     end
 
     it "allows to specify a preferred dependency" do
@@ -480,30 +500,42 @@ describe Pod::Specification do
       @spec.default_subspec.should == 'Preferred-Subspec'
     end
 
-    xit "allows to specify a dependency" do
-
-    end
-
-    xit "returns the dependencies" do
-
+    it "allows to specify a dependency" do
+      @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
+      @spec.activate_platform(:ios)
+      dep = @spec.external_dependencies.first
+      dep.name.should == 'SVStatusHUD'
+      dep.requirements_list.sort.should == ["< 1.4", "~> 1.0"]
     end
   end
 
   #-----------------------------------------------------------------------------#
 
   describe "DSL - Multi-Platform" do
-
-    xit "allows to specify iOS attributes" do
-
+    before do
+      @spec = Pod::Spec.new do |s|
+        s.name = "Pod"
+      end
     end
 
-    xit "allows to specify OS X attributes" do
-
+    it "allows to specify iOS attributes" do
+      @spec.ios.preserve_paths = [ 'APath' ]
+      @spec.activate_platform(:ios)
+      @spec.preserve_paths.should == [ 'APath' ]
+      @spec.activate_platform(:osx)
+      @spec.preserve_paths.should == []
     end
 
+    it "allows to specify OS X attributes" do
+      @spec.osx.preserve_paths = [ 'APath' ]
+      @spec.activate_platform(:osx)
+      @spec.preserve_paths.should == [ 'APath' ]
+      @spec.activate_platform(:ios)
+      @spec.preserve_paths.should == []
+    end
   end
-
 end
+
 
 #   describe "In general" do
 #     before do
