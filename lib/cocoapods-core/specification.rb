@@ -25,9 +25,7 @@ module Pod
     #         the name of the specification.
     #
     def initialize(parent = nil, name = nil)
-      @parent   = parent
-      @name     = name
-
+      DSL.attributes.each { |a| a.initialize_spec_ivar(self) }
       @subspecs = []
       @define_for_platforms = PLATFORMS
       @deployment_target = {}
@@ -36,7 +34,8 @@ module Pod
         @dependencies[platform] = []
       end
 
-      DSL.attributes.each { |a| a.initialize_on(self) }
+      @parent = parent
+      @name   = name
 
       yield self if block_given?
     end

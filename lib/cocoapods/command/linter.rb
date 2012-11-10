@@ -1,7 +1,6 @@
 module Pod
   class Command
     class Linter
-      include Config::Mixin
 
       # TODO: Add check to ensure that attributes inherited by subspecs are not duplicated ?
 
@@ -90,75 +89,6 @@ module Pod
         :success
       end
 
-      # Performs platform specific analysis.
-      # It requires to download the source at each iteration
-      #
-      def peform_extensive_analysis
-        set_up_lint_environment
-        install_pod
-        if `which xcodebuild`.strip.empty?
-          puts "Skipping compilation with `xcodebuild' because it can't be found.\n".yellow if config.verbose?
-        else
-          puts "\nBuilding with xcodebuild.\n".yellow if config.verbose?
-          # treat xcodebuild warnings as notes because the spec maintainer might not be the author of the library
-          xcodebuild_output.each { |msg| ( msg.include?('error: ') ? @platform_errors[@platform] : @platform_notes[@platform] ) << msg }
-        end
-        @platform_errors[@platform]   += file_patterns_errors
-        @platform_warnings[@platform] += file_patterns_warnings
-        tear_down_lint_environment
-      end
-
-      def install_pod
-        podfile = podfile_from_spec
-        config.verbose
-        config.skip_repo_update = true
-        sandbox = Sandbox.new(config.project_pods_root)
-        resolver = Resolver.new(podfile, nil, sandbox)
-        installer = Installer.new(resolver)
-        installer.install!
-        @pod = installer.pods.find { |pod| pod.top_specification == spec }
-        config.silent
-      end
-
-      def podfile_from_spec
-        name     = spec.name
-        podspec  = file.realpath
-        platform = @platform
-        local    = local?
-        podfile  = Pod::Podfile.new do
-          platform(platform.to_sym, platform.deployment_target)
-          if (local)
-            pod name, :local => podspec.dirname.to_s
-          else
-            pod name, :podspec => podspec.to_s
-          end
-        end
-        podfile
-      end
-
-      def set_up_lint_environment
-        tmp_dir.rmtree if tmp_dir.exist?
-        tmp_dir.mkpath
-        @original_config = Config.instance.clone
-        config.project_root      = tmp_dir
-        config.project_pods_root = tmp_dir + 'Pods'
-        config.silent            = !config.verbose
-        config.integrate_targets = false
-        config.generate_docs     = false
-      end
-
-      def tear_down_lint_environment
-        tmp_dir.rmtree unless no_clean
-        Config.instance = @original_config
-      end
-
-      def tmp_dir
-        Pathname.new('/tmp/CocoaPods/Lint')
-      end
-
-      def pod_dir
-        tmp_dir + 'Pods' + spec.name
-      end
 
       # It reads a podspec file and checks for strings corresponding
       # to features that are or will be deprecated
@@ -177,17 +107,7 @@ module Pod
       def podspec_errors
         messages = []
         messages << "The name of the spec should match the name of the file" unless names_match?
-        messages << "Unrecognized platfrom" unless platform_valid?
-        messages << "Missing name"          unless spec.name
-        messages << "Missing version"       unless spec.version
-        messages << "Missing summary"       if !spec.summary || spec.summary.empty?
-        messages << "Missing homepage"      unless spec.homepage
-        messages << "Missing author(s)"     unless spec.authors
-        messages << "Missing or invalid source: #{spec.source}" unless source_valid?
         messages << "The summary should be short use `description` (max 140 characters)." if spec.summary && spec.summary.length > 140
-
-        # attributes with multiplatform values
-        return messages unless platform_valid?
         messages << "The spec appears to be empty (no source files, resources, or preserve paths)" if spec.source_files.empty? && spec.subspecs.empty? && spec.resources.empty? && spec.preserve_paths.empty?
         messages += paths_starting_with_a_slash_errors
         messages += deprecation_errors
@@ -198,10 +118,6 @@ module Pod
         return true unless spec.name
         root_name = spec.name.match(/[^\/]*/)[0]
         file.basename.to_s == root_name + '.podspec'
-      end
-
-      def platform_valid?
-        !spec.platform || [:ios, :osx].include?(spec.platform.name)
       end
 
       def source_valid?
@@ -231,8 +147,6 @@ module Pod
 
       # @return [Array<String>] List of the **non** fatal defects detected in a podspec
       def podspec_warnings
-        license  = spec.license || {}
-        source   = spec.source  || {}
         text     = @file.read
         messages = []
         messages << "Missing license type"                                  unless license[:type]
@@ -261,57 +175,6 @@ module Pod
         messages
       end
 
-      # It creates a podfile in memory and builds a library containing
-      # the pod for all available platfroms with xcodebuild.
-      #
-      # @return [Array<String>]
-      #
-      def xcodebuild_output
-        return [] if `which xcodebuild`.strip.empty?
-        messages      = []
-        output        = Dir.chdir(config.project_pods_root) { `xcodebuild clean build 2>&1` }
-        clean_output  = process_xcode_build_output(output)
-        messages     += clean_output
-        puts(output) if config.verbose?
-        messages
-      end
-
-      def process_xcode_build_output(output)
-        output_by_line = output.split("\n")
-        selected_lines = output_by_line.select do |l|
-          l.include?('error: ') && (l !~ /errors? generated\./) && (l !~ /error: \(null\)/)\
-            || l.include?('warning: ') && (l !~ /warnings? generated\./)\
-            || l.include?('note: ') && (l !~ /expanded from macro/)
-        end
-        selected_lines.map do |l|
-          new = l.gsub(/\/tmp\/CocoaPods\/Lint\/Pods\//,'') # Remove the unnecessary tmp path
-          new.gsub!(/^ */,' ')                              # Remove indentation
-          "XCODEBUILD > " << new                            # Mark
-        end
-      end
-
-      # It checks that every file pattern specified in a spec yields
-      # at least one file. It requires the pods to be alredy present
-      # in the current working directory under Pods/spec.name.
-      #
-      # @return [Array<String>]
-      #
-      def file_patterns_errors
-        messages = []
-        messages << "The sources did not match any file"                     if !spec.source_files.empty? && @pod.source_files.empty?
-        messages << "The resources did not match any file"                   if !spec.resources.empty? && @pod.resource_files.empty?
-        messages << "The preserve_paths did not match any file"              if !spec.preserve_paths.empty? && @pod.preserve_files.empty?
-        messages << "The exclude_header_search_paths did not match any file" if !spec.exclude_header_search_paths.empty? && @pod.headers_excluded_from_search_paths.empty?
-        messages
-      end
-
-      def file_patterns_warnings
-        messages = []
-        unless @pod.license_file || spec.license && ( spec.license[:type] == 'Public Domain' || spec.license[:text] )
-          messages << "Unable to find a license file"
-        end
-        messages
-      end
     end
   end
 end

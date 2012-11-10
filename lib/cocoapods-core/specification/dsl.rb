@@ -63,8 +63,8 @@ module Pod
       #
       attribute :name, {
         :required       => true,
-        :multi_platform => false,
         :root_only      => true,
+        :multi_platform => false,
       }
 
       # @return [String] The name of the specification _including_ the names of
@@ -89,8 +89,8 @@ module Pod
       #
       attribute :version, {
         :required       => true,
-        :multi_platform => false,
         :root_only      => true,
+        :multi_platform => false,
       }
 
       # @return [Version] The version of the Pod.
@@ -123,9 +123,9 @@ module Pod
       attribute :authors, {
         :types          => [ String, Array, Hash ],
         :required       => true,
-        :multi_platform => false,
         :root_only      => true,
         :singularize    => true,
+        :multi_platform => false,
       }
 
       # @return [Hash] a hash containing the authors as the keys and their
@@ -178,7 +178,7 @@ module Pod
       #   @param [String, Hash{Symbol=>String}] license
       #
       attribute :license, {
-        :wrapper        => Hash,
+        :container      => Hash,
         :keys           => LICENSE_KEYS,
         :required       => true,
         :multi_platform => false,
@@ -257,7 +257,7 @@ module Pod
       #     should be retrieved.
       #
       attribute :source, {
-        :wrapper        => Hash,
+        :container      => Hash,
         :keys           => SOURCE_KEYS,
         :required       => true,
         :root_only      => true,
@@ -349,7 +349,7 @@ module Pod
         :multi_platform => false,
         :root_only      => true,
         :singularize    => true,
-        :wrapper        => Array,
+        :container      => Array,
       }
 
       #------------------#
@@ -372,7 +372,7 @@ module Pod
       #   @return [Hash{Symbol=>Array<String>}]
       #
       attribute :documentation, {
-        :wrapper        => Hash,
+        :container      => Hash,
         :root_only      => true,
         :multi_platform => false,
       }
@@ -417,7 +417,6 @@ module Pod
       #
       attribute :platform, {
         :types          => [Array, Symbol],
-        :inheritance    => :first_defined,
         :multi_platform => false,
       }
 
@@ -462,7 +461,6 @@ module Pod
       #   @return [Version] The deployment target of each supported platform.
       #
       attribute :deployment_target, {
-        :inheritance => :first_defined,
       }
 
       def _prepare_deployment_target(deployment_target)
@@ -489,8 +487,7 @@ module Pod
       #           whether the source files require ARC.
       #
       attribute :requires_arc, {
-        :types       => [TrueClass, FalseClass],
-        :inheritance => :first_defined,
+        :types   => [TrueClass, FalseClass],
       }
 
       #------------------#
@@ -518,8 +515,7 @@ module Pod
       #     needs to link against
       #
       attribute :frameworks, {
-        :wrapper     => Array,
-        :inheritance => :merge,
+        :container   => Array,
         :singularize => true
       }
 
@@ -544,8 +540,7 @@ module Pod
       #     needs to **weakly** link against
       #
       attribute :weak_frameworks, {
-        :wrapper     => Array,
-        :inheritance => :merge,
+        :container   => Array,
         :singularize => true
       }
 
@@ -574,8 +569,7 @@ module Pod
       #     needs to link against
       #
       attribute :libraries, {
-        :wrapper     => Array,
-        :inheritance => :merge,
+        :container   => Array,
         :singularize => true
       }
 
@@ -604,8 +598,7 @@ module Pod
       #     needs to link against
       #
       attribute :compiler_flags, {
-        :wrapper     => Array,
-        :inheritance => :merge,
+        :container   => Array,
         :singularize => true
       }
 
@@ -631,8 +624,7 @@ module Pod
       #           specification.
       #
       attribute :xcconfig, {
-        :wrapper        => Hash,
-        :inheritance => :merge,
+        :container => Hash,
       }
 
       # TODO: the xcconfig was merged on multiple definitions. Important to
@@ -657,8 +649,6 @@ module Pod
       # end
 
       #------------------#
-
-      # TODO: decide inheritance policy
 
       # @!method prefix_header_contents=(content)
       #
@@ -686,8 +676,7 @@ module Pod
       #   @return [String] The contents of the prefix header.
       #
       attribute :prefix_header_contents, {
-        :types => [Array, String],
-        :inheritance => :first_defined,
+        :types   => [Array, String],
       }
 
       def _prepare_prefix_header_contents(value)
@@ -695,8 +684,6 @@ module Pod
       end
 
       #------------------#
-
-      # TODO: decide inheritance policy
 
       # @!method prefix_header_file=(path)
       #
@@ -720,9 +707,7 @@ module Pod
       #
       #   @return [Pathname] The path of the prefix header file.
       #
-      attribute :prefix_header_file, {
-        :inheritance => :first_defined,
-      }
+      attribute :prefix_header_file
 
       #------------------#
 
@@ -743,9 +728,7 @@ module Pod
       #
       #   @return [Pathname] the headers directory.
       #
-      attribute :header_dir, {
-        :inheritance   => :first_defined,
-      }
+      attribute :header_dir
 
       #------------------#
 
@@ -771,9 +754,7 @@ module Pod
       #   @return [Pathname] the directory from where to preserve the headers
       #           namespacing.
       #
-      attribute :header_mappings_dir, {
-        :inheritance   => :first_defined,
-      }
+      attribute :header_mappings_dir
 
       #-----------------------------------------------------------------------#
 
@@ -872,7 +853,7 @@ module Pod
       #   @return [Array<String>, FileList]
       #
       attribute :source_files, {
-        :file_patterns => true,
+        :container     => Array,
         :default_value => [ 'Classes/**/*.{h,m}' ],
       }
 
@@ -900,7 +881,7 @@ module Pod
       #   @return [Array<String>, FileList]
       #
       attribute :public_header_files, {
-        :file_patterns => true,
+        :container => Array,
       }
 
       #------------------#
@@ -951,12 +932,11 @@ module Pod
       #           the resources that should be copied.
       #
       attribute :resources, {
-        :file_patterns => true,
-        :types         => [Hash, String, Array],
+        :types         => [String, Array],
+        :container     => Hash,
+        :keys          => RESORUCES_DESTINATIONS,
         :default_value => { :resources => [ 'Resources/**/*' ] },
         :singularize   => true,
-        :keys          => RESORUCES_DESTINATIONS,
-        :wrapper       => Hash,
       }
 
       def _prepare_resources(value)
@@ -992,9 +972,9 @@ module Pod
       #   @return [Array<String>, Rake::FileList]
       #
       attribute :exclude_files, {
-        :file_patterns => true,
-        :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
-        :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
+        :container   => Array,
+        :ios_default => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
+        :osx_default => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
       }
 
       #------------------#
@@ -1024,8 +1004,8 @@ module Pod
       #   @return [Array<String>, FileList]
       #
       attribute :preserve_paths, {
-        :file_patterns => true,
-        :singularize   => true
+        :container   => Array,
+        :singularize => true
       }
 
       #-----------------------------------------------------------------------#
@@ -1141,7 +1121,9 @@ module Pod
       #   @return [String] the name of the subspec that should be inherited as
       #           dependency.
       #
-      attribute :default_subspec
+      attribute :default_subspec, {
+        :inherited => false,
+      }
 
       #------------------#
 

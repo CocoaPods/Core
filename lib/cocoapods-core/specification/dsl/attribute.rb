@@ -15,7 +15,8 @@ module Pod
       #
       def active_plaform_check
         unless active_platform
-          raise StandardError, "#{self.inspect} not activated for a platform before consumption."
+          raise StandardError, "#{self.inspect} not activated for a " \
+            "platform before consumption."
         end
       end
 
@@ -32,47 +33,54 @@ module Pod
         #
         attr_reader :name
 
+        # Returns a new attribute initialized with the given options.
+        #
+        # Attributes by default are:
+        #
+        # - inherited
+        # - multi-platform
+        #
         # @param    [Symbol] name @see name
         #
-        # @option  options [String] :description
+        # @param    [Hash{Symbol=>Object}] options
+        #           The options for configuring the attribute (see Options
+        #           group).
+        #
+        # @raise    If there are unrecognized options.
         #
         def initialize(name, options)
           @name = name
 
-          @root_only        = options.delete(:root_only) { false }
-          @multi_platform   = options.delete(:multi_platform) { true }
-          @required         = options.delete(:required)
-          @singularize      = options.delete(:singularize)
-          @inheritance      = options.delete(:inheritance)
-          @defined_as = options.delete(:defined_as)
+          @multi_platform = options.delete(:multi_platform) { true      }
+          @inherited      = options.delete(:inherited)      { true      }
+          @root_only      = options.delete(:root_only)      { false     }
+          @required       = options.delete(:required)       { false     }
+          @singularize    = options.delete(:singularize)    { false     }
+          @container      = options.delete(:container)      { nil       }
+          @keys           = options.delete(:keys)           { nil       }
+          @default_value  = options.delete(:default_value)  { nil       }
+          @ios_default    = options.delete(:ios_default)    { nil       }
+          @osx_default    = options.delete(:osx_default)    { nil       }
+          @defined_as     = options.delete(:defined_as)     { nil       } # TODO used only by dependency
+          @types          = options.delete(:types)          { [String ] }
 
-          @default_value    = options.delete(:default_value)
-          @ios_default      = options.delete(:ios_default)
-          @osx_default      = options.delete(:osx_default)
-          @keys             = options.delete(:keys)
+          # temporary support for Rake::FileList
+          @types << Rake::FileList if defined?(Rake)
 
-          @wrapper = options.delete(:wrapper)
-          @types = options.delete(:types) {[]}
-          @types << type if type = options.delete(:type)
-
-          @file_patterns = options.delete(:file_patterns) {false}
-          if @file_patterns
-            @multi_platform ||= true
-            @inheritance ||= :merge
-            @wrapper ||= Array
+          if @root_only
+            @multi_platform = false
+            @inherited = false
           end
 
-          @types << String if @types.empty?
-          @types << @wrapper if @wrapper
-          @types << Rake::FileList if @file_patterns && defined?(Rake)
-
-          raise StandardError, "Unrecognized options for specification attribute: #{options}" unless options.empty?
+          unless options.empty?
+            raise StandardError, "Unrecognized options: #{options} for #{to_s}"
+          end
         end
 
-        # @return [String]
+        # @return [String] A string representation suitable for UI.
         #
         def to_s
-          "Attribute for `#{name}`"
+          "Specification attribute `#{name}`"
         end
 
         #-------------------#
@@ -81,7 +89,7 @@ module Pod
 
         # @return [Array<Class>] the list of the classes of the values
         #   supported by the attribute writer. If not specified defaults
-        #   to #{String} and the class of the #{#wrapper}.
+        #   to #{String} and the class of the #{#container}.
         #
         attr_reader :types
 
@@ -89,19 +97,9 @@ module Pod
         #   as default initialization value and to automatically wrap other
         #   values to arrays.
         #
-        attr_reader :wrapper
+        attr_reader :container
 
-        # @return [Symbol] defines the behaviour of the reader, if defined it
-        #   can be either:
-        #
-        #   - first_defined: represents attributes that should be looked in
-        #     the parent if nil.
-        #   - merge: represents attributes that have a #{wrapper} and whose
-        #     values should be merged with the parents.
-        #
-        attr_reader :inheritance
-
-        # @return [Array] the list of the accepted keys for an attribute
+        # @return [Array, Hash] the list of the accepted keys for an attribute
         #   wrapped by a Hash.
         #
         attr_reader :keys
@@ -155,23 +153,17 @@ module Pod
 
         # @!group Specification helpers
 
-        # @return [Object] the value that should be used initialize the ivar.
-        #
-        def initialization_value
-          default_value || (wrapper.new if wrapper)
-        end
-
         # Initializes the ivar for the given specification.
         #
         # @return [void]
         #
-        def initialize_on(spec)
+        def initialize_spec_ivar(spec)
           if multi_platform?
             value = {}
-            Spec::PLATFORMS.each { |platform| value[platform] = initialization_value }
-            value[:ios] = ios_default if ios_default
-            value[:osx] = osx_default if osx_default
+            PLATFORMS.each { |p| value[p] = container ? container.new : nil }
             spec.instance_variable_set(ivar, value)
+          else
+            spec.instance_variable_set(ivar, container.new) if container
           end
         end
 
@@ -180,7 +172,6 @@ module Pod
         def ivar
           "@#{name}"
         end
-
 
         #-------------------#
 
@@ -192,29 +183,58 @@ module Pod
           name
         end
 
-        # @return [Object] Returns the value for the attribute taking into
-        #         account the inheritance policy.
+        # @return [Bool] defines whether the attribute reader should join the
+        # values with the parent.
+        #
+        # @note   Attributes stored in wrappers are always inherited.
+        #
+        def inherited?; @inherited; end
+
+        # Returns the value of the attribute of the given specification taking
+        # into account whether it should inherit the values of the parents.
+        #
+        # If the attribute is a collection it is concatenated with the value of
+        # the parent. If the value is stored in a String the values are joined
+        # by an empty space. Finally if it is stored in a hash the values are
+        # merged according to the above defined rules.
+        #
+        # @param  [Specification] spec
+        #         the specification whose value is required.
+        #
+        # @param  [Object] value
+        #         the value stored in the instance variable of the attribute.
+        #
+        # @return [Object] the value for the attribute.
         #
         def value_with_inheritance(spec, value)
-          return value if spec.root_spec?
-          if inheritance == :first_defined
-            value ||= spec.parent.send(reader_name)
-          elsif inheritance == :merge
-            parent_value = spec.parent.send(reader_name)
-            case parent_value
-            when Array
-              value = (parent_value || []) + value
-            when Hash
-              value = (parent_value || {}).merge(value) do |_, oldval, newval|
-                if newval.is_a?(Array)
-                  oldval + newval
-                else
-                  oldval + ' ' + newval
-                end
+          return value if spec.root_spec? || !inherited?
+          parent_value = spec.parent.send(reader_name)
+
+          if container == Array
+            (parent_value || []) + value
+          elsif container == Hash
+            (parent_value || {}).merge(value) do |_, oldval, newval|
+              if newval.is_a?(Array)
+                oldval + newval
+              else
+                oldval + ' ' + newval
               end
             end
+          else
+            value || parent_value
           end
-          value
+        end
+
+        def default_value
+          if multi_platform?
+            value = {}
+            PLATFORMS.each { |p| value[p] = @default_value }
+            value[:ios] = ios_default if @ios_default
+            value[:osx] = osx_default if @osx_default
+            value
+          else
+            @default_value
+          end
         end
 
         #-------------------#
@@ -248,8 +268,8 @@ module Pod
         #         prepare hook was defined.
         #
         def prepare_ivar(spec, value)
-          if wrapper
-            if wrapper ==  Array
+          if container
+            if container ==  Array
               value = [ value ] unless value.is_a?(Array)
             end
           end
@@ -269,33 +289,49 @@ module Pod
         # @return [void]
         #
         def validate_type(spec, value)
-          unless types.any? { |klass| value.class == klass }
+          unless supported_types.any? { |klass| value.class == klass }
             raise StandardError, "Non acceptable type `#{value.class}` for "\
-              "attribute `#{name}`. Allowed values: `#{types.inspect}`"
+              "#{to_s}. Allowed values: `#{types.inspect}`"
+          end
+        end
+
+        def supported_types
+          types.dup.push(container).compact
+        end
+
+        # Validates a value before storing.
+        #
+        # @raise If a root only attribute is set in a subspec.
+        #
+        # @raise If a unknown key is added to a hash.
+        #
+        # @return [void]
+        #
+        def validate_value(spec, value)
+          if root_only? && !spec.root_spec
+            raise StandardError, "#{spec.inspect} Can't set `#{name}' for subspecs."
           end
 
-          # Validates a value before storing.
-          #
-          # @raise If a root only attribute is set in a subspec.
-          #
-          # @raise If a unknown key is added to a hash.
-          #
-          # @return [void]
-          #
-          def validate_value(spec, value)
-            if root_only? && !spec.root_spec
-              raise StandardError, "#{spec.inspect} Can't set `#{name}' for subspecs."
-            end
-            if keys
-              allowed_keys = keys.is_a?(Hash) ? (keys.keys.concat(keys.values.flatten.compact)) : keys
-              value.keys.each do |key|
-                unless allowed_keys.include?(key)
-                  raise StandardError, "Unknown key `#{key}` for attribute "\
-                    "`#{name}`. Allowed keys: `#{allowed_keys.inspect}`"
-                end
+          if keys
+            value.keys.each do |key|
+              unless allowed_keys.include?(key)
+                raise StandardError, "Unknown key `#{key}` for "\
+                  "#{to_s}. Allowed keys: `#{allowed_keys.inspect}`"
               end
             end
           end
+
+          # @return [Array] the flattened list of the allowed keys for the
+          # hash of a given specification.
+          #
+          def allowed_keys
+            if keys.is_a?(Hash)
+              keys.keys.concat(keys.values.flatten.compact)
+            else
+              keys
+            end
+          end
+
         end
       end
 
@@ -339,8 +375,16 @@ module Pod
             if attr.multi_platform?
               active_plaform_check
               value = value[active_platform]
+              value = attr.value_with_inheritance(self, value)
+              # TODO: clean up
+              if attr.default_value[active_platform] && ( !value || (value.respond_to?(:empty?) && value.empty?) )
+                attr.default_value[active_platform]
+              else
+                value
+              end
+            else
+              attr.value_with_inheritance(self, value) || attr.default_value
             end
-            attr.value_with_inheritance(self, value)
           end
         end
 
@@ -348,7 +392,7 @@ module Pod
         # by this module.
         #
         # The defined method, prepares the value according to the
-        # {Attribute#wrapper} and to the optional prepare hook. Then it
+        # {Attribute#container} and to the optional prepare hook. Then it
         # performs validations and stores the attribute in the corresponding
         # ivar.
         #
@@ -371,7 +415,21 @@ module Pod
             if attr.multi_platform?
               ivar_value = instance_variable_get(attr.ivar)
               @define_for_platforms.each do |platform|
-                ivar_value[platform] = value
+                current = ivar_value[platform]
+                if current && current.is_a?(Array)
+                  ivar_value[platform] = current + value
+                  # TODO: clean up
+                elsif current && current.is_a?(Hash)
+                  ivar_value[platform] = current.merge(value) do |_, old, new|
+                    if old.is_a?(Array)
+                      old + new
+                    else
+                      old + ' ' + new
+                    end
+                  end
+                else
+                  ivar_value[platform] = value
+                end
               end
             else
               instance_variable_set(attr.ivar, value);
@@ -387,7 +445,9 @@ module Pod
         # @return     [void]
         #
         def define_attr_writer_alias(attr)
-          alias_method(attr.writer_alias, attr.writer_name) if attr.writer_alias
+          if attr.writer_alias
+            alias_method(attr.writer_alias, attr.writer_name)
+          end
         end
 
       end

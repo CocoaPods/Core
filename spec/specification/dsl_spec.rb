@@ -1,8 +1,8 @@
 require File.expand_path('../../spec_helper', __FILE__)
 
-describe Pod::Specification do
+describe Pod::Specification::DSL do
 
-  describe "DSL - Root specification attributes" do
+  describe "Root specification attributes" do
     before do
       @spec = Pod::Spec.new do |s|
         s.name = "Pod"
@@ -105,7 +105,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Platform attributes" do
+  describe "Platform attributes" do
     before do
       @spec = Pod::Spec.new do |s|
         s.name = "Pod"
@@ -158,7 +158,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Regular attributes" do
+  describe "Regular attributes" do
     before do
       @spec = Pod::Spec.new do |s|
         s.name = "Pod"
@@ -257,7 +257,7 @@ describe Pod::Specification do
       @subspec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
     end
 
-    xit "merges the compiler flags so values for platforms can be specified" do
+    it "merges the compiler flags so values for platforms can be specified" do
       @spec.compiler_flags = '-Wdeprecated-implementations'
       @spec.ios.compiler_flags = '-Wunused-value'
       @spec.activate_platform(:ios)
@@ -279,7 +279,7 @@ describe Pod::Specification do
       @subspec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
     end
 
-    xit "merges the xcconfig values so values for platforms can be specified" do
+    it "merges the xcconfig values so values for platforms can be specified" do
       @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
       @spec.ios.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
       @spec.activate_platform(:ios)
@@ -345,7 +345,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - File patterns attributes" do
+  describe "File patterns attributes" do
     before do
       @spec = Pod::Spec.new do |s|
         s.name = "Pod"
@@ -463,7 +463,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Hooks" do
+  describe "Hooks" do
     before do
       @spec = Pod::Spec.new do |s|
       end
@@ -481,7 +481,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Dependencies & Subspecs" do
+  describe "Dependencies & Subspecs" do
     before do
       @spec = Pod::Spec.new do |s|
       end
@@ -516,7 +516,7 @@ describe Pod::Specification do
 
   #-----------------------------------------------------------------------------#
 
-  describe "DSL - Multi-Platform" do
+  describe "Multi-Platform" do
     before do
       @spec = Pod::Spec.new do |s|
         s.name = "Pod"
