@@ -17,6 +17,10 @@ module Pod
       # @return [TargetDefinition] the parent target definition.
       #
       attr_reader :parent
+      
+      # @return [Podfile] the podfile that contains the specification for this target definition.
+      #
+      attr_reader :podfile
 
       # @param  [String, Symbol]
       #         name @see name
@@ -27,9 +31,10 @@ module Pod
       # @option options [Bool] :exclusive
       #         @see exclusive?
       #
-      def initialize(name, parent, options = {})
+      def initialize(name, parent, podfile, options = {})
         @name      = name
         @parent    = parent
+        @podfile   = podfile
         @exclusive = options[:exclusive]
         @target_dependencies = []
       end
@@ -135,6 +140,10 @@ module Pod
 
       def to_s
         "TargetDefinition for `#{label}`"
+      end
+      
+      def inspect
+        "#<#{self.class} with label: `#{label}'>"
       end
     end
   end

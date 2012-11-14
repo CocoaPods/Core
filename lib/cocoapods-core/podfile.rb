@@ -34,7 +34,7 @@ module Pod
     #
     def initialize(defined_in_file = nil, &block)
       self.defined_in_file = defined_in_file
-      @target_definition = TargetDefinition.new(:default, nil, :exclusive => true)
+      @target_definition = TargetDefinition.new(:default, nil, self, :exclusive => true)
       @target_definitions = { :default => @target_definition }
       instance_eval(&block)
     end
