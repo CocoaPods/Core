@@ -198,7 +198,7 @@ module Pod
       #
       def target(name, options = {})
         parent = @target_definition
-        @target_definitions[name] = @target_definition = TargetDefinition.new(name, parent, options)
+        @target_definitions[name] = @target_definition = TargetDefinition.new(name, parent, self, options)
         yield
       ensure
         @target_definition = parent
