@@ -121,6 +121,7 @@ describe Pod::Specification::Set::Presenter do
 
     it "returns the GitHub last activity" do
       Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'pushed_at' => "2012-08-01T15:54:18Z" })
+      Time.stubs(:now).returns(Time.parse("2012-11-01 00:00:00 +0100"))
       @presenter.github_last_activity.should == "3 months ago"
     end
   end
