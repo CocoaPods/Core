@@ -34,7 +34,7 @@ module Pod
       # @param  [Array<Source>,Source] sources
       #         the sources that contain a Pod.
       #
-      def initialize(name, sources)
+      def initialize(name, sources = [])
         @name    = name
         sources  = sources.is_a?(Array) ? sources : [sources]
         @sources = sources.sort_by(&:name)
@@ -73,19 +73,6 @@ module Pod
         @dependencies.inject(Dependency.new(name)) do |previous, dependency|
           previous.merge(dependency.to_pod_dependency)
         end
-      end
-
-      # @return [Specification] the specification for the given subspec name,
-      #         from {Specification}.
-      #
-      # @param  [String] name
-      #         the name of the specification. It can be the name of the top
-      #         level parent or the name of a subspec.
-      #
-      # @see    specification
-      #
-      def specification_by_name(name)
-        specification.top_level_parent.subspec_by_name(name)
       end
 
       # @return [Specification] the top level specification of the Pod for the
@@ -150,14 +137,12 @@ module Pod
       # @note External sources *don't* support subspecs.
       #
       class External < Set
-        def initialize(specification)
-          @specification = specification
-          @required_by   = []
-          @dependencies  = []
-        end
 
-        def name
-          @specification.top_level_parent.name
+        attr_reader :specification
+
+        def initialize(spec)
+          @specification = spec.root_spec
+          super(@specification.name)
         end
 
         def ==(other)
@@ -173,10 +158,6 @@ module Pod
 
         def specification_path
           raise StandardError, "specification_path"
-        end
-
-        def specification
-          @specification
         end
 
         def versions
