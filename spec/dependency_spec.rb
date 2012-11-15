@@ -4,6 +4,66 @@ module Pod
   describe Dependency do
     describe "In general" do
 
+
+      it "preserves the external source on duplication" do
+        dep = Dependency.new('bananas', :podspec => 'bananas' )
+        dep.dup.external_source.should == { :podspec => 'bananas' }
+      end
+
+      it "preserves the head information on duplication" do
+        dep = Dependency.new('bananas', :head)
+        dep.dup.head.should.be.true
+      end
+
+      it "creates a dependency from a string" do
+        d =  Dependency.from_string("BananaLib (1.0)")
+        d.name.should == "BananaLib"
+        d.requirement.should =~ Version.new("1.0")
+        d.head.should.be.nil
+        d.external_source.should.be.nil
+      end
+
+      it "preserves head information when initialized form a string" do
+        d = Dependency.from_string("BananaLib (HEAD)")
+        d.name.should == "BananaLib"
+        d.requirement.should.be.none?
+        d.head.should.be.true
+        d.external_source.should.be.nil
+      end
+
+      it "doesn't include external source when initialized from a string as incomplete and thus it should be provided by the client" do
+        d = Dependency.from_string("BananaLib (from `www.example.com', tag `1.0')")
+        d.name.should == "BananaLib"
+        d.requirement.should.be.none?
+        d.external?.should.be.false
+      end
+
+      it "returns whether it is compatible with another dependency" do
+        dep1 = Dependency.new('bananas', '>= 1.8')
+        dep2 = Dependency.new('bananas', '1.9')
+        dep1.compatible?(dep2).should.be.true
+      end
+
+      it "is not compatible with another dependency with non satisfied version requirements" do
+        dep1 = Dependency.new('bananas', '> 1.9')
+        dep2 = Dependency.new('bananas', '1.9')
+        dep1.compatible?(dep2).should.be.false
+      end
+
+      it "is not compatible with another if the head informations differ" do
+        dep1 = Dependency.new('bananas', :head)
+        dep2 = Dependency.new('bananas', '1.9')
+        dep1.compatible?(dep2).should.be.false
+      end
+
+      it "is not compatible with another if the external sources differ" do
+        dep1 = Dependency.new('bananas', :podspec => 'bananas' )
+        dep2 = Dependency.new('bananas', '1.9')
+        dep1.compatible?(dep2).should.be.false
+      end
+
+################################################################################
+
       it "merges dependencies (taken from newer RubyGems version)" do
         dep1 = Dependency.new('bananas', '>= 1.8')
         dep2 = Dependency.new('bananas', '1.9')
@@ -72,3 +132,4 @@ module Pod
     end
   end
 end
+

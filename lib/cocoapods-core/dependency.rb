@@ -5,8 +5,12 @@ module Pod
   # requirements and external sources information.
   #
   # This class leverages the RubyGems dependency class
-  # (http://rubygems.rubyforge.org/rubygems-update/Gem/Dependency.html) with
-  # minor extension to support CocoaPods specific features.
+  # with minor extension to support CocoaPods specific features.
+  #
+  # More information can be found at:
+  #
+  # - https://github.com/rubygems/rubygems/blob/master/lib/rubygems/dependency.rb
+  # - http://rubygems.rubyforge.org/rubygems-update/Gem/Dependency.html
   #
   # The Dependency class provides support for subspecs.
   #
@@ -22,8 +26,8 @@ module Pod
     #         highest know version but force the downloader to checkout the
     #         `head` of the source repository.
     #
-    attr_reader  :head
-    alias_method :head?, :head
+    attr_accessor :head
+    alias_method  :head?, :head
 
     # @return [Specification] the specification loaded for the dependency.
     #
@@ -82,11 +86,11 @@ module Pod
       super(name, *requirements)
     end
 
-    # @return [Bool] whether the dependency wants the latest version of a Pod.
-    #
-    def latest_version?
-      versions = @version_requirements.requirements.map(&:last)
-      versions == [Gem::Version.new('0')]
+    attr_accessor :specific_version
+
+    def requirement
+      return Gem::Requirement.new(specific_version) if specific_version
+      super
     end
 
     # @return [Bool] whether the dependency points to a subspec.
@@ -139,8 +143,14 @@ module Pod
     #
     # @return [Bool] whether the dependency matches the given version.
     #
-    def match_version?(version)
-      match?(name, version) && (version.head? == head?)
+    def compatible?(other)
+      return false unless name == other.name
+      return false unless head? == other.head?
+      return false unless external_source == other.external_source
+
+      other.requirement.requirements.all? do | operator, version |
+        self.requirement.satisfied_by? Gem::Version.new(version)
+      end
     end
 
     # @return [Bool] whether the dependency is equal to another taking into
@@ -151,8 +161,23 @@ module Pod
       super && head? == other.head? && @external_source == other.external_source
     end
 
+    # TODO
+    def merge(other)
+      dep = super
+      dep.head = head? || other.head?
+      if external_source || other.external_source
+        dep.external_source = (external_source||{}).merge(other.external_source||{})
+      end
+      dep
+    end
+
+    #-------------------------------------------------------------------------#
+
+    # !@group String representation
+
     # Creates a string representation of the dependency suitable for
-    # serialization and de-serialization without loss of information.
+    # serialization and de-serialization without loss of information. The
+    # string is also suitable for UI.
     #
     # @note     This representation is used by the {Lockfile}.
     #
@@ -183,9 +208,46 @@ module Pod
       result
     end
 
-    # Creates a string representation of the external source.
+    # Generates a dependency from its string representation.
     #
-    # @note     This representation is used by the {Lockfile}.
+    # @param    [String] string
+    #           The string that describes the dependency generated from
+    #           {#to_s}.
+    #
+    # @note     The information about external sources is not completely
+    #           serialized in the string representation and should be stored a
+    #           part by clients that need to create a dependency equal to the
+    #           original one.
+    #
+    # @return   [Dependency] the dependency described by the string.
+    #
+    def self.from_string(string)
+      match_data = string.match(/(\S*)( (.*))?/)
+      name = match_data[1]
+      version = match_data[2]
+      version = version.gsub(/[()]/,'') if version
+      case version
+      when nil || /from `(.*)'/
+        Dependency.new(name)
+      when /HEAD/
+        Dependency.new(name, :head)
+      else
+        Dependency.new(name, version)
+      end
+    end
+
+    # @return [String] a string representation suitable for debugging.
+    #
+    def inspect
+      "<#{self.class} name=#{self.name} requirements=#{requirement.to_s} " \
+      "external_source=#{external_source||'nil'}>"
+    end
+
+    #--------------------------------------#
+
+    private
+
+    # Creates a string representation of the external source suitable for UI.
     #
     # @example  Output examples
     #
