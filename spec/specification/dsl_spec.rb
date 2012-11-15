@@ -42,6 +42,13 @@ describe Pod::Specification::DSL do
       @spec.authors.should == { 'Darth Vader' => nil }
     end
 
+    it "allows to specify the authors as an array of strings and hashes" do
+      @spec.authors = [ 'Darth Vader',
+                        { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' } ]
+      @spec.authors.should == { 'Darth Vader' => nil,
+                                'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
+    end
+
     it "returns the license" do
       @spec.license = 'MIT'
       @spec.license.should == { :type => 'MIT' }

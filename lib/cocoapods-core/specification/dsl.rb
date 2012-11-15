@@ -136,7 +136,13 @@ module Pod
           authors
         elsif authors.is_a?(Array)
           result = {}
-          authors.each { |name| result[name] = nil }
+          authors.each do |name_or_hash|
+             if name_or_hash.is_a?(String)
+               result[name_or_hash] = nil
+             else
+               result.merge!(name_or_hash)
+             end
+           end
           result
         elsif authors.is_a?(String)
           { authors => nil }
