@@ -178,9 +178,11 @@ namespace :spec do
         Pod::Specification.from_file(Pathname(filename))
       rescue Exception => e
         incompatible_count += 1
+        puts "\n\e[1;33m"
+        puts e.class
+        puts "\e[0m\n"
+        puts e.message
         puts
-        puts filename
-        puts e
         puts e.backtrace
         clean = FALSE
       end
