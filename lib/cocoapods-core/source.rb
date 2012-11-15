@@ -121,13 +121,17 @@ module Pod
     #
     def search_by_name(query, full_text_search = false)
       pod_sets.map do |set|
-        text = if full_text_search
-          s = set.specification
-          "#{s.name} #{s.authors} #{s.summary} #{s.description}"
+        if full_text_search
+          begin
+            s = set.specification
+            text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
+          rescue Spec::InvalidPodspecError => e
+            puts "Skipping `#{set.name}` because the podspec contains errors."
+          end
         else
-          set.name
+          text = set.name
         end
-        set if text.downcase.include?(query.downcase)
+        set if text && text.downcase.include?(query.downcase)
       end.compact
     end
 
