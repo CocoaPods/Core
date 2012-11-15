@@ -371,6 +371,9 @@ module Pod
         #
         def define_attr_reader(attr)
           define_method(attr.reader_name) do
+            if attr.root_only? && subspec?
+              return root_spec.send(attr.reader_name)
+            end
             value = instance_variable_get(attr.ivar)
             if attr.multi_platform?
               active_plaform_check
