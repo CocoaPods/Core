@@ -81,18 +81,6 @@ module Pod
       @defined_in_file = file
     end
 
-    # @return [String] A string suitable for representing the specification in
-    #         clients.
-    #
-    def to_s
-      "#{name} (#{version})"
-    end
-
-    # @return [String] A string suitable for debugging.
-    #
-    def inspect
-      "#<#{self.class.name} for `#{to_s}`>"
-    end
 
     # Compares a specification to another. The comparison is based only on the
     # name and the version of the specification.
@@ -298,6 +286,18 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
+    # @!group DSL deprecations
+
+    # TODO: Convert master repo.
+    #
+    alias :preferred_dependency= :default_subspec=
+
+    def clean_paths
+      raise StandardError, "Clean paths are deprecated. CocoaPods now cleans unused files by default. Use preserver paths if needed."
+    end
+
+    #---------------------------------------------------------------------------#
+
     # The PlatformProxy works in conjunction with Specification#_on_platform.
     # It provides support for a syntax like `spec.ios.source_files = 'file'`.
     #
@@ -395,6 +395,71 @@ module Pod
     ensure
       @define_for_platforms = before
     end
+
+    #---------------------------------------------------------------------------#
+
+    # @!group String representation
+
+    # @return [String] A string suitable for representing the specification in
+    #         clients.
+    #
+    def to_s
+      "#{name} (#{version})"
+    end
+
+    # @param    [String] string
+    #           the string that describes a {Specification} generated from
+    #           {Specification#to_s}.
+    #
+    # @example  Input examples
+    #
+    #           "libPusher"
+    #           "libPusher (1.0)"
+    #           "libPusher (HEAD based on 1.0)"
+    #           "RestKit/JSON"
+    #
+    # @return   [Array<String, Version>] the name and the version of a
+    #           pod.
+    #
+    def self.name_and_version_from_string(string_reppresenation)
+      match_data = string_reppresenation.match(/(\S*) \((.*)\)/)
+      name = match_data[1]
+      vers = Version.from_string(match_data[2])
+      [name, vers]
+    end
+
+    # @return [String] A string suitable for debugging.
+    #
+    def inspect
+      "#<#{self.class.name} for `#{to_s}`>"
+    end
+
+    #
+    #
+    class InvalidPodspecError < StandardError;
+
+      def initialize(exception, podspec_path)
+        @exception    = exception
+        @podspec_path = podspec_path
+      end
+
+      def message
+        # e.message
+        message = "Invalid podspec at `#{@podspec_path.basename}` - #{@exception.message}\n\n"
+        podfile_file_trace_line = @exception.backtrace.find { |l| l =~ /#{@podspec_path}/ }
+        line_numer    = podfile_file_trace_line.split(':')[1].to_i - 1
+        podfile_lines = File.readlines(@podspec_path.to_s)
+        indent        = "    "
+        indicator     = indent.dup.insert(1, ">")[0..-2]
+
+        message << "#{indent}from #{podfile_file_trace_line.gsub(/:in.*$/,'')}\n"
+        message << "#{indent}-------------------------------------------\n"
+        (message << indent    << podfile_lines[line_numer - 1 ]) unless line_numer == 0
+        (message << indicator << podfile_lines[line_numer])
+        (message << indent    << podfile_lines[line_numer + 1 ]) unless line_numer == (podfile_lines.count - 1)
+        message << "#{indent}-------------------------------------------\n"
+      end
+    end
   end
 
   Spec = Specification
@@ -408,6 +473,10 @@ module Pod
     string = File.open(path, 'r:utf-8')  { |f| f.read }
     # Work around for Rubinius incomplete encoding in 1.9 mode
     string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-    eval(string, nil, path.to_s)
+    begin
+      eval(string, nil, path.to_s)
+    rescue Exception => e
+      raise Specification::InvalidPodspecError.new(e, path)
+    end
   end
 end
