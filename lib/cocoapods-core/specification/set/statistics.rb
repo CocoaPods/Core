@@ -35,7 +35,7 @@ module Pod
 
         # @return [Pathname] the path to the optional cache file.
         #
-        # @note   The cache file can be specified afer initialization, but
+        # @note   The cache file can be specified after initialization, but
         #         it has to be configured before requiring any value, otherwise
         #         it is ignored.
         #
@@ -68,7 +68,7 @@ module Pod
           @cache_expiration = cache_expiration
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         # @!group Accessing the statistics
 
@@ -145,7 +145,8 @@ module Pod
         #
         # @param  [Set] set @see github_watchers
         #
-        # @return [Time] the time of the last push or nil if the Pod is not hosted on GitHub.
+        # @return [Time] the time of the last push or nil if the Pod is not
+        #         hosted on GitHub.
         #
         def github_pushed_at(set)
           github_stats_if_needed(set)
@@ -153,7 +154,7 @@ module Pod
           Time.parse(string_time) if string_time
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         private
 
@@ -161,7 +162,14 @@ module Pod
         #         set is stored a hash with the result of the computations.
         #
         def cache
-          @cache ||= cache_file && cache_file.exist? ? YAML.load(cache_file.read) : {}
+          unless @cache
+            if cache_file && cache_file.exist?
+              @cache = YAML.load(cache_file.read)
+            else
+              @cache = {}
+            end
+          end
+          @cache
         end
 
         # Returns the value for the given key of a set stored in the cache, if
@@ -204,7 +212,10 @@ module Pod
         # @return [void]
         #
         def save_cache
-          File.open(cache_file, 'w') { |f| f.write(YAML.dump(cache)) } if cache_file
+          if cache_file
+            yaml = YAML.dump(cache)
+            File.open(cache_file, 'w') { |f| f.write(yaml) }
+          end
         end
 
         # Analyzes the history of the git repository of the {Source} of the
@@ -219,7 +230,9 @@ module Pod
           date = get_value(set, :creation_date)
           unless date
             Dir.chdir(set.sources.first.repo) do
-              date = Time.at(`git log --first-parent --format=%ct #{set.name}`.split("\n").last.to_i)
+              git_log   = `git log --first-parent --format=%ct #{set.name}`
+              creation_date = git_log.split("\n").last.to_i
+              date = Time.at(creation_date)
             end
             set_value(set, :creation_date, date)
           end
@@ -227,7 +240,7 @@ module Pod
         end
 
         # Retrieved the GitHub information from the API for the given set and
-        # storest it in the in-memory cache.
+        # stores it in the in-memory cache.
         #
         # @note   If there is a valid cache and it was generated withing the
         #         expiration time frame this method does nothing.
@@ -238,7 +251,8 @@ module Pod
         # @return [void]
         #
         def github_stats_if_needed(set)
-          return if (date = get_value(set, :gh_date)) && (date > Time.now - cache_expiration)
+          update_date = get_value(set, :gh_date)
+          return if update_date && update_date > (Time.now - cache_expiration)
 
           spec    = set.specification
           url     = spec.source[:git] || ''
