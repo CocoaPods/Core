@@ -106,15 +106,6 @@ module Pod
           spec.homepage
         end
 
-        # @return [String] the description of the Pod, if no description is
-        #         available the summary is returned.
-        #
-        # TODO: the specification logic should me moved here.
-        #
-        def description
-          spec.description
-        end
-
         # @return [String] a short description, expected to be 140 characters
         #         long of the Pod.
         #
@@ -122,12 +113,19 @@ module Pod
           spec.summary
         end
 
+        # @return [String] the description of the Pod, if no description is
+        #         available the summary is returned.
+        #
+        def description
+          spec.description || spec.summary
+        end
+
         # @return [String] the URL of the source of the Pod.
         #
-        # TODO: improve support for non git sources.
-        #
         def source_url
-          spec.source.reject { |k, _| k == :commit || k == :tag }.values.first
+          url_keys = [:git, :svn, :http, :hg, :local ]
+          key = spec.source.keys.find { |k| url_keys.include?(k) }
+          key ? spec.source[key] : 'No source url'
         end
 
         # @return [String] the platforms supported by the Pod.
