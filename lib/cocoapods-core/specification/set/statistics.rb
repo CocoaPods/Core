@@ -1,14 +1,3 @@
-require 'yaml'
-
-# This is to make sure Faraday doesn't warn the user about the `system_timer` gem missing.
-old_warn, $-w = $-w, nil
-begin
-  require 'faraday'
-ensure
-  $-w = old_warn
-end
-require 'octokit'
-
 module Pod
   class Specification
     class Set
@@ -64,6 +53,17 @@ module Pod
         # @param  [Integer] cache_expiration  @see cache_expiration
         #
         def initialize(cache_file = nil, cache_expiration = (60 * 60 * 24 * 3))
+          require 'yaml'
+          # This is to make sure Faraday doesn't warn the user about the
+          # `system_timer` gem missing.
+          old_warn, $-w = $-w, nil
+          begin
+            require 'faraday'
+          ensure
+            $-w = old_warn
+          end
+          require 'octokit'
+
           @cache_file       = cache_file
           @cache_expiration = cache_expiration
         end
@@ -238,7 +238,8 @@ module Pod
         # @return [void]
         #
         def github_stats_if_needed(set)
-          return if get_value(set, :gh_date) && (get_value(set, :gh_date) > Time.now - cache_expiration)
+          return if (date = get_value(set, :gh_date)) && (date > Time.now - cache_expiration)
+
           spec    = set.specification
           url     = spec.source[:git] || ''
           repo_id = url[/github.com\/([^\/\.]*\/[^\/\.]*)\.*/, 1]
