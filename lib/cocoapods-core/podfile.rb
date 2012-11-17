@@ -115,7 +115,6 @@ module Pod
       pod(name, *requirements, &block)
     end
 
-
     #---------------------------------------------------------------------------#
 
     # @!group Working with a podfile
@@ -140,7 +139,6 @@ module Pod
     # @return [void]
     #
     def validate!
-      # TODO: raise if not platform is specified for the target definition ?
     end
 
     # @return [String] a string useful to represent the Podfile in a message
