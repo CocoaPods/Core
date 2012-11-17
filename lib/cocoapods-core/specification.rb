@@ -1,6 +1,7 @@
 require 'active_support/core_ext/string/strip.rb'
 require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/dsl'
+require 'cocoapods-core/specification/linter'
 
 module Pod
 
@@ -55,9 +56,13 @@ module Pod
     # @return [Specification]
     #
     def self.from_file(path, subspec_name = nil)
-      raise StandardError, "No podspec exists at path `#{path}'." unless path.exist?
+      unless path.exist?
+        raise StandardError, "No podspec exists at path `#{path}`."
+      end
       spec = ::Pod._eval_podspec(path)
-      raise StandardError, "Invalid podspec file at path `#{path}'." unless spec.is_a?(Specification)
+      unless spec.is_a?(Specification)
+        raise StandardError, "Invalid podspec file at path `#{path}`."
+      end
       spec.defined_in_file = path
       spec.subspec_by_name(subspec_name)
     end
@@ -77,7 +82,9 @@ module Pod
     # @return [void]
     #
     def defined_in_file=(file)
-      raise StandardError, "Defined in file can be set only for root specs." unless root_spec?
+      unless root_spec?
+        raise StandardError, "Defined in file can be set only for root specs."
+      end
       @defined_in_file = file
     end
 
@@ -95,7 +102,7 @@ module Pod
          version == other.version)
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Working with a hierarchy of specifications
 
@@ -123,7 +130,7 @@ module Pod
       !parent.nil?
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Working with dependencies
 
@@ -164,7 +171,10 @@ module Pod
         remainder = relative_name[self.name.size+1..-1] || ''
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
-        raise StandardError, "Unable to find a specification named `#{relative_name}` in `#{self.name}`." unless subspec
+        unless subspec
+          raise StandardError, "Unable to find a specification named " \
+            "`#{relative_name}` in `#{self.name}`."
+        end
         if remainder.empty?
           subspec
         else
@@ -185,7 +195,8 @@ module Pod
     #
     def external_dependencies(all_platforms = false)
       active_plaform_check unless all_platforms
-      result = all_platforms ? @dependencies.values.flatten : @dependencies[active_platform]
+      result = if all_platforms then @dependencies.values.flatten
+               else @dependencies[active_platform] end
       result = parent.external_dependencies + result if parent
       result.uniq
     end
@@ -200,7 +211,8 @@ module Pod
     #
     def subspec_dependencies
       active_plaform_check
-      specs = default_subspec ? [subspec_by_name("#{name}/#{default_subspec}")] : subspecs
+      specs = if default_subspec then [subspec_by_name("#{name}/#{default_subspec}")]
+              else subspecs end
       specs = specs.compact
       specs = specs.select { |s| s.supported_on_platform?(active_platform) }
       specs = specs.map { |s| Dependency.new(s.name, version) }
@@ -222,7 +234,7 @@ module Pod
     #   end
     # end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL helpers
 
@@ -237,7 +249,8 @@ module Pod
       !source.nil? && !source[:local].nil?
     end
 
-    # @return     [Bool] whether the specification is supported in the given platform.
+    # @return     [Bool] whether the specification is supported in the given
+    #             platform.
     #
     # @overload   supported_on_platform?(platform)
     #
@@ -253,7 +266,8 @@ module Pod
     #             the deployment target which is checked for support.
     #
     def supported_on_platform?(*platform)
-      platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
+      platform = if platform[0].is_a?(Platform) then platform[0]
+                 else Platform.new(*platform) end
       available_platforms.any? { |p| platform.supports?(p) }
     end
 
@@ -284,19 +298,36 @@ module Pod
       end
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL deprecations
 
     # TODO: Convert master repo.
-    #
-    alias :preferred_dependency= :default_subspec=
+    # TODO: Review implementations.
+    # TODO: exclude_header_search_paths
 
-    def clean_paths
-      raise StandardError, "Clean paths are deprecated. CocoaPods now cleans unused files by default. Use preserver paths if needed."
+    # Preferred dependency rename.
+    #
+    def preferred_dependency=(args)
+      puts "`preferred_dependency` has been renamed to `default_subspec`."
+      self.default_subspec = args
     end
 
-    #---------------------------------------------------------------------------#
+    # Clean paths warnings.
+    #
+    def clean_paths
+      raise StandardError, "Clean paths are deprecated. CocoaPods now " \
+        "cleans unused files by default. Use preserver paths if needed."
+    end
+
+    # Checks the specification for deprecations and changes.
+    #
+    def peform_post_initialization_checks
+      # TODO: check that the post install hook has not been overridden.
+      # TODO: check that the headers hook has not been set.
+    end
+
+    #-------------------------------------------------------------------------#
 
     # The PlatformProxy works in conjunction with Specification#_on_platform.
     # It provides support for a syntax like `spec.ios.source_files = 'file'`.
@@ -327,14 +358,15 @@ module Pod
       end
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Support for Multi-platform attributes
 
     # Defines the active platform for consumption of the specification.
     #
     # This method is provided as a convenience so there is no need to specify
-    # the symbolic name of a platform while accessing the multi-platform attributes.
+    # the symbolic name of a platform while accessing the multi-platform
+    # attributes.
     #
     # @overload   activate_platform(platform)
     #
@@ -359,9 +391,11 @@ module Pod
     #
     def activate_platform(*platform)
       if root_spec?
-        raise StandardError, "A specification needs to be activated at the root level." unless root_spec?
-        platform = platform[0].is_a?(Platform) ? platform[0] : Platform.new(*platform)
-        raise StandardError, "#{to_s} is not compatible with #{platform.to_s}." unless supported_on_platform?(platform)
+        platform = if platform[0].is_a?(Platform) then platform[0]
+                   else Platform.new(*platform) end
+        unless supported_on_platform?(platform)
+          raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
+        end
         @active_platform = platform.to_sym
       else
         root_spec.activate_platform(*platform)
@@ -396,7 +430,7 @@ module Pod
       @define_for_platforms = before
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group String representation
 
@@ -433,33 +467,6 @@ module Pod
     def inspect
       "#<#{self.class.name} for `#{to_s}`>"
     end
-
-    #
-    #
-    class InvalidPodspecError < StandardError;
-
-      def initialize(exception, podspec_path)
-        @exception    = exception
-        @podspec_path = podspec_path
-      end
-
-      def message
-        # e.message
-        message = "Invalid podspec at `#{@podspec_path.basename}` - #{@exception.message}\n\n"
-        podfile_file_trace_line = @exception.backtrace.find { |l| l =~ /#{@podspec_path}/ }
-        line_numer    = podfile_file_trace_line.split(':')[1].to_i - 1
-        podfile_lines = File.readlines(@podspec_path.to_s)
-        indent        = "    "
-        indicator     = indent.dup.insert(1, ">")[0..-2]
-
-        message << "#{indent}from #{podfile_file_trace_line.gsub(/:in.*$/,'')}\n"
-        message << "#{indent}-------------------------------------------\n"
-        (message << indent    << podfile_lines[line_numer - 1 ]) unless line_numer == 0
-        (message << indicator << podfile_lines[line_numer])
-        (message << indent    << podfile_lines[line_numer + 1 ]) unless line_numer == (podfile_lines.count - 1)
-        message << "#{indent}-------------------------------------------\n"
-      end
-    end
   end
 
   Spec = Specification
@@ -472,11 +479,14 @@ module Pod
   def self._eval_podspec(path)
     string = File.open(path, 'r:utf-8')  { |f| f.read }
     # Work around for Rubinius incomplete encoding in 1.9 mode
-    string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+    if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+      string.encode!('UTF-8')
+    end
     begin
       eval(string, nil, path.to_s)
     rescue Exception => e
-      raise Specification::InvalidPodspecError.new(e, path)
+      raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}",
+                         path, e.backtrace)
     end
   end
 end
