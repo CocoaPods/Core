@@ -92,9 +92,8 @@ module Bacon
     def handle_summary
       puts " #{ErrorLog.split("\n\n").first}" if Backtraces
       unless Counter[:disabled].zero?
-        puts Bacon.color(:yellow, "#{Counter[:disabled]} disabled specifications\n")
+        puts Bacon.color(:yellow, "#{Counter[:disabled]} disabled specifications")
       end
-      puts
       result = "%d specifications (%d requirements), %d failures, %d errors" %
         Counter.values_at(:specifications, :requirements, :failed, :errors)
       if Counter[:failed].zero?
