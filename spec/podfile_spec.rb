@@ -12,6 +12,24 @@ module Pod
       it "returns the string representation" do
         Podfile.new {}.to_s.should == 'Podfile'
       end
+
+      extend SpecHelper::TemporaryDirectory
+
+      it "includes the line of the podfile that generated an exception" do
+        podfile_content = "platform :windows\npod 'libPusher'"
+        podfile_file = temporary_directory + 'Podfile'
+        File.open(podfile_file, 'w') { |f| f.write(podfile_content) }
+        raised = false
+        begin
+          Podfile.from_file(podfile_file)
+        rescue DSLError => e
+          raised = true
+          e.message.should.be =~ /from .*\/tmp\/Podfile:1/
+          e.message.should.be =~ /platform :windows/
+          e.message.should.be =~ /pod 'libPusher'/
+        end
+        raised.should.be.true
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -160,67 +178,6 @@ module Pod
         [:osx_target, :nested_osx_target].each do |target_name|
           target = @podfile.target_definitions[target_name]
           target.user_project_path.to_s.should == 'OSX Project.xcodeproj'
-        end
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    describe "Exceptions" do
-      extend SpecHelper::TemporaryDirectory
-
-      before do
-        @podfile_file = temporary_directory + 'Podfile'
-        @podfile_content = [ "platform :ios" ]
-      end
-
-      def write_podfile
-        @podfile_content * "\n"
-        File.open(@podfile_file, 'w') { |f| f.write(@podfile_content * "\n") }
-      end
-
-      it "includes the line of the podfile that generated the exception" do
-        @podfile_content = [ "platform :windows", "pod 'libPusher'" ]
-        write_podfile
-        begin
-          Podfile.from_file(@podfile_file)
-        rescue Podfile::StandardError => e
-          e.message.should.be =~ /from .*\/tmp\/Podfile:1/
-          e.message.should.be =~ /platform :windows/
-          e.message.should.be =~ /pod 'libPusher'/
-        end
-      end
-
-      it "informs if a platform is unsupported" do
-        @podfile_content = [ "platform :windows" ]
-        write_podfile
-        begin
-          Podfile.from_file(@podfile_file)
-        rescue Podfile::StandardError => e
-          e.message.should.be =~ /Unsupported platform `windows`/
-          e.message.should.be =~ /Podfile:1/
-        end
-      end
-
-      it "informs that inline podspecs are deprecated" do
-        @podfile_content << "pod do |s|" << "  s.name = 'mypod'" << "end"
-        write_podfile
-        begin
-          Podfile.from_file(@podfile_file)
-        rescue Podfile::StandardError => e
-          e.message.should.be =~ /Inline specifications are deprecated/
-          e.message.should.be =~ /Podfile:2/
-        end
-      end
-
-      it "informs that a dependency needs a name" do
-        @podfile_content << "pod"
-        write_podfile
-        begin
-          Podfile.from_file(@podfile_file)
-        rescue Podfile::StandardError => e
-          e.message.should.be =~ /A dependency requires a name/
-          e.message.should.be =~ /Podfile:2/
         end
       end
     end

@@ -39,6 +39,13 @@ module Pod
       instance_eval(&block)
     end
 
+    # @return [String] a string useful to represent the Podfile in a message
+    #         presented to the user.
+    #
+    def to_s
+      "Podfile"
+    end
+
     # Initializes a podfile from the file with the given path.
     #
     # @param  [Pathname] path
@@ -50,53 +57,26 @@ module Pod
       podfile = Podfile.new(path) do
         string = File.open(path, 'r:utf-8')  { |f| f.read }
         # Work around for Rubinius incomplete encoding in 1.9 mode
-        string.encode!('UTF-8') if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-        eval(string, nil, path.to_s)
+        if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+          string.encode!('UTF-8')
+        end
+
+        begin
+          eval(string, nil, path.to_s)
+        rescue Exception => e
+          raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}",
+                             path, e.backtrace)
+        end
       end
       podfile.validate!
       podfile
     end
 
+    #-------------------------------------------------------------------------#
+
     class Pod::Podfile::StandardError < StandardError; end
 
-    # Raises a {Podfile::StandardError} exception with the given message. If
-    # the Podfile is defined in a file, the line that caused the exception is
-    # included in the message.
-    #
-    # @param    [String] message
-    #           the message of the exception.
-    #
-    # @example  Output example
-    #
-    #           Pod::Podfile::StandardError: Inline specifications are deprecated.
-    #           Please store the specification in a `podspec` file.
-    #
-    #               from CocoaPods/tmp/Podfile:2
-    #
-    #               pod do |s|
-    #            >    s.name = 'mypod'
-    #               end
-    #
-    # @return   [void]
-    #
-    def raise(message)
-      if defined_in_file
-        podfile_file_trace_line = caller.find { |l| l =~ /#{defined_in_file.basename}/ }
-        line_numer    = podfile_file_trace_line.split(':')[1].to_i - 1
-        podfile_lines = File.readlines(defined_in_file.to_s)
-        indent        = "    "
-        indicator     = indent.dup.insert(1, ">")[0..-2]
-
-        message << "\n\n#{indent}from #{podfile_file_trace_line.gsub(/:in.*$/,'')}\n\n"
-        (message << indent    << podfile_lines[line_numer - 1 ]) unless line_numer == 0
-        (message << indicator << podfile_lines[line_numer])
-        (message << indent    << podfile_lines[line_numer + 1 ]) unless line_numer == (podfile_lines.count - 1)
-        message << "\n"
-      end
-      super StandardError, message
-    end
-
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group DSL support
 
@@ -115,7 +95,7 @@ module Pod
       pod(name, *requirements, &block)
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Working with a podfile
 
@@ -123,7 +103,6 @@ module Pod
     #         of the podfile stored by their name.
     #
     attr_reader :target_definitions
-
 
     # @return [Array<Dependency>] the dependencies of the all the target
     #         definitions.
@@ -141,12 +120,6 @@ module Pod
     def validate!
     end
 
-    # @return [String] a string useful to represent the Podfile in a message
-    #         presented to the user.
-    #
-    def to_s
-      "Podfile"
-    end
 
     # @return [String] the path of the workspace if specified by the user.
     #

@@ -52,27 +52,32 @@ module Pod
     # @return [String] the message of the exception.
     #
     def message
-      m = description.dup
+      unless @message
+        m = description.dup
 
-      return m unless backtrace && dsl_path && File.exist?(dsl_path)
+        return m unless backtrace && dsl_path && File.exist?(dsl_path)
 
-      trace_line = backtrace.find { |l| l =~ /#{dsl_path}/ }
-      return m unless trace_line
-      line_numer = trace_line.split(':')[1].to_i - 1
-      return m unless line_numer
-      lines      = File.readlines(dsl_path.to_s)
-      indent     = "    "
-      indicator  = indent.dup.insert(1, ">")[0..-2]
-      first_line = ( line_numer.zero? )
-      last_line  = ( line_numer == (lines.count - 1) )
+        trace_line = backtrace.find { |l| l =~ /#{dsl_path}/ }
+        return m unless trace_line
+        line_numer = trace_line.split(':')[1].to_i - 1
+        return m unless line_numer
+        lines      = File.readlines(dsl_path.to_s)
+        indent     = "    "
+        indicator  = indent.dup.insert(1, ">")[0..-2]
+        first_line = ( line_numer.zero? )
+        last_line  = ( line_numer == (lines.count - 1) )
 
-      m << "\n\n"
-      m << "#{indent}from #{trace_line.gsub(/:in.*$/,'')}\n"
-      m << "#{indent}-------------------------------------------\n"
-      m << "#{indent}#{    lines[line_numer - 1] }" unless first_line
-      m << "#{indicator}#{ lines[line_numer] }"
-      m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
-      m << "#{indent}-------------------------------------------\n"
+        m << "\n\n"
+        m << "#{indent}from #{trace_line.gsub(/:in.*$/,'')}\n"
+        m << "#{indent}-------------------------------------------\n"
+        m << "#{indent}#{    lines[line_numer - 1] }" unless first_line
+        m << "#{indicator}#{ lines[line_numer] }"
+        m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
+        m << "\n" unless m.end_with?("\n")
+        m << "#{indent}-------------------------------------------\n"
+        @message = m
+      end
+      @message
     end
   end
 end

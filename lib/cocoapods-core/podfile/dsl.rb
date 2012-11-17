@@ -10,25 +10,26 @@ module Pod
 
       # Specifies a dependency of the project.
       #
-      # A dependency requirement is defined by the name of the Pod and optionally
-      # a list of version requirements.
+      # A dependency requirement is defined by the name of the Pod and
+      # optionally a list of version requirements.
       #
       # ------
       #
-      # When starting out with a project it is likely that you will want to use the
-      # latest version of a Pod. If this is the case, simply omit the version
-      # requirements.
+      # When starting out with a project it is likely that you will want to use
+      # the latest version of a Pod. If this is the case, simply omit the
+      # version requirements.
       #
       #     pod 'SSZipArchive'
       #
       #
-      # Later on in the project you may want to freeze to a specific version of a
-      # Pod, in which case you can specify that version number.
+      # Later on in the project you may want to freeze to a specific version of
+      # a Pod, in which case you can specify that version number.
       #
       #     pod 'Objection', '0.9'
       #
       #
-      # Besides no version, or a specific one, it is also possible to use operators:
+      # Besides no version, or a specific one, it is also possible to use
+      # operators:
       #
       # * `> 0.1`    Any version higher than 0.1
       # * `>= 0.1`   Version 0.1 and any higher version
@@ -44,10 +45,10 @@ module Pod
       # * [Semantic Versioning](http://semver.org)
       # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
       #
-      # Finally, instead of a version, you can specify the `:head` flag. This will
-      # use the pod’s latest version spec version, but force the download of the
-      # ‘bleeding edge’ version. Use this with caution, as the spec might not be
-      # compatible anymore.
+      # Finally, instead of a version, you can specify the `:head` flag. This
+      # will use the pod’s latest version spec version, but force the download
+      # of the ‘bleeding edge’ version. Use this with caution, as the spec
+      # might not be compatible anymore.
       #
       #     pod 'Objection', :head
       #
@@ -76,8 +77,8 @@ module Pod
       #
       #
       # The `podspec` file is expected to be in the root of the repo, if this
-      # library does not have a `podspec` file in its repo yet, you will have to
-      # use one of the approaches outlined in the sections below.
+      # library does not have a `podspec` file in its repo yet, you will have
+      # to use one of the approaches outlined in the sections below.
       #
       #
       # ### From a podspec outside a spec repo, for a library without podspec.
@@ -96,11 +97,11 @@ module Pod
       #
       def pod(name = nil, *requirements, &block)
         if block
-          raise "Inline specifications are deprecated. Please store the specification in a `podspec` file."
+          raise StandardError, "Inline specifications are deprecated. Please store the specification in a `podspec` file."
         end
 
         unless name
-          raise "A dependency requires a name."
+          raise StandardError, "A dependency requires a name."
         end
 
         @target_definition.target_dependencies << Dependency.new(name, *requirements)
@@ -239,7 +240,7 @@ module Pod
       #
       def platform(name, target = nil)
         unless [:ios, :osx].include?(name)
-          raise "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
+          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
         end
 
         # Support for deprecated options parameter
