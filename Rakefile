@@ -183,7 +183,7 @@ namespace :spec do
         puts "\e[0m\n"
         puts e.message
         puts
-        puts e.backtrace
+        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile')}
         clean = FALSE
       end
     end
