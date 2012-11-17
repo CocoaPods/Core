@@ -1,7 +1,6 @@
 # The Pod modules name-spaces all the classes of CocoaPods.
 #
 module Pod
-  class StandardError < ::StandardError; end
 end
 
 require 'rubygems'
@@ -25,6 +24,7 @@ end
 require 'version'
 require 'pathname'
 
+require 'cocoapods-core/standard_error'
 require 'cocoapods-core/version'
 require 'cocoapods-core/dependency'
 require 'cocoapods-core/platform'
