@@ -110,12 +110,7 @@ module Pod
     #         target.
     #
     def to_s
-      case @symbolic_name
-      when :ios
-        s = 'iOS'
-      when :osx
-        s = 'OS X'
-      end
+      s = self.class.string_name(@symbolic_name)
       s << " #{deployment_target}" if deployment_target
       s
     end
@@ -131,6 +126,20 @@ module Pod
     #
     def requires_legacy_ios_archs?
       (name == :ios) && deployment_target && (deployment_target < Version.new("4.3"))
+    end
+
+    # Converts the symbolic name of a platform to a string name suitable to be
+    # presented to the user.
+    #
+    # @param [Symbol]   the symbolic name of a platform.
+    #
+    # @return [String] The string that describes the name of the given symbol.
+    #
+    def self.string_name(symbolic_name)
+      case symbolic_name
+      when :ios then 'iOS'
+      when :osx then 'OS X'
+      else symbolic_name end
     end
   end
 end
