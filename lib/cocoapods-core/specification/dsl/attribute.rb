@@ -2,6 +2,9 @@ module Pod
   class Specification
     module DSL
 
+      # temporary support for Rake::FileList
+      module ::Rake; class FileList; end; end
+
       # @return [Array<Attribute>] The attributes of the class.
       #
       def self.attributes
@@ -56,6 +59,7 @@ module Pod
           @root_only      = options.delete(:root_only)      { false     }
           @required       = options.delete(:required)       { false     }
           @singularize    = options.delete(:singularize)    { false     }
+          @file_patterns  = options.delete(:file_patterns)  { false     }
           @container      = options.delete(:container)      { nil       }
           @keys           = options.delete(:keys)           { nil       }
           @default_value  = options.delete(:default_value)  { nil       }
@@ -65,7 +69,7 @@ module Pod
           @types          = options.delete(:types)          { [String ] }
 
           # temporary support for Rake::FileList
-          @types << Rake::FileList if defined?(Rake)
+          @types << Rake::FileList if defined?(Rake) && @file_patterns
 
           if @root_only
             @multi_platform = false
@@ -136,6 +140,12 @@ module Pod
         #   attribute writer.
         #
         def singularize?; @singularize; end
+
+        # @return [Bool] whether the attribute describes file patterns.
+        #
+        # @note   This is mostly used by the linter.
+        #
+        def file_patterns?; @file_patterns; end
 
         # @return [Bool] whether an implementation for the writers and the
         # setters is provided and thus the definition should be skipped.
@@ -289,6 +299,7 @@ module Pod
         # @return [void]
         #
         def validate_type(spec, value)
+          return if value.nil?
           unless supported_types.any? { |klass| value.class == klass }
             raise StandardError, "Non acceptable type `#{value.class}` for "\
               "#{to_s}. Allowed values: `#{types.inspect}`"

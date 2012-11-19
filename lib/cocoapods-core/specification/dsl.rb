@@ -427,6 +427,7 @@ module Pod
       }
 
       def _prepare_platform(name_and_deployment_target)
+        return nil if name_and_deployment_target.nil?
         if name_and_deployment_target.is_a?(Array)
           name = name_and_deployment_target.first
           deployment_target = name_and_deployment_target.last
@@ -860,6 +861,7 @@ module Pod
       #
       attribute :source_files, {
         :container     => Array,
+        :file_patterns => true,
         :default_value => [ 'Classes/**/*.{h,m}' ],
       }
 
@@ -888,6 +890,7 @@ module Pod
       #
       attribute :public_header_files, {
         :container => Array,
+        :file_patterns => true,
       }
 
       #------------------#
@@ -939,6 +942,7 @@ module Pod
       #
       attribute :resources, {
         :types         => [String, Array],
+        :file_patterns => true,
         :container     => Hash,
         :keys          => RESORUCES_DESTINATIONS,
         :default_value => { :resources => [ 'Resources/**/*' ] },
@@ -979,6 +983,7 @@ module Pod
       #
       attribute :exclude_files, {
         :container   => Array,
+        :file_patterns => true,
         :ios_default => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
         :osx_default => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
       }
@@ -1010,8 +1015,9 @@ module Pod
       #   @return [Array<String>, FileList]
       #
       attribute :preserve_paths, {
-        :container   => Array,
-        :singularize => true
+        :container     => Array,
+        :file_patterns => true,
+        :singularize   => true
       }
 
       #-----------------------------------------------------------------------#
