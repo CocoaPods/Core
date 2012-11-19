@@ -8,7 +8,7 @@ module Pod
   # @note The default implementation uses a git repo as a backing store, where the
   # podspecs are namespaced as:
   #
-  #     #{root_spec_name}/#{VERSION}/#{root_spec_name}.podspec
+  #     #{spec_name}/#{VERSION}/#{spec_name}.podspec
   #
   class Source
 
@@ -100,7 +100,7 @@ module Pod
     def search(dependency)
       pod_sets.find do |set|
         # First match the (top level) name, which does not yet load the spec from disk
-        set.name == dependency.root_spec_name &&
+        set.name == dependency.root_name &&
           # Now either check if it's a dependency on the top level spec, or if it's not
           # check if the requested subspec exists in the top level spec.
           set.specification.subspec_by_name(dependency.name)
@@ -135,7 +135,7 @@ module Pod
       end.compact
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # The {Aggregate} manages a directory of sources repositories.
     #
@@ -194,7 +194,7 @@ module Pod
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        Specification::Set.new(dependency.root_spec_name, sources) unless sources.empty?
+        Specification::Set.new(dependency.root_name, sources) unless sources.empty?
       end
 
       # @return [Array<Set>]  the sets that contain the search term.

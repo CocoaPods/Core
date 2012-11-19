@@ -116,9 +116,9 @@ module Pod
     # @return [Dependency] a dependency with the same versions requirements
     #         that is guaranteed to point to a top level specification.
     #
-    def to_pod_dependency
+    def to_root_dependency
       dep = dup
-      dep.name = root_spec_name
+      dep.name = root_name
       dep
     end
 
@@ -131,17 +131,20 @@ module Pod
     #
     # @return [String] the name of the Pod.
     #
-    def root_spec_name
+    def root_name
       subspec_dependency? ? @name.split('/').first : @name
     end
 
-    # Checks if a dependency would be satisfied by the given {Version} of a
-    # {Specification} with the same name.
+    # Checks if a dependency would be satisfied by the requirements of another
+    # dependency.
     #
-    # @param  [String] version
-    #         the version to check.
+    # @param  [Dependency] other
+    #         the other dependency.
     #
-    # @return [Bool] whether the dependency matches the given version.
+    # @note   This is used by the Lockfile to check if a stored dependency is
+    #         still compatible with the Podfile.
+    #
+    # @return [Bool] whether the dependency is compatible with the given one.
     #
     def compatible?(other)
       return false unless name == other.name
@@ -161,7 +164,17 @@ module Pod
       super && head? == other.head? && @external_source == other.external_source
     end
 
-    # TODO
+    # Merges the version requirements of the dependency with another one.
+    #
+    # @param  [Dependency] other
+    #         the other dependency to merge with.
+    #
+    # @note   If one of the depencies specifies an external source or is head,
+    #         the resulting dependency preserves this attributes.
+    #
+    # @return [Dependency] a dependency (not necessary a new instance) that
+    #         includes also the version requirenments of the given one.
+    #
     def merge(other)
       dep = super
       dep.head = head? || other.head?

@@ -1,28 +1,30 @@
 require File.expand_path('../../../spec_helper', __FILE__)
 
-describe Pod::Specification::DSL::Attributes do
+module Pod
+  describe Specification::DSL::Attributes do
 
-  describe "In general" do
+    describe "In general" do
 
-    before do
-      class TestClass
-        def self.attributes
-          @attributes
+      before do
+        class TestClass
+          def self.attributes
+            @attributes
+          end
+          @attributes = []
+          extend Specification::Attributes
+          attribute :name, { :type => String }
         end
-        @attributes = []
-        extend Pod::Specification::Attributes
-        attribute :name, { :type => String }
+        @spec = TestClass.new
       end
-      @spec = TestClass.new
-    end
 
-    xit "stores the list of the attributes" do
-      TestClass.attributes.map(&:name).should == [ :name ]
-    end
+      xit "stores the list of the attributes" do
+        TestClass.attributes.map(&:name).should == [ :name ]
+      end
 
-    xit "defines reader and setter methods for an attribute" do
-      @spec.name = 'name'
-      @spec.name.should == 'name'
+      xit "defines reader and setter methods for an attribute" do
+        @spec.name = 'name'
+        @spec.name.should == 'name'
+      end
     end
   end
 end

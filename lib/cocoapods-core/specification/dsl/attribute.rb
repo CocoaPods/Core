@@ -217,7 +217,7 @@ module Pod
         # @return [Object] the value for the attribute.
         #
         def value_with_inheritance(spec, value)
-          return value if spec.root_spec? || !inherited?
+          return value if spec.root? || !inherited?
           parent_value = spec.parent.send(reader_name)
 
           if container == Array
@@ -319,7 +319,7 @@ module Pod
         # @return [void]
         #
         def validate_value(spec, value)
-          if root_only? && !spec.root_spec
+          if root_only? && !spec.root
             raise StandardError, "#{spec.inspect} Can't set `#{name}' for subspecs."
           end
 
@@ -383,7 +383,7 @@ module Pod
         def define_attr_reader(attr)
           define_method(attr.reader_name) do
             if attr.root_only? && subspec?
-              return root_spec.send(attr.reader_name)
+              return root.send(attr.reader_name)
             end
             value = instance_variable_get(attr.ivar)
             if attr.multi_platform?

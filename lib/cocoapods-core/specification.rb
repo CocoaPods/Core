@@ -43,8 +43,8 @@ module Pod
 
     # Loads a specification form the given path.
     #
-    # @param  [String] path
-    #         the path of the `podspec file`.
+    # @param  [Pathname, String] path
+    #         the path of the `podspec` file.
     #
     # @param  [String] subspec_name
     #         the name of the specification that should be returned. If nil
@@ -56,6 +56,7 @@ module Pod
     # @return [Specification]
     #
     def self.from_file(path, subspec_name = nil)
+      path = Pathname.new(path)
       unless path.exist?
         raise StandardError, "No podspec exists at path `#{path}`."
       end
@@ -71,7 +72,7 @@ module Pod
     #         from a file.
     #
     def defined_in_file
-      root_spec? ? @defined_in_file : root_spec.defined_in_file
+      root? ? @defined_in_file : root.defined_in_file
     end
 
     # Sets the path of the `podspec` file used to load the specification.
@@ -82,7 +83,7 @@ module Pod
     # @return [void]
     #
     def defined_in_file=(file)
-      unless root_spec?
+      unless root?
         raise StandardError, "Defined in file can be set only for root specs."
       end
       @defined_in_file = file
@@ -108,19 +109,13 @@ module Pod
 
     # @return [Specification] The root specification or itself if it is root.
     #
-    def root_spec
-      @parent ? @parent.root_spec : self
-    end
-
-    # @return [String] The name of the pod.
-    #
-    def root_spec_name
-      root_spec.name
+    def root
+      @parent ? @parent.root : self
     end
 
     # @return [Bool] whether the specification is root.
     #
-    def root_spec?
+    def root?
       parent.nil?
     end
 
@@ -266,8 +261,7 @@ module Pod
     #             the deployment target which is checked for support.
     #
     def supported_on_platform?(*platform)
-      platform = if platform[0].is_a?(Platform) then platform[0]
-                 else Platform.new(*platform) end
+      platform = Platform.new(*platform)
       available_platforms.any? { |p| platform.supports?(p) }
     end
 
@@ -390,15 +384,18 @@ module Pod
     # @return     [void]
     #
     def activate_platform(*platform)
-      if root_spec?
-        platform = if platform[0].is_a?(Platform) then platform[0]
-                   else Platform.new(*platform) end
-        unless supported_on_platform?(platform)
-          raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
-        end
+      platform = Platform.new(*platform)
+      unless supported_on_platform?(platform)
+        raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
+      end
+      set_active_platform(platform)
+    end
+
+    def set_active_platform(platform)
+      if root?
         @active_platform = platform.to_sym
       else
-        root_spec.activate_platform(*platform)
+        root.set_active_platform(*platform)
       end
     end
 
@@ -406,7 +403,7 @@ module Pod
     #         activated for.
     #
     def active_platform
-      root_spec? ? @active_platform : root_spec.active_platform
+      root? ? @active_platform : root.active_platform
     end
 
     # Alters the `@define_for_platforms` instance variable to point to the
@@ -482,6 +479,7 @@ module Pod
     if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
       string.encode!('UTF-8')
     end
+
     begin
       eval(string, nil, path.to_s)
     rescue Exception => e

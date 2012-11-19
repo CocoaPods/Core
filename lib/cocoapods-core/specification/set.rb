@@ -71,7 +71,7 @@ module Pod
       #
       def dependency
         @dependencies.inject(Dependency.new(name)) do |previous, dependency|
-          previous.merge(dependency.to_pod_dependency)
+          previous.merge(dependency.to_root_dependency)
         end
       end
 
@@ -141,7 +141,7 @@ module Pod
         attr_reader :specification
 
         def initialize(spec)
-          @specification = spec.root_spec
+          @specification = spec.root
           super(@specification.name)
         end
 

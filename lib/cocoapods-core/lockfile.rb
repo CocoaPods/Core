@@ -95,7 +95,7 @@ module Pod
         data = internal_data['DEPENDENCIES'] || []
         @dependencies = data.map do |string|
           dep = Dependency.from_string(string)
-          dep.external_source = external_sources[dep.root_spec_name]
+          dep.external_source = external_sources[dep.root_name]
           dep
         end
       end
@@ -335,7 +335,7 @@ module Pod
         deps = podfile.dependencies.select(&:external?)
         deps = deps.sort { |d, other| d.name <=> other.name}
         sources = {}
-        deps.each { |d| sources[d.root_spec_name] = d.external_source }
+        deps.each { |d| sources[d.root_name] = d.external_source }
         sources
       end
 
@@ -357,7 +357,7 @@ module Pod
         specs.select { |spec| !spec.defined_in_file.nil? }.each do |spec|
           checksum = Digest::SHA1.hexdigest(File.read(spec.defined_in_file))
           checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
-          checksums[spec.root_spec.name] = checksum
+          checksums[spec.root.name] = checksum
         end
         checksums
       end
