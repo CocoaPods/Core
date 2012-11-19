@@ -93,9 +93,9 @@ module Pod
       def perform_textual_analysis
         return unless @file
         text = @file.read
-        deprecation "`config.ios?' and `config.osx?' are deprecated" if text. =~ /config\..?os.?/
-        deprecation "clean_paths are deprecated (use preserve_paths)" if text. =~ /clean_paths/
-        error "Comments must be deleted" if text.scan(/^\s*#/).length > 24
+        deprecation "`config.ios?' and `config.osx?' are deprecated." if text. =~ /config\..?os.?/
+        deprecation "clean_paths are deprecated (use preserve_paths)." if text. =~ /clean_paths/
+        error "Comments must be deleted." if text.scan(/^\s*#/).length > 24
       end
 
       # Checks that every root only attribute which is required has a value.
@@ -228,11 +228,11 @@ module Pod
           github      = git.include?('github.com')
           version     = spec.version.to_s
 
-          error "Example source" if git =~ /http:\/\/EXAMPLE/
+          error "Example source." if git =~ /http:\/\/EXAMPLE/
           error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
-          warning 'The version should be included in the Git tag' if tag && !tag.include?(version)
-          warning "Github repositories should end in `.git`"      if github && !git.end_with?('.git')
-          warning "Github repositories should use `https` link"   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
+          warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
+          warning "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
+          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
 
           if version == '0.0.1'
             warning 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
@@ -252,7 +252,7 @@ module Pod
       #
       def _validate_compiler_flags(flags)
         if flags.join(' ').split(' ').any? { |flag| flag.start_with?('-Wno') }
-          warning "Warnings must not be disabled (`-Wno' compiler flags)"
+          warning "Warnings must not be disabled (`-Wno' compiler flags)."
         end
       end
 
@@ -282,7 +282,7 @@ module Pod
         methods = %w[ source_files resources preserve_paths subspecs ]
         empty = methods.all? { |m| spec.send(m).empty? }
         if empty
-          warning "The spec appears to be empty (no source files, resources, or preserve paths)"
+          error "The spec appears to be empty (no source files, resources, or preserve paths)."
         end
       end
 
