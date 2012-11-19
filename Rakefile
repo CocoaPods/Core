@@ -171,11 +171,12 @@ namespace :spec do
     glob_pattern = (ROOT + "spec/fixtures/spec-repos/master/**/*.podspec").to_s
     total_count = 0
     incompatible_count = 0
+    specs = []
     Dir.glob(glob_pattern).each do |filename|
       Pathname(filename)
       begin
         total_count += 1
-        Pod::Specification.from_file(Pathname(filename))
+        specs << Pod::Specification.from_file(Pathname(filename))
       rescue Exception => e
         incompatible_count += 1
         puts "\n\e[1;33m"
@@ -187,6 +188,20 @@ namespace :spec do
         clean = FALSE
       end
     end
+
+    puts "\n\n---\n"
+    specs.each do |s|
+      linter = Pod::Specification::Linter.new(s)
+      unless linter.lint
+        puts "\n#{s.name} #{s.version}"
+        results = linter.results.map do |r|
+          if r.type == :error then "\e[1;31m  #{r.to_s}\e[0m"
+          else "  " + r.to_s end
+        end
+        puts results * "\n"
+      end
+    end
+
     puts
     if incompatible_count.zero?
       message = "#{total_count} podspecs analyzed. All compatible."
