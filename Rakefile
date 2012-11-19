@@ -164,14 +164,17 @@ namespace :spec do
   task :repo do
     puts "Checking compatibility with master repo"
     require 'pathname'
-    ROOT = Pathname.new(File.expand_path('../', __FILE__))
-    $:.unshift((ROOT + 'lib').to_s)
+    root = Pathname.new(File.expand_path('../', __FILE__))
+    $:.unshift((root + 'lib').to_s)
     require 'cocoapods-core'
 
-    glob_pattern = (ROOT + "spec/fixtures/spec-repos/master/**/*.podspec").to_s
-    total_count = 0
-    incompatible_count = 0
-    specs = []
+    master_repo_path       =  ENV['HOME'] + "/.cocoapods/master"
+    glob_pattern           =  (master_repo_path + "/**/*.podspec").to_s
+    total_count            =  0
+    incompatible_count     =  0
+    spec_with_errors_count =  0
+    specs                  =  []
+
     Dir.glob(glob_pattern).each do |filename|
       Pathname(filename)
       begin
@@ -192,10 +195,12 @@ namespace :spec do
     puts "\n\n---\n"
     specs.each do |s|
       linter = Pod::Specification::Linter.new(s)
-      unless linter.lint
+      linter.lint
+      unless linter.errors.empty?
+        spec_with_errors_count += 1
         puts "\n#{s.name} #{s.version}"
-        results = linter.results.map do |r|
-          if r.type == :error then "\e[1;31m  #{r.to_s}\e[0m"
+        results = linter.errors.map do |r|
+          if r.type == :error then "\e[1;33m  #{r.to_s}\e[0m"
           else "  " + r.to_s end
         end
         puts results * "\n"
@@ -203,11 +208,12 @@ namespace :spec do
     end
 
     puts
-    if incompatible_count.zero?
+    if incompatible_count.zero? && spec_with_errors_count.zero?
       message = "#{total_count} podspecs analyzed. All compatible."
       puts "\e[1;32m#{message}\e[0m" # Print in green
     else
-      message = "#{incompatible_count} podspecs out of #{total_count} are NOT compatible with the master repo."
+      message = "#{incompatible_count} podspecs out of #{total_count} did fail to load."
+      message << "\n#{spec_with_errors_count} podspecs presents errors."
       STDERR.puts "\e[1;31m#{message}\e[0m" # Print in red
       exit 1
     end
