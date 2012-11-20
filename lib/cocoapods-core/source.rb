@@ -129,7 +129,7 @@ module Pod
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
           rescue DSLError => e
-            puts "Skipping `#{set.name}` because the podspec contains errors."
+            STDERR.puts "Skipping `#{set.name}` because the podspec contains errors."
           end
         else
           text = set.name
