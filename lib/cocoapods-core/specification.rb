@@ -310,6 +310,14 @@ module Pod
         "cleans unused files by default. Use preserver paths if needed."
     end
 
+    def part_of_dependency=
+      raise StandardError, "Deprecated attribute"
+    end
+
+    def part_of=
+      raise StandardError, "Deprecated attribute"
+    end
+
     # Checks the specification for deprecations and changes.
     #
     def peform_post_initialization_checks
