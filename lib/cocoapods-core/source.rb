@@ -128,7 +128,7 @@ module Pod
           begin
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
-          rescue Spec::InvalidPodspecError => e
+          rescue DSLError => e
             puts "Skipping `#{set.name}` because the podspec contains errors."
           end
         else

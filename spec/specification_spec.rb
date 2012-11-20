@@ -109,10 +109,12 @@ module Pod
       it "returns a subspec with the given name" do
         @spec.subspec_by_name('Pod/Subspec').should == @subspec
         @spec.subspec_by_name('Pod/Subspec/Subsubspec').should == @subsubspec
+        @subspec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
       end
 
       it "raises if it can't find a subspec with the given name" do
         lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise StandardError
+        lambda { @spec.subspec_by_name('Pod/Subspeca') }.should.raise StandardError
       end
 
       it "returns the dependencies on other Pods for the activated platform" do

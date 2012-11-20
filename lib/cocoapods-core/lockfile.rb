@@ -119,11 +119,11 @@ module Pod
       version = pod_versions[name]
 
       unless dep
-        raise StandardError, "Attempt to lock a Pod without an known dependency."
+        raise StandardError, "Attempt to lock the `#{name}` Pod without an known dependency."
       end
 
       unless version
-        raise StandardError, "Attempt to lock a Pod without an known version."
+        raise StandardError, "Attempt to lock the `#{name}` Pod without an known version."
       end
 
       locked_dependency = dep.dup

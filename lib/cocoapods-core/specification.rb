@@ -160,21 +160,17 @@ module Pod
     #
     def subspec_by_name(relative_name)
       # TODO: the implementation of this method should be cleaner.
-      if relative_name.nil? || relative_name == self.name
+      if relative_name.nil? || relative_name == @name
         self
       else
-        remainder = relative_name[self.name.size+1..-1] || ''
+        remainder = relative_name[@name.size+1..-1]
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
         unless subspec
           raise StandardError, "Unable to find a specification named " \
             "`#{relative_name}` in `#{self.name}`."
         end
-        if remainder.empty?
-          subspec
-        else
-          subspec.subspec_by_name(relative_name)
-        end
+        subspec.subspec_by_name(remainder)
       end
     end
 
@@ -303,7 +299,7 @@ module Pod
     # Preferred dependency rename.
     #
     def preferred_dependency=(args)
-      puts "`preferred_dependency` has been renamed to `default_subspec`."
+      # puts "`preferred_dependency` has been renamed to `default_subspec`."
       self.default_subspec = args
     end
 
