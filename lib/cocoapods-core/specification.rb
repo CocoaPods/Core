@@ -290,39 +290,72 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    # Calls the pre install callback if defined.
+    #
+    # @param  [Pod::LocalPod] pod
+    #         the local pod instanace that manages the files described by this
+    #         specification.
+    #
+    # @param  [Podfile::TargetDefinition] target_definition
+    #         the target definition that required this specification as a
+    #         dependency.
+    #
+    # @return [Bool] whether a pre install callback was specified and it was
+    #         called.
+    #
+    def pre_install!(pod, target_definition)
+      if @pre_install_callback
+        @pre_install_callback.call(pod, target_definition)
+        true
+      else
+        false
+      end
+    end
+
+    # Calls the post install callback if defined.
+    #
+    # @param  [Pod::TargetInstaller] target installer
+    #         the target installer that is performing the installation of the
+    #         pod.
+    #
+    # @return [Bool] whether a post install callback was specified and it was
+    #         called.
+    #
+    def post_install!(target_installer)
+      if @post_install_callback
+        @post_install_callback.call(target_installer)
+        true
+      else
+        false
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
     # @!group DSL deprecations
 
-    # TODO: Convert master repo.
-    # TODO: Review implementations.
-    # TODO: exclude_header_search_paths
-
-    # Preferred dependency rename.
-    #
     def preferred_dependency=(args)
-      # puts "`preferred_dependency` has been renamed to `default_subspec`."
+      STDERR.puts "`preferred_dependency` has been renamed to `default_subspec`."
       self.default_subspec = args
     end
 
-    # Clean paths warnings.
-    #
-    def clean_paths
+    def singleton_method_added(method)
+      if [:pre_install, :post_install ].include?(method)
+        STDERR.puts "The use of `#{method}` by overriding the method is deprecated."
+      elsif method == :header_mappings
+        raise StandardError, "The use of the `header_mappings` hook has been deprecated."
+      end
+    end
+
+    def clean_paths=(value)
       raise StandardError, "Clean paths are deprecated. CocoaPods now " \
         "cleans unused files by default. Use preserver paths if needed."
     end
 
-    def part_of_dependency=
-      raise StandardError, "Deprecated attribute"
-    end
-
-    def part_of=
-      raise StandardError, "Deprecated attribute"
-    end
-
-    # Checks the specification for deprecations and changes.
-    #
-    def peform_post_initialization_checks
-      # TODO: check that the post install hook has not been overridden.
-      # TODO: check that the headers hook has not been set.
+    [ :part_of_dependency=, :part_of=, :exclude_header_search_paths= ].each do |method|
+      define_method method do |value|
+        raise StandardError, "Attribute `#{method.to_s[0..-2]}` has been deprecated."
+      end
     end
 
     #-------------------------------------------------------------------------#

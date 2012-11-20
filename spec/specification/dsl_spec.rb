@@ -473,18 +473,22 @@ module Pod
 
     describe "Hooks" do
       before do
-        @spec = Spec.new do |s|
-        end
+        @spec = Spec.new
       end
 
-      it "returns false if the pre install hook was not executed" do
-        @spec.pre_install(nil, nil).should == FALSE
+      it "stores a block to run before the installation" do
+        value = ''
+        @spec.post_install do value << 'modified' end
+        @spec.post_install!(nil)
+        value.should == 'modified'
       end
 
-      it "returns false if the post install hook was not executed" do
-        @spec.post_install(nil).should == FALSE
+      it "stores a block to run after the installation" do
+        value = ''
+        @spec.post_install do value << 'modified' end
+        @spec.post_install!(nil)
+        value.should == 'modified'
       end
-
     end
 
     #-----------------------------------------------------------------------------#
