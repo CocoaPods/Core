@@ -132,7 +132,7 @@ module Pod
           @current_spec = current_spec
           platforms = current_spec.available_platforms
           platforms.each do |platform|
-            @current_platform = platform.name
+            @current_platform = platform
             current_spec.activate_platform(platform)
 
             run_all_specs_valudation_hooks
@@ -148,7 +148,7 @@ module Pod
 
       # @return [Symbol] the name of the platform being validated.
       #
-      attr_reader :current_platform
+      attr_accessor :current_platform
 
       # Runs the validation hook for the attributes that are not root only.
       #
@@ -344,7 +344,7 @@ module Pod
           result = Result.new(type, message)
           results << result
         end
-        result.platforms << current_platform if current_platform
+        result.platforms << current_platform.name if current_platform
       end
 
       #-----------------------------------------------------------------------#
