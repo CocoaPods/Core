@@ -21,6 +21,8 @@ module Pod
         @linter.file.should == @podspec_path
       end
 
+      extend SpecHelper::TemporaryDirectory
+
       it "catches specification load errors" do
         podspec = "Pod::Spec.new do |s|; error; end"
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
