@@ -57,7 +57,7 @@ module Pod
       end
 
       it "returns the results of the lint" do
-        @linter.results.map(&:type).sort.should == [:deprecation, :error, :warning ]
+        @linter.results.map{ |r| r.type.to_s }.sort.should == %w[ deprecation error warning ]
       end
 
       it "returns the errors results of the lint" do
