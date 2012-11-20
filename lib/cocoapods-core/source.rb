@@ -1,3 +1,5 @@
+require 'cocoapods-core/source/validator'
+
 module Pod
 
   # The {Source} class is responsible to manage a collection of podspecs.
@@ -71,6 +73,7 @@ module Pod
     #
     def versions(name)
       pod_dir = repo + name
+      return unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
         Version.new(basename) if v.directory? && basename[0,1] != '.'
