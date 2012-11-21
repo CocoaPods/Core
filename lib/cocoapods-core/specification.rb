@@ -159,7 +159,6 @@ module Pod
     # @return   [Specification] the subspec with the given name or self.
     #
     def subspec_by_name(relative_name)
-      # TODO: the implementation of this method should be cleaner.
       if relative_name.nil? || relative_name == @name
         self
       else
@@ -185,7 +184,7 @@ module Pod
     # @return [Array<Dependency>] the dependencies on other Pods.
     #
     def external_dependencies(all_platforms = false)
-      active_plaform_check unless all_platforms
+      __active_plaform_check unless all_platforms
       result = if all_platforms then @dependencies.values.flatten
                else @dependencies[active_platform] end
       result = parent.external_dependencies + result if parent
@@ -201,7 +200,7 @@ module Pod
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies
-      active_plaform_check
+      __active_plaform_check
       specs = if default_subspec then [subspec_by_name("#{name}/#{default_subspec}")]
               else subspecs end
       specs = specs.compact
@@ -215,23 +214,9 @@ module Pod
       external_dependencies + subspec_dependencies
     end
 
-    # @note   This is used by the specification set
-    #
-    # @return [Dependency]
-    # TODO :delete
-    # def dependency_by_top_level_spec_name(name)
-    #   external_dependencies(true).each do |dep|
-    #     return dep if dep.top_level_spec_name == name
-    #   end
-    # end
-
     #-------------------------------------------------------------------------#
 
     # @!group DSL helpers
-
-    # TODO: Convert master repo.
-    #
-    alias :preferred_dependency= :default_subspec=
 
     # @return [Bool] whether the specification should use a directory as it
     #         source.
@@ -385,7 +370,7 @@ module Pod
           end
         end
 
-        alias_method(a.writer_alias, a.writer_name) if a.writer_alias
+        alias_method(a.writer_singular_form, a.writer_name) if a.writer_singular_form
       end
     end
 

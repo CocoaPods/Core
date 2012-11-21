@@ -35,6 +35,7 @@ module Pod
     module DSL
 
       extend   Pod::Specification::DSL::Attributes
+      include  Pod::Specification::DSL::AttributeSupport
 
       # @!group DSL: Root specification
       #
@@ -611,8 +612,6 @@ module Pod
 
       #------------------#
 
-      # TODO: use meta-programming?
-
       # @!method xcconfig=(value)
       #
       #   Any flag to add to final xcconfig file.
@@ -633,27 +632,6 @@ module Pod
       attribute :xcconfig, {
         :container => Hash,
       }
-
-      # TODO: the xcconfig was merged on multiple definitions. Important to
-      # support multi-platform variants.
-
-      # def _prepare_xcconfig(value)
-      #   result = {}
-      #   @define_for_platforms.each do |platform|
-      #     result[platform] = @xcconfig[platform].merge(value)
-      #   end
-      #   result
-      # end
-
-      # def xcconfig
-      #   if @parent
-      #     @parent.xcconfig.merge(@xcconfig[active_platform]) do |_, parent_val, self_val|
-      #       parent_val + ' ' + self_val
-      #     end
-      #   else
-      #     @xcconfig[active_platform]
-      #   end
-      # end
 
       #------------------#
 

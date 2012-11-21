@@ -2,26 +2,14 @@ module Pod
   class Specification
     module DSL
 
-      # temporary support for Rake::FileList
-      module ::Rake; class FileList; end; end
-
       # @return [Array<Attribute>] The attributes of the class.
       #
       def self.attributes
         @attributes
       end
 
-      # Checks that specification has been activated for platform as it is
-      # necessary to read multi-platform attributes.
-      #
-      # @raise It the specification has not been activated for a platform.
-      #
-      def active_plaform_check
-        unless active_platform
-          raise StandardError, "#{self.inspect} not activated for a " \
-            "platform before consumption."
-        end
-      end
+      # TODO: temporary support for Rake::FileList
+      module ::Rake; class FileList; end; end
 
       #-----------------------------------------------------------------------#
 
@@ -65,7 +53,7 @@ module Pod
           @default_value  = options.delete(:default_value)  { nil       }
           @ios_default    = options.delete(:ios_default)    { nil       }
           @osx_default    = options.delete(:osx_default)    { nil       }
-          @defined_as     = options.delete(:defined_as)     { nil       } # TODO used only by dependency
+          @defined_as     = options.delete(:defined_as)     { nil       }
           @types          = options.delete(:types)          { [String ] }
 
           # temporary support for Rake::FileList
@@ -87,29 +75,48 @@ module Pod
           "Specification attribute `#{name}`"
         end
 
-        #-------------------#
+        # @return [String] A string representation suitable for debugging.
+        #
+        def inspect
+          "<#{self.class} name=#{self.name} types=#{types} multi_platform=#{multi_platform?}>"
+        end
+
+        #--------------------------------------#
 
         # @!group Options
 
         # @return [Array<Class>] the list of the classes of the values
-        #   supported by the attribute writer. If not specified defaults
-        #   to #{String} and the class of the #{#container}.
+        #         supported by the attribute writer. If not specified defaults
+        #         to #{String}.
         #
         attr_reader :types
 
+        # @return [Array<Class>] the list of the classes of the values
+        #         supported by the attribute, including the container.
+        #
+        def supported_types
+          @supported_types ||= @types.dup.push(container).compact
+        end
+
         # @return [Class] if defined it can be #{Array} or #{Hash}. It is used
-        #   as default initialization value and to automatically wrap other
-        #   values to arrays.
+        #         as default initialization value and to automatically wrap
+        #         other values to arrays.
         #
         attr_reader :container
 
         # @return [Array, Hash] the list of the accepted keys for an attribute
-        #   wrapped by a Hash.
+        #         wrapped by a Hash.
+        #
+        # @note   A hash is accepted to group the keys associated only with
+        #         certain keys (see the source attribute of a Spec).
         #
         attr_reader :keys
 
         # @return [Object] if the attribute follows configuration over
-        #   convention it can specify a default value.
+        #         convention it can specify a default value.
+        #
+        # @note   The default value is not automatically wrapped and should be
+        #         specified within the container if any.
         #
         attr_reader :default_value
 
@@ -122,22 +129,22 @@ module Pod
         attr_reader :osx_default
 
         # @return [Bool] whether the specification should be considered invalid
-        #   if a value for the attribute is not specified.
+        #         if a value for the attribute is not specified.
         #
         def required?; @required; end
 
         # @return [Bool] whether the attribute should be specified only on the
-        #   root specification.
+        #         root specification.
         #
         def root_only?; @root_only; end
 
         # @return [Bool] whether the attribute is multi-platform and should
-        #   work in conjunction with #{PlatformProxy}.
+        #         work in conjunction with #{PlatformProxy}.
         #
         def multi_platform?; @multi_platform; end
 
         # @return [Bool] whether there should be a singular alias for the
-        #   attribute writer.
+        #         attribute writer.
         #
         def singularize?; @singularize; end
 
@@ -148,22 +155,32 @@ module Pod
         def file_patterns?; @file_patterns; end
 
         # @return [Bool] whether an implementation for the writers and the
-        # setters is provided and thus the definition should be skipped.
+        #         setters is provided and thus the definition should be
+        #         skipped.
         #
-        # Multi-platform attributes can use it to be Picked up by the platform
-        # proxy and by the documentation.
-        #
-        # TODO: this is used only by the `dependency` attribute.
+        # @note   Multi-platform attributes can use it to be Picked up by the
+        #         platform proxy (currently used only by the `dependency`
+        #         attribute).
         #
         def skip_definitions?
           !@defined_as.nil?
         end
 
-        #-------------------#
+        #--------------------------------------#
 
         # @!group Specification helpers
 
+        # @return [String] the instance variable associated with the attribute.
+        #
+        def ivar
+          "@#{name}"
+        end
+
         # Initializes the ivar for the given specification.
+        #
+        # @note   The default value is not stored in the ivar but returned by
+        #         the getter, to preserve to possibility to detect if the
+        #         specifications has a value for the attribute.
         #
         # @return [void]
         #
@@ -177,13 +194,7 @@ module Pod
           end
         end
 
-        # @return [String] the instance variable associated with the attribute.
-        #
-        def ivar
-          "@#{name}"
-        end
-
-        #-------------------#
+        #--------------------------------------#
 
         # @!group Reader method support
 
@@ -214,6 +225,9 @@ module Pod
         # @param  [Object] value
         #         the value stored in the instance variable of the attribute.
         #
+        # @note   If attributes described by a string need to be concatenated
+        #         they should be contained in an array.
+        #
         # @return [Object] the value for the attribute.
         #
         def value_with_inheritance(spec, value)
@@ -221,13 +235,13 @@ module Pod
           parent_value = spec.parent.send(reader_name)
 
           if container == Array
-            (parent_value || []) + value
+            (parent_value || []) + (value || [])
           elsif container == Hash
-            (parent_value || {}).merge(value) do |_, oldval, newval|
-              if newval.is_a?(Array)
-                oldval + newval
+            (parent_value || {}).merge(value || {}) do |_, old, new|
+              if new.is_a?(Array)
+                old + new
               else
-                oldval + ' ' + newval
+                old + ' ' + new
               end
             end
           else
@@ -247,7 +261,7 @@ module Pod
           end
         end
 
-        #-------------------#
+        #--------------------------------------#
 
         # @!group Writer method support
 
@@ -260,24 +274,33 @@ module Pod
         # @return [String] an aliased attribute writer offered for convenience
         #         on the DSL.
         #
-        def writer_alias
+        def writer_singular_form
           "#{name.to_s.singularize}=" if singularize?
         end
 
 
         # @return [String] the name of the prepare hook for this attribute.
         #
+        # @note   The hook is called after the value has been wrapped in an
+        #         array (if needed according to the container) but before
+        #         validation.
+        #
         def prepare_hook_name
           "_prepare_#{name}"
         end
 
-        # Calls the prepare hook to allow further customization of a value
-        # before storing it in the instance variable.
+        # Wraps a value in an Array if needed and calls the prepare hook to
+        # allow further customization of a value before storing it in the
+        # instance variable.
+        #
+        # @note   Only array containers are wrapped. To automatically wrap
+        #         values for attributes with hash containers a prepare hook
+        #         should be used.
         #
         # @return [Object] the customized value of the original one if no
         #         prepare hook was defined.
         #
-        def prepare_ivar(spec, value)
+        def prepare_value(spec, value)
           if container
             if container ==  Array
               value = [ value ] unless value.is_a?(Array)
@@ -294,20 +317,18 @@ module Pod
         # Validates the value for an attribute. This validation should be
         # performed before the value is prepared or wrapped.
         #
-        # @raise if the type is not in the allowed ones.
+        # @note   The this is called before preparing the value.
+        #
+        # @raise  If the type is not in the allowed list.
         #
         # @return [void]
         #
-        def validate_type(spec, value)
+        def validate_type(value)
           return if value.nil?
           unless supported_types.any? { |klass| value.class == klass }
             raise StandardError, "Non acceptable type `#{value.class}` for "\
               "#{to_s}. Allowed values: `#{types.inspect}`"
           end
-        end
-
-        def supported_types
-          types.dup.push(container).compact
         end
 
         # Validates a value before storing.
@@ -318,9 +339,9 @@ module Pod
         #
         # @return [void]
         #
-        def validate_value(spec, value)
-          if root_only? && !spec.root
-            raise StandardError, "#{spec.inspect} Can't set `#{name}' for subspecs."
+        def validate_for_writing(spec, value)
+          if root_only? && !spec.root?
+            raise StandardError, "Can't set `#{name}` attribute for subspecs (in `#{spec.name}`)."
           end
 
           if keys
@@ -329,6 +350,10 @@ module Pod
                 raise StandardError, "Unknown key `#{key}` for "\
                   "#{to_s}. Allowed keys: `#{allowed_keys.inspect}`"
               end
+            end
+
+            if defined?(Rake) && value.is_a?(Rake::FileList)
+              # UI.warn "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
             end
           end
 
@@ -342,7 +367,6 @@ module Pod
               keys
             end
           end
-
         end
       end
 
@@ -365,11 +389,11 @@ module Pod
           unless attr.skip_definitions?
             define_attr_reader(attr)
             define_attr_writer(attr)
-            define_attr_writer_alias(attr)
+            define_attr_writer_singular_form(attr)
           end
         end
 
-        #-------------------#
+        #--------------------------------------#
 
         # @!group Private methods
 
@@ -387,10 +411,9 @@ module Pod
             end
             value = instance_variable_get(attr.ivar)
             if attr.multi_platform?
-              active_plaform_check
+              __active_plaform_check
               value = value[active_platform]
               value = attr.value_with_inheritance(self, value)
-              # TODO: clean up
               if attr.default_value[active_platform] && ( !value || (value.respond_to?(:empty?) && value.empty?) )
                 attr.default_value[active_platform]
               else
@@ -410,6 +433,10 @@ module Pod
         # performs validations and stores the attribute in the corresponding
         # ivar.
         #
+        # @note       To properly support multi platform attributes their
+        #             values are merged/concatenated with the value of the
+        #             ivar.
+        #
         # @note       Multi-platform attributes use a hash to store the value
         #             for each platform.
         #
@@ -422,25 +449,18 @@ module Pod
         def define_attr_writer(attr)
 
           define_method(attr.writer_name) do |value|
-            attr.validate_type(self, value)
-            value = attr.prepare_ivar(self, value)
-            attr.validate_value(self, value)
+            attr.validate_type(value)
+            value = attr.prepare_value(self, value)
+            attr.validate_for_writing(self, value)
 
             if attr.multi_platform?
               ivar_value = instance_variable_get(attr.ivar)
               @define_for_platforms.each do |platform|
                 current = ivar_value[platform]
-                if current && current.is_a?(Array)
+                if current && attr.container == Array
                   ivar_value[platform] = current + value
-                  # TODO: clean up
-                elsif current && current.is_a?(Hash)
-                  ivar_value[platform] = current.merge(value) do |_, old, new|
-                    if old.is_a?(Array)
-                      old + new
-                    else
-                      old + ' ' + new
-                    end
-                  end
+                elsif current && attr.container == Hash
+                  ivar_value[platform] = __deep_merge_hash(current, value)
                 else
                   ivar_value[platform] = value
                 end
@@ -458,12 +478,47 @@ module Pod
         #
         # @return     [void]
         #
-        def define_attr_writer_alias(attr)
-          if attr.writer_alias
-            alias_method(attr.writer_alias, attr.writer_name)
+        def define_attr_writer_singular_form(attr)
+          if attr.writer_singular_form
+            alias_method(attr.writer_singular_form, attr.writer_name)
+          end
+        end
+      end
+
+      #-----------------------------------------------------------------------#
+
+      # This module provides support for creating the {Specification} DSL. In
+      # practice it provides the DSL for the creation of the DSL (Yup! You've
+      # read it right).
+      #
+      module AttributeSupport
+
+        private
+
+        # Checks that specification has been activated for platform as it is
+        # necessary to read multi-platform attributes.
+        #
+        # @raise It the specification has not been activated for a platform.
+        #
+        def __active_plaform_check
+          unless active_platform
+            raise StandardError, "#{self.inspect} not activated for a " \
+              "platform before consumption."
           end
         end
 
+        # @return [Hash] merges the keys of the given hashes concatenating them
+        # if needed.
+        #
+        def __deep_merge_hash(hash1, hash2)
+          hash1.merge(hash2) do |_, old, new|
+            if old.is_a?(Array)
+              old + new
+            else
+              old + ' ' + new
+            end
+          end
+        end
       end
     end
   end
