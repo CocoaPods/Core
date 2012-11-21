@@ -266,7 +266,7 @@ module Pod
           patterns = patterns.flatten
           patterns.each do |pattern|
             if defined?(Rake) && pattern.is_a?(Rake::FileList)
-              deprecation "FileList is deprecated (#{attrb.name})."
+              deprecation "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
             else
               if pattern.start_with?('/')
                 error "File patterns must be relative and cannot start with a slash (#{attrb.name})."

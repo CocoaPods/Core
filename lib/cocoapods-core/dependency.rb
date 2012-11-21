@@ -80,7 +80,9 @@ module Pod
       elsif requirements.last == :head
         @head = true
         requirements.pop
-        raise StandardError, "A `:head' dependency may not specify version requirements." unless requirements.empty?
+        unless requirements.empty?
+          raise StandardError, "A `:head' dependency may not specify version requirements."
+        end
       end
 
       super(name, *requirements)
@@ -169,17 +171,19 @@ module Pod
     # @param  [Dependency] other
     #         the other dependency to merge with.
     #
-    # @note   If one of the depencies specifies an external source or is head,
+    # @note   If one of the decencies specifies an external source or is head,
     #         the resulting dependency preserves this attributes.
     #
     # @return [Dependency] a dependency (not necessary a new instance) that
-    #         includes also the version requirenments of the given one.
+    #         includes also the version requirements of the given one.
     #
     def merge(other)
       dep = super
       dep.head = head? || other.head?
       if external_source || other.external_source
-        dep.external_source = (external_source||{}).merge(other.external_source||{})
+        self_external_source  = external_source || {}
+        other_external_source = other.external_source || {}
+        dep.external_source = self_external_source.merge(other_external_source)
       end
       dep
     end

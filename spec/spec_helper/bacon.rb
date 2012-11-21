@@ -75,6 +75,11 @@ module Bacon
   # Overrides the TestUnitOutput to provide colored result output.
   #
   module TestUnitOutput
+    def handle_specification(name)
+      print '|'
+      yield
+    end
+
     def handle_requirement(description, disabled = false)
       error = yield
       if !error.empty?

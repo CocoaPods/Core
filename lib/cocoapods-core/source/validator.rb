@@ -1,6 +1,8 @@
 module Pod
   class Source
 
+    # THIS CLASS IS A STUB
+
     # Checks whether a podspec can be accepted by a source.
     #
     # This class can work on Travis but some checks are lost as the repo is

@@ -36,11 +36,11 @@ module Pod
         check_error('Linter failed')
       end
 
-      xit "checks the path of the specification" do
-        @spec.stubs(:name).returns('Name')
-        Specification::Linter.any_instance.stubs(:lint).returns(true)
-        check_error('Incorrect path', '`Name/2.0.1/Name.podspec`')
-      end
+      # xit "checks the path of the specification" do
+      #   @spec.stubs(:name).returns('Name')
+      #   Specification::Linter.any_instance.stubs(:lint).returns(true)
+      #   check_error('Incorrect path', '`Name/2.0.1/Name.podspec`')
+      # end
 
       it "checks if the source of the specification did change" do
         source = { :git => 'http://EVIL-GORILLA-FORK/banana-lib.git', :tag => 'v1.0' }
@@ -54,21 +54,21 @@ module Pod
         check_error('untagged versions cannot be added')
       end
 
-      xit "rejects a Git based specification without tag if it is not marked as 0.0.1" do
-        @validator.source.stubs(:versions).returns([Version.new('0.0.1')])
-        source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA' }
-        @spec.stubs(:source).returns(source)
-        @validator.stubs(:reference_spec)
-        check_error('Untagged', '0.0.1')
-      end
+      # xit "rejects a Git based specification without tag if it is not marked as 0.0.1" do
+      #   @validator.source.stubs(:versions).returns([Version.new('0.0.1')])
+      #   source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA' }
+      #   @spec.stubs(:source).returns(source)
+      #   @validator.stubs(:reference_spec)
+      #   check_error('Untagged', '0.0.1')
+      # end
 
-      xit "checks if there an attempt to change the commit of an untagged version" do
-        @validator.source.stubs(:versions).returns([Version.new('0.0.1')])
-        source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA2' }
-        @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns(source)
-        check_error('rewrite', 'commit', '0.0.1')
-      end
+      # xit "checks if there an attempt to change the commit of an untagged version" do
+      #   @validator.source.stubs(:versions).returns([Version.new('0.0.1')])
+      #   source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA2' }
+      #   @spec.stubs(:version).returns(Version.new '0.0.1')
+      #   @spec.stubs(:source).returns(source)
+      #   check_error('rewrite', 'commit', '0.0.1')
+      # end
 
       it "checks that the dependencies of the specification are available" do
         dep = Dependency.new('find_me', '~>1.0')

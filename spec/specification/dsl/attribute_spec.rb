@@ -272,7 +272,7 @@ module Pod
 
       it "returns the allowed keys flattening keys specified in a hash" do
         attr = Attribute.new(:source, :keys => {:git => [:tag, :commit], :http => nil})
-        attr.allowed_keys.sort.should == [:commit, :git, :http, :tag]
+        attr.allowed_keys.map(&:to_s).sort.should == %w[commit git http tag]
       end
     end
   end
