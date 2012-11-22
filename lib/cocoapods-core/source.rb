@@ -93,6 +93,18 @@ module Pod
       Specification.from_file(specification_path)
     end
 
+    def all_specs
+      specs = pods.map do |name|
+        begin
+          versions(name).map { |version| specification(name, version) }
+        rescue DSLError => e
+          STDERR.puts "Skipping `#{name}` because the podspec contains errors."
+          next
+        end
+      end
+      specs.flatten.compact
+    end
+
     #---------------------------------------------------------------------------#
 
     # @!group Searching the source
@@ -128,7 +140,7 @@ module Pod
           begin
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
-          rescue DSLError => e
+          rescue
             STDERR.puts "Skipping `#{set.name}` because the podspec contains errors."
           end
         else
@@ -136,6 +148,28 @@ module Pod
         end
         set if text && text.downcase.include?(query.downcase)
       end.compact
+    end
+
+    #---------------------------------------------------------------------------#
+
+    def to_hash
+      hash = {}
+      all_specs.each do |spec|
+        print '.'
+        hash[spec.name] ||= {}
+        hash[spec.name][spec.version.version] = spec.to_hash
+      end
+      hash
+    end
+
+    def to_yaml
+      require 'yaml'
+      to_hash.to_yaml
+    end
+
+    def to_json
+      require 'json'
+      to_hash.to_json
     end
 
     #-------------------------------------------------------------------------#

@@ -2,6 +2,7 @@ require 'active_support/core_ext/string/strip.rb'
 require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/dsl'
 require 'cocoapods-core/specification/linter'
+require 'cocoapods-core/specification/yaml'
 
 module Pod
 
@@ -14,6 +15,7 @@ module Pod
   class Specification
 
     include Pod::Specification::DSL
+    include Pod::Specification::YAMLSupport
 
     # @return [Specification] parent the parent of the specification unless the
     #         specification is a root.

@@ -76,7 +76,7 @@ module Bacon
   #
   module TestUnitOutput
     def handle_specification(name)
-      print '|'
+      print ':'
       yield
     end
 
