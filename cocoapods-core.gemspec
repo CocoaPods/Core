@@ -11,6 +11,11 @@ Gem::Specification.new do |s|
   s.homepage      =  "https://github.com/CocoaPods/CocoaPods"
   s.authors       =  ["Eloy Duran", "Fabio Pelosin"]
   s.summary       =  "The models of CocoaPods"
+  s.description   = "The CocoaPods-Core gem provides support to work with the models of "    \
+                    "CocoaPods.\n\n "                                                        \
+                    "It is intended to be used in place of the CocoaPods when the the "      \
+                    "installation of the dependencies is not needed."                        \
+
   s.files         =  Dir["lib/**/*.rb"] + %w{ README.md LICENSE }
   s.require_paths =  %w{ lib }
 
