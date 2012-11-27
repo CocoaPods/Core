@@ -29,7 +29,6 @@ require 'cocoapods-core/version'
 require 'cocoapods-core/dependency'
 require 'cocoapods-core/platform'
 require 'cocoapods-core/source'
-
 require 'cocoapods-core/specification'
 require 'cocoapods-core/podfile'
 require 'cocoapods-core/lockfile'

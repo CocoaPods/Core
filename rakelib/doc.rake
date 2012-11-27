@@ -72,8 +72,6 @@ namespace :doc do
     sh "open '#{generator.output_file}'"
   end
 
-
-  # TEST
   task :developer => :load do
     generator = Pod::Doc::Gem.new(ROOT + 'cocoapods-core.gemspec')
     generator.render

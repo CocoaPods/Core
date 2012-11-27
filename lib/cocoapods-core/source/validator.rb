@@ -22,8 +22,9 @@ module Pod
         @linter_results = {}
       end
 
-      # @param  [Array<Pathname>] a list of path that should be checked for
-      #         being accepted in specs repo.
+      # @param  [Array<Pathname>] spec_paths
+      #         a list of path that should be checked for being accepted in
+      #         specs repo.
       #
       # @return [Bool] whether to podspec can be accepted by the source.
       #

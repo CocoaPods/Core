@@ -131,7 +131,8 @@ module Pod
     # Converts the symbolic name of a platform to a string name suitable to be
     # presented to the user.
     #
-    # @param [Symbol]   the symbolic name of a platform.
+    # @param  [Symbol] symbolic_name
+    #         the symbolic name of a platform.
     #
     # @return [String] The string that describes the name of the given symbol.
     #

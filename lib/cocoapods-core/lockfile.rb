@@ -105,7 +105,8 @@ module Pod
     # Generates a depedency that requires the exact version of the Pod with the
     # given name.
     #
-    # @param  [String] the name of the Pod
+    # @param  [String] name
+    #         the name of the Pod
     #
     # @note   The generated dependencies are by the Installer to prevent the
     #         Resolver from upgrading a Pod during an installation.

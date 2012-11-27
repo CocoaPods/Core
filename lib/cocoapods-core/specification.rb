@@ -260,7 +260,8 @@ module Pod
 
     # Returns the deployment target for the specified platform.
     #
-    # @param  [String] the symbolic name of the platform.
+    # @param  [String] platform_name
+    #         the symbolic name of the platform.
     #
     # @return [Version] the version of the deployment target or nil if not
     #         specified or the platform is not supported.
@@ -301,7 +302,7 @@ module Pod
 
     # Calls the post install callback if defined.
     #
-    # @param  [Pod::TargetInstaller] target installer
+    # @param  [Pod::TargetInstaller] target_installer
     #         the target installer that is performing the installation of the
     #         pod.
     #
@@ -462,7 +463,7 @@ module Pod
       "#{name} (#{version})"
     end
 
-    # @param    [String] string
+    # @param    [String] string_reppresenation
     #           the string that describes a {Specification} generated from
     #           {Specification#to_s}.
     #
