@@ -95,7 +95,14 @@ module Bacon
     end
 
     def handle_summary
-      puts " #{ErrorLog.split("\n\n").first}" if Backtraces
+      first_error = ''
+      error_count = 0
+      ErrorLog.lines.each do |s|
+        errors_identifiers = %w[ Errno Error Informative ]
+        error_count += 1 if errors_identifiers.any? { |id| s.include?(id + ':') }
+        first_error << s if error_count <= 1
+      end
+      puts "\n#{first_error}" if Backtraces
       unless Counter[:disabled].zero?
         puts Bacon.color(:yellow, "#{Counter[:disabled]} disabled specifications")
       end
