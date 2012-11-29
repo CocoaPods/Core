@@ -30,7 +30,7 @@ namespace :doc do
     end
   end
 
-  task :generate => :load do
+  task :dsl => :load do
     module Pod
       module Doc
 
@@ -68,16 +68,19 @@ namespace :doc do
     dsl_file = (ROOT + 'lib/cocoapods-core/podfile/dsl.rb').to_s
     generator = Pod::Doc::Podfile.new(dsl_file)
     generator.render
-
-    sh "open '#{generator.output_file}'"
   end
 
-  task :developer => :load do
+  task :gem => :load do
     generator = Pod::Doc::Gem.new(ROOT + 'cocoapods-core.gemspec')
+    generator.github_name = 'Core'
+    generator.root_module = 'Pod'
     generator.render
-    sh "open '#{generator.output_file}'"
   end
+
+  task :generate => [:dsl, :gem]
 end
 
 desc "Genereates the documentation"
-task :doc => 'doc:generate'
+task :doc => 'doc:generate' do
+  sh 'open rakelib/doc/index.html'
+end

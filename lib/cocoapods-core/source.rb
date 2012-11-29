@@ -2,15 +2,15 @@ require 'cocoapods-core/source/validator'
 
 module Pod
 
-  # The {Source} class is responsible to manage a collection of podspecs.
+  # The Source class is responsible to manage a collection of podspecs.
   #
-  # @note The backing store of the podspecs collection is an implementation detail
+  # The backing store of the podspecs collection is an implementation detail
   # abstracted from the rest of CocoaPods.
   #
-  # @note The default implementation uses a git repo as a backing store, where the
+  # The default implementation uses a git repo as a backing store, where the
   # podspecs are namespaced as:
   #
-  #     #{spec_name}/#{VERSION}/#{spec_name}.podspec
+  #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
 
