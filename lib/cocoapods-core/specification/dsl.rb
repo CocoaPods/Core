@@ -86,7 +86,8 @@ module Pod
       #
       #     spec.version = '0.0.1'
       #
-      #   @param [String] version
+      #   @param  [String] version
+      #           the version of the Pod.
       #
       attribute :version, {
         :required       => true,
@@ -119,7 +120,8 @@ module Pod
       #     spec.authors = { 'Darth Vader' => 'darthvader@darkside.com',
       #                      'Wookiee'     => 'wookiee@aggrrttaaggrrt.com' }
       #
-      #   @param [String, Hash{String=>String}] authors
+      #   @param  [String, Hash{String=>String}] authors
+      #           the list of the authors of the library and their emails.
       #
       attribute :authors, {
         :types          => [ String, Array, Hash ],
@@ -182,7 +184,10 @@ module Pod
       #                      LICENSE
       #                    }
       #
-      #   @param [String, Hash{Symbol=>String}] license
+      #   @param  [String, Hash{Symbol=>String}] license
+      #           The type of the lincense and the text of the grant that
+      #           allows to use the library (or the relative path to the file
+      #           that contains it).
       #
       attribute :license, {
         :container      => Hash,

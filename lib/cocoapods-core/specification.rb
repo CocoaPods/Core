@@ -357,6 +357,8 @@ module Pod
       #         the specification whose syntax attribute should be set.
       #
       # @param  [Symbol] platform
+      #         the platform described by this proxy. Can be either `:ios` or
+      #         `:osx`.
       #
       def initialize(specification, platform)
         @specification, @platform = specification, platform
@@ -442,6 +444,9 @@ module Pod
     #
     # @note   This is used by PlatformProxy to assign attributes for the scoped
     #         platform.
+    #
+    # @param  [Platform] platform
+    #         The platform on which the attributes will be specified.
     #
     # @return [void]
     #
