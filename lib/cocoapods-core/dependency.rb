@@ -154,7 +154,7 @@ module Pod
       return false unless external_source == other.external_source
 
       other.requirement.requirements.all? do | operator, version |
-        self.requirement.satisfied_by? Gem::Version.new(version)
+        self.requirement.satisfied_by? Version.new(version)
       end
     end
 

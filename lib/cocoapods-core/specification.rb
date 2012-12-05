@@ -485,7 +485,7 @@ module Pod
     def self.name_and_version_from_string(string_reppresenation)
       match_data = string_reppresenation.match(/(\S*) \((.*)\)/)
       name = match_data[1]
-      vers = Version.from_string(match_data[2])
+      vers = Version.new(match_data[2])
       [name, vers]
     end
 
