@@ -4,7 +4,7 @@ require 'version'
 
 Gem::Specification.new do |s|
   s.name          =  "cocoapods-core"
-  s.version       =  Pod::CORE_VERSION
+  s.version       =  Pod::VERSION
   s.date          =  Date.today
   s.license       =  "MIT"
   s.email         =  ["eloy.de.enige@gmail.com", "fabiopelosin@gmail.com"]
