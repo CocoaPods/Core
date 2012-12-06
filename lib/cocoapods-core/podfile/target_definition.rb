@@ -1,7 +1,7 @@
 module Pod
   class Podfile
 
-    # The {TargetDefinition} stores the information of a CocoaPods static
+    # The TargetDefinition stores the information of a CocoaPods static
     # library. The target definition can be linked with one or more targets of
     # the user project.
     #
@@ -17,7 +17,7 @@ module Pod
       # @return [TargetDefinition] the parent target definition.
       #
       attr_reader :parent
-      
+
       # @return [Podfile] the podfile that contains the specification for this target definition.
       #
       attr_reader :podfile
@@ -141,7 +141,7 @@ module Pod
       def to_s
         "TargetDefinition for `#{label}`"
       end
-      
+
       def inspect
         "#<#{self.class} with label: `#{label}'>"
       end

@@ -3,7 +3,7 @@ require 'cocoapods-core/podfile/target_definition'
 
 module Pod
 
-  # The {Podfile} is a specification that describes the dependencies of the
+  # The Podfile is a specification that describes the dependencies of the
   # targets of an Xcode project.
   #
   # It supports its own DSL and generally is stored in files named

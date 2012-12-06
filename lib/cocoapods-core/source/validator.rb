@@ -1,7 +1,7 @@
 module Pod
   class Source
 
-    # THIS CLASS IS A STUB
+    # TODO: THIS CLASS IS A STUB
 
     # Checks whether a podspec can be accepted by a source.
     #

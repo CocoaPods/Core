@@ -54,10 +54,11 @@ module Pod
       # @raise  If the versions requirement of the dependency are not
       #         compatible with the previously stored dependencies.
       #
+      # @todo   This should simply return a boolean. Is cocoaPods that should raise.
+      #
       # @return [void]
       #
       def required_by(dependency, dependent_name)
-        #TODO: this should simply return a boolean. Is cocoaPods that should raise.
         unless @required_by.empty? || dependency.requirement.satisfied_by?(Gem::Version.new(required_version.to_s))
           raise StandardError, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
         end
@@ -95,9 +96,10 @@ module Pod
       # @return [Version] the highest version that satisfies the stored
       #         dependencies.
       #
+      # @todo   This should simply return nil. CocoaPods should raise instead.
+      #
       def required_version
         versions.find { |v| dependency.match?(name, v) } ||
-          # TODO: this should simply return nil. Is CocoaPods that should raise.
           (raise StandardError, "Required version (#{dependency}) not found for `#{name}'.\nAvailable versions: #{versions.join(', ')}")
       end
 

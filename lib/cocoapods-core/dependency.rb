@@ -1,6 +1,6 @@
 module Pod
 
-  # The {Dependency} allows to specify dependencies of a {Podfile} or a
+  # The Dependency allows to specify dependencies of a {Podfile} or a
   # {Specification} on a Pod. It stores the name of the dependency, version
   # requirements and external sources information.
   #
@@ -88,8 +88,13 @@ module Pod
       super(name, *requirements)
     end
 
+    # @return [Version] whether the dependency points to a specific version.
+    #
     attr_accessor :specific_version
 
+    # @return [Gem::Requirement] the requirement of this dependency (a set of
+    #         one or more version restrictions).
+    #
     def requirement
       return Gem::Requirement.new(specific_version) if specific_version
       super

@@ -3,6 +3,8 @@ module Pod
 
     module YAMLSupport
 
+      # TODO: this class is a stub.
+
       # No support for hooks
       # No support for regular expressions
       # Needs to store the encoder version

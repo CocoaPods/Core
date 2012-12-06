@@ -33,7 +33,7 @@ module Pod
     # @return [Integer] compares a source with another one for sorting
     #         purposes.
     #
-    # @note   Source are compared by the alphabeical order of their name, and
+    # @note   Source are compared by the alphabetical order of their name, and
     #         this convention should be used in any case where sources need to
     #         be disambiguated.
     #
@@ -41,7 +41,7 @@ module Pod
       name <=> other.name
     end
 
-    # @return [String] the string reppresentation of a source.
+    # @return [String] the string representation of a source.
     #
     def to_s
       "Source `#{name}`"
@@ -93,6 +93,9 @@ module Pod
       Specification.from_file(specification_path)
     end
 
+    # @return [Array<Specification>] all the specifications contained by the
+    #         source.
+    #
     def all_specs
       specs = pods.map do |name|
         begin
@@ -152,6 +155,12 @@ module Pod
 
     #---------------------------------------------------------------------------#
 
+    # @!group Representations
+
+    # @return [Hash{String=>{String=>Specification}}] the static representation
+    #         of all the specifications grouped first by name and then by
+    #         version.
+    #
     def to_hash
       hash = {}
       all_specs.each do |spec|
@@ -162,11 +171,15 @@ module Pod
       hash
     end
 
+    # @return [String] the YAML encoded {to_hash} representation.
+    #
     def to_yaml
       require 'yaml'
       to_hash.to_yaml
     end
 
+    # @return [String] the JSON encoded {to_hash} representation.
+    #
     def to_json
       require 'json'
       to_hash.to_json
@@ -174,7 +187,7 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # The {Aggregate} manages a directory of sources repositories.
+    # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
 

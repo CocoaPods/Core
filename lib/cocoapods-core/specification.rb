@@ -6,7 +6,7 @@ require 'cocoapods-core/specification/yaml'
 
 module Pod
 
-  # The {Specification} provides a DSL to describe a Pod. A pod is defined as a
+  # The Specification provides a DSL to describe a Pod. A pod is defined as a
   # library originating from a source. A specification can support detailed
   # attributes for modules of code  through subspecs.
   #
@@ -502,6 +502,8 @@ module Pod
   #
   # @return [Object] it can return any object but, is expected to be called on
   #         `podspec` files that should return a #{Specification}.
+  #
+  # @visiblity private
   #
   def self._eval_podspec(path)
     string = File.open(path, 'r:utf-8')  { |f| f.read }

@@ -1,6 +1,6 @@
 module Pod
 
-  # The {Lockfile} stores information about the pods that were installed by
+  # The Lockfile stores information about the pods that were installed by
   # CocoaPods.
   #
   # It is used in combination with the Podfile to resolve the exact version of
@@ -102,7 +102,7 @@ module Pod
       @dependencies
     end
 
-    # Generates a depedency that requires the exact version of the Pod with the
+    # Generates a dependency that requires the exact version of the Pod with the
     # given name.
     #
     # @param  [String] name
@@ -184,7 +184,7 @@ module Pod
     # @return [Hash{Symbol=>Array[Strings]}] a hash where pods are grouped
     #         by the state in which they are.
     #
-    # TODO:   Why do we look for compatiblity instead of just comparing if the
+    # @todo   Why do we look for compatibility instead of just comparing if the
     #         two dependencies are equal?
     #
     def detect_changes_with_podfile(podfile)
@@ -328,8 +328,8 @@ module Pod
       #           the values store the external source hashes of each
       #           dependency.
       #
-      # TODO:     The downloaders should generate an external source hash that
-      #           shold be store for dependencys in head mode and for those
+      # @todo     The downloader should generate an external source hash that
+      #           should be store for dependencies in head mode and for those
       #           with external source.
       #
       def generate_external_sources_data(podfile)
@@ -349,7 +349,7 @@ module Pod
       #           }
       #
       # @return   [Hash] a hash where the keys are the names of the root
-      #           specifications and the values are the SHA1 diggest of the
+      #           specifications and the values are the SHA1 digest of the
       #           podspec file.
       #
       def generate_checksums(specs)

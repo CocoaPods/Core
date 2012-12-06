@@ -1,6 +1,6 @@
 module Pod
 
-  # A platform describes an SDK name and deployment target.
+  # A Platform describes an SDK name and deployment target.
   #
   class Platform
 
