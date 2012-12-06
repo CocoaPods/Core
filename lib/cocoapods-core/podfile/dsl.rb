@@ -1,12 +1,41 @@
 module Pod
   class Podfile
 
+    # The of the methods defined in this file and the order of the methods is
+    # relevant for the documentation generated on CocoaPods/cocoapods.github.com.
+
     # The Podfile is a specification that describes the dependencies of the
-    # targets of an Xcode project.
+    # targets of one or more Xcode projects. The Podfile always creates an
+    # implicit target, named `default`, which links to the first target of the
+    # user project.
+    #
+    # A podfile can be very simple:
+    #
+    #     pod 'AFNetworking', '~> 1.0'
+    #
+    # An example of a more complex podfile can be:
+    #
+    #     platform :ios, '6.0'
+    #     inhibit_all_warnings!
+    #
+    #     xcodeproj `MyProject`
+    #
+    #     pod 'ObjectiveSugar', '~> 0.5'
+    #
+    #     target :test do
+    #       pod 'OCMock', '~> 2.0.1'
+    #     end
+    #
+    #     post_install do |installer|
+    #       installer.project.targets.each do |target|
+    #         puts "#{target.name}"
+    #       end
+    #     end
     #
     module DSL
 
       # @!group Dependencies
+      #   The Podfile specifies the dependencies of each user target.
 
       # Specifies a dependency of the project.
       #
@@ -107,12 +136,9 @@ module Pod
         @target_definition.target_dependencies << Dependency.new(name, *requirements)
       end
 
-      # Use the dependencies of a Pod defined in the given podspec file.
-      #
-      # ---
-      #
-      # If no arguments are passed the first podspec in the root of the Podfile
-      # is used.
+      # Use the dependencies of a Pod defined in the given podspec file. If no
+      # arguments are passed the first podspec in the root of the Podfile is
+      # used. It is intended to be used by the project of a library.
       #
       # @example
       #   podspec
@@ -182,12 +208,6 @@ module Pod
       #
       # @example  Defining an exclusive target
       #
-      #           target :test, :exclusive => true do
-      #             pod 'JSONKit'
-      #           end
-      #
-      # @example  Defining an exclusive target
-      #
       #           target :ZipApp do
       #             pod 'SSZipArchive'
       #             target :test, :exclusive => true do
@@ -210,6 +230,7 @@ module Pod
       #---------------------------------------------------------------------------#
 
       # @!group Target configuration
+      #   This group list the options to configure a target.
 
       # Specifies the platform for which a static library should be build.
       #
@@ -329,6 +350,7 @@ module Pod
       #---------------------------------------------------------------------------#
 
       # @!group Workspace
+      #   This group list the options to configure workspace and to set global settings.
 
       # Specifies the Xcode workspace that should contain all the projects.
       #
@@ -359,7 +381,7 @@ module Pod
       # This is for scripting languages such as [MacRuby](http://macruby.org),
       # [Nu](http://programming.nu/index), and
       # [JSCocoa](http://inexdo.com/JSCocoa), which use it to bridge types,
-      # functions, etc better.
+      # functions, etc.
       #
       # @return   [void]
       #
@@ -376,7 +398,7 @@ module Pod
       # Xcode 4.3.2 no longer seems to support the `-fobjc-arc` flag. Therefore
       # it now has to be enabled explicitly using this method.
       #
-      # Support for this method might be dropped in a future release.
+      # Support for this method might be dropped in CocoaPods `1.0`.
       #
       # @return   [void]
       #
@@ -387,13 +409,13 @@ module Pod
       #---------------------------------------------------------------------------#
 
       # @!group Hooks
+      #   The Podfile provides hooks that will be called during the
+      #   installation process.
+      #
+      #   Hooks are __global__ and not stored per target definition.
 
       # This hook allows you to make any changes to the Pods after they have been
       # downloaded but before they are installed.
-      #
-      # ------
-      #
-      # Hooks are global and not stored per target definition.
       #
       # @example  Defining a pre install hook in a Podfile.
       #
@@ -408,10 +430,6 @@ module Pod
 
       # This hook allows you to make any last changes to the generated Xcode project
       # before it is written to disk, or any other tasks you might want to perform.
-      #
-      # ------
-      #
-      # Hooks are global and not stored per target definition.
       #
       # @example  Customizing the `OTHER_LDFLAGS` of all targets
       #
@@ -431,3 +449,4 @@ module Pod
     end
   end
 end
+
