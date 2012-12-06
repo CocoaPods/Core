@@ -503,7 +503,7 @@ module Pod
   # @return [Object] it can return any object but, is expected to be called on
   #         `podspec` files that should return a #{Specification}.
   #
-  # @visiblity private
+  # @private
   #
   def self._eval_podspec(path)
     string = File.open(path, 'r:utf-8')  { |f| f.read }
