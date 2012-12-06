@@ -323,26 +323,26 @@ module Pod
     # @!group DSL deprecations
 
     def preferred_dependency=(args)
-      STDERR.puts "`preferred_dependency` has been renamed to `default_subspec`."
+      STDERR.puts "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
       self.default_subspec = args
     end
 
     def singleton_method_added(method)
       if [:pre_install, :post_install ].include?(method)
-        STDERR.puts "The use of `#{method}` by overriding the method is deprecated."
+        STDERR.puts "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
       elsif method == :header_mappings
-        raise StandardError, "The use of the `header_mappings` hook has been deprecated."
+        raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
       end
     end
 
     def clean_paths=(value)
-      raise StandardError, "Clean paths are deprecated. CocoaPods now " \
+      raise StandardError, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
         "cleans unused files by default. Use preserver paths if needed."
     end
 
     [ :part_of_dependency=, :part_of=, :exclude_header_search_paths= ].each do |method|
       define_method method do |value|
-        raise StandardError, "Attribute `#{method.to_s[0..-2]}` has been deprecated."
+        raise StandardError, "[#{to_s}] Attribute `#{method.to_s[0..-2]}` has been deprecated."
       end
     end
 
