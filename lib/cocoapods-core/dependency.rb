@@ -179,7 +179,7 @@ module Pod
     #         external source.
     #
     def ==(other)
-      super && head? == other.head? && @external_source == other.external_source
+      super && head? == other.head? && @external_source == other.external_source && inhibits_warnings? == other.inhibits_warnings?
     end
 
     # Merges the version requirements of the dependency with another one.
@@ -273,7 +273,7 @@ module Pod
     #
     def inspect
       "<#{self.class} name=#{self.name} requirements=#{requirement.to_s} " \
-      "external_source=#{external_source||'nil'}>"
+      "external_source=#{external_source||'nil'} inhibit_warnings=#{self.inhibits_warnings?}>"
     end
 
     #--------------------------------------#
