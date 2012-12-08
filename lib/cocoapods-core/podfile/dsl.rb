@@ -83,6 +83,13 @@ module Pod
       #
       # ------
       #
+      # If you want to turn off warnings per single pod, you can specify it
+      # by setting `inhibit_warnings` to true. By default, it's false
+      #
+      #     pod 'Objection', inhibit_warnings: true
+      #
+      # ------
+      #
       # Dependencies can be obtained also from external sources.
       #
       # ### From a podspec in the root of a library repo.

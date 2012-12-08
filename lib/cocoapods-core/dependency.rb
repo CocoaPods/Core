@@ -29,6 +29,10 @@ module Pod
     attr_accessor :head
     alias_method  :head?, :head
 
+    # @return [Bool] whether the dependency should ignore xcode warnings.
+    #
+    attr_accessor :inhibit_warnings
+
     # @return [Specification] the specification loaded for the dependency.
     #
     attr_accessor :specification
@@ -75,7 +79,9 @@ module Pod
     #             Dependency.new('RestKit', :head)
     #
     def initialize(name = nil, *requirements)
+
       if requirements.last.is_a?(Hash)
+        @inhibit_warnings = requirements.last.delete(:inhibit_warnings)
         @external_source = requirements.pop
       elsif requirements.last == :head
         @head = true
@@ -110,6 +116,11 @@ module Pod
     #
     def external?
       !@external_source.nil?
+    end
+
+    # @return [Bool] false by default, true if set in podfile
+    def inhibits_warnings?
+      @inhibit_warnings || false
     end
 
     # Creates a new dependency with the name of the top level spec and the same

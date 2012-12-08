@@ -6,7 +6,7 @@ module Pod
     describe "Dependencies" do
       it "adds dependencies" do
         podfile = Podfile.new do
-          pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
+          pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1', inhibit_warnings: true
         end
         podfile.dependencies.size.should == 2
         podfile.dependencies.find {|d| d.root_name == 'ASIHTTPRequest'}.should == Dependency.new('ASIHTTPRequest')

@@ -24,6 +24,11 @@ module Pod
         dep.should.be.external
       end
 
+      it "inhibits warnings if asked to" do
+        d = Dependency.new("cocoapods", git: "git://github.com/cocoapods/cocoapods", inhibit_warnings: true)
+        d.inhibits_warnings?.should.be.true
+      end
+
       it "identifies itself as a `head` dependency" do
         dependency = Dependency.new("cocoapods", :head)
         dependency.should.be.head
