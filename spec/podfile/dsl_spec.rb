@@ -6,11 +6,11 @@ module Pod
     describe "Dependencies" do
       it "adds dependencies" do
         podfile = Podfile.new do
-          pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1', inhibit_warnings: true
+          pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1', :inhibit_warnings => true
         end
         podfile.dependencies.size.should == 2
         podfile.dependencies.find {|d| d.root_name == 'ASIHTTPRequest'}.should == Dependency.new('ASIHTTPRequest')
-        podfile.dependencies.find {|d| d.root_name == 'SSZipArchive'}.should   == Dependency.new('SSZipArchive', '>= 0.1',  inhibit_warnings: true)
+        podfile.dependencies.find {|d| d.root_name == 'SSZipArchive'}.should   == Dependency.new('SSZipArchive', '>= 0.1',  :inhibit_warnings => true)
       end
 
       it "adds a dependency on a Pod repo outside of a spec repo (the repo is expected to contain a podspec)" do
