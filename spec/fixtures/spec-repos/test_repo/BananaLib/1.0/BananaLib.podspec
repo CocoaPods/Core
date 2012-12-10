@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
   s.xcconfig     = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
   s.prefix_header_file = 'Classes/BananaLib.pch'
   s.resources    = "Resources/*.png"
+  s.requires_arc = true
   s.dependency   'monkey', '~> 1.0.1', '< 1.0.9'
   s.license      = {
     :type => 'MIT',

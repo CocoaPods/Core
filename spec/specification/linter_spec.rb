@@ -211,7 +211,7 @@ module Pod
 
     #--------------------------------------#
 
-    describe 'All specs' do
+    describe 'File patterns & Build settings' do
       before do
         fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
@@ -253,6 +253,13 @@ module Pod
         @linter.lint
         message = @linter.results.first.message
         message.should.include('appears to be empty')
+      end
+
+      it "requires that the require_arc value is specified until the switch to a true default" do
+        @spec.stubs(:requires_arc)
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.include('`requires_arc` should be specified')
       end
     end
   end

@@ -137,6 +137,7 @@ module Pod
 
             run_all_specs_valudation_hooks
             validate_file_patterns
+            check_tmp_arc_not_nil
             check_if_spec_is_empty
           end
         end
@@ -273,6 +274,14 @@ module Pod
               end
             end
           end
+        end
+      end
+
+      # @todo remove in 0.18 and switch the default to true.
+      #
+      def check_tmp_arc_not_nil
+        if spec.requires_arc.nil?
+          warning "A value for `requires_arc` should be specified until the migration to a `true` default."
         end
       end
 
