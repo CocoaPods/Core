@@ -45,6 +45,7 @@ module Pod
             :osx=>["monkey (< 1.0.9, ~> 1.0.1)"],
             :ios=>["monkey (< 1.0.9, ~> 1.0.1)"]
           },
+          'requires_arc' => {:osx=>true, :ios=>true}
         }
 
         computed = @spec.to_hash
