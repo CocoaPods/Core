@@ -40,14 +40,15 @@ module Pod
       # @return [Bool] whether the specification passed validation.
       #
       def lint
-        unless spec
-          error "The specification could not be loaded.\n#{e.message}\n#{e.backtrace}"
-        end
         @results = []
-        perform_textual_analysis
-        check_required_root_attributes
-        run_root_validation_hooks
-        perform_all_specs_ananlysis
+        if spec
+          perform_textual_analysis
+          check_required_root_attributes
+          run_root_validation_hooks
+          perform_all_specs_ananlysis
+        else
+          error "The specification defined in `#{file}` could not be loaded."
+        end
         results.empty?
       end
 
