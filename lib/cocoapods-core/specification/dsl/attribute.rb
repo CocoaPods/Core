@@ -205,9 +205,12 @@ module Pod
         #
         def empty?(spec)
           if multi_platform?
-            spec.instance_variable_get(ivar) == {:osx=>{}, :ios=>{}}
+            spec.instance_variable_get(ivar).all? do |platform, value|
+              value.nil? || value.empty?
+            end
           else
-            spec.instance_variable_get(ivar).nil?
+            value = spec.instance_variable_get(ivar)
+            value.nil? || value.empty?
           end
         end
 

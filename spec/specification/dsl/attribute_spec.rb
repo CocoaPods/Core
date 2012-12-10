@@ -129,6 +129,13 @@ module Pod
         spec.instance_variable_get('@custom_attrb').should.not == ['default']
         spec.instance_variable_get('@custom_attrb').should == []
       end
+
+      it "returns whether a values has been specified for the attribute in a given specification" do
+        spec = Spec.new
+        @attr.empty?(spec).should.be.true
+        spec.frameworks = ['some', 'frameworks']
+        @attr.empty?(spec).should.be.false
+      end
     end
 
     #-------------------------------------------------------------------------#
