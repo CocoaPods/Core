@@ -323,13 +323,13 @@ module Pod
     # @!group DSL deprecations
 
     def preferred_dependency=(args)
-      STDERR.puts "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
+      CoreUI.warn "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
       self.default_subspec = args
     end
 
     def singleton_method_added(method)
       if [:pre_install, :post_install ].include?(method)
-        STDERR.puts "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
+        CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
       elsif method == :header_mappings
         raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
       end

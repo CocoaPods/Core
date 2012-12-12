@@ -101,7 +101,7 @@ module Pod
         begin
           versions(name).map { |version| specification(name, version) }
         rescue DSLError => e
-          STDERR.puts "Skipping `#{name}` because the podspec contains errors."
+          CoreUI.warn "Skipping `#{name}` because the podspec contains errors."
           next
         end
       end
@@ -144,7 +144,7 @@ module Pod
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
           rescue
-            STDERR.puts "Skipping `#{set.name}` because the podspec contains errors."
+            CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
           end
         else
           text = set.name
