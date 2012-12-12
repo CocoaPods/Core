@@ -22,7 +22,7 @@ module Pod
           :podspec: path/JSONKit.podspec
 
       SPEC CHECKSUMS:
-        BananaLib: 9906b267592664126923875ce2c8d03824372c79
+        BananaLib: 439d9f683377ecf4a27de43e8cf3bce6be4df97b
         JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
       COCOAPODS CORE: #{VERSION}
@@ -351,7 +351,7 @@ module Pod
 
       it "stores the checksum of the specifications" do
         @lockfile.internal_data['SPEC CHECKSUMS'].should == {
-          "BananaLib"=>"9906b267592664126923875ce2c8d03824372c79",
+          "BananaLib"=>"439d9f683377ecf4a27de43e8cf3bce6be4df97b",
           "JSONKit"=>"92ae5f71b77c8dec0cd8d0744adab79d38560949"
         }
       end

@@ -194,6 +194,26 @@ module Pod
           end
         end
 
+        # Checks if a value for the attribute has been defined for the given
+        # specification.
+        #
+        # @param  [Specification] spec
+        #         the specification to check.
+        #
+        # @return [Bolean] whether a value has been specified for this
+        #         attribute.
+        #
+        def empty?(spec)
+          if multi_platform?
+            spec.instance_variable_get(ivar).all? do |platform, value|
+              value.nil? || value.empty?
+            end
+          else
+            value = spec.instance_variable_get(ivar)
+            value.nil? || value.empty?
+          end
+        end
+
         #--------------------------------------#
 
         # @!group Reader method support
