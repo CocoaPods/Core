@@ -49,8 +49,8 @@ module Pod
     #         the path of the `podspec` file.
     #
     # @param  [String] subspec_name
-    #         the name of the specification that should be returned. If nil
-    #         returns the root specification.
+    #         the name of the specification that should be returned. If it is
+    #         nil returns the root specification.
     #
     # @raise  If the file doesn't return a Pods::Specification after
     #         evaluation.
