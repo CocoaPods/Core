@@ -29,10 +29,6 @@ module Pod
     attr_accessor :head
     alias_method  :head?, :head
 
-    # @return [Specification] the specification loaded for the dependency.
-    #
-    attr_accessor :specification
-
     # @overload   initialize(name, requirements)
     #
     #   @param    [String] name
