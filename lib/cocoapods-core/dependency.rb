@@ -249,7 +249,7 @@ module Pod
       version = match_data[2]
       version = version.gsub(/[()]/,'') if version
       case version
-      when nil || /from `(.*)'/
+      when nil || /from `(.*)(`|')/
         Dependency.new(name)
       when /HEAD/
         Dependency.new(name, :head)
@@ -282,16 +282,16 @@ module Pod
     def external_source_description
       source = external_source
       if source.key?(:git)
-        desc =  "`#{source[:git]}'"
-        desc << ", commit `#{source[:commit]}'" if source[:commit]
-        desc << ", branch `#{source[:branch]}'" if source[:branch]
-        desc << ", tag `#{source[:tag]}'"       if source[:tag]
+        desc =  "`#{source[:git]}`"
+        desc << ", commit `#{source[:commit]}`" if source[:commit]
+        desc << ", branch `#{source[:branch]}`" if source[:branch]
+        desc << ", tag `#{source[:tag]}`"       if source[:tag]
       elsif source.key?(:podspec)
-        desc = "`#{source[:podspec]}'"
+        desc = "`#{source[:podspec]}`"
       elsif source.key?(:local)
-        desc = "`#{source[:local]}'"
+        desc = "`#{source[:local]}`"
       else
-        desc = "`#{source.to_s}'"
+        desc = "`#{source.to_s}`"
       end
       "from #{desc}"
     end
