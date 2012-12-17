@@ -75,13 +75,31 @@ module Pod
       @pod_names
     end
 
-    # @return [Hash{String => Version}] a Hash containing the name of the root
-    #         specification of the installed Pods as the keys and their
-    #         corresponding {Version} as the values.
+    # Returns the version of the given Pod.
     #
-    def pod_versions
-      generate_pod_names_and_versions unless @pod_versions
-      @pod_versions
+    # @param [name] The name of the Pod (root name of the specification).
+    #
+    # @return [Version] The version of the pod.
+    #
+    # @return [Nil] If there is no version stored for the given name.
+    #
+    def version(pod_name)
+      version = pod_versions[pod_name]
+      return version if version
+      pod_name = pod_versions.keys.find { |name| Specification.root_name(name) == pod_name }
+      pod_versions[pod_name]
+    end
+
+    # Returns the checksum for the given Pod.
+    #
+    # @param [name] The name of the Pod (root name of the specification).
+    #
+    # @return [String] The checksum of the specification for the given Pod.
+    #
+    # @return [Nil] If there is no checksum stored for the given name.
+    #
+    def checksum(name)
+      checksum_data[name]
     end
 
     # @return [Array<Dependency>] the dependencies of the Podfile used for the
@@ -95,7 +113,7 @@ module Pod
         data = internal_data['DEPENDENCIES'] || []
         @dependencies = data.map do |string|
           dep = Dependency.from_string(string)
-          dep.external_source = external_sources[dep.root_name]
+          dep.external_source = external_sources_data[dep.root_name]
           dep
         end
       end
@@ -116,8 +134,8 @@ module Pod
     # @return [Dependency] the generated dependency.
     #
     def dependency_to_lock_pod_named(name)
-      dep = dependencies.find { |d| d.name == name }
-      version = pod_versions[name]
+      dep = dependencies.find { |d| d.name == name || d.root_name == name }
+      version = version(name)
 
       unless dep
         raise StandardError, "Attempt to lock the `#{name}` Pod without an known dependency."
@@ -133,6 +151,8 @@ module Pod
     end
 
     #--------------------------------------#
+
+    # !@group Accessing the internal data.
 
     private
 
@@ -156,9 +176,26 @@ module Pod
     #         keys and the values are the external source hash the dependency
     #         that required the pod.
     #
-    def external_sources
-      @external_sources ||= internal_data["EXTERNAL SOURCES"] || {}
+    def external_sources_data
+      @external_sources_data ||= internal_data["EXTERNAL SOURCES"] || {}
     end
+
+    # @return [Hash{String => Version}] a Hash containing the name of the root
+    #         specification of the installed Pods as the keys and their
+    #         corresponding {Version} as the values.
+    #
+    def pod_versions
+      generate_pod_names_and_versions unless @pod_versions
+      @pod_versions
+    end
+
+    # @return [Hash{String => Version}] A Hash containing the checksums of the
+    #         specification by the name of their root.
+    #
+    def checksum_data
+      data = internal_data['SPEC CHECKSUMS'] || {}
+    end
+
 
     #-------------------------------------------------------------------------#
 
@@ -353,12 +390,9 @@ module Pod
       #           podspec file.
       #
       def generate_checksums(specs)
-        require 'digest'
         checksums = {}
         specs.select { |spec| !spec.defined_in_file.nil? }.each do |spec|
-          checksum = Digest::SHA1.hexdigest(File.read(spec.defined_in_file))
-          checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
-          checksums[spec.root.name] = checksum
+          checksums[spec.root.name] = spec.checksum
         end
         checksums
       end

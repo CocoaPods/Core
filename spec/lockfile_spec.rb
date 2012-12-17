@@ -15,7 +15,7 @@ module Pod
 
       DEPENDENCIES:
       - BananaLib (~> 1.0)
-      - JSONKit (from `path/JSONKit.podspec')
+      - JSONKit (from `path/JSONKit.podspec`)
 
       EXTERNAL SOURCES:
         JSONKit:
@@ -97,12 +97,15 @@ module Pod
         @lockfile.pod_names.should == %w| BananaLib JSONKit monkey |
       end
 
-      it "returns the versions of the installed pods" do
-        @lockfile.pod_versions.should == {
-          "BananaLib" => Version.new("1.0"),
-          "JSONKit" => Version.new("1.4"),
-          "monkey" => Version.new("1.0.8")
-        }
+      it "returns the versions of a given pod" do
+        @lockfile.version("BananaLib").should == Version.new("1.0")
+        @lockfile.version("JSONKit").should == Version.new("1.4")
+        @lockfile.version("monkey").should == Version.new("1.0.8")
+      end
+
+
+      it "returns the checksum for the given Pod" do
+        @lockfile.checksum('BananaLib').should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
       end
 
       it "returns the dependencies used for the last installation" do
@@ -317,7 +320,7 @@ module Pod
         ]
         specs.each { |s| s.activate_platform(:ios) }
         lockfile = Lockfile.generate(podfile, specs)
-        lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com', tag `1.0')"
+        lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com`, tag `1.0`)"
         lockfile.internal_data["EXTERNAL SOURCES"]["BananaLib"].should == { :git => "www.example.com", :tag => '1.0' }
       end
     end
@@ -339,7 +342,7 @@ module Pod
 
       it "stores the information of the dependencies of the Podfile" do
         @lockfile.internal_data['DEPENDENCIES'].should == [
-          "BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec')"
+          "BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"
         ]
       end
 
