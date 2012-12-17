@@ -28,6 +28,21 @@ module Pod
         @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.1' }
         @spec.should.not == Spec.new
       end
+
+      it "returns the checksum of the file in which it is defined" do
+        @path = fixture('BananaLib.podspec')
+        @spec = Spec.from_file(@path)
+        @spec.checksum.should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
+      end
+
+      it "returns a nil checksum if the specification is not defined in a file" do
+        @spec.checksum.should.be.nil
+      end
+
+      it "returns the root name of a given specification name" do
+        Specification.root_name('Pod').should == 'Pod'
+        Specification.root_name('Pod/Subspec').should == 'Pod'
+      end
     end
 
     #-------------------------------------------------------------------------#

@@ -105,6 +105,30 @@ module Pod
          version == other.version)
     end
 
+    # @return [String] The SHA1 digest of the file in which the specification
+    #         is defined.
+    #
+    # @return [Nil] If the specification is not defined in a file.
+    #
+    def checksum
+      require 'digest'
+      unless defined_in_file.nil?
+        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+        checksum
+      end
+    end
+
+    # Returns the root name of a specification.
+    #
+    # @param  [String] the name of a specification or of a subspec.
+    #
+    # @return [String] the root name
+    #
+    def self.root_name(full_name)
+      full_name.split('/').first
+    end
+
     #-------------------------------------------------------------------------#
 
     # @!group Working with a hierarchy of specifications
