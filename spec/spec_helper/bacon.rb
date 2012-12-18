@@ -142,6 +142,3 @@ module Bacon
   end
 end
 
-
-
-
