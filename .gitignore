@@ -7,6 +7,4 @@
 tmp
 spec/fixtures/vcr
 .yardoc
-/documentation
 .rbx/
-rakelib/doc

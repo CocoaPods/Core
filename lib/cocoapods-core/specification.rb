@@ -49,8 +49,8 @@ module Pod
     #         the path of the `podspec` file.
     #
     # @param  [String] subspec_name
-    #         the name of the specification that should be returned. If nil
-    #         returns the root specification.
+    #         the name of the specification that should be returned. If it is
+    #         nil returns the root specification.
     #
     # @raise  If the file doesn't return a Pods::Specification after
     #         evaluation.
@@ -103,6 +103,30 @@ module Pod
         (self.class === other &&
          name == other.name &&
          version == other.version)
+    end
+
+    # @return [String] The SHA1 digest of the file in which the specification
+    #         is defined.
+    #
+    # @return [Nil] If the specification is not defined in a file.
+    #
+    def checksum
+      require 'digest'
+      unless defined_in_file.nil?
+        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+        checksum
+      end
+    end
+
+    # Returns the root name of a specification.
+    #
+    # @param  [String] the name of a specification or of a subspec.
+    #
+    # @return [String] the root name
+    #
+    def self.root_name(full_name)
+      full_name.split('/').first
     end
 
     #-------------------------------------------------------------------------#
@@ -323,13 +347,13 @@ module Pod
     # @!group DSL deprecations
 
     def preferred_dependency=(args)
-      STDERR.puts "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
+      CoreUI.warn "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
       self.default_subspec = args
     end
 
     def singleton_method_added(method)
       if [:pre_install, :post_install ].include?(method)
-        STDERR.puts "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
+        CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
       elsif method == :header_mappings
         raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
       end

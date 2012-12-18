@@ -15,7 +15,7 @@ module Pod
 
       DEPENDENCIES:
       - BananaLib (~> 1.0)
-      - JSONKit (from `path/JSONKit.podspec')
+      - JSONKit (from `path/JSONKit.podspec`)
 
       EXTERNAL SOURCES:
         JSONKit:
@@ -25,7 +25,7 @@ module Pod
         BananaLib: 439d9f683377ecf4a27de43e8cf3bce6be4df97b
         JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
-      COCOAPODS CORE: #{VERSION}
+      COCOAPODS: #{VERSION}
       LOCKFILE
     end
 
@@ -97,12 +97,15 @@ module Pod
         @lockfile.pod_names.should == %w| BananaLib JSONKit monkey |
       end
 
-      it "returns the versions of the installed pods" do
-        @lockfile.pod_versions.should == {
-          "BananaLib" => Version.new("1.0"),
-          "JSONKit" => Version.new("1.4"),
-          "monkey" => Version.new("1.0.8")
-        }
+      it "returns the versions of a given pod" do
+        @lockfile.version("BananaLib").should == Version.new("1.0")
+        @lockfile.version("JSONKit").should == Version.new("1.4")
+        @lockfile.version("monkey").should == Version.new("1.0.8")
+      end
+
+
+      it "returns the checksum for the given Pod" do
+        @lockfile.checksum('BananaLib').should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
       end
 
       it "returns the dependencies used for the last installation" do
@@ -276,6 +279,17 @@ module Pod
         @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
       end
 
+      it "generates a hash reppresentation" do
+        @lockfile.to_hash.should == {
+          "PODS"=> [
+            {"BananaLib (1.0)" => ["monkey (< 1.0.9, ~> 1.0.1)"]},
+            "JSONKit (1.4)", "monkey (1.0.8)"],
+          "DEPENDENCIES"=>["BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"],
+          "EXTERNAL SOURCES"=>{"JSONKit"=>{:podspec=>"path/JSONKit.podspec"}},
+          "SPEC CHECKSUMS"=>{"BananaLib"=>"439d9f683377ecf4a27de43e8cf3bce6be4df97b", "JSONKit"=>"92ae5f71b77c8dec0cd8d0744adab79d38560949"},
+          "COCOAPODS"=>"0.17.0.alpha"}
+      end
+
       it "generates a valid YAML representation" do
         YAML.load(@lockfile.to_yaml).should == YAML.load(Sample.yaml)
       end
@@ -317,7 +331,7 @@ module Pod
         ]
         specs.each { |s| s.activate_platform(:ios) }
         lockfile = Lockfile.generate(podfile, specs)
-        lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com', tag `1.0')"
+        lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com`, tag `1.0`)"
         lockfile.internal_data["EXTERNAL SOURCES"]["BananaLib"].should == { :git => "www.example.com", :tag => '1.0' }
       end
     end
@@ -339,7 +353,7 @@ module Pod
 
       it "stores the information of the dependencies of the Podfile" do
         @lockfile.internal_data['DEPENDENCIES'].should == [
-          "BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec')"
+          "BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"
         ]
       end
 
@@ -357,7 +371,7 @@ module Pod
       end
 
       it "store the version of the CocoaPods Core gem" do
-        @lockfile.internal_data['COCOAPODS CORE'].should == VERSION
+        @lockfile.internal_data['COCOAPODS'].should == VERSION
       end
 
       it "it includes all the information that it is expected to store" do

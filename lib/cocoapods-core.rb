@@ -16,7 +16,7 @@ require 'rubygems'
 # E.g. https://github.com/CocoaPods/CocoaPods/issues/398
 #
 unless Gem::Version::Requirement.new('>= 1.6.0').satisfied_by?(Gem::Version.new(Gem::VERSION))
-  message = "Your RubyGems version (1.8.24) is too old, please update with: `gem update --system`"
+  message = "Your RubyGems version (#{Gem::VERSION}) is too old, please update with: `gem update --system`"
   STDERR.puts "\e[1;31m#{message}\e[0m" # Print in red
   exit 1
 end
@@ -24,11 +24,12 @@ end
 require 'version'
 require 'pathname'
 
-require 'cocoapods-core/standard_error'
-require 'cocoapods-core/version'
+require 'cocoapods-core/core_ui'
 require 'cocoapods-core/dependency'
+require 'cocoapods-core/lockfile'
 require 'cocoapods-core/platform'
+require 'cocoapods-core/podfile'
 require 'cocoapods-core/source'
 require 'cocoapods-core/specification'
-require 'cocoapods-core/podfile'
-require 'cocoapods-core/lockfile'
+require 'cocoapods-core/standard_error'
+require 'cocoapods-core/version'
