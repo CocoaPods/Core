@@ -76,21 +76,25 @@ module Bacon
   #
   module TestUnitOutput
     def handle_specification(name)
-      print ':'
+      print Bacon.color(nil, ':')
       yield
     end
 
     def handle_requirement(description, disabled = false)
-      error = yield
-      if !error.empty?
-        m = error[0..0]
-        c = (m == "E" ? :red : :yellow) unless @first_error
-        print Bacon.color(c, m)
-        @first_error = true
-      elsif disabled
-        print "D"
+      if @first_error
+        print Bacon.color(nil, '_')
       else
-        print Bacon.color(nil, '.')
+        error = yield
+        if !error.empty?
+          m = error[0..0]
+          c = (m == "E" ? :red : :yellow)
+          print Bacon.color(c, m)
+          @first_error = true
+        elsif disabled
+          print "D"
+        else
+          print Bacon.color(nil, '.')
+        end
       end
     end
 
@@ -98,8 +102,7 @@ module Bacon
       first_error = ''
       error_count = 0
       ErrorLog.lines.each do |s|
-        errors_identifiers = %w[ Errno Error Informative ]
-        error_count += 1 if errors_identifiers.any? { |id| s.include?(id + ':') }
+        error_count += 1 if s.include?('Error:') || s.include?('Informative')
         first_error << s if error_count <= 1
       end
       puts "\n#{first_error}" if Backtraces
@@ -138,5 +141,7 @@ module Bacon
     end
   end
 end
+
+
 
 
