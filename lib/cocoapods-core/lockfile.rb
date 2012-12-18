@@ -263,6 +263,32 @@ module Pod
       defined_in_file = path
     end
 
+    # @return [Hash{String=>Array,Hash,String}] a hash reppresentation of the
+    #         Lockfile.
+    #
+    # @example Output
+    #
+    #   {
+    #     'PODS'             => [ { BananaLib (1.0) => [monkey (< 1.0.9, ~> 1.0.1)] },
+    #                             "JSONKit (1.4)",
+    #                             "monkey (1.0.8)"]
+    #     'DEPENDENCIES'     => [ "BananaLib (~> 1.0)",
+    #                             "JSONKit (from `path/JSONKit.podspec`)" ],
+    #     'EXTERNAL SOURCES' => { "JSONKit" => { :podspec => path/JSONKit.podspec } },
+    #     'SPEC CHECKSUMS'   => { "BananaLib" => "439d9f683377ecf4a27de43e8cf3bce6be4df97b",
+    #                             "JSONKit", "92ae5f71b77c8dec0cd8d0744adab79d38560949" },
+    #     'COCOAPODS'        => "0.17.0"
+    #   }
+    #
+    #
+    def to_hash
+      hash = {}
+      internal_data.each do |key, value|
+        hash[key] = value unless value.empty?
+      end
+      hash
+    end
+
     # @return [String] the YAML representation of the Lockfile, used for
     #         serialization.
     #
@@ -271,11 +297,7 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      yaml_data = {}
-      internal_data.each do |key, value|
-        yaml_data[key] = value unless value.empty?
-      end
-      yaml_data.to_yaml.gsub(/^--- ?\n/,"").gsub(/^([A-Z])/,"\n\\1")
+      to_hash.to_yaml.gsub(/^--- ?\n/,"").gsub(/^([A-Z])/,"\n\\1")
     end
 
     #-------------------------------------------------------------------------#
@@ -305,7 +327,7 @@ module Pod
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'SPEC CHECKSUMS'   => generate_checksums(specs),
-          'COCOAPODS CORE'   => VERSION
+          'COCOAPODS'        => VERSION
         }
         Lockfile.new(hash)
       end
@@ -323,7 +345,7 @@ module Pod
       #         [ {"BananaLib (1.0)"=>["monkey (< 1.0.9, ~> 1.0.1)"]},
       #   "monkey (1.0.8)" ]
       #
-      # @return   [Array] the generated data.
+      # @return   [Array<Hash,String>] the generated data.
       #
       def generate_pods_data(podfile, specs)
         pod_and_deps = specs.map do |spec|
