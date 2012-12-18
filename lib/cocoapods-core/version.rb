@@ -66,6 +66,12 @@ module Pod
     def to_s
       head? ? "HEAD based on #{super}" : super
     end
+
+    # @return [String] a string representation suitable for debugging.
+    #
+    def inspect
+      "<#{self.class} version=#{self.version}>"
+    end
   end
 end
 
