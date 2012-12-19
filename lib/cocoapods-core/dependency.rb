@@ -4,15 +4,8 @@ module Pod
   # {Specification} on a Pod. It stores the name of the dependency, version
   # requirements and external sources information.
   #
-  # This class leverages the RubyGems dependency class
-  # with minor extension to support CocoaPods specific features.
-  #
-  # More information can be found at:
-  #
-  # - https://github.com/rubygems/rubygems/blob/master/lib/rubygems/dependency.rb
-  # - http://rubygems.rubyforge.org/rubygems-update/Gem/Dependency.html
-  #
-  # The Dependency class provides support for subspecs.
+  # This class leverages the RubyGems dependency class with minor extension to
+  # support CocoaPods specific features like subspecs.
   #
   class Dependency < Pod::Vendor::Gem::Dependency
 
@@ -88,11 +81,11 @@ module Pod
     #
     attr_accessor :specific_version
 
-    # @return [Gem::Requirement] the requirement of this dependency (a set of
+    # @return [Requirement] the requirement of this dependency (a set of
     #         one or more version restrictions).
     #
     def requirement
-      return Gem::Requirement.new(specific_version) if specific_version
+      return Requirement.new(specific_version) if specific_version
       super
     end
 
@@ -219,7 +212,7 @@ module Pod
         version << external_source_description
       elsif head?
         version << 'HEAD'
-      elsif @version_requirements != Gem::Requirement.default
+      elsif @version_requirements != Requirement.default
         version << @version_requirements.to_s
       end
       result = @name.dup

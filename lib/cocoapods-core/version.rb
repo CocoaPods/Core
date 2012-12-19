@@ -3,10 +3,7 @@ module Pod
   # The Version class stores information about the version of a
   # {Specification}.
   #
-  # It is based on the RubyGems
-  # [Gem::Version](https://github.com/rubygems/rubygems/blob/master/lib/rubygems/version.rb)
-  # [docs](http://rubygems.rubyforge.org/rubygems-update/Gem/Version.html)
-  # adapted to support head information.
+  # It is based on the RubyGems class adapted to support head information.
   #
   # ### From RubyGems:
   #
