@@ -14,7 +14,7 @@ module Pod
   #
   # The Dependency class provides support for subspecs.
   #
-  class Dependency < Gem::Dependency
+  class Dependency < Pod::Vendor::Gem::Dependency
 
     # @return [Hash{Symbol=>String}] a hash describing the external source
     #         where the pod should be fetched. The external source has to
@@ -77,7 +77,7 @@ module Pod
         @head = true
         requirements.pop
         unless requirements.empty?
-          raise StandardError, "A `:head' dependency may not specify version requirements."
+          raise StandardError, "A `:head` dependency may not specify version requirements."
         end
       end
 
@@ -166,6 +166,7 @@ module Pod
     def ==(other)
       super && head? == other.head? && @external_source == other.external_source
     end
+    alias :eql? :==
 
     # Merges the version requirements of the dependency with another one.
     #

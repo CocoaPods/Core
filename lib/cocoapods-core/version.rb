@@ -33,7 +33,7 @@ module Pod
   # 3. 1.0.a.2
   # 4. 0.9
   #
-  class Version < Gem::Version
+  class Version < Pod::Vendor::Gem::Version
 
     # @return [Bool] whether the version represents the `head` of repository.
     #
