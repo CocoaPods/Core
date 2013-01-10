@@ -82,7 +82,7 @@ module Pod
 
       #------------------#
 
-      # @!method version
+      # @!method version=(version)
       #
       #   The version of the Pod. CocoaPods follows
       #   [semantic versioning](http://semver.org).
@@ -229,11 +229,6 @@ module Pod
       #   @param  [String] homepage
       #           the URL of the homepage of the Pod.
       #
-      #
-      # @!method homepage
-      #
-      #   @return [String] The URL of the homepage of the Pod.
-      #
       attribute :homepage, {
         :required       => true,
         :multi_platform => false,
@@ -269,12 +264,6 @@ module Pod
       #   @param  [Hash{Symbol=>String}] source
       #           The location from where the library should be retrieved.
       #
-      #
-      # @!method source
-      #
-      #   @return [Hash{Symbol=>String}] The location from where the library
-      #     should be retrieved.
-      #
       attribute :source, {
         :container      => Hash,
         :keys           => SOURCE_KEYS,
@@ -305,11 +294,6 @@ module Pod
       #   @param  [String] summary
       #           A short description of the Pod.
       #
-      #
-      # @!method summary
-      #
-      #   @return [String] A short description of the Pod.
-      #
       attribute :summary, {
         :required       => true,
         :multi_platform => false,
@@ -334,11 +318,6 @@ module Pod
       #
       #   @param  [String] description
       #           A longer description of the Pod.
-      #
-      #
-      # @!method description
-      #
-      #   @return [String] A longer description of the Pod.
       #
       attribute :description, {
         :multi_platform => false,
@@ -368,11 +347,6 @@ module Pod
       #   @param  [String] screenshots
       #           An URL for the screenshot of the Pod.
       #
-      #
-      # @!method screenshots
-      #
-      #   @return [String] An URL for the screenshot of the Pod.
-      #
       attribute :screenshots, {
         :multi_platform => false,
         :root_only      => true,
@@ -394,11 +368,6 @@ module Pod
       #
       #   @param  [Hash{Symbol=>Array<String>}] documentation
       #           Additional options to pass to the appledoc tool.
-      #
-      #
-      # @!method documentation
-      #
-      #   @return [Hash{Symbol=>Array<String>}]
       #
       attribute :documentation, {
         :container      => Hash,
@@ -547,12 +516,6 @@ module Pod
       #   @param  [String, Array<String>] frameworks
       #           A list of framework names.
       #
-      #
-      # @!method frameworks
-      #
-      #   @return [Array<String>] A list of frameworks that the user’s target
-      #     needs to link against
-      #
       attribute :frameworks, {
         :container   => Array,
         :singularize => true
@@ -571,12 +534,6 @@ module Pod
       #
       #   @param  [String, Array<String>] weak_frameworks
       #           A list of frameworks names.
-      #
-      #
-      # @!method weak_frameworks
-      #
-      #   @return [Array<String>] A list of frameworks that the user’s target
-      #     needs to **weakly** link against
       #
       attribute :weak_frameworks, {
         :container   => Array,
@@ -601,12 +558,6 @@ module Pod
       #   @param  [String, Array<String>] libraries
       #           A list of library names.
       #
-      #
-      # @!method libraries
-      #
-      #   @return [Array<String>] A list of libraries that the user’s target
-      #     needs to link against
-      #
       attribute :libraries, {
         :container   => Array,
         :singularize => true
@@ -614,27 +565,16 @@ module Pod
 
       #------------------#
 
-      # @!method libraries=(*libraries)
+      # @!method compiler_flags=(flags)
       #
-      #   A list of libraries that the user’s target (application) needs to
-      #   link against.
-      #
-      #   @example
-      #
-      #     spec.ios.library = 'xml2'
+      #   A list of flags which should be passed to the compiler.
       #
       #   @example
       #
-      #     spec.libraries = 'xml2', 'z'
+      #     spec.compiler_flags = '-DOS_OBJECT_USE_OBJC=0', '-Wno-format'
       #
-      #   @param  [String, Array<String>] libraries
-      #           A list of library names.
-      #
-      #
-      # @!method libraries
-      #
-      #   @return [Array<String>] A list of libraries that the user’s target
-      #     needs to link against
+      #   @param  [String, Array<String>] flags
+      #           A list of flags.
       #
       attribute :compiler_flags, {
         :container   => Array,
@@ -653,12 +593,6 @@ module Pod
       #
       #   @param  [Hash{String => String}] value
       #           A representing an xcconfig.
-      #
-      #
-      # @!method xcconfig
-      #
-      #   @return [Hash{String => String}] the xcconfig flags for the current
-      #           specification.
       #
       attribute :xcconfig, {
         :container => Hash,
@@ -685,11 +619,6 @@ module Pod
       #
       #   @param  [String] content
       #           The contents of the prefix header.
-      #
-      #
-      # @!method prefix_header_contents
-      #
-      #   @return [String] The contents of the prefix header.
       #
       attribute :prefix_header_contents, {
         :types   => [Array, String],
@@ -718,11 +647,6 @@ module Pod
       #   @param  [String] path
       #           The path to the prefix header file.
       #
-      #
-      # @!method prefix_header_file
-      #
-      #   @return [Pathname] The path of the prefix header file.
-      #
       attribute :prefix_header_file
 
       #------------------#
@@ -739,11 +663,6 @@ module Pod
       #   @param  [String] dir
       #           the headers directory.
       #
-      #
-      # @!method header_dir
-      #
-      #   @return [Pathname] the headers directory.
-      #
       attribute :header_dir
 
       #------------------#
@@ -759,12 +678,6 @@ module Pod
       #
       #   @param  [String] dir
       #           the directory from where to preserve the headers namespacing.
-      #
-      #
-      # @!method header_mappings_dir
-      #
-      #   @return [Pathname] the directory from where to preserve the headers
-      #           namespacing.
       #
       attribute :header_mappings_dir
 
@@ -845,6 +758,8 @@ module Pod
       #       "*"            #=> ["CHANGELOG.md", "JSONKit.h", "JSONKit.m", "README.md"]
       #
 
+      #------------------#
+
       # @!method source_files=(source_files)
       #
       #   The source files of the Pod.
@@ -859,11 +774,6 @@ module Pod
       #
       #   @param  [String, Array<String>] source_files
       #           the source files of the Pod.
-      #
-      #
-      # @!method source_files
-      #
-      #   @return [Array<String>, FileList] the source files of the Pod.
       #
       attribute :source_files, {
         :container     => Array,
@@ -889,11 +799,6 @@ module Pod
       #
       #   @param  [String, Array<String>] public_header_files
       #           the public headers of the Pod.
-      #
-      #
-      # @!method public_header_files
-      #
-      #   @return [Array<String>, FileList] the public headers of the Pod.
       #
       attribute :public_header_files, {
         :container => Array,
@@ -941,13 +846,6 @@ module Pod
       #   @param  [Hash, String, Array<String>] resources
       #           the resources of the Pod.
       #
-      #
-      # @!method resources
-      #
-      #   @return [Array<String>, FileList] A hash where the key represents the
-      #           paths of the resources to copy and the values the paths of
-      #           the resources that should be copied.
-      #
       attribute :resources, {
         :types         => [String, Array],
         :file_patterns => true,
@@ -985,12 +883,6 @@ module Pod
       #   @param  [String, Array<String>] exclude_files
       #           the file patterns that the Pod should ignore.
       #
-      #
-      # @!method exclude_files
-      #
-      #   @return [Array<String>, Rake::FileList] The file patterns that the
-      #           Pod should ignore.
-      #
       attribute :exclude_files, {
         :container   => Array,
         :file_patterns => true,
@@ -1019,12 +911,6 @@ module Pod
       #
       #   @param  [String, Array<String>] preserve_paths
       #           the paths that should be not cleaned.
-      #
-      #
-      # @!method preserve_paths
-      #
-      #   @return [Array<String>, FileList] The paths that should be not
-      #           cleaned.
       #
       attribute :preserve_paths, {
         :container     => Array,
@@ -1188,12 +1074,6 @@ module Pod
       #
       #   @param  [String] subspec_name
       #           the name of the subspec that should be inherited as
-      #           dependency.
-      #
-      #
-      # @!method default_subspec
-      #
-      #   @return [String] the name of the subspec that should be inherited as
       #           dependency.
       #
       attribute :default_subspec, {
