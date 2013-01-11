@@ -7,108 +7,57 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
-          s.subspec 'Subspec' do |sp|
-          end
         end
-        @subspec = @spec.subspecs.first
       end
 
-      it "returns the name" do
-        @spec.name.should == "Pod"
+      it "allows to specify the name" do
+        @spec.name = "Name"
+        @spec.attributes_hash[:name].should == "Name"
       end
 
-      it "includes the name of the parent in the names of subspecs" do
-        @subspec.name.should == "Pod/Subspec"
+      it "allows to specify the version" do
+        @spec.version = "1.0"
+        @spec.attributes_hash[:version].should == "1.0"
       end
 
-      it "returns the version" do
-        @spec.version = '1.0'
-        @spec.version.should == Version.new('1.0')
-      end
-
-      it "returns the authors" do
+      it "allows to specify the authors" do
         hash = { 'Darth Vader' => 'darthvader@darkside.com',
                  'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
         @spec.authors = hash
-        @spec.authors.should == hash
+        @spec.attributes_hash[:authors].should == hash
       end
 
-      it "allows to specify the authors as an array if no email is available" do
-        @spec.authors = 'Darth Vader', 'Wookiee'
-        @spec.authors.should == { 'Darth Vader' => nil, 'Wookiee' => nil }
-      end
-
-      it "allows to specify a single author with no email" do
-        @spec.authors = 'Darth Vader'
-        @spec.authors.should == { 'Darth Vader' => nil }
-      end
-
-      it "allows to specify the authors as an array of strings and hashes" do
-        @spec.authors = [ 'Darth Vader',
-                          { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' } ]
-        @spec.authors.should == { 'Darth Vader' => nil,
-                                  'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
-      end
-
-      it "returns the license" do
-        @spec.license = 'MIT'
-        @spec.license.should == { :type => 'MIT' }
-      end
-
-      it "allows to specify the file containing the license if needed" do
+      it "allows to specify the license" do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
-        @spec.license.should == { :type => 'MIT', :file => 'MIT-LICENSE' }
+        @spec.attributes_hash[:license].should == { :type => 'MIT', :file => 'MIT-LICENSE' }
       end
 
-      it "allows to specify the entire text of the license if needed" do
-        @spec.license = { :type => 'MIT', :text => <<-TEXT
-                        Copyright
-                        MIT-LICENSE
-                          TEXT
-        }
-        @spec.license.should == { :type => 'MIT', :text => "Copyright\nMIT-LICENSE" }
-      end
-
-      it "checks for unknown keys in the license" do
-        lambda { @spec.license = { :name => 'MIT' } }.should.raise StandardError
-      end
-
-      it "returns the homepage" do
+      it "allows to specify the homepage" do
         @spec.homepage = 'www.example.com'
-        @spec.homepage.should == 'www.example.com'
+        @spec.attributes_hash[:homepage].should == 'www.example.com'
       end
 
-      it "returns the source" do
+      it "allows to specify the homepage" do
         @spec.source = { :git => 'www.example.com/repo.git' }
-        @spec.source.should == { :git => 'www.example.com/repo.git' }
+        @spec.attributes_hash[:source].should == { :git => 'www.example.com/repo.git' }
       end
 
-      it "checks the source for unknown keys" do
-        call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
-        call.should.raise StandardError
+      it "allows to specify the summary" do
+        @spec.summary = 'text'
+        @spec.attributes_hash[:summary].should == 'text'
       end
 
-      it "returns the summary" do
-        @spec.summary = 'A library that describes the meaning of life.'
-        @spec.summary.should == 'A library that describes the meaning of life.'
+      it "allows to specify the description" do
+        @spec.description = 'text'
+        @spec.attributes_hash[:description].should == 'text'
       end
 
-      it "returns the descriptions" do
-        desc = <<-DESC
-           A library that computes the meaning of life. Features:
-           1. Is self aware
-           ...
-           42. Likes candies.
-        DESC
-        @spec.description = desc
-        @spec.description.should == desc.strip_heredoc
-      end
-
-      it "returns any setting to pass to the appledoc tool" do
+      it "allows to specify the documentation settings" do
         settings =  { :appledoc => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
         @spec.documentation = settings
-        @spec.documentation.should == settings
+        @spec.attributes_hash[:documentation].should == settings
       end
+
     end
 
     #-----------------------------------------------------------------------------#
@@ -117,50 +66,23 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
-          s.subspec 'Subspec' do |sp|
-          end
         end
-        @subspec = @spec.subspecs.first
       end
 
-      it "allows to specify a single supported platform" do
-        @spec.platform = :ios, '4.3'
-        @spec.platform.should == :ios
+      it "allows to specify the supported platform" do
+        @spec.platform = :ios
+        @spec.attributes_hash[:platform].should == :ios
       end
 
-      it "inherits the platform from the parent if no specified" do
-        @spec.platform = :ios, '4.3'
-        @subspec.platform.should == :ios
+      it "allows to specify the deployment target along the supported platform as a shortcut" do
+        @spec.platform = :ios, '6.0'
+        @spec.attributes_hash[:platform].should == :ios
+        @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
       end
 
       it "allows to specify a deployment target for each platform" do
-        @spec.ios.deployment_target = '4.3'
-        @spec.activate_platform(:ios)
-        @spec.deployment_target(:ios).should == Version.new('4.3')
-      end
-
-      it "returns the list of the available platforms" do
-        @spec.available_platforms.sort_by{ |p| p.name.to_s }.should == [
-          Platform.new(:ios),
-          Platform.new(:osx),
-        ]
-      end
-
-      it "takes into account the platform of the parent for returning the list of the available platforms" do
-        @spec.platform = :ios, '4.3'
-        @subspec.available_platforms.sort_by(&:name).should == [ Platform.new(:ios, 4.3), ]
-      end
-
-      it "takes into account the specified deployment targets for returning the list of the available platforms" do
-        @spec.platform = :ios, '4.3'
-        @subspec.ios.deployment_target = '6.0'
-        @subspec.available_platforms.sort_by(&:name).should == [ Platform.new(:ios, '6.0') ]
-      end
-
-      it "prioritizes the explicitly defined platform for returning the list of the available platforms" do
-        @subspec.platform = :ios, '4.3'
-        @subspec.ios.deployment_target = '6.0'
-        @subspec.available_platforms.sort_by(&:name).should == [ Platform.new(:ios, '4.3') ]
+        @spec.ios.deployment_target = '6.0'
+        @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
       end
     end
 
@@ -170,183 +92,59 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
-          s.subspec 'Subspec' do |sp|
-          end
         end
-        @subspec = @spec.subspecs.first
-        @spec.activate_platform(:ios)
       end
 
       #------------------#
 
       it "allows to specify whether the specification requires ARC" do
         @spec.requires_arc = true
-        @spec.requires_arc.should.be.true
+        @spec.attributes_hash[:requires_arc].should == true
       end
-
-      it "doesn't requires arc by default" do
-        @spec.requires_arc.should == nil
-      end
-
-      it "inherits where it requires arc from the parent" do
-        @spec.requires_arc = true
-        @subspec.requires_arc.should.be.true
-      end
-
-      #------------------#
 
       it "allows to specify the frameworks" do
         @spec.framework = %w[ QuartzCore CoreData ]
-        @spec.frameworks.should == %w[ QuartzCore CoreData ]
+        @spec.attributes_hash[:frameworks].should == %w[ QuartzCore CoreData ]
       end
-
-      it "allows to specify a single framework" do
-        @spec.framework = 'QuartzCore'
-        @spec.frameworks.should == %w[ QuartzCore ]
-      end
-
-      it "inherits the frameworks of the parent" do
-        @spec.framework = 'QuartzCore'
-        @subspec.framework = 'CoreData'
-        @subspec.frameworks.should == %w[ QuartzCore CoreData ]
-      end
-
-      #------------------#
 
       it "allows to specify the weak frameworks" do
         @spec.weak_frameworks = %w[ Twitter iAd ]
-        @spec.weak_frameworks.should == %w[ Twitter iAd ]
+        @spec.attributes_hash[:weak_frameworks].should == %w[ Twitter iAd ]
       end
-
-      it "allows to specify a single weak framework" do
-        @spec.weak_framework = 'Twitter'
-        @spec.weak_frameworks.should == %w[ Twitter ]
-      end
-
-      it "inherits the weak frameworks of the parent" do
-        @spec.framework    = 'Twitter'
-        @subspec.framework = 'iAd'
-        @subspec.frameworks.should == %w[ Twitter iAd ]
-      end
-
-      #------------------#
 
       it "allows to specify the libraries" do
         @spec.libraries = 'z', 'xml2'
-        @spec.libraries.should  == %w[ z xml2 ]
+        @spec.attributes_hash[:libraries].should == %w[ z xml2 ]
       end
-
-      it "allows to specify a single library" do
-        @spec.library = 'z'
-        @spec.libraries.should  == %w[ z ]
-      end
-
-      it "inherits the libraries from the parent" do
-        @spec.library    = 'z'
-        @subspec.library = 'xml2'
-        @subspec.libraries.should == %w[ z xml2 ]
-      end
-
-      #------------------#
 
       it "allows to specify compiler flags" do
         @spec.compiler_flags = %w[ -Wdeprecated-implementations -Wunused-value ]
-        @spec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @spec.attributes_hash[:compiler_flags].should == %w[ -Wdeprecated-implementations -Wunused-value ]
       end
-
-      it "allows to specify a single compiler flag" do
-        @spec.compiler_flag = '-Wdeprecated-implementations'
-        @spec.compiler_flags.should == %w[ -Wdeprecated-implementations ]
-      end
-
-      it "inherits the compiler flags from the parent" do
-        @spec.compiler_flag = '-Wdeprecated-implementations'
-        @subspec.compiler_flag = '-Wunused-value'
-        @subspec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
-      end
-
-      it "merges the compiler flags so values for platforms can be specified" do
-        @spec.compiler_flags = '-Wdeprecated-implementations'
-        @spec.ios.compiler_flags = '-Wunused-value'
-        @spec.activate_platform(:ios)
-        @spec.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
-        @spec.activate_platform(:osx)
-        @spec.compiler_flags.should == %w[ -Wdeprecated-implementations ]
-      end
-
-      #------------------#
 
       it "allows to specify xcconfig settings" do
         @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.attributes_hash[:xcconfig].should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
-
-      it "inherits the xcconfig values from the parent" do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @subspec.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
-        @subspec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
-      end
-
-      it "merges the xcconfig values so values for platforms can be specified" do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @spec.ios.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
-        @spec.activate_platform(:ios)
-        @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
-        @spec.activate_platform(:osx)
-        @spec.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
-      end
-
-      #------------------#
 
       it "allows to specify the contents of the prefix header" do
         @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
-        @spec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
+        @spec.attributes_hash[:prefix_header_contents].should == '#import <UIKit/UIKit.h>'
       end
-
-      it "allows to specify the contents of the prefix header as an array" do
-        @spec.prefix_header_contents = '#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>'
-        @spec.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
-      end
-
-      it "inherits the contents of the prefix header" do
-        @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
-        @subspec.prefix_header_contents.should == '#import <UIKit/UIKit.h>'
-      end
-
-      #------------------#
 
       it "allows to specify the path of compiler header file" do
         @spec.prefix_header_file = 'iphone/include/prefix.pch'
-        @spec.prefix_header_file.should == 'iphone/include/prefix.pch'
+        @spec.attributes_hash[:prefix_header_file].should == 'iphone/include/prefix.pch'
       end
-
-      it "inherits the path of compiler header file from the parent" do
-        @spec.prefix_header_file = 'iphone/include/prefix.pch'
-        @subspec.prefix_header_file.should == 'iphone/include/prefix.pch'
-      end
-
-      #------------------#
 
       it "allows to specify a directory to use for the headers" do
         @spec.header_dir = 'Three20Core'
-        @spec.header_dir.should == 'Three20Core'
+        @spec.attributes_hash[:header_dir].should == 'Three20Core'
       end
-
-      it "inherits the directory to use for the headers from the parent" do
-        @spec.header_dir = 'Three20Core'
-        @subspec.header_dir.should == 'Three20Core'
-      end
-
-      #------------------#
 
       it "allows to specify a directory to preserver the namespacing of the headers" do
         @spec.header_mappings_dir = 'src/include'
-        @spec.header_mappings_dir.should == 'src/include'
-      end
-
-      it "inherits the directory to use for the headers from the parent" do
-        @spec.header_mappings_dir = 'src/include'
-        @subspec.header_mappings_dir.should == 'src/include'
+        @spec.attributes_hash[:header_mappings_dir].should == 'src/include'
       end
 
     end
@@ -357,114 +155,32 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
-          s.subspec 'Subspec' do |sp|
-          end
         end
-        @subspec = @spec.subspecs.first
-        @spec.activate_platform(:ios)
       end
 
-      it "inherits the files patterns from the parent" do
+      it "allows to specify the source files" do
         @spec.source_files = [ "lib_classes/**/*" ]
-        @subspec.source_files = [ "subspec_classes/**/*" ]
-        @subspec.source_files.should == [ "lib_classes/**/*", "subspec_classes/**/*" ]
+        @spec.attributes_hash[:source_files].should == [ "lib_classes/**/*" ]
       end
 
-      it "wraps strings in an array" do
-        @spec.source_files = "lib_classes/**/*"
-        @spec.source_files.should == [ "lib_classes/**/*" ]
-      end
-
-      #------------------#
-
-      it "returns the source files" do
-        @spec.source_files = [ "lib_classes/**/*" ]
-        @spec.source_files.should == [ "lib_classes/**/*" ]
-      end
-
-      it "has a default value for the source files" do
-        @spec.source_files.should == [ "Classes/**/*.{h,m}" ]
-      end
-
-
-      #------------------#
-
-      it "returns the public headers files" do
+      it "allows to specify the public headers files" do
         @spec.public_header_files = [ "include/**/*" ]
-        @spec.public_header_files.should == [ "include/**/*" ]
+        @spec.attributes_hash[:public_header_files].should == [ "include/**/*" ]
       end
 
-      #------------------#
-
-      it "returns the resources files" do
+      it "allows to specify the resources files" do
         @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
-        @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
+        @spec.attributes_hash[:resources].should == { :frameworks => ['frameworks/CrashReporter.framework'] }
       end
 
-      it "inherit resources from the parent" do
-        @spec.resources = {
-          :frameworks => ['frameworks/*'],
-          :resources => 'parent_resources/*'
-        }
-        @subspec.resources = {
-          :shared_support => ['shared_support/*'],
-          :resources => ['subspec_resources/*']
-        }
-
-        @subspec.resources.should == {
-          :frameworks => ['frameworks/*'],
-          :shared_support => ['shared_support/*'],
-          :resources => ['parent_resources/*', 'subspec_resources/*'],
-        }
-
+      it "allows to specify the paths to exclude" do
+        @spec.exclude_files = ["Classes/**/unused.{h,m}"]
+        @spec.attributes_hash[:exclude_files].should == ["Classes/**/unused.{h,m}"]
       end
 
-      it "wrap to arrays resources specified as a string with a destination" do
-        @spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
-        @spec.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
-      end
-
-      it "assigns the `:resources` destination if resources are not specified with one" do
-        @spec.resources = 'frameworks/CrashReporter.framework'
-        @spec.resources.should == { :resources => ['frameworks/CrashReporter.framework'] }
-      end
-
-      it "has a default value for the resources files" do
-        @spec.resources.should == { :resources => [ 'Resources/**/*' ] }
-      end
-
-      it "has a singular form for resources" do
-        @spec.resource = [ "lib_resources/**/*" ]
-        @spec.resources.should == {:resources=>["lib_resources/**/*"]}
-      end
-
-      it "checks for unknown destinations in the resources" do
-        lambda { @spec.resources = { :my_custom_folder => 'Resources/**/*' } }.should.raise StandardError
-      end
-
-      #------------------#
-
-      it "returns the paths to exclude" do
-        @spec.exclude_files = "Classes/**/unused.{h,m}"
-        @spec.exclude_files.should == ["Classes/**/unused.{h,m}"]
-      end
-
-      it "has a default value for the paths to exclude" do
-        @spec.exclude_files.should ==  ["Classes/osx/**/*", "Resources/osx/**/*"]
-        @spec.activate_platform(:osx)
-        @spec.exclude_files.should ==  ["Classes/ios/**/*", "Resources/ios/**/*"]
-      end
-
-      #------------------#
-
-      it "returns the paths to preserve" do
+      it "allows to specify the paths to preserve" do
         @spec.preserve_paths = ["Frameworks/*.framework"]
-        @spec.preserve_paths.should == ["Frameworks/*.framework"]
-      end
-
-      it "can accept a single path to preserve" do
-        @spec.preserve_path = "Frameworks/*.framework"
-        @spec.preserve_paths.should == ["Frameworks/*.framework"]
+        @spec.attributes_hash[:preserve_paths].should == ["Frameworks/*.framework"]
       end
 
     end
@@ -513,16 +229,17 @@ module Pod
 
       it "allows to specify a preferred dependency" do
         @spec.default_subspec = 'Preferred-Subspec'
-        @spec.activate_platform(:ios)
-        @spec.default_subspec.should == 'Preferred-Subspec'
+        @spec.attributes_hash[:default_subspec].should == 'Preferred-Subspec'
       end
 
-      it "allows to specify a dependency" do
+      it "allows to specify a dependencies" do
+        @spec.dependencies = {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+        @spec.attributes_hash[:dependencies].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+      end
+
+      it "allows to specify a single dependency as a shortcut" do
         @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
-        @spec.activate_platform(:ios)
-        dep = @spec.external_dependencies.first
-        dep.name.should == 'SVStatusHUD'
-        dep.requirements_list.sort.should == ["< 1.4", "~> 1.0"]
+        @spec.attributes_hash[:dependencies].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
       end
     end
 
@@ -537,19 +254,75 @@ module Pod
 
       it "allows to specify iOS attributes" do
         @spec.ios.preserve_paths = [ 'APath' ]
-        @spec.activate_platform(:ios)
-        @spec.preserve_paths.should == [ 'APath' ]
-        @spec.activate_platform(:osx)
-        @spec.preserve_paths.should == []
+        @spec.attributes_hash[:ios][:preserve_paths].should == [ 'APath' ]
+        @spec.attributes_hash[:preserve_paths].should.be.nil
+        @spec.attributes_hash[:osx].should.be.nil
       end
 
       it "allows to specify OS X attributes" do
         @spec.osx.preserve_paths = [ 'APath' ]
-        @spec.activate_platform(:osx)
-        @spec.preserve_paths.should == [ 'APath' ]
-        @spec.activate_platform(:ios)
-        @spec.preserve_paths.should == []
+        @spec.attributes_hash[:osx][:preserve_paths].should == [ 'APath' ]
+        @spec.attributes_hash[:preserve_paths].should.be.nil
+        @spec.attributes_hash[:ios].should.be.nil
       end
     end
+
+    #-----------------------------------------------------------------------------#
+
+    describe "Attributes default values" do
+
+      it "doesn't requires arc by default" do
+        attr = Specification::DSL.attributes[:requires_arc]
+        ios_default = attr.default_value_for_platform(:ios)
+        osx_default = attr.default_value_for_platform(:osx)
+        ios_default.should == false
+        osx_default.should == false
+      end
+
+      it "has a default value for the source files attribute" do
+        attr = Specification::DSL.attributes[:source_files]
+        ios_default = attr.default_value_for_platform(:ios)
+        osx_default = attr.default_value_for_platform(:osx)
+        ios_default.should == [ "Classes/**/*.{h,m}" ]
+        osx_default.should == [ "Classes/**/*.{h,m}" ]
+      end
+
+      it "has a default value for the resources attribute" do
+        attr = Specification::DSL.attributes[:resources]
+        ios_default = attr.default_value_for_platform(:ios)
+        osx_default = attr.default_value_for_platform(:osx)
+        ios_default.should == { :resources => [ "Resources/**/*" ] }
+        osx_default.should == { :resources => [ "Resources/**/*" ] }
+      end
+
+      xit "has a default value for the paths to exclude attribute" do
+        attr = Specification::DSL.attributes[:exclude_files]
+        ios_default = attr.default_value_for_platform(:ios)
+        osx_default = attr.default_value_for_platform(:osx)
+        ios_default.should == ["Classes/**/osx/**/*", "Resources/**/osx/**/*"]
+        osx_default.should == ["Classes/**/ios/**/*", "Resources/**/ios/**/*"]
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
+
+    describe "Attributes singular form" do
+
+      it "allows to use the singular form the attributes which support it" do
+        attributes = Specification::DSL.attributes.values
+        singularized = attributes.select { |attr| attr.singularize? }
+        spec = Specification.new
+        singularized.each do |attr|
+          spec.should.respond_to(attr.writer_name)
+        end
+        singularized.map(&:name).sort.should == [
+          :authors, :compiler_flags, :frameworks, :libraries,
+          :preserve_paths, :resources, :screenshots, :weak_frameworks
+        ]
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
+
   end
 end

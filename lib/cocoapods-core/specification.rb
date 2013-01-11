@@ -28,17 +28,10 @@ module Pod
     #         the name of the specification.
     #
     def initialize(parent = nil, name = nil)
-      DSL.attributes.each { |a| a.initialize_spec_ivar(self) }
+      @attributes_hash = {}
       @subspecs = []
-      @define_for_platforms = PLATFORMS
-      @deployment_target = {}
-      @dependencies = {}
-      PLATFORMS.each do |platform|
-        @dependencies[platform] = []
-      end
-
       @parent = parent
-      @name   = name
+      attributes_hash[:name] = name
 
       yield self if block_given?
     end
@@ -372,6 +365,49 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+
+    # @!group DSL attribute writers
+
+    # @return [Hash] the hash that stores the information of the attributes of
+    #         the specification.
+    #
+    attr_accessor :attributes_hash
+
+    # Sets the value for the attribute with the given name.
+    #
+    # @param  [Symbol] name
+    #         the name of the attribute.
+    #
+    # @param  [Object] value
+    #         the value to store.
+    #
+    # @param  [Symbol] platform.
+    #         If provided the attribute is stored only for the given platform.
+    #
+    # @return void
+    #
+    def store_attribute(name, value, platform_name = nil)
+      if platform_name
+        attributes_hash[platform_name] ||= {}
+        attributes_hash[platform_name][name] = value
+      else
+        attributes_hash[name] = value
+      end
+    end
+
+    # Defines the accessor methods for the attributes providing support for the
+    # Ruby DSL.
+    #
+    DSL.attributes.values.reject { |a| a.skip_definitions? }.each do |a|
+      define_method(a.writer_name) do |value|
+        store_attribute(a.name, value)
+      end
+
+      alias_method(a.writer_singular_form, a.writer_name) if a.writer_singular_form
+    end
+
+    #-------------------------------------------------------------------------#
+
     # The PlatformProxy works in conjunction with Specification#_on_platform.
     # It provides support for a syntax like `spec.ios.source_files = 'file'`.
     #
@@ -392,93 +428,22 @@ module Pod
       # that forwards the message to the {#specification} using the
       # {Specification#on_platform} method.
       #
-      DSL.attributes.select { |a| a.multi_platform? }.each do |a|
-        define_method(a.writer_name) do |args|
-          @specification._on_platform(@platform) do
-            @specification.send(a.writer_name, args)
-          end
-        end
+      # @todo the deployment target attribute should be defined only in the platform proxy.
+    #
+      DSL.attributes.values.select { |a| a.multi_platform? }.each do |a|
+        define_method(a.writer_name) do |value|
+          @specification.store_attribute(a.name, value, @platform)
+    end
 
         alias_method(a.writer_singular_form, a.writer_name) if a.writer_singular_form
-      end
     end
 
-    #-------------------------------------------------------------------------#
-
-    # @!group Support for Multi-platform attributes
-
-    # Defines the active platform for consumption of the specification.
-    #
-    # This method is provided as a convenience so there is no need to specify
-    # the symbolic name of a platform while accessing the multi-platform
-    # attributes.
-    #
-    # @overload   activate_platform(platform)
-    #
-    #   @param    [Platform] platform
-    #             the platform to activate.
-    #
-    # @overload   activate_platform(symbolic_name, deployment_target)
-    #
-    #   @param    [Symbol] symbolic_name
-    #             the name of the platform to activate.
-    #
-    #   @param    [String] deployment_target
-    #             the deployment target to activate.
-    #
-    # @note       To simplify the interface a specification needs to be
-    #             activated for a platform before accessing multi-platform
-    #             attributes.
-    #
-    # @raise      If the platform is not supported by the specification.
-    #
-    # @return     [void]
-    #
-    def activate_platform(*platform)
-      platform = Platform.new(*platform)
-      unless supported_on_platform?(platform)
-        raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
-      end
-      set_active_platform(platform)
+      def dependency(*name_and_version_requirements)
+        name, *version_requirements = name_and_version_requirements.flatten
+        @specification.attributes_hash[@platform] ||= {}
+        @specification.attributes_hash[@platform][:dependencies] ||= {}
+        @specification.attributes_hash[@platform][:dependencies][name] = version_requirements
     end
-
-    def set_active_platform(platform)
-      if root?
-        @active_platform = platform.to_sym
-      else
-        root.set_active_platform(*platform)
-      end
-    end
-
-    # @return [Symbol] The name of the platform this specification was
-    #         activated for.
-    #
-    def active_platform
-      root? ? @active_platform : root.active_platform
-    end
-
-    # Alters the `@define_for_platforms` instance variable to point to the
-    # given platform during the execution of the given block.
-    #
-    # @visibility private
-    #
-    # @note   Multi-platform attribute writers should use the
-    #         `@define_for_platforms` instance variable to infer the platforms
-    #         for which the attribute should be defined.
-    #
-    # @note   This is used by PlatformProxy to assign attributes for the scoped
-    #         platform.
-    #
-    # @param  [Platform] platform
-    #         The platform on which the attributes will be specified.
-    #
-    # @return [void]
-    #
-    def _on_platform(platform)
-      before, @define_for_platforms = @define_for_platforms, [platform]
-      yield
-    ensure
-      @define_for_platforms = before
     end
 
     #-------------------------------------------------------------------------#
@@ -516,7 +481,7 @@ module Pod
     # @return [String] A string suitable for debugging.
     #
     def inspect
-      "#<#{self.class.name} for `#{to_s}`>"
+      "#<#{self.class.name} name=#{name.inspect}>"
     end
   end
 

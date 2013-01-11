@@ -1,3 +1,4 @@
+require 'cocoapods-core/specification/dsl/attribute_support'
 require 'cocoapods-core/specification/dsl/attribute'
 
 module Pod
@@ -38,8 +39,9 @@ module Pod
     #
     module DSL
 
-      extend   Pod::Specification::DSL::Attributes
-      include  Pod::Specification::DSL::AttributeSupport
+      extend   Pod::Specification::DSL::AttributesSupport
+
+      #-----------------------------------------------------------------------#
 
       # @!group Root specification
       #
@@ -72,18 +74,9 @@ module Pod
       #   @param  [String] name
       #           the name of the pod.
       #
-      attribute :name, {
-        :required       => true,
-        :root_only      => true,
-        :multi_platform => false,
+      root_attribute :name, {
+        :required => true,
       }
-
-      # @return [String] The name of the specification _including_ the names of
-      #   the parents, in case of ‘sub-specifications’.
-      #
-      def name
-        @parent ? "#{@parent.name}/#{@name}" : @name
-      end
 
       #------------------#
 
@@ -99,17 +92,9 @@ module Pod
       #   @param  [String] version
       #           the version of the Pod.
       #
-      attribute :version, {
-        :required       => true,
-        :root_only      => true,
-        :multi_platform => false,
+      root_attribute :version, {
+        :required => true,
       }
-
-      # @return [Version] The version of the Pod.
-      #
-      def _prepare_version(version)
-        Version.new(version)
-      end
 
       #------------------#
 
@@ -133,34 +118,11 @@ module Pod
       #   @param  [String, Hash{String=>String}] authors
       #           the list of the authors of the library and their emails.
       #
-      attribute :authors, {
-        :types          => [ String, Array, Hash ],
-        :required       => true,
-        :root_only      => true,
-        :singularize    => true,
-        :multi_platform => false,
+      root_attribute :authors, {
+        :types       => [ String, Array, Hash ],
+        :required    => true,
+        :singularize => true,
       }
-
-      # @return [Hash] a hash containing the authors as the keys and their
-      #         email address as the values.
-      #
-      def _prepare_authors(authors)
-        if authors.is_a?(Hash)
-          authors
-        elsif authors.is_a?(Array)
-          result = {}
-          authors.each do |name_or_hash|
-             if name_or_hash.is_a?(String)
-               result[name_or_hash] = nil
-             else
-               result.merge!(name_or_hash)
-             end
-           end
-          result
-        elsif authors.is_a?(String)
-          { authors => nil }
-        end
-      end
 
       #------------------#
 
@@ -203,23 +165,11 @@ module Pod
       #           allows to use the library (or the relative path to the file
       #           that contains it).
       #
-      attribute :license, {
-        :container      => Hash,
-        :keys           => LICENSE_KEYS,
-        :required       => true,
-        :multi_platform => false,
-        :root_only      => true,
+      root_attribute :license, {
+        :container => Hash,
+        :keys      => LICENSE_KEYS,
+        :required  => true,
       }
-
-      # @return [Hash] A hash containing the license information of the Pod.
-      #
-      def _prepare_license(value)
-        license = value.is_a?(String) ? { :type => value } : value
-        if license[:text]
-          license[:text] = license[:text].strip_heredoc.gsub(/\n$/, '')
-        end
-        license
-      end
 
       #------------------#
 
@@ -234,10 +184,8 @@ module Pod
       #   @param  [String] homepage
       #           the URL of the homepage of the Pod.
       #
-      attribute :homepage, {
-        :required       => true,
-        :multi_platform => false,
-        :root_only      => true,
+      root_attribute :homepage, {
+        :required => true,
       }
 
       #------------------#
@@ -269,12 +217,10 @@ module Pod
       #   @param  [Hash{Symbol=>String}] source
       #           The location from where the library should be retrieved.
       #
-      attribute :source, {
-        :container      => Hash,
-        :keys           => SOURCE_KEYS,
-        :required       => true,
-        :root_only      => true,
-        :multi_platform => false,
+      root_attribute :source, {
+        :container => Hash,
+        :keys      => SOURCE_KEYS,
+        :required  => true,
       }
 
       #------------------#
@@ -299,10 +245,8 @@ module Pod
       #   @param  [String] summary
       #           A short description of the Pod.
       #
-      attribute :summary, {
-        :required       => true,
-        :multi_platform => false,
-        :root_only      => true,
+      root_attribute :summary, {
+        :required => true,
       }
 
       #------------------#
@@ -324,14 +268,7 @@ module Pod
       #   @param  [String] description
       #           A longer description of the Pod.
       #
-      attribute :description, {
-        :multi_platform => false,
-        :root_only      => true,
-      }
-
-      def _prepare_description(description)
-        description.strip_heredoc
-      end
+      root_attribute :description
 
       #------------------#
 
@@ -352,9 +289,7 @@ module Pod
       #   @param  [String] screenshots
       #           An URL for the screenshot of the Pod.
       #
-      attribute :screenshots, {
-        :multi_platform => false,
-        :root_only      => true,
+      root_attribute :screenshots, {
         :singularize    => true,
         :container      => Array,
       }
@@ -374,10 +309,8 @@ module Pod
       #   @param  [Hash{Symbol=>Array<String>}] documentation
       #           Additional options to pass to the appledoc tool.
       #
-      attribute :documentation, {
-        :container      => Hash,
-        :root_only      => true,
-        :multi_platform => false,
+      root_attribute :documentation, {
+        :container => Hash,
       }
 
       #-----------------------------------------------------------------------#
@@ -415,30 +348,12 @@ module Pod
       #           (either `:ios` or `:osx`) and the second is the deployment
       #           target.
       #
-      #
-      # @!method platform
-      #
-      #   @return [Platform] The platform of the specification.
-      #
-      attribute :platform, {
-        :types          => [Array, Symbol],
-        :multi_platform => false,
-      }
-
-      def _prepare_platform(name_and_deployment_target)
-        return nil if name_and_deployment_target.nil?
-        if name_and_deployment_target.is_a?(Array)
-          name = name_and_deployment_target.first
-          deployment_target = name_and_deployment_target.last
-        else
-          name = name_and_deployment_target
-          deployment_target = nil
+      def platform=((name, deployment_target))
+        attributes_hash[:platform] = name
+        if deployment_target
+          attributes_hash[name.to_sym] ||= {}
+          attributes_hash[name.to_sym][:deployment_target] = deployment_target
         end
-        unless PLATFORMS.include?(name)
-          raise StandardError, "Unsupported platform `#{name}`. The available " \
-            "names are `#{PLATFORMS.inspect}`"
-        end
-        Platform.new(name, deployment_target)
       end
 
       #------------------#
@@ -458,23 +373,7 @@ module Pod
       #   @param    [String] deployment_target
       #             The deployment target of the platform.
       #
-      #   @raise    If there is an attempt to set the deployment target for
-      #             more than one platform.
-      #
-      #
-      # @!method deployment_target
-      #
-      #   @return [Version] The deployment target of each supported platform.
-      #
-      attribute :deployment_target, {
-      }
-
-      def _prepare_deployment_target(deployment_target)
-        unless @define_for_platforms.count == 1
-          raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
-        end
-        Version.new(deployment_target)
-      end
+      attribute :deployment_target
 
       #-----------------------------------------------------------------------#
 
@@ -492,8 +391,8 @@ module Pod
       #
       #   ---
       #
-      #   The default value of this attribute is __transitioning__ from `false` to
-      #   `true`, and in the meanwhile this attribute is always required.
+      #   The default value of this attribute is __transitioning__ from `false`
+      #   to `true`, and in the meanwhile this attribute is always required.
       #
       #   @example
       #
@@ -503,7 +402,7 @@ module Pod
       #           whether the source files require ARC.
       #
       attribute :requires_arc, {
-        :types   => [TrueClass, FalseClass],
+        :types => [TrueClass, FalseClass],
         :default_value => false,
       }
 
@@ -629,7 +528,7 @@ module Pod
       #           The contents of the prefix header.
       #
       attribute :prefix_header_contents, {
-        :types   => [Array, String],
+        :types => [Array, String],
       }
 
       #------------------#
@@ -858,16 +757,6 @@ module Pod
         :singularize   => true,
       }
 
-      def _prepare_resources(value)
-        value = { :resources => value } unless value.is_a?(Hash)
-        result = {}
-        value.each do |key, patterns|
-          patterns = [ patterns ] if patterns.is_a?(String)
-          result[key] = patterns
-        end
-        result
-      end
-
       #------------------#
 
       # @!method exclude_files=(exclude_files)
@@ -887,10 +776,10 @@ module Pod
       #           the file patterns that the Pod should ignore.
       #
       attribute :exclude_files, {
-        :container   => Array,
+        :container     => Array,
         :file_patterns => true,
-        :ios_default => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
-        :osx_default => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
+        :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
+        :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
       }
 
       #------------------#
@@ -1089,8 +978,10 @@ module Pod
 
       #------------------#
 
-      attribute :dependency, {
-        :defined_as => 'dependency',
+      # @todo This currently is not used in the Ruby DSL.
+      #
+      attribute :dependencies, {
+        :container => Hash
       }
 
       # Any dependency on other Pods or to a ‘sub-specification’.
@@ -1117,11 +1008,8 @@ module Pod
         name, *version_requirements = name_and_version_requirements.flatten
         raise StandardError, "A specification can't require self as a subspec" if name == self.name
         raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
-        dep = Dependency.new(name, *version_requirements)
-        @define_for_platforms.each do |platform|
-          @dependencies[platform] << dep
-        end
-        dep
+        attributes_hash[:dependencies] ||= {}
+        attributes_hash[:dependencies][name] = version_requirements
       end
 
       #-----------------------------------------------------------------------#
