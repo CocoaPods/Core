@@ -778,8 +778,8 @@ module Pod
       attribute :exclude_files, {
         :container     => Array,
         :file_patterns => true,
-        :ios_default   => [ 'Classes/osx/**/*', 'Resources/osx/**/*' ],
-        :osx_default   => [ 'Classes/ios/**/*', 'Resources/ios/**/*' ],
+        :ios_default   => [ 'Classes/**/osx/**/*', 'Resources/**/osx/**/*' ],
+        :osx_default   => [ 'Classes/**/ios/**/*', 'Resources/**/ios/**/*' ],
       }
 
       #------------------#

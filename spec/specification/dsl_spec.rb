@@ -295,7 +295,7 @@ module Pod
         osx_default.should == { :resources => [ "Resources/**/*" ] }
       end
 
-      xit "has a default value for the paths to exclude attribute" do
+      it "has a default value for the paths to exclude attribute" do
         attr = Specification::DSL.attributes[:exclude_files]
         ios_default = attr.default_value_for_platform(:ios)
         osx_default = attr.default_value_for_platform(:osx)
