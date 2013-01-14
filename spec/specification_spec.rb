@@ -337,38 +337,16 @@ module Pod
     end
   end
 
-  #-----------------------------------------------------------------------------#
 
-  describe Specification::PlatformProxy do
-    describe "In general" do
-      before do
-        @spec =  Spec.new
-        @proxy = Specification::PlatformProxy.new(@spec, :ios)
       end
 
-      it "declares the writer methods of the multi-platform attributes" do
-        attributes = Specification::DSL.attributes.select(&:multi_platform?)
-        attributes.each do |attr|
-          @proxy.should.respond_to?(attr.writer_name)
         end
       end
 
-      it "forwards multi-platform attributes to the specification" do
-        @spec.expects(:source_files=).once
-        @proxy.source_files = 'SomeFile'
       end
 
-      it "configures the specificatin `@define_for_platforms` instance variable while setting an attribute" do
-        @spec.expects(:_on_platform).with(:ios)
-        @proxy.source_files = 'SomeFile'
       end
 
-      it "works correctly with the specification multi platform attributes" do
-        @proxy.preserve_paths = ['SomeFile']
-        @spec.instance_variable_get('@preserve_paths').should == {
-          :osx => [],
-          :ios => ['SomeFile']
-        }
       end
     end
   end

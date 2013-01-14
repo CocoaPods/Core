@@ -408,46 +408,6 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # The PlatformProxy works in conjunction with Specification#_on_platform.
-    # It provides support for a syntax like `spec.ios.source_files = 'file'`.
-    #
-    class PlatformProxy
-
-      # @param  [Specification] specification
-      #         the specification whose syntax attribute should be set.
-      #
-      # @param  [Symbol] platform
-      #         the platform described by this proxy. Can be either `:ios` or
-      #         `:osx`.
-      #
-      def initialize(specification, platform)
-        @specification, @platform = specification, platform
-      end
-
-      # Defines a setter method for each attribute of the specification class,
-      # that forwards the message to the {#specification} using the
-      # {Specification#on_platform} method.
-      #
-      # @todo the deployment target attribute should be defined only in the platform proxy.
-    #
-      DSL.attributes.values.select { |a| a.multi_platform? }.each do |a|
-        define_method(a.writer_name) do |value|
-          @specification.store_attribute(a.name, value, @platform)
-    end
-
-        alias_method(a.writer_singular_form, a.writer_name) if a.writer_singular_form
-    end
-
-      def dependency(*name_and_version_requirements)
-        name, *version_requirements = name_and_version_requirements.flatten
-        @specification.attributes_hash[@platform] ||= {}
-        @specification.attributes_hash[@platform][:dependencies] ||= {}
-        @specification.attributes_hash[@platform][:dependencies][name] = version_requirements
-    end
-    end
-
-    #-------------------------------------------------------------------------#
-
     # @!group String representation
 
     # @return [String] A string suitable for representing the specification in
