@@ -50,7 +50,8 @@ module Pod
       end
 
       it "returns the specification for the required version" do
-        @set.specification.should == Spec.new { |s| s.name = 'CocoaLumberjack'; s.version = '1.2' }
+        @set.specification.name.should == 'CocoaLumberjack'
+        @set.specification.version.should == Version.new('1.2')
       end
 
       it "ignores dotfiles when getting the version directories" do
