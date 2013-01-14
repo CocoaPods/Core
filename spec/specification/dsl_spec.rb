@@ -12,50 +12,50 @@ module Pod
 
       it "allows to specify the name" do
         @spec.name = "Name"
-        @spec.attributes_hash[:name].should == "Name"
+        @spec.attributes_hash["name"].should == "Name"
       end
 
       it "allows to specify the version" do
         @spec.version = "1.0"
-        @spec.attributes_hash[:version].should == "1.0"
+        @spec.attributes_hash["version"].should == "1.0"
       end
 
       it "allows to specify the authors" do
         hash = { 'Darth Vader' => 'darthvader@darkside.com',
                  'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
         @spec.authors = hash
-        @spec.attributes_hash[:authors].should == hash
+        @spec.attributes_hash["authors"].should == hash
       end
 
       it "allows to specify the license" do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
-        @spec.attributes_hash[:license].should == { :type => 'MIT', :file => 'MIT-LICENSE' }
+        @spec.attributes_hash["license"].should == { :type => 'MIT', :file => 'MIT-LICENSE' }
       end
 
       it "allows to specify the homepage" do
         @spec.homepage = 'www.example.com'
-        @spec.attributes_hash[:homepage].should == 'www.example.com'
+        @spec.attributes_hash["homepage"].should == 'www.example.com'
       end
 
       it "allows to specify the homepage" do
         @spec.source = { :git => 'www.example.com/repo.git' }
-        @spec.attributes_hash[:source].should == { :git => 'www.example.com/repo.git' }
+        @spec.attributes_hash["source"].should == { :git => 'www.example.com/repo.git' }
       end
 
       it "allows to specify the summary" do
         @spec.summary = 'text'
-        @spec.attributes_hash[:summary].should == 'text'
+        @spec.attributes_hash["summary"].should == 'text'
       end
 
       it "allows to specify the description" do
         @spec.description = 'text'
-        @spec.attributes_hash[:description].should == 'text'
+        @spec.attributes_hash["description"].should == 'text'
       end
 
       it "allows to specify the documentation settings" do
         settings =  { :appledoc => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
         @spec.documentation = settings
-        @spec.attributes_hash[:documentation].should == settings
+        @spec.attributes_hash["documentation"].should == settings
       end
 
     end
@@ -71,18 +71,18 @@ module Pod
 
       it "allows to specify the supported platform" do
         @spec.platform = :ios
-        @spec.attributes_hash[:platform].should == :ios
+        @spec.attributes_hash["platform"].should == :ios
       end
 
       it "allows to specify the deployment target along the supported platform as a shortcut" do
         @spec.platform = :ios, '6.0'
-        @spec.attributes_hash[:platform].should == :ios
-        @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
+        @spec.attributes_hash["platform"].should == :ios
+        @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
       end
 
       it "allows to specify a deployment target for each platform" do
         @spec.ios.deployment_target = '6.0'
-        @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
+        @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
       end
 
       it "doesnt' allows to specify the deployment target without a platform" do
@@ -104,52 +104,52 @@ module Pod
 
       it "allows to specify whether the specification requires ARC" do
         @spec.requires_arc = true
-        @spec.attributes_hash[:requires_arc].should == true
+        @spec.attributes_hash["requires_arc"].should == true
       end
 
       it "allows to specify the frameworks" do
         @spec.framework = %w[ QuartzCore CoreData ]
-        @spec.attributes_hash[:frameworks].should == %w[ QuartzCore CoreData ]
+        @spec.attributes_hash["frameworks"].should == %w[ QuartzCore CoreData ]
       end
 
       it "allows to specify the weak frameworks" do
         @spec.weak_frameworks = %w[ Twitter iAd ]
-        @spec.attributes_hash[:weak_frameworks].should == %w[ Twitter iAd ]
+        @spec.attributes_hash["weak_frameworks"].should == %w[ Twitter iAd ]
       end
 
       it "allows to specify the libraries" do
         @spec.libraries = 'z', 'xml2'
-        @spec.attributes_hash[:libraries].should == %w[ z xml2 ]
+        @spec.attributes_hash["libraries"].should == %w[ z xml2 ]
       end
 
       it "allows to specify compiler flags" do
         @spec.compiler_flags = %w[ -Wdeprecated-implementations -Wunused-value ]
-        @spec.attributes_hash[:compiler_flags].should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @spec.attributes_hash["compiler_flags"].should == %w[ -Wdeprecated-implementations -Wunused-value ]
       end
 
       it "allows to specify xcconfig settings" do
         @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @spec.attributes_hash[:xcconfig].should == { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.attributes_hash["xcconfig"].should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
       it "allows to specify the contents of the prefix header" do
         @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
-        @spec.attributes_hash[:prefix_header_contents].should == '#import <UIKit/UIKit.h>'
+        @spec.attributes_hash["prefix_header_contents"].should == '#import <UIKit/UIKit.h>'
       end
 
       it "allows to specify the path of compiler header file" do
         @spec.prefix_header_file = 'iphone/include/prefix.pch'
-        @spec.attributes_hash[:prefix_header_file].should == 'iphone/include/prefix.pch'
+        @spec.attributes_hash["prefix_header_file"].should == 'iphone/include/prefix.pch'
       end
 
       it "allows to specify a directory to use for the headers" do
         @spec.header_dir = 'Three20Core'
-        @spec.attributes_hash[:header_dir].should == 'Three20Core'
+        @spec.attributes_hash["header_dir"].should == 'Three20Core'
       end
 
       it "allows to specify a directory to preserver the namespacing of the headers" do
         @spec.header_mappings_dir = 'src/include'
-        @spec.attributes_hash[:header_mappings_dir].should == 'src/include'
+        @spec.attributes_hash["header_mappings_dir"].should == 'src/include'
       end
 
     end
@@ -165,27 +165,27 @@ module Pod
 
       it "allows to specify the source files" do
         @spec.source_files = [ "lib_classes/**/*" ]
-        @spec.attributes_hash[:source_files].should == [ "lib_classes/**/*" ]
+        @spec.attributes_hash["source_files"].should == [ "lib_classes/**/*" ]
       end
 
       it "allows to specify the public headers files" do
         @spec.public_header_files = [ "include/**/*" ]
-        @spec.attributes_hash[:public_header_files].should == [ "include/**/*" ]
+        @spec.attributes_hash["public_header_files"].should == [ "include/**/*" ]
       end
 
       it "allows to specify the resources files" do
         @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
-        @spec.attributes_hash[:resources].should == { :frameworks => ['frameworks/CrashReporter.framework'] }
+        @spec.attributes_hash["resources"].should == { :frameworks => ['frameworks/CrashReporter.framework'] }
       end
 
       it "allows to specify the paths to exclude" do
         @spec.exclude_files = ["Classes/**/unused.{h,m}"]
-        @spec.attributes_hash[:exclude_files].should == ["Classes/**/unused.{h,m}"]
+        @spec.attributes_hash["exclude_files"].should == ["Classes/**/unused.{h,m}"]
       end
 
       it "allows to specify the paths to preserve" do
         @spec.preserve_paths = ["Frameworks/*.framework"]
-        @spec.attributes_hash[:preserve_paths].should == ["Frameworks/*.framework"]
+        @spec.attributes_hash["preserve_paths"].should == ["Frameworks/*.framework"]
       end
 
     end
@@ -234,17 +234,17 @@ module Pod
 
       it "allows to specify a preferred dependency" do
         @spec.default_subspec = 'Preferred-Subspec'
-        @spec.attributes_hash[:default_subspec].should == 'Preferred-Subspec'
+        @spec.attributes_hash["default_subspec"].should == 'Preferred-Subspec'
       end
 
       it "allows to specify a dependencies" do
         @spec.dependencies = {'SVStatusHUD' => ['~>1.0', '< 1.4']}
-        @spec.attributes_hash[:dependencies].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
       end
 
       it "allows to specify a single dependency as a shortcut" do
         @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
-        @spec.attributes_hash[:dependencies].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
       end
     end
 
@@ -259,16 +259,16 @@ module Pod
 
       it "allows to specify iOS attributes" do
         @spec.ios.preserve_paths = [ 'APath' ]
-        @spec.attributes_hash[:ios][:preserve_paths].should == [ 'APath' ]
-        @spec.attributes_hash[:preserve_paths].should.be.nil
-        @spec.attributes_hash[:osx].should.be.nil
+        @spec.attributes_hash["ios"]["preserve_paths"].should == [ 'APath' ]
+        @spec.attributes_hash["preserve_paths"].should.be.nil
+        @spec.attributes_hash["osx"].should.be.nil
       end
 
       it "allows to specify OS X attributes" do
         @spec.osx.preserve_paths = [ 'APath' ]
-        @spec.attributes_hash[:osx][:preserve_paths].should == [ 'APath' ]
-        @spec.attributes_hash[:preserve_paths].should.be.nil
-        @spec.attributes_hash[:ios].should.be.nil
+        @spec.attributes_hash["osx"]["preserve_paths"].should == [ 'APath' ]
+        @spec.attributes_hash["preserve_paths"].should.be.nil
+        @spec.attributes_hash["ios"].should.be.nil
       end
     end
 

@@ -351,10 +351,10 @@ module Pod
       #           target.
       #
       def platform=((name, deployment_target))
-        attributes_hash[:platform] = name
+        attributes_hash["platform"] = name
         if deployment_target
-          attributes_hash[name.to_sym] ||= {}
-          attributes_hash[name.to_sym][:deployment_target] = deployment_target
+          attributes_hash[name.to_s] ||= {}
+          attributes_hash[name.to_s]["deployment_target"] = deployment_target
         end
       end
 
@@ -1010,8 +1010,8 @@ module Pod
       def dependency(name, *version_requirements)
         raise StandardError, "A specification can't require self as a subspec" if name == self.name
         raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
-        attributes_hash[:dependencies] ||= {}
-        attributes_hash[:dependencies][name] = version_requirements
+        attributes_hash["dependencies"] ||= {}
+        attributes_hash["dependencies"][name] = version_requirements
       end
 
       #-----------------------------------------------------------------------#

@@ -19,8 +19,8 @@ module Pod
       end
 
       it "returns the attributes hash" do
-        @spec.attributes_hash.should == {:name=>"Pod", :version=>"1.0"}
-        @subspec.attributes_hash.should == {:name=>"Subspec"}
+        @spec.attributes_hash.should == {"name"=>"Pod", "version"=>"1.0"}
+        @subspec.attributes_hash.should == {"name"=>"Subspec"}
       end
 
       it "returns the subspecs" do
@@ -280,18 +280,24 @@ module Pod
 
       it "stores the value of an attribute" do
         @spec.store_attribute(:attribute, "value")
-        @spec.attributes_hash.should == { :name=>nil, :attribute=>"value" }
+        @spec.attributes_hash.should == {
+          "name" => nil,
+          "attribute" => "value"
+        }
       end
 
       it "stores the value of an attribute for a given platform" do
         @spec.store_attribute(:attribute, "value", :ios)
-        @spec.attributes_hash.should == { :name=>nil, :ios=>{:attribute=>"value"} }
+        @spec.attributes_hash.should == {
+          "name" => nil,
+          "ios" => { "attribute" => "value" }
+        }
       end
 
       it "declares attribute writer methods" do
         Specification::DSL.attributes.values.each do |attr|
           @spec.send(attr.writer_name, 'a_value')
-          @spec.attributes_hash[attr.name].should == 'a_value'
+          @spec.attributes_hash[attr.name.to_s].should == 'a_value'
         end
       end
 
@@ -299,7 +305,7 @@ module Pod
         singular_attrs = Specification::DSL.attributes.values.select { |a| a.writer_singular_form }
         singular_attrs.each do |attr|
           @spec.send(attr.writer_name, 'a_value')
-          @spec.attributes_hash[attr.name].should == 'a_value'
+          @spec.attributes_hash[attr.name.to_s].should == 'a_value'
         end
       end
     end
@@ -329,59 +335,9 @@ module Pod
       it "reports the file from which it was initialized" do
         @spec.defined_in_file.should == @path
       end
-
-      it "it initializes correctly" do
-        expected = {
-          :authors => [
-            "Banana Corp",
-            {
-              "Monkey Boy" => "monkey@banana-corp.local"
-            }
-          ],
-            :description => "Full of chunky bananas.",
-            :documentation => {
-              :appledoc => [
-                "--project-company",
-                "Banana Corp",
-                "--company-id",
-                "com.banana"
-              ],
-                :html => "http://banana-corp.local/banana-lib/docs.html"
-            },
-            :homepage => "http://banana-corp.local/banana-lib.html",
-            :license => {
-              :file => "LICENSE",
-              :text => "Permission is hereby granted ...",
-              :type => "MIT"
-            },
-            :name => "BananaLib",
-            :prefix_header_file => "Classes/BananaLib.pch",
-            :requires_arc => true,
-            :resources => "Resources/*.png",
-            :source => {
-              :git => "http://banana-corp.local/banana-lib.git",
-              :tag => "v1.0"
-            },
-            :source_files => [
-              "Classes/*.{h,m}",
-              "Vendor"
-            ],
-              :summary => "Chunky bananas!",
-              :version => "1.0",
-              :xcconfig => {
-                "OTHER_LDFLAGS" => "-framework SystemConfiguration"
-              },
-              :dependencies => {"monkey"=>["~> 1.0.1", "< 1.0.9"]}
-        }
-
-        @spec.attributes_hash.should == expected
-      end
     end
 
     #-------------------------------------------------------------------------#
 
   end
-
-  #---------------------------------------------------------------------------#
-
 end

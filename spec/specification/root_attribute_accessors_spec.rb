@@ -67,8 +67,8 @@ module Pod
         Line1
         Line2
       DOC
-      @spec.license = { :type => 'MIT', :text => text }
-      @spec.license[:text].should == "Line1\nLine2\n"
+      @spec.license = { "type" => 'MIT', "text" => text }
+      @spec.license["text"].should == "Line1\nLine2\n"
     end
 
     it "returns the homepage" do

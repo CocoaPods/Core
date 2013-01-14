@@ -11,7 +11,7 @@ module Pod
       #         names of the parents, in case of ‘sub-specifications’.
       #
       def base_name
-        attributes_hash[:name]
+        attributes_hash["name"]
       end
 
       # @return [String] The name of the specification including the names of
@@ -24,7 +24,7 @@ module Pod
       # @return [Version] The version of the Pod.
       #
       def version
-        Version.new(attributes_hash[:version])
+        Version.new(attributes_hash["version"])
       end
 
       # @return [Hash] a hash containing the authors as the keys and their
@@ -40,7 +40,7 @@ module Pod
       #   'Author'
       #
       def authors
-        authors = attributes_hash[:authors]
+        authors = attributes_hash["authors"]
         if authors.is_a?(Hash)
           authors
         elsif authors.is_a?(Array)
@@ -63,11 +63,11 @@ module Pod
       # @note   The indentation is stripped from the license text.
       #
       def license
-        license = attributes_hash[:license]
+        license = attributes_hash["license"]
         if license.is_a?(String)
           { :type => license }
         else
-          license[:text] = license[:text].strip_heredoc if license[:text]
+          license["text"] = license["text"].strip_heredoc if license["text"]
           license
         end
       end
@@ -75,20 +75,20 @@ module Pod
       # @return [String] The URL of the homepage of the Pod.
       #
       def homepage
-        attributes_hash[:homepage]
+        attributes_hash["homepage"]
       end
 
       # @return [Hash{Symbol=>String}] The location from where the library
       #         should be retrieved.
       #
       def source
-        attributes_hash[:source]
+        attributes_hash["source"]
       end
 
       # @return [String] A short description of the Pod.
       #
       def summary
-        attributes_hash[:summary]
+        attributes_hash["summary"]
       end
 
       # @return [String] A longer description of the Pod.
@@ -96,7 +96,7 @@ module Pod
       # @note   The indentation is stripped from the description.
       #
       def description
-        attributes_hash[:description].strip_heredoc
+        attributes_hash["description"].strip_heredoc
       end
 
       # @return [Array<String>] The list of the URL for the screenshots of the
@@ -105,7 +105,7 @@ module Pod
       # @note   The value is coherced to an array.
       #
       def screenshots
-        value = attributes_hash[:screenshots]
+        value = attributes_hash["screenshots"]
         [*value]
       end
 
@@ -113,7 +113,7 @@ module Pod
       #         appledoc tool.
       #
       def documentation
-        attributes_hash[:documentation]
+        attributes_hash["documentation"]
       end
 
       #-----------------------------------------------------------------------#

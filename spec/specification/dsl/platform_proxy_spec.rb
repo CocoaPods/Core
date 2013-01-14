@@ -33,14 +33,14 @@ module Pod
 
     it "allows to specify a dependency" do
       @proxy.dependency(['A-pod', '~> 1.0'])
-      @spec.attributes_hash[:ios][:dependencies].should == {
+      @spec.attributes_hash["ios"]["dependencies"].should == {
         'A-pod' => '~> 1.0'
       }
     end
 
     it "allows to declare the deployment target" do
       @proxy.deployment_target = '6.0'
-      @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
+      @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
     end
 
   end

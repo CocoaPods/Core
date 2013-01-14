@@ -200,10 +200,10 @@ module Pod
       # @return [String, Array, Hash] The value for an attribute.
       #
       def raw_value_for_attribute(the_spec, attr)
-        value = the_spec.attributes_hash[attr.name]
+        value = the_spec.attributes_hash[attr.name.to_s]
         value = prepare_value(attr, value)
-        if attr.multi_platform? && the_spec.attributes_hash[consumer_platform]
-          platform_value = the_spec.attributes_hash[consumer_platform][attr.name]
+        if attr.multi_platform? && the_spec.attributes_hash[consumer_platform.to_s]
+          platform_value = the_spec.attributes_hash[consumer_platform.to_s][attr.name.to_s]
           platform_value = prepare_value(attr, platform_value)
           value = merge_values(attr, value, platform_value)
         end

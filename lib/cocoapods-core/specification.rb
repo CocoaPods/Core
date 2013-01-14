@@ -34,7 +34,7 @@ module Pod
       @attributes_hash = {}
       @subspecs = []
       @parent = parent
-      attributes_hash[:name] = name
+      attributes_hash['name'] = name
 
       yield self if block_given?
     end
@@ -174,7 +174,7 @@ module Pod
     # @return [String] the name of the default subspec if provided.
     #
     def default_subspec
-      attributes_hash[:default_subspec]
+      attributes_hash["default_subspec"]
     end
 
     # Returns the dependencies on subspecs.
@@ -276,8 +276,8 @@ module Pod
     # @return [Nil] if not deployment target was specified for the platform.
     #
     def deployment_target(platform_name)
-      if attributes_hash[platform_name]
-        result = attributes_hash[platform_name][:deployment_target]
+      if attributes_hash[platform_name.to_s]
+        result = attributes_hash[platform_name.to_s]["deployment_target"]
       end
       result ||= parent.deployment_target(platform_name) if parent
       result
@@ -292,7 +292,7 @@ module Pod
     #         platforms.
     #
     def supported_platform_names
-      result = attributes_hash[:platform]
+      result = attributes_hash["platform"]
       result ||= parent.supported_platform_names if parent
       result
     end
@@ -357,7 +357,9 @@ module Pod
     # @return void
     #
     def store_attribute(name, value, platform_name = nil)
+      name = name.to_s
       if platform_name
+        platform_name = platform_name.to_s
         attributes_hash[platform_name] ||= {}
         attributes_hash[platform_name][name] = value
       else

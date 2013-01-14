@@ -45,9 +45,10 @@ module Pod
         # @return [void]
         #
         def dependency((name, version_requirements))
-          spec.attributes_hash[platform] ||= {}
-          spec.attributes_hash[platform][:dependencies] ||= {}
-          spec.attributes_hash[platform][:dependencies][name] = version_requirements
+          platform_name = platform.to_s
+          spec.attributes_hash[platform_name] ||= {}
+          spec.attributes_hash[platform_name]["dependencies"] ||= {}
+          spec.attributes_hash[platform_name]["dependencies"][name] = version_requirements
         end
 
         # Allows to set the deployment target for the platform.
