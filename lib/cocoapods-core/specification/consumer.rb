@@ -35,9 +35,9 @@ module Pod
         @spec = spec
         @consumer_platform = platform
 
-        # unless spec.supported_on_platform?(platform)
-        #   raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
-        # end
+        unless spec.supported_on_platform?(platform)
+          raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
+        end
       end
 
       # Creates a method to access the contents of the attribute.
@@ -52,26 +52,6 @@ module Pod
         define_method(name) do
           value_for_attribute(name)
         end
-      end
-
-      #-----------------------------------------------------------------------#
-
-      # @!group Platform
-
-
-      # TODO
-      # @return [Platform] The platform of the specification.
-      #
-      def platform
-        spec.platform
-      end
-
-
-      # TODO
-      # @return [Version] The deployment target of each supported platform.
-      #
-      def deployment_target
-
       end
 
       #-----------------------------------------------------------------------#
@@ -183,48 +163,77 @@ module Pod
       def value_for_attribute(attr_name)
         attr = Specification::DSL.attributes[attr_name]
         value = value_with_inheritance(spec, attr)
-        value || attr.default_value_for_platform(consumer_platform)
+        value ||= attr.default(consumer_platform)
+        value ||= attr.container.new if attr.container
+        value
       end
 
+      # Returns the value of a given attribute taking into account inheritance.
       #
+      # @param  [Specification] the_spec
+      #         the specification for which the value is needed.
       #
-      def value_with_inheritance(evaluated_spec, attr)
-        value = raw_value_for_attribute(evaluated_spec, attr)
-        if evaluated_spec.root? || !attr.inherited?
+      # @param  [Specification::DSL::Attribute] attr
+      #         the attribute for which that value is needed.
+      #
+      # @return [String, Array, Hash] the value for the attribute.
+      #
+      def value_with_inheritance(the_spec, attr)
+        value = raw_value_for_attribute(the_spec, attr)
+        if the_spec.root? || !attr.inherited?
           return value
         end
 
-        parent_value = value_with_inheritance(evaluated_spec.parent, attr)
+        parent_value = value_with_inheritance(the_spec.parent, attr)
         merge_values(attr, parent_value, value)
       end
 
-      # @return [String, Array, Hash] The value for an attribute as stored in
-      #         the specification taking into account the current platform.
+      # Returns the value of a given attribute taking into account multi
+      # platform values.
       #
-      def raw_value_for_attribute(spec, attr)
-        value = spec.attributes_hash[attr.name]
+      # @param  [Specification] the_spec
+      #         the specification for which the value is needed.
+      #
+      # @param  [Specification::DSL::Attribute] attr
+      #         the attribute for which that value is needed.
+      #
+      # @return [String, Array, Hash] The value for an attribute.
+      #
+      def raw_value_for_attribute(the_spec, attr)
+        value = the_spec.attributes_hash[attr.name]
         value = prepare_value(attr, value)
-        if attr.multi_platform? && spec.attributes_hash[consumer_platform]
-          platform_value = spec.attributes_hash[consumer_platform][attr.name]
+        if attr.multi_platform? && the_spec.attributes_hash[consumer_platform]
+          platform_value = the_spec.attributes_hash[consumer_platform][attr.name]
           platform_value = prepare_value(attr, platform_value)
           value = merge_values(attr, value, platform_value)
         end
         value
       end
 
-      # @return [String, Array, Hash] Merges two values of an attribute, either
-      #         because the attribute is multi platform or because it is inherited.
+      # Merges the values of an attribute, either because the attribute is
+      # multi platform or because it is inherited.
+      #
+      # @param  [Specification::DSL::Attribute] attr
+      #         the attribute for which that value is needed.
+      #
+      # @param  [String, Array, Hash] value
+      #         the current value.
+      #
+      # @param  [String, Array, Hash] value_to_merge
+      #         the value to append.
+      #
+      # @return [String, Array, Hash] The merged value.
       #
       def merge_values(attr, value, value_to_merge)
         return value unless value_to_merge
         return value_to_merge unless value
 
         if attr.container == Array
-          value + value_to_merge
+          [*value] + [*value_to_merge]
         elsif attr.container == Hash
           value = value.merge(value_to_merge) do |_, old, new|
-            if new.is_a?(Array)
-              old + new
+            if new.is_a?(Array) || old.is_a?(Array)
+              [*old] + [*new]
             else
               old + ' ' + new
             end
@@ -263,6 +272,11 @@ module Pod
 
       private
 
+      # @!group Preparing Values
+      #
+      # Raw values need to be prepared as soon as they are read so they can be
+      # safely merged to support multi platform attributes and inheritance
+
       # @return [String] the name of the prepare hook for this attribute.
       #
       # @note   The hook is called after the value has been wrapped in an
@@ -273,54 +287,32 @@ module Pod
         "_prepare_#{attr.name}"
       end
 
-      # @!group Preparing Values
+      # Converts the prefix header to a string if specifed as an array.
       #
-      # Raw values need to be prepared as soon as they are read so they can be
-      # safely merged to support multi platform attributes and inheritance
-
+      # @param  [String, Array] value.
+      #         The value of the attribute as specified by the user.
       #
+      # @return [String] the prefix header.
       #
       def _prepare_prefix_header_contents(value)
         value.is_a?(Array) ? value * "\n" : value
       end
 
+      # Converts the resources file patterns to a hash defaulting to the
+      # resource key if they are defined as an Array or a String.
       #
+      # @param  [String, Array, Hash] value.
+      #         The value of the attribute as specified by the user.
+      #
+      # @return [Hash] the resources.
       #
       def _prepare_resources(value)
         value = { :resources => value } unless value.is_a?(Hash)
         result = {}
         value.each do |key, patterns|
-          patterns = [ patterns ] if patterns.is_a?(String)
-          result[key] = patterns
+          result[key] = [*patterns]
         end
         result
-      end
-
-      #
-      #
-      def _prepare_deployment_target(deployment_target)
-        unless @define_for_platforms.count == 1
-          raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
-        end
-        Version.new(deployment_target)
-      end
-
-      #
-      #
-      def _prepare_platform(name_and_deployment_target)
-        return nil if name_and_deployment_target.nil?
-        if name_and_deployment_target.is_a?(Array)
-          name = name_and_deployment_target.first
-          deployment_target = name_and_deployment_target.last
-        else
-          name = name_and_deployment_target
-          deployment_target = nil
-        end
-        unless PLATFORMS.include?(name)
-          raise StandardError, "Unsupported platform `#{name}`. The available " \
-            "names are `#{PLATFORMS.inspect}`"
-        end
-        Platform.new(name, deployment_target)
       end
 
       #-----------------------------------------------------------------------#
