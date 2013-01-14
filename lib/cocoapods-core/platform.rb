@@ -115,6 +115,13 @@ module Pod
       s
     end
 
+    # @return [String] the debug representation.
+    #
+    def inspect
+      "#<#{self.class.name} name=#{name.inspect} " \
+      "deployment_target=#{deployment_target.inspect}>"
+    end
+
     # @return [Symbol] a symbol representing the name of the platform.
     #
     def to_sym
