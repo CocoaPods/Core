@@ -2,10 +2,16 @@ module Pod
   class Specification
     module DSL
 
+      # @return [Array<Attribute>] The attributes of the class.
+      #
+      def self.attributes
+        @attributes
+      end
+
       # This module provides support for storing the runtime information of the
       # {Specification} DSL.
       #
-      module AttributesSupport
+      module AttributeSupport
 
         # Defines a root attribute for the extended class.
         #

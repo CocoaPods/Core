@@ -84,6 +84,11 @@ module Pod
         @spec.ios.deployment_target = '6.0'
         @spec.attributes_hash[:ios][:deployment_target].should == '6.0'
       end
+
+      it "doesnt' allows to specify the deployment target without a platform" do
+        e = lambda { @spec.deployment_target = '6.0' }.should.raise StandardError
+        e.message.should.match /declared only per platform/
+      end
     end
 
     #-----------------------------------------------------------------------------#
@@ -273,34 +278,26 @@ module Pod
 
       it "doesn't requires arc by default" do
         attr = Specification::DSL.attributes[:requires_arc]
-        ios_default = attr.default_value_for_platform(:ios)
-        osx_default = attr.default_value_for_platform(:osx)
-        ios_default.should == false
-        osx_default.should == false
+        attr.default(:ios).should == false
+        attr.default(:osx).should == false
       end
 
       it "has a default value for the source files attribute" do
         attr = Specification::DSL.attributes[:source_files]
-        ios_default = attr.default_value_for_platform(:ios)
-        osx_default = attr.default_value_for_platform(:osx)
-        ios_default.should == [ "Classes/**/*.{h,m}" ]
-        osx_default.should == [ "Classes/**/*.{h,m}" ]
+        attr.default(:ios).should == [ "Classes/**/*.{h,m}" ]
+        attr.default(:osx).should == [ "Classes/**/*.{h,m}" ]
       end
 
       it "has a default value for the resources attribute" do
         attr = Specification::DSL.attributes[:resources]
-        ios_default = attr.default_value_for_platform(:ios)
-        osx_default = attr.default_value_for_platform(:osx)
-        ios_default.should == { :resources => [ "Resources/**/*" ] }
-        osx_default.should == { :resources => [ "Resources/**/*" ] }
+        attr.default(:ios).should == { :resources => [ "Resources/**/*" ] }
+        attr.default(:osx).should == { :resources => [ "Resources/**/*" ] }
       end
 
       it "has a default value for the paths to exclude attribute" do
         attr = Specification::DSL.attributes[:exclude_files]
-        ios_default = attr.default_value_for_platform(:ios)
-        osx_default = attr.default_value_for_platform(:osx)
-        ios_default.should == ["Classes/**/osx/**/*", "Resources/**/osx/**/*"]
-        osx_default.should == ["Classes/**/ios/**/*", "Resources/**/ios/**/*"]
+        attr.default(:ios).should == ["Classes/**/osx/**/*", "Resources/**/osx/**/*"]
+        attr.default(:osx).should == ["Classes/**/ios/**/*", "Resources/**/ios/**/*"]
       end
     end
 

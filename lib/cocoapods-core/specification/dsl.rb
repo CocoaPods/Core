@@ -1,5 +1,7 @@
 require 'cocoapods-core/specification/dsl/attribute_support'
 require 'cocoapods-core/specification/dsl/attribute'
+require 'cocoapods-core/specification/dsl/platform_proxy'
+require 'cocoapods-core/specification/dsl/deprecations'
 
 module Pod
   class Specification
@@ -39,7 +41,7 @@ module Pod
     #
     module DSL
 
-      extend   Pod::Specification::DSL::AttributesSupport
+      extend Pod::Specification::DSL::AttributeSupport
 
       #-----------------------------------------------------------------------#
 
@@ -358,22 +360,22 @@ module Pod
 
       #------------------#
 
-      # @!method deployment_target=(deployment_target)
+      #  The deployment targets of the supported platforms.
       #
-      #   The deployment targets of the supported platforms.
+      #  @example
       #
-      #   @example
+      #    spec.ios.deployment_target = "6.0"
       #
-      #     spec.ios.deployment_target = "6.0"
+      #  @example
       #
-      #   @example
+      #    spec.osx.deployment_target = "10.8"
       #
-      #     spec.osx.deployment_target = "10.8"
+      #  @param    [String] deployment_target
+      #            The deployment target of the platform.
       #
-      #   @param    [String] deployment_target
-      #             The deployment target of the platform.
-      #
-      attribute :deployment_target
+      def deployment_target=(*args)
+        raise StandardError, "The deployment target can be declared only per platform."
+      end
 
       #-----------------------------------------------------------------------#
 
@@ -974,6 +976,7 @@ module Pod
       #
       attribute :default_subspec, {
         :inherited => false,
+        :multi_platform => false,
       }
 
       #------------------#
@@ -1004,8 +1007,7 @@ module Pod
       # @example
       #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
       #
-      def dependency(*name_and_version_requirements)
-        name, *version_requirements = name_and_version_requirements.flatten
+      def dependency(name, *version_requirements)
         raise StandardError, "A specification can't require self as a subspec" if name == self.name
         raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
         attributes_hash[:dependencies] ||= {}

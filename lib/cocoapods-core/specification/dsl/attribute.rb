@@ -2,17 +2,6 @@ module Pod
   class Specification
     module DSL
 
-      # @return [Array<Attribute>] The attributes of the class.
-      #
-      def self.attributes
-        @attributes
-      end
-
-      # TODO: temporary support for Rake::FileList
-      module ::Rake; class FileList; end; end
-
-      #-----------------------------------------------------------------------#
-
       # A Specification attribute stores the information of an attribute. It
       # also provides logic to implement any required logic.
       #
@@ -53,16 +42,7 @@ module Pod
           @default_value  = options.delete(:default_value)  { nil       }
           @ios_default    = options.delete(:ios_default)    { nil       }
           @osx_default    = options.delete(:osx_default)    { nil       }
-          @defined_as     = options.delete(:defined_as)     { nil       }
           @types          = options.delete(:types)          { [String ] }
-
-          # temporary support for Rake::FileList
-          @types << Rake::FileList if defined?(Rake) && @file_patterns
-
-          if @root_only
-            @multi_platform = false
-            @inherited = false
-          end
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{to_s}"
@@ -78,10 +58,11 @@ module Pod
         # @return [String] A string representation suitable for debugging.
         #
         def inspect
-          "<#{self.class} name=#{self.name} types=#{types} multi_platform=#{multi_platform?}>"
+          "<#{self.class} name=#{self.name} types=#{types} " \
+          "multi_platform=#{multi_platform?}>"
         end
 
-        #--------------------------------------#
+        #---------------------------------------------------------------------#
 
         # @!group Options
 
@@ -154,38 +135,27 @@ module Pod
         #
         def file_patterns?; @file_patterns; end
 
-        # @return [Bool] whether an implementation for the writers and the
-        #         setters is provided and thus the definition should be
-        #         skipped.
-        #
-        # @note   Multi-platform attributes can use it to be Picked up by the
-        #         platform proxy (currently used only by the `dependency`
-        #         attribute).
-        #
-        def skip_definitions?
-          !@defined_as.nil?
-        end
-
-        #--------------------------------------#
-
-        # @!group Reader method support
-
-        # @return [Symbol] the name of the getter method for the attribute.
-        #
-        def reader_name
-          name
-        end
-
         # @return [Bool] defines whether the attribute reader should join the
         # values with the parent.
         #
         # @note   Attributes stored in wrappers are always inherited.
         #
-        def inherited?; @inherited; end
+        def inherited?
+          !root_only? && @inherited
+        end
 
-        # TODO
+        #---------------------------------------------------------------------#
+
+        # @!group Accessors support
+
+        # Returns the default value for the attribute.
         #
-        def default_value_for_platform(platform)
+        # @param  [Symbol] platform
+        #         the platform for which the default value is requested.
+        #
+        # @return [Object] The default value.
+        #
+        def default(platform = nil)
           if platform && multi_platform?
             platform_value = ios_default if platform == :ios
             platform_value = osx_default if platform == :osx
@@ -195,14 +165,10 @@ module Pod
           end
         end
 
-        #--------------------------------------#
-
-        # @!group Writer method support
-
         # @return [String] the name of the setter method for the attribute.
         #
         def writer_name
-           @defined_as || "#{name}="
+          "#{name}="
         end
 
         # @return [String] an aliased attribute writer offered for convenience
@@ -212,6 +178,9 @@ module Pod
           "#{name.to_s.singularize}=" if singularize?
         end
 
+        #---------------------------------------------------------------------#
+
+        # @!group Values validation
 
         # Validates the value for an attribute. This validation should be
         # performed before the value is prepared or wrapped.
