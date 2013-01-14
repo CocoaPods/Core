@@ -27,11 +27,17 @@ module Pod
         @spec.subspecs.should == [@subspec]
       end
 
-      it "returns that it's equal to another specification" do
-        @spec.should == Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+      it "returns whether it is equal to another specification" do
+        @spec.should == @spec
+      end
+
+      it "is not equal to another specification if the attributes are different" do
+        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Seed'; s.version = '1.0' }
-        @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.1' }
-        @spec.should.not == Spec.new
+      end
+
+      it "is not equal to another specification if the subspecs are different" do
+        @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
       end
 
       it "produces a string representation suitable for UI output." do

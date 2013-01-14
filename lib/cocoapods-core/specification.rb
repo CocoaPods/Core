@@ -42,20 +42,23 @@ module Pod
     # @return [Hash] the hash that stores the information of the attributes of
     #         the specification.
     #
-    attr_reader :attributes_hash
+    attr_accessor :attributes_hash
 
     # @return [Array<Specification>] The subspecs of the specification.
     #
-    attr_reader :subspecs
+    attr_accessor :subspecs
 
-    # Compares a specification to another. The comparison is based only on the
-    # name and the version of the specification.
+    # Checks if a specification si equal to the given one.
     #
-    # @return [Bool] whether the specifications represent the same version of
-    #         the same Pod.
+    # @param  [Specification] other
+    #         the specification to compare with.
+    #
+    # @return [Bool] whether the specifications are equal.
     #
     def ==(other)
-      self.class === other && attributes_hash == other.attributes_hash
+      self.class === other &&
+        attributes_hash == other.attributes_hash &&
+        subspecs == other.subspecs
     end
 
     # @return [String] A string suitable for representing the specification in
