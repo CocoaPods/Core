@@ -58,7 +58,7 @@ module Pod
     end
 
     it "supports the license attribute specified as a hash" do
-      @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
+      @spec.license = { "type" => 'MIT', "file" => 'MIT-LICENSE' }
       @spec.license.should == { :type => 'MIT', :file => 'MIT-LICENSE' }
     end
 
@@ -68,7 +68,7 @@ module Pod
         Line2
       DOC
       @spec.license = { "type" => 'MIT', "text" => text }
-      @spec.license["text"].should == "Line1\nLine2\n"
+      @spec.license[:text].should == "Line1\nLine2\n"
     end
 
     it "returns the homepage" do

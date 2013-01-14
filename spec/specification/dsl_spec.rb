@@ -29,7 +29,7 @@ module Pod
 
       it "allows to specify the license" do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
-        @spec.attributes_hash["license"].should == { :type => 'MIT', :file => 'MIT-LICENSE' }
+        @spec.attributes_hash["license"].should == { "type" => 'MIT', "file" => 'MIT-LICENSE' }
       end
 
       it "allows to specify the homepage" do
@@ -39,7 +39,7 @@ module Pod
 
       it "allows to specify the homepage" do
         @spec.source = { :git => 'www.example.com/repo.git' }
-        @spec.attributes_hash["source"].should == { :git => 'www.example.com/repo.git' }
+        @spec.attributes_hash["source"].should == { "git" => 'www.example.com/repo.git' }
       end
 
       it "allows to specify the summary" do
@@ -53,7 +53,7 @@ module Pod
       end
 
       it "allows to specify the documentation settings" do
-        settings =  { :appledoc => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
+        settings =  { "appledoc" => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
         @spec.documentation = settings
         @spec.attributes_hash["documentation"].should == settings
       end
@@ -175,7 +175,7 @@ module Pod
 
       it "allows to specify the resources files" do
         @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
-        @spec.attributes_hash["resources"].should == { :frameworks => ['frameworks/CrashReporter.framework'] }
+        @spec.attributes_hash["resources"].should == { "frameworks" => ['frameworks/CrashReporter.framework'] }
       end
 
       it "allows to specify the paths to exclude" do

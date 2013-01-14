@@ -354,10 +354,13 @@ module Pod
     # @param  [Symbol] platform.
     #         If provided the attribute is stored only for the given platform.
     #
+    # @note   If the provides value is Hash the keys are converted to a string.
+    #
     # @return void
     #
     def store_attribute(name, value, platform_name = nil)
       name = name.to_s
+      value = convert_keys_to_string(value) if value.is_a?(Hash)
       if platform_name
         platform_name = platform_name.to_s
         attributes_hash[platform_name] ||= {}
@@ -378,6 +381,25 @@ module Pod
       if a.writer_singular_form
         alias_method(a.writer_singular_form, a.writer_name)
       end
+    end
+
+    private
+
+    # Converts the keys of the given hash to a string.
+    #
+    # @param  [Object] value
+    #         the value that needs to be stripped from the Symbols.
+    #
+    # @return [Hash] the hash with the strings instead of the keys.
+    #
+    def convert_keys_to_string(value)
+      return unless value
+      result = {}
+      value.each do |key, subvalue|
+        subvalue = convert_keys_to_string(subvalue) if subvalue.is_a?(Hash)
+        result[key.to_s] = subvalue
+      end
+      result
     end
 
     #-------------------------------------------------------------------------#

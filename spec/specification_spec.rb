@@ -195,7 +195,7 @@ module Pod
       end
 
       it "it reports if it is locally sourced" do
-        @spec.source = {:local => '/tmp/local/path'}
+        @spec.source = {"local" => '/tmp/local/path'}
         @spec.local?.should.be.true
       end
 
@@ -291,6 +291,14 @@ module Pod
         @spec.attributes_hash.should == {
           "name" => nil,
           "ios" => { "attribute" => "value" }
+        }
+      end
+
+      it "converts the keys of the hashes to a string" do
+        @spec.store_attribute(:attribute, { :key => "value" })
+        @spec.attributes_hash.should == {
+          "name" => nil,
+          "attribute" => { "key" => "value" }
         }
       end
 

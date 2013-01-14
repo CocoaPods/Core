@@ -122,7 +122,9 @@ module Pod
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
       #
-      spec_attr_accessor :resources
+      def resources
+        convert_keys_to_symbol(value_for_attribute(:resources))
+      end
 
       # @return [Array<String>] The file patterns that the
       #         Pod should ignore.
@@ -266,6 +268,27 @@ module Pod
         else
           value
         end
+      end
+
+      #-----------------------------------------------------------------------#
+
+      private
+
+      # Converts the keys of the given hash to a string.
+      #
+      # @param  [Object] value
+      #         the value that needs to be stripped from the Symbols.
+      #
+      # @return [Hash] the hash with the strings instead of the keys.
+      #
+      def convert_keys_to_symbol(value)
+        return unless value
+        result = {}
+        value.each do |key, subvalue|
+          subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
+          result[key.to_sym] = subvalue
+        end
+        result
       end
 
       #-----------------------------------------------------------------------#
