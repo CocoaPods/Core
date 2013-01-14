@@ -130,9 +130,9 @@ module Bacon
       result = "%d specifications (%d requirements), %d failures, %d errors" %
         Counter.values_at(:specifications, :requirements, :failed, :errors)
       if Counter[:failed].zero?
-        print Bacon.color(:green, result)
+        puts Bacon.color(:green, result)
       else
-        print Bacon.color(:red, result)
+        puts Bacon.color(:red, result)
       end
     end
 
