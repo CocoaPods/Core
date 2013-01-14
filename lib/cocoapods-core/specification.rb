@@ -58,7 +58,9 @@ module Pod
     def ==(other)
       self.class === other &&
         attributes_hash == other.attributes_hash &&
-        subspecs == other.subspecs
+        subspecs == other.subspecs &&
+        pre_install_callback == other.pre_install_callback &&
+        post_install_callback == other.post_install_callback
     end
 
     # @return [String] A string suitable for representing the specification in
@@ -305,6 +307,14 @@ module Pod
     public
 
     # @!group Hooks support
+
+    # @return [Proc] the pre install callback if defined.
+    #
+    attr_reader :pre_install_callback
+
+    # @return [Proc] the post install callback if defined.
+    #
+    attr_reader :post_install_callback
 
     # Calls the pre install callback if defined.
     #

@@ -40,11 +40,17 @@ module Pod
         @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
       end
 
+      it "is not equal to another specification if the callbacks differ" do
+        spec_1 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0'; s.post_install do; end }
+        spec_1.should.not == spec_2
+      end
+
       it "produces a string representation suitable for UI output." do
         @spec.to_s.should == "Pod (1.0)"
       end
 
-      it "returns the name nad the version of a Specification from its #to_s output" do
+      it "returns the name and the version of a Specification from its #to_s output" do
         name, version = Specification.name_and_version_from_string("libPusher (1.0)")
         name.should == "libPusher"
         version.should == Version.new("1.0")
