@@ -18,47 +18,46 @@ module Pod
         @subspec.parent.should == @spec
       end
 
-      it "produces a string representation suitable for UI output." do
-        @spec.to_s.should == "Pod (1.0)"
+      it "returns the attributes hash" do
+        @spec.attributes_hash.should == {:name=>"Pod", :version=>"1.0"}
+        @subspec.attributes_hash.should == {:name=>"Subspec"}
       end
 
-      it "returns that it's equal to another specification if the name and version are equal" do
+      it "returns the subspecs" do
+        @spec.subspecs.should == [@subspec]
+      end
+
+      it "returns that it's equal to another specification" do
         @spec.should == Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Seed'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.1' }
         @spec.should.not == Spec.new
       end
 
-      it "returns the checksum of the file in which it is defined" do
-        @path = fixture('BananaLib.podspec')
-        @spec = Spec.from_file(@path)
-        @spec.checksum.should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
+      it "produces a string representation suitable for UI output." do
+        @spec.to_s.should == "Pod (1.0)"
       end
 
-      it "returns a nil checksum if the specification is not defined in a file" do
-        @spec.checksum.should.be.nil
+      it "returns the name nad the version of a Specification from its #to_s output" do
+        name, version = Specification.name_and_version_from_string("libPusher (1.0)")
+        name.should == "libPusher"
+        version.should == Version.new("1.0")
+      end
+
+      it "takes into account head information while returning the name and the version" do
+        name, version = Specification.name_and_version_from_string("libPusher (HEAD based on 1.0)")
+        name.should == "libPusher"
+        version.should == Version.new("HEAD based on 1.0")
+      end
+
+      it "takes into account the full name of the subspec returning the name and the version" do
+        name, version = Specification.name_and_version_from_string("RestKit/JSON (1.0)")
+        name.should == "RestKit/JSON"
       end
 
       it "returns the root name of a given specification name" do
         Specification.root_name('Pod').should == 'Pod'
         Specification.root_name('Pod/Subspec').should == 'Pod'
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    describe "Initialization from a file" do
-      before do
-        @path = fixture('BananaLib.podspec')
-        @spec = Spec.from_file(@path)
-      end
-
-      it "can be initialized from a file" do
-        @spec.class.should == Spec
-      end
-
-      it "reports the file from which it was initialized" do
-        @spec.defined_in_file.should == @path
       end
     end
 
@@ -113,67 +112,73 @@ module Pod
         @subsubspec = @subspec.subspecs.first
       end
 
-      it "returns the child subspecs" do
-        @spec.subspecs.sort_by(&:name).should == [@subspec, @subspec_osx]
-      end
-
       it "returns the recursive subspecs" do
         @spec.recursive_subspecs.sort_by(&:name).should == [@subspec, @subsubspec, @subspec_osx]
       end
 
-      it "returns a subspec with the given name" do
+      it "returns a subspec given the absolute name" do
         @spec.subspec_by_name('Pod/Subspec').should == @subspec
         @spec.subspec_by_name('Pod/Subspec/Subsubspec').should == @subsubspec
+      end
+
+      it "returns a subspec given the relative name" do
         @subspec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
       end
 
       it "raises if it can't find a subspec with the given name" do
         lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise StandardError
-        lambda { @spec.subspec_by_name('Pod/Subspeca') }.should.raise StandardError
       end
 
-      it "returns the dependencies on other Pods for the activated platform" do
-        @spec.activate_platform(:ios)
-        @spec.external_dependencies.should == [ Dependency.new('AFNetworking') ]
+      it "returns the default subspec" do
+        @spec.default_subspec = 'Subspec'
+        @spec.default_subspec.should == 'Subspec'
       end
 
-      it "inherits the dependencies of the parent" do
-        @spec.activate_platform(:ios)
-        @subsubspec.external_dependencies.should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
-      end
-
-      it "returns all the dependencies on specification of other Pods" do
-        @spec.activate_platform(:ios)
-        @spec.external_dependencies(true).should == [
-          Dependency.new('AFNetworking'),
-          Dependency.new('MagicalRecord') ]
-      end
-
-      it "returns dependencies on its subspecs" do
-        @spec.activate_platform(:osx)
+      it "returns the dependencies on its subspecs" do
         @spec.subspec_dependencies.should == [
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspecOSX', '1.0') ]
       end
 
-      it "returns dependencies of only the subspecs that are supported for the active platform" do
-        @spec.activate_platform(:ios)
-        @spec.subspec_dependencies.should == [ Dependency.new('Pod/Subspec', '1.0') ]
+      it "returns the dependencies on its subspecs for a given platform" do
+        @spec.subspec_dependencies(:ios).should == [
+          Dependency.new('Pod/Subspec', '1.0')
+        ]
       end
 
       it "returns a dependency on a default subspec if it is specified" do
-        @spec.activate_platform(:osx)
-        @spec.default_subspec = 'SubspecOSX'
-        @spec.subspec_dependencies.should == [ Dependency.new('Pod/SubspecOSX', '1.0') ]
+        @spec.default_subspec = 'Subspec'
+        @spec.subspec_dependencies.should == [
+          Dependency.new('Pod/Subspec', '1.0')
+        ]
       end
 
       it "returns all the dependencies" do
-        @spec.activate_platform(:osx)
-        @spec.dependencies.sort_by(&:name).should == [
+        @spec.dependencies.should == [
+          Dependency.new('AFNetworking'),
+          Dependency.new('MagicalRecord') ]
+      end
+
+      it "returns the dependencies given the platform" do
+        @spec.dependencies(:ios).should == [ Dependency.new('AFNetworking') ]
+      end
+
+      it "inherits the dependencies of the parent" do
+        @subsubspec.dependencies(:ios).should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
+      end
+
+      it "returns all the dependencies including the ones on subspecs given a platform" do
+        @spec.all_dependencies.sort_by(&:name).should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspecOSX', '1.0') ]
+      end
+
+      it "returns all the dependencies for a given platform" do
+        @spec.all_dependencies(:ios).sort_by(&:name).should == [
+          Dependency.new('AFNetworking'),
+          Dependency.new('Pod/Subspec', '1.0') ]
       end
     end
 
@@ -190,7 +195,6 @@ module Pod
       end
 
       it "it reports if it is locally sourced" do
-        @spec.activate_platform(:ios)
         @spec.source = {:local => '/tmp/local/path'}
         @spec.local?.should.be.true
       end
@@ -206,73 +210,42 @@ module Pod
 
       it "returns the available platforms for which the pod is supported" do
         @spec.platform = :ios, '4.0'
-        @spec.available_platforms.count.should == 1
-        @spec.available_platforms.first.should == :ios
-        @spec.available_platforms.first.deployment_target.should == Version.new('4.0')
+        @spec.available_platforms.should == [Platform.new(:ios, '4.0')]
+      end
+
+      it "inherits the name of the supported platforms from the parent" do
+        @spec.platform = :ios, '4.0'
+        @subspec.available_platforms.should == [Platform.new(:ios, '4.0')]
       end
 
       it "returns the deployment target for the given platform" do
         @spec.platform = :ios, '4.0'
-        @spec.deployment_target(:ios).should == Version.new('4.0')
+        @spec.deployment_target(:ios).should == '4.0'
       end
 
-      it "returns the deployment target specified the `deployment_target` attribute the spec has no `platform`" do
+      it "allows a subspec to override the deployment target of the parent" do
         @spec.platform = :ios, '4.0'
         @subspec.ios.deployment_target = '5.0'
-        @subspec.deployment_target(:ios).should == Version.new('5.0')
+        @subspec.deployment_target(:ios).should == '5.0'
       end
 
       it "inherits the deployment target from the parent" do
         @spec.platform = :ios, '4.0'
-        @subspec.deployment_target(:ios).should == Version.new('4.0')
+        @subspec.deployment_target(:ios).should == '4.0'
       end
 
-      it "returns nil if not deployment target is available for the given platfrom" do
-        @spec.osx.deployment_target = '10.6'
-        @subspec.platform = :ios, '4.0'
-        @subspec.deployment_target(:osx).should.be.nil
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    describe "Multi-platform support" do
-      before do
-        @spec = Spec.new do |s|
-          s.platform = :ios, '4.3'
-          s.subspec 'Subspec' do |sp| end
-        end
-        @subspec = @spec.subspecs.first
+      it "returns the symbolic names of the supported platforms as specified by the user" do
+        @spec.platform = :ios, '4.0'
+        @spec.send(:supported_platform_names).should == :ios
       end
 
-      it "can be activated for a supported platform" do
+      it "inherits the supported platform from the parent" do
         @spec.platform = :ios
-        lambda {@spec.activate_platform(:ios)}.should.not.raise StandardError
+        @subspec.send(:supported_platform_names).should == :ios
       end
 
-      it "raises if a platform with another name is activated" do
-        lambda {@spec.activate_platform(:osx)}.should.raise StandardError
-      end
-
-      it "raises if a platform with an unsupported deployment target is activated" do
-        lambda {@spec.activate_platform(:ios, '4.0')}.should.raise StandardError
-      end
-
-      it "inherits the active platform of the root specification" do
-        @spec.activate_platform(:ios)
-        @subspec.active_platform.should == :ios
-      end
-
-      it "activates a platform at the root level" do
-        @subspec.activate_platform(:ios)
-        @spec.active_platform.should == :ios
-      end
-
-      it "provides support for the platform proxy" do
-        @spec._on_platform(:ios) do
-          @spec.instance_variable_get('@define_for_platforms').should == [ :ios ]
-        end
-        @spec.instance_variable_get('@define_for_platforms').should == Specification::PLATFORMS
+      it "returns nil as the symbolic name if no supported platform is specified" do
+        @spec.send(:supported_platform_names).should == nil
       end
     end
 
@@ -298,36 +271,117 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+
+    describe "DSL Attribute writers" do
+
       before do
-      end
-      end
-
+        @spec =  Spec.new
       end
 
+      it "stores the value of an attribute" do
+        @spec.store_attribute(:attribute, "value")
+        @spec.attributes_hash.should == { :name=>nil, :attribute=>"value" }
       end
 
+      it "stores the value of an attribute for a given platform" do
+        @spec.store_attribute(:attribute, "value", :ios)
+        @spec.attributes_hash.should == { :name=>nil, :ios=>{:attribute=>"value"} }
       end
 
-      end
-
-      end
-
-      end
-
-    end
-  end
-
-
-      end
-
+      it "declares attribute writer methods" do
+        Specification::DSL.attributes.values.each do |attr|
+          @spec.send(attr.writer_name, 'a_value')
+          @spec.attributes_hash[attr.name].should == 'a_value'
         end
       end
 
-      end
-
-      end
-
+      it "supports the singular form of attribute writer methods" do
+        singular_attrs = Specification::DSL.attributes.values.select { |a| a.writer_singular_form }
+        singular_attrs.each do |attr|
+          @spec.send(attr.writer_name, 'a_value')
+          @spec.attributes_hash[attr.name].should == 'a_value'
+        end
       end
     end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Initialization from a file" do
+
+      before do
+        @path = fixture('BananaLib.podspec')
+        @spec = Spec.from_file(@path)
+      end
+
+      it "can be initialized from a file" do
+        @spec.class.should == Spec
+      end
+
+      it "returns the checksum of the file in which it is defined" do
+        @spec.checksum.should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
+      end
+
+      it "returns a nil checksum if the specification is not defined in a file" do
+        spec = Spec.new
+        spec.checksum.should.be.nil
+      end
+
+      it "reports the file from which it was initialized" do
+        @spec.defined_in_file.should == @path
+      end
+
+      it "it initializes correctly" do
+        expected = {
+          :authors => [
+            "Banana Corp",
+            {
+              "Monkey Boy" => "monkey@banana-corp.local"
+            }
+          ],
+            :description => "Full of chunky bananas.",
+            :documentation => {
+              :appledoc => [
+                "--project-company",
+                "Banana Corp",
+                "--company-id",
+                "com.banana"
+              ],
+                :html => "http://banana-corp.local/banana-lib/docs.html"
+            },
+            :homepage => "http://banana-corp.local/banana-lib.html",
+            :license => {
+              :file => "LICENSE",
+              :text => "Permission is hereby granted ...",
+              :type => "MIT"
+            },
+            :name => "BananaLib",
+            :prefix_header_file => "Classes/BananaLib.pch",
+            :requires_arc => true,
+            :resources => "Resources/*.png",
+            :source => {
+              :git => "http://banana-corp.local/banana-lib.git",
+              :tag => "v1.0"
+            },
+            :source_files => [
+              "Classes/*.{h,m}",
+              "Vendor"
+            ],
+              :summary => "Chunky bananas!",
+              :version => "1.0",
+              :xcconfig => {
+                "OTHER_LDFLAGS" => "-framework SystemConfiguration"
+              },
+              :dependencies => {"monkey"=>["~> 1.0.1", "< 1.0.9"]}
+        }
+
+        @spec.attributes_hash.should == expected
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
+
+  #---------------------------------------------------------------------------#
+
 end
