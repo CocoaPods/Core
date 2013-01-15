@@ -4,7 +4,7 @@ module Pod
   #
   class Platform
 
-    # @return [Symbol] the name of the SDK represented by the platform.
+    # @return [Symbol, String] the name of the SDK represented by the platform.
     #
     def name
       @symbolic_name
@@ -19,7 +19,7 @@ module Pod
     #
     # @overload   initialize(name, deployment_target)
     #
-    #   @param    [Symbol] name
+    #   @param    [Symbol, String] name
     #             the name of platform.
     #
     #   @param    [String, Version] deployment_target
@@ -48,7 +48,7 @@ module Pod
         @symbolic_name = input.name
         @deployment_target = input.deployment_target
       else
-        @symbolic_name = input
+        @symbolic_name = input.to_sym
         target = target[:deployment_target] if target.is_a?(Hash)
         @deployment_target = Version.create(target)
       end
@@ -115,10 +115,35 @@ module Pod
       s
     end
 
+    # @return [String] the debug representation.
+    #
+    def inspect
+      "#<#{self.class.name} name=#{name.inspect} " \
+      "deployment_target=#{deployment_target.inspect}>"
+    end
+
     # @return [Symbol] a symbol representing the name of the platform.
     #
     def to_sym
       name
+    end
+
+    # Compares the platform first by name and the by deployment_target for
+    # sorting.
+    #
+    # @param  [Platform] other
+    #         The other platform to compare.
+    #
+    # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
+    #         than, equal to, or greater than other.
+    #
+    def <=> other
+      name_sort = self.name.to_s <=> other.name.to_s
+      if name_sort.zero?
+        self.deployment_target <=> other.deployment_target
+      else
+        name_sort
+      end
     end
 
     # @return [Bool] whether the platform requires legacy architectures for

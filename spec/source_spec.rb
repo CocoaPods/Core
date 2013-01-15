@@ -22,10 +22,28 @@ module Pod
         @source.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
       end
 
-      it "returns the specification of a given version of a Pod" do
+      it "returns the specification loaded from the Ruby DSL of a given version of a Pod" do
         spec = @source.specification('Reachability', Version.new('3.0.0'))
         spec.name.should == 'Reachability'
         spec.version.should.to_s == '3.0.0'
+      end
+
+      it "returns the specification loaded from a YAML file of a given version of a Pod" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        spec = source.specification('YAMLSpec', Version.new('1.0'))
+        spec.name.should == 'YAMLSpec'
+        spec.version.should.to_s == '1.0'
+      end
+
+      it "returns favors the YAML version of a specification if both are available" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        spec = source.specification('YAMLSpec', Version.new('0.9'))
+        spec.name.should == 'YAMLSpec'
+        spec.version.should.to_s == '0.9'
+        path = fixture('spec-repos/test_repo/YAMLSpec/0.9')
+
+        (path + 'YAMLSpec.podspec').should.exist
+        spec.defined_in_file.should == path + 'YAMLSpec.podspec.yaml'
       end
 
       it "properly configures the sources of a set in search by name" do
