@@ -328,6 +328,14 @@ module Pod
       #
       PLATFORMS = [:osx, :ios].freeze
 
+      # @todo This currently is not used in the Ruby DSL.
+      #
+      attribute :platforms, {
+        :container      => Hash,
+        :keys           => PLATFORMS,
+        :multi_platform => false
+      }
+
       # @!method platform=(name_and_deployment_target)
       #
       #   The platform on which this Pod is supported. Leaving this blank
@@ -351,11 +359,8 @@ module Pod
       #           target.
       #
       def platform=((name, deployment_target))
-        attributes_hash["platform"] = name
-        if deployment_target
-          attributes_hash[name.to_s] ||= {}
-          attributes_hash[name.to_s]["deployment_target"] = deployment_target
-        end
+        attributes_hash["platforms"] ||= {}
+        attributes_hash["platforms"][name.to_s] = deployment_target
       end
 
       #------------------#

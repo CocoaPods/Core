@@ -23,6 +23,11 @@ describe Platform do
       @platform.name.should == :ios
     end
 
+    it "can be initialized with a string symbolic name" do
+      Platform.new("ios")
+      @platform.name.should == :ios
+    end
+
     it "can be compared for equality with another platform with the same symbolic name" do
       @platform.should == Platform.new(:ios)
     end

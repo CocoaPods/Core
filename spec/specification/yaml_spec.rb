@@ -18,7 +18,7 @@ module Pod
       it "can be initialized from a YAML file" do
         yaml_path = fixture('bananalib.podspec.yaml')
         spec_from_yaml = Specification.from_file(yaml_path)
-        spec_from_yaml.should == @spec
+        spec_from_yaml.attributes_hash.should == @spec.attributes_hash
       end
 
       it "returns whether it safe to convert a specification to hash" do
@@ -54,6 +54,37 @@ module Pod
         EOS
         spec = Specification.from_yaml(yaml)
         spec.dependencies.should == [Dependency.new('monkey', '~> 1.0.1')]
+      end
+
+      it "allows to specify a platform with a deplyment target" do
+        yaml = <<-EOS
+          name: Pod
+          platforms:
+            ios: '6.0'
+        EOS
+        spec = Specification.from_yaml(yaml)
+        spec.available_platforms.should == [Platform.new(:ios, '6.0')]
+      end
+
+      it "allows to specify a platform without a deplyment target" do
+        yaml = <<-EOS
+          name: Pod
+          platforms:
+            ios
+        EOS
+        spec = Specification.from_yaml(yaml)
+        spec.available_platforms.should == [Platform.new(:ios)]
+      end
+
+      it "allows to specify a multiple platforms without a deplyment target" do
+        yaml = <<-EOS
+          name: Pod
+          platforms:
+            - ios
+            - osx
+        EOS
+        spec = Specification.from_yaml(yaml)
+        spec.available_platforms.should == [Platform.new(:ios), Platform.new(:osx)]
       end
 
     end

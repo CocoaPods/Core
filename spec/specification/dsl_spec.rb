@@ -71,18 +71,17 @@ module Pod
 
       it "allows to specify the supported platform" do
         @spec.platform = :ios
-        @spec.attributes_hash["platform"].should == :ios
+        @spec.attributes_hash["platforms"].should == { "ios" => nil }
       end
 
       it "allows to specify the deployment target along the supported platform as a shortcut" do
         @spec.platform = :ios, '6.0'
-        @spec.attributes_hash["platform"].should == :ios
-        @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
+        @spec.attributes_hash["platforms"].should == { "ios" => "6.0" }
       end
 
       it "allows to specify a deployment target for each platform" do
         @spec.ios.deployment_target = '6.0'
-        @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
+        @spec.attributes_hash["platforms"]["ios"].should == '6.0'
       end
 
       it "doesnt' allows to specify the deployment target without a platform" do

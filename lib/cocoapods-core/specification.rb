@@ -268,8 +268,9 @@ module Pod
     #         platforms.
     #
     def available_platforms
-      names = supported_platform_names || PLATFORMS
-      [*names].map { |name| Platform.new(name, deployment_target(name)) }
+      names = supported_platform_names
+      names = PLATFORMS if names.empty?
+      names.map { |name| Platform.new(name, deployment_target(name)) }
     end
 
     # Returns the deployment target for the specified platform.
@@ -281,25 +282,45 @@ module Pod
     # @return [Nil] if not deployment target was specified for the platform.
     #
     def deployment_target(platform_name)
-      if attributes_hash[platform_name.to_s]
-        result = attributes_hash[platform_name.to_s]["deployment_target"]
-      end
+      result = platform_hash[platform_name.to_s]
       result ||= parent.deployment_target(platform_name) if parent
       result
     end
 
     protected
 
-    # @return [Symbol] the symbolic name of the platform in which the
+    # @return [Array[Symbol]] the symbolic name of the platform in which the
     #         specification is supported.
     #
     # @return [Nil] if the specification is supported on all the known
     #         platforms.
     #
     def supported_platform_names
-      result = attributes_hash["platform"]
-      result ||= parent.supported_platform_names if parent
+      result = platform_hash.keys
+      if result.empty? && parent
+        result = parent.supported_platform_names
+      end
       result
+    end
+
+    # @return [Hash] the normalized hash which reppresents the platform
+    #         information.
+    #
+    def platform_hash
+      case value = attributes_hash["platforms"]
+      when String
+        { value => nil }
+      when Array
+        result = {}
+        value.each do |value|
+          result[value] = nil
+        end
+        result
+      when Hash
+        value
+      else
+        Hash.new
+      end
     end
 
     #-------------------------------------------------------------------------#

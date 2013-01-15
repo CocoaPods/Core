@@ -4,7 +4,7 @@ module Pod
   #
   class Platform
 
-    # @return [Symbol] the name of the SDK represented by the platform.
+    # @return [Symbol, String] the name of the SDK represented by the platform.
     #
     def name
       @symbolic_name
@@ -19,7 +19,7 @@ module Pod
     #
     # @overload   initialize(name, deployment_target)
     #
-    #   @param    [Symbol] name
+    #   @param    [Symbol, String] name
     #             the name of platform.
     #
     #   @param    [String, Version] deployment_target
@@ -48,7 +48,7 @@ module Pod
         @symbolic_name = input.name
         @deployment_target = input.deployment_target
       else
-        @symbolic_name = input
+        @symbolic_name = input.to_sym
         target = target[:deployment_target] if target.is_a?(Hash)
         @deployment_target = Version.create(target)
       end

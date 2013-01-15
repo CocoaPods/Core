@@ -56,7 +56,9 @@ module Pod
         # @return [void]
         #
         def deployment_target=(value)
-          spec.store_attribute(:deployment_target, value, platform)
+          platform_name = platform.to_s
+          spec.attributes_hash["platforms"] ||= {}
+          spec.attributes_hash["platforms"][platform_name] = value
         end
       end
     end

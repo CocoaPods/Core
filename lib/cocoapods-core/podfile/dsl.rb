@@ -37,7 +37,7 @@ module Pod
       # @!group Dependencies
       #   The Podfile specifies the dependencies of each user target.
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # Specifies a dependency of the project.
       #

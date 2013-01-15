@@ -246,18 +246,14 @@ module Pod
         @subspec.deployment_target(:ios).should == '4.0'
       end
 
-      it "returns the symbolic names of the supported platforms as specified by the user" do
+      it "returns the names of the supported platforms as specified by the user" do
         @spec.platform = :ios, '4.0'
-        @spec.send(:supported_platform_names).should == :ios
+        @spec.send(:supported_platform_names).should == ["ios"]
       end
 
       it "inherits the supported platform from the parent" do
         @spec.platform = :ios
-        @subspec.send(:supported_platform_names).should == :ios
-      end
-
-      it "returns nil as the symbolic name if no supported platform is specified" do
-        @spec.send(:supported_platform_names).should == nil
+        @subspec.send(:supported_platform_names).should == ["ios"]
       end
     end
 
@@ -354,7 +350,7 @@ module Pod
       end
 
       it "returns the checksum of the file in which it is defined" do
-        @spec.checksum.should == '390fc0b0ed0ec310b194d2b7c0c0b781ee2ffadb'
+        @spec.checksum.should == '8ff74d56f7a56f314d56f187cabfe342b8bfbc6b'
       end
 
       it "returns a nil checksum if the specification is not defined in a file" do

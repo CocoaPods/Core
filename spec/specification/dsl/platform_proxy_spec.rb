@@ -40,7 +40,7 @@ module Pod
 
     it "allows to declare the deployment target" do
       @proxy.deployment_target = '6.0'
-      @spec.attributes_hash["ios"]["deployment_target"].should == '6.0'
+      @spec.attributes_hash["platforms"]["ios"].should == '6.0'
     end
 
   end
