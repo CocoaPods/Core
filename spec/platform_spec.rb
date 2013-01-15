@@ -62,6 +62,27 @@ describe Platform do
       p.deployment_target.should == Version.new('4.0.0')
     end
 
+    it "can be sorted by name" do
+      p_1 = Platform.new(:ios, '4.0')
+      p_2 = Platform.new(:osx, '10.6')
+      (p_1 <=> p_2).should == -1
+      (p_1 <=> p_1).should == 0
+      (p_2 <=> p_1).should == 1
+    end
+
+    it "can be sorted by deployment_target" do
+      p_1 = Platform.new(:ios, '4.0')
+      p_2 = Platform.new(:ios, '6.0')
+      (p_1 <=> p_2).should == -1
+      (p_1 <=> p_1).should == 0
+      (p_2 <=> p_1).should == 1
+    end
+
+    it "returns whether it requires legacy iOS architectures" do
+      Platform.new(:ios, '4.0').requires_legacy_ios_archs?.should.be.true
+      Platform.new(:ios, '5.0').requires_legacy_ios_archs?.should.be.false
+    end
+
   end
 
   describe "Supporting other platforms" do
