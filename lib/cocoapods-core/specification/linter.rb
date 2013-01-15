@@ -98,14 +98,16 @@ module Pod
       # @return [void]
       #
       def  check_required_root_attributes
-        attributes = DSL.attributes.select(&:root_only?)
+        attributes = DSL.attributes.values.select(&:root_only?)
         attributes.each do |attr|
-          value = spec.send(attr.reader_name)
-          next unless attr.required?
-          unless value && (!value.respond_to?(:empty?) || !value.empty?)
-            error("Missing required attribute `#{attr.name}`.")
+          # if spec.respond_to?(attr.name)
+            value = spec.send(attr.name)
+            next unless attr.required?
+            unless value && (!value.respond_to?(:empty?) || !value.empty?)
+              error("Missing required attribute `#{attr.name}`.")
+            end
           end
-        end
+        # end
       end
 
       # Runs the validation hook for root only attributes.
@@ -113,8 +115,14 @@ module Pod
       # @return [void]
       #
       def run_root_validation_hooks
-        attributes = DSL.attributes.select(&:root_only?)
-        run_validation_hooks(attributes)
+        attributes = DSL.attributes.values.select(&:root_only?)
+        attributes.each do |attr|
+          validation_hook = "_validate_#{attr.name}"
+          next unless respond_to?(validation_hook, true)
+          value = spec.send(attr.name)
+          next unless value
+          send(validation_hook, value)
+        end
       end
 
       # Run validations for multi-platform attributes activating .
@@ -124,35 +132,34 @@ module Pod
       def perform_all_specs_ananlysis
         all_specs = [ spec, *spec.recursive_subspecs ]
         all_specs.each do |current_spec|
-          @current_spec = current_spec
-          platforms = current_spec.available_platforms
-          platforms.each do |platform|
-            @current_platform = platform
-            current_spec.activate_platform(platform)
-
+          current_spec.available_platforms.each do |platform|
+            @consumer = Specification::Consumer.new(current_spec, platform)
             run_all_specs_valudation_hooks
             validate_file_patterns
             check_tmp_arc_not_nil
             check_if_spec_is_empty
+            @consumer = nil
           end
         end
       end
 
-      # @return [Specification] the current (sub)spec being validated.
+      # @return [Specification::Consumer] the current consumer.
       #
-      attr_reader :current_spec
-
-      # @return [Symbol] the name of the platform being validated.
-      #
-      attr_accessor :current_platform
+      attr_accessor :consumer
 
       # Runs the validation hook for the attributes that are not root only.
       #
       # @return [void]
       #
       def run_all_specs_valudation_hooks
-        attributes = DSL.attributes.reject(&:root_only?)
-        run_validation_hooks(attributes)
+        attributes = DSL.attributes.values.reject(&:root_only?)
+        attributes.each do |attr|
+          validation_hook = "_validate_#{attr.name}"
+          next unless respond_to?(validation_hook, true)
+          value = consumer.send(attr.name)
+          next unless value
+          send(validation_hook, value)
+        end
       end
 
       # Runs the validation hook for each attribute.
@@ -164,13 +171,7 @@ module Pod
       # @return [void]
       #
       def run_validation_hooks(attributes)
-        attributes.each do |attr|
-          validation_hook = "_validate_#{attr.name}"
-          next unless respond_to?(validation_hook, true)
-          value = spec.send(attr.reader_name)
-          next unless value
-          send(validation_hook, value)
-        end
+
       end
 
       #-----------------------------------------------------------------------#
@@ -255,9 +256,9 @@ module Pod
       # Checks the attributes that represent file patterns.
       #
       def validate_file_patterns
-        attributes = DSL.attributes.select(&:file_patterns?)
+        attributes = DSL.attributes.values.select(&:file_patterns?)
         attributes.each do |attrb|
-          patterns = spec.send(attrb.reader_name)
+          patterns = consumer.send(attrb.name)
           patterns = patterns.is_a?(Hash) ? patterns.values : patterns
           patterns = patterns.flatten
           patterns.each do |pattern|
@@ -275,7 +276,7 @@ module Pod
       # @todo remove in 0.18 and switch the default to true.
       #
       def check_tmp_arc_not_nil
-        if spec.requires_arc.nil?
+        if consumer.requires_arc.nil?
           warning "A value for `requires_arc` should be specified until the migration to a `true` default."
         end
       end
@@ -284,7 +285,7 @@ module Pod
       #
       def check_if_spec_is_empty
         methods = %w[ source_files resources preserve_paths subspecs ]
-        empty = methods.all? { |m| spec.send(m).empty? }
+        empty = methods.all? { |m| consumer.send(m).empty? }
         if empty
           error "The spec appears to be empty (no source files, resources, or preserve paths)."
         end
@@ -337,7 +338,7 @@ module Pod
           result = Result.new(type, message)
           results << result
         end
-        result.platforms << current_platform.name if current_platform
+        result.platforms << consumer.platform.name if consumer
       end
 
       #-----------------------------------------------------------------------#
@@ -383,3 +384,44 @@ module Pod
     end
   end
 end
+
+      # # TODO
+      # # Converts the resources file patterns to a hash defaulting to the
+      # # resource key if they are defined as an Array or a String.
+      # #
+      # # @param  [String, Array, Hash] value.
+      # #         The value of the attribute as specified by the user.
+      # #
+      # # @return [Hash] the resources.
+      # #
+      # def _prepare_deployment_target(deployment_target)
+      #   unless @define_for_platforms.count == 1
+      #     raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
+      #   end
+      #   Version.new(deployment_target)
+      # end
+
+      # # TODO
+      # # Converts the resources file patterns to a hash defaulting to the
+      # # resource key if they are defined as an Array or a String.
+      # #
+      # # @param  [String, Array, Hash] value.
+      # #         The value of the attribute as specified by the user.
+      # #
+      # # @return [Hash] the resources.
+      # #
+      # def _prepare_platform(name_and_deployment_target)
+      #   return nil if name_and_deployment_target.nil?
+      #   if name_and_deployment_target.is_a?(Array)
+      #     name = name_and_deployment_target.first
+      #     deployment_target = name_and_deployment_target.last
+      #   else
+      #     name = name_and_deployment_target
+      #     deployment_target = nil
+      #   end
+      #   unless PLATFORMS.include?(name)
+      #     raise StandardError, "Unsupported platform `#{name}`. The available " \
+      #       "names are `#{PLATFORMS.inspect}`"
+      #   end
+      #   Platform.new(name, deployment_target)
+      # end
