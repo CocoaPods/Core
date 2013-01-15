@@ -454,17 +454,26 @@ module Pod
     # @raise  If the file doesn't return a Pods::Specification after
     #         evaluation.
     #
-    # @return [Specification]
+    # @return [Specification] the specification
     #
     def self.from_file(path, subspec_name = nil)
       path = Pathname.new(path)
       unless path.exist?
         raise StandardError, "No podspec exists at path `#{path}`."
       end
-      spec = ::Pod._eval_podspec(path)
-      unless spec.is_a?(Specification)
-        raise StandardError, "Invalid podspec file at path `#{path}`."
+
+      case path.extname
+      when '.podspec'
+        spec = ::Pod._eval_podspec(path)
+        unless spec.is_a?(Specification)
+          raise StandardError, "Invalid podspec file at path `#{path}`."
+        end
+      when '.yaml'
+        spec = Specification.from_yaml(path.read)
+      else
+        raise StandardError, "Unsupported specification format `#{path.extname}`."
       end
+
       spec.defined_in_file = path
       spec.subspec_by_name(subspec_name)
     end

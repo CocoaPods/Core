@@ -334,17 +334,27 @@ module Pod
 
     describe "Initialization from a file" do
 
+      it "can be initialized from a file" do
+        spec = Spec.from_file(fixture('BananaLib.podspec'))
+        spec.class.should == Spec
+        spec.name.should == 'BananaLib'
+      end
+
+      it "can be initialized from a YAML file" do
+        spec = Spec.from_file(fixture('BananaLib.podspec.yaml'))
+        spec.class.should == Spec
+        spec.name.should == 'BananaLib'
+      end
+
+      #--------------------------------------#
+
       before do
         @path = fixture('BananaLib.podspec')
         @spec = Spec.from_file(@path)
       end
 
-      it "can be initialized from a file" do
-        @spec.class.should == Spec
-      end
-
       it "returns the checksum of the file in which it is defined" do
-        @spec.checksum.should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
+        @spec.checksum.should == '390fc0b0ed0ec310b194d2b7c0c0b781ee2ffadb'
       end
 
       it "returns a nil checksum if the specification is not defined in a file" do

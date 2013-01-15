@@ -1,66 +1,60 @@
 module Pod
   class Specification
-
     module YAMLSupport
 
-      # TODO: this class is a stub.
-
-      # No support for hooks
-      # No support for regular expressions
-      # Needs to store the encoder version
-
-      def to_hash
-        hash = {}
-        attributes = Specification::DSL.attributes
-
-        attributes.each do |attrb|
-          value = instance_variable_get(attrb.ivar)
-          next if is_empty?(value)
-          value = prepare_value(value)
-          hash[attrb.name.to_s] = value
-        end
-
-        if subspecs && !subspecs.empty?
-          hash['subspecs'] = subspecs.map { |s| s.to_hash }
-        end
-
-        available_platforms.each do |platform|
-          activate_platform(platform)
-          dependencies = external_dependencies.map(&:to_s)
-          unless dependencies.empty?
-            hash['dependencies'] ||= {}
-            hash['dependencies'][platform.name] = dependencies
-          end
-        end
-
-        hash
-      end
-
-      def is_empty?(value)
-        return true unless value
-        case value
-        when Hash  then is_empty?(value.values)
-        when Array then value.compact.all?{|v| is_empty?(v)}
-        else false end
-      end
-
-      def prepare_value(value)
-        case value
-        when Version then value.version
-        when Platform
-          [value.name, value.deployment_target ? value.deployment_target.version : nil]
-        else value end
-      end
-
+      # @return [String] the yaml representation of the specification.
+      #
       def to_yaml
         to_hash.to_yaml
       end
 
-      def self.from_hash(hash)
-        spec = Spec.new
-        spec
+      # @return [Hash] the hash representation of the specification including
+      #         subspecs.
+      #
+      def to_hash
+        hash = attributes_hash.dup
+        hash["subspecs"] = subspecs.map { |spec| spec.to_hash } unless subspecs.empty?
+        hash
       end
 
+      # @return [Bool] Whether the specification can be converted to a hash
+      #         without loss of information.
+      #
+      def safe_to_hash?
+        pre_install_callback.nil? && post_install_callback.nil?
+      end
+
+    end
+
+    # Configures the specification from the given hash.
+    #
+    # @param  [Hash] the hash which contains the information of the
+    #         specification.
+    #
+    # @return [Specification] the specification
+    #
+    def self.from_hash(hash)
+      spec = Spec.new
+      attributes_hash = hash.dup
+      subspecs = attributes_hash.delete('subspecs')
+      spec.attributes_hash = attributes_hash
+      if subspecs
+        spec.subspecs = subspecs.map { |hash| Specification.from_hash(hash) }
+      end
+      spec
+    end
+
+    # Configures the specification from the given YAML representation.
+    #
+    # @param  [String] the YAML encoded hash which contains the information of
+    #         the specification.
+    #
+    #
+    # @return [Specification] the specification
+    #
+    def self.from_yaml(yaml)
+      hash = YAML.load(yaml)
+      from_hash(hash)
     end
   end
 end

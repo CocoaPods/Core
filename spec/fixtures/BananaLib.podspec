@@ -24,4 +24,8 @@ Pod::Spec.new do |s|
        '--company-id', 'com.banana',
     ]
   }
+
+  s.subspec "GreenBanana" do |ss|
+    ss.source_files = 'GreenBanana'
+  end
 end
