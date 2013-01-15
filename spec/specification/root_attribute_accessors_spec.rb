@@ -26,6 +26,10 @@ module Pod
       @spec.version.should == Version.new('1.0')
     end
 
+    it "memoizes the version to allow to set it to head" do
+      @spec.version.should.equal? @spec.version
+    end
+
     it "returns the version version of the root specification for subspecs" do
       @spec.subspecs.first.version.should == Version.new('1.0')
     end
