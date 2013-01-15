@@ -18,7 +18,7 @@ module Pod
       end
 
       it "returns the platform" do
-        @consumer.consumer_platform.should == :ios
+        @consumer.platform.should == :ios
       end
 
       it "raises if the specification does not suppor the given platform" do

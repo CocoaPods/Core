@@ -26,14 +26,14 @@ module Pod
       # @return [Symbol] The platform for which the specification should be
       #         consumed.
       #
-      attr_reader :consumer_platform
+      attr_reader :platform
 
       # @param  [Specification] spec @see spec
       # @param  [Symbol] platform @see platform
       #
       def initialize(spec, platform)
         @spec = spec
-        @consumer_platform = platform
+        @platform = platform
 
         unless spec.supported_on_platform?(platform)
           raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
@@ -165,7 +165,7 @@ module Pod
       def value_for_attribute(attr_name)
         attr = Specification::DSL.attributes[attr_name]
         value = value_with_inheritance(spec, attr)
-        value ||= attr.default(consumer_platform)
+        value ||= attr.default(platform)
         value ||= attr.container.new if attr.container
         value
       end
@@ -204,8 +204,8 @@ module Pod
       def raw_value_for_attribute(the_spec, attr)
         value = the_spec.attributes_hash[attr.name.to_s]
         value = prepare_value(attr, value)
-        if attr.multi_platform? && the_spec.attributes_hash[consumer_platform.to_s]
-          platform_value = the_spec.attributes_hash[consumer_platform.to_s][attr.name.to_s]
+        if attr.multi_platform? && the_spec.attributes_hash[platform.to_s]
+          platform_value = the_spec.attributes_hash[platform.to_s][attr.name.to_s]
           platform_value = prepare_value(attr, platform_value)
           value = merge_values(attr, value, platform_value)
         end
