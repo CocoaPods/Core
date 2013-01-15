@@ -26,6 +26,10 @@ module Pod
       @spec.version.should == Version.new('1.0')
     end
 
+    it "returns the version version of the root specification for subspecs" do
+      @spec.subspecs.first.version.should == Version.new('1.0')
+    end
+
     it "returns the authors" do
       hash = { 'Darth Vader' => 'darthvader@darkside.com',
                'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }

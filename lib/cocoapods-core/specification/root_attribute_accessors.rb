@@ -24,7 +24,7 @@ module Pod
         # @return [Version] The version of the Pod.
         #
         def version
-          Version.new(attributes_hash["version"])
+           root? ? Version.new(attributes_hash["version"]) : root.version
         end
 
         # @return [Hash] a hash containing the authors as the keys and their
