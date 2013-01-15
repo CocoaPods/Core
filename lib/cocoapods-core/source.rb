@@ -89,7 +89,11 @@ module Pod
     #         the version for the specification.
     #
     def specification(name, version)
-      specification_path = repo + name + version.to_s + "#{name}.podspec"
+      path = repo + name + version.to_s
+      specification_path = path + "#{name}.podspec.yaml"
+      unless specification_path.exist?
+        specification_path = path + "#{name}.podspec"
+      end
       Specification.from_file(specification_path)
     end
 
