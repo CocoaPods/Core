@@ -97,7 +97,8 @@ module Pod
         # @note   The indentation is stripped from the description.
         #
         def description
-          attributes_hash["description"].strip_heredoc
+          description = attributes_hash["description"]
+          description.strip_heredoc if description
         end
 
         # @return [Array<String>] The list of the URL for the screenshots of the
