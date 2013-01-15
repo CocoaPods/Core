@@ -255,6 +255,26 @@ module Pod
         @spec.platform = :ios
         @subspec.send(:supported_platform_names).should == ["ios"]
       end
+
+      it "returns the consumer for the given symbolic name of a platform" do
+        @spec.ios.source_files = 'ios-files'
+        consumer = @spec.consumer(:ios)
+        consumer.spec.should == @spec
+        consumer.platform.should == :ios
+        consumer.source_files.should == ['ios-files']
+      end
+
+      it "returns the consumer of a given platform" do
+        consumer = @spec.consumer(Platform.new :ios)
+        consumer.spec.should == @spec
+        consumer.platform.should == :ios
+      end
+
+      it "caches the consumers per platform" do
+        @spec.consumer(:ios).should.equal?@spec.consumer(:ios)
+        @spec.consumer(:ios).platform.should == :ios
+        @spec.consumer(:osx).platform.should == :osx
+      end
     end
 
     #-------------------------------------------------------------------------#

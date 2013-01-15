@@ -40,6 +40,7 @@ module Pod
     def initialize(parent = nil, name = nil)
       @attributes_hash = {}
       @subspecs = []
+      @consumers = {}
       @parent = parent
       attributes_hash['name'] = name
 
@@ -221,10 +222,10 @@ module Pod
     #
     def dependencies(platform = nil)
       if platform
-        Consumer.new(self, platform).dependencies || []
+        consumer(platform).dependencies || []
       else
         available_platforms.map do |platform|
-          Consumer.new(self, platform.name).dependencies
+          consumer(platform).dependencies
         end.flatten.uniq
       end
     end
@@ -233,6 +234,18 @@ module Pod
     #
     def all_dependencies(platform = nil)
       dependencies(platform) + subspec_dependencies(platform)
+    end
+
+    # Returns a comsumer to access the the multi-platform attributes.
+    #
+    # @param  [String, Symbol, Platform] platform
+    #         he platform of the consumer
+    #
+    # @return [Specification::Consumer] the consumer for the given platform
+    #
+    def consumer(platform)
+      platform = platform.to_sym
+      @consumers[platform] ||= Consumer.new(self, platform)
     end
 
     #-------------------------------------------------------------------------#
