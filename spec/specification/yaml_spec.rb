@@ -5,7 +5,7 @@ module Pod
 
     describe "In general" do
       before do
-        path = fixture('bananalib.podspec')
+        path = fixture('BananaLib.podspec')
         @spec = Spec.from_file(path)
       end
 
@@ -16,7 +16,7 @@ module Pod
       end
 
       it "can be initialized from a YAML file" do
-        yaml_path = fixture('bananalib.podspec.yaml')
+        yaml_path = fixture('BananaLib.podspec.yaml')
         spec_from_yaml = Specification.from_file(yaml_path)
         spec_from_yaml.attributes_hash.should == @spec.attributes_hash
       end
