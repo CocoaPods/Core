@@ -398,6 +398,12 @@ module Pod
         it "initializes the value to the empty container if no value could be resolved" do
           @consumer.frameworks.should == []
         end
+
+        it "doesn't triggers the lazy evaluation of Rake::FileList [TEMPORARY]" do
+          @subspec.source_files = Rake::FileList.new('FileList-Resources')
+          computed = @subspec_consumer.source_files
+          computed.find { |value| value.class == Rake::FileList }.should.not.be.nil
+        end
       end
 
       #--------------------------------------#

@@ -96,6 +96,23 @@ module Pod
 
       #------------------#
 
+      xit "checks for unrecognized keys" do
+
+      end
+
+      xit "checks the type of the values of the attributes" do
+
+      end
+
+      xit "checks for unknown keys in the license" do
+        lambda { @spec.license = { :name => 'MIT' } }.should.raise StandardError
+      end
+
+      xit "checks the source for unknown keys" do
+        call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
+        call.should.raise StandardError
+      end
+
       it "checks the required attributes" do
         @spec.stubs(:name).returns(nil)
         message_should_include('name', 'required')
@@ -234,8 +251,8 @@ module Pod
         message.should.include('source_files')
       end
 
-      xit "announces deprecations for the Rake::FileList" do
-        @spec.source_files = ::Rake::FileList.new
+      it "announces deprecations for the Rake::FileList [TEMPORARY]" do
+        @spec.source_files = ::Rake::FileList.new('FileList-Classes')
         @linter.lint
         message = @linter.results.first.message
         message.should.include('FileList')
@@ -291,14 +308,3 @@ module Pod
     end
   end
 end
-
-
-
-      # xit "checks for unknown keys in the license" do
-      #   lambda { @spec.license = { :name => 'MIT' } }.should.raise StandardError
-      # end
-
-      # xit "checks the source for unknown keys" do
-      #   call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
-      #   call.should.raise StandardError
-      # end

@@ -5,6 +5,13 @@ require 'cocoapods-core/specification/root_attribute_accessors'
 require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/yaml'
 
+# TODO Temporary support
+if RUBY_VERSION >= "1.9"
+  require 'rake/file_list'
+else
+  require 'rake'
+end
+
 module Pod
 
   # The Specification provides a DSL to describe a Pod. A pod is defined as a

@@ -255,14 +255,17 @@ module Pod
 
       # Checks the attributes that represent file patterns.
       #
+      # @todo Check the attributes hash directly.
+      #
       def validate_file_patterns
         attributes = DSL.attributes.values.select(&:file_patterns?)
         attributes.each do |attrb|
           patterns = consumer.send(attrb.name)
-          patterns = patterns.is_a?(Hash) ? patterns.values : patterns
-          patterns = patterns.flatten
+          if patterns.is_a?(Hash)
+            patterns = patterns.values.flatten(1)
+          end
           patterns.each do |pattern|
-            if defined?(Rake) && pattern.is_a?(Rake::FileList)
+            if pattern.is_a?(Rake::FileList)
               error "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
             else
               if pattern.start_with?('/')

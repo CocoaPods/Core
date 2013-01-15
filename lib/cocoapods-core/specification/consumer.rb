@@ -259,7 +259,11 @@ module Pod
       def prepare_value(attr, value)
         return nil unless value
         if attr.container ==  Array
-          value = [*value ]
+          if value.class == Rake::FileList
+            value = [value]
+          else
+            value = [*value]
+          end
         end
 
         hook_name = prepare_hook_name(attr)
