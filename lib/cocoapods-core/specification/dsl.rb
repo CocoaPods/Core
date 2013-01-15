@@ -359,8 +359,13 @@ module Pod
       #           target.
       #
       def platform=((name, deployment_target))
-        attributes_hash["platforms"] ||= {}
-        attributes_hash["platforms"][name.to_s] = deployment_target
+        if name
+        attributes_hash["platforms"] = {
+          name.to_s => deployment_target
+        }
+        else
+          attributes_hash["platforms"] = {}
+        end
       end
 
       #------------------#
