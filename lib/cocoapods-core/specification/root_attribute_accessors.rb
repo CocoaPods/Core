@@ -71,10 +71,12 @@ module Pod
           license = attributes_hash["license"]
           if license.is_a?(String)
             { :type => license }
-          else
+          elsif license.is_a?(Hash)
             license = convert_keys_to_symbol(license)
             license[:text] = license[:text].strip_heredoc if license[:text]
             license
+          else
+            {}
           end
         end
 
