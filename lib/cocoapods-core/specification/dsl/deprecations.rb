@@ -6,14 +6,24 @@ module Pod
       #
       module Deprecations
 
-        def preferred_dependency=(args)
+        def preferred_dependency=(name)
+          self.default_subspec = name
           CoreUI.warn "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
-          attributes_hash[:default_subspec] = args
         end
 
         def singleton_method_added(method)
-          if [:pre_install, :post_install ].include?(method)
+          if method == :pre_install
             CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
+            @pre_install_callback = Proc.new do |pod, target_definition|
+              self.pre_install(pod, target_definition)
+            end
+
+          elsif method == :post_install
+            CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
+            @post_install_callback = Proc.new do |target_installer|
+              self.post_install(target_installer)
+            end
+
           elsif method == :header_mappings
             raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
           end
