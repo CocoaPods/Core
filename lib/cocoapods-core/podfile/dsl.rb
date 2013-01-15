@@ -288,8 +288,11 @@ module Pod
       #
       # @param    [Hash{String => symbol}] build_configurations
       #           a hash where the keys are the name of the build configurations
-      #           and the values a symbol that represents their type (`:debug` or
-      #           `:release`).
+      #           in your Xcode project and the values are Symbols that specify
+      #           if the configuration should be based on the `:debug` or
+      #           `:release` configuration. If no explicit mapping is specified
+      #           for a configuration in your project, it will default to
+      #           `:release`.
       #
       # @example  Specifying the user project
       #
