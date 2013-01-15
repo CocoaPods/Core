@@ -348,12 +348,14 @@ module Pod
       end
 
       it "inherits the dependencies of the parent" do
-        @subspec_consumer.dependencies.should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
+        @subspec_consumer.dependencies.sort.should == [
+          Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
       end
 
       it "takes into account the dependencies specified for a platform" do
         osx_consumer = Specification::Consumer.new(@spec, :osx)
-        osx_consumer.dependencies.should == [ Dependency.new('AFNetworking'), Dependency.new('MagicalRecord') ]
+        osx_consumer.dependencies.sort.should == [
+          Dependency.new('AFNetworking'), Dependency.new('MagicalRecord') ]
       end
     end
 

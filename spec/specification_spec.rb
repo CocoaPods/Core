@@ -147,7 +147,7 @@ module Pod
       end
 
       it "returns the dependencies on its subspecs" do
-        @spec.subspec_dependencies.should == [
+        @spec.subspec_dependencies.sort.should == [
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspecOSX', '1.0') ]
       end
@@ -166,21 +166,21 @@ module Pod
       end
 
       it "returns all the dependencies" do
-        @spec.dependencies.should == [
+        @spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord') ]
       end
 
       it "returns the dependencies given the platform" do
-        @spec.dependencies(:ios).should == [ Dependency.new('AFNetworking') ]
+        @spec.dependencies(:ios).sort.should == [ Dependency.new('AFNetworking') ]
       end
 
       it "inherits the dependencies of the parent" do
-        @subsubspec.dependencies(:ios).should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
+        @subsubspec.dependencies(:ios).sort.should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
       end
 
       it "returns all the dependencies including the ones on subspecs given a platform" do
-        @spec.all_dependencies.sort_by(&:name).should == [
+        @spec.all_dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('Pod/Subspec', '1.0'),
@@ -188,7 +188,7 @@ module Pod
       end
 
       it "returns all the dependencies for a given platform" do
-        @spec.all_dependencies(:ios).sort_by(&:name).should == [
+        @spec.all_dependencies(:ios).sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('Pod/Subspec', '1.0') ]
       end

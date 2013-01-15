@@ -358,7 +358,8 @@ module Pod
       #           (either `:ios` or `:osx`) and the second is the deployment
       #           target.
       #
-      def platform=((name, deployment_target))
+      def platform=(args)
+        name, deployment_target = args
         if name
         attributes_hash["platforms"] = {
           name.to_s => deployment_target
@@ -1017,7 +1018,8 @@ module Pod
       # @example
       #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
       #
-      def dependency(name, *version_requirements)
+      def dependency(*args)
+        name, *version_requirements = args
         raise StandardError, "A specification can't require self as a subspec" if name == self.name
         raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
         attributes_hash["dependencies"] ||= {}

@@ -84,7 +84,7 @@ module Pod
             - osx
         EOS
         spec = Specification.from_yaml(yaml)
-        spec.available_platforms.should == [Platform.new(:ios), Platform.new(:osx)]
+        spec.available_platforms.sort.should == [Platform.new(:ios), Platform.new(:osx)]
       end
 
     end

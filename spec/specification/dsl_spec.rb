@@ -245,6 +245,16 @@ module Pod
         @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
         @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
       end
+
+      it "allows to specify a single dependency as a shortcut with one version requirement" do
+        @spec.dependency('SVStatusHUD', '~>1.0')
+        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0']}
+      end
+
+      it "allows to specify a single dependency as a shortcut with no version requirements" do
+        @spec.dependency('SVStatusHUD')
+        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => []}
+      end
     end
 
     #-----------------------------------------------------------------------------#
@@ -311,9 +321,9 @@ module Pod
         singularized.each do |attr|
           spec.should.respond_to(attr.writer_name)
         end
-        singularized.map(&:name).sort.should == [
-          :authors, :compiler_flags, :frameworks, :libraries,
-          :preserve_paths, :resources, :screenshots, :weak_frameworks
+        singularized.map{ |attr| attr.name.to_s }.sort.should == %w[
+          authors compiler_flags frameworks libraries
+          preserve_paths resources screenshots weak_frameworks
         ]
       end
     end

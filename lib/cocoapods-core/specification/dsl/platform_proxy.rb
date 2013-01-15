@@ -44,7 +44,8 @@ module Pod
         #
         # @return [void]
         #
-        def dependency((name, version_requirements))
+        def dependency(*args)
+          name, *version_requirements = args
           platform_name = platform.to_s
           spec.attributes_hash[platform_name] ||= {}
           spec.attributes_hash[platform_name]["dependencies"] ||= {}

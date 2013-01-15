@@ -16,8 +16,8 @@ module Pod
     #-------------------------------------------------------------------------#
 
     it "stores the attributes" do
-       TestClass.attributes.keys.should == [
-         :test_root_attribute, :test_attribute
+       TestClass.attributes.keys.sort_by(&:to_s).should == [
+         :test_attribute, :test_root_attribute
        ]
     end
 
