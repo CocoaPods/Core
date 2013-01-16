@@ -799,8 +799,8 @@ module Pod
         ].freeze,
         :osx_default   => [
           'Classes/**/ios/**/*'.freeze,
-          'Resources/**/ios/**/*'.freeze ]
-        .freeze,
+          'Resources/**/ios/**/*'.freeze 
+        ].freeze,
       }
 
       #------------------#
