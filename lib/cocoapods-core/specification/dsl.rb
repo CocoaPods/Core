@@ -693,7 +693,7 @@ module Pod
       attribute :source_files, {
         :container     => Array,
         :file_patterns => true,
-        :default_value => [ 'Classes/**/*.{h,m}' ],
+        :default_value => [ 'Classes/**/*.{h,m}'.freeze ].freeze,
       }
 
       #------------------#
@@ -766,7 +766,9 @@ module Pod
         :file_patterns => true,
         :container     => Hash,
         :keys          => RESORUCES_DESTINATIONS,
-        :default_value => { :resources => [ 'Resources/**/*' ] },
+        :default_value => {
+          :resources => [ 'Resources/**/*'.freeze ].freeze
+        }.freeze,
         :singularize   => true,
       }
 
@@ -791,8 +793,14 @@ module Pod
       attribute :exclude_files, {
         :container     => Array,
         :file_patterns => true,
-        :ios_default   => [ 'Classes/**/osx/**/*', 'Resources/**/osx/**/*' ],
-        :osx_default   => [ 'Classes/**/ios/**/*', 'Resources/**/ios/**/*' ],
+        :ios_default   => [
+          'Classes/**/osx/**/*'.freeze,
+          'Resources/**/osx/**/*'.freeze
+        ].freeze,
+        :osx_default   => [
+          'Classes/**/ios/**/*'.freeze,
+          'Resources/**/ios/**/*'.freeze ]
+        .freeze,
       }
 
       #------------------#
