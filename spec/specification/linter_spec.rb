@@ -48,6 +48,7 @@ module Pod
         @linter.spec.source_files = '/Absolute'
         @linter.lint
         @linter.results.count.should == 1
+        @linter.results
         @linter.results.first.platforms.map(&:to_s).sort.should == %w[ios osx]
       end
 
@@ -94,6 +95,23 @@ module Pod
       end
 
       #------------------#
+
+      xit "checks for unrecognized keys" do
+
+      end
+
+      xit "checks the type of the values of the attributes" do
+
+      end
+
+      xit "checks for unknown keys in the license" do
+        lambda { @spec.license = { :name => 'MIT' } }.should.raise StandardError
+      end
+
+      xit "checks the source for unknown keys" do
+        call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
+        call.should.raise StandardError
+      end
 
       it "checks the required attributes" do
         @spec.stubs(:name).returns(nil)
@@ -233,8 +251,8 @@ module Pod
         message.should.include('source_files')
       end
 
-      it "announces deprecations for the Rake::FileList" do
-        @spec.source_files = ::Rake::FileList.new
+      it "announces deprecations for the Rake::FileList [TEMPORARY]" do
+        @spec.source_files = ::Rake::FileList.new('FileList-Classes')
         @linter.lint
         message = @linter.results.first.message
         message.should.include('FileList')
@@ -243,17 +261,19 @@ module Pod
       end
 
       it "checks if a specification is empty" do
-        @spec.stubs(:source_files).returns([])
-        @spec.stubs(:resources).returns({})
-        @spec.stubs(:preserve_paths).returns([])
-        @spec.stubs(:subspecs).returns([])
+        consumer = Specification::Consumer
+        consumer.any_instance.stubs(:source_files).returns([])
+        consumer.any_instance.stubs(:resources).returns({})
+        consumer.any_instance.stubs(:preserve_paths).returns([])
+        consumer.any_instance.stubs(:subspecs).returns([])
         @linter.lint
         message = @linter.results.first.message
         message.should.include('appears to be empty')
       end
 
       it "requires that the require_arc value is specified until the switch to a true default" do
-        @spec.stubs(:requires_arc)
+        consumer = Specification::Consumer
+        consumer.any_instance.stubs(:requires_arc).returns(nil)
         @linter.lint
         message = @linter.results.first.message
         message.should.include('`requires_arc` should be specified')

@@ -1,4 +1,6 @@
 Pod::Spec.new do |s|
+
+  # Root attributes
   s.name         = 'BananaLib'
   s.version      = '1.0'
   s.authors      = 'Banana Corp', { 'Monkey Boy' => 'monkey@banana-corp.local' }
@@ -6,12 +8,6 @@ Pod::Spec.new do |s|
   s.summary      = 'Chunky bananas!'
   s.description  = 'Full of chunky bananas.'
   s.source       = { :git => 'http://banana-corp.local/banana-lib.git', :tag => 'v1.0' }
-  s.source_files = 'Classes/*.{h,m}', 'Vendor'
-  s.xcconfig     = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
-  s.prefix_header_file = 'Classes/BananaLib.pch'
-  s.resources    = "Resources/*.png"
-  s.requires_arc = true
-  s.dependency   'monkey', '~> 1.0.1', '< 1.0.9'
   s.license      = {
     :type => 'MIT',
     :file => 'LICENSE',
@@ -24,4 +20,23 @@ Pod::Spec.new do |s|
        '--company-id', 'com.banana',
     ]
   }
+
+  # Platform
+  s.platform = :ios, '4.3'
+
+  # File patterns
+  s.source_files     = 'Classes/*.{h,m}', 'Vendor'
+  s.ios.source_files = 'Classes_ios/*.{h,m}'
+  s.resources        = "Resources/*.png"
+
+  # Build settings
+  s.xcconfig           = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
+  s.prefix_header_file = 'Classes/BananaLib.pch'
+  s.requires_arc       = true
+
+  # Dependencies
+  s.dependency   'monkey', '~> 1.0.1', '< 1.0.9'
+  s.subspec "GreenBanana" do |ss|
+    ss.source_files = 'GreenBanana'
+  end
 end

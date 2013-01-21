@@ -59,7 +59,7 @@ module Pod
       # @return [void]
       #
       def required_by(dependency, dependent_name)
-        unless @required_by.empty? || dependency.requirement.satisfied_by?(Gem::Version.new(required_version.to_s))
+        unless @required_by.empty? || dependency.requirement.satisfied_by?(Version.new(required_version.to_s))
           raise StandardError, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
         end
         @specification = nil

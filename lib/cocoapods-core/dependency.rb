@@ -4,17 +4,10 @@ module Pod
   # {Specification} on a Pod. It stores the name of the dependency, version
   # requirements and external sources information.
   #
-  # This class leverages the RubyGems dependency class
-  # with minor extension to support CocoaPods specific features.
+  # This class leverages the RubyGems dependency class with minor extension to
+  # support CocoaPods specific features like subspecs.
   #
-  # More information can be found at:
-  #
-  # - https://github.com/rubygems/rubygems/blob/master/lib/rubygems/dependency.rb
-  # - http://rubygems.rubyforge.org/rubygems-update/Gem/Dependency.html
-  #
-  # The Dependency class provides support for subspecs.
-  #
-  class Dependency < Gem::Dependency
+  class Dependency < Pod::Vendor::Gem::Dependency
 
     # @return [Hash{Symbol=>String}] a hash describing the external source
     #         where the pod should be fetched. The external source has to
@@ -87,7 +80,7 @@ module Pod
         @head = true
         requirements.pop
         unless requirements.empty?
-          raise StandardError, "A `:head' dependency may not specify version requirements."
+          raise StandardError, "A `:head` dependency may not specify version requirements."
         end
       end
 
@@ -98,11 +91,11 @@ module Pod
     #
     attr_accessor :specific_version
 
-    # @return [Gem::Requirement] the requirement of this dependency (a set of
+    # @return [Requirement] the requirement of this dependency (a set of
     #         one or more version restrictions).
     #
     def requirement
-      return Gem::Requirement.new(specific_version) if specific_version
+      return Requirement.new(specific_version) if specific_version
       super
     end
 
@@ -181,6 +174,7 @@ module Pod
     def ==(other)
       super && head? == other.head? && @external_source == other.external_source && inhibits_warnings? == other.inhibits_warnings?
     end
+    alias :eql? :==
 
     # Merges the version requirements of the dependency with another one.
     #
@@ -233,7 +227,7 @@ module Pod
         version << external_source_description
       elsif head?
         version << 'HEAD'
-      elsif @version_requirements != Gem::Requirement.default
+      elsif @version_requirements != Requirement.default
         version << @version_requirements.to_s
       end
       result = @name.dup

@@ -1,8 +1,16 @@
-require 'active_support/core_ext/string/strip.rb'
-require 'cocoapods-core/specification/set'
+require 'cocoapods-core/specification/consumer'
 require 'cocoapods-core/specification/dsl'
 require 'cocoapods-core/specification/linter'
+require 'cocoapods-core/specification/root_attribute_accessors'
+require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/yaml'
+
+# TODO Temporary support
+if RUBY_VERSION >= "1.9"
+  require 'rake/file_list'
+else
+  require 'rake'
+end
 
 module Pod
 
@@ -15,12 +23,14 @@ module Pod
   class Specification
 
     include Pod::Specification::DSL
+    include Pod::Specification::DSL::Deprecations
+    include Pod::Specification::RootAttributesAccessors
     include Pod::Specification::YAMLSupport
 
-    # @return [Specification] parent the parent of the specification unless the
+    # @return [Specification] the parent of the specification unless the
     #         specification is a root.
     #
-    attr_accessor :parent
+    attr_reader :parent
 
     # @param  [Specification] parent @see parent
     #
@@ -28,95 +38,70 @@ module Pod
     #         the name of the specification.
     #
     def initialize(parent = nil, name = nil)
-      DSL.attributes.each { |a| a.initialize_spec_ivar(self) }
+      @attributes_hash = {}
       @subspecs = []
-      @define_for_platforms = PLATFORMS
-      @deployment_target = {}
-      @dependencies = {}
-      PLATFORMS.each do |platform|
-        @dependencies[platform] = []
-      end
-
+      @consumers = {}
       @parent = parent
-      @name   = name
+      attributes_hash['name'] = name
 
       yield self if block_given?
     end
 
-    # Loads a specification form the given path.
+    # @return [Hash] the hash that stores the information of the attributes of
+    #         the specification.
     #
-    # @param  [Pathname, String] path
-    #         the path of the `podspec` file.
-    #
-    # @param  [String] subspec_name
-    #         the name of the specification that should be returned. If it is
-    #         nil returns the root specification.
-    #
-    # @raise  If the file doesn't return a Pods::Specification after
-    #         evaluation.
-    #
-    # @return [Specification]
-    #
-    def self.from_file(path, subspec_name = nil)
-      path = Pathname.new(path)
-      unless path.exist?
-        raise StandardError, "No podspec exists at path `#{path}`."
-      end
-      spec = ::Pod._eval_podspec(path)
-      unless spec.is_a?(Specification)
-        raise StandardError, "Invalid podspec file at path `#{path}`."
-      end
-      spec.defined_in_file = path
-      spec.subspec_by_name(subspec_name)
-    end
+    attr_accessor :attributes_hash
 
-    # @return [String] the path where the specification is defined, if loaded
-    #         from a file.
+    # @return [Array<Specification>] The subspecs of the specification.
     #
-    def defined_in_file
-      root? ? @defined_in_file : root.defined_in_file
-    end
+    attr_accessor :subspecs
 
-    # Sets the path of the `podspec` file used to load the specification.
+    # Checks if a specification si equal to the given one.
     #
-    # @param  [String] file
-    #         the `podspec` file.
+    # @param  [Specification] other
+    #         the specification to compare with.
     #
-    # @return [void]
-    #
-    def defined_in_file=(file)
-      unless root?
-        raise StandardError, "Defined in file can be set only for root specs."
-      end
-      @defined_in_file = file
-    end
-
-
-    # Compares a specification to another. The comparison is based only on the
-    # name and the version of the specification.
-    #
-    # @return [Bool] whether the specifications represent the same version of
-    #         the same Pod.
+    # @return [Bool] whether the specifications are equal.
     #
     def ==(other)
-      object_id == other.object_id ||
-        (self.class === other &&
-         name == other.name &&
-         version == other.version)
+      self.class === other &&
+        attributes_hash == other.attributes_hash &&
+        subspecs == other.subspecs &&
+        pre_install_callback == other.pre_install_callback &&
+        post_install_callback == other.post_install_callback
     end
 
-    # @return [String] The SHA1 digest of the file in which the specification
-    #         is defined.
+    # @return [String] A string suitable for representing the specification in
+    #         clients.
     #
-    # @return [Nil] If the specification is not defined in a file.
+    def to_s
+      "#{name} (#{version})"
+    end
+
+    # @return [String] A string suitable for debugging.
     #
-    def checksum
-      require 'digest'
-      unless defined_in_file.nil?
-        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
-        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
-        checksum
-      end
+    def inspect
+      "#<#{self.class.name} name=#{name.inspect}>"
+    end
+
+    # @param    [String] string_representation
+    #           the string that describes a {Specification} generated from
+    #           {Specification#to_s}.
+    #
+    # @example  Input examples
+    #
+    #           "libPusher (1.0)"
+    #           "libPusher (HEAD based on 1.0)"
+    #           "RestKit/JSON (1.0)"
+    #
+    # @return   [Array<String, Version>] the name and the version of a
+    #           pod.
+    #
+    def self.name_and_version_from_string(string_reppresenation)
+      match_data = string_reppresenation.match(/(\S*) \((.*)\)/)
+      name = match_data[1]
+      vers = Version.new(match_data[2])
+      [name, vers]
     end
 
     # Returns the root name of a specification.
@@ -131,12 +116,14 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @!group Working with a hierarchy of specifications
+    public
+
+    # @!group Hierarchy
 
     # @return [Specification] The root specification or itself if it is root.
     #
     def root
-      @parent ? @parent.root : self
+      parent ? parent.root : self
     end
 
     # @return [Bool] whether the specification is root.
@@ -153,22 +140,20 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @!group Working with dependencies
+    public
 
-    attr_reader :subspecs
+    # @!group Dependencies & Subspecs
 
     # @return [Array<Specifications>] the recursive list of all the subspecs of
     #         a specification.
     #
     def recursive_subspecs
-      @recursive_subspecs ||= begin
-        mapper = lambda do |spec|
-          spec.subspecs.map do |subspec|
-            [subspec, *mapper.call(subspec)]
-          end.flatten
-        end
-        mapper.call(self)
+      mapper = lambda do |spec|
+        spec.subspecs.map do |subspec|
+          [subspec, *mapper.call(subspec)]
+        end.flatten
       end
+      mapper.call(self)
     end
 
     # Returns the subspec with the given name or the receiver if the name is
@@ -185,10 +170,10 @@ module Pod
     # @return   [Specification] the subspec with the given name or self.
     #
     def subspec_by_name(relative_name)
-      if relative_name.nil? || relative_name == @name
+      if relative_name.nil? || relative_name == base_name
         self
       else
-        remainder = relative_name[@name.size+1..-1]
+        remainder = relative_name[base_name.size+1..-1]
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
         unless subspec
@@ -197,6 +182,32 @@ module Pod
         end
         subspec.subspec_by_name(remainder)
       end
+    end
+
+    # @return [String] the name of the default subspec if provided.
+    #
+    def default_subspec
+      attributes_hash["default_subspec"]
+    end
+
+    # Returns the dependencies on subspecs.
+    #
+    # @note   A specification has a dependency on either the
+    #         {#default_subspec} or each of its children subspecs that are
+    #         compatible with its platform.
+    #
+    # @return [Array<Dependency>] the dependencies on subspecs.
+    #
+    def subspec_dependencies(platform = nil)
+      if default_subspec
+        specs = [subspec_by_name("#{name}/#{default_subspec}")]
+      else
+        specs = subspecs.compact
+      end
+      if platform
+        specs = specs.select { |s| s.supported_on_platform?(platform) }
+      end
+      specs = specs.map { |s| Dependency.new(s.name, version) }
     end
 
     # Returns the dependencies on other Pods or subspecs of other Pods.
@@ -209,38 +220,37 @@ module Pod
     #
     # @return [Array<Dependency>] the dependencies on other Pods.
     #
-    def external_dependencies(all_platforms = false)
-      __active_plaform_check unless all_platforms
-      result = if all_platforms then @dependencies.values.flatten
-               else @dependencies[active_platform] end
-      result = parent.external_dependencies + result if parent
-      result.uniq
-    end
-
-    # Returns the dependencies on subspecs.
-    #
-    # @note   A specification has a dependency on either the
-    #         {#default_subspec} or each of its children subspecs that are
-    #         compatible with its platform.
-    #
-    # @return [Array<Dependency>] the dependencies on subspecs.
-    #
-    def subspec_dependencies
-      __active_plaform_check
-      specs = if default_subspec then [subspec_by_name("#{name}/#{default_subspec}")]
-              else subspecs end
-      specs = specs.compact
-      specs = specs.select { |s| s.supported_on_platform?(active_platform) }
-      specs = specs.map { |s| Dependency.new(s.name, version) }
+    def dependencies(platform = nil)
+      if platform
+        consumer(platform).dependencies || []
+      else
+        available_platforms.map do |platform|
+          consumer(platform).dependencies
+        end.flatten.uniq
+      end
     end
 
     # @return [Array<Dependency>] all the dependencies of the specification.
     #
-    def dependencies
-      external_dependencies + subspec_dependencies
+    def all_dependencies(platform = nil)
+      dependencies(platform) + subspec_dependencies(platform)
+    end
+
+    # Returns a comsumer to access the the multi-platform attributes.
+    #
+    # @param  [String, Symbol, Platform] platform
+    #         he platform of the consumer
+    #
+    # @return [Specification::Consumer] the consumer for the given platform
+    #
+    def consumer(platform)
+      platform = platform.to_sym
+      @consumers[platform] ||= Consumer.new(self, platform)
     end
 
     #-------------------------------------------------------------------------#
+
+    public
 
     # @!group DSL helpers
 
@@ -269,7 +279,7 @@ module Pod
     #
     def supported_on_platform?(*platform)
       platform = Platform.new(*platform)
-      available_platforms.any? { |p| platform.supports?(p) }
+      available_platforms.any? { |available| platform.supports?(available) }
     end
 
     # @return [Array<Platform>] The platforms that the Pod is supported on.
@@ -278,7 +288,8 @@ module Pod
     #         platforms.
     #
     def available_platforms
-      names = platform ? [ platform.name ] : PLATFORMS
+      names = supported_platform_names
+      names = PLATFORMS if names.empty?
       names.map { |name| Platform.new(name, deployment_target(name)) }
     end
 
@@ -287,25 +298,69 @@ module Pod
     # @param  [String] platform_name
     #         the symbolic name of the platform.
     #
-    # @return [Version] the version of the deployment target or nil if not
-    #         specified or the platform is not supported.
+    # @return [String] the deployment target
+    # @return [Nil] if not deployment target was specified for the platform.
     #
     def deployment_target(platform_name)
-      if @platform
-        platform.deployment_target if platform.name == platform_name
-      elsif target = @deployment_target[platform_name]
-        target
-      elsif parent
-        parent.deployment_target(platform_name)
+      result = platform_hash[platform_name.to_s]
+      result ||= parent.deployment_target(platform_name) if parent
+      result
+    end
+
+    protected
+
+    # @return [Array[Symbol]] the symbolic name of the platform in which the
+    #         specification is supported.
+    #
+    # @return [Nil] if the specification is supported on all the known
+    #         platforms.
+    #
+    def supported_platform_names
+      result = platform_hash.keys
+      if result.empty? && parent
+        result = parent.supported_platform_names
+      end
+      result
+    end
+
+    # @return [Hash] the normalized hash which reppresents the platform
+    #         information.
+    #
+    def platform_hash
+      case value = attributes_hash["platforms"]
+      when String
+        { value => nil }
+      when Array
+        result = {}
+        value.each do |value|
+          result[value] = nil
+        end
+        result
+      when Hash
+        value
+      else
+        Hash.new
       end
     end
 
     #-------------------------------------------------------------------------#
 
+    public
+
+    # @!group Hooks support
+
+    # @return [Proc] the pre install callback if defined.
+    #
+    attr_reader :pre_install_callback
+
+    # @return [Proc] the post install callback if defined.
+    #
+    attr_reader :post_install_callback
+
     # Calls the pre install callback if defined.
     #
     # @param  [Pod::LocalPod] pod
-    #         the local pod instanace that manages the files described by this
+    #         the local pod instance that manages the files described by this
     #         specification.
     #
     # @param  [Podfile::TargetDefinition] target_definition
@@ -316,12 +371,9 @@ module Pod
     #         called.
     #
     def pre_install!(pod, target_definition)
-      if @pre_install_callback
-        @pre_install_callback.call(pod, target_definition)
-        true
-      else
-        false
-      end
+      return false unless @pre_install_callback
+      @pre_install_callback.call(pod, target_definition)
+      true
     end
 
     # Calls the post install callback if defined.
@@ -334,191 +386,158 @@ module Pod
     #         called.
     #
     def post_install!(target_installer)
-      if @post_install_callback
-        @post_install_callback.call(target_installer)
-        true
-      else
-        false
-      end
+      return false unless @post_install_callback
+      @post_install_callback.call(target_installer)
+      true
     end
 
     #-------------------------------------------------------------------------#
 
-    # @!group DSL deprecations
+    public
 
-    def preferred_dependency=(args)
-      CoreUI.warn "[#{to_s}] `preferred_dependency` has been renamed to `default_subspec`."
-      self.default_subspec = args
-    end
+    # @!group DSL attribute writers
 
-    def singleton_method_added(method)
-      if [:pre_install, :post_install ].include?(method)
-        CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the method is deprecated."
-      elsif method == :header_mappings
-        raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
-      end
-    end
-
-    def clean_paths=(value)
-      raise StandardError, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
-        "cleans unused files by default. Use preserver paths if needed."
-    end
-
-    [ :part_of_dependency=, :part_of=, :exclude_header_search_paths= ].each do |method|
-      define_method method do |value|
-        raise StandardError, "[#{to_s}] Attribute `#{method.to_s[0..-2]}` has been deprecated."
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    # The PlatformProxy works in conjunction with Specification#_on_platform.
-    # It provides support for a syntax like `spec.ios.source_files = 'file'`.
+    # Sets the value for the attribute with the given name.
     #
-    class PlatformProxy
+    # @param  [Symbol] name
+    #         the name of the attribute.
+    #
+    # @param  [Object] value
+    #         the value to store.
+    #
+    # @param  [Symbol] platform.
+    #         If provided the attribute is stored only for the given platform.
+    #
+    # @note   If the provides value is Hash the keys are converted to a string.
+    #
+    # @return void
+    #
+    def store_attribute(name, value, platform_name = nil)
+      name = name.to_s
+      value = convert_keys_to_string(value) if value.is_a?(Hash)
+      if platform_name
+        platform_name = platform_name.to_s
+        attributes_hash[platform_name] ||= {}
+        attributes_hash[platform_name][name] = value
+      else
+        attributes_hash[name] = value
+      end
+    end
 
-      # @param  [Specification] specification
-      #         the specification whose syntax attribute should be set.
-      #
-      # @param  [Symbol] platform
-      #         the platform described by this proxy. Can be either `:ios` or
-      #         `:osx`.
-      #
-      def initialize(specification, platform)
-        @specification, @platform = specification, platform
+    # Defines the setters methods for the attributes providing support for the
+    # Ruby DSL.
+    #
+    DSL.attributes.values.each do |a|
+      define_method(a.writer_name) do |value|
+        store_attribute(a.name, value)
       end
 
-      # Defines a setter method for each attribute of the specification class,
-      # that forwards the message to the {#specification} using the
-      # {Specification#on_platform} method.
-      #
-      DSL.attributes.select { |a| a.multi_platform? }.each do |a|
-        define_method(a.writer_name) do |args|
-          @specification._on_platform(@platform) do
-            @specification.send(a.writer_name, args)
-          end
+      if a.writer_singular_form
+        alias_method(a.writer_singular_form, a.writer_name)
+      end
+    end
+
+    private
+
+    # Converts the keys of the given hash to a string.
+    #
+    # @param  [Object] value
+    #         the value that needs to be stripped from the Symbols.
+    #
+    # @return [Hash] the hash with the strings instead of the keys.
+    #
+    def convert_keys_to_string(value)
+      return unless value
+      result = {}
+      value.each do |key, subvalue|
+        subvalue = convert_keys_to_string(subvalue) if subvalue.is_a?(Hash)
+        result[key.to_s] = subvalue
+      end
+      result
+    end
+
+    #-------------------------------------------------------------------------#
+
+    public
+
+    # @!group File representation
+
+    # @return [String] The SHA1 digest of the file in which the specification
+    #         is defined.
+    #
+    # @return [Nil] If the specification is not defined in a file.
+    #
+    def checksum
+      require 'digest'
+      unless defined_in_file.nil?
+        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+        checksum
+      end
+    end
+
+    # @return [String] the path where the specification is defined, if loaded
+    #         from a file.
+    #
+    def defined_in_file
+      root? ? @defined_in_file : root.defined_in_file
+    end
+
+    # Loads a specification form the given path.
+    #
+    # @param  [Pathname, String] path
+    #         the path of the `podspec` file.
+    #
+    # @param  [String] subspec_name
+    #         the name of the specification that should be returned. If it is
+    #         nil returns the root specification.
+    #
+    # @raise  If the file doesn't return a Pods::Specification after
+    #         evaluation.
+    #
+    # @return [Specification] the specification
+    #
+    def self.from_file(path, subspec_name = nil)
+      path = Pathname.new(path)
+      unless path.exist?
+        raise StandardError, "No podspec exists at path `#{path}`."
+      end
+
+      case path.extname
+      when '.podspec'
+        spec = ::Pod._eval_podspec(path)
+        unless spec.is_a?(Specification)
+          raise StandardError, "Invalid podspec file at path `#{path}`."
         end
-
-        alias_method(a.writer_singular_form, a.writer_name) if a.writer_singular_form
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    # @!group Support for Multi-platform attributes
-
-    # Defines the active platform for consumption of the specification.
-    #
-    # This method is provided as a convenience so there is no need to specify
-    # the symbolic name of a platform while accessing the multi-platform
-    # attributes.
-    #
-    # @overload   activate_platform(platform)
-    #
-    #   @param    [Platform] platform
-    #             the platform to activate.
-    #
-    # @overload   activate_platform(symbolic_name, deployment_target)
-    #
-    #   @param    [Symbol] symbolic_name
-    #             the name of the platform to activate.
-    #
-    #   @param    [String] deployment_target
-    #             the deployment target to activate.
-    #
-    # @note       To simplify the interface a specification needs to be
-    #             activated for a platform before accessing multi-platform
-    #             attributes.
-    #
-    # @raise      If the platform is not supported by the specification.
-    #
-    # @return     [void]
-    #
-    def activate_platform(*platform)
-      platform = Platform.new(*platform)
-      unless supported_on_platform?(platform)
-        raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
-      end
-      set_active_platform(platform)
-    end
-
-    def set_active_platform(platform)
-      if root?
-        @active_platform = platform.to_sym
+      when '.yaml'
+        spec = Specification.from_yaml(path.read)
       else
-        root.set_active_platform(*platform)
+        raise StandardError, "Unsupported specification format `#{path.extname}`."
       end
+
+      spec.defined_in_file = path
+      spec.subspec_by_name(subspec_name)
     end
 
-    # @return [Symbol] The name of the platform this specification was
-    #         activated for.
+    # Sets the path of the `podspec` file used to load the specification.
     #
-    def active_platform
-      root? ? @active_platform : root.active_platform
-    end
-
-    # Alters the `@define_for_platforms` instance variable to point to the
-    # given platform during the execution of the given block.
-    #
-    # @visibility private
-    #
-    # @note   Multi-platform attribute writers should use the
-    #         `@define_for_platforms` instance variable to infer the platforms
-    #         for which the attribute should be defined.
-    #
-    # @note   This is used by PlatformProxy to assign attributes for the scoped
-    #         platform.
-    #
-    # @param  [Platform] platform
-    #         The platform on which the attributes will be specified.
+    # @param  [String] file
+    #         the `podspec` file.
     #
     # @return [void]
     #
-    def _on_platform(platform)
-      before, @define_for_platforms = @define_for_platforms, [platform]
-      yield
-    ensure
-      @define_for_platforms = before
-    end
-
-    #-------------------------------------------------------------------------#
-
-    # @!group String representation
-
-    # @return [String] A string suitable for representing the specification in
-    #         clients.
+    # @visibility private
     #
-    def to_s
-      "#{name} (#{version})"
-    end
-
-    # @param    [String] string_reppresenation
-    #           the string that describes a {Specification} generated from
-    #           {Specification#to_s}.
-    #
-    # @example  Input examples
-    #
-    #           "libPusher"
-    #           "libPusher (1.0)"
-    #           "libPusher (HEAD based on 1.0)"
-    #           "RestKit/JSON"
-    #
-    # @return   [Array<String, Version>] the name and the version of a
-    #           pod.
-    #
-    def self.name_and_version_from_string(string_reppresenation)
-      match_data = string_reppresenation.match(/(\S*) \((.*)\)/)
-      name = match_data[1]
-      vers = Version.new(match_data[2])
-      [name, vers]
-    end
-
-    # @return [String] A string suitable for debugging.
-    #
-    def inspect
-      "#<#{self.class.name} for `#{to_s}`>"
+    def defined_in_file=(file)
+      unless root?
+        raise StandardError, "Defined in file can be set only for root specs."
+      end
+      @defined_in_file = file
     end
   end
+
+
+  #---------------------------------------------------------------------------#
 
   Spec = Specification
 

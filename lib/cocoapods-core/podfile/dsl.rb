@@ -37,6 +37,8 @@ module Pod
       # @!group Dependencies
       #   The Podfile specifies the dependencies of each user target.
 
+      #-----------------------------------------------------------------------#
+
       # Specifies a dependency of the project.
       #
       # A dependency requirement is defined by the name of the Pod and
@@ -182,9 +184,8 @@ module Pod
         end
 
         spec = Specification.from_file(file)
-        spec.activate_platform(@target_definition.platform)
-        all_specs = spec.recursive_subspecs.push(spec)
-        deps = all_specs.map {|specification| specification.external_dependencies }
+        all_specs = [spec, *spec.recursive_subspecs]
+        deps = all_specs.map{ |s| s.dependencies(@target_definition.platform) }
         deps = deps.flatten.uniq
         @target_definition.target_dependencies.concat(deps)
       end
@@ -232,12 +233,12 @@ module Pod
         @target_definition = parent
       end
 
-
-
       #---------------------------------------------------------------------------#
 
       # @!group Target configuration
       #   This group list the options to configure a target.
+
+      #---------------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
       #
@@ -295,8 +296,11 @@ module Pod
       #
       # @param    [Hash{String => symbol}] build_configurations
       #           a hash where the keys are the name of the build configurations
-      #           and the values a symbol that represents their type (`:debug` or
-      #           `:release`).
+      #           in your Xcode project and the values are Symbols that specify
+      #           if the configuration should be based on the `:debug` or
+      #           `:release` configuration. If no explicit mapping is specified
+      #           for a configuration in your project, it will default to
+      #           `:release`.
       #
       # @example  Specifying the user project
       #
@@ -359,6 +363,8 @@ module Pod
       # @!group Workspace
       #   This group list the options to configure workspace and to set global settings.
 
+      #---------------------------------------------------------------------------#
+
       # Specifies the Xcode workspace that should contain all the projects.
       #
       # -----
@@ -420,6 +426,8 @@ module Pod
       #   installation process.
       #
       #   Hooks are __global__ and not stored per target definition.
+
+      #---------------------------------------------------------------------------#
 
       # This hook allows you to make any changes to the Pods after they have been
       # downloaded but before they are installed.

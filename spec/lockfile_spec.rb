@@ -50,7 +50,6 @@ module Pod
           s.version = "1.0.8"
         end
       ]
-      specs.each { |s| s.activate_platform(:ios) }
       specs
     end
   end
@@ -147,7 +146,6 @@ module Pod
             s.name = "JSONKit"
             s.version = "1.4"
           end ]
-        @specs.each { |s| s.activate_platform(:ios) }
         @lockfile = Lockfile.generate(@podfile, @specs)
       end
 
@@ -255,7 +253,6 @@ module Pod
             s.version = "1.4"
             s.version.head = true
           end ]
-        @specs.each { |s| s.activate_platform(:ios) }
         @lockfile = Lockfile.generate(podfile, @specs)
         podfile = Podfile.new do
           platform :ios
@@ -309,7 +306,6 @@ module Pod
             s.version = "1.0.8"
           end
         ]
-        specs.each { |s| s.activate_platform(:ios) }
         lockfile = Lockfile.generate(podfile, specs)
         lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (HEAD)"
       end
@@ -329,7 +325,6 @@ module Pod
             s.version = "1.0.8"
           end
         ]
-        specs.each { |s| s.activate_platform(:ios) }
         lockfile = Lockfile.generate(podfile, specs)
         lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com`, tag `1.0`)"
         lockfile.internal_data["EXTERNAL SOURCES"]["BananaLib"].should == { :git => "www.example.com", :tag => '1.0' }

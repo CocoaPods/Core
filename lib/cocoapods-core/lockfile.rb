@@ -338,18 +338,22 @@ module Pod
 
       # Generates the list of the installed Pods and their dependencies.
       #
-      # @note     The dependencies of iOS and OS X version of the same pod are
-      #           merged.
+      # @note   The dependencies of iOS and OS X version of the same pod are
+      #         merged.
       #
-      # @example  Output
-      #         [ {"BananaLib (1.0)"=>["monkey (< 1.0.9, ~> 1.0.1)"]},
+      # @todo   Specifications should be stored per platform, otherwise they
+      #         list dependencies which actually might not be used.
+      #
+      # @return [Array<Hash,String>] the generated data.
+      #
+      # @example Output
+      #   [ {"BananaLib (1.0)"=>["monkey (< 1.0.9, ~> 1.0.1)"]},
       #   "monkey (1.0.8)" ]
       #
-      # @return   [Array<Hash,String>] the generated data.
       #
       def generate_pods_data(podfile, specs)
         pod_and_deps = specs.map do |spec|
-          [spec.to_s, spec.dependencies.map(&:to_s).sort]
+          [spec.to_s, spec.all_dependencies.map(&:to_s).sort]
         end.uniq
 
         tmp = {}

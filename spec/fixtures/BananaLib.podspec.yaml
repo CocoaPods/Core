@@ -1,0 +1,54 @@
+---
+
+# Root attributes
+name: BananaLib
+version: '1.0'
+authors:
+- Banana Corp
+- Monkey Boy: monkey@banana-corp.local
+homepage: http://banana-corp.local/banana-lib.html
+summary: Chunky bananas!
+description: Full of chunky bananas.
+source:
+  git: http://banana-corp.local/banana-lib.git
+  tag: v1.0
+license:
+  type: MIT
+  file: LICENSE
+  text: Permission is hereby granted ...
+documentation:
+  html: http://banana-corp.local/banana-lib/docs.html
+  appledoc:
+  - "--project-company"
+  - Banana Corp
+  - "--company-id"
+  - com.banana
+
+# Root attributes
+platforms:
+  ios: '4.3'
+
+ios:
+  source_files: 'Classes_ios/*.{h,m}'
+
+# File patterns
+source_files:
+- Classes/*.{h,m}
+- Vendor
+resources: Resources/*.png
+
+
+# Build settings
+xcconfig:
+  OTHER_LDFLAGS: "-framework SystemConfiguration"
+prefix_header_file: Classes/BananaLib.pch
+requires_arc: true
+
+# Dependencies
+dependencies:
+  monkey:
+  - "~> 1.0.1"
+  - "< 1.0.9"
+subspecs:
+- name: GreenBanana
+  source_files: GreenBanana
