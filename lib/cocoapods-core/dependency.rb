@@ -75,7 +75,8 @@ module Pod
 
       if requirements.last.is_a?(Hash)
         @inhibit_warnings = requirements.last.delete(:inhibit_warnings)
-        @external_source = requirements.pop
+        source = requirements.pop
+        @external_source = source unless source.empty?
       elsif requirements.last == :head
         @head = true
         requirements.pop

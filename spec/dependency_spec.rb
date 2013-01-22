@@ -27,7 +27,7 @@ module Pod
       it "inhibits warnings if asked to" do
         Dependency.new("cocoapods", :git => "git://github.com/cocoapods/cocoapods").inhibits_warnings?.should.be.false
         
-        d = Dependency.new("cocoapods", :git => "git://github.com/cocoapods/cocoapods", :inhibit_warnings => true)
+        d = Dependency.new("cocoapods", :inhibit_warnings => true)
         d.inhibits_warnings?.should.be.true
       end
 
