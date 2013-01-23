@@ -41,10 +41,10 @@ module Pod
       name <=> other.name
     end
 
-    # @return [String] the string representation of a source.
+    # @return [String] the name of the source.
     #
     def to_s
-      "Source `#{name}`"
+      name
     end
 
     #---------------------------------------------------------------------------#
