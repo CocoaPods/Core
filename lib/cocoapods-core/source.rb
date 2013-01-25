@@ -30,6 +30,9 @@ module Pod
       @repo.basename.to_s
     end
 
+    alias_method :to_s, :name
+
+
     # @return [Integer] compares a source with another one for sorting
     #         purposes.
     #
@@ -39,12 +42,6 @@ module Pod
     #
     def <=> (other)
       name <=> other.name
-    end
-
-    # @return [String] the name of the source.
-    #
-    def to_s
-      name
     end
 
     #---------------------------------------------------------------------------#
