@@ -390,12 +390,48 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      # @!group Build configuration
+      # @!group Build settings
       #
       #   In this group are listed the attributes related to the configuration
       #   of the build environment that should be used to build the library.
 
       #-----------------------------------------------------------------------#
+
+      # @todo This currently is not used in the Ruby DSL.
+      #
+      attribute :dependencies, {
+        :container => Hash
+      }
+
+      # Any dependency on other Pods or to a ‘sub-specification’.
+      #
+      # ---
+      #
+      # Dependencies can specify versions requirements. The use of the spermy
+      # indicator `~>` is recommended because it provides a good compromise
+      # between control on the version without being too restrictive.
+      #
+      # Pods with too restrictive dependencies, limit their compatibility with
+      # other Pods.
+      #
+      # @example
+      #   spec.dependency = 'AFNetworking', '~> 1.0'
+      #
+      # @example
+      #   spec.dependency = 'RestKit/CoreData', '~> 0.20.0'
+      #
+      # @example
+      #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
+      #
+      def dependency(*args)
+        name, *version_requirements = args
+        raise StandardError, "A specification can't require self as a subspec" if name == self.name
+        raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+        attributes_hash["dependencies"] ||= {}
+        attributes_hash["dependencies"][name] = version_requirements
+      end
+
+      #------------------#
 
       # @!method requires_arc=(flag)
       #
@@ -888,7 +924,7 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      # @!group Dependencies
+      # @!group Subspecs
       #
       #   A library can specify a dependency on either another library, a
       #   subspec of another library, or a subspec of itself.
@@ -997,42 +1033,6 @@ module Pod
         :inherited => false,
         :multi_platform => false,
       }
-
-      #------------------#
-
-      # @todo This currently is not used in the Ruby DSL.
-      #
-      attribute :dependencies, {
-        :container => Hash
-      }
-
-      # Any dependency on other Pods or to a ‘sub-specification’.
-      #
-      # ---
-      #
-      # Dependencies can specify versions requirements. The use of the spermy
-      # indicator `~>` is recommended because it provides a good compromise
-      # between control on the version without being too restrictive.
-      #
-      # Pods with too restrictive dependencies, limit their compatibility with
-      # other Pods.
-      #
-      # @example
-      #   spec.dependency = 'AFNetworking', '~> 1.0'
-      #
-      # @example
-      #   spec.dependency = 'RestKit/CoreData', '~> 0.20.0'
-      #
-      # @example
-      #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
-      #
-      def dependency(*args)
-        name, *version_requirements = args
-        raise StandardError, "A specification can't require self as a subspec" if name == self.name
-        raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
-        attributes_hash["dependencies"] ||= {}
-        attributes_hash["dependencies"][name] = version_requirements
-      end
 
       #-----------------------------------------------------------------------#
 
