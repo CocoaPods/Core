@@ -25,7 +25,7 @@ module Pod
         BananaLib: 439d9f683377ecf4a27de43e8cf3bce6be4df97b
         JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
-      COCOAPODS: #{VERSION}
+      COCOAPODS: #{CORE_VERSION}
       LOCKFILE
     end
 
@@ -366,7 +366,7 @@ module Pod
       end
 
       it "store the version of the CocoaPods Core gem" do
-        @lockfile.internal_data['COCOAPODS'].should == VERSION
+        @lockfile.internal_data['COCOAPODS'].should == CORE_VERSION
       end
 
       it "it includes all the information that it is expected to store" do

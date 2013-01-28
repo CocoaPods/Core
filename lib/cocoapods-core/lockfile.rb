@@ -327,7 +327,7 @@ module Pod
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'SPEC CHECKSUMS'   => generate_checksums(specs),
-          'COCOAPODS'        => VERSION
+          'COCOAPODS'        => CORE_VERSION
         }
         Lockfile.new(hash)
       end
