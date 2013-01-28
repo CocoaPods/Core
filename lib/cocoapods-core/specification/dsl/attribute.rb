@@ -32,7 +32,7 @@ module Pod
           @name = name
 
           @multi_platform = options.delete(:multi_platform) { true      }
-          @inherited      = options.delete(:inherited)      { true      }
+          @inherited      = options.delete(:inherited)      { false     }
           @root_only      = options.delete(:root_only)      { false     }
           @required       = options.delete(:required)       { false     }
           @singularize    = options.delete(:singularize)    { false     }

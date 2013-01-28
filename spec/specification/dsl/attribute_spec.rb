@@ -36,8 +36,8 @@ module Pod
         @attr.should.be.multi_platform
       end
 
-      it "is inherited by default" do
-        @attr.should.be.inherited
+      it "is not inherited by default" do
+        @attr.should.not.be.inherited
       end
 
       it "is not root only by default" do

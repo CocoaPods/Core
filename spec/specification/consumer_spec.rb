@@ -226,10 +226,10 @@ module Pod
         @subspec_consumer = Specification::Consumer.new(@subspec, :ios)
       end
 
-      it "inherits the files patterns from the parent" do
+      it "doesn't inherits the files patterns from the parent" do
         @spec.source_files = [ "lib_classes/**/*" ]
         @subspec.source_files = [ "subspec_classes/**/*" ]
-        @subspec_consumer.source_files.should == [ "lib_classes/**/*", "subspec_classes/**/*" ]
+        @subspec_consumer.source_files.should == [ "subspec_classes/**/*" ]
       end
 
       it "wraps strings in an array" do
@@ -262,7 +262,7 @@ module Pod
         @consumer.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
       end
 
-      it "inherit resources from the parent" do
+      it "doesn't inherit resources from the parent" do
         @spec.resources = {
           :frameworks => ['frameworks/*'],
           :resources => 'parent_resources/*'
@@ -273,9 +273,8 @@ module Pod
         }
 
         @subspec_consumer.resources.should == {
-          :frameworks => ['frameworks/*'],
           :shared_support => ['shared_support/*'],
-          :resources => ['parent_resources/*', 'subspec_resources/*'],
+          :resources => ['subspec_resources/*'],
         }
       end
 
@@ -368,8 +367,10 @@ module Pod
           s.name = "Pod"
           s.source_files = "spec_files"
           s.ios.source_files = "ios_files"
+          s.framework = 'spec_framework'
           s.subspec 'Subspec' do |ss|
             ss.source_files = "subspec_files"
+            ss.framework = 'subspec_framework'
           end
         end
         @subspec = @spec.subspecs.first
@@ -382,7 +383,7 @@ module Pod
       describe "#value_for_attribute" do
 
         it "takes into account inheritance" do
-          @subspec_consumer.source_files.should == ["spec_files", "ios_files", "subspec_files"]
+          @subspec_consumer.frameworks.should == ["spec_framework", "subspec_framework"]
         end
 
         it "takes into account multiplatform values" do
@@ -396,7 +397,7 @@ module Pod
         end
 
         it "initializes the value to the empty container if no value could be resolved" do
-          @consumer.frameworks.should == []
+          @consumer.libraries.should == []
         end
 
         it "doesn't triggers the lazy evaluation of Rake::FileList [TEMPORARY]" do
@@ -417,9 +418,9 @@ module Pod
         end
 
         it "takes into account the value of the parent if needed" do
-          attr = Specification::DSL.attributes[:source_files]
+          attr = Specification::DSL.attributes[:frameworks]
           value = @consumer.send(:value_with_inheritance, @subspec, attr)
-          value.should ==  ["spec_files", "ios_files", "subspec_files"]
+          value.should ==  ["spec_framework", "subspec_framework"]
         end
 
         it "doesn't inherits value of the parent if the attribute is not inherited" do

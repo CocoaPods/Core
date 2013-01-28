@@ -321,6 +321,9 @@ module Pod
       #
       #   A specification should indicate the platforms and the correspondent
       #   deployment targets on which the library is supported.
+      #
+      #   If not defined in a subspec the attributes of this group inherit the
+      #   value of the parent.
 
       #-----------------------------------------------------------------------#
 
@@ -333,7 +336,8 @@ module Pod
       attribute :platforms, {
         :container      => Hash,
         :keys           => PLATFORMS,
-        :multi_platform => false
+        :multi_platform => false,
+        :inherited => true,
       }
 
       # @!method platform=(name_and_deployment_target)
@@ -394,13 +398,17 @@ module Pod
       #
       #   In this group are listed the attributes related to the configuration
       #   of the build environment that should be used to build the library.
+      #
+      #   If not defined in a subspec the attributes of this group inherit the
+      #   value of the parent.
 
       #-----------------------------------------------------------------------#
 
       # @todo This currently is not used in the Ruby DSL.
       #
       attribute :dependencies, {
-        :container => Hash
+        :container => Hash,
+        :inherited => true,
       }
 
       # Any dependency on other Pods or to a ‘sub-specification’.
@@ -453,6 +461,7 @@ module Pod
       attribute :requires_arc, {
         :types => [TrueClass, FalseClass],
         :default_value => false,
+        :inherited => true,
       }
 
       #------------------#
@@ -474,7 +483,8 @@ module Pod
       #
       attribute :frameworks, {
         :container   => Array,
-        :singularize => true
+        :singularize => true,
+        :inherited => true,
       }
 
       #------------------#
@@ -493,7 +503,8 @@ module Pod
       #
       attribute :weak_frameworks, {
         :container   => Array,
-        :singularize => true
+        :singularize => true,
+        :inherited => true,
       }
 
       #------------------#
@@ -516,7 +527,8 @@ module Pod
       #
       attribute :libraries, {
         :container   => Array,
-        :singularize => true
+        :singularize => true,
+        :inherited => true,
       }
 
       #------------------#
@@ -534,7 +546,8 @@ module Pod
       #
       attribute :compiler_flags, {
         :container   => Array,
-        :singularize => true
+        :singularize => true,
+        :inherited => true,
       }
 
       #------------------#
@@ -552,6 +565,7 @@ module Pod
       #
       attribute :xcconfig, {
         :container => Hash,
+        :inherited => true,
       }
 
       #------------------#
@@ -578,6 +592,7 @@ module Pod
       #
       attribute :prefix_header_contents, {
         :types => [Array, String],
+        :inherited => true,
       }
 
       #------------------#
@@ -599,7 +614,10 @@ module Pod
       #   @param  [String] path
       #           The path to the prefix header file.
       #
-      attribute :prefix_header_file
+      attribute :prefix_header_file, {
+        :inherited => true
+      }
+
 
       #------------------#
 
@@ -615,7 +633,9 @@ module Pod
       #   @param  [String] dir
       #           the headers directory.
       #
-      attribute :header_dir
+      attribute :header_dir, {
+        :inherited => true
+      }
 
       #------------------#
 
@@ -631,7 +651,9 @@ module Pod
       #   @param  [String] dir
       #           the directory from where to preserve the headers namespacing.
       #
-      attribute :header_mappings_dir
+      attribute :header_mappings_dir, {
+        :inherited => true
+      }
 
       #-----------------------------------------------------------------------#
 
@@ -1030,7 +1052,6 @@ module Pod
       #           dependency.
       #
       attribute :default_subspec, {
-        :inherited => false,
         :multi_platform => false,
       }
 
