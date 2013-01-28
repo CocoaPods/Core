@@ -4,6 +4,8 @@ module Pod
   require 'pathname'
   require 'cocoapods-core/vendor'
 
+  require 'cocoapods-core/gem_version'
+
   require 'cocoapods-core/version'
   require 'cocoapods-core/requirement'
   require 'cocoapods-core/dependency'
