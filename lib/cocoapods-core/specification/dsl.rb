@@ -340,27 +340,25 @@ module Pod
         :inherited => true,
       }
 
-      # @!method platform=(name_and_deployment_target)
+      # The platform on which this Pod is supported. Leaving this blank
+      # means the Pod is supported on all platforms.
       #
-      #   The platform on which this Pod is supported. Leaving this blank
-      #   means the Pod is supported on all platforms.
+      # @example
       #
-      #   @example
+      #   spec.platform = :osx, "10.8"
       #
-      #     spec.platform = :osx, "10.8"
+      # @example
       #
-      #   @example
+      #   spec.platform = :ios
       #
-      #     spec.platform = :ios
+      # @example
       #
-      #   @example
+      #   spec.platform = :osx
       #
-      #     spec.platform = :osx
-      #
-      #   @param  [Array<Symbol, String>] name_and_deployment_target
-      #           A tuple where the first value is the name of the platform,
-      #           (either `:ios` or `:osx`) and the second is the deployment
-      #           target.
+      # @param  [Array<Symbol, String>] name_and_deployment_target
+      #         A tuple where the first value is the name of the platform,
+      #         (either `:ios` or `:osx`) and the second is the deployment
+      #         target.
       #
       def platform=(args)
         name, deployment_target = args
