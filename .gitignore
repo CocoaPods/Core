@@ -8,3 +8,4 @@ tmp
 spec/fixtures/vcr
 .yardoc
 .rbx/
+Gemfile.lock
