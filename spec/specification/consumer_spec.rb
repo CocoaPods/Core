@@ -244,10 +244,6 @@ module Pod
         @consumer.source_files.should == [ "lib_classes/**/*" ]
       end
 
-      it "returns the default for the source files attribute if no value is specified" do
-        @consumer.source_files.should == [ "Classes/**/*.{h,m}" ]
-      end
-
       #------------------#
 
       it "returns the public headers files" do
@@ -288,10 +284,6 @@ module Pod
         @consumer.resources.should == { :resources => ['frameworks/CrashReporter.framework'] }
       end
 
-      it "returns the default for the resources attribute if no value is specified" do
-        @consumer.resources.should == { :resources => [ 'Resources/**/*' ] }
-      end
-
       it "has a singular form for resources" do
         @spec.resource = [ "lib_resources/**/*" ]
         @consumer.resources.should == {:resources=>["lib_resources/**/*"]}
@@ -302,12 +294,6 @@ module Pod
       it "returns the paths to exclude" do
         @spec.exclude_files = "Classes/**/unused.{h,m}"
         @consumer.exclude_files.should == ["Classes/**/unused.{h,m}"]
-      end
-
-      it "returns the default for the exclude files attribute if no value is specified" do
-        @consumer.exclude_files.should ==  ["Classes/**/osx/**/*", "Resources/**/osx/**/*"]
-        osx_consumer = Specification::Consumer.new(@spec, :osx)
-        osx_consumer.exclude_files.should ==  ["Classes/**/ios/**/*", "Resources/**/ios/**/*"]
       end
 
       #------------------#
@@ -393,7 +379,7 @@ module Pod
         end
 
         it "takes into account a default value if specified" do
-          @consumer.resources.should == {:resources=>["Resources/**/*"]}
+          @consumer.requires_arc.should == false
         end
 
         it "initializes the value to the empty container if no value could be resolved" do

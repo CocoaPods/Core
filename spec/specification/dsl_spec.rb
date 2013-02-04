@@ -291,23 +291,6 @@ module Pod
         attr.default(:osx).should == false
       end
 
-      it "has a default value for the source files attribute" do
-        attr = Specification::DSL.attributes[:source_files]
-        attr.default(:ios).should == [ "Classes/**/*.{h,m}" ]
-        attr.default(:osx).should == [ "Classes/**/*.{h,m}" ]
-      end
-
-      it "has a default value for the resources attribute" do
-        attr = Specification::DSL.attributes[:resources]
-        attr.default(:ios).should == { :resources => [ "Resources/**/*" ] }
-        attr.default(:osx).should == { :resources => [ "Resources/**/*" ] }
-      end
-
-      it "has a default value for the paths to exclude attribute" do
-        attr = Specification::DSL.attributes[:exclude_files]
-        attr.default(:ios).should == ["Classes/**/osx/**/*", "Resources/**/osx/**/*"]
-        attr.default(:osx).should == ["Classes/**/ios/**/*", "Resources/**/ios/**/*"]
-      end
     end
 
     #-----------------------------------------------------------------------------#
