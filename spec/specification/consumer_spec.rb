@@ -57,6 +57,12 @@ module Pod
         @subspec_consumer.requires_arc?.should.be.true
       end
 
+      it "doesn't iherit whether it requres ARC from the parent if it is false" do
+        @spec.requires_arc = true
+        @subspec.requires_arc = false
+        @subspec_consumer.requires_arc?.should.be.false
+      end
+
       #----------------#
 
       it "allows to specify the frameworks" do
@@ -439,7 +445,7 @@ module Pod
 
       describe "#merge_values" do
 
-        it "returns the current value if the value to merge is undefined" do
+        it "returns the current value if the value to merge is nil" do
           attr = Specification::DSL::Attribute.new(:test, { :container => Hash })
           result = @consumer.send(:merge_values, attr, "value", nil)
           result.should == "value"
@@ -449,6 +455,14 @@ module Pod
           attr = Specification::DSL::Attribute.new(:test, { :container => Hash })
           result = @consumer.send(:merge_values, attr, nil, "value")
           result.should == "value"
+        end
+
+        it "handles boolean values" do
+          attr = Specification::DSL::Attribute.new(:test, { :types => [TrueClass, FalseClass] })
+          @consumer.send(:merge_values, attr, false, nil).should   == false
+          @consumer.send(:merge_values, attr, false, false).should == false
+          @consumer.send(:merge_values, attr, false, true).should  == true
+          @consumer.send(:merge_values, attr, true, false).should  == false
         end
 
         it "concatenates the values of attributes contained in an array" do

@@ -218,22 +218,26 @@ module Pod
       # @param  [Specification::DSL::Attribute] attr
       #         the attribute for which that value is needed.
       #
-      # @param  [String, Array, Hash] value
-      #         the current value.
+      # @param  [String, Array, Hash] exisitng_value
+      #         the current value (the value of the parent or non-multiplatform
+      #         value).
       #
-      # @param  [String, Array, Hash] value_to_merge
-      #         the value to append.
+      # @param  [String, Array, Hash] new_value
+      #         the value to append (the value of the spec or the
+      #         multi-platform value).
       #
       # @return [String, Array, Hash] The merged value.
       #
-      def merge_values(attr, value, value_to_merge)
-        return value unless value_to_merge
-        return value_to_merge unless value
+      def merge_values(attr, exisitng_value, new_value)
+        return exisitng_value if new_value.nil?
+        return new_value if exisitng_value.nil?
 
-        if attr.container == Array
-          [*value] + [*value_to_merge]
+        if attr.types.include?(TrueClass)
+          new_value.nil? ? exisitng_value : new_value
+        elsif attr.container == Array
+          [*exisitng_value] + [*new_value]
         elsif attr.container == Hash
-          value = value.merge(value_to_merge) do |_, old, new|
+          exisitng_value = exisitng_value.merge(new_value) do |_, old, new|
             if new.is_a?(Array) || old.is_a?(Array)
               [*old] + [*new]
             else
@@ -257,7 +261,6 @@ module Pod
       #         prepare hook was defined.
       #
       def prepare_value(attr, value)
-        return nil unless value
         if attr.container ==  Array
           if value.class == Rake::FileList
             value = [value]
