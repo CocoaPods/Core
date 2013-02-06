@@ -235,11 +235,13 @@ module Pod
         if attr.types.include?(TrueClass)
           new_value.nil? ? exisitng_value : new_value
         elsif attr.container == Array
-          [*exisitng_value] + [*new_value]
+          r = [*exisitng_value] + [*new_value]
+          r.compact
         elsif attr.container == Hash
           exisitng_value = exisitng_value.merge(new_value) do |_, old, new|
             if new.is_a?(Array) || old.is_a?(Array)
-              [*old] + [*new]
+              r = [*old] + [*new]
+              r.compact
             else
               old + ' ' + new
             end
@@ -265,7 +267,7 @@ module Pod
           if value.class == Rake::FileList
             value = [value]
           else
-            value = [*value]
+            value = [*value].compact
           end
         end
 
@@ -340,7 +342,7 @@ module Pod
         value = { :resources => value } unless value.is_a?(Hash)
         result = {}
         value.each do |key, patterns|
-          result[key] = [*patterns]
+          result[key] = [*patterns].compact
         end
         result
       end

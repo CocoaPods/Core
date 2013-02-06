@@ -1,10 +1,10 @@
 # The Pod modules name-spaces all the classes of CocoaPods.
 #
 module Pod
+  require 'cocoapods-core/gem_version'
+
   require 'pathname'
   require 'cocoapods-core/vendor'
-
-  require 'cocoapods-core/gem_version'
 
   require 'cocoapods-core/version'
   require 'cocoapods-core/requirement'
