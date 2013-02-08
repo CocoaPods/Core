@@ -297,7 +297,14 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      YAMLConverter.convert(to_hash)#.to_yaml.gsub(/^--- ?\n/,"").gsub(/^([A-Z])/,"\n\\1")
+      keys_hint = [
+        "PODS",
+        "DEPENDENCIES",
+        "EXTERNAL SOURCES",
+        "SPEC CHECKSUMS",
+        "COCOAPODS"
+      ]
+      YAMLConverter.convert(to_hash, keys_hint)
     end
 
     #-------------------------------------------------------------------------#
