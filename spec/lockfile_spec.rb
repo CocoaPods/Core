@@ -329,6 +329,7 @@ module Pod
         lockfile.internal_data["DEPENDENCIES"][0].should == "BananaLib (from `www.example.com`, tag `1.0`)"
         lockfile.internal_data["EXTERNAL SOURCES"]["BananaLib"].should == { :git => "www.example.com", :tag => '1.0' }
       end
+
     end
 
     #-------------------------------------------------------------------------#

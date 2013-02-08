@@ -17,6 +17,7 @@ module Pod
   require 'cocoapods-core/source'
   require 'cocoapods-core/specification'
   require 'cocoapods-core/standard_error'
+  require 'cocoapods-core/yaml_converter'
 end
 
 

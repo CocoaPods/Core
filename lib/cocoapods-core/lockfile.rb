@@ -193,7 +193,7 @@ module Pod
     #         specification by the name of their root.
     #
     def checksum_data
-      data = internal_data['SPEC CHECKSUMS'] || {}
+      internal_data['SPEC CHECKSUMS'] || {}
     end
 
 
@@ -260,7 +260,7 @@ module Pod
     def write_to_disk(path)
       path.dirname.mkpath unless path.dirname.exist?
       File.open(path, 'w') {|f| f.write(to_yaml) }
-      defined_in_file = path
+      self.defined_in_file = path
     end
 
     # @return [Hash{String=>Array,Hash,String}] a hash reppresentation of the
@@ -297,7 +297,7 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      to_hash.to_yaml.gsub(/^--- ?\n/,"").gsub(/^([A-Z])/,"\n\\1")
+      YAMLConverter.convert(to_hash)#.to_yaml.gsub(/^--- ?\n/,"").gsub(/^([A-Z])/,"\n\\1")
     end
 
     #-------------------------------------------------------------------------#
@@ -335,6 +335,8 @@ module Pod
       #--------------------------------------#
 
       private
+
+      # !@group Private helpers
 
       # Generates the list of the installed Pods and their dependencies.
       #
