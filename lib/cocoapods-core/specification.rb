@@ -56,19 +56,46 @@ module Pod
     #
     attr_accessor :subspecs
 
-    # Checks if a specification si equal to the given one.
+    # Checks if a specification is equal to the given one according its name
+    # and to its version.
     #
     # @param  [Specification] other
     #         the specification to compare with.
     #
+    # @todo   Not sure if comparing only the name and the version is the way to
+    #         go. This is used by the installer to group specifications by root
+    #         spec.
+    #
     # @return [Bool] whether the specifications are equal.
     #
     def ==(other)
-      self.class === other &&
-        attributes_hash == other.attributes_hash &&
-        subspecs == other.subspecs &&
-        pre_install_callback == other.pre_install_callback &&
-        post_install_callback == other.post_install_callback
+      # TODO
+      # self.class === other &&
+      #   attributes_hash == other.attributes_hash &&
+      #   subspecs == other.subspecs &&
+      #   pre_install_callback == other.pre_install_callback &&
+      #   post_install_callback == other.post_install_callback
+      self.to_s == other.to_s
+    end
+
+    # @see ==
+    #
+    def eql?(other)
+      self == other
+    end
+
+    # Return the hash value for this specification according to its attributes
+    # hash.
+    #
+    # @note   This function must have the property that a.eql?(b) implies
+    #         a.hash == b.hash.
+    #
+    # @note   This method is used by the Hash class.
+    #
+    # @return [Fixnum] The hash value.
+    #
+    def hash
+      to_s.hash
     end
 
     # @return [String] A string suitable for representing the specification in
@@ -224,8 +251,8 @@ module Pod
       if platform
         consumer(platform).dependencies || []
       else
-        available_platforms.map do |platform|
-          consumer(platform).dependencies
+        available_platforms.map do |spec_platform|
+          consumer(spec_platform).dependencies
         end.flatten.uniq
       end
     end
@@ -236,7 +263,7 @@ module Pod
       dependencies(platform) + subspec_dependencies(platform)
     end
 
-    # Returns a comsumer to access the the multi-platform attributes.
+    # Returns a consumer to access the multi-platform attributes.
     #
     # @param  [String, Symbol, Platform] platform
     #         he platform of the consumer
@@ -323,7 +350,7 @@ module Pod
       result
     end
 
-    # @return [Hash] the normalized hash which reppresents the platform
+    # @return [Hash] the normalized hash which represents the platform
     #         information.
     #
     def platform_hash
@@ -332,8 +359,8 @@ module Pod
         { value => nil }
       when Array
         result = {}
-        value.each do |value|
-          result[value] = nil
+        value.each do |a_value|
+          result[a_value] = nil
         end
         result
       when Hash

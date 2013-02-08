@@ -31,19 +31,34 @@ module Pod
         @spec.should == @spec
       end
 
-      it "is not equal to another specification if the attributes are different" do
+      it "is not equal to another specification if the name is different" do
         spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Seed'; s.version = '1.0' }
       end
 
-      it "is not equal to another specification if the subspecs are different" do
-        @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+      it "is not equal to another specification if the version if different" do
+        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '2.0' }
       end
 
-      it "is not equal to another specification if the callbacks differ" do
+      it "is equal to another if the name and the version match regardless of the attributes" do
+        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        @spec.should == Spec.new { |s| s.name = 'Pod'; s.version = '1.0'; s.source_files = "Classes" }
+      end
+
+      it "provides support for Array#uniq" do
         spec_1 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
-        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0'; s.post_install do; end }
-        spec_1.should.not == spec_2
+        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        [spec_1, spec_2].uniq.count.should == 1
+      end
+
+      it "provides support for being used as a the key of a Hash" do
+        spec_1 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        hash = {}
+        hash[spec_1] = "VALUE_1"
+        hash[spec_2] = "VALUE_2"
+        hash[spec_1].should == "VALUE_2"
       end
 
       it "produces a string representation suitable for UI output." do
