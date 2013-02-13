@@ -12,6 +12,9 @@ module Pod
   #
   class Lockfile
 
+    # TODO    The symbols should be converted to a String and back to symbol
+    #         when reading (EXTERNAL SOURCES Download options)
+
     # @return [String] the hash used to initialize the Lockfile.
     #
     attr_reader :internal_data

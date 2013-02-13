@@ -30,6 +30,11 @@ module Pod
         dependency.to_s.should == "cocoapods (HEAD)"
       end
 
+      it "includes the external sources in the string reppresentation" do
+        dependency = Dependency.new("cocoapods", :hg => 'example.com')
+        dependency.to_s.should == "cocoapods (from `example.com`)"
+      end
+
       it "only supports the `:head` option on the last version of a pod" do
         should.raise Pod::StandardError do
           Dependency.new("cocoapods", "1.2.3", :head)

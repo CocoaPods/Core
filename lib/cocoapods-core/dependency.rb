@@ -267,6 +267,8 @@ module Pod
     #           "from `www.example.com/libPusher.podspec'"
     #           "from `~/path/to/libPusher'"
     #
+    # @todo     Improve the description for Mercurial and Subversion.
+    #
     # @return   [String] the description of the external source.
     #
     def external_source_description
@@ -276,6 +278,10 @@ module Pod
         desc << ", commit `#{source[:commit]}`" if source[:commit]
         desc << ", branch `#{source[:branch]}`" if source[:branch]
         desc << ", tag `#{source[:tag]}`"       if source[:tag]
+      elsif source.key?(:hg)
+        desc =  "`#{source[:hg]}`"
+      elsif source.key?(:svn)
+        desc =  "`#{source[:svn]}`"
       elsif source.key?(:podspec)
         desc = "`#{source[:podspec]}`"
       elsif source.key?(:local)
