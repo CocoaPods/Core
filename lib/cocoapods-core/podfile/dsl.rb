@@ -164,6 +164,11 @@ module Pod
       #           the path of the podspec file
       #
       # @option   options [String] :name
+      #           the name of the podspec
+      #
+      # @note     This method uses the dependencies declared by the for the
+      #           platform of the target definition.
+      #
       #
       # @note     This method requires that the Podfile has a non nil value for
       #           {#defined_in_file} unless the path option is used.
@@ -172,13 +177,16 @@ module Pod
       #
       def podspec(options = nil)
         if options && path = options[:path]
-          path = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
-          file = Pathname.new(File.expand_path(path))
+          path_with_ext = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
+          path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
+          file = defined_in_file.dirname + path_without_tilde
         elsif options && name = options[:name]
           name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
           file = defined_in_file.dirname + name
-        else
+        elsif options.nil?
           file = Pathname.glob(defined_in_file.dirname + '*.podspec').first
+        else
+          raise StandardError, "Unrecognized options for the podspec method `#{options}`"
         end
 
         spec = Specification.from_file(file)

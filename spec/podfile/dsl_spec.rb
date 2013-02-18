@@ -57,29 +57,83 @@ module Pod
         podfile.target_definitions[:tests].name.should == :tests
       end
 
-      it "it can use use the dependencies of the first podspec in the directory of the podfile" do
-        podfile = Podfile.new(fixture('Podfile')) do
-          platform :ios
-          podspec
-        end
-        podfile.dependencies.map(&:name).should == %w[ monkey ]
-      end
+      #--------------------------------------#
 
-      it "it can use use the dependencies of the podspec with the given path" do
-        banalib_path = fixture('BananaLib.podspec').to_s
-        podfile = Podfile.new do
-          platform :ios
-          podspec :path => banalib_path
-        end
-        podfile.dependencies.map(&:name).should == %w[ monkey ]
-      end
+      describe "Podspec" do
 
-      it "it can use use the dependencies of the podspec with the given name" do
-        podfile = Podfile.new(fixture('Podfile')) do
-          platform :ios
-          podspec :name => 'BananaLib'
+        it "it can use use the dependencies of the first podspec in the directory of the podfile" do
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
         end
-        podfile.dependencies.map(&:name).should == %w[ monkey ]
+
+        it "it can use use the dependencies of the podspec with the given absolute path" do
+          banalib_path = fixture('BananaLib.podspec').to_s
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :path => banalib_path
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "it can use use the dependencies of the podspec with the given relative path respect to the Podfile" do
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :path => 'BananaLib.podspec'
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "it expands the tilde in the provided path" do
+          stub_spec = Spec.new do |s|
+            s.dependency 'monkey'
+          end
+          expaded = Pathname.new("/Users/fabio/BananaLib.podspec")
+          Pod::Specification.expects(:from_file).with(expaded).returns(stub_spec)
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :path => '~/BananaLib.podspec'
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "it can use use the dependencies of the podspec with the given path without the extension" do
+          banalib_path = fixture('BananaLib').to_s
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :path => banalib_path
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "it can use use the dependencies of the podspec with the given name without the extension" do
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :name => 'BananaLib'
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "it can use use the dependencies of the podspec with the given name with the extension" do
+          podfile = Podfile.new(fixture('Podfile')) do
+            platform :ios
+            podspec :name => 'BananaLib.podspec'
+          end
+          podfile.dependencies.map(&:name).should == %w[ monkey ]
+        end
+
+        it "raises if unrecognized options are provided" do
+          e = lambda {
+            Podfile.new(fixture('Podfile')) do
+              platform :ios
+              podspec :unrecognized => 'BananaLib.podspec'
+            end
+          }.should.raise Podfile::StandardError
+          e.message.should.match /Unrecognized options/
+        end
+
       end
     end
 
