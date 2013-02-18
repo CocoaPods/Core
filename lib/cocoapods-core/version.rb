@@ -32,14 +32,13 @@ module Pod
   #
   class Version < Pod::Vendor::Gem::Version
 
-    # Overrride the constants defined by the superclass to add Semantic
+    # Override the constants defined by the superclass to add Semantic
     # Versioning prerelease support (with a dash). E.g.: 1.0.0-alpha1
     #
     # For more info, see: http://semver.org
     #
-    VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z\-]+)*' # :nodoc:
-    ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})*\s*\z/ # :nodoc:
-    superclass.const_set(:ANCHORED_VERSION_PATTERN, ANCHORED_VERSION_PATTERN)
+    VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z\-]+)*'
+    ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})*\s*\z/
 
     # @return [Bool] whether the version represents the `head` of repository.
     #
@@ -47,7 +46,7 @@ module Pod
     alias_method  :head?, :head
 
     # @param  [String,Version] version
-    #         A string reppresenting a version, or another version.
+    #         A string representing a version, or another version.
     #
     # @todo   The `from` part of the regular expression should be remove in
     #         CocoaPods 1.0.0.
@@ -79,15 +78,21 @@ module Pod
       "<#{self.class} version=#{self.version}>"
     end
 
-    # @return [Boolean] indicates wether or not the version is a prerelease.
+    # @return [Boolean] indicates whether or not the version is a prerelease.
     #
-    # Prerelease Pods can contain a hyphen and/or a letter (conforms to
-    # Semantic Versioning instead of RubyGems).
+    # @note   Prerelease Pods can contain a hyphen and/or a letter (conforms to
+    #         Semantic Versioning instead of RubyGems).
     #
-    # For more info, see: http://semver.org
+    #         For more info, see: http://semver.org
     #
     def prerelease?
       @prerelease ||= @version =~ /[a-zA-Z\-]/
+    end
+
+    # @return [Bool] Whether a string representation is correct.
+    #
+    def self.correct? version
+      version.to_s =~ ANCHORED_VERSION_PATTERN
     end
   end
 end
