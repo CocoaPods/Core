@@ -147,7 +147,7 @@ module Pod::Vendor
 
     include Comparable
 
-    VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z\-]+)*' # :nodoc:
+    VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z]+)*' # :nodoc:
     ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})*\s*\z/ # :nodoc:
 
     ##
@@ -251,9 +251,10 @@ module Pod::Vendor
     end
 
     ##
-    # Prerelease Pods can contain a hyphen and/or a letter (conforms to Semantic Versioning instead of RubyGems)
+    # A version is considered a prerelease if it contains a letter.
+
     def prerelease?
-      @prerelease ||= @version =~ /[a-zA-Z\-]/
+      @prerelease ||= @version =~ /[a-zA-Z]/
     end
 
     def pretty_print q # :nodoc:
