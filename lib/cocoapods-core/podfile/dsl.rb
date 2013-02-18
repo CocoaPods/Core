@@ -66,7 +66,7 @@ module Pod
       # * `>= 0.1`   Version 0.1 and any higher version
       # * `< 0.1`    Any version lower than 0.1
       # * `<= 0.1`   Version 0.1 and any lower version
-      # * `~> 0.1.2` Version 0.1.2 and the versions upto 0.2, not including 0.2
+      # * `~> 0.1.2` Version 0.1.2 and the versions up to 0.2, not including 0.2
       #
       # A list of version requirements can be specified for even more fine
       # grained control.
@@ -95,12 +95,17 @@ module Pod
       #
       # To use the `master` branch of the repo:
       #
-      #   pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git'
+      #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git'
       #
       #
       # Or specify a commit:
       #
-      #     pod 'TTTFormatterKit', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
+      #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
+      #
+      #
+      # Or specify a local folder in the machine:
+      #
+      #     pod 'AFNetworking', :local => '~/Documents/AFNetworking'
       #
       #
       # It is important to note, though, that this means that the version will
@@ -115,7 +120,7 @@ module Pod
       # ### From a podspec outside a spec repo, for a library without podspec.
       #
       # If a podspec is available from another source outside of the library’s
-      # repo. Consider, for instance, a podpsec available via HTTP:
+      # repo. Consider, for instance, a podspec available via HTTP:
       #
       #     pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
       #
