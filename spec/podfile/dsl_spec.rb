@@ -90,8 +90,9 @@ module Pod
           stub_spec = Spec.new do |s|
             s.dependency 'monkey'
           end
-          expaded = Pathname.new("/Users/fabio/BananaLib.podspec")
-          Pod::Specification.expects(:from_file).with(expaded).returns(stub_spec)
+          home_dir = File.expand_path("~")
+          expanded = Pathname.new("#{home_dir}/BananaLib.podspec")
+          Pod::Specification.expects(:from_file).with(expanded).returns(stub_spec)
           podfile = Podfile.new(fixture('Podfile')) do
             platform :ios
             podspec :path => '~/BananaLib.podspec'
