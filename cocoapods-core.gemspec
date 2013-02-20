@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
-  s.add_runtime_dependency 'rake', '~> 0.9.4' # TEMPORARY SUPPORT
+  s.add_runtime_dependency 'rake', '~> 10.0.0' # TEMPORARY SUPPORT
 
   ## Make sure you can build the gem on older versions of RubyGems too:
   s.rubygems_version = "1.6.2"
