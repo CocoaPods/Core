@@ -6,9 +6,14 @@ module Pod
   # representation is generated. In details it provides:
   #
   # - sorting for hashes in ruby 1.8.x
-  # - ability to hing the sorting of the keys of a dictionary when converting
+  # - ability to hint the sorting of the keys of a dictionary when converting
   #   it. In this case the keys are also separated by an additional new line
   #   feed for readability.
+  #
+  # @note This class misses important features necessary for a correct YAML
+  #       serialization and thus it is safe to use only for the Lockfile.
+  #       The missing features include:
+  #       - Strings are never quoted even when ambiguous.
   #
   class YAMLConverter
 
@@ -26,8 +31,13 @@ module Pod
       #
       # @return [String] the YAML representation of the given object.
       #
-      def convert(object, hash_keys_hint = nil)
-        result = process_according_to_class(object, hash_keys_hint)
+      def convert(value)
+        result = process_according_to_class(value)
+        result << "\n"
+      end
+
+      def convert_hash(value, hash_keys_hint, line_separator = "\n")
+        result = process_hash(value, hash_keys_hint, line_separator)
         result << "\n"
       end
 
@@ -39,7 +49,7 @@ module Pod
       #
       # - each of the methods returns a YAML partial without an ending new
       #   line.
-      # - if a partinal needs to be indentated is resposability of the method
+      # - if a partial needs to be indented is responsibility of the method
       #   using it.
       #
       # ---
@@ -50,10 +60,12 @@ module Pod
       #
       def process_according_to_class(value, hash_keys_hint = nil)
         case value
-        when String then process_string(value)
-        when Symbol then process_string(":#{value}")
-        when Array  then process_array(value)
-        when Hash   then process_hash(value, hash_keys_hint)
+        when String     then value
+        when Symbol     then ":#{value}"
+        when TrueClass  then 'true'
+        when FalseClass then 'false'
+        when Array      then process_array(value)
+        when Hash       then process_hash(value, hash_keys_hint)
         else
           raise "Unsupported class for YAML conversion #{value.class}"
         end
@@ -100,7 +112,7 @@ module Pod
       #
       # @return [String] the YAML representation of the given object.
       #
-      def process_hash(hash, hash_keys_hint)
+      def process_hash(hash, hash_keys_hint = nil, line_separator = "\n")
         keys = sorted_array_with_hint(hash.keys, hash_keys_hint)
         key_lines = []
         keys.each do |key|
@@ -108,14 +120,14 @@ module Pod
           processed = process_according_to_class(key_value)
           processed_key = process_according_to_class(key)
           case key_value
-          when String
-            key_lines << "#{processed_key}: #{processed}"
           when Array, Hash
             key_partial_yaml = processed.lines.map { |line| "  #{line}" } * ""
             key_lines << "#{processed_key}:\n#{key_partial_yaml}"
+          else
+            key_lines << "#{processed_key}: #{processed}"
           end
         end
-        key_lines * (hash_keys_hint ? "\n\n" : "\n")
+        key_lines * line_separator
       end
 
       #-----------------------------------------------------------------------#

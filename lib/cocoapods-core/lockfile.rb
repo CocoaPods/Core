@@ -307,7 +307,7 @@ module Pod
         "SPEC CHECKSUMS",
         "COCOAPODS"
       ]
-      YAMLConverter.convert(to_hash, keys_hint)
+      YAMLConverter.convert_hash(to_hash, keys_hint, "\n\n")
     end
 
     #-------------------------------------------------------------------------#

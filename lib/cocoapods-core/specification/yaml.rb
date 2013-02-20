@@ -26,7 +26,7 @@ module Pod
 
     end
 
-    # Configures the specification from the given hash.
+    # Configures a new specification from the given hash.
     #
     # @param  [Hash] the hash which contains the information of the
     #         specification.
@@ -44,7 +44,7 @@ module Pod
       spec
     end
 
-    # Configures the specification from the given YAML representation.
+    # Configures a new specification from the given YAML representation.
     #
     # @param  [String] the YAML encoded hash which contains the information of
     #         the specification.
