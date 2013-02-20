@@ -29,14 +29,17 @@ module Pod
     # [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration)
     # and thus it can be very simple:
     #
-    #     Pod::Spec.new do |spec|
-    #       spec.name     = 'AFNetworking'
-    #       spec.version  = '1.0.1'
-    #       spec.license  = 'MIT'
-    #       spec.summary  = 'A delightful iOS and OS X networking framework.'
-    #       spec.homepage = 'https://github.com/AFNetworking/AFNetworking'
-    #       spec.authors  = {'Mattt Thompson' => 'm@mattt.me', 'Scott Raymond' => 'sco@gowalla.com'}
-    #       spec.source   = { :git => 'https://github.com/AFNetworking/AFNetworking.git', :tag => '1.0.1' }
+    #     Pod::Spec.new do |s|
+    #       s.name         = 'Reachability'
+    #       s.version      = '3.1.0'
+    #       s.license      = { :type => 'BSD' }
+    #       s.homepage     = 'https://github.com/tonymillion/Reachability'
+    #       s.authors      = { 'Tony Million' => 'tonymillion@gmail.com' }
+    #       s.summary      = 'ARC and GCD Compatible Reachability Class for iOS and OS X. Drop in replacement for Apple Reachability.'
+    #       s.source       = { :git => 'https://github.com/tonymillion/Reachability.git', :tag => 'v3.1.0' }
+    #       s.source_files = 'Reachability.{h,m}'
+    #       s.framework    = 'SystemConfiguration'
+    #       s.requires_arc = true
     #     end
     #
     module DSL
