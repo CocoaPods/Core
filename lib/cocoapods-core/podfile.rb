@@ -42,13 +42,17 @@ module Pod
     #             pod "AFNetworking", "~> 1.0"
     #           end
     #
-    def initialize(defined_in_file = nil, &block)
+    def initialize(defined_in_file = nil, internal_hash = {}, &block)
       self.defined_in_file = defined_in_file
-      @internal_hash = {}
-      @root_target_definition = TargetDefinition.new(:default, self)
-      @current_target_definition = @root_target_definition
-      @target_definitions = { :default => @root_target_definition }
-      instance_eval(&block) if block
+      @internal_hash = internal_hash
+      if block
+        default_target_def = TargetDefinition.new(:default, self)
+        @root_target_definitions = [default_target_def]
+        @current_target_definition = default_target_def
+        instance_eval(&block)
+      else
+        @root_target_definitions = []
+      end
     end
 
     # @return [String] a string useful to represent the Podfile in a message
@@ -67,13 +71,23 @@ module Pod
     # @return [Hash{Symbol,String => TargetDefinition}] the target definitions
     #         of the podfile stored by their name.
     #
-    attr_reader :target_definitions
+    def target_definitions
+      Hash[target_definition_list.map { |td| [td.name, td] }]
+    end
+
+    def target_definition_list
+      root_target_definitions.map { |td| [td, td.recursive_children] }.flatten
+    end
+
+    # @return [Array<TargetDefinition>] The root target definition.
+    #
+    attr_accessor :root_target_definitions
 
     # @return [Array<Dependency>] the dependencies of the all the target
     #         definitions.
     #
     def dependencies
-      @target_definitions.values.map(&:dependencies).flatten.uniq
+      target_definition_list.map(&:dependencies).flatten.uniq
     end
 
     #-------------------------------------------------------------------------#
@@ -168,7 +182,7 @@ module Pod
     #
     def to_hash
       hash = {}
-      hash['target_definitions'] = root_target_definition.to_hash
+      hash['target_definitions'] = Hash[root_target_definitions.map { |child| [child.name, child.to_hash] }]
       hash.merge!(internal_hash)
       hash
     end
@@ -245,14 +259,12 @@ module Pod
     # @return [Podfile] the new Podfile
     #
     def self.from_hash(hash, path = nil)
-      podfile = Podfile.new(path)
       internal_hash = hash.dup
-      target_definitions_hash = internal_hash.delete('target_definitions')
-      podfile.send(:internal_hash=, internal_hash)
-      if target_definitions_hash
-        definition = TargetDefinition.from_hash(target_definitions_hash, podfile)
-        podfile.send(:root_target_definition=, definition)
-        podfile.target_definitions[:default] = definition
+      target_definitions = internal_hash.delete('target_definitions') || []
+      podfile = Podfile.new(path,internal_hash)
+      target_definitions.each do |name, definition_hash|
+        definition = TargetDefinition.from_hash(name, definition_hash, podfile)
+        podfile.root_target_definitions << definition
       end
       podfile
     end
@@ -313,10 +325,6 @@ module Pod
       raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
       internal_hash[key]
     end
-
-    # @return [TargetDefinition] The root target definition.
-    #
-    attr_accessor :root_target_definition
 
     # @return [TargetDefinition] The current target definition to which the DSL
     #         commands apply.

@@ -223,7 +223,6 @@ module Pod
         parent = current_target_definition
         definition = TargetDefinition.new(name, parent)
         definition.exclusive = true if options[:exclusive]
-        @target_definitions[name] = definition
         self.current_target_definition = definition
         yield
       ensure

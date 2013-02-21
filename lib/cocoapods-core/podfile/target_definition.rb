@@ -19,10 +19,6 @@ module Pod
       #
       attr_reader :parent
 
-      # @return [Array<TargetDefinition>] the children target definitions.
-      #
-      attr_reader :children
-
       # @param  [String, Symbol]
       #         name @see name
       #
@@ -32,15 +28,26 @@ module Pod
       # @option options [Bool] :exclusive
       #         @see exclusive?
       #
-      def initialize(name, parent)
+      def initialize(name, parent, internal_hash = {})
         @name = name
         @parent = parent
-        @internal_hash = {}
+        @internal_hash = internal_hash
         @children = []
 
         if parent.is_a?(TargetDefinition)
           parent.children << self
         end
+      end
+
+      # @return [Array<TargetDefinition>] the children target definitions.
+      #
+      attr_reader :children
+
+      # @return [Array<TargetDefinition>] the targets definition descending
+      #         from this one.
+      #
+      def recursive_children
+        (children + children.map(&:recursive_children)).flatten
       end
 
       # @return [Bool] Whether the target definition is root.
@@ -366,9 +373,9 @@ module Pod
       def to_hash
         hash = internal_hash.dup
         unless children.empty?
-          hash['children'] = children.map { |child| child.to_hash }
+          hash['children'] = Hash[children.map { |child| [child.name, child.to_hash] }]
         end
-        { name => hash }
+        hash
       end
 
       # Configures a new target definition from the given hash.
@@ -378,17 +385,12 @@ module Pod
       #
       # @return [TargetDefinition] the new target definition
       #
-      def self.from_hash(hash, parent)
-        name = hash.keys.first
-        data = hash.values.first
-        definition = TargetDefinition.new(name, parent)
-        internal_hash = data.dup
-        children_hashes = internal_hash.delete('children')
-        definition.send(:internal_hash=, internal_hash)
-        if children_hashes
-          children_hashes.map do |child_hash|
-            TargetDefinition.from_hash(child_hash, definition)
-          end
+      def self.from_hash(name, hash, parent)
+        internal_hash = hash.dup
+        children_hashes = internal_hash.delete('children') || {}
+        definition = TargetDefinition.new(name, parent, internal_hash)
+        children_hashes.each do |child_name, child_hash|
+          TargetDefinition.from_hash(child_name, child_hash, definition)
         end
         definition
       end

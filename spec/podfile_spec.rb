@@ -144,13 +144,11 @@ module Pod
           "target_definitions"=>{
             :default=>{
               "dependencies"=>["ASIHTTPRequest"],
-              "children"=>[
-                {
-                  "sub-target"=>{
-                    "dependencies"=>["JSONKit"]
-                  }
+              "children"=> {
+                "sub-target"=>{
+                  "dependencies"=>["JSONKit"]
                 }
-              ]
+              }
             }
           }
         }
@@ -330,11 +328,6 @@ module Pod
           target = @podfile.target_definitions[target_name]
           target.user_project_path.to_s.should == 'OSX Project.xcodeproj'
         end
-      end
-
-      it "can be safely serialized to YAML" do
-        converted = Podfile.from_yaml(@podfile.to_yaml)
-        converted.to_hash.should == @podfile.to_hash
       end
     end
 

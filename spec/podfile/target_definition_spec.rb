@@ -23,17 +23,19 @@ module Pod
         @child.parent.should == @root
       end
 
+      #--------------------------------------#
+
       it "returns the children" do
         @root.children.should == [@child]
         @child.children.should == []
       end
 
-      it "returns the podfile that specifies it" do
-        @root.podfile.class.should == Podfile
-        @child.podfile.class.should == Podfile
+      it "returns the recursive children" do
+        @grand_child   = Podfile::TargetDefinition.new("MyAppTests", @child)
+        @root.recursive_children.should == [@child, @grand_child]
+        @child.recursive_children.should == [@grand_child]
+        @grand_child.recursive_children.should == []
       end
-
-      #--------------------------------------#
 
       it "returns whether it is root" do
         @root.should.be.root
@@ -43,6 +45,11 @@ module Pod
       it "returns the root target definition" do
         @root.root.should == @root
         @child.root.should == @root
+      end
+
+      it "returns the podfile that specifies it" do
+        @root.podfile.class.should == Podfile
+        @child.podfile.class.should == Podfile
       end
 
       it "returns dependencies" do
@@ -250,27 +257,25 @@ module Pod
         @child.store_pod('BlocksKit')
         @child.set_platform(:ios)
         @child.to_hash.should == {
-          "MyAppTests"=>{
-            "dependencies"=>["BlocksKit"],
-            "platform"=>"ios"
-          }
+          "dependencies"=>["BlocksKit"],
+          "platform"=>"ios"
         }
       end
 
       it "stores the children in the hash representation" do
+        child_2   = Podfile::TargetDefinition.new("MoarTests", @root)
         @root.store_pod('BlocksKit')
         @child.store_pod('RestKit')
         @root.to_hash.should == {
-          "MyApp"=>{
-            "platform"=>{"ios"=>"6.0"},
-            "dependencies"=> ["BlocksKit"],
-            "children"=> [
-              {
-                "MyAppTests"=>{
-                  "dependencies"=> [ "RestKit"]
-                }
-              }
-            ]
+          "platform"=>{"ios"=>"6.0"},
+          "dependencies"=> ["BlocksKit"],
+          "children"=>
+          {
+            "MyAppTests"=>{
+              "dependencies"=> [ "RestKit"]
+            },
+            "MoarTests"=>{
+            }
           }
         }
       end
@@ -278,7 +283,7 @@ module Pod
       it "can be initialized from a hash" do
         @root.store_pod('BlocksKit')
         @child.store_pod('RestKit')
-        converted = Podfile::TargetDefinition.from_hash(@root.to_hash, @podfile)
+        converted = Podfile::TargetDefinition.from_hash(@root.name, @root.to_hash, @podfile)
         converted.to_hash.should == @root.to_hash
       end
 
