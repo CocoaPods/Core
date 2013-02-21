@@ -45,7 +45,7 @@ module Pod
     def initialize(defined_in_file = nil, &block)
       self.defined_in_file = defined_in_file
       @internal_hash = {}
-      @root_target_definition = TargetDefinition.new(:default, nil, self, :exclusive => true)
+      @root_target_definition = TargetDefinition.new(:default, self)
       @current_target_definition = @root_target_definition
       @target_definitions = { :default => @root_target_definition }
       instance_eval(&block) if block
@@ -221,7 +221,7 @@ module Pod
       target_definitions_hash = internal_hash.delete('target_definitions')
       podfile.send(:internal_hash=, internal_hash)
       if target_definitions_hash
-        definition = TargetDefinition.from_hash(target_definitions_hash, nil, podfile)
+        definition = TargetDefinition.from_hash(target_definitions_hash, podfile)
         podfile.send(:root_target_definition=, definition)
       end
       podfile

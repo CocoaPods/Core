@@ -14,18 +14,14 @@ module Pod
       #
       attr_reader :name
 
-      # @return [TargetDefinition] the parent target definition.
+      # @return [TargetDefinition, Podfile] the parent target definition or the
+      #         Podfile if the receiver is root.
       #
       attr_reader :parent
 
-      # @return [Array<TargetDefinition>]
+      # @return [Array<TargetDefinition>] the children target definitions.
       #
       attr_reader :children
-
-      # @return [Podfile] the podfile that contains the specification for this
-      # target definition.
-      #
-      attr_reader :podfile
 
       # @param  [String, Symbol]
       #         name @see name
@@ -36,11 +32,10 @@ module Pod
       # @option options [Bool] :exclusive
       #         @see exclusive?
       #
-      def initialize(name, parent, podfile, options = {})
+      def initialize(name, parent)
+        @name = name
+        @parent = parent
         @internal_hash = {}
-        @name     = name
-        @parent   = parent
-        @podfile  = podfile
         @children = []
 
         if parent.is_a?(TargetDefinition)
@@ -51,8 +46,22 @@ module Pod
       # @return [Bool]
       #
       def root?
-        name == :default
-        # parent.is_a?(Podfile)
+        parent.is_a?(Podfile) || parent.nil?
+      end
+
+      def root
+        if root?
+          self
+        else
+          parent.root
+        end
+      end
+
+      # @return [Podfile] the podfile that contains the specification for this
+      # target definition.
+      #
+      def podfile
+        root.parent
       end
 
       # @return [Array<Dependency>] the list of the dependencies of the target
@@ -80,7 +89,7 @@ module Pod
       #         name.
       #
       def label
-        if root?
+        if root? && name == :default
           "Pods"
         elsif exclusive? || parent.nil?
           "Pods-#{name}"
@@ -120,7 +129,11 @@ module Pod
       #         not match the parent's `platform`.
       #
       def exclusive?
-        get_hash_value('exclusive') || ( platform && parent && parent.platform != platform )
+        if root?
+          true
+        else
+          get_hash_value('exclusive') || ( platform && parent && parent.platform != platform )
+        end
       end
 
       #--------------------------------------#
@@ -155,7 +168,7 @@ module Pod
         if path
           File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
         else
-          parent.user_project_path if parent
+          parent.user_project_path unless root?
         end
       end
 
@@ -170,7 +183,7 @@ module Pod
       #         represents their type (`:debug` or `:release`).
       #
       def build_configurations
-        get_hash_value('build_configurations') || (parent.build_configurations if parent)
+        get_hash_value('build_configurations') || (parent.build_configurations unless root?)
       end
 
       #--------------------------------------#
@@ -179,7 +192,7 @@ module Pod
       #         warnings with a compiler flag.
       #
       def inhibit_all_warnings?
-        get_hash_value('inhibit_all_warnings') || (parent.inhibit_all_warnings? if parent)
+        get_hash_value('inhibit_all_warnings') || (parent.inhibit_all_warnings? unless root?)
       end
 
       # Sets whether the target definition should inhibit the warnings during
@@ -224,7 +237,7 @@ module Pod
           target ||= (name == :ios ? '4.3' : '10.6')
           Platform.new(name, target)
         else
-          parent.platform if parent
+          parent.platform unless root?
         end
       end
 
@@ -290,16 +303,16 @@ module Pod
       #
       # @return [TargetDefinition] the new target definition
       #
-      def self.from_hash(hash, parent, podfile)
+      def self.from_hash(hash, parent)
         name = hash.keys.first
         data = hash.values.first
-        definition = TargetDefinition.new(name, parent, podfile)
+        definition = TargetDefinition.new(name, parent)
         internal_hash = data.dup
         children_hashes = internal_hash.delete('children')
         definition.send(:internal_hash=, internal_hash)
         if children_hashes
           children = children_hashes.map do |child_hash|
-            TargetDefinition.from_hash(child_hash, definition, podfile)
+            TargetDefinition.from_hash(child_hash, definition)
           end
           definition.send(:children=, children)
         end
