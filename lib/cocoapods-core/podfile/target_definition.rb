@@ -386,10 +386,9 @@ module Pod
         children_hashes = internal_hash.delete('children')
         definition.send(:internal_hash=, internal_hash)
         if children_hashes
-          children = children_hashes.map do |child_hash|
+          children_hashes.map do |child_hash|
             TargetDefinition.from_hash(child_hash, definition)
           end
-          definition.send(:children=, children)
         end
         definition
       end

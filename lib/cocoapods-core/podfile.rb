@@ -252,6 +252,7 @@ module Pod
       if target_definitions_hash
         definition = TargetDefinition.from_hash(target_definitions_hash, podfile)
         podfile.send(:root_target_definition=, definition)
+        podfile.target_definitions[:default] = definition
       end
       podfile
     end
