@@ -247,10 +247,10 @@ module Pod
         name_or_hash = get_hash_value('platform')
         if name_or_hash
           if name_or_hash.is_a?(Hash)
-            name = name_or_hash.keys.first
+            name = name_or_hash.keys.first.to_sym
             target = name_or_hash.values.first
           else
-            name = name_or_hash
+            name = name_or_hash.to_sym
           end
           target ||= (name == :ios ? '4.3' : '10.6')
           Platform.new(name, target)
@@ -277,9 +277,9 @@ module Pod
         end
 
         if target
-          value = {name => target}
+          value = {name.to_s => target}
         else
-          value = name
+          value = name.to_s
         end
         set_hash_value('platform', value)
       end

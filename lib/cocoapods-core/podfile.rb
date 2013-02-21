@@ -261,7 +261,7 @@ module Pod
     #
     # @param  [String] yaml
     #         The YAML encoded hash which contains the information of the
-  #         Podfile.
+    #         Podfile.
     #
     # @param  [Pathname] path
     #         The path from which the Podfile is loaded.

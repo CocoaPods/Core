@@ -1,7 +1,7 @@
 ---
 target_definitions:
   :default:
-    platform: :ios
+    platform: ios
     dependencies:
     - SSZipArchive:
       - '>= 1'

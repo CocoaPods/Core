@@ -252,7 +252,7 @@ module Pod
         @child.to_hash.should == {
           "MyAppTests"=>{
             "dependencies"=>["BlocksKit"],
-            "platform"=>:ios
+            "platform"=>"ios"
           }
         }
       end
@@ -262,7 +262,7 @@ module Pod
         @child.store_pod('RestKit')
         @root.to_hash.should == {
           "MyApp"=>{
-            "platform"=>{:ios=>"6.0"},
+            "platform"=>{"ios"=>"6.0"},
             "dependencies"=> ["BlocksKit"],
             "children"=> [
               {
