@@ -86,10 +86,12 @@ module Pod
     #
     def workspace_path
       path = get_hash_value('workspace')
-      if File.extname(path) == '.xcworkspace'
-        path
-      else
-        "#{path}.xcworkspace"
+      if path
+        if File.extname(path) == '.xcworkspace'
+          path
+        else
+          "#{path}.xcworkspace"
+        end
       end
     end
 
