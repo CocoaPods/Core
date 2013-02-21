@@ -44,6 +44,16 @@ module Pod
         result.should == ":value\n"
       end
 
+      it "converts the true class" do
+        result = YAMLConverter.convert(true)
+        result.should == "true\n"
+      end
+
+      it "converts the false class" do
+        result = YAMLConverter.convert(false)
+        result.should == "false\n"
+      end
+
       it "converts an array" do
         value = ["Value_1", "Value_2"]
         result = YAMLConverter.convert(value)
@@ -117,7 +127,7 @@ module Pod
       it "converts a complex file" do
         value = YAML.load(sample_yaml)
         sorted_keys = ["PODS", "DEPENDENCIES", "EXTERNAL SOURCES", "SPEC CHECKSUMS", "COCOAPODS"]
-        result = YAMLConverter.convert(value, sorted_keys)
+        result = YAMLConverter.convert_hash(value, sorted_keys, "\n\n")
         YAML.load(result).should == value
         result.should == sample_yaml
       end

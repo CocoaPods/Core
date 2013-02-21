@@ -2,7 +2,8 @@ module Pod
   class Podfile
 
     # The of the methods defined in this file and the order of the methods is
-    # relevant for the documentation generated on CocoaPods/cocoapods.github.com.
+    # relevant for the documentation generated on
+    # CocoaPods/cocoapods.github.com.
 
     # The Podfile is a specification that describes the dependencies of the
     # targets of one or more Xcode projects. The Podfile always creates an
@@ -140,7 +141,7 @@ module Pod
           raise StandardError, "A dependency requires a name."
         end
 
-        @target_definition.target_dependencies << Dependency.new(name, *requirements)
+        current_target_definition.store_pod(name, *requirements)
       end
 
       # Use the dependencies of a Pod defined in the given podspec file. If no
@@ -176,24 +177,7 @@ module Pod
       # @return   [void]
       #
       def podspec(options = nil)
-        if options && path = options[:path]
-          path_with_ext = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
-          path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
-          file = defined_in_file.dirname + path_without_tilde
-        elsif options && name = options[:name]
-          name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
-          file = defined_in_file.dirname + name
-        elsif options.nil?
-          file = Pathname.glob(defined_in_file.dirname + '*.podspec').first
-        else
-          raise StandardError, "Unrecognized options for the podspec method `#{options}`"
-        end
-
-        spec = Specification.from_file(file)
-        all_specs = [spec, *spec.recursive_subspecs]
-        deps = all_specs.map{ |s| s.dependencies(@target_definition.platform) }
-        deps = deps.flatten.uniq
-        @target_definition.target_dependencies.concat(deps)
+        current_target_definition.store_podspec(options)
       end
 
       # Defines a new static library target and scopes dependencies defined from
@@ -232,19 +216,26 @@ module Pod
       # @return   [void]
       #
       def target(name, options = {})
-        parent = @target_definition
-        @target_definitions[name] = @target_definition = TargetDefinition.new(name, parent, self, options)
+        if options && !options.keys.all? { |key| [:exclusive].include?(key) }
+          raise StandardError, "Unsupported options `#{options}` for target `#{name}`"
+        end
+
+        parent = current_target_definition
+        definition = TargetDefinition.new(name, parent)
+        definition.exclusive = true if options[:exclusive]
+        @target_definitions[name] = definition
+        self.current_target_definition = definition
         yield
       ensure
-        @target_definition = parent
+        self.current_target_definition = parent
       end
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # @!group Target configuration
       #   This group list the options to configure a target.
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
       #
@@ -274,17 +265,11 @@ module Pod
       # @return   [void]
       #
       def platform(name, target = nil)
-        unless [:ios, :osx].include?(name)
-          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
-        end
 
         # Support for deprecated options parameter
         target = target[:deployment_target] if target.is_a?(Hash)
 
-        unless target
-          target = (name == :ios ? '4.3' : '10.6')
-        end
-        @target_definition.platform = Platform.new(name, target)
+        current_target_definition.set_platform(name, target)
       end
 
       # Specifies the Xcode project that contains the target that the Pods library
@@ -322,9 +307,8 @@ module Pod
       # @return   [void]
       #
       def xcodeproj(path, build_configurations = {})
-        path = File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
-        @target_definition.user_project_path = path
-        @target_definition.build_configurations = build_configurations
+        current_target_definition.user_project_path = path
+        current_target_definition.build_configurations = build_configurations
       end
 
       # Specifies the target(s) in the user’s project that this Pods library
@@ -350,8 +334,7 @@ module Pod
       # @return   [void]
       #
       def link_with(targets)
-        targets = [targets] unless targets.is_a?(Array)
-        @target_definition.link_with = targets
+        current_target_definition.link_with = targets
       end
 
       # Inhibits **all** the warnings from the CocoaPods libraries.
@@ -361,15 +344,17 @@ module Pod
       # This attribute is inherited by child target definitions.
       #
       def inhibit_all_warnings!
-        @target_definition.inhibit_all_warnings = true
+        current_target_definition.inhibit_all_warnings = true
       end
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # @!group Workspace
-      #   This group list the options to configure workspace and to set global settings.
+      #
+      #   This group list the options to configure workspace and to set global
+      #   settings.
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # Specifies the Xcode workspace that should contain all the projects.
       #
@@ -389,11 +374,11 @@ module Pod
       # @return   [void]
       #
       def workspace(path)
-        @workspace_path = (File.extname(path) == '.xcworkspace' ? path : "#{path}.xcworkspace")
+        set_hash_value('workspace', path.to_s)
       end
 
-      # Specifies that a BridgeSupport metadata document should be generated from
-      # the headers of all installed Pods.
+      # Specifies that a BridgeSupport metadata document should be generated
+      # from the headers of all installed Pods.
       #
       # -----
       #
@@ -405,10 +390,11 @@ module Pod
       # @return   [void]
       #
       def generate_bridge_support!
-        @generate_bridge_support = true
+        set_hash_value('generate_bridge_support', true)
       end
 
-      # Specifies that the -fobjc-arc flag should be added to the `OTHER_LD_FLAGS`.
+      # Specifies that the -fobjc-arc flag should be added to the
+      # `OTHER_LD_FLAGS`.
       #
       # -----
       #
@@ -422,10 +408,10 @@ module Pod
       # @return   [void]
       #
       def set_arc_compatibility_flag!
-        @set_arc_compatibility_flag = true
+        set_hash_value('set_arc_compatibility_flag', true)
       end
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
       # @!group Hooks
       #   The Podfile provides hooks that will be called during the
@@ -433,10 +419,10 @@ module Pod
       #
       #   Hooks are __global__ and not stored per target definition.
 
-      #---------------------------------------------------------------------------#
+      #-----------------------------------------------------------------------#
 
-      # This hook allows you to make any changes to the Pods after they have been
-      # downloaded but before they are installed.
+      # This hook allows you to make any changes to the Pods after they have
+      # been downloaded but before they are installed.
       #
       # @example  Defining a pre install hook in a Podfile.
       #
@@ -449,8 +435,9 @@ module Pod
         @pre_install_callback = block
       end
 
-      # This hook allows you to make any last changes to the generated Xcode project
-      # before it is written to disk, or any other tasks you might want to perform.
+      # This hook allows you to make any last changes to the generated Xcode
+      # project before it is written to disk, or any other tasks you might want
+      # to perform.
       #
       # @example  Customizing the `OTHER_LDFLAGS` of all targets
       #

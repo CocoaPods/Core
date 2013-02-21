@@ -14,6 +14,16 @@ module Pod
   #
   class Podfile
 
+    # @!group DSL support
+
+    include Pod::Podfile::DSL
+
+    #-------------------------------------------------------------------------#
+
+    class Pod::Podfile::StandardError < StandardError; end
+
+    #-------------------------------------------------------------------------#
+
     # @return [Pathname] the path where the podfile was loaded from. It is nil
     #         if the podfile was generated programmatically.
     #
@@ -23,7 +33,7 @@ module Pod
     #           the path of the podfile.
     #
     # @param    [Proc] block
-    #           a block that configures the podfile through its DSL.
+    #           an optional block that configures the podfile through the DSL.
     #
     # @example  Creating a Podfile.
     #
@@ -34,9 +44,11 @@ module Pod
     #
     def initialize(defined_in_file = nil, &block)
       self.defined_in_file = defined_in_file
-      @target_definition = TargetDefinition.new(:default, nil, self, :exclusive => true)
-      @target_definitions = { :default => @target_definition }
-      instance_eval(&block)
+      @internal_hash = {}
+      @root_target_definition = TargetDefinition.new(:default, self)
+      @current_target_definition = @root_target_definition
+      @target_definitions = { :default => @root_target_definition }
+      instance_eval(&block) if block
     end
 
     # @return [String] a string useful to represent the Podfile in a message
@@ -46,56 +58,9 @@ module Pod
       "Podfile"
     end
 
-    # Initializes a podfile from the file with the given path.
-    #
-    # @param  [Pathname] path
-    #         the path from where the podfile should be loaded.
-    #
-    # @return [Podfile] the generated podfile.
-    #
-    def self.from_file(path)
-      podfile = Podfile.new(path) do
-        string = File.open(path, 'r:utf-8')  { |f| f.read }
-        # Work around for Rubinius incomplete encoding in 1.9 mode
-        if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-          string.encode!('UTF-8')
-        end
-
-        begin
-          eval(string, nil, path.to_s)
-        rescue Exception => e
-          raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}",
-                             path, e.backtrace)
-        end
-      end
-      podfile.validate!
-      podfile
-    end
-
     #-------------------------------------------------------------------------#
 
-    class Pod::Podfile::StandardError < StandardError; end
-
-    #-------------------------------------------------------------------------#
-
-    # @!group DSL support
-
-    include Pod::Podfile::DSL
-
-    # @deprecated Deprecated in favour of the more succinct {#pod}
-    #
-    # @see        pod
-    #
-    # @todo       Remove for CocoaPods 1.0.
-    #
-    # @return     [void]
-    #
-    def dependency(name = nil, *requirements, &block)
-      warn "[DEPRECATED] `dependency' is deprecated (use `pod')"
-      pod(name, *requirements, &block)
-    end
-
-    #-------------------------------------------------------------------------#
+    public
 
     # @!group Working with a podfile
 
@@ -108,36 +73,45 @@ module Pod
     #         definitions.
     #
     def dependencies
-      @target_definitions.values.map(&:target_dependencies).flatten.uniq
+      @target_definitions.values.map(&:dependencies).flatten.uniq
     end
 
-    # Validates the podfile.
-    #
-    # @note   Currently this method does nothing.
-    #
-    # @return [void]
-    #
-    def validate!
-    end
+    #-------------------------------------------------------------------------#
 
+    public
+
+    # @!group Attributes
 
     # @return [String] the path of the workspace if specified by the user.
     #
-    attr_reader :workspace_path
+    def workspace_path
+      path = get_hash_value('workspace')
+      if File.extname(path) == '.xcworkspace'
+        path
+      else
+        "#{path}.xcworkspace"
+      end
+    end
 
     # @return [Bool] whether the podfile should generate a BridgeSupport
     #         metadata document.
     #
     def generate_bridge_support?
-      @generate_bridge_support
+      get_hash_value('generate_bridge_support')
     end
 
     # @return [Bool] whether the -fobjc-arc flag should be added to the
     #         OTHER_LD_FLAGS.
     #
     def set_arc_compatibility_flag?
-      @set_arc_compatibility_flag
+      get_hash_value('set_arc_compatibility_flag')
     end
+
+    #-------------------------------------------------------------------------#
+
+    public
+
+    # @!group Hooks
 
     # Calls the pre install callback if defined.
     #
@@ -172,5 +146,159 @@ module Pod
         false
       end
     end
+
+    #-------------------------------------------------------------------------#
+
+    public
+
+    # @!group Representations
+
+    # @return [Array] The keys used by the hash representation of the Podfile.
+    #
+    HASH_KEYS = [
+      'target_definitions',
+      'workspace',
+      'generate_bridge_support',
+      'set_arc_compatibility_flag',
+    ].freeze
+
+    # @return [Hash] The hash representation of the Podfile.
+    #
+    def to_hash
+      hash = {}
+      hash['target_definitions'] = root_target_definition.to_hash
+      hash.merge!(internal_hash)
+      hash
+    end
+
+    # @return [String] The YAML representation of the Podfile.
+    #
+    def to_yaml
+      to_hash.to_yaml
+    end
+
+    #-------------------------------------------------------------------------#
+
+    public
+
+    # @!group Class methods
+
+    # Initializes a podfile from the file with the given path.
+    #
+    # @param  [Pathname] path
+    #         the path from where the podfile should be loaded.
+    #
+    # @return [Podfile] the generated podfile.
+    #
+    def self.from_file(path)
+      podfile = Podfile.new(path) do
+        string = File.open(path, 'r:utf-8')  { |f| f.read }
+        # Work around for Rubinius incomplete encoding in 1.9 mode
+        if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+          string.encode!('UTF-8')
+        end
+
+        begin
+          eval(string, nil, path.to_s)
+        rescue Exception => e
+          raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}",
+                             path, e.backtrace)
+        end
+      end
+      podfile
+    end
+
+    # Configures a new Podfile from the given hash.
+    #
+    # @param  [Hash] the hash which contains the information of the
+    #         Podfile.
+    #
+    # @return [Podfile] the new Podfile
+    #
+    def self.from_hash(hash)
+      podfile = Podfile.new
+      internal_hash = hash.dup
+      target_definitions_hash = internal_hash.delete('target_definitions')
+      podfile.send(:internal_hash=, internal_hash)
+      if target_definitions_hash
+        definition = TargetDefinition.from_hash(target_definitions_hash, podfile)
+        podfile.send(:root_target_definition=, definition)
+      end
+      podfile
+    end
+
+    # Configures a new Podfile from the given YAML representation.
+    #
+    # @param  [String] the YAML encoded hash which contains the information of
+    #         the Podfile.
+    #
+    #
+    # @return [Podfile] the new Podfile
+    #
+    def self.from_yaml(yaml)
+      hash = YAML.load(yaml)
+      from_hash(hash)
+    end
+
+    #-------------------------------------------------------------------------#
+
+    private
+
+    # @!group Private helpers
+
+    # @return [Hash] The hash which store the attributes of the Podfile.
+    #
+    attr_accessor :internal_hash
+
+    # Set a value in the internal hash of the Podfile for the given key.
+    #
+    # @param  [String] key
+    #         The key for which to store the value.
+    #
+    # @param  [Object] value
+    #         The value to store.
+    #
+    # @raise  If the key is not recognized.
+    #
+    # @return [void]
+    #
+    def set_hash_value(key, value)
+      raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+      internal_hash[key] = value
+    end
+
+    # Returns the value for the given key in the internal hash of the Podfile.
+    #
+    # @param  [String] key
+    #         The key for which the value is needed.
+    #
+    # @raise  If the key is not recognized.
+    #
+    # @return [Object] The value for the key.
+    #
+    def get_hash_value(key)
+      raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+      internal_hash[key]
+    end
+
+    # @return [TargetDefinition] The root target definition.
+    #
+    attr_accessor :root_target_definition
+
+    # @return [TargetDefinition] The current target definition to which the DSL
+    #         commands apply.
+    #
+    attr_accessor :current_target_definition
+
+    #-------------------------------------------------------------------------#
+
+    # @deprecated Deprecated in favour of the more succinct {#pod}. Remove for
+    #             CocoaPods 1.0.
+    #
+    def dependency(name = nil, *requirements, &block)
+      warn "[DEPRECATED] `dependency' is deprecated (use `pod')"
+      pod(name, *requirements, &block)
+    end
+
   end
 end

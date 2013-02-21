@@ -16,7 +16,7 @@ module Pod
       extend SpecHelper::TemporaryDirectory
 
       it "includes the line of the podfile that generated an exception" do
-        podfile_content = "platform :windows\npod 'libPusher'"
+        podfile_content = "\n# Comment\npod "
         podfile_file = temporary_directory + 'Podfile'
         File.open(podfile_file, 'w') { |f| f.write(podfile_content) }
         raised = false
@@ -24,9 +24,9 @@ module Pod
           Podfile.from_file(podfile_file)
         rescue DSLError => e
           raised = true
-          e.message.should.be =~ /from .*\/tmp\/Podfile:1/
-          e.message.should.be =~ /platform :windows/
-          e.message.should.be =~ /pod 'libPusher'/
+          e.message.should.match /from .*\/tmp\/Podfile:3/
+          e.message.should.match /requires a name/
+          e.message.should.match /# Comment/
         end
         raised.should.be.true
       end
@@ -72,6 +72,153 @@ module Pod
         Podfile.new {}.post_install!(:an_installer).should.be == false
         result = Podfile.new { post_install { |installer| } }.post_install!(:an_installer)
         result.should.be == true
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Attributes" do
+
+      it "returns the workspace" do
+        Podfile.new do
+          workspace 'MyWorkspace.xcworkspace'
+        end.workspace_path.should == 'MyWorkspace.xcworkspace'
+      end
+
+      it "appends the extension to the specified workspaces if needed" do
+        Podfile.new do
+          workspace 'MyWorkspace'
+        end.workspace_path.should == 'MyWorkspace.xcworkspace'
+      end
+
+      it "returns whether the BridgeSupport metadata should be generated" do
+        Podfile.new {}.should.not.generate_bridge_support
+        Podfile.new { generate_bridge_support! }.should.generate_bridge_support
+      end
+
+      it 'returns whether the ARC compatibility flag should be set' do
+        Podfile.new {}.should.not.set_arc_compatibility_flag
+        Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Representation" do
+
+      it "returns the hash representation" do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest'
+        end
+        podfile.to_hash.should == {
+          "target_definitions"=>{
+            :default=>{"dependencies"=>["ASIHTTPRequest"]}
+          }
+        }
+      end
+
+      it "includes the podfile wide settings in the hash representation" do
+        podfile = Podfile.new do
+          workspace('MyApp.xcworkspace')
+          generate_bridge_support!
+          set_arc_compatibility_flag!
+        end
+        podfile.to_hash.should == {
+          "target_definitions"=>{:default=>{}},
+          "workspace"=>"MyApp.xcworkspace",
+          "generate_bridge_support"=>true,
+          "set_arc_compatibility_flag"=>true
+        }
+      end
+
+      it "includes the targets definitions tree in the hash representation" do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest'
+          target "sub-target" do
+            pod 'JSONKit'
+          end
+        end
+        podfile.to_hash.should == {
+          "target_definitions"=>{
+            :default=>{
+              "dependencies"=>["ASIHTTPRequest"],
+              "children"=>[
+                {
+                  "sub-target"=>{
+                    "dependencies"=>["JSONKit"]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      end
+
+      it "returns the yaml representation" do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest'
+          pod 'JSONKit', '> 1.0'
+          generate_bridge_support!
+          set_arc_compatibility_flag!
+        end
+        expected = <<-EOF.strip_heredoc
+          ---
+          target_definitions:
+            :default:
+              dependencies:
+              - ASIHTTPRequest
+              - JSONKit:
+                - '> 1.0'
+          generate_bridge_support: true
+          set_arc_compatibility_flag: true
+        EOF
+        podfile.to_yaml.should == expected
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Class methods" do
+
+      it "can be initialized from a file" do
+        podfile = Podfile.from_file(fixture('Podfile'))
+        podfile.target_definitions.values.map(&:name).should == [:default]
+        podfile.defined_in_file.should == fixture('Podfile')
+      end
+
+      it "can be initialized from a hash" do
+        fixture_podfile = Podfile.from_file(fixture('Podfile'))
+        hash = fixture_podfile.to_hash
+        podfile = Podfile.from_hash(hash)
+        podfile.to_hash.should == fixture_podfile.to_hash
+      end
+
+      it "can be initialized from a target definition" do
+        fixture_podfile = Podfile.from_file(fixture('Podfile'))
+        yaml = fixture_podfile.to_yaml
+        podfile = Podfile.from_yaml(yaml)
+        podfile.to_hash.should == fixture_podfile.to_hash
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Private helpers" do
+
+      it "sets and retrieves a value in the internal hash" do
+        podfile = Podfile.new
+        podfile.send(:set_hash_value, 'generate_bridge_support', true)
+        podfile.send(:get_hash_value, 'generate_bridge_support').should.be.true
+      end
+
+      it "raises if there is an attempt to access or set an unknown key in the internal hash" do
+        podfile = Podfile.new
+        -> { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
+        -> { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
       end
 
     end
@@ -180,6 +327,14 @@ module Pod
           target.user_project_path.to_s.should == 'OSX Project.xcodeproj'
         end
       end
+
+      it "can be safely serialized to YAML" do
+        converted = Podfile.from_yaml(@podfile.to_yaml)
+        converted.to_hash.should == @podfile.to_hash
+      end
     end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
