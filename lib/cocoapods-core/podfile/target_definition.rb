@@ -43,12 +43,14 @@ module Pod
         end
       end
 
-      # @return [Bool]
+      # @return [Bool] Whether the target definition is root.
       #
       def root?
         parent.is_a?(Podfile) || parent.nil?
       end
 
+      # @return [TargetDefinition] The root target definition.
+      #
       def root
         if root?
           self
@@ -57,35 +59,35 @@ module Pod
         end
       end
 
-      # @return [Podfile] the podfile that contains the specification for this
-      # target definition.
+      # @return [Podfile] The podfile that contains the specification for this
+      #         target definition.
       #
       def podfile
         root.parent
       end
 
-      # @return [Array<Dependency>] the list of the dependencies of the target
+      # @return [Array<Dependency>] The list of the dependencies of the target
       #         definition including the inherited ones.
       #
       def dependencies
         non_inherited_dependencies + ((exclusive? || parent.nil?) ? [] : parent.dependencies)
       end
 
-      # @return [Array] the list of the dependencies of the target definition,
+      # @return [Array] The list of the dependencies of the target definition,
       #         excluding inherited ones.
       #
       def non_inherited_dependencies
         pod_dependencies.concat(podspec_dependencies)
       end
 
-      # @return [Bool] whether the target definition has at least one
+      # @return [Bool] Whether the target definition has at least one
       #         dependency, excluding inherited ones.
       #
       def empty?
         non_inherited_dependencies.empty?
       end
 
-      # @return [String] the label of the target definition according to its
+      # @return [String] The label of the target definition according to its
       #         name.
       #
       def label
@@ -116,17 +118,15 @@ module Pod
 
       # @!group Attributes
 
-      # Sets if the target definition is exclusive.
+      # Returns whether the target definition should inherit the dependencies
+      # of the parent.
       #
-      def exclusive=(flag)
-        set_hash_value('exclusive', flag)
-      end
-
-      # @return [Bool] whether the target definition should inherit the
-      #         dependencies of the parent.
+      # @note   A target is always `exclusive` if it is root.
       #
-      # @note   A target is automatically `exclusive` if the `platform` does
+      # @note   A target is always `exclusive` if the `platform` does
       #         not match the parent's `platform`.
+      #
+      # @return [Bool] whether is exclusive.
       #
       def exclusive?
         if root?
@@ -136,15 +136,31 @@ module Pod
         end
       end
 
+      # Sets whether the target definition is exclusive.
+      #
+      # @param  [Bool] flag
+      #         Whether the definition is exclusive.
+      #
+      # @return [void]
+      #
+      def exclusive=(flag)
+        set_hash_value('exclusive', flag)
+      end
+
       #--------------------------------------#
 
-      # @return [Array] the list of the names of the Xcode targets with which
-      #         this target definition should be linked with.
+      # @return [Array<String>] the list of the names of the Xcode targets with
+      #         which this target definition should be linked with.
       #
       def link_with
         get_hash_value('link_with')
       end
 
+      # Sets the client targets that should be integrated by this definition.
+      #
+      # @param  [Array<String>] targets
+      #         The list of the targets names.
+      #
       # @return [void]
       #
       def link_with=(targets)
@@ -156,13 +172,6 @@ module Pod
       # @return [String] the path of the project this target definition should
       #         link with.
       #
-      def user_project_path=(path)
-        set_hash_value('user_project_path', path)
-      end
-
-      # Sets the path of the user project this target definition should link
-      # with.
-      #
       def user_project_path
         path = get_hash_value('user_project_path')
         if path
@@ -172,18 +181,38 @@ module Pod
         end
       end
 
-      #--------------------------------------#
-
-      def build_configurations=(hash)
-        set_hash_value('build_configurations', hash) unless hash.empty?
+      # Sets the path of the user project this target definition should link
+      # with.
+      #
+      # @param  [String] path
+      #         The path of the project.
+      #
+      # @return [void]
+      #
+      def user_project_path=(path)
+        set_hash_value('user_project_path', path)
       end
 
-      # @return [Hash{String => symbol}] a hash where the keys are the name of
+      #--------------------------------------#
+
+      # @return [Hash{String => symbol}] A hash where the keys are the name of
       #         the build configurations and the values a symbol that
       #         represents their type (`:debug` or `:release`).
       #
       def build_configurations
         get_hash_value('build_configurations') || (parent.build_configurations unless root?)
+      end
+
+      # Sets the build configurations for this target.
+      #
+      # @return [Hash{String => Symbol}] hash
+      #         A hash where the keys are the name of the build configurations
+      #         and the values the type.
+      #
+      # @return [void]
+      #
+      def build_configurations=(hash)
+        set_hash_value('build_configurations', hash) unless hash.empty?
       end
 
       #--------------------------------------#
@@ -198,6 +227,9 @@ module Pod
       # Sets whether the target definition should inhibit the warnings during
       # compilation.
       #
+      # @param  [Bool] flag
+      #         Whether the warnings should be suppressed.
+      #
       # @return [void]
       #
       def inhibit_all_warnings=(flag)
@@ -206,24 +238,10 @@ module Pod
 
       #--------------------------------------#
 
-      # Sets the {Platform} of the target definition.
-      #
-      # @param [Symbol, Array] platform
-      #
-      def set_platform(name, target = nil)
-        unless [:ios, :osx].include?(name)
-          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
-        end
-
-        if target
-          value = {name => target}
-        else
-          value = name
-        end
-        set_hash_value('platform', value)
-      end
-
       # @return [Platform] the platform of the target definition.
+      #
+      # @note   If no deployment target has been specified a default value is
+      #         provided.
       #
       def platform
         name_or_hash = get_hash_value('platform')
@@ -241,8 +259,50 @@ module Pod
         end
       end
 
+      # Sets the platform of the target definition.
+      #
+      # @param  [Symbol] name
+      #         The name of the platform.
+      #
+      # @param  [String] target
+      #         The deployment target of the platform.
+      #
+      # @raise  When the name of the platform is unsupported.
+      #
+      # @return [void]
+      #
+      def set_platform(name, target = nil)
+        unless [:ios, :osx].include?(name)
+          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
+        end
+
+        if target
+          value = {name => target}
+        else
+          value = name
+        end
+        set_hash_value('platform', value)
+      end
+
       #--------------------------------------#
 
+      # Stores the dependency for a Pod with the given name.
+      #
+      # @param  [String] name
+      #         The name of the Pod
+      #
+      # @param  [Array<String, Hash>] requirements
+      #         The requirements and the options of the dependency.
+      #
+      # @note   The dependencies are stored as an array. To simplify the YAML
+      #         representation if they have requirements they are represented
+      #         as a Hash, otherwise only the String of the name is added to
+      #         the array.
+      #
+      # @todo   This needs urgently a rename.
+      #
+      # @return [void]
+      #
       def store_pod(name, *requirements)
         if requirements && !requirements.empty?
           pod = { name => requirements }
@@ -254,6 +314,21 @@ module Pod
 
       #--------------------------------------#
 
+      # Stores the podspec whose dependencies should be included by the
+      # target.
+      #
+      # @param  [Hash] options
+      #         The options used to find the podspec (either by name or by
+      #         path). If nil the podspec is auto-detected (i.e. the first one
+      #         in the folder of the Podfile)
+      #
+      # @note   The storage of this information is optimized for YAML
+      #         readability.
+      #
+      # @todo   This needs urgently a rename.
+      #
+      # @return [void]
+      #
       def store_podspec(options = nil)
         if options
           unless options.keys.all? { |key| [:name, :path].include?(key) }
@@ -358,6 +433,9 @@ module Pod
       # @param  [String] key
       #         The key for which the value is needed.
       #
+      # @param  [Object] base_value
+      #         The value to set if they key is nil. Useful for collections.
+      #
       # @raise  If the key is not recognized.
       #
       # @return [Object] The value for the key.
@@ -367,7 +445,8 @@ module Pod
         internal_hash[key] ||= base_value
       end
 
-      # @return [Array<Dependency>]
+      # @return [Array<Dependency>] The dependencies specified by the user for
+      #         this target definition.
       #
       def pod_dependencies
         pods = get_hash_value('dependencies') || []
@@ -382,7 +461,7 @@ module Pod
         end
       end
 
-      # @return [Array<Dependency>]
+      # @return [Array<Dependency>] The dependencies inherited by the podspecs.
       #
       def podspec_dependencies
         podspecs = get_hash_value('podspecs') || []
@@ -391,10 +470,17 @@ module Pod
           spec = Specification.from_file(file)
           all_specs = [spec, *spec.recursive_subspecs]
           all_specs.map{ |s| s.dependencies(platform) }
+
         end.flatten.uniq
       end
 
-      # @return [Pathname]
+      # The path of the podspec with the given options.
+      #
+      # @param  [Hash] options
+      #         The options to use for finding the podspec. The supported keys
+      #         are: `:name`, `:path`, `:autodetect`.
+      #
+      # @return [Pathname] The path.
       #
       def podspec_path_from_options(options)
         if path = options[:path]
