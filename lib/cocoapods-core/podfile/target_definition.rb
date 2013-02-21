@@ -38,11 +38,14 @@ module Pod
       #
       def initialize(name, parent, podfile, options = {})
         @internal_hash = {}
-        @name      = name
-        @parent    = parent
-        @podfile   = podfile
-        @exclusive = options[:exclusive]
+        @name     = name
+        @parent   = parent
+        @podfile  = podfile
         @children = []
+
+        if parent.is_a?(TargetDefinition)
+          parent.children << self
+        end
       end
 
       # @return [Bool]
@@ -52,14 +55,17 @@ module Pod
         # parent.is_a?(Podfile)
       end
 
-      #-----------------------------------------------------------------------#
-
-      # @!group Attributes
+      # @return [Array<Dependency>] the list of the dependencies of the target
+      #         definition including the inherited ones.
+      #
+      def dependencies
+        non_inherited_dependencies + ((exclusive? || parent.nil?) ? [] : parent.dependencies)
+      end
 
       # @return [Array] the list of the dependencies of the target definition,
       #         excluding inherited ones.
       #
-      def target_dependencies
+      def non_inherited_dependencies
         pod_dependencies.concat(podspec_dependencies)
       end
 
@@ -67,17 +73,8 @@ module Pod
       #         dependency, excluding inherited ones.
       #
       def empty?
-        target_dependencies.empty?
+        non_inherited_dependencies.empty?
       end
-
-      # @return [Array<Dependency>] the list of the dependencies of the target
-      #         definition including the inherited ones.
-      #
-      def dependencies
-        target_dependencies + ((exclusive? || parent.nil?) ? [] : parent.dependencies)
-      end
-
-
 
       # @return [String] the label of the target definition according to its
       #         name.
@@ -92,13 +89,13 @@ module Pod
         end
       end
 
-      # @return [String]
+      # @return [String] A string representation suitable for UI.
       #
       def to_s
         "`#{label}` target definition"
       end
 
-      # @return [String]
+      # @return [String] A string representation suitable for debug.
       #
       def inspect
         "#<#{self.class} label=#{label}>"
@@ -112,7 +109,9 @@ module Pod
 
       # Sets if the target definition is exclusive.
       #
-      attr_writer :exclusive
+      def exclusive=(flag)
+        set_hash_value('exclusive', flag)
+      end
 
       # @return [Bool] whether the target definition should inherit the
       #         dependencies of the parent.
@@ -121,22 +120,25 @@ module Pod
       #         not match the parent's `platform`.
       #
       def exclusive?
-        @exclusive || ( platform && parent && parent.platform != platform )
+        get_hash_value('exclusive') || ( platform && parent && parent.platform != platform )
       end
 
-      def store_pod(name, requirements = nil)
-        internal_hash['dependencies'] ||= []
-        if requirements && !requirements.empty?
-          internal_hash['dependencies'] << { name => requirements }
-        else
-          internal_hash['dependencies'] << name
-        end
+      #--------------------------------------#
+
+      # @return [Array] the list of the names of the Xcode targets with which
+      #         this target definition should be linked with.
+      #
+      def link_with
+        get_hash_value('link_with')
       end
 
-      def store_podspec(options)
-        internal_hash['Podspecs'] ||= []
-        internal_hash['Podspecs'] << options || { :autodetect => true }
+      # @return [void]
+      #
+      def link_with=(targets)
+        set_hash_value('link_with', Array(targets).map(&:to_s))
       end
+
+      #--------------------------------------#
 
       # @return [String] the path of the project this target definition should
       #         link with.
@@ -149,11 +151,15 @@ module Pod
       # with.
       #
       def user_project_path
-        path = internal_hash['user_project_path'] || (parent.user_project_path if parent)
+        path = get_hash_value('user_project_path')
         if path
-         File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
+          File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
+        else
+          parent.user_project_path if parent
         end
       end
+
+      #--------------------------------------#
 
       def build_configurations=(hash)
         set_hash_value('build_configurations', hash) unless hash.empty?
@@ -164,27 +170,16 @@ module Pod
       #         represents their type (`:debug` or `:release`).
       #
       def build_configurations
-        internal_hash['build_configurations']
+        get_hash_value('build_configurations') || (parent.build_configurations if parent)
       end
 
-      # @return [Array] the list of the names of the Xcode targets with which
-      #         this target definition should be linked with.
-      #
-      def link_with
-        internal_hash['link_with']
-      end
-
-      # @return [void]
-      #
-      def link_with=(targets)
-        set_hash_value('link_with', Array(targets).map(&:to_s))
-      end
+      #--------------------------------------#
 
       # @return [Bool] whether the target definition should silence all the
       #         warnings with a compiler flag.
       #
       def inhibit_all_warnings?
-        internal_hash['inhibit_all_warnings'] || (parent.inhibit_all_warnings? if parent)
+        get_hash_value('inhibit_all_warnings') || (parent.inhibit_all_warnings? if parent)
       end
 
       # Sets whether the target definition should inhibit the warnings during
@@ -196,11 +191,17 @@ module Pod
         set_hash_value('inhibit_all_warnings', flag)
       end
 
+      #--------------------------------------#
+
       # Sets the {Platform} of the target definition.
       #
       # @param [Symbol, Array] platform
       #
       def set_platform(name, target = nil)
+        unless [:ios, :osx].include?(name)
+          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
+        end
+
         if target
           value = {name => target}
         else
@@ -221,12 +222,33 @@ module Pod
             name = name_or_hash
           end
           target ||= (name == :ios ? '4.3' : '10.6')
-          unless [:ios, :osx].include?(name)
-            raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
-          end
           Platform.new(name, target)
         else
           parent.platform if parent
+        end
+      end
+
+      #--------------------------------------#
+
+      def store_pod(name, *requirements)
+        if requirements && !requirements.empty?
+          pod = { name => requirements }
+        else
+          pod = name
+        end
+        get_hash_value('dependencies', []) << pod
+      end
+
+      #--------------------------------------#
+
+      def store_podspec(options = nil)
+        if options
+          unless options.keys.all? { |key| [:name, :path].include?(key) }
+            raise StandardError, "Unrecognized options for the podspec method `#{options}`"
+          end
+          get_hash_value('podspecs', []) << options
+        else
+          get_hash_value('podspecs', []) << { :autodetect => true }
         end
       end
 
@@ -236,10 +258,13 @@ module Pod
 
       # @!group Representations
 
-      # @return [Array] The keys used by the hash representation of the Podfile.
+      # @return [Array] The keys used by the hash representation of the
+      #         target definition.
       #
       HASH_KEYS = [
         'platform',
+        'podspecs',
+        'exclusive',
         'link_with',
         'inhibit_all_warnings',
         'user_project_path',
@@ -287,6 +312,10 @@ module Pod
 
       # @!group Private helpers
 
+      # @return [Array<TargetDefinition>]
+      #
+      attr_writer :children
+
       # @return [Hash] The hash which store the attributes of the target
       #         definition.
       #
@@ -320,57 +349,50 @@ module Pod
       #
       # @return [Object] The value for the key.
       #
-      def get_hash_value(key)
+      def get_hash_value(key, base_value = nil)
         raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
-        internal_hash[key]
+        internal_hash[key] ||= base_value
       end
-
-
-      # @return [Array<TargetDefinition>]
-      #
-      attr_writer :children
 
       # @return [Array<Dependency>]
       #
       def pod_dependencies
-        pods = internal_hash['dependencies']
-        if pods
-          pods.map do |name_or_hash|
-            if name_or_hash.is_a?(Hash)
-              name = name_or_hash.keys.first
-              requirements = name_or_hash.values.first
-              Dependency.new(name, *requirements)
-            else
-              Dependency.new(name_or_hash)
-            end
+        pods = get_hash_value('dependencies') || []
+        pods.map do |name_or_hash|
+          if name_or_hash.is_a?(Hash)
+            name = name_or_hash.keys.first
+            requirements = name_or_hash.values.first
+            Dependency.new(name, *requirements)
+          else
+            Dependency.new(name_or_hash)
           end
-        else
-          []
         end
       end
 
       # @return [Array<Dependency>]
       #
       def podspec_dependencies
-        podspecs = internal_hash['Podspecs'] || []
+        podspecs = get_hash_value('podspecs') || []
         podspecs.map do |options|
-          if options && path = options[:path]
-            path_with_ext = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
-            path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
-            file = podfile.defined_in_file.dirname + path_without_tilde
-          elsif options && name = options[:name]
-            name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
-            file = podfile.defined_in_file.dirname + name
-          elsif options.nil?
-            file = Pathname.glob(podfile.defined_in_file.dirname + '*.podspec').first
-          else
-            raise StandardError, "Unrecognized options for the podspec method `#{options}`"
-          end
-
+          file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
           all_specs = [spec, *spec.recursive_subspecs]
-          deps = all_specs.map{ |s| s.dependencies(platform) }
-          deps = deps.flatten.uniq
+          all_specs.map{ |s| s.dependencies(platform) }
+        end.flatten.uniq
+      end
+
+      # @return [Pathname]
+      #
+      def podspec_path_from_options(options)
+        if path = options[:path]
+          path_with_ext = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
+          path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
+          file = podfile.defined_in_file.dirname + path_without_tilde
+        elsif name = options[:name]
+          name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
+          file = podfile.defined_in_file.dirname + name
+        elsif options[:autodetect]
+          file = Pathname.glob(podfile.defined_in_file.dirname + '*.podspec').first
         end
       end
 

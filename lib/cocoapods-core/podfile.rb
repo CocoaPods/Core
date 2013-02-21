@@ -73,7 +73,7 @@ module Pod
     #         definitions.
     #
     def dependencies
-      @target_definitions.values.map(&:target_dependencies).flatten.uniq
+      @target_definitions.values.map(&:dependencies).flatten.uniq
     end
 
     #-------------------------------------------------------------------------#

@@ -141,7 +141,7 @@ module Pod
           raise StandardError, "A dependency requires a name."
         end
 
-        current_target_definition.store_pod(name, requirements)
+        current_target_definition.store_pod(name, *requirements)
       end
 
       # Use the dependencies of a Pod defined in the given podspec file. If no
@@ -216,10 +216,15 @@ module Pod
       # @return   [void]
       #
       def target(name, options = {})
+        if options && !options.keys.all? { |key| [:exclusive].include?(key) }
+          raise StandardError, "Unsupported options `#{options}` for target `#{name}`"
+        end
+
         parent = current_target_definition
-        self.current_target_definition = TargetDefinition.new(name, parent, self, options)
-        parent.children << current_target_definition
-        @target_definitions[name] = current_target_definition
+        definition = TargetDefinition.new(name, parent, self, options)
+        definition.exclusive = true if options[:exclusive]
+        @target_definitions[name] = definition
+        self.current_target_definition = definition
         yield
       ensure
         self.current_target_definition = parent
