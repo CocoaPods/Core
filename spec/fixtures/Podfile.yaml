@@ -1,0 +1,13 @@
+---
+target_definitions:
+  :default:
+    platform: :ios
+    dependencies:
+    - SSZipArchive:
+      - '>= 1'
+    - ASIHTTPRequest:
+      - ~> 1.8.0
+    - Reachability
+    - ASIWebPageRequest:
+      - < 1.8.2
+

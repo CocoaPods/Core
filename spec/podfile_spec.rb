@@ -183,23 +183,27 @@ module Pod
 
     describe "Class methods" do
 
-      it "can be initialized from a file" do
-        podfile = Podfile.from_file(fixture('Podfile'))
-        podfile.target_definitions.values.map(&:name).should == [:default]
-        podfile.defined_in_file.should == fixture('Podfile')
+      it "can be initialized from a ruby DSL file" do
+        ruby_podfile = Podfile.from_file(fixture('Podfile'))
+        ruby_podfile.target_definitions.keys.should == [:default]
+        ruby_podfile.dependencies.map(&:name).should == [
+          "SSZipArchive",
+          "ASIHTTPRequest",
+          "Reachability",
+          "ASIWebPageRequest"
+        ]
+      end
+
+      it "can be initialized from a YAML file" do
+        ruby_podfile = Podfile.from_file(fixture('Podfile'))
+        yaml_podfile = Podfile.from_file(fixture('Podfile.yaml'))
+        ruby_podfile.to_hash.should == yaml_podfile.to_hash
       end
 
       it "can be initialized from a hash" do
         fixture_podfile = Podfile.from_file(fixture('Podfile'))
         hash = fixture_podfile.to_hash
         podfile = Podfile.from_hash(hash)
-        podfile.to_hash.should == fixture_podfile.to_hash
-      end
-
-      it "can be initialized from a target definition" do
-        fixture_podfile = Podfile.from_file(fixture('Podfile'))
-        yaml = fixture_podfile.to_yaml
-        podfile = Podfile.from_yaml(yaml)
         podfile.to_hash.should == fixture_podfile.to_hash
       end
 
