@@ -174,7 +174,7 @@ module Pod
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF
-        podfile.to_yaml.should == expected
+        YAML::load(podfile.to_yaml).should == YAML::load(expected)
       end
 
     end
@@ -217,8 +217,8 @@ module Pod
 
       it "raises if there is an attempt to access or set an unknown key in the internal hash" do
         podfile = Podfile.new
-        -> { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
-        -> { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
+        lambda { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
+        lambda { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
       end
 
     end
