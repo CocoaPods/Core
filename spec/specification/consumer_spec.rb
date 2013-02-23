@@ -393,9 +393,21 @@ module Pod
         end
 
         it "doesn't triggers the lazy evaluation of Rake::FileList [TEMPORARY]" do
-          @subspec.source_files = Rake::FileList.new('FileList-Resources')
-          computed = @subspec_consumer.source_files
-          computed.find { |value| value.class == Rake::FileList }.should.not.be.nil
+          @file_list = Rake::FileList.new('FileList-Resources')
+          def @file_list.resolve
+            raise "Error"
+          end
+          @subspec.source_files = @file_list
+          lambda { @subspec_consumer.source_files }.should.not.raise
+        end
+
+        it "doesn't triggers the lazy evaluation of Rake::FileList [TEMPORARY]" do
+          @file_list = Rake::FileList.new('FileList-Resources')
+          def @file_list.resolve
+            raise "Error"
+          end
+          @spec.ios.source_files = @file_list
+          lambda { @subspec_consumer.source_files }.should.not.raise
         end
       end
 

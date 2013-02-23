@@ -92,7 +92,7 @@ module Pod
         text = @file.read
         error "`config.ios?' and `config.osx?' are deprecated."  if text =~ /config\..?os.?/
         error "clean_paths are deprecated (use preserve_paths)." if text =~ /clean_paths/
-        error "Comments must be deleted." if text.scan(/^\s*#/).length > 24
+        warning "Comments must be deleted." if text.scan(/^\s*#/).length > 24
       end
 
       # Checks that every root only attribute which is required has a value.
@@ -106,7 +106,11 @@ module Pod
             value = spec.send(attr.name)
             next unless attr.required?
             unless value && (!value.respond_to?(:empty?) || !value.empty?)
-              error("Missing required attribute `#{attr.name}`.")
+              if attr.name == :license
+                warning("Missing required attribute `#{attr.name}`.")
+              else
+                error("Missing required attribute `#{attr.name}`.")
+              end
             end
           end
         # end
@@ -234,7 +238,7 @@ module Pod
           warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
 
           if version == '0.0.1'
-            warning 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
+            error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
           else
             warning 'Git sources should specify a tag.' if tag.nil?
           end
