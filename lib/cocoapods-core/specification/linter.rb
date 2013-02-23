@@ -30,6 +30,7 @@ module Pod
             @spec = Specification.from_file(@file)
           rescue Exception => e
             @spec = nil
+            @raise_message = e.message
           end
         end
       end
@@ -47,7 +48,8 @@ module Pod
           run_root_validation_hooks
           perform_all_specs_ananlysis
         else
-          error "The specification defined in `#{file}` could not be loaded."
+          error "The specification defined in `#{file}` could not be loaded." \
+            "\n\n#{@raise_message}"
         end
         results.empty?
       end
