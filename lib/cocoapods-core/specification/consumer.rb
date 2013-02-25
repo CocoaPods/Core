@@ -23,20 +23,21 @@ module Pod
       #
       attr_reader :spec
 
-      # @return [Symbol] The platform for which the specification should be
-      #         consumed.
+      # @return [Symbol] The name of the platform for which the specification
+      #         needs to be consumed.
       #
-      attr_reader :platform
+      attr_reader :platform_name
 
       # @param  [Specification] spec @see spec
-      # @param  [Symbol] platform @see platform
+      # @param  [Symbol, Platform] platform
+      #         The platform for which the specification needs to be consumed.
       #
       def initialize(spec, platform)
         @spec = spec
-        @platform = platform
+        @platform_name = platform.is_a?(Symbol) ? platform : platform.name
 
         unless spec.supported_on_platform?(platform)
-          raise StandardError, "#{to_s} is not compatible with #{platform.to_s}."
+          raise StandardError, "#{to_s} is not compatible with #{platform}."
         end
       end
 
@@ -165,7 +166,7 @@ module Pod
       def value_for_attribute(attr_name)
         attr = Specification::DSL.attributes[attr_name]
         value = value_with_inheritance(spec, attr)
-        value ||= attr.default(platform)
+        value ||= attr.default(platform_name)
         value ||= attr.container.new if attr.container
         value
       end
@@ -205,8 +206,8 @@ module Pod
         value = the_spec.attributes_hash[attr.name.to_s]
         value = prepare_value(attr, value)
 
-        if attr.multi_platform? && the_spec.attributes_hash[platform.name.to_s]
-          platform_value = the_spec.attributes_hash[platform.name.to_s][attr.name.to_s]
+        if attr.multi_platform? && the_spec.attributes_hash[platform_name.to_s]
+          platform_value = the_spec.attributes_hash[platform_name.to_s][attr.name.to_s]
           platform_value = prepare_value(attr, platform_value)
           value = merge_values(attr, value, platform_value)
         end
@@ -219,7 +220,7 @@ module Pod
       # @param  [Specification::DSL::Attribute] attr
       #         the attribute for which that value is needed.
       #
-      # @param  [String, Array, Hash] exisitng_value
+      # @param  [String, Array, Hash] existing_value
       #         the current value (the value of the parent or non-multiplatform
       #         value).
       #
@@ -229,17 +230,17 @@ module Pod
       #
       # @return [String, Array, Hash] The merged value.
       #
-      def merge_values(attr, exisitng_value, new_value)
-        return exisitng_value if new_value.nil?
-        return new_value if exisitng_value.nil?
+      def merge_values(attr, existing_value, new_value)
+        return existing_value if new_value.nil?
+        return new_value if existing_value.nil?
 
         if attr.types.include?(TrueClass)
-          new_value.nil? ? exisitng_value : new_value
+          new_value.nil? ? existing_value : new_value
         elsif attr.container == Array
-          r = [*exisitng_value] + [*new_value]
+          r = [*existing_value] + [*new_value]
           r.compact
         elsif attr.container == Hash
-          exisitng_value = exisitng_value.merge(new_value) do |_, old, new|
+          existing_value = existing_value.merge(new_value) do |_, old, new|
             if new.is_a?(Array) || old.is_a?(Array)
               r = [*old] + [*new]
               r.compact
@@ -320,7 +321,7 @@ module Pod
         "_prepare_#{attr.name}"
       end
 
-      # Converts the prefix header to a string if specifed as an array.
+      # Converts the prefix header to a string if specified as an array.
       #
       # @param  [String, Array] value.
       #         The value of the attribute as specified by the user.

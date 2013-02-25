@@ -8,7 +8,7 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
-          s.platform = :ios
+          s.platform = :ios, '6.0'
         end
         @consumer = Specification::Consumer.new(@spec, :ios)
       end
@@ -18,12 +18,19 @@ module Pod
       end
 
       it "returns the platform" do
-        @consumer.platform.should == :ios
+        @consumer.platform_name.should == :ios
       end
 
-      it "raises if the specification does not suppor the given platform" do
-        e = lambda {Specification::Consumer.new(@spec, :osx)}.should.raise StandardError
-        e.message.should.match /not compatible with osx/
+      it "can be initialized with a platform instance" do
+        @consumer = Specification::Consumer.new(@spec, Platform.new(:ios, '6.1'))
+        @consumer.platform_name.class.should == Symbol
+        @consumer.platform_name.should == :ios
+      end
+
+      it "raises if the specification does not supports the given platform" do
+        platform = Platform.new(:ios, '4.3')
+        e = lambda {Specification::Consumer.new(@spec, platform)}.should.raise StandardError
+        e.message.should.match /not compatible with iOS 4.3/
       end
     end
 

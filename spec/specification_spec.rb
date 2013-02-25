@@ -275,20 +275,20 @@ module Pod
         @spec.ios.source_files = 'ios-files'
         consumer = @spec.consumer(:ios)
         consumer.spec.should == @spec
-        consumer.platform.should == :ios
+        consumer.platform_name.should == :ios
         consumer.source_files.should == ['ios-files']
       end
 
       it "returns the consumer of a given platform" do
         consumer = @spec.consumer(Platform.new :ios)
         consumer.spec.should == @spec
-        consumer.platform.should == :ios
+        consumer.platform_name.should == :ios
       end
 
       it "caches the consumers per platform" do
         @spec.consumer(:ios).should.equal?@spec.consumer(:ios)
-        @spec.consumer(:ios).platform.should == :ios
-        @spec.consumer(:osx).platform.should == :osx
+        @spec.consumer(:ios).platform_name.should == :ios
+        @spec.consumer(:osx).platform_name.should == :osx
       end
     end
 

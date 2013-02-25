@@ -347,7 +347,7 @@ module Pod
           result = Result.new(type, message)
           results << result
         end
-        result.platforms << consumer.platform.name if consumer
+        result.platforms << consumer.platform_name if consumer
       end
 
       #-----------------------------------------------------------------------#
