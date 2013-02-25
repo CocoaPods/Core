@@ -780,10 +780,32 @@ module Pod
 
       #------------------#
 
+      # @!method resources=(resources)
+      #
+      #   A list of resources that should be copied into the target bundle.
+      #
+      #   @example
+      #
+      #     spec.resource = "Resources/HockeySDK.bundle"
+      #
+      #   @example
+      #
+      #     spec.resources = ["Images/*.png", "Sounds/*"]
+      #
+      #   @param  [String, Array<String>] resources the resources of the Pod.
+      #
+      attribute :resources, {
+        :container     => Array,
+        :file_patterns => true,
+        :singularize   => true,
+      }
+
+      #------------------#
+
       # The possible destinations for the `resources` attribute. Extracted form
       # `Xcodeproj::Constants.COPY_FILES_BUILD_PHASE_DESTINATIONS`.
       #
-      RESORUCES_DESTINATIONS = [
+      RESOURCES_DESTINATIONS = [
         :products_directory,
         :wrapper,
         :resources,
@@ -795,7 +817,8 @@ module Pod
         :plug_ins,
       ].freeze
 
-      # @!method resources=(resources)
+      # @todo Implement in CP 0.18
+      # method resources_bundle=(resources)
       #
       #   A list of resources that should be copied into the target bundle.
       #
@@ -819,13 +842,13 @@ module Pod
       #   @param  [Hash, String, Array<String>] resources
       #           the resources of the Pod.
       #
-      attribute :resources, {
-        :types         => [String, Array],
-        :file_patterns => true,
-        :container     => Hash,
-        :keys          => RESORUCES_DESTINATIONS,
-        :singularize   => true,
-      }
+      # attribute :resources_bundle, {
+      #   :types         => [String, Array],
+      #   :file_patterns => true,
+      #   :container     => Hash,
+      #   :keys          => RESOURCES_DESTINATIONS,
+      #   :singularize   => true,
+      # }
 
       #------------------#
 

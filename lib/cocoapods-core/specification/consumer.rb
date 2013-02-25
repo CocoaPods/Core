@@ -123,9 +123,7 @@ module Pod
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
       #
-      def resources
-        convert_keys_to_symbol(value_for_attribute(:resources))
-      end
+      spec_attr_accessor :resources
 
       # @return [Array<String>] The file patterns that the
       #         Pod should ignore.
@@ -287,20 +285,22 @@ module Pod
 
       # Converts the keys of the given hash to a string.
       #
+      # @todo   Removed if not used by `resources_bundle`
+      #
       # @param  [Object] value
       #         the value that needs to be stripped from the Symbols.
       #
       # @return [Hash] the hash with the strings instead of the keys.
       #
-      def convert_keys_to_symbol(value)
-        return unless value
-        result = {}
-        value.each do |key, subvalue|
-          subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
-          result[key.to_sym] = subvalue
-        end
-        result
-      end
+      # def convert_keys_to_symbol(value)
+      #   return unless value
+      #   result = {}
+      #   value.each do |key, subvalue|
+      #     subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
+      #     result[key.to_sym] = subvalue
+      #   end
+      #   result
+      # end
 
       #-----------------------------------------------------------------------#
 
@@ -340,14 +340,14 @@ module Pod
       #
       # @return [Hash] the resources.
       #
-      def _prepare_resources(value)
-        value = { :resources => value } unless value.is_a?(Hash)
-        result = {}
-        value.each do |key, patterns|
-          result[key] = [*patterns].compact
-        end
-        result
-      end
+      # def _prepare_resources_bundle(value)
+      #   value = { :resources => value } unless value.is_a?(Hash)
+      #   result = {}
+      #   value.each do |key, patterns|
+      #     result[key] = [*patterns].compact
+      #   end
+      #   result
+      # end
 
       #-----------------------------------------------------------------------#
 

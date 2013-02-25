@@ -173,8 +173,8 @@ module Pod
       end
 
       it "allows to specify the resources files" do
-        @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
-        @spec.attributes_hash["resources"].should == { "frameworks" => ['frameworks/CrashReporter.framework'] }
+        @spec.resources = ['frameworks/CrashReporter.framework']
+        @spec.attributes_hash["resources"].should == ['frameworks/CrashReporter.framework']
       end
 
       it "allows to specify the paths to exclude" do

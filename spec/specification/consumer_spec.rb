@@ -267,39 +267,19 @@ module Pod
       #------------------#
 
       it "returns the resources files" do
-        @spec.resources = { :frameworks => ['frameworks/CrashReporter.framework'] }
-        @consumer.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
+        @spec.resources = ['frameworks/CrashReporter.framework']
+        @consumer.resources.should == ['frameworks/CrashReporter.framework']
       end
 
       it "doesn't inherit resources from the parent" do
-        @spec.resources = {
-          :frameworks => ['frameworks/*'],
-          :resources => 'parent_resources/*'
-        }
-        @subspec.resources = {
-          :shared_support => ['shared_support/*'],
-          :resources => ['subspec_resources/*']
-        }
-
-        @subspec_consumer.resources.should == {
-          :shared_support => ['shared_support/*'],
-          :resources => ['subspec_resources/*'],
-        }
-      end
-
-      it "wrap to arrays resources specified as a string with a destination" do
-        @spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
-        @consumer.resources.should == { :frameworks => ['frameworks/CrashReporter.framework'] }
-      end
-
-      it "assigns the `:resources` destination if resources are not specified with one" do
-        @spec.resources = 'frameworks/CrashReporter.framework'
-        @consumer.resources.should == { :resources => ['frameworks/CrashReporter.framework'] }
+        @spec.resources = ['parent_resources/*']
+        @subspec.resources = ['subspec_resources/*']
+        @subspec_consumer.resources.should == ['subspec_resources/*']
       end
 
       it "has a singular form for resources" do
-        @spec.resource = [ "lib_resources/**/*" ]
-        @consumer.resources.should == {:resources=>["lib_resources/**/*"]}
+        @spec.resource = "lib_resources/file.png"
+        @consumer.resources.should == ["lib_resources/file.png"]
       end
 
       #------------------#
