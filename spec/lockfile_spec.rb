@@ -276,15 +276,17 @@ module Pod
         @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
       end
 
-      it "generates a hash reppresentation" do
-        @lockfile.to_hash.should == {
+      it "generates a hash representation" do
+        hash = @lockfile.to_hash
+        hash.delete("COCOAPODS")
+        hash.should == {
           "PODS"=> [
             {"BananaLib (1.0)" => ["monkey (< 1.0.9, ~> 1.0.1)"]},
             "JSONKit (1.4)", "monkey (1.0.8)"],
           "DEPENDENCIES"=>["BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"],
           "EXTERNAL SOURCES"=>{"JSONKit"=>{:podspec=>"path/JSONKit.podspec"}},
           "SPEC CHECKSUMS"=>{"BananaLib"=>"439d9f683377ecf4a27de43e8cf3bce6be4df97b", "JSONKit"=>"92ae5f71b77c8dec0cd8d0744adab79d38560949"},
-          "COCOAPODS"=>"0.17.0.alpha"}
+          }
       end
 
       it "generates an ordered YAML representation" do
