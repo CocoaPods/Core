@@ -293,8 +293,8 @@ module Pod
       # Check empty subspec attributes
       #
       def check_if_spec_is_empty
-        methods = %w[ source_files resources preserve_paths subspecs ]
-        empty = methods.all? { |m| consumer.send(m).empty? }
+        methods = %w[ source_files resources preserve_paths ]
+        empty = methods.all? { |m| consumer.send(m).empty? } && consumer.spec.subspecs.empty?
         if empty
           error "The spec appears to be empty (no source files, resources, or preserve paths)."
         end
