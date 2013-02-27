@@ -247,7 +247,7 @@ module Pod
             end
           end
         else
-          value
+          new_value
         end
       end
 
