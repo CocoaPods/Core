@@ -274,10 +274,16 @@ module Pod
 
       # @return [Array<Pathname>] the directories where the sources are stored.
       #
+      # @note   If the repos dir doesn't exits this will return an empty array.
+      #
       # @raise  If the repos dir doesn't exits.
       #
       def dirs
-        repos_dir.children.select(&:directory?)
+        if repos_dir.exist?
+          repos_dir.children.select(&:directory?)
+        else
+          []
+        end
       end
     end
   end
