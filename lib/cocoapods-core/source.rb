@@ -44,7 +44,7 @@ module Pod
       name <=> other.name
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Queering the source
 
@@ -79,19 +79,33 @@ module Pod
 
     # @return [Specification] the specification for a given version of Pod.
     #
+    # @param  @see specification_path
+    #
+    def specification(name, version)
+      Specification.from_file(specification_path(name, version))
+    end
+
+    # Returns the path of the specification with the given name and version.
+    #
     # @param  [String] name
     #         the name of the Pod.
     #
     # @param  [Version,String] version
     #         the version for the specification.
     #
-    def specification(name, version)
+    # @return [Pathname] The path of the specification.
+    #
+    def specification_path(name, version)
       path = repo + name + version.to_s
       specification_path = path + "#{name}.podspec.yaml"
       unless specification_path.exist?
         specification_path = path + "#{name}.podspec"
       end
-      Specification.from_file(specification_path)
+      unless specification_path.exist?
+        raise StandardError, "Unable to find the specification #{name} " \
+          "(#{version}) in the #{name} source."
+      end
+      specification_path
     end
 
     # @return [Array<Specification>] all the specifications contained by the

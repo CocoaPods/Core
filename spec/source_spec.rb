@@ -2,15 +2,31 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe Source do
-    describe "In general" do
 
-      before do
-        @source = Source.new(fixture('spec-repos/master'))
-      end
+    before do
+      @source = Source.new(fixture('spec-repos/master'))
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "In general" do
 
       it "return its name" do
         @source.name.should == 'master'
       end
+
+      it "can be ordered according to its name" do
+        s1 = Source.new(Pathname.new 'customized')
+        s2 = Source.new(Pathname.new 'master')
+        s3 = Source.new(Pathname.new 'private')
+        [s3, s1, s2].sort.should == [s1, s2, s3]
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Queering the source" do
 
       it "returns the sets of all the available Pods" do
         set_names = @source.pod_sets.map(&:name)
@@ -22,47 +38,52 @@ module Pod
         @source.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
       end
 
-      it "returns the specification loaded from the Ruby DSL of a given version of a Pod" do
+      it "returns the specification for the given name and version" do
         spec = @source.specification('Reachability', Version.new('3.0.0'))
         spec.name.should == 'Reachability'
         spec.version.should.to_s == '3.0.0'
       end
 
-      it "returns the specification loaded from a YAML file of a given version of a Pod" do
-        source = Source.new(fixture('spec-repos/test_repo'))
-        spec = source.specification('YAMLSpec', Version.new('1.0'))
-        spec.name.should == 'YAMLSpec'
-        spec.version.should.to_s == '1.0'
+      it "returns the path of Ruby specification with a given name and version" do
+        path = @source.specification_path('Reachability', Version.new('3.0.0'))
+        path.should == @source.repo + 'Reachability/3.0.0/Reachability.podspec'
       end
 
-      it "returns favors the YAML version of a specification if both are available" do
+      it "returns the path of YAML specification with a given name and version" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        spec = source.specification('YAMLSpec', Version.new('0.9'))
-        spec.name.should == 'YAMLSpec'
-        spec.version.should.to_s == '0.9'
-        path = fixture('spec-repos/test_repo/YAMLSpec/0.9')
-
-        (path + 'YAMLSpec.podspec').should.exist
-        spec.defined_in_file.should == path + 'YAMLSpec.podspec.yaml'
+        path = source.specification_path('YAMLSpec', Version.new('1.0'))
+        path.should == source.repo + 'YAMLSpec/1.0/YAMLSpec.podspec.yaml'
       end
 
-      it "properly configures the sources of a set in search by name" do
+      it "favors the YAML version of a specification if both are available" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        sets = source.search_by_name('monkey', true)
-        sets.count.should == 1
-        set = sets.first
-        set.name.should == 'BananaLib'
-        set.sources.map(&:name).should == %w| test_repo |
+        ruby_path = source.repo + 'YAMLSpec/0.9/YAMLSpec.podspec.yaml'
+        path = source.specification_path('YAMLSpec', Version.new('0.9'))
+        ruby_path.should.exist
+        path.should == source.repo + 'YAMLSpec/0.9/YAMLSpec.podspec.yaml'
       end
 
-      it "can be ordered according to its name" do
-        s1 = Source.new(Pathname.new 'customized')
-        s2 = Source.new(Pathname.new 'master')
-        s3 = Source.new(Pathname.new 'private')
-        [s3, s1, s2].sort.should == [s1, s2, s3]
+      it "raises if it can't find a specification for the given version and name" do
+        should.raise StandardError do
+          @source.specification_path('YAMLSpec', Version.new('999'))
+        end.message.should.match(/Unable to find the specification YAMLSpec/)
       end
     end
+
+    #-----------------------------------------------------------------------#
+
+    it "properly configures the sources of a set in search by name" do
+      source = Source.new(fixture('spec-repos/test_repo'))
+      sets = source.search_by_name('monkey', true)
+      sets.count.should == 1
+      set = sets.first
+      set.name.should == 'BananaLib'
+      set.sources.map(&:name).should == %w| test_repo |
+    end
+
   end
+
+  #-----------------------------------------------------------------------#
 
   describe Source::Aggregate do
     describe "In general" do
