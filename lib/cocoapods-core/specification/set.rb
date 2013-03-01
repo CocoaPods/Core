@@ -54,7 +54,8 @@ module Pod
       # @raise  If the versions requirement of the dependency are not
       #         compatible with the previously stored dependencies.
       #
-      # @todo   This should simply return a boolean. Is cocoaPods that should raise.
+      # @todo   This should simply return a boolean. Is CocoaPods that should
+      #         raise.
       #
       # @return [void]
       #
@@ -84,13 +85,16 @@ module Pod
       #         used to disambiguate.
       #
       def specification
-        unless @specification
-          sources = []
-          versions_by_source.each{ |source, versions| sources << source if versions.include?(required_version) }
-          source = sources.sort_by(&:name).first
-          @specification = source.specification(name, required_version)
+        @specification ||= Specification.from_file(specification_path_for_version(required_version))
+      end
+
+      def specification_path_for_version(version)
+        sources = []
+        versions_by_source.each do |source, source_versions|
+          sources << source if source_versions.include?(required_version)
         end
-        @specification
+        source = sources.sort_by(&:name).first
+        source.specification_path(name, required_version)
       end
 
       # @return [Version] the highest version that satisfies the stored
@@ -99,8 +103,12 @@ module Pod
       # @todo   This should simply return nil. CocoaPods should raise instead.
       #
       def required_version
-        versions.find { |v| dependency.match?(name, v) } ||
-          (raise StandardError, "Required version (#{dependency}) not found for `#{name}'.\nAvailable versions: #{versions.join(', ')}")
+        version = versions.find { |v| dependency.match?(name, v) }
+        unless version
+          raise StandardError, "Required version (#{dependency}) not found " \
+            "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"
+        end
+        version
       end
 
       # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -108,6 +116,18 @@ module Pod
       #
       def versions
         versions_by_source.values.flatten.uniq.sort.reverse
+      end
+
+      # @return [Version] The highest version known of the specification.
+      #
+      def highest_version
+        versions.first
+      end
+
+      # @return [Pathname] The path of the highest version.
+      #
+      def highest_version_spec_path
+        specification_path_for_version(highest_version)
       end
 
       # @return [Hash{Source => Version}] all the available versions for the
@@ -130,7 +150,30 @@ module Pod
       end
       alias_method :inspect, :to_s
 
-      #-------------------------------------------------------------------------#
+      # Returns a hash representation of the set composed by dumb data types.
+      #
+      # @example
+      #
+      #   "name" => "CocoaLumberjack",
+      #   "versions" => { "master" => [ "1.6", "1.3.3"] },
+      #   "highest_version" => "1.6",
+      #   "highest_version_spec" => 'REPO/CocoaLumberjack/1.6/CocoaLumberjack.podspec'
+      #
+      # @return [Hash] The hash representation.
+      #
+      def to_hash
+        versions = versions_by_source.inject({}) do |memo, (source, version)|
+          memo[source.name] = version.map(&:to_s); memo
+        end
+        {
+          'name' => name,
+          'versions' => versions,
+          'highest_version' => highest_version.to_s,
+          'highest_version_spec' => highest_version_spec_path.to_s
+        }
+      end
+
+      #-----------------------------------------------------------------------#
 
       # The Set::External class handles Pods from external sources. Pods from
       # external sources don't use the {Source} and are initialized by a given
