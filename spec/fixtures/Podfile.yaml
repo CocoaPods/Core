@@ -1,6 +1,7 @@
 ---
 target_definitions:
-  :default:
+  Pods:
+    link_with_first_target: true
     platform: ios
     dependencies:
     - SSZipArchive:

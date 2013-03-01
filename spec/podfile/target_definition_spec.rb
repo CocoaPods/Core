@@ -84,7 +84,7 @@ module Pod
       end
 
       it "returns `Pods` as the label if its name is default" do
-        target_def = Podfile::TargetDefinition.new(:default, @podfile)
+        target_def = Podfile::TargetDefinition.new("Pods", @podfile)
         target_def.label.should == 'Pods'
       end
 
@@ -132,6 +132,24 @@ module Pod
       it "wraps the targets specified by the user in an array" do
         @root.link_with = 'appTarget1'
         @root.link_with.should.be == ['appTarget1']
+      end
+
+      it "returns nil if the link_with array is empty" do
+        @root.link_with = []
+        @root.link_with.should.be.nil
+      end
+
+      #--------------------------------------#
+
+      it "allows to specify whether it should link with the first target of project" do
+        @root.link_with_first_target = true
+        @root.should.link_with_first_target
+      end
+
+      it "returns that it shouldn't link with the first target if any target has been specified" do
+        @root.link_with = 'appTarget1'
+        @root.link_with_first_target = true
+        @root.should.not.link_with_first_target
       end
 
       #--------------------------------------#

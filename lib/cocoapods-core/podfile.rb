@@ -46,7 +46,8 @@ module Pod
       self.defined_in_file = defined_in_file
       @internal_hash = internal_hash
       if block
-        default_target_def = TargetDefinition.new(:default, self)
+        default_target_def = TargetDefinition.new("Pods", self)
+        default_target_def.link_with_first_target = true
         @root_target_definitions = [default_target_def]
         @current_target_definition = default_target_def
         instance_eval(&block)

@@ -13,6 +13,22 @@ module Pod
         Podfile.new {}.to_s.should == 'Podfile'
       end
 
+      it "creates a default target definition if a block is provided" do
+        podfile = Podfile.new {}
+        podfile.root_target_definitions.count.should == 1
+        podfile.root_target_definitions.first.name.should == 'Pods'
+      end
+
+      it "names the default target definition as Pods" do
+        podfile = Podfile.new {}
+        podfile.root_target_definitions.first.name.should == 'Pods'
+      end
+
+      it "specifies that the default target definition should link with the first target of the project" do
+        podfile = Podfile.new {}
+        podfile.root_target_definitions.first.should.link_with_first_target
+      end
+
       extend SpecHelper::TemporaryDirectory
 
       it "includes the line of the podfile that generated an exception" do
@@ -53,7 +69,7 @@ module Pod
 
       it "returns the target definitions" do
         @podfile.target_definitions.count.should == 2
-        @podfile.target_definitions[:default].name.should == :default
+        @podfile.target_definitions["Pods"].name.should == "Pods"
         @podfile.target_definitions["sub-target"].name.should == "sub-target"
       end
 
@@ -114,7 +130,10 @@ module Pod
         end
         podfile.to_hash.should == {
           "target_definitions"=>{
-            :default=>{"dependencies"=>["ASIHTTPRequest"]}
+            "Pods"=>{
+              "link_with_first_target"=>true,
+              "dependencies"=>["ASIHTTPRequest"]
+            }
           }
         }
       end
@@ -126,7 +145,7 @@ module Pod
           set_arc_compatibility_flag!
         end
         podfile.to_hash.should == {
-          "target_definitions"=>{:default=>{}},
+          "target_definitions"=>{ "Pods"=> { "link_with_first_target"=>true }},
           "workspace"=>"MyApp.xcworkspace",
           "generate_bridge_support"=>true,
           "set_arc_compatibility_flag"=>true
@@ -142,7 +161,8 @@ module Pod
         end
         podfile.to_hash.should == {
           "target_definitions"=>{
-            :default=>{
+            "Pods"=>{
+              "link_with_first_target"=>true,
               "dependencies"=>["ASIHTTPRequest"],
               "children"=> {
                 "sub-target"=>{
@@ -164,7 +184,8 @@ module Pod
         expected = <<-EOF.strip_heredoc
           ---
           target_definitions:
-            :default:
+            Pods:
+              link_with_first_target: true
               dependencies:
               - ASIHTTPRequest
               - JSONKit:
@@ -183,7 +204,7 @@ module Pod
 
       it "can be initialized from a ruby DSL file" do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
-        ruby_podfile.target_definitions.keys.should == [:default]
+        ruby_podfile.target_definitions.keys.should == ["Pods"]
         ruby_podfile.dependencies.map(&:name).should == [
           "SSZipArchive",
           "ASIHTTPRequest",
@@ -260,7 +281,7 @@ module Pod
       end
 
       it "adds dependencies outside of any explicit target block to the default target" do
-        target = @podfile.target_definitions[:default]
+        target = @podfile.target_definitions["Pods"]
         target.label.should == 'Pods'
         target.dependencies.should == [Dependency.new('ASIHTTPRequest')]
       end
@@ -287,7 +308,7 @@ module Pod
       end
 
       it "leaves the name of the target, to link with, to be automatically resolved" do
-        target = @podfile.target_definitions[:default]
+        target = @podfile.target_definitions["Pods"]
         target.link_with.should == nil
       end
 
@@ -297,13 +318,13 @@ module Pod
       end
 
       it "returns the platform of the target" do
-        @podfile.target_definitions[:default].platform.should == :ios
+        @podfile.target_definitions["Pods"].platform.should == :ios
         @podfile.target_definitions[:test].platform.should == :ios
         @podfile.target_definitions[:osx_target].platform.should == :osx
       end
 
       it "assigns a deployment target to the platforms if not specified" do
-        @podfile.target_definitions[:default].platform.deployment_target.to_s.should == '4.3'
+        @podfile.target_definitions["Pods"].platform.deployment_target.to_s.should == '4.3'
         @podfile.target_definitions[:test].platform.deployment_target.to_s.should == '4.3'
         @podfile.target_definitions[:osx_target].platform.deployment_target.to_s.should == '10.6'
       end
@@ -314,13 +335,13 @@ module Pod
       end
 
       it "specifies that the inhibit all warnings flag should be added to the target's build settings" do
-        @podfile.target_definitions[:default].should.not.inhibit_all_warnings
+        @podfile.target_definitions["Pods"].should.not.inhibit_all_warnings
         @podfile.target_definitions[:test].should.inhibit_all_warnings
         @podfile.target_definitions[:subtarget].should.inhibit_all_warnings
       end
 
       it "returns the Xcode project that contains the target to link with" do
-        [:default, :debug, :test, :subtarget].each do |target_name|
+        ["Pods", :debug, :test, :subtarget].each do |target_name|
           target = @podfile.target_definitions[target_name]
           target.user_project_path.to_s.should == 'iOS Project.xcodeproj'
         end

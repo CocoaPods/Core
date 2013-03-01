@@ -98,7 +98,7 @@ module Pod
       #         name.
       #
       def label
-        if root? && name == :default
+        if root? && name == "Pods"
           "Pods"
         elsif exclusive? || parent.nil?
           "Pods-#{name}"
@@ -156,11 +156,12 @@ module Pod
 
       #--------------------------------------#
 
-      # @return [Array<String>] the list of the names of the Xcode targets with
+      # @return [Array<String>] The list of the names of the Xcode targets with
       #         which this target definition should be linked with.
       #
       def link_with
-        get_hash_value('link_with')
+        value = get_hash_value('link_with')
+        value unless value.nil? || value.empty?
       end
 
       # Sets the client targets that should be integrated by this definition.
@@ -172,6 +173,33 @@ module Pod
       #
       def link_with=(targets)
         set_hash_value('link_with', Array(targets).map(&:to_s))
+      end
+
+      #--------------------------------------#
+
+      # Returns whether the target definition should link with the first target
+      # of the project.
+      #
+      # @note   This option is ignored if {link_with} is set.
+      #
+      # @return [Bool] whether is exclusive.
+      #
+      def link_with_first_target?
+        get_hash_value('link_with_first_target') unless link_with
+      end
+
+      # Sets whether the target definition should link with the first target of
+      # the project.
+      #
+      # @note   This option is ignored if {link_with} is set.
+      #
+      # @param  [Bool] flag
+      #         Whether the definition should link with the first target.
+      #
+      # @return [void]
+      #
+      def link_with_first_target=(flag)
+        set_hash_value('link_with_first_target', flag)
       end
 
       #--------------------------------------#
@@ -361,6 +389,7 @@ module Pod
         'podspecs',
         'exclusive',
         'link_with',
+        'link_with_first_target',
         'inhibit_all_warnings',
         'user_project_path',
         'build_configurations',

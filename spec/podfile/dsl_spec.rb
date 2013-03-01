@@ -59,32 +59,32 @@ module Pod
             platform :osx, "10.8"
           end
         end
-        podfile.target_definitions[:default].platform.should == Platform.new(:ios, "6.0")
+        podfile.target_definitions["Pods"].platform.should == Platform.new(:ios, "6.0")
         podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, "10.8")
       end
 
       it "allows to specify the user xcode project for a Target definition" do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
-        podfile.target_definitions[:default].user_project_path.should == 'App.xcodeproj'
+        podfile.target_definitions["Pods"].user_project_path.should == 'App.xcodeproj'
       end
 
       it "allows to specify the build configurations of a user project" do
         podfile = Podfile.new do
           xcodeproj 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
-        podfile.target_definitions[:default].build_configurations.should == {
+        podfile.target_definitions["Pods"].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug
         }
       end
 
       it "allows to specify the user targets a Target definition should link with" do
         podfile = Podfile.new { link_with 'app_target' }
-        podfile.target_definitions[:default].link_with.should == ['app_target']
+        podfile.target_definitions["Pods"].link_with.should == ['app_target']
       end
 
       it "allows to inhibit all the warnings of a Target definition" do
         podfile = Podfile.new { inhibit_all_warnings! }
-        podfile.target_definitions[:default].inhibit_all_warnings?.should.be.true
+        podfile.target_definitions["Pods"].inhibit_all_warnings?.should.be.true
       end
     end
 
