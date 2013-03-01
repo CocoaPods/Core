@@ -275,6 +275,7 @@ module Pod
         @child.store_pod('BlocksKit')
         @child.set_platform(:ios)
         @child.to_hash.should == {
+          "name" => "MyAppTests",
           "dependencies"=>["BlocksKit"],
           "platform"=>"ios"
         }
@@ -285,23 +286,25 @@ module Pod
         @root.store_pod('BlocksKit')
         @child.store_pod('RestKit')
         @root.to_hash.should == {
+          "name" => "MyApp",
           "platform"=>{"ios"=>"6.0"},
           "dependencies"=> ["BlocksKit"],
-          "children"=>
-          {
-            "MyAppTests"=>{
+          "children"=> [
+            {
+              "name" => "MyAppTests",
               "dependencies"=> [ "RestKit"]
             },
-            "MoarTests"=>{
+            {
+              "name" => "MoarTests",
             }
-          }
+          ]
         }
       end
 
       it "can be initialized from a hash" do
         @root.store_pod('BlocksKit')
         @child.store_pod('RestKit')
-        converted = Podfile::TargetDefinition.from_hash(@root.name, @root.to_hash, @podfile)
+        converted = Podfile::TargetDefinition.from_hash(@root.to_hash, @podfile)
         converted.to_hash.should == @root.to_hash
       end
 

@@ -1,6 +1,6 @@
 ---
 target_definitions:
-  Pods:
+  - name: Pods
     link_with_first_target: true
     platform: ios
     dependencies:

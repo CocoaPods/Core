@@ -10,10 +10,6 @@ module Pod
     #
     class TargetDefinition
 
-      # @return [String, Symbol] the name of the target definition.
-      #
-      attr_reader :name
-
       # @return [TargetDefinition, Podfile] the parent target definition or the
       #         Podfile if the receiver is root.
       #
@@ -28,12 +24,14 @@ module Pod
       # @option options [Bool] :exclusive
       #         @see exclusive?
       #
-      def initialize(name, parent, internal_hash = {})
-        @name = name
+      def initialize(name, parent, internal_hash = nil)
+        @internal_hash = internal_hash || {}
         @parent = parent
-        @internal_hash = internal_hash
         @children = []
 
+        unless internal_hash
+          self.name = name 
+        end
         if parent.is_a?(TargetDefinition)
           parent.children << self
         end
@@ -124,6 +122,27 @@ module Pod
       public
 
       # @!group Attributes
+
+      # @return [String] the path of the project this target definition should
+      #         link with.
+      #
+      def name
+        get_hash_value('name')
+      end
+
+      # Sets the path of the user project this target definition should link
+      # with.
+      #
+      # @param  [String] path
+      #         The path of the project.
+      #
+      # @return [void]
+      #
+      def name=(name)
+        set_hash_value('name', name)
+      end
+
+      #--------------------------------------#
 
       # Returns whether the target definition should inherit the dependencies
       # of the parent.
@@ -385,6 +404,7 @@ module Pod
       #         target definition.
       #
       HASH_KEYS = [
+        'name',
         'platform',
         'podspecs',
         'exclusive',
@@ -402,7 +422,7 @@ module Pod
       def to_hash
         hash = internal_hash.dup
         unless children.empty?
-          hash['children'] = Hash[children.map { |child| [child.name, child.to_hash] }]
+          hash['children'] = children.map(&:to_hash)
         end
         hash
       end
@@ -414,12 +434,12 @@ module Pod
       #
       # @return [TargetDefinition] the new target definition
       #
-      def self.from_hash(name, hash, parent)
+      def self.from_hash(hash, parent)
         internal_hash = hash.dup
-        children_hashes = internal_hash.delete('children') || {}
-        definition = TargetDefinition.new(name, parent, internal_hash)
-        children_hashes.each do |child_name, child_hash|
-          TargetDefinition.from_hash(child_name, child_hash, definition)
+        children_hashes = internal_hash.delete('children') || []
+        definition = TargetDefinition.new(nil, parent, internal_hash)
+        children_hashes.each do |child_hash|
+          TargetDefinition.from_hash(child_hash, definition)
         end
         definition
       end

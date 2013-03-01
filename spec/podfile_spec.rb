@@ -129,12 +129,11 @@ module Pod
           pod 'ASIHTTPRequest'
         end
         podfile.to_hash.should == {
-          "target_definitions"=>{
-            "Pods"=>{
-              "link_with_first_target"=>true,
-              "dependencies"=>["ASIHTTPRequest"]
-            }
-          }
+          "target_definitions"=> [
+            "name" => "Pods",
+            "link_with_first_target"=>true,
+            "dependencies"=>["ASIHTTPRequest"]
+          ]
         }
       end
 
@@ -145,7 +144,7 @@ module Pod
           set_arc_compatibility_flag!
         end
         podfile.to_hash.should == {
-          "target_definitions"=>{ "Pods"=> { "link_with_first_target"=>true }},
+          "target_definitions"=>[{ "name" => "Pods", "link_with_first_target"=>true }],
           "workspace"=>"MyApp.xcworkspace",
           "generate_bridge_support"=>true,
           "set_arc_compatibility_flag"=>true
@@ -160,17 +159,19 @@ module Pod
           end
         end
         podfile.to_hash.should == {
-          "target_definitions"=>{
-            "Pods"=>{
+          "target_definitions"=>[
+            {
+              "name" => "Pods",
               "link_with_first_target"=>true,
               "dependencies"=>["ASIHTTPRequest"],
-              "children"=> {
-                "sub-target"=>{
-                  "dependencies"=>["JSONKit"]
+              "children"=> [
+                {
+                  "name" => "sub-target",
+                  "dependencies"=> ["JSONKit"]
                 }
-              }
+              ]
             }
-          }
+          ]
         }
       end
 
@@ -184,12 +185,12 @@ module Pod
         expected = <<-EOF.strip_heredoc
           ---
           target_definitions:
-            Pods:
-              link_with_first_target: true
-              dependencies:
-              - ASIHTTPRequest
-              - JSONKit:
-                - '> 1.0'
+          - name: Pods
+            link_with_first_target: true
+            dependencies:
+            - ASIHTTPRequest
+            - JSONKit:
+              - '> 1.0'
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF

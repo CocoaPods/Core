@@ -183,7 +183,7 @@ module Pod
     #
     def to_hash
       hash = {}
-      hash['target_definitions'] = Hash[root_target_definitions.map { |child| [child.name, child.to_hash] }]
+      hash['target_definitions'] = root_target_definitions.map(&:to_hash)
       hash.merge!(internal_hash)
       hash
     end
@@ -263,8 +263,8 @@ module Pod
       internal_hash = hash.dup
       target_definitions = internal_hash.delete('target_definitions') || []
       podfile = Podfile.new(path,internal_hash)
-      target_definitions.each do |name, definition_hash|
-        definition = TargetDefinition.from_hash(name, definition_hash, podfile)
+      target_definitions.each do |definition_hash|
+        definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition
       end
       podfile
