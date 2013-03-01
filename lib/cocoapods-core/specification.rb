@@ -66,7 +66,7 @@ module Pod
     #         go. This is used by the installer to group specifications by root
     #         spec.
     #
-    # @return [Bool] whether the specifications are equal.
+    # @return [Bool] Whether the specifications are equal.
     #
     def ==(other)
       # TODO

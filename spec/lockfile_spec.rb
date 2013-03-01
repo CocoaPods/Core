@@ -92,6 +92,15 @@ module Pod
         @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
       end
 
+      it "returns whether it is equal to another" do
+        podfile = Podfile.new do
+          platform :ios
+          pod 'BananaLib', '~>1.0'
+        end
+        @lockfile.should == @lockfile
+        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs)
+      end
+
       it "returns the list of the names of the  installed pods" do
         @lockfile.pod_names.should == %w| BananaLib JSONKit monkey |
       end
@@ -101,7 +110,6 @@ module Pod
         @lockfile.version("JSONKit").should == Version.new("1.4")
         @lockfile.version("monkey").should == Version.new("1.0.8")
       end
-
 
       it "returns the checksum for the given Pod" do
         @lockfile.checksum('BananaLib').should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'

@@ -53,6 +53,12 @@ module Pod
     #
     attr_accessor :defined_in_file
 
+    # @return [Bool] Whether the Podfiles are equal.
+    #
+    def ==(other)
+      other && self.to_hash == other.to_hash
+    end
+
     # @return [String] a string representation suitable for UI output.
     #
     def to_s
