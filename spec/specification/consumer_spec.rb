@@ -64,7 +64,7 @@ module Pod
         @subspec_consumer.requires_arc?.should.be.true
       end
 
-      it "doesn't iherit whether it requres ARC from the parent if it is false" do
+      it "doesn't inherit whether it requires ARC from the parent if it is false" do
         @spec.requires_arc = true
         @subspec.requires_arc = false
         @subspec_consumer.requires_arc?.should.be.false
@@ -312,7 +312,7 @@ module Pod
           s.dependency 'AFNetworking'
           s.osx.dependency 'MagicalRecord'
           s.subspec 'Subspec' do |sp|
-            sp.dependency 'libPusher'
+            sp.dependency 'libPusher', '1.0'
           end
         end
         @subspec = @spec.subspecs.first
@@ -327,13 +327,23 @@ module Pod
 
       it "inherits the dependencies of the parent" do
         @subspec_consumer.dependencies.sort.should == [
-          Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
+          Dependency.new('AFNetworking'), Dependency.new('libPusher', '1.0') ]
       end
 
       it "takes into account the dependencies specified for a platform" do
         osx_consumer = Specification::Consumer.new(@spec, :osx)
         osx_consumer.dependencies.sort.should == [
           Dependency.new('AFNetworking'), Dependency.new('MagicalRecord') ]
+      end
+
+      it "raises if unsupported parameters are stored in the dependency" do
+        spec = Spec.new(nil, 'Pod')
+        spec.dependency 'AFNetworking', :git=>"example.com"
+
+        consumer = Specification::Consumer.new(spec, :ios)
+        should.raise Informative do
+          consumer.dependencies
+        end.message.should.match /.*Unsupported parameters.*/
       end
     end
 
