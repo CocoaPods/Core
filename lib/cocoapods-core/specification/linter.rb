@@ -272,7 +272,7 @@ module Pod
           end
           patterns.each do |pattern|
             if pattern.is_a?(Rake::FileList)
-              error "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
+              warning "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
             else
               if pattern.start_with?('/')
                 error "File patterns must be relative and cannot start with a slash (#{attrb.name})."
@@ -294,9 +294,10 @@ module Pod
       #
       def check_if_spec_is_empty
         methods = %w[ source_files resources preserve_paths ]
-        empty = methods.all? { |m| consumer.send(m).empty? } && consumer.spec.subspecs.empty?
+        empty_patterns = methods.all? { |m| consumer.send(m).empty? } && consumer.spec.subspecs.empty?
+        empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
-          error "The spec appears to be empty (no source files, resources, or preserve paths)."
+          warning "The spec appears to be empty (no source files, resources, preserve paths or subspecs)."
         end
       end
 
