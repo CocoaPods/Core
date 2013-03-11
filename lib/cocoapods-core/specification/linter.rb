@@ -297,7 +297,7 @@ module Pod
         empty_patterns = methods.all? { |m| consumer.send(m).empty? } && consumer.spec.subspecs.empty?
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
-          warning "The spec appears to be empty (no source files, resources, preserve paths or subspecs)."
+          warning "The #{consumer.spec} spec appears to be empty (no source files, resources, preserve paths or subspecs)."
         end
       end
 
