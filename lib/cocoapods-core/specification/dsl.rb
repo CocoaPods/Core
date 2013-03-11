@@ -376,18 +376,18 @@ module Pod
 
       #------------------#
 
-      #  The deployment targets of the supported platforms.
+      # The deployment targets of the supported platforms.
       #
-      #  @example
+      # @example
       #
-      #    spec.ios.deployment_target = "6.0"
+      #   spec.ios.deployment_target = "6.0"
       #
-      #  @example
+      # @example
       #
-      #    spec.osx.deployment_target = "10.8"
+      #   spec.osx.deployment_target = "10.8"
       #
-      #  @param    [String] deployment_target
-      #            The deployment target of the platform.
+      # @param    [String] deployment_target
+      #           The deployment target of the platform.
       #
       def deployment_target=(*args)
         raise StandardError, "The deployment target can be declared only per platform."
@@ -912,20 +912,23 @@ module Pod
 
       # This is a convenience method which gets called after all pods have been
       # downloaded but before they have been installed, and the Xcode project
-      # and related files have been generated.
+      # and related files have been generated.  Note that this hook is called
+      # for each Pods library.
       #
-      # It receives the `Pod::LocalPod` instance generated form the
-      # specification and the `Pod::Podfile::TargetDefinition` instance for the
+      # It receives the
+      # `[Pod::Hooks::PodRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/podrepresentation/)`
+      # instance generated form the
+      # specification and the
+      # `[Pod::Hooks::LibraryRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)`
+      # instance for the
       # current target.
       #
       # Override this to, for instance, to run any build script.
       #
       # @example
       #
-      #   Pod::Spec.new do |spec|
-      #     spec.pre_install do |pod, target_definition|
-      #       Dir.chdir(pod.root){ `sh make.sh` }
-      #     end
+      #   spec.pre_install do |pod, target_definition|
+      #     Dir.chdir(pod.root){ `sh make.sh` }
       #   end
       #
       def pre_install(&block)
@@ -934,21 +937,20 @@ module Pod
 
       # This is a convenience method which gets called after all pods have been
       # downloaded, installed, and the Xcode project and related files have
-      # been generated.
+      # been generated. Note that this hook is called for each Pods library.
       #
-      # It receives the `Pod::Installer::TargetInstaller` instance for the
-      # current target.
+      # It receives a
+      # `[Pod::Hooks::LibraryRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)`
+      # instance for the current target.
       #
       # Override this to, for instance, add to the prefix header.
       #
       # @example
       #
-      #   Pod::Spec.new do |spec|
-      #     spec.post_install do |target_installer|
-      #       prefix_header = config.project_pods_root + target_installer.prefix_header_filename
-      #       prefix_header.open('a') do |file|
-      #         file.puts('#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif')
-      #       end
+      #   spec.post_install do |library_representation|
+      #     prefix_header = library_representation.prefix_header_path
+      #     prefix_header.open('a') do |file|
+      #       file.puts('#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif')
       #     end
       #   end
       #

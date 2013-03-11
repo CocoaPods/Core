@@ -423,11 +423,15 @@ module Pod
       # This hook allows you to make any changes to the Pods after they have
       # been downloaded but before they are installed.
       #
+      # It receives the
+      # `[Pod::Hooks::InstallerRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/installerrepresentation/)`
+      # as its only argument.
+      #
       # @example  Defining a pre install hook in a Podfile.
       #
-      #           pre_install do |installer|
-      #             # Do something fancy!
-      #           end
+      #   pre_install do |installer_representation|
+      #     # Do something fancy!
+      #   end
       #
       #
       def pre_install(&block)
@@ -438,15 +442,19 @@ module Pod
       # project before it is written to disk, or any other tasks you might want
       # to perform.
       #
+      # It receives the
+      # `[Pod::Hooks::InstallerRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/installerrepresentation/)`
+      # as its only argument.
+      #
       # @example  Customizing the `OTHER_LDFLAGS` of all targets
       #
-      #           post_install do |installer|
-      #             installer.project.targets.each do |target|
-      #               target.build_configurations.each do |config|
-      #                 config.build_settings['GCC_ENABLE_OBJC_GC'] = 'supported'
-      #               end
-      #             end
-      #           end
+      #   post_install do |installer_representation|
+      #     installer_representation.project.targets.each do |target|
+      #       target.build_configurations.each do |config|
+      #         config.build_settings['GCC_ENABLE_OBJC_GC'] = 'supported'
+      #       end
+      #     end
+      #   end
       #
       # @return   [void]
       #
