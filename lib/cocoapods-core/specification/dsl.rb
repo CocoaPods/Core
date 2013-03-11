@@ -125,6 +125,7 @@ module Pod
       #
       root_attribute :authors, {
         :types       => [ String, Array, Hash ],
+        :container   => Hash,
         :required    => true,
         :singularize => true,
       }
