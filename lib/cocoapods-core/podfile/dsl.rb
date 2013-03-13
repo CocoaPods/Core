@@ -281,6 +281,10 @@ module Pod
       # explicit project and there is only **one** project in the same
       # directory as the Podfile then that project will be used.
       #
+      # It is possible also to specify whether the build settings of your
+      # custom build configurations should be modeled after the Release or
+      # the Debug build configuration.
+      #
       # @param    [String] path
       #           the path of the project to link with
       #
@@ -302,6 +306,11 @@ module Pod
       #             # This Pods library links with a target in another project.
       #             xcodeproj `TestProject`
       #           end
+      #
+      # @example  Using custom build configurations
+      #
+      #           xcodeproj `TestProject`, 'Mac App Store' => :release, 'Test' => :debug
+      #
       #
       # @return   [void]
       #
