@@ -61,7 +61,7 @@ module Pod
       #
       def required_by(dependency, dependent_name)
         unless @required_by.empty? || dependency.requirement.satisfied_by?(Version.new(required_version.to_s))
-          raise StandardError, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
+          raise Informative, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
         end
         @specification = nil
         @required_by  << dependent_name
@@ -105,7 +105,7 @@ module Pod
       def required_version
         version = versions.find { |v| dependency.match?(name, v) }
         unless version
-          raise StandardError, "Required version (#{dependency}) not found " \
+          raise Informative, "Required version (#{dependency}) not found " \
             "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"
         end
         version
