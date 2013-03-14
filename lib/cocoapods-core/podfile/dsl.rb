@@ -282,8 +282,10 @@ module Pod
       # directory as the Podfile then that project will be used.
       #
       # It is possible also to specify whether the build settings of your
-      # custom build configurations should be modeled after the Release or
-      # the Debug build configuration.
+      # custom build configurations should be modeled after the release or
+      # the debug presets. To do so you need to specify a hash where the name
+      # of each build configuration is associated to either `:release` or
+      # `:debug`.
       #
       # @param    [String] path
       #           the path of the project to link with
