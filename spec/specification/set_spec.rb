@@ -33,12 +33,12 @@ module Pod
         @set.required_by(Dependency.new('CocoaLumberjack'), 'Spec')
         lambda {
           @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0' ), 'Spec')
-        }.should.raise StandardError
+        }.should.raise Informative
       end
 
       it "raises if the required version doesn't exist" do
         @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0'), 'Spec')
-        lambda { @set.required_version }.should.raise StandardError
+        lambda { @set.required_version }.should.raise Informative
       end
 
       it "can test if it is equal to another set" do
@@ -83,7 +83,7 @@ module Pod
 
       it "raises if a version is incompatible with the activated version" do
         spec = Dependency.new('CocoaLumberjack', '1.2.1')
-        lambda { @set.required_by(spec, 'Spec') }.should.raise StandardError
+        lambda { @set.required_by(spec, 'Spec') }.should.raise Informative
       end
     end
 
@@ -173,7 +173,7 @@ module Pod
 
     it "raises if the required version doesn't match the specification" do
       @set.required_by(Dependency.new('BananaLib', '< 1.0'), 'Spec')
-      lambda { @set.required_version }.should.raise StandardError
+      lambda { @set.required_version }.should.raise Informative
     end
   end
 end
