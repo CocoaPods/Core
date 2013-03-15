@@ -3,6 +3,8 @@ source "http://rubygems.org"
 gemspec
 
 group :development do
+  gem 'coveralls', require: false
+
   gem "mocha", "~> 0.11.4"
   gem "bacon"
   gem "mocha-on-bacon"
