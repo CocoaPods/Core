@@ -22,6 +22,14 @@ module Pod
     attr_accessor :head
     alias_method  :head?, :head
 
+    # @return [Bool] whether the dependency should ignore xcode warnings.
+    #
+    attr_accessor :inhibit_warnings
+
+    # @return [Specification] the specification loaded for the dependency.
+    #
+    attr_accessor :specification
+
     # @overload   initialize(name, requirements)
     #
     #   @param    [String] name
@@ -64,8 +72,11 @@ module Pod
     #             Dependency.new('RestKit', :head)
     #
     def initialize(name = nil, *requirements)
+
       if requirements.last.is_a?(Hash)
-        @external_source = requirements.pop
+        @inhibit_warnings = requirements.last.delete(:inhibit_warnings)
+        source = requirements.pop
+        @external_source = source unless source.empty?
       elsif requirements.last == :head
         @head = true
         requirements.pop
@@ -99,6 +110,11 @@ module Pod
     #
     def external?
       !@external_source.nil?
+    end
+
+    # @return [Bool] false by default, true if set in podfile
+    def inhibits_warnings?
+      @inhibit_warnings || false
     end
 
     # Creates a new dependency with the name of the top level spec and the same
@@ -157,7 +173,7 @@ module Pod
     #         external source.
     #
     def ==(other)
-      super && head? == other.head? && @external_source == other.external_source
+      super && head? == other.head? && @external_source == other.external_source && inhibits_warnings? == other.inhibits_warnings?
     end
     alias :eql? :==
 
@@ -252,7 +268,7 @@ module Pod
     #
     def inspect
       "<#{self.class} name=#{self.name} requirements=#{requirement.to_s} " \
-      "external_source=#{external_source||'nil'}>"
+      "external_source=#{external_source||'nil'} inhibit_warnings=#{self.inhibits_warnings?}>"
     end
 
     #--------------------------------------#
