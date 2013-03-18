@@ -1,6 +1,6 @@
 # CocoaPods Core
 
-[![Master Build Status](https://secure.travis-ci.org/CocoaPods/Core.png?branch=master)](https://secure.travis-ci.org/CocoaPods/Core)
+[![Build Status](https://travis-ci.org/CocoaPods/Core.png?branch=master)](https://travis-ci.org/CocoaPods/Core)
 [![Coverage Status](https://coveralls.io/repos/CocoaPods/Core/badge.png?branch=master)](https://coveralls.io/r/CocoaPods/Core)
 
 The CocoaPods-Core gem provides support to work with the models of CocoaPods.
