@@ -192,13 +192,6 @@ module Pod
       to_hash.to_yaml
     end
 
-    # @return [String] the JSON encoded {to_hash} representation.
-    #
-    def to_json
-      require 'json'
-      to_hash.to_json
-    end
-
     #-------------------------------------------------------------------------#
 
     # The Aggregate manages a directory of sources repositories.

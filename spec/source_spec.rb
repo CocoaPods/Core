@@ -71,7 +71,7 @@ module Pod
 
       it "returns all the specifications" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        source.all_specs.map(&:name).uniq.should == ["BananaLib", "JSONKit", "YAMLSpec"]
+        source.all_specs.map(&:name).sort.uniq.should == ["BananaLib", "JSONKit", "YAMLSpec"]
       end
 
     end
@@ -115,14 +115,7 @@ module Pod
         yaml.should.match /---/
         yaml.should.match /BananaLib:/
       end
-
-      it "returns the json representation" do
-        json = @source.to_json
-        json.should.match /"BananaLib":/
-      end
-
     end
-
   end
 
   #-----------------------------------------------------------------------#
@@ -219,7 +212,7 @@ module Pod
       #--------------------------------------#
 
       it "returns the directories where the repos are defined" do
-        @aggregate.dirs.map { |d| d.basename.to_s } .should == ["master", "test_repo"]
+        @aggregate.dirs.map { |d| d.basename.to_s }.sort.should == ["master", "test_repo"]
       end
 
       it "returns an empty list for the directories if the repos dir doesn't exists" do

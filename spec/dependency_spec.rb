@@ -178,7 +178,7 @@ module Pod
           @dep.send(:external_source_description, :svn => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :podspec => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :local => 'example.com').should == 'from `example.com`'
-          @dep.send(:external_source_description, :other => 'example.com').should == 'from `{:other=>"example.com"}`'
+          @dep.send(:external_source_description, :other => 'example.com').should.match /from.*example.com/
         end
       end
 

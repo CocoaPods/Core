@@ -183,7 +183,7 @@ module Pod
         when String then value.downcase
         when Symbol then sorting_string(value.to_s)
         when Array  then sorting_string(value.first)
-        when Hash   then sorting_string(value.keys.sort.first)
+        when Hash   then value.keys.map { |key| key.to_s.downcase }.sort.first
         end
       end
     end
