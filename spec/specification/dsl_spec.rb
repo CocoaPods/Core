@@ -27,6 +27,11 @@ module Pod
         @spec.attributes_hash["authors"].should == hash
       end
 
+      it "allows to specify the authors in the singular form" do
+        @spec.author = { 'orta' => 'orta.therox@gmail.com' }
+        @spec.attributes_hash["authors"].should == { 'orta' => 'orta.therox@gmail.com' }
+      end
+
       it "allows to specify the license" do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
         @spec.attributes_hash["license"].should == { "type" => 'MIT', "file" => 'MIT-LICENSE' }
