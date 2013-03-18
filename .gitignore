@@ -10,3 +10,4 @@ spec/fixtures/vcr
 .rbx/
 Gemfile.lock
 coverage/
+.coveralls.yml
