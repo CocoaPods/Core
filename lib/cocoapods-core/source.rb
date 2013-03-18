@@ -1,4 +1,5 @@
-require 'cocoapods-core/source/validator'
+require 'cocoapods-core/source/acceptor'
+require 'cocoapods-core/source/health_reporter'
 
 module Pod
 
@@ -18,10 +19,10 @@ module Pod
     #
     attr_reader :repo
 
-    # @param  [Pathname] repo @see #repo.
+    # @param  [Pathname, String] repo @see #repo.
     #
     def initialize(repo)
-      @repo = repo
+      @repo = Pathname.new(repo)
     end
 
     # @return [String] the name of the source.
