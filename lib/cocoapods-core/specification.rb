@@ -102,7 +102,13 @@ module Pod
     #         clients.
     #
     def to_s
-      "#{name} (#{version})"
+      if name && version.version != ""
+        "#{name} (#{version})"
+      elsif name
+        name
+      else
+        "No-name"
+      end
     end
 
     # @return [String] A string suitable for debugging.
@@ -527,19 +533,19 @@ module Pod
     def self.from_file(path, subspec_name = nil)
       path = Pathname.new(path)
       unless path.exist?
-        raise StandardError, "No podspec exists at path `#{path}`."
+        raise Informative, "No podspec exists at path `#{path}`."
       end
 
       case path.extname
       when '.podspec'
         spec = ::Pod._eval_podspec(path)
         unless spec.is_a?(Specification)
-          raise StandardError, "Invalid podspec file at path `#{path}`."
+          raise Informative, "Invalid podspec file at path `#{path}`."
         end
       when '.yaml'
         spec = Specification.from_yaml(path.read)
       else
-        raise StandardError, "Unsupported specification format `#{path.extname}`."
+        raise Informative, "Unsupported specification format `#{path.extname}`."
       end
 
       spec.defined_in_file = path

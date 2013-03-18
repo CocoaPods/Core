@@ -105,13 +105,13 @@ module Pod
       end
 
       # TODO: this check cannot be performed before a merge.
-      def check_spec_path
-        expected = "#{spec.name}/#{spec.version}/#{spec.name}.podspec"
-        relative_path = spec_path.relative_path_from(source.repo).to_s
-        unless relative_path == expected
-          error "Incorrect path, the path is `#{relative_path}` and should be `#{expected}`."
-        end
-      end
+      # def check_spec_path
+      #   expected = "#{spec.name}/#{spec.version}/#{spec.name}.podspec"
+      #   relative_path = spec_path.relative_path_from(source.repo).to_s
+      #   unless relative_path == expected
+      #     error "Incorrect path, the path is `#{relative_path}` and should be `#{expected}`."
+      #   end
+      # end
 
       def check_spec_source_change
         return unless spec
@@ -131,7 +131,7 @@ module Pod
         return if !spec.source[:git] || spec.source[:tag]
 
         # Allow to fix a 0.0.1 podspec
-        if !related_specifications.any? { |s| s.version == '0.0.1' }
+        if related_specifications && !related_specifications.any? { |s| s.version == '0.0.1' }
           error "There is already versioned specifications so " \
             "untagged versions cannot be added."
         elsif spec.version != Version.new('0.0.1')

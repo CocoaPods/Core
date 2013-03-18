@@ -115,7 +115,7 @@ module Pod
       specs = pods.map do |name|
         begin
           versions(name).map { |version| specification(name, version) }
-        rescue DSLError => e
+        rescue
           CoreUI.warn "Skipping `#{name}` because the podspec contains errors."
           next
         end
@@ -123,7 +123,7 @@ module Pod
       specs.flatten.compact
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Searching the source
 
@@ -168,7 +168,7 @@ module Pod
       end.compact
     end
 
-    #---------------------------------------------------------------------------#
+    #-------------------------------------------------------------------------#
 
     # @!group Representations
 
@@ -179,7 +179,6 @@ module Pod
     def to_hash
       hash = {}
       all_specs.each do |spec|
-        print '.'
         hash[spec.name] ||= {}
         hash[spec.name][spec.version.version] = spec.to_hash
       end
@@ -266,6 +265,8 @@ module Pod
       #
       # @raise  If no source including the set can be found.
       #
+      # @todo   Clients should raise not this method.
+      #
       # @see    Source#search_by_name
       #
       def search_by_name(query, full_text_search = false)
@@ -299,6 +300,9 @@ module Pod
           []
         end
       end
+
+      #-----------------------------------------------------------------------#
+
     end
   end
 end

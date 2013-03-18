@@ -137,6 +137,15 @@ module Pod
         time_delta = (Time.now - saved_cache['JSONKit'][:gh_date])
         time_delta.should < 60
       end
+
+      it "handles gracefully any Octokit exception" do
+        def Octokit.repo(repo_id)
+          raise StandardError
+        end
+        should.not.raise do
+          @stats.github_watchers(@set)
+        end
+      end
     end
   end
 end

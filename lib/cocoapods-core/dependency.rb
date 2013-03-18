@@ -209,7 +209,7 @@ module Pod
     def to_s
       version = ''
       if external?
-        version << external_source_description
+        version << external_source_description(external_source)
       elsif head?
         version << 'HEAD'
       elsif @version_requirements != Requirement.default
@@ -271,8 +271,7 @@ module Pod
     #
     # @return   [String] the description of the external source.
     #
-    def external_source_description
-      source = external_source
+    def external_source_description(source)
       if source.key?(:git)
         desc =  "`#{source[:git]}`"
         desc << ", commit `#{source[:commit]}`" if source[:commit]

@@ -210,7 +210,7 @@ module Pod
     def self.from_file(path)
       path = Pathname.new(path)
       unless path.exist?
-        raise StandardError, "No Podfile exists at path `#{path}`."
+        raise Informative, "No Podfile exists at path `#{path}`."
       end
       string = File.open(path, 'r:utf-8')  { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
@@ -224,7 +224,7 @@ module Pod
       when '.yaml', '.cocoapods'
         Podfile.from_yaml(string, path)
       else
-        raise StandardError, "Unsupported Podfile format `#{path}`."
+        raise Informative, "Unsupported Podfile format `#{path}`."
       end
     end
 
@@ -332,15 +332,20 @@ module Pod
     #
     attr_accessor :current_target_definition
 
+    public
+
+    # @!group Deprecations
     #-------------------------------------------------------------------------#
 
     # @deprecated Deprecated in favour of the more succinct {#pod}. Remove for
     #             CocoaPods 1.0.
     #
     def dependency(name = nil, *requirements, &block)
-      warn "[DEPRECATED] `dependency' is deprecated (use `pod')"
+      CoreUI.warn "[DEPRECATED] `dependency' is deprecated (use `pod')"
       pod(name, *requirements, &block)
     end
+
+    #-------------------------------------------------------------------------#
 
   end
 end

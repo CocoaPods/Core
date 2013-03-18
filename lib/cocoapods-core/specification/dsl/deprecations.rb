@@ -25,18 +25,18 @@ module Pod
             end
 
           elsif method == :header_mappings
-            raise StandardError, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
+            raise Informative, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
           end
         end
 
         def clean_paths=(value)
-          raise StandardError, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
+          raise Informative, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
             "cleans unused files by default. Use preserver paths if needed."
         end
 
         [ :part_of_dependency=, :part_of=, :exclude_header_search_paths= ].each do |method|
           define_method method do |value|
-            raise StandardError, "[#{to_s}] Attribute `#{method.to_s[0..-2]}` has been deprecated."
+            raise Informative, "[#{to_s}] Attribute `#{method.to_s[0..-2]}` has been deprecated."
           end
         end
 

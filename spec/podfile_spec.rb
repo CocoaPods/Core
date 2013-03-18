@@ -220,6 +220,20 @@ module Pod
         ruby_podfile.to_hash.should == yaml_podfile.to_hash
       end
 
+      it "raises if the given initialization file doesn't exists" do
+        should.raise Informative do
+          Podfile.from_file('Missing-file')
+        end.message.should.match /No Podfile exists/
+      end
+
+      it "raises if the given initialization file has an unsupported extension" do
+        Pathname.any_instance.stubs(:exist?).returns(true)
+        File.stubs(:open).returns('')
+        should.raise Informative do
+          Podfile.from_file('Podfile.json')
+        end.message.should.match /Unsupported Podfile format/
+      end
+
       it "can be initialized from a hash" do
         fixture_podfile = Podfile.from_file(fixture('Podfile'))
         hash = fixture_podfile.to_hash
@@ -245,6 +259,17 @@ module Pod
         lambda { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
       end
 
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Deprecations" do
+      it "Warns about the deprecated dependency DSL directive" do
+        podfile = Podfile.new
+        podfile.expects(:pod).with('My-Pod')
+        podfile.dependency 'My-Pod'
+        CoreUI.warnings.should.match /DEPRECATED/
+      end
     end
 
     #-------------------------------------------------------------------------#

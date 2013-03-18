@@ -70,13 +70,17 @@ module Pod
       @spec.license.should == { :type => 'MIT', :file => 'MIT-LICENSE' }
     end
 
-    it "strips indenetation from the license text" do
+    it "strips indentation from the license text" do
       text = <<-DOC
         Line1
         Line2
       DOC
       @spec.license = { "type" => 'MIT', "text" => text }
       @spec.license[:text].should == "Line1\nLine2\n"
+    end
+
+    it "returns the empty hash if not license information has been specified" do
+      @spec.license.should == {}
     end
 
     it "returns the homepage" do

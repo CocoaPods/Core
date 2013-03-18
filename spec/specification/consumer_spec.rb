@@ -504,6 +504,14 @@ module Pod
           result = @consumer.send(:merge_values, attr, value, value_to_mege)
           result.should == {'OTHER_LDFLAGS' => '-lObjC -framework SystemConfiguration'}
         end
+
+        it "returns the original value if the attribute is a string" do
+          attr = Specification::DSL::Attribute.new(:test, {})
+          existing_value = 'header_dir_1'
+          value_to_mege = 'header_dir_2'
+          result = @consumer.send(:merge_values, attr, existing_value, value_to_mege)
+          result.should == 'header_dir_2'
+        end
       end
 
       #--------------------------------------#

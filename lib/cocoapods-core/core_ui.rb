@@ -4,16 +4,16 @@ module Pod
   #
   module CoreUI
 
-    class << self
-      def puts(message)
-        STDOUT.puts message
-      end
-
-      def warn(message)
-        STDERR.puts message
-      end
-
+    def self.puts(message)
+      STDOUT.puts message
     end
+
+    def self.warn(message)
+      STDERR.puts message
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
 

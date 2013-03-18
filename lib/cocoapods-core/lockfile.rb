@@ -39,10 +39,9 @@ module Pod
     #
     def self.from_file(path)
       return nil unless path.exist?
-      begin
-        hash = YAML.load(File.open(path))
-      rescue Exception => e
-        raise StandardError, "Podfile.lock syntax error:  #{e.inspect}"
+      hash = YAML.load(File.open(path))
+      unless hash && hash.is_a?(Hash)
+        raise Informative, "Invalid Lockfile in `#{path}`"
       end
       lockfile = Lockfile.new(hash)
       lockfile.defined_in_file = path
@@ -57,12 +56,6 @@ module Pod
     #
     def ==(other)
       other && self.to_hash == other.to_hash
-    end
-
-    # @return [String] a string representation suitable for UI output.
-    #
-    def to_s
-      "Podfile.lock"
     end
 
     # @return [String] a string representation suitable for debugging.
@@ -95,8 +88,8 @@ module Pod
     def version(pod_name)
       version = pod_versions[pod_name]
       return version if version
-      pod_name = pod_versions.keys.find { |name| Specification.root_name(name) == pod_name }
-      pod_versions[pod_name]
+      root_name = pod_versions.keys.find { |name| Specification.root_name(name) == pod_name }
+      pod_versions[root_name]
     end
 
     # Returns the checksum for the given Pod.
@@ -146,12 +139,8 @@ module Pod
       dep = dependencies.find { |d| d.name == name || d.root_name == name }
       version = version(name)
 
-      unless dep
+      unless dep && version
         raise StandardError, "Attempt to lock the `#{name}` Pod without an known dependency."
-      end
-
-      unless version
-        raise StandardError, "Attempt to lock the `#{name}` Pod without an known version."
       end
 
       locked_dependency = dep.dup
@@ -272,7 +261,7 @@ module Pod
       self.defined_in_file = path
     end
 
-    # @return [Hash{String=>Array,Hash,String}] a hash reppresentation of the
+    # @return [Hash{String=>Array,Hash,String}] a hash representation of the
     #         Lockfile.
     #
     # @example Output
@@ -339,7 +328,7 @@ module Pod
       #
       def generate(podfile, specs)
         hash = {
-          'PODS'             => generate_pods_data(podfile, specs),
+          'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'SPEC CHECKSUMS'   => generate_checksums(specs),
@@ -369,7 +358,7 @@ module Pod
       #   "monkey (1.0.8)" ]
       #
       #
-      def generate_pods_data(podfile, specs)
+      def generate_pods_data(specs)
         pod_and_deps = specs.map do |spec|
           [spec.to_s, spec.all_dependencies.map(&:to_s).sort]
         end.uniq

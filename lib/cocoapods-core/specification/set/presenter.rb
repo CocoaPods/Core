@@ -35,8 +35,8 @@ module Pod
           @set.versions.first
         end
 
-        # @return   [Array<Version>] all the versions available sorted
-        #           ascendingly.
+        # @return   [Array<Version>] all the versions available ascending
+        #           order.
         #
         def versions
           @set.versions.sort.reverse

@@ -105,11 +105,7 @@ module Pod
         end
       end
 
-      # @return [String] A string representation suitable for UI.
-      #
-      def to_s
-        "`#{label}` target definition"
-      end
+      alias :to_s :label
 
       # @return [String] A string representation suitable for debug.
       #

@@ -86,38 +86,82 @@ module Pod
             - Value_2
         EOT
       end
+
+      it "raises if it can't handle the class of the given object" do
+        value = Pathname.new('a-path')
+        should.raise StandardError do
+          YAMLConverter.convert(value)
+        end.message.should.match /Unsupported class/
+      end
     end
 
     #-------------------------------------------------------------------------#
 
     describe "Private Helpers" do
 
-      it "sorts an array according to its string representation" do
-        values = ["JSONKit", "BananaLib"]
-        result = YAMLConverter.send(:sorted_array, values)
-        result.should == ["BananaLib", "JSONKit"]
+      describe "#sorted_array_with_hint" do
+        it "sorts an array according to its string representation" do
+          values = ["JSONKit", "BananaLib"]
+          result = YAMLConverter.send(:sorted_array, values)
+          result.should == ["BananaLib", "JSONKit"]
+        end
+
+        it "sorts an array containing strings and hashes according to its string representation" do
+          values = ["JSONKit", "BananaLib", { "c_hash_key" => "a_value" }]
+          result = YAMLConverter.send(:sorted_array, values)
+          result.should == ["BananaLib", {"c_hash_key"=>"a_value"}, "JSONKit"]
+        end
+
+        it "sorts an array with a given hint" do
+          values = ["non-hinted", "second", "first"]
+          hint = ["first", "second", "hinted-missing"]
+          result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
+          result.should == ["first", "second", "non-hinted"]
+        end
+
+        it "sorts an array with a given nil hint" do
+          values = ["JSONKit", "BananaLib"]
+          hint = nil
+          result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
+          result.should == ["BananaLib", "JSONKit"]
+        end
       end
 
-      it "sorts an array containing strings and hashes according to its string representation" do
-        values = ["JSONKit", "BananaLib", { "c_hash_key" => "a_value" }]
-        result = YAMLConverter.send(:sorted_array, values)
-        result.should == ["BananaLib", {"c_hash_key"=>"a_value"}, "JSONKit"]
-      end
+      describe "#sorting_string" do
 
-      it "sorts an array with a given hint" do
-        values = ["non-hinted", "second", "first"]
-        hint = ["first", "second", "hinted-missing"]
-        result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
-        result.should == ["first", "second", "non-hinted"]
-      end
+        it "returns the empty string if a nil value is passed" do
+          value = nil
+          result = YAMLConverter.send(:sorting_string, value)
+          result.should == ""
+        end
 
-      it "sorts an array with a given nil hin" do
-        values = ["JSONKit", "BananaLib"]
-        hint = nil
-        result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
-        result.should == ["BananaLib", "JSONKit"]
-      end
+        it "sorts strings ignoring case" do
+          value = "String"
+          result = YAMLConverter.send(:sorting_string, value)
+          result.should == "string"
+        end
 
+        it "sorts symbols ignoring case" do
+          value = :Symbol
+          result = YAMLConverter.send(:sorting_string, value)
+          result.should == "symbol"
+        end
+
+        it "sorts arrays using the first element ignoring case" do
+          value = ['String_2','String_1']
+          result = YAMLConverter.send(:sorting_string, value)
+          result.should == "string_2"
+        end
+
+        it "sorts a hash using first key in alphabetical order" do
+          value = {
+            :key_2 => 'a_value',
+            :key_1 => 'a_value',
+          }
+          result = YAMLConverter.send(:sorting_string, value)
+          result.should == "key_1"
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#

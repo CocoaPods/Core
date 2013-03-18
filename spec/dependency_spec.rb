@@ -30,7 +30,7 @@ module Pod
         dependency.to_s.should == "cocoapods (HEAD)"
       end
 
-      it "includes the external sources in the string reppresentation" do
+      it "includes the external sources in the string representation" do
         dependency = Dependency.new("cocoapods", :hg => 'example.com')
         dependency.to_s.should == "cocoapods (from `example.com`)"
       end
@@ -151,6 +151,41 @@ module Pod
         result.requirement.as_list.should == ['= 1.9']
       end
     end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Private helpers" do
+
+      before do
+        @dep = Dependency.new('bananas', '1.9')
+      end
+
+      describe "#external_source_description" do
+
+        it "returns the description of git sources" do
+          source = {
+            :git => 'example.com/repo.git',
+            :branch => 'master',
+            :commit => 'SHA',
+            :tag => '1.0.0',
+          }
+          description = @dep.send(:external_source_description, source)
+          description.should == 'from `example.com/repo.git`, commit `SHA`, branch `master`, tag `1.0.0`'
+        end
+
+        it "returns the description of other sources" do
+          @dep.send(:external_source_description, :hg => 'example.com').should == 'from `example.com`'
+          @dep.send(:external_source_description, :svn => 'example.com').should == 'from `example.com`'
+          @dep.send(:external_source_description, :podspec => 'example.com').should == 'from `example.com`'
+          @dep.send(:external_source_description, :local => 'example.com').should == 'from `example.com`'
+          @dep.send(:external_source_description, :other => 'example.com').should == 'from `{:other=>"example.com"}`'
+        end
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
 

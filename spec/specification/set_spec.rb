@@ -171,6 +171,12 @@ module Pod
       @set.specification.should == @spec
     end
 
+    it "raises if asked for the specification path" do
+      should.raise StandardError do
+        @set.specification_path
+      end
+    end
+
     it "raises if the required version doesn't match the specification" do
       @set.required_by(Dependency.new('BananaLib', '< 1.0'), 'Spec')
       lambda { @set.required_version }.should.raise Informative

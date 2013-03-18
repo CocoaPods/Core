@@ -86,6 +86,13 @@ module Pod
         lockfile.defined_in_file.should == @tmp_path
       end
 
+      it "raises if the provided YAML doesn't returns a hash" do
+        File.open(@tmp_path, 'w') {|f| f.write("value") }
+        should.raise Informative do
+          Lockfile.from_file(@tmp_path)
+        end.message.should.match /Invalid Lockfile/
+      end
+
       #--------------------------------------#
 
       before do
@@ -111,6 +118,11 @@ module Pod
         @lockfile.version("monkey").should == Version.new("1.0.8")
       end
 
+      it "returns the versions of a given pod handling the case in which the root spec was not stored" do
+        @lockfile.stubs(:pod_versions).returns({"BananaLib/Subspec"=>Version.new(1.0)})
+        @lockfile.version("BananaLib").should == Version.new("1.0")
+      end
+
       it "returns the checksum for the given Pod" do
         @lockfile.checksum('BananaLib').should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
       end
@@ -133,6 +145,12 @@ module Pod
         json_dep = Dependency.new('JSONKit', '1.4')
         json_dep.external_source = { :podspec => 'path/JSONKit.podspec' }
         @lockfile.dependency_to_lock_pod_named('JSONKit').should == json_dep
+      end
+
+      it "raises if there is a request for a locking dependency for a not stored Pod" do
+        should.raise StandardError do
+          @lockfile.dependency_to_lock_pod_named('Missing')
+        end.message.should.match /without an known dependency/
       end
     end
 
@@ -284,6 +302,13 @@ module Pod
         @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
       end
 
+      it "can be store itself at the given path" do
+        path = SpecHelper.temporary_directory + 'Podfile.lock'
+        @lockfile.write_to_disk(path)
+        loaded = Lockfile.from_file(path)
+        loaded.should == @lockfile
+      end
+
       it "generates a hash representation" do
         hash = @lockfile.to_hash
         hash.delete("COCOAPODS")
@@ -387,6 +412,33 @@ module Pod
       it "it includes all the information that it is expected to store" do
         @lockfile.internal_data.should == YAML.load(Sample.yaml)
       end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Private helpers" do
+
+      describe "#generate_pods_data" do
+        it "groups multiple dependencies for the same pod" do
+        specs = [
+          Specification.new do |s|
+            s.name = "BananaLib"
+            s.version = "1.0"
+            s.dependency 'monkey', '< 1.0.9'
+          end,
+          Specification.new do |s|
+            s.name = "BananaLib"
+            s.version = "1.0"
+            s.dependency 'tree', '~> 1.0.1'
+          end
+        ]
+          pods_data = Lockfile.send(:generate_pods_data, specs)
+          pods_data.should == [{
+            "BananaLib (1.0)" => ["monkey (< 1.0.9)", "tree (~> 1.0.1)"]
+          }]
+        end
+      end
+
     end
   end
 end

@@ -63,6 +63,31 @@ module Pod
         podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, "10.8")
       end
 
+      it "allows to specify whether the target is exclusive" do
+        podfile = Podfile.new do
+          target 'Pods', :exclusive => true do
+          end
+        end
+        podfile.target_definitions["Pods"].should.be.exclusive
+      end
+
+      it "is not exclusive by default" do
+        podfile = Podfile.new do
+          target 'Pods' do
+          end
+        end
+        podfile.target_definitions["Pods"].should.not.be.exclusive
+      end
+
+      it "raises if unrecognized keys are passed during the initialization of a target" do
+        should.raise Informative do
+          podfile = Podfile.new do
+            target 'Pods', :unrecognized => true do
+            end
+          end
+        end
+      end
+
       it "allows to specify the user xcode project for a Target definition" do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
         podfile.target_definitions["Pods"].user_project_path.should == 'App.xcodeproj'

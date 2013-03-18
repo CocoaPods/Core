@@ -65,6 +65,16 @@ module Pod
         @spec.to_s.should == "Pod (1.0)"
       end
 
+      it "handles the case where no version is available in the string representation" do
+        spec_1 = Spec.new { |s| s.name = 'Pod' }
+        spec_1.to_s.should == "Pod"
+      end
+
+      it "handles the case where no name is available in the string representation" do
+        spec_1 = Spec.new
+        spec_1.to_s.should == "No-name"
+      end
+
       it "returns the name and the version of a Specification from its #to_s output" do
         name, version = Specification.name_and_version_from_string("libPusher (1.0)")
         name.should == "libPusher"
@@ -377,6 +387,19 @@ module Pod
         spec.name.should == 'BananaLib'
       end
 
+      it "presents an informative if the given file file doesn't exits" do
+        should.raise Informative do
+          Spec.from_file('Missing.podspec')
+        end.message.should.match /No podspec exists/
+      end
+
+      it "presents an informative if it can't handle the specification format" do
+        Pathname.any_instance.stubs(:exist?).returns(true)
+        should.raise Informative do
+          Spec.from_file('Missing.podspec.json')
+        end.message.should.match /Unsupported specification format/
+      end
+
       #--------------------------------------#
 
       before do
@@ -395,6 +418,17 @@ module Pod
 
       it "reports the file from which it was initialized" do
         @spec.defined_in_file.should == @path
+      end
+
+      it "raises if there is an attempt to set the file in which the spec is defined for a subspec" do
+        spec = Spec.new do |s|
+          s.name = "Pod"
+          s.version = "1.0"
+          s.subspec 'Subspec' do |sp| end
+        end
+        should.raise StandardError do
+          spec.subspecs.first.defined_in_file = 'Some-file'
+        end.message.should.match /can be set only for root specs/
       end
     end
 

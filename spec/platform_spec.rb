@@ -113,6 +113,7 @@ describe Platform do
     it "returns the string name of a given symbolic name" do
       Platform.string_name(:ios).should == 'iOS'
       Platform.string_name(:osx).should == 'OS X'
+      Platform.string_name(:win).should == 'win'
     end
   end
 end

@@ -7,7 +7,7 @@ module Pod
       @source = Source.new(fixture('spec-repos/master'))
     end
 
-    #-------------------------------------------------------------------------#
+    #--------------------------------------#
 
     describe "In general" do
 
@@ -24,7 +24,7 @@ module Pod
 
     end
 
-    #-------------------------------------------------------------------------#
+    #--------------------------------------#
 
     describe "Queering the source" do
 
@@ -68,17 +68,59 @@ module Pod
           @source.specification_path('YAMLSpec', Version.new('999'))
         end.message.should.match(/Unable to find the specification YAMLSpec/)
       end
+
+      it "returns all the specifications" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        source.all_specs.map(&:name).uniq.should == ["BananaLib", "JSONKit", "YAMLSpec"]
+      end
+
     end
 
-    #-----------------------------------------------------------------------#
+    #--------------------------------------#
 
-    it "properly configures the sources of a set in search by name" do
-      source = Source.new(fixture('spec-repos/test_repo'))
-      sets = source.search_by_name('monkey', true)
-      sets.count.should == 1
-      set = sets.first
-      set.name.should == 'BananaLib'
-      set.sources.map(&:name).should == %w| test_repo |
+    describe "Searching the source" do
+
+      it "properly configures the sources of a set in search by name" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        sets = source.search_by_name('monkey', true)
+        sets.count.should == 1
+        set = sets.first
+        set.name.should == 'BananaLib'
+        set.sources.map(&:name).should == %w| test_repo |
+      end
+
+      it "handles gracefully specification which can't load in search by name" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        should.not.raise do
+          source.search_by_name('monkey', true)
+        end
+      end
+
+    end
+
+    #--------------------------------------#
+
+    describe "Representations" do
+
+      before do
+        @source = Source.new(fixture('spec-repos/test_repo'))
+      end
+
+      it "returns the hash representation" do
+        @source.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'
+      end
+
+      it "returns the yaml representation" do
+        yaml = @source.to_yaml
+        yaml.should.match /---/
+        yaml.should.match /BananaLib:/
+      end
+
+      it "returns the json representation" do
+        json = @source.to_json
+        json.should.match /"BananaLib":/
+      end
+
     end
 
   end
@@ -130,17 +172,19 @@ module Pod
       end
 
       it "returns nil if a specification can't be found" do
-        dep = Dependency.new('DoesNotExist')
+        dep = Dependency.new('Does-not-exist')
         set = @aggregate.search(dep)
         set.should == nil
       end
 
       it "raises if a subspec can't be found" do
         lambda {
-          dep = Dependency.new('RestKit/DoesNotExist')
+          dep = Dependency.new('RestKit/Does-not-exist')
           set = @aggregate.search(dep)
         }.should.raise StandardError
       end
+
+      #--------------------------------------#
 
       it "searches the sets by name" do
         sets = @aggregate.search_by_name('JSONKit')
@@ -156,6 +200,31 @@ module Pod
         set = sets.first
         set.name.should == 'BananaLib'
         set.sources.map(&:name).should == %w| test_repo |
+      end
+
+      it "performs a full text search" do
+        @aggregate.stubs(:dirs).returns([fixture('spec-repos/test_repo')])
+        sets = @aggregate.search_by_name('Banana Corp', true)
+        sets.count.should == 1
+        sets.first.name.should == 'BananaLib'
+      end
+
+      it "raises an informative if unable to find a Pod with the given name" do
+        @aggregate.stubs(:dirs).returns([fixture('spec-repos/test_repo')])
+        should.raise Informative do
+          @aggregate.search_by_name('Some-funky-name', true)
+        end.message.should.match /Unable to find/
+      end
+
+      #--------------------------------------#
+
+      it "returns the directories where the repos are defined" do
+        @aggregate.dirs.map { |d| d.basename.to_s } .should == ["master", "test_repo"]
+      end
+
+      it "returns an empty list for the directories if the repos dir doesn't exists" do
+        aggregate = Source::Aggregate.new(Pathname.new('missing-dir'))
+        aggregate.dirs.should == []
       end
     end
   end

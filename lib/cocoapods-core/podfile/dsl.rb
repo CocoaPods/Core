@@ -217,7 +217,7 @@ module Pod
       #
       def target(name, options = {})
         if options && !options.keys.all? { |key| [:exclusive].include?(key) }
-          raise StandardError, "Unsupported options `#{options}` for target `#{name}`"
+          raise Informative, "Unsupported options `#{options}` for target `#{name}`"
         end
 
         parent = current_target_definition
@@ -264,10 +264,8 @@ module Pod
       # @return   [void]
       #
       def platform(name, target = nil)
-
         # Support for deprecated options parameter
         target = target[:deployment_target] if target.is_a?(Hash)
-
         current_target_definition.set_platform(name, target)
       end
 

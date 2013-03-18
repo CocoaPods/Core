@@ -165,7 +165,7 @@ module Pod
       case symbolic_name
       when :ios then 'iOS'
       when :osx then 'OS X'
-      else symbolic_name end
+      else symbolic_name.to_s end
     end
   end
 end

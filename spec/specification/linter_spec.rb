@@ -31,6 +31,16 @@ module Pod
         lambda { Specification::Linter.new(path) }.should.not.raise
       end
 
+      it "includes an error indicating that the specification could not be loaded" do
+        podspec = "Pod::Spec.new do |s|; error; end"
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        File.open(path, 'w') {|f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        linter.results.count.should == 1
+        linter.results.first.message.should.match /spec.*could not be loaded/
+      end
+
       before do
         fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
@@ -48,7 +58,6 @@ module Pod
         @linter.spec.source_files = '/Absolute'
         @linter.lint
         @linter.results.count.should == 1
-        @linter.results
         @linter.results.first.platforms.map(&:to_s).sort.should == %w[ios osx]
       end
 
