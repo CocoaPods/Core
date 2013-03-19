@@ -84,8 +84,12 @@ module Pod
     # @return [Requirement] the requirement of this dependency (a set of
     #         one or more version restrictions).
     #
+    # @todo   The specific version is stripped from head information because
+    #         because its string representation would not parse. It would
+    #         be better to add something like Version#display_string.
+    #
     def requirement
-      return Requirement.new(specific_version) if specific_version
+      return Requirement.new(Version.new(specific_version.version)) if specific_version
       super
     end
 

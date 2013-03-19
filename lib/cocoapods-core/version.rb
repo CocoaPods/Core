@@ -68,6 +68,9 @@ module Pod
     # @note   The raw version string is still accessible with the {#version}
     #         method.
     #
+    # @todo   Adding the head information to the string representation creates
+    #         issues (see Dependency#requirement).
+    #
     def to_s
       head? ? "HEAD based on #{super}" : super
     end

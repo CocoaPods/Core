@@ -55,6 +55,18 @@ module Pod
         end
       end
 
+      it "can store a specific version which is used in place of the requirements" do
+        sut = Dependency.new("cocoapods", "> 1.0")
+        sut.specific_version = Version.new('1.23')
+        sut.requirement.as_list.should == ["= 1.23"]
+      end
+
+      it "can handle specific version with head information" do
+        sut = Dependency.new("cocoapods", "> 1.0")
+        sut.specific_version = Version.new('HEAD based on 1.23')
+        sut.requirement.as_list.should == ["= 1.23"]
+      end
+
       #--------------------------------------#
 
       it "preserves the external source on duplication" do

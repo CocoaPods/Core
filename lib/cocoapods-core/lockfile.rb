@@ -129,8 +129,8 @@ module Pod
     # @param  [String] name
     #         the name of the Pod
     #
-    # @note   The generated dependencies are by the Installer to prevent the
-    #         Resolver from upgrading a Pod during an installation.
+    # @note   The generated dependencies used are by the Resolver from
+    #         upgrading a Pod during an installation.
     #
     # @raise  If there is no version stored for the given name.
     #
