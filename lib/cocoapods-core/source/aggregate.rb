@@ -215,7 +215,7 @@ module Pod
         result['version'] = spec.version.to_s
         result['summary'] = spec.summary
         result['description'] = spec.description
-        result['authors'] = spec.authors.keys * ', '
+        result['authors'] = spec.authors.keys.sort * ', '
         result
       rescue
         CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
