@@ -225,7 +225,7 @@ module Pod
       def _validate_license(l)
         type = l[:type]
         warning "Missing license type." if type.nil?
-        warning "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
+        master_repo_error "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
         error   "Sample license type."  if type && type =~ /\(example\)/
       end
 
