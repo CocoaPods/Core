@@ -90,7 +90,7 @@ module Pod
       def perform_textual_analysis
         return unless @file
         text = @file.read
-        error "`config.ios?' and `config.osx?' are deprecated."  if text =~ /config\..?os.?/
+        error "`config.ios?` and `config.osx?` are deprecated."  if text =~ /config\..?os.?/
         error "clean_paths are deprecated (use preserve_paths)." if text =~ /clean_paths/
         warning "Comments must be deleted." if text.scan(/^\s*#/).length > 24
       end
