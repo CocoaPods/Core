@@ -35,6 +35,12 @@ module Pod
         end
       end
 
+      # @return [Bool] Whether the more strict validation of the master repo
+      #         should be used. Specifically The master repo treats certain
+      #         warnings as errors.
+      #
+      attr_accessor :master_repo_mode
+
       # Lints the specification adding a {Result} for any failed check to the
       # {#results} list.
       #
@@ -234,8 +240,8 @@ module Pod
           error "Example source." if git =~ /http:\/\/EXAMPLE/
           error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
           warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
-          warning "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
-          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
+          master_repo_error "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
+          master_repo_error "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
 
           if version == '0.0.1'
             error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
@@ -327,6 +333,22 @@ module Pod
       #
       def warning(message)
         add_result(:warning, message)
+      end
+
+      # Adds an error if the master repo mode is enabled, otherwise logs a
+      # warning.
+      #
+      # @param  [String] message
+      #         The message of the result.
+      #
+      # @return [void]
+      #
+      def master_repo_error(message)
+        if master_repo_mode
+          error(message)
+        else
+          warning(message)
+        end
       end
 
       # Adds a result of the given type with the given message. If there is a

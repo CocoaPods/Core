@@ -80,6 +80,18 @@ module Pod
       it "returns the warnings results of the lint" do
         @linter.warnings.map(&:type).should == [:warning]
       end
+
+      it "can operate in master repo mode" do
+        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
+        @podspec_path = fixture(fixture_path)
+        @linter = Specification::Linter.new(@podspec_path)
+        @spec = @linter.spec
+        @spec.stubs(:source).returns({:git => 'https://github.com/repo', :tag => '1.0'})
+        @linter.master_repo_mode = true
+        @linter.lint
+        error = @linter.results.find { |r| r.type == :error && r.message.match(/end in.*\.git/) }
+        error.should.not.be.nil
+      end
     end
 
     #--------------------------------------#
@@ -151,7 +163,7 @@ module Pod
         @spec.stubs(:summary).returns('sample')
         message_should_include('summary', 'punctuation')
       end
-      
+
       it "checks to make sure there are not too many comments in the file" do
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
@@ -162,7 +174,7 @@ module Pod
         linter.results.count.should == 1
         linter.results.first.message.should.match /Comments must be deleted./
       end
-      
+
       it "should not count #define's as comments" do
         podspec = "#define\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
@@ -257,6 +269,7 @@ module Pod
     #--------------------------------------#
 
     describe 'File patterns & Build settings' do
+
       before do
         fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
@@ -309,6 +322,7 @@ module Pod
         message.should.include('`requires_arc` should be specified')
       end
     end
+
   end
 
   #---------------------------------------------------------------------------#
