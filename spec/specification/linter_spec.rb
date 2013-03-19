@@ -309,9 +309,10 @@ module Pod
         consumer.any_instance.stubs(:resources).returns({})
         consumer.any_instance.stubs(:preserve_paths).returns([])
         consumer.any_instance.stubs(:subspecs).returns([])
+        consumer.any_instance.stubs(:dependencies).returns([])
         @linter.lint
         message = @linter.results.first.message
-        message.should.include('appears to be empty')
+        message.should.include('spec is empty')
       end
 
       it "requires that the require_arc value is specified until the switch to a true default" do
