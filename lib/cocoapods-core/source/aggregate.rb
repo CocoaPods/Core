@@ -48,6 +48,50 @@ module Pod
         end
       end
 
+      # @return [Array<Pathname>] the directories where the sources are stored.
+      #
+      # @note   If the repos dir doesn't exits this will return an empty array.
+      #
+      # @raise  If the repos dir doesn't exits.
+      #
+      def dirs
+        if repos_dir.exist?
+          repos_dir.children.select(&:directory?)
+        else
+          []
+        end
+      end
+
+      # Returns a set configured with the source which contains the highest
+      # version in the aggregate.
+      #
+      # @param  [String] name
+      #         The name of the Pod.
+      #
+      # @return [Set] The most representative set for the Pod with the given
+      #         name.
+      #
+      def represenative_set(name)
+        representative_source = nil
+        highest_version = nil
+        all.each do |source|
+          source_versions = source.versions(name)
+          if source_versions
+            source_version = source_versions.first
+            if highest_version.nil? || (highest_version < source_version)
+              highest_version = source_version
+              representative_source = source
+            end
+          end
+        end
+        Specification::Set.new(name, representative_source)
+      end
+
+      public
+
+      # @!group Search
+      #-----------------------------------------------------------------------#
+
       # @return [Set, nil] a set for a given dependency including all the
       #         {Source} that contain the Pod. If no sources containing the
       #         Pod where found it returns nil.
@@ -87,18 +131,95 @@ module Pod
         result
       end
 
-      # @return [Array<Pathname>] the directories where the sources are stored.
+      public
+
+      # @!group Search Index
+      #-----------------------------------------------------------------------#
+
+      # Generates from scratch the search data for all the sources of the
+      # aggregate. This operation can take a considerable amount of time
+      # (seconds) as it needs to evaluate the most representative podspec
+      # for each Pod.
       #
-      # @note   If the repos dir doesn't exits this will return an empty array.
+      # @return [Hash{String=>Hash}] The search data of every set grouped by
+      #         name.
       #
-      # @raise  If the repos dir doesn't exits.
-      #
-      def dirs
-        if repos_dir.exist?
-          repos_dir.children.select(&:directory?)
-        else
-          []
+      def generate_search_index
+        result = {}
+        all_sets.each do |set|
+          result[set.name] = search_data_from_set(set)
         end
+        result
+      end
+
+      # Updates inline the given search data with the information stored in all
+      # the sources. The update skips the Pods for which the version of the
+      # search data is the same of the highest version known to the aggregate.
+      # This can lead to updates in podspecs being skipped until a new version
+      # is released.
+      #
+      # @note   This procedure is considerably faster as it only needs to
+      #         load the most representative spec of the new or updated Pods.
+      #
+      # @return [Hash{String=>Hash}] The search data of every set grouped by
+      #         name.
+      #
+      def update_search_index(search_data)
+        enumerated_names = []
+        all_sets.each do |set|
+          enumerated_names << set.name
+          set_data = search_data[set.name]
+          has_data = set_data && set_data['version']
+          needs_update = !has_data || Version.new(set_data['version']) < set.required_version
+          if needs_update
+            search_data[set.name] = search_data_from_set(set)
+          end
+        end
+
+        stored_names = search_data.keys
+        delted_names = stored_names - enumerated_names
+        delted_names.each do |name|
+          search_data.delete(name)
+        end
+
+        search_data
+      end
+
+      private
+
+      # @!group Private helpers
+      #-----------------------------------------------------------------------#
+
+      # Returns the search related information from the most representative
+      # specification of the set following keys:
+      #
+      #   - version
+      #   - summary
+      #   - description
+      #   - authors
+      #
+      # @param  [Set] set
+      #         The set for which the information is needed.
+      #
+      # @note   If the specification can't load an empty hash is returned and
+      #         a warning is printed.
+      #
+      # @note   For compatibility with non Ruby clients a strings are used
+      #         instead of symbols for the keys.
+      #
+      # @return [Hash{String=>String}] A hash with the search information.
+      #
+      def search_data_from_set(set)
+        result = {}
+        spec = set.specification
+        result['version'] = spec.version.to_s
+        result['summary'] = spec.summary
+        result['description'] = spec.description
+        result['authors'] = spec.authors.keys * ', '
+        result
+      rescue
+        CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
+        result
       end
 
       #-----------------------------------------------------------------------#

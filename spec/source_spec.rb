@@ -4,7 +4,7 @@ module Pod
   describe Source do
 
     before do
-      @source = Source.new(fixture('spec-repos/master'))
+      @sut = Source.new(fixture('spec-repos/master'))
     end
 
     #-------------------------------------------------------------------------#
@@ -12,7 +12,7 @@ module Pod
     describe "In general" do
 
       it "return its name" do
-        @source.name.should == 'master'
+        @sut.name.should == 'master'
       end
 
       it "can be ordered according to its name" do
@@ -29,24 +29,24 @@ module Pod
     describe "Queering the source" do
 
       it "returns the sets of all the available Pods" do
-        set_names = @source.pod_sets.map(&:name)
+        set_names = @sut.pod_sets.map(&:name)
         set_names.should.include('JSONKit')
         set_names.should.include('Reachability')
       end
 
       it "returns the available versions of a Pod" do
-        @source.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
+        @sut.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
       end
 
       it "returns the specification for the given name and version" do
-        spec = @source.specification('Reachability', Version.new('3.0.0'))
+        spec = @sut.specification('Reachability', Version.new('3.0.0'))
         spec.name.should == 'Reachability'
         spec.version.should.to_s == '3.0.0'
       end
 
       it "returns the path of Ruby specification with a given name and version" do
-        path = @source.specification_path('Reachability', Version.new('3.0.0'))
-        path.should == @source.repo + 'Reachability/3.0.0/Reachability.podspec'
+        path = @sut.specification_path('Reachability', Version.new('3.0.0'))
+        path.should == @sut.repo + 'Reachability/3.0.0/Reachability.podspec'
       end
 
       it "returns the path of YAML specification with a given name and version" do
@@ -65,7 +65,7 @@ module Pod
 
       it "raises if it can't find a specification for the given version and name" do
         should.raise StandardError do
-          @source.specification_path('YAMLSpec', Version.new('999'))
+          @sut.specification_path('YAMLSpec', Version.new('999'))
         end.message.should.match(/Unable to find the specification YAMLSpec/)
       end
 
@@ -103,15 +103,15 @@ module Pod
     describe "Representations" do
 
       before do
-        @source = Source.new(fixture('spec-repos/test_repo'))
+        @sut = Source.new(fixture('spec-repos/test_repo'))
       end
 
       it "returns the hash representation" do
-        @source.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'
+        @sut.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'
       end
 
       it "returns the yaml representation" do
-        yaml = @source.to_yaml
+        yaml = @sut.to_yaml
         yaml.should.match /---/
         yaml.should.match /BananaLib:/
       end
