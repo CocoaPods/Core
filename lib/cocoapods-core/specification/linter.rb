@@ -206,15 +206,15 @@ module Pod
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)
-        warning "The summary should be short use `description` (max 140 characters)." if s.length > 140
-        warning "The summary is not meaningful." if s =~ /A short description of/
+        master_repo_error "The summary should be short use `description` (max 140 characters)." if s.length > 140
+        master_repo_error "The summary is not meaningful." if s =~ /A short description of/
         warning "The summary should end with proper punctuation." if s !~ /(\.|\?|!)$/
       end
 
       # Performs validations related to the `description` attribute.
       #
       def _validate_description(d)
-        warning "The description is not meaningful." if d =~ /An optional longer description of/
+        master_repo_error "The description is not meaningful." if d =~ /An optional longer description of/
         warning "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
         warning "The description is equal to the summary." if d == spec.summary
         warning "The description is shorter than the summary." if d.length < spec.summary.length
@@ -225,8 +225,8 @@ module Pod
       def _validate_license(l)
         type = l[:type]
         warning "Missing license type." if type.nil?
-        warning "Sample license type."  if type && type =~ /\(example\)/
         warning "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
+        error   "Sample license type."  if type && type =~ /\(example\)/
       end
 
       # Performs validations related to the `source` attribute.
@@ -278,7 +278,10 @@ module Pod
           end
           patterns.each do |pattern|
             if pattern.is_a?(Rake::FileList)
-              warning "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
+              # TODO: enable for the 0.17 release
+              unless master_repo_mode
+                warning "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
+              end
             else
               if pattern.start_with?('/')
                 error "File patterns must be relative and cannot start with a slash (#{attrb.name})."
