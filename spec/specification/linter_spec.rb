@@ -151,6 +151,27 @@ module Pod
         @spec.stubs(:summary).returns('sample')
         message_should_include('summary', 'punctuation')
       end
+      
+      it "checks to make sure there are not too many comments in the file" do
+        podspec = "# some comment\n" * 30
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        FileUtils.cp @podspec_path, path
+        File.open(path, 'a') {|f| f.puts(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        linter.results.count.should == 1
+        linter.results.first.message.should.match /Comments must be deleted./
+      end
+      
+      it "should not count #define's as comments" do
+        podspec = "#define\n" * 30
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        FileUtils.cp @podspec_path, path
+        File.open(path, 'a') {|f| f.puts(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        linter.results.count.should == 0
+      end
 
       #------------------#
 
