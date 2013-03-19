@@ -105,21 +105,19 @@ module Pod
       #
       # @return [void]
       #
-      def  check_required_root_attributes
+      def check_required_root_attributes
         attributes = DSL.attributes.values.select(&:root_only?)
         attributes.each do |attr|
-          # if spec.respond_to?(attr.name)
-            value = spec.send(attr.name)
-            next unless attr.required?
-            unless value && (!value.respond_to?(:empty?) || !value.empty?)
-              if attr.name == :license
-                warning("Missing required attribute `#{attr.name}`.")
-              else
-                error("Missing required attribute `#{attr.name}`.")
-              end
+          value = spec.send(attr.name)
+          next unless attr.required?
+          unless value && (!value.respond_to?(:empty?) || !value.empty?)
+            if attr.name == :license
+              warning("Missing required attribute `#{attr.name}`.")
+            else
+              error("Missing required attribute `#{attr.name}`.")
             end
           end
-        # end
+        end
       end
 
       # Runs the validation hook for root only attributes.
@@ -302,11 +300,11 @@ module Pod
       # Check empty subspec attributes
       #
       def check_if_spec_is_empty
-        methods = %w[ source_files resources preserve_paths ]
-        empty_patterns = methods.all? { |m| consumer.send(m).empty? } && consumer.spec.subspecs.empty?
+        methods = %w[ source_files resources preserve_paths dependencies ]
+        empty_patterns = methods.all? { |m| consumer.send(m).empty? }
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
-          warning "The #{consumer.spec} spec appears to be empty (no source files, resources, preserve paths or subspecs)."
+          error "The #{consumer.spec} spec is empty (no source files, resources, preserve paths, dependencies or subspecs)."
         end
       end
 
