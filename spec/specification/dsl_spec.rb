@@ -67,7 +67,7 @@ module Pod
 
     #-----------------------------------------------------------------------------#
 
-    describe "Platform attributes" do
+    describe "Platform" do
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
@@ -90,18 +90,65 @@ module Pod
       end
 
       it "doesnt' allows to specify the deployment target without a platform" do
-        e = lambda { @spec.deployment_target = '6.0' }.should.raise StandardError
+        e = lambda { @spec.deployment_target = '6.0' }.should.raise Informative
         e.message.should.match /declared only per platform/
       end
     end
 
     #-----------------------------------------------------------------------------#
 
-    describe "Regular attributes" do
+    describe "Build settings" do
       before do
         @spec = Spec.new do |s|
           s.name = "Pod"
         end
+      end
+
+      #------------------#
+
+      describe "dependency" do
+
+        it "allows to specify a dependencies" do
+          @spec.dependencies = {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+        end
+
+        it "allows to specify a single dependency as a shortcut" do
+          @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
+          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+        end
+
+        it "allows to specify a single dependency as a shortcut with one version requirement" do
+          @spec.dependency('SVStatusHUD', '~>1.0')
+          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0']}
+        end
+
+        it "allows to specify a single dependency as a shortcut with no version requirements" do
+          @spec.dependency('SVStatusHUD')
+          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => []}
+        end
+
+        it "raises if the specification requires itself" do
+          should.raise Informative do
+            @spec.dependency('Pod')
+          end.message.should.match /can't require itself/
+        end
+
+        it "raises if the specification requires one of its parents" do
+          @spec.subspec 'subspec' do |sp|
+          end
+          subspec = @spec.subspecs.first
+          should.raise Informative do
+            subspec.dependency('Pod')
+          end.message.should.match /can't require one of its parents/
+        end
+
+        it "raises if the requirements are not supported" do
+          should.raise Informative do
+            @spec.dependency('SVProgressHUD', :head)
+          end.message.should.match /Unsupported version requirements/
+        end
+
       end
 
       #------------------#
@@ -218,7 +265,7 @@ module Pod
 
     #-----------------------------------------------------------------------------#
 
-    describe "Dependencies & Subspecs" do
+    describe "Subspecs" do
       before do
         @spec = Spec.new do |s|
         end
@@ -241,25 +288,6 @@ module Pod
         @spec.attributes_hash["default_subspec"].should == 'Preferred-Subspec'
       end
 
-      it "allows to specify a dependencies" do
-        @spec.dependencies = {'SVStatusHUD' => ['~>1.0', '< 1.4']}
-        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
-      end
-
-      it "allows to specify a single dependency as a shortcut" do
-        @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
-        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
-      end
-
-      it "allows to specify a single dependency as a shortcut with one version requirement" do
-        @spec.dependency('SVStatusHUD', '~>1.0')
-        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0']}
-      end
-
-      it "allows to specify a single dependency as a shortcut with no version requirements" do
-        @spec.dependency('SVStatusHUD')
-        @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => []}
-      end
     end
 
     #-----------------------------------------------------------------------------#

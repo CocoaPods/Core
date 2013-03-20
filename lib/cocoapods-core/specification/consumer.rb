@@ -144,13 +144,7 @@ module Pod
       def dependencies
         value = value_for_attribute(:dependencies)
         value.map do |name, requirements|
-          if Array(requirements).all?{ |req| req.is_a?(String) }
-            Dependency.new(name, requirements)
-          else
-            raise Informative, "Unsupported parameters for `#{name}` " \
-              "dependency `#{requirements.to_s}` in #{spec}.\n" \
-              "Specifications don't support external sources"
-          end
+          Dependency.new(name, requirements)
         end
       end
 

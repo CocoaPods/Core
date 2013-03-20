@@ -46,6 +46,13 @@ module Pod
       end.message.should.match /header_mappings.*deprecated/
     end
 
+   it "raises if the copy_header_mapping hook is defined" do
+      should.raise Informative do
+        def @spec.copy_header_mapping
+        end
+      end.message.should.match /copy_header_mapping.*deprecated/
+    end
+
     it "raises for the deprecated `clean_paths` attribute" do
       lambda { @spec.clean_paths = 'value' }.should.raise Informative
     end

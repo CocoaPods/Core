@@ -336,15 +336,6 @@ module Pod
           Dependency.new('AFNetworking'), Dependency.new('MagicalRecord') ]
       end
 
-      it "raises if unsupported parameters are stored in the dependency" do
-        spec = Spec.new(nil, 'Pod')
-        spec.dependency 'AFNetworking', :git=>"example.com"
-
-        consumer = Specification::Consumer.new(spec, :ios)
-        should.raise Informative do
-          consumer.dependencies
-        end.message.should.match /.*Unsupported parameters.*/
-      end
     end
 
     #-------------------------------------------------------------------------#

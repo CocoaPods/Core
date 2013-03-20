@@ -25,13 +25,18 @@ module Pod
             end
 
           elsif method == :header_mappings
-            raise Informative, "[#{to_s}] The use of the `header_mappings` hook has been deprecated."
+            raise Informative, "[#{to_s}] The use of the `header_mappings` hook has been deprecated.\n" \
+              "Use the `header_dir` and the `header_mappings_dir` attributes."
+
+          elsif method == :copy_header_mapping
+            raise Informative, "[#{to_s}] The use of the `copy_header_mapping` hook has been deprecated.\n" \
+              "Use the `header_dir` and the `header_mappings_dir` attributes."
           end
         end
 
         def clean_paths=(value)
           raise Informative, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
-            "cleans unused files by default. Use preserver paths if needed."
+            "cleans unused files by default. Use the `preserve_paths` attribute if needed."
         end
 
         [ :part_of_dependency=, :part_of=, :exclude_header_search_paths= ].each do |method|

@@ -391,7 +391,7 @@ module Pod
       #           The deployment target of the platform.
       #
       def deployment_target=(*args)
-        raise StandardError, "The deployment target can be declared only per platform."
+        raise Informative, "The deployment target can be declared only per platform."
       end
 
       #-----------------------------------------------------------------------#
@@ -435,8 +435,9 @@ module Pod
       #
       def dependency(*args)
         name, *version_requirements = args
-        raise StandardError, "A specification can't require self as a subspec" if name == self.name
-        raise StandardError, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+        raise Informative, "A specification can't require itself as a subspec" if name == self.name
+        raise Informative, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+        raise Informative, "Unsupported version requirements" unless version_requirements.all? { |req| req.is_a?(String) }
         attributes_hash["dependencies"] ||= {}
         attributes_hash["dependencies"][name] = version_requirements
       end
