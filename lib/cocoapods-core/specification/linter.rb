@@ -213,9 +213,9 @@ module Pod
       #
       def _validate_description(d)
         master_repo_error "The description is not meaningful." if d =~ /An optional longer description of/
-        warning "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
-        warning "The description is equal to the summary." if d == spec.summary
-        warning "The description is shorter than the summary." if d.length < spec.summary.length
+        master_repo_error "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
+        master_repo_error "The description is equal to the summary." if d == spec.summary
+        master_repo_error "The description is shorter than the summary." if d.length < spec.summary.length
       end
 
       # Performs validations related to the `license` attribute.
