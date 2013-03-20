@@ -2,5 +2,5 @@ module Pod
 
   # The version of the cocoapods-core.
   #
-  CORE_VERSION = '0.17.0.rc5' unless defined? Pod::CORE_VERSION
+  CORE_VERSION = '0.17.0.rc6' unless defined? Pod::CORE_VERSION
 end
