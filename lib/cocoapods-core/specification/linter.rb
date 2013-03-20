@@ -237,14 +237,14 @@ module Pod
 
           error "Example source." if git =~ /http:\/\/EXAMPLE/
           error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
-          warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
+          master_repo_error 'The version should be included in the Git tag.' if tag && !tag.include?(version)
           master_repo_error "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
           master_repo_error "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
 
           if version == '0.0.1'
             error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
           else
-            warning 'Git sources should specify a tag.' if tag.nil?
+            master_repo_error 'Git sources should specify a tag.' if tag.nil?
           end
         end
       end
