@@ -110,8 +110,8 @@ module Pod
       # @return [void]
       #
       def check_spec_path(name, version, spec)
-        unless spec.name == name && spec.version == version
-          report.add_message(:error, "Incorrect path", name)
+        unless spec.name == name && spec.version.to_s == version.to_s
+          report.add_message(:error, "Incorrect path", name, spec.version)
         end
       end
 
