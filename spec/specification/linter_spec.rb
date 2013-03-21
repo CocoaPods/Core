@@ -294,7 +294,7 @@ module Pod
         message.should.include('source_files')
       end
 
-      it "announces deprecations for the Rake::FileList [TEMPORARY]" do
+      xit "announces deprecations for the Rake::FileList [TEMPORARY]" do
         @spec.source_files = ::Rake::FileList.new('FileList-Classes')
         @linter.lint
         message = @linter.results.first.message
