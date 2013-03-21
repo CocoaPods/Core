@@ -35,12 +35,6 @@ module Pod
         end
       end
 
-      # @return [Bool] Whether the more strict validation of the master repo
-      #         should be used. Specifically The master repo treats certain
-      #         warnings as errors.
-      #
-      attr_accessor :master_repo_mode
-
       # Lints the specification adding a {Result} for any failed check to the
       # {#results} list.
       #
@@ -98,7 +92,7 @@ module Pod
         text = @file.read
         error "`config.ios?` and `config.osx?` are deprecated."  if text =~ /config\..?os.?/
         error "clean_paths are deprecated (use preserve_paths)." if text =~ /clean_paths/
-        master_repo_error "Comments must be deleted." if text.scan(/^\s*#\s+/).length > 24
+        warning "Comments must be deleted." if text.scan(/^\s*#\s+/).length > 24
       end
 
       # Checks that every root only attribute which is required has a value.
@@ -204,18 +198,18 @@ module Pod
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)
-        master_repo_error "The summary should be short use `description` (max 140 characters)." if s.length > 140
-        master_repo_error "The summary is not meaningful." if s =~ /A short description of/
+        warning "The summary should be short use `description` (max 140 characters)." if s.length > 140
+        warning "The summary is not meaningful." if s =~ /A short description of/
         warning "The summary should end with proper punctuation." if s !~ /(\.|\?|!)$/
       end
 
       # Performs validations related to the `description` attribute.
       #
       def _validate_description(d)
-        master_repo_error "The description is not meaningful." if d =~ /An optional longer description of/
-        master_repo_error "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
-        master_repo_error "The description is equal to the summary." if d == spec.summary
-        master_repo_error "The description is shorter than the summary." if d.length < spec.summary.length
+        warning "The description is not meaningful." if d =~ /An optional longer description of/
+        warning "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
+        warning "The description is equal to the summary." if d == spec.summary
+        warning "The description is shorter than the summary." if d.length < spec.summary.length
       end
 
       # Performs validations related to the `license` attribute.
@@ -223,7 +217,7 @@ module Pod
       def _validate_license(l)
         type = l[:type]
         warning "Missing license type." if type.nil?
-        master_repo_error "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
+        warning "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
         error   "Sample license type."  if type && type =~ /\(example\)/
       end
 
@@ -237,14 +231,14 @@ module Pod
 
           error "Example source." if git =~ /http:\/\/EXAMPLE/
           error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
-          master_repo_error 'The version should be included in the Git tag.' if tag && !tag.include?(version)
-          master_repo_error "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
-          master_repo_error "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
+          warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
+          warning "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
+          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
 
           if version == '0.0.1'
             error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
           else
-            master_repo_error 'Git sources should specify a tag.' if tag.nil?
+            warning 'Git sources should specify a tag.' if tag.nil?
           end
         end
       end
@@ -332,22 +326,6 @@ module Pod
       #
       def warning(message)
         add_result(:warning, message)
-      end
-
-      # Adds an error if the master repo mode is enabled, otherwise logs a
-      # warning.
-      #
-      # @param  [String] message
-      #         The message of the result.
-      #
-      # @return [void]
-      #
-      def master_repo_error(message)
-        if master_repo_mode
-          error(message)
-        else
-          warning(message)
-        end
       end
 
       # Adds a result of the given type with the given message. If there is a

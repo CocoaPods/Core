@@ -38,18 +38,6 @@ module Pod
         errors.should.match /Missing required attribute/
       end
 
-      it "doesn't enable the master repo mode on the linters by default" do
-        Specification::Linter.any_instance.expects(:master_repo_mode=).with(nil).at_least_once
-        Specification::Linter.any_instance.expects(:master_repo_mode=).with(true).never
-        @sut.analyze
-      end
-
-      it "enables the master repo on the linters when requested" do
-        Specification::Linter.any_instance.expects(:master_repo_mode=).with(true).at_least_once
-        @sut.master_repo_mode = true
-        @sut.analyze
-      end
-
       it "checks the path of the specifications" do
         @sut.analyze
         errors = @sut.report.pods_by_error.keys.join("\n")

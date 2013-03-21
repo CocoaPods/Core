@@ -81,17 +81,6 @@ module Pod
         @linter.warnings.map(&:type).should == [:warning]
       end
 
-      it "can operate in master repo mode" do
-        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
-        @podspec_path = fixture(fixture_path)
-        @linter = Specification::Linter.new(@podspec_path)
-        @spec = @linter.spec
-        @spec.stubs(:source).returns({:git => 'https://github.com/repo', :tag => '1.0'})
-        @linter.master_repo_mode = true
-        @linter.lint
-        error = @linter.results.find { |r| r.type == :error && r.message.match(/end in.*\.git/) }
-        error.should.not.be.nil
-      end
     end
 
     #--------------------------------------#

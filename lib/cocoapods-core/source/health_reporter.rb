@@ -17,12 +17,6 @@ module Pod
         @linter_results = {}
       end
 
-      # @return [Bool] Whether the more strict validation of the master repo
-      #         should be used. Specifically The master repo treats certain
-      #         warnings as errors.
-      #
-      attr_accessor :master_repo_mode
-
       public
 
       # @!group Configuration
@@ -93,7 +87,6 @@ module Pod
       #
       def lint_spec(name, version, spec_path)
         linter = Specification::Linter.new(spec_path)
-        linter.master_repo_mode = master_repo_mode
         linter.lint
         linter.results.each do |result|
           type = result.type == :error ? :error : :warning
