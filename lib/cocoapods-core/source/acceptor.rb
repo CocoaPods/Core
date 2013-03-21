@@ -56,10 +56,13 @@ module Pod
       # Checks whether the source of the proposed specification is different
       # from the one of the reference specification.
       #
+      # @note   HTTP Sources are ignored as they change per version.
+      #
       # @return [void]
       #
       def check_spec_source_change(spec, errors)
         return unless spec
+        return if spec.source[:http]
         return unless reference_spec(spec)
         keys = Spec::DSL::SOURCE_KEYS.keys
         source = spec.source.values_at(*keys).compact.first
@@ -101,8 +104,8 @@ module Pod
         end
       end
 
-      # Checks that there is a specification available for the dependencies of
-      # the given specification.
+      # Checks that there is a specification available for each of the
+      # dependencies of the given specification.
       #
       # @return [void]
       #

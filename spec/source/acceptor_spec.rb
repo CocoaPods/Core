@@ -46,6 +46,12 @@ module Pod
         errors.should.match /The source of the spec doesn't match/
       end
 
+      it "doesn't check if the source of the specification did change for HTTP sources" do
+        @spec.source = { :http => 'http://banana-lib/lib.zip' }
+        errors = @sut.analyze(@spec).join("\n")
+        errors.should.not.match /The source of the spec doesn't match/
+      end
+
       it "rejects a Git based specification without tag if there is at least one tagged version" do
         @spec.source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA' }
         errors = @sut.analyze(@spec).join("\n")
