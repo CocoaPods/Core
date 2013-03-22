@@ -92,7 +92,10 @@ module Pod
         text = @file.read
         error "`config.ios?` and `config.osx?` are deprecated."  if text =~ /config\..?os.?/
         error "clean_paths are deprecated (use preserve_paths)." if text =~ /clean_paths/
-        warning "Comments must be deleted." if text.scan(/^\s*#\s+/).length > 24
+        all_lines_count = text.lines.count
+        comments_lines_count = text.scan(/^\s*#\s+/).length
+        comments_ratio = comments_lines_count.fdiv(all_lines_count)
+        warning "Comments must be deleted." if comments_lines_count > 20 && comments_ratio > 0.2
       end
 
       # Checks that every root only attribute which is required has a value.

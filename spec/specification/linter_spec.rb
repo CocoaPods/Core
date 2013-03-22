@@ -153,7 +153,7 @@ module Pod
         message_should_include('summary', 'punctuation')
       end
 
-      it "checks to make sure there are not too many comments in the file" do
+      it "checks that there are not too many comments in the file" do
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         FileUtils.cp @podspec_path, path
