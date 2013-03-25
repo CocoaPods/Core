@@ -13,6 +13,7 @@ module Pod
   class Informative < PlainInformative; end
 
   require 'pathname'
+  require 'rake'
   require 'cocoapods-core/vendor'
 
   require 'cocoapods-core/version'
