@@ -13,7 +13,6 @@ module Pod
   class Informative < PlainInformative; end
 
   require 'pathname'
-  require 'rake'
   require 'cocoapods-core/vendor'
 
   require 'cocoapods-core/version'
@@ -28,6 +27,11 @@ module Pod
   require 'cocoapods-core/specification'
   require 'cocoapods-core/standard_error'
   require 'cocoapods-core/yaml_converter'
+
+  # TODO: Temporary support for FileList
+  #
+  require 'rake'
+  FileList = Rake::FileList
 end
 
 
