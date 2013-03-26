@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.files         =  Dir["lib/**/*.rb"] + %w{ README.md LICENSE }
   s.require_paths =  %w{ lib }
 
-  s.add_runtime_dependency 'activesupport', '~> 3.2.6'
+  s.add_runtime_dependency 'activesupport', '~> 3.2.13'
   s.add_runtime_dependency 'faraday',       '~> 0.8.1'
   s.add_runtime_dependency 'octokit',       '~> 1.7'
 
