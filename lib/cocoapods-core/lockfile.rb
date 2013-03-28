@@ -110,7 +110,6 @@ module Pod
     #
     # @note   It includes only the dependencies explicitly required in the
     #         podfile and not those triggered by the Resolver.
-    #
     def dependencies
       unless @dependencies
         data = internal_data['DEPENDENCIES'] || []

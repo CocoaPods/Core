@@ -173,20 +173,20 @@ module Pod
 
       it "returns the dependencies on its subspecs" do
         @spec.subspec_dependencies.sort.should == [
-          Dependency.new('Pod/Subspec', '1.0'),
-          Dependency.new('Pod/SubspecOSX', '1.0') ]
+          Dependency.new('Pod/Subspec'),
+          Dependency.new('Pod/SubspecOSX') ]
       end
 
       it "returns the dependencies on its subspecs for a given platform" do
         @spec.subspec_dependencies(:ios).should == [
-          Dependency.new('Pod/Subspec', '1.0')
+          Dependency.new('Pod/Subspec')
         ]
       end
 
       it "returns a dependency on a default subspec if it is specified" do
         @spec.default_subspec = 'Subspec'
         @spec.subspec_dependencies.should == [
-          Dependency.new('Pod/Subspec', '1.0')
+          Dependency.new('Pod/Subspec')
         ]
       end
 
@@ -208,14 +208,14 @@ module Pod
         @spec.all_dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
-          Dependency.new('Pod/Subspec', '1.0'),
-          Dependency.new('Pod/SubspecOSX', '1.0') ]
+          Dependency.new('Pod/Subspec'),
+          Dependency.new('Pod/SubspecOSX') ]
       end
 
       it "returns all the dependencies for a given platform" do
         @spec.all_dependencies(:ios).sort.should == [
           Dependency.new('AFNetworking'),
-          Dependency.new('Pod/Subspec', '1.0') ]
+          Dependency.new('Pod/Subspec') ]
       end
     end
 
