@@ -425,13 +425,13 @@ module Pod
       # other Pods.
       #
       # @example
-      #   spec.dependency = 'AFNetworking', '~> 1.0'
+      #   spec.dependency 'AFNetworking', '~> 1.0'
       #
       # @example
-      #   spec.dependency = 'RestKit/CoreData', '~> 0.20.0'
+      #   spec.dependency 'RestKit/CoreData', '~> 0.20.0'
       #
       # @example
-      #   spec.ios.dependency = 'MBProgressHUD', '~> 0.5'
+      #   spec.ios.dependency 'MBProgressHUD', '~> 0.5'
       #
       def dependency(*args)
         name, *version_requirements = args
