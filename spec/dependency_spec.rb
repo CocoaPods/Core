@@ -35,8 +35,14 @@ module Pod
         dependency.to_s.should == "cocoapods (from `example.com`)"
       end
 
+      it "raises if version requirements are specified for an external source" do
+        should.raise Pod::Informative do
+          Dependency.new("cocoapods", "1.2.3", :head)
+        end
+      end
+
       it "only supports the `:head` option on the last version of a pod" do
-        should.raise Pod::StandardError do
+        should.raise Pod::Informative do
           Dependency.new("cocoapods", "1.2.3", :head)
         end
       end

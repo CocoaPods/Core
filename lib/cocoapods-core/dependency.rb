@@ -66,11 +66,15 @@ module Pod
     def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
         @external_source = requirements.pop
+        unless requirements.empty?
+          raise Informative, "A dependency with an external source may not specify version requirements (#{name})."
+        end
+
       elsif requirements.last == :head
         @head = true
         requirements.pop
         unless requirements.empty?
-          raise StandardError, "A `:head` dependency may not specify version requirements."
+          raise Informative, "A `:head` dependency may not specify version requirements (#{name})."
         end
       end
 
