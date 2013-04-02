@@ -359,7 +359,7 @@ module Pod
       #
       #   spec.platform = :osx
       #
-      # @param  [Array<Symbol, String>] name_and_deployment_target
+      # @param  [Array<Symbol, String>] args
       #         A tuple where the first value is the name of the platform,
       #         (either `:ios` or `:osx`) and the second is the deployment
       #         target.
@@ -387,7 +387,7 @@ module Pod
       #
       #   spec.osx.deployment_target = "10.8"
       #
-      # @param    [String] deployment_target
+      # @param    [String] args
       #           The deployment target of the platform.
       #
       def deployment_target=(*args)
@@ -914,16 +914,15 @@ module Pod
 
       # This is a convenience method which gets called after all pods have been
       # downloaded but before they have been installed, and the Xcode project
-      # and related files have been generated.  Note that this hook is called
-      # for each Pods library.
+      # and related files have been generated. Note that this hook is called
+      # for each Pods library and only for installations where the Pod is
+      # installed.
       #
       # It receives the
-      # `[Pod::Hooks::PodRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/podrepresentation/)`
-      # instance generated form the
-      # specification and the
-      # `[Pod::Hooks::LibraryRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)`
-      # instance for the
-      # current target.
+      # [`Pod::Hooks::PodRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/podrepresentation/)
+      # and the
+      # [`Pod::Hooks::LibraryRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)
+      # instances.
       #
       # Override this to, for instance, to run any build script.
       #
@@ -939,10 +938,11 @@ module Pod
 
       # This is a convenience method which gets called after all pods have been
       # downloaded, installed, and the Xcode project and related files have
-      # been generated. Note that this hook is called for each Pods library.
+      # been generated. Note that this hook is called for each Pods library and
+      # only for installations where the Pod is installed.
       #
       # It receives a
-      # `[Pod::Hooks::LibraryRepresentation](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)`
+      # [`Pod::Hooks::LibraryRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)
       # instance for the current target.
       #
       # Override this to, for instance, add to the prefix header.
