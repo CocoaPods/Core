@@ -5,8 +5,8 @@ module Pod
 
     before do
       @podfile = Podfile.new
-      @root  = Podfile::TargetDefinition.new("MyApp", @podfile)
-      @child   = Podfile::TargetDefinition.new("MyAppTests", @root)
+      @root = Podfile::TargetDefinition.new("MyApp", @podfile)
+      @child = Podfile::TargetDefinition.new("MyAppTests", @root)
       @root.set_platform(:ios, '6.0')
     end
 
@@ -378,6 +378,18 @@ module Pod
         it "returns the dependencies of podspecs" do
           path = SpecHelper::Fixture.fixture('BananaLib.podspec').to_s
           @root.store_podspec(:path => path)
+          @root.send(:podspec_dependencies).should == [
+            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1')
+          ]
+        end
+
+        it "reject the dependencies on subspecs" do
+          path = SpecHelper::Fixture.fixture('BananaLib.podspec').to_s
+          @root.store_podspec(:path => path)
+          external_dep = Dependency.new('monkey', '< 1.0.9', '~> 1.0.1')
+          internal_dep = Dependency.new('BananaLib/subspec')
+          deps = [external_dep, internal_dep]
+          Specification.any_instance.stubs(:dependencies).returns([deps])
           @root.send(:podspec_dependencies).should == [
             Dependency.new('monkey', '< 1.0.9', '~> 1.0.1')
           ]

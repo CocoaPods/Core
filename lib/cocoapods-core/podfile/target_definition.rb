@@ -509,14 +509,20 @@ module Pod
 
       # @return [Array<Dependency>] The dependencies inherited by the podspecs.
       #
+      # @note   The podspec directive is intended include the dependencies of a
+      #         spec in the project where it is developed. For this reason the
+      #         spec, or any of it subspecs, cannot be included in the
+      #         dependencies. Otherwise it would generate an chicken-and-egg
+      #         problem.
+      #
       def podspec_dependencies
         podspecs = get_hash_value('podspecs') || []
         podspecs.map do |options|
           file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
           all_specs = [spec, *spec.recursive_subspecs]
-          all_specs.map{ |s| s.dependencies(platform) }
-
+          all_deps = all_specs.map{ |s| s.dependencies(platform) }.flatten
+          all_deps.reject { |dep| dep.root_name == spec.root.name }
         end.flatten.uniq
       end
 
