@@ -59,7 +59,7 @@ module Pod
         lambda {
           dep = Dependency.new('RestKit/Does-not-exist')
           set = @sut.search(dep)
-        }.should.raise StandardError
+        }.should.raise Informative
       end
 
       it "returns the directories where the repos are defined" do

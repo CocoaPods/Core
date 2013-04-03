@@ -163,7 +163,7 @@ module Pod
       end
 
       it "raises if it can't find a subspec with the given name" do
-        lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise StandardError
+        lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise Informative
       end
 
       it "returns the default subspec" do
