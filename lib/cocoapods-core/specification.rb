@@ -210,8 +210,8 @@ module Pod
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
         unless subspec
-          raise StandardError, "Unable to find a specification named " \
-            "`#{relative_name}` in `#{self.name}`."
+          raise Informative, "Unable to find a specification named " \
+            "`#{relative_name}` in `#{self.name} (#{self.version})`."
         end
         subspec.subspec_by_name(remainder)
       end
