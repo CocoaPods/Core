@@ -147,6 +147,15 @@ module Pod
 
       #--------------------------------------#
 
+      it "is able to match against proper SemVer pre-release versions" do
+        dep = Dependency.new('bananas', '< 2.0.0')
+        should.not.raise do
+          dep.match?('bananas', '2.0.0-rc1')
+        end
+      end
+
+      #--------------------------------------#
+
       it "merges with another dependency" do
         dep1 = Dependency.new('bananas', '>= 1.8')
         dep2 = Dependency.new('bananas', '1.9')

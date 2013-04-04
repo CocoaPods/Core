@@ -191,6 +191,18 @@ module Pod
       dep
     end
 
+    # @private
+    #
+    #   Copy of superclass which uses our Version class instead, which supports
+    #   proper SemVer prelease versions.
+    #
+    def match?(name, version)
+      return false unless self.name === name
+      return true if requirement.none?
+
+      requirement.satisfied_by? Pod::Version.new(version)
+    end
+
     #-------------------------------------------------------------------------#
 
     # !@group String representation
