@@ -274,8 +274,15 @@ module Pod
         get_hash_value('inhibit_all_warnings') || (parent.inhibit_all_warnings? unless root?)
       end
 
+      # @return [Bool] whether the target definition should inhibit warnings
+      #                for a single pod
+      #
+      def inhibits_warnings_for_pod?(pod_name)
+        get_hash_value("inhibited_warnings_per_pod", []).include? pod_name
+      end
+
       # Sets whether the target definition should inhibit the warnings during
-      # compilation.
+      # compilation for all pods.
       #
       # @param  [Bool] flag
       #         Whether the warnings should be suppressed.
@@ -284,6 +291,17 @@ module Pod
       #
       def inhibit_all_warnings=(flag)
         set_hash_value('inhibit_all_warnings', flag)
+      end
+
+      # Inhibits warnings for a specific pod during compilation.
+      #
+      # @param  [String] pod name
+      #         Whether the warnings should be suppressed.
+      #
+      # @return [void]
+      #
+      def inhibit_warnings_for_pod(pod_name)
+        get_hash_value('inhibited_warnings_per_pod', []) << pod_name
       end
 
       #--------------------------------------#
@@ -359,6 +377,7 @@ module Pod
         else
           pod = name
         end
+        ihnibit_warnings_if_asked(name, *requirements)
         get_hash_value('dependencies', []) << pod
       end
 
@@ -390,9 +409,6 @@ module Pod
         end
       end
 
-      #-----------------------------------------------------------------------#
-
-      public
 
       # @!group Representations
 
@@ -407,6 +423,7 @@ module Pod
         'link_with',
         'link_with_first_target',
         'inhibit_all_warnings',
+        "inhibited_warnings_per_pod",
         'user_project_path',
         'build_configurations',
         'dependencies',
@@ -545,6 +562,22 @@ module Pod
         elsif options[:autodetect]
           file = Pathname.glob(podfile.defined_in_file.dirname + '*.podspec').first
         end
+      end
+
+      # Removes :inhibit_warnings from the requirements list, and adds
+      # the pod's name into internal hash for disabling warnings.
+      #
+      # @param [String] pod name
+      #
+      # @param [Array] requirements
+      #
+      # @return [void]
+      #
+      def ihnibit_warnings_if_asked(name, *requirements)
+        return requirements unless requirements.last.is_a?(Hash)
+
+        should_inhibit = requirements.last.delete(:inhibit_warnings)
+        inhibit_warnings_for_pod(name) if should_inhibit
       end
 
       #-----------------------------------------------------------------------#
