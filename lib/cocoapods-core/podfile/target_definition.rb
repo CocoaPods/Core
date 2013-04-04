@@ -275,7 +275,7 @@ module Pod
       end
 
       # @return [Bool] whether the target definition should inhibit warnings
-      #                for a single pod
+      #         for a single pod
       #
       def inhibits_warnings_for_pod?(pod_name)
         get_hash_value("inhibited_warnings_per_pod", []).include? pod_name
@@ -373,7 +373,7 @@ module Pod
       #
       def store_pod(name, *requirements)
         if requirements && !requirements.empty?
-          inhibit_warnings_if_asked(name, requirements)
+          parse_inhibit_warnings(name, requirements)
           pod = { name => requirements }
         else
           pod = name
@@ -409,6 +409,9 @@ module Pod
         end
       end
 
+      #-----------------------------------------------------------------------#
+
+      public
 
       # @!group Representations
 
@@ -569,13 +572,13 @@ module Pod
       #
       # @param [String] pod name
       #
-      # @param [Array] requirements. If :inhibit_warnings is the only key
-      #                in the hash, the hash should be destroyed because it
-      #                confuses Gem::Dependency. (it thinks it's an ext. source)
+      # @param [Array] requirements
+      #        If :inhibit_warnings is the only key in the hash, the hash 
+      #        should be destroyed because it confuses Gem::Dependency.
       #
       # @return [void]
       #
-      def inhibit_warnings_if_asked(name, requirements)
+      def parse_inhibit_warnings(name, requirements)
         options = requirements.last
         return requirements unless options.is_a?(Hash)
 

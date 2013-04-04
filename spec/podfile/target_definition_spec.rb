@@ -207,7 +207,7 @@ module Pod
 
       it "must delete the hash if it was empty. otherwise breaks Dependency" do
         reqs = [{ :inhibit_warnings => true }]
-        @root.send(:inhibit_warnings_if_asked, 'Objective-Record', reqs)
+        @root.send(:parse_inhibit_warnings, 'Objective-Record', reqs)
         reqs.should.be.empty?
       end
 
