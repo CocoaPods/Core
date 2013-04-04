@@ -373,11 +373,11 @@ module Pod
       #
       def store_pod(name, *requirements)
         if requirements && !requirements.empty?
+          inhibit_warnings_if_asked(name, requirements)
           pod = { name => requirements }
         else
           pod = name
         end
-        ihnibit_warnings_if_asked(name, *requirements)
         get_hash_value('dependencies', []) << pod
       end
 
@@ -569,15 +569,20 @@ module Pod
       #
       # @param [String] pod name
       #
-      # @param [Array] requirements
+      # @param [Array] requirements. If :inhibit_warnings is the only key
+      #                in the hash, the hash should be destroyed because it
+      #                confuses Gem::Dependency. (it thinks it's an ext. source)
       #
       # @return [void]
       #
-      def ihnibit_warnings_if_asked(name, *requirements)
-        return requirements unless requirements.last.is_a?(Hash)
+      def inhibit_warnings_if_asked(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
 
-        should_inhibit = requirements.last.delete(:inhibit_warnings)
+        should_inhibit = options.delete(:inhibit_warnings)
         inhibit_warnings_for_pod(name) if should_inhibit
+
+        requirements.pop if options.empty?
       end
 
       #-----------------------------------------------------------------------#
