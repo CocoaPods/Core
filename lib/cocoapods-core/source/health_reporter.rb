@@ -111,7 +111,7 @@ module Pod
       #
       def check_spec_path(name, version, spec)
         unless spec.name == name && spec.version.to_s == version.to_s
-          report.add_message(:error, "Incorrect path", name, spec.version)
+          report.add_message(:error, "Incorrect path #{ spec.defined_in_file }", name, spec.version)
         end
       end
 
