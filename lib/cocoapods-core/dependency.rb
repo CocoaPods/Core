@@ -179,9 +179,10 @@ module Pod
     #
     def ==(other)
       Dependency === other &&
-      self.name == other.name &&
-      self.requirement == other.requirement &&
-      head? == other.head? && @external_source == other.external_source
+        name == other.name &&
+        requirement == other.requirement &&
+        head? == other.head? &&
+        external_source == other.external_source
     end
     alias :eql? :==
 
