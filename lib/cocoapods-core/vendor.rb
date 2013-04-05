@@ -22,11 +22,10 @@ module Pod
 
       require 'cocoapods-core/vendor/version'
       require 'cocoapods-core/vendor/requirement'
-      require 'cocoapods-core/vendor/dependency'
 
       #-----------------------------------------------------------------------#
       # RubyGems License                                                      #
-      # https://github.com/rubygems/rubygems/blob/master/MIT.txt
+      # https://github.com/rubygems/rubygems/blob/master/MIT.txt              #
       #-----------------------------------------------------------------------#
 
       # Copyright (c) Chad Fowler, Rich Kilmer, Jim Weirich and others.
