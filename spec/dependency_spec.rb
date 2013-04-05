@@ -4,6 +4,38 @@ module Pod
   describe Dependency do
     describe "In general" do
 
+      it "can be initialized with no requirements" do
+        sut = Dependency.new('bananas')
+        sut.name.should == 'bananas'
+      end
+
+      it "can be initialized with multiple requirements" do
+        sut = Dependency.new('bananas', '> 1.0', '< 2.0')
+        sut.requirement.to_s.should == "< 2.0, > 1.0"
+      end
+
+      it "can be initialized with a requirement on a pre-release version" do
+        sut = Dependency.new('bananas', '> 1.0-pre')
+        sut.requirement.should == '> 1.0-pre'
+      end
+
+      it 'can be initialized with an external source' do
+        dep = Dependency.new("cocoapods", :git => "git://github.com/cocoapods/cocoapods")
+        dep.should.be.external
+      end
+
+      it "raises if initialized with an external source and requirements are provided" do
+        should.raise Informative do
+          Dependency.new("cocoapods", "1.0", :git => "git://github.com/cocoapods/cocoapods")
+        end
+      end
+
+      it "can be initialized in head mode" do
+        dependency = Dependency.new("cocoapods", :head)
+        dependency.should.be.head
+        dependency.to_s.should == "cocoapods (HEAD)"
+      end
+
       it "creates a dependency from a string" do
         d =  Dependency.from_string("BananaLib (1.0)")
         d.name.should == "BananaLib"
@@ -17,17 +49,6 @@ module Pod
         d.name.should == "BananaLib"
         d.requirement.should.be.none?
         d.external?.should.be.false
-      end
-
-      it 'identifies itself as an external dependency' do
-        dep = Dependency.new("cocoapods", :git => "git://github.com/cocoapods/cocoapods")
-        dep.should.be.external
-      end
-
-      it "identifies itself as a `head` dependency" do
-        dependency = Dependency.new("cocoapods", :head)
-        dependency.should.be.head
-        dependency.to_s.should == "cocoapods (HEAD)"
       end
 
       it "includes the external sources in the string representation" do
@@ -145,6 +166,12 @@ module Pod
         dep1.should.not == dep3
       end
 
+      it "supports Array#uniq" do
+        d_1 = Dependency.new('bananas')
+        d_2 = Dependency.new('bananas')
+        [d_1, d_2].uniq.should == [d_1]
+      end
+
       #--------------------------------------#
 
       it "is able to match against proper SemVer pre-release versions" do
@@ -177,6 +204,39 @@ module Pod
         result.should.be.external
         result.requirement.as_list.should == ['= 1.9']
       end
+
+      it "raises if there is an attempt to merge with a dependency with a different name" do
+        should.raise ArgumentError do
+          dep1 = Dependency.new('bananas', '>= 1.8')
+          dep2 = Dependency.new('orange', '1.9')
+          dep1.merge(dep2)
+        end
+      end
+
+      #--------------------------------------#
+
+      it "matches a specification with the correct name" do
+        dep = Dependency.new('bananas', '1.0')
+        dep.match?('bananas', '1.0').should.be.true
+        dep.match?('orange', '1.0').should.be.false
+      end
+
+      it "matches any version if no requirements are provided" do
+        dep = Dependency.new('bananas')
+        dep.match?('bananas', '1.0').should.be.true
+      end
+
+      it "matches a specification with the correct version if requirements are provided" do
+        dep = Dependency.new('bananas', '> 0.5')
+        dep.match?('bananas', '1.0').should.be.true
+        dep.match?('bananas', '0.1').should.be.false
+      end
+
+      it "matching supports the comparison with pre-release version" do
+        dep = Dependency.new('bananas', '> 0.5')
+        dep.match?('bananas', '1.0-rc1').should.be.true
+      end
+
     end
 
     #-------------------------------------------------------------------------#

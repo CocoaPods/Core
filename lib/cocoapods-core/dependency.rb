@@ -27,7 +27,7 @@ module Pod
     #   @param    [String] name
     #             the name of the Pod.
     #
-    #   @param    [Array] requirements
+    #   @param    [Array, Version, String, Requirement] requirements
     #             an array specifying the version requirements of the
     #             dependency.
     #
@@ -78,7 +78,11 @@ module Pod
         end
       end
 
-      super(name, *requirements)
+      if requirements.length == 1 && requirements.first.is_a?(Requirement)
+        requirements = requirements.first
+      end
+      @name = name
+      @requirement = Requirement.create(requirements)
     end
 
     # @return [Version] whether the dependency points to a specific version.
@@ -94,7 +98,7 @@ module Pod
     #
     def requirement
       return Requirement.new(Version.new(specific_version.version)) if specific_version
-      super
+      @requirement
     end
 
     # @return [Bool] whether the dependency points to a subspec.
@@ -165,9 +169,26 @@ module Pod
     #         external source.
     #
     def ==(other)
-      super && head? == other.head? && @external_source == other.external_source
+      Dependency === other &&
+      self.name == other.name &&
+      self.requirement == other.requirement &&
+      head? == other.head? && @external_source == other.external_source
     end
     alias :eql? :==
+
+    #  @return [Fixnum] The hash value based on the name and on the
+    #  requirements.
+    #
+    def hash
+      name.hash ^ requirement.hash
+    end
+
+    # @return [Fixnum] How the dependency should be sorted respect to another
+    #         one according to its name.
+    #
+    def <=> other
+      self.name <=> other.name
+    end
 
     # Merges the version requirements of the dependency with another one.
     #
@@ -181,7 +202,21 @@ module Pod
     #         includes also the version requirements of the given one.
     #
     def merge(other)
-      dep = super
+      unless name == other.name then
+        raise ArgumentError, "#{self} and #{other} have different names"
+      end
+      default   = Requirement.default
+      self_req  = self.requirement
+      other_req = other.requirement
+
+      if other_req == default
+        dep = self.class.new(name, self_req)
+      elsif self_req == default
+        dep = self.class.new(name, other_req)
+      else
+        dep = self.class.new(name, self_req.as_list.concat(other_req.as_list))
+      end
+
       dep.head = head? || other.head?
       if external_source || other.external_source
         self_external_source  = external_source || {}
@@ -191,16 +226,21 @@ module Pod
       dep
     end
 
-    # @private
+    # Checks whether the dependency would be satisfied by the specification
+    # with the given name and version.
     #
-    #   Copy of superclass which uses our Version class instead, which supports
-    #   proper SemVer prelease versions.
+    # @param  [String]
+    #         The proposed name.
+    #
+    # @param  [String, Version] version
+    #         The proposed version.
+    #
+    # @return [Bool] Whether the dependency is satisfied.
     #
     def match?(name, version)
       return false unless self.name === name
       return true if requirement.none?
-
-      requirement.satisfied_by? Pod::Version.new(version)
+      requirement.satisfied_by?(Version.new(version))
     end
 
     #-------------------------------------------------------------------------#
@@ -232,8 +272,8 @@ module Pod
         version << external_source_description(external_source)
       elsif head?
         version << 'HEAD'
-      elsif @version_requirements != Requirement.default
-        version << @version_requirements.to_s
+      elsif requirement != Requirement.default
+        version << requirement.to_s
       end
       result = @name.dup
       result << " (#{version})" unless version.empty?
