@@ -267,17 +267,13 @@ module Pod
 
       #--------------------------------------#
 
-      # @return [Bool] whether the target definition should silence all the
-      #         warnings with a compiler flag.
-      #
-      def inhibit_all_warnings?
-        inhibit_warnings_hash['all'] || (parent.inhibit_all_warnings? unless root?)
-      end
-
       # @return [Bool] whether the target definition should inhibit warnings
-      #         for a single pod
+      #         for a single pod. If inhibit_all_warnings is true, it will
+      #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
+        return true if inhibit_warnings_hash['all'] || (parent.inhibits_warnings_for_pod?(name) unless root?)
+
         inhibit_warnings_hash['for_pods'] ||= []
         inhibit_warnings_hash['for_pods'].include? pod_name
       end

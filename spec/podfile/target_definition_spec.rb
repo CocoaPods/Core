@@ -192,7 +192,8 @@ module Pod
       #--------------------------------------#
 
       it "doesn't inhibit all warnings by default" do
-        @root.should.not.inhibit_all_warnings?
+        @root.store_pod("ObjectiveSugar")
+        @root.should.not.inhibits_warnings_for_pod?("ObjectiveSugar")
       end
 
       it "doesn't inhibit warnings per pod by default" do
@@ -213,12 +214,13 @@ module Pod
 
       it "returns if it should inhibit all warnings" do
         @root.inhibit_all_warnings = true
-        @root.should.inhibit_all_warnings?
+        @root.should.inhibits_warnings_for_pod?('ObjectiveSugar')
       end
 
       it "inherits the option to inhibit all warnings from the parent" do
         @root.inhibit_all_warnings = true
-        @child.should.inhibit_all_warnings?
+        @child.store_pod('ASIHTTPRequest')
+        @child.should.inhibits_warnings_for_pod?('ASIHTTPRequest')
       end
 
       #--------------------------------------#
