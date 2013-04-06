@@ -88,6 +88,26 @@ module Pod
       #
       # Dependencies can be obtained also from external sources.
       #
+      #
+      # ### Using the files from a folder local to the machine.
+      #
+      #  If you wold like to use develop a Pod in tandem with its client
+      #  project you can use the `local` option.
+      #
+      #     pod 'AFNetworking', :local => '~/Documents/AFNetworking'
+      #
+      #  Using this option CocoaPods will assume the given folder to be the
+      #  root of the Pod and will link the files directly from there in the
+      #  Pods project. This means that your edits will persist to CocoaPods
+      #  installations.
+      #
+      #  The referenced folder can be a checkout of your your favorite SCM or
+      #  even a git submodule of the current repo.
+      #
+      #  Note that the `podspec` of the Pod file is expected to be in the
+      #  folder.
+      #
+      #
       # ### From a podspec in the root of a library repo.
       #
       # Sometimes you may want to use the bleeding edge version of a Pod. Or a
@@ -103,15 +123,8 @@ module Pod
       #
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
       #
-      #
-      # Or specify a local folder in the machine:
-      #
-      #     pod 'AFNetworking', :local => '~/Documents/AFNetworking'
-      #
-      #
       # It is important to note, though, that this means that the version will
       # have to satisfy any other dependencies on the Pod by other Pods.
-      #
       #
       # The `podspec` file is expected to be in the root of the repo, if this
       # library does not have a `podspec` file in its repo yet, you will have
@@ -124,6 +137,7 @@ module Pod
       # repo. Consider, for instance, a podspec available via HTTP:
       #
       #     pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
+      #
       #
       # @note       This method allow a nil name and the raises to be more
       #             informative.
