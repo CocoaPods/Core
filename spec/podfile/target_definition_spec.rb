@@ -337,8 +337,8 @@ module Pod
       #--------------------------------------#
 
       it "sets and retrieves a value in the internal hash" do
-        @root.send(:set_hash_value, 'inhibit_all_warnings', true)
-        @root.send(:get_hash_value, 'inhibit_all_warnings').should.be.true
+        @root.send(:set_hash_value, 'name', 'Fabio')
+        @root.send(:get_hash_value, 'name').should.equal 'Fabio'
       end
 
       it "raises if there is an attempt to access or set an unknown key in the internal hash" do

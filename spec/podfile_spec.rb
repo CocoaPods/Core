@@ -178,7 +178,7 @@ module Pod
       it "returns the yaml representation" do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest'
-          pod 'JSONKit', '> 1.0'
+          pod 'JSONKit', '> 1.0', :inhibit_warnings => true
           generate_bridge_support!
           set_arc_compatibility_flag!
         end
@@ -191,10 +191,50 @@ module Pod
             - ASIHTTPRequest
             - JSONKit:
               - '> 1.0'
+            inhibit_warnings:
+              all: false
+              for_pods:
+                - 'JSONKit'
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF
         YAML::load(podfile.to_yaml).should == YAML::load(expected)
+      end
+
+      it "includes inhibit warnings per pod" do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest', :inhibit_warnings => true
+          pod 'ObjectiveSugar'
+        end
+        podfile.to_hash.should == {
+          "target_definitions" => [
+            "name" => "Pods",
+            "link_with_first_target" => true,
+            "inhibit_warnings" => {
+              "all" => false,
+              "for_pods" => [ "ASIHTTPRequest" ]
+            },
+            "dependencies" => ["ASIHTTPRequest", "ObjectiveSugar"]
+          ]
+        }
+      end
+
+      it "includes inhibit all warnings" do
+        podfile = Podfile.new do
+          pod 'ObjectiveSugar'
+          inhibit_all_warnings!
+        end
+        podfile.to_hash.should == {
+          "target_definitions" => [
+            "name" => "Pods",
+            "link_with_first_target" => true,
+            "dependencies" => ["ObjectiveSugar"],
+            "inhibit_warnings" => {
+              "all" => true,
+              "for_pods" => []
+            }
+          ]
+        }
       end
 
     end

@@ -271,14 +271,14 @@ module Pod
       #         warnings with a compiler flag.
       #
       def inhibit_all_warnings?
-        get_hash_value('inhibit_all_warnings') || (parent.inhibit_all_warnings? unless root?)
+        inhibit_warnings_hash['all'] || (parent.inhibit_all_warnings? unless root?)
       end
 
       # @return [Bool] whether the target definition should inhibit warnings
       #         for a single pod
       #
       def inhibits_warnings_for_pod?(pod_name)
-        get_hash_value("inhibited_warnings_per_pod", []).include? pod_name
+        inhibit_warnings_hash['for_pods'].include? pod_name
       end
 
       # Sets whether the target definition should inhibit the warnings during
@@ -290,7 +290,7 @@ module Pod
       # @return [void]
       #
       def inhibit_all_warnings=(flag)
-        set_hash_value('inhibit_all_warnings', flag)
+        inhibit_warnings_hash['all'] = flag
       end
 
       # Inhibits warnings for a specific pod during compilation.
@@ -301,7 +301,7 @@ module Pod
       # @return [void]
       #
       def inhibit_warnings_for_pod(pod_name)
-        get_hash_value('inhibited_warnings_per_pod', []) << pod_name
+        inhibit_warnings_hash['for_pods'] << pod_name
       end
 
       #--------------------------------------#
@@ -372,12 +372,14 @@ module Pod
       # @return [void]
       #
       def store_pod(name, *requirements)
+        parse_inhibit_warnings(name, requirements)
+
         if requirements && !requirements.empty?
-          parse_inhibit_warnings(name, requirements)
           pod = { name => requirements }
         else
           pod = name
         end
+
         get_hash_value('dependencies', []) << pod
       end
 
@@ -425,8 +427,7 @@ module Pod
         'exclusive',
         'link_with',
         'link_with_first_target',
-        'inhibit_all_warnings',
-        "inhibited_warnings_per_pod",
+        'inhibit_warnings',
         'user_project_path',
         'build_configurations',
         'dependencies',
@@ -510,6 +511,16 @@ module Pod
         raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
         internal_hash[key] ||= base_value
       end
+
+      # Returns the inhibit_warnings hash prepopulated with default values
+      #
+      # @return [Hash<String, Array>] Hash with :all key for inhibiting all warnings,
+      #         and :for_pods key for inhibiting warnings per pod
+      #
+      def inhibit_warnings_hash
+        get_hash_value('inhibit_warnings', { 'all' => false, 'for_pods' => [] })
+      end
+
 
       # @return [Array<Dependency>] The dependencies specified by the user for
       #         this target definition.
