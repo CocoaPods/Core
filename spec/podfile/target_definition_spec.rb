@@ -195,6 +195,22 @@ module Pod
         @root.should.not.inhibit_all_warnings?
       end
 
+      it "doesn't inhibit warnings per pod by default" do
+        @root.store_pod("ObjectiveSugar")
+        @root.should.not.inhibits_warnings_for_pod?("ObjectiveSugar")
+      end
+
+      it "inhibits warnings per pod if passed to store_pod" do
+        @root.store_pod("Objective-Record", :head, :inhibit_warnings => true)
+        @root.should.inhibits_warnings_for_pod?("Objective-Record")
+      end
+
+      it "must delete the hash if it was empty. otherwise breaks Dependency" do
+        reqs = [{ :inhibit_warnings => true }]
+        @root.send(:parse_inhibit_warnings, 'Objective-Record', reqs)
+        reqs.should.be.empty?
+      end
+
       it "returns if it should inhibit all warnings" do
         @root.inhibit_all_warnings = true
         @root.should.inhibit_all_warnings?
