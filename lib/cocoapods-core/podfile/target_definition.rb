@@ -278,6 +278,7 @@ module Pod
       #         for a single pod
       #
       def inhibits_warnings_for_pod?(pod_name)
+        inhibit_warnings_hash['for_pods'] ||= []
         inhibit_warnings_hash['for_pods'].include? pod_name
       end
 
@@ -301,6 +302,7 @@ module Pod
       # @return [void]
       #
       def inhibit_warnings_for_pod(pod_name)
+        inhibit_warnings_hash['for_pods'] ||= []
         inhibit_warnings_hash['for_pods'] << pod_name
       end
 
@@ -518,7 +520,7 @@ module Pod
       #         and :for_pods key for inhibiting warnings per pod
       #
       def inhibit_warnings_hash
-        get_hash_value('inhibit_warnings', { 'all' => false, 'for_pods' => [] })
+        get_hash_value('inhibit_warnings', {})
       end
 
 

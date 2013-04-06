@@ -192,7 +192,6 @@ module Pod
             - JSONKit:
               - '> 1.0'
             inhibit_warnings:
-              all: false
               for_pods:
                 - 'JSONKit'
           generate_bridge_support: true
@@ -211,7 +210,6 @@ module Pod
             "name" => "Pods",
             "link_with_first_target" => true,
             "inhibit_warnings" => {
-              "all" => false,
               "for_pods" => [ "ASIHTTPRequest" ]
             },
             "dependencies" => ["ASIHTTPRequest", "ObjectiveSugar"]
@@ -230,8 +228,7 @@ module Pod
             "link_with_first_target" => true,
             "dependencies" => ["ObjectiveSugar"],
             "inhibit_warnings" => {
-              "all" => true,
-              "for_pods" => []
+              "all" => true
             }
           ]
         }
