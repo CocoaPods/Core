@@ -29,7 +29,7 @@ module Pod
     # @return [String] the name of the source.
     #
     def name
-      @repo.basename.to_s
+      repo.basename.to_s
     end
 
     alias_method :to_s, :name
@@ -53,7 +53,7 @@ module Pod
     # @return [Array<String>] the list of the name of all the Pods.
     #
     def pods
-      @repo.children.map do |child|
+      specs_dir.children.map do |child|
         child.basename.to_s if child.directory? && child.basename.to_s != '.git'
       end.compact
     end
@@ -71,7 +71,7 @@ module Pod
     #         the name of the Pod.
     #
     def versions(name)
-      pod_dir = repo + name
+      pod_dir = specs_dir + name
       return unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
@@ -98,7 +98,7 @@ module Pod
     # @return [Pathname] The path of the specification.
     #
     def specification_path(name, version)
-      path = repo + name + version.to_s
+      path = specs_dir + name + version.to_s
       specification_path = path + "#{name}.podspec.yaml"
       unless specification_path.exist?
         specification_path = path + "#{name}.podspec"
@@ -192,6 +192,31 @@ module Pod
     def to_yaml
       require 'yaml'
       to_hash.to_yaml
+    end
+
+    private
+
+    #-------------------------------------------------------------------------#
+
+    # @group Private Helpers
+
+    # @return [Pathname] The directory where the specs are stored.
+    #
+    # @note   In previous versions of CocoaPods they used to be stored in
+    #         the root of the repo. This lead to issues, especially with
+    #         the GitHub interface and now the are stored in a dedicated
+    #         folder.
+    #
+    def specs_dir
+      unless @specs_dir
+        specs_sub_dir = repo + 'Specs'
+        if repo.children.include?(specs_sub_dir)
+          @specs_dir = repo + 'Specs'
+        else
+          @specs_dir = repo
+        end
+      end
+      @specs_dir
     end
 
     #-------------------------------------------------------------------------#

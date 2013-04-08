@@ -127,7 +127,7 @@ module Pod
         spec = @set.specification
         spec.name.should == 'JSONKit'
         spec.version.to_s.should == '999.999.999'
-        spec.defined_in_file.should == fixture('spec-repos/test_repo/JSONKit/999.999.999/JSONKit.podspec')
+        spec.defined_in_file.should == fixture('spec-repos/test_repo/Specs/JSONKit/999.999.999/JSONKit.podspec')
       end
 
       it "prefers sources by alphabetical order" do

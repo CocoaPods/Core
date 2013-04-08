@@ -4,7 +4,7 @@ module Pod
   describe Specification::Linter do
     describe 'In general' do
       before do
-        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
+        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         @podspec_path = fixture(fixture_path)
       end
 
@@ -42,7 +42,7 @@ module Pod
       end
 
       before do
-        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
+        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
       end
@@ -87,7 +87,7 @@ module Pod
 
     describe 'Root spec' do
       before do
-        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
+        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         @podspec_path = fixture(fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
         @spec = @linter.spec
@@ -260,7 +260,7 @@ module Pod
     describe 'File patterns & Build settings' do
 
       before do
-        fixture_path = 'spec-repos/test_repo/BananaLib/1.0/BananaLib.podspec'
+        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
         @linter = Specification::Linter.new(podspec_path)
         @spec = @linter.spec
