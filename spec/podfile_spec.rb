@@ -397,10 +397,10 @@ module Pod
         @podfile.target_definitions[:nested_osx_target].should.not.be.exclusive
       end
 
-      it "specifies that the inhibit all warnings flag should be added to the target's build settings" do
-        @podfile.target_definitions["Pods"].should.not.inhibit_all_warnings
-        @podfile.target_definitions[:test].should.inhibit_all_warnings
-        @podfile.target_definitions[:subtarget].should.inhibit_all_warnings
+      it "inhibits warnings for any asked pod if inhibit_all_warnings! is called" do
+        @podfile.target_definitions["Pods"].inhibits_warnings_for_pod?('SSZipArchive').should.not.be.true
+        @podfile.target_definitions[:test].inhibits_warnings_for_pod?('JSONKit').should.be.true
+        @podfile.target_definitions[:subtarget].inhibits_warnings_for_pod?('Reachability').should.be.true
       end
 
       it "returns the Xcode project that contains the target to link with" do
