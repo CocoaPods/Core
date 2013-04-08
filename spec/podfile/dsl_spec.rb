@@ -108,8 +108,8 @@ module Pod
       end
 
       it "allows to inhibit all the warnings of a Target definition" do
-        podfile = Podfile.new { inhibit_all_warnings! }
-        podfile.target_definitions["Pods"].inhibit_all_warnings?.should.be.true
+        podfile = Podfile.new { pod 'ObjectiveRecord'; inhibit_all_warnings! }
+        podfile.target_definitions["Pods"].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
       end
     end
 
