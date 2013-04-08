@@ -365,6 +365,11 @@ module Pod
       #
       # This attribute is inherited by child target definitions.
       #
+      # If you would like to inhibit warnings per Pod the it is possible to do
+      # so with the following syntax:
+      #
+      #     pod 'SSZipArchive', :inhibit_warnings => true
+      #
       def inhibit_all_warnings!
         current_target_definition.inhibit_all_warnings = true
       end
