@@ -39,8 +39,8 @@ module Pod
 
     def self.specs
       repo_path      = 'spec-repos/test_repo/'
-      bananalib_path = repo_path + 'BananaLib/1.0/BananaLib.podspec'
-      jsonkit_path   = repo_path + 'JSONKit/1.4/JSONKit.podspec'
+      bananalib_path = repo_path + 'Specs/BananaLib/1.0/BananaLib.podspec'
+      jsonkit_path   = repo_path + 'Specs/JSONKit/1.4/JSONKit.podspec'
 
       specs = [
         Specification.from_file(fixture(bananalib_path)),

@@ -52,15 +52,15 @@ module Pod
       it "returns the path of YAML specification with a given name and version" do
         source = Source.new(fixture('spec-repos/test_repo'))
         path = source.specification_path('YAMLSpec', Version.new('1.0'))
-        path.should == source.repo + 'YAMLSpec/1.0/YAMLSpec.podspec.yaml'
+        path.should == source.repo + 'Specs/YAMLSpec/1.0/YAMLSpec.podspec.yaml'
       end
 
       it "favors the YAML version of a specification if both are available" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        ruby_path = source.repo + 'YAMLSpec/0.9/YAMLSpec.podspec.yaml'
+        ruby_path = source.repo + 'Specs/YAMLSpec/0.9/YAMLSpec.podspec.yaml'
         path = source.specification_path('YAMLSpec', Version.new('0.9'))
         ruby_path.should.exist
-        path.should == source.repo + 'YAMLSpec/0.9/YAMLSpec.podspec.yaml'
+        path.should == source.repo + 'Specs/YAMLSpec/0.9/YAMLSpec.podspec.yaml'
       end
 
       it "raises if it can't find a specification for the given version and name" do
@@ -115,6 +115,26 @@ module Pod
         yaml.should.match /---/
         yaml.should.match /BananaLib:/
       end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Private Helpers" do
+
+      describe "#specs_dir" do
+        it "uses the `Specs` dir if it is present" do
+          repo = fixture('spec-repos/test_repo')
+          sut = Source.new(repo)
+          sut.send(:specs_dir).should == repo + 'Specs'
+        end
+
+        it "uses the root of the repo as the specs dir if the `Specs` folder is not present" do
+          repo = fixture('spec-repos/master')
+          sut = Source.new(repo)
+          sut.send(:specs_dir).should == repo
+        end
+      end
+
     end
 
     #-------------------------------------------------------------------------#
