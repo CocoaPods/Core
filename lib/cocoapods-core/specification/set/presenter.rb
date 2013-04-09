@@ -9,17 +9,22 @@ module Pod
       #
       class Presenter
 
-        # @return   [Set] the set that should be presented.
+        # @return [Set] the set that should be presented.
         #
-        attr_accessor :set
+        attr_reader :set
 
-        # @param    [Set] set @see #set.
+        # @return [Statistics] The statistics provider.
         #
-        def initialize(set)
+        attr_reader :statistics_provider
+
+        # @param  [Set] set @see #set.
+        #
+        def initialize(set, statistics_provider = nil)
           @set = set
+          @statistics_provider = statistics_provider || Statistics.instance
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         # @!group Set Information
 
@@ -68,7 +73,7 @@ module Pod
           @set.sources.map(&:name).sort
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         # @!group Specification Information
 
@@ -155,7 +160,7 @@ module Pod
           (spec.recursive_subspecs.any? && spec.recursive_subspecs) || nil
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         # @!group Statistics
 
@@ -163,28 +168,28 @@ module Pod
         #         Pod.
         #
         def creation_date
-          Statistics.instance.creation_date(@set)
+          statistics_provider.creation_date(@set)
         end
 
         # @return [Integer] the GitHub likes of the repo of the Pod.
         #
         def github_watchers
-          Statistics.instance.github_watchers(@set)
+          statistics_provider.github_watchers(@set)
         end
 
         # @return [Integer] the GitHub forks of the repo of the Pod.
         #
         def github_forks
-          Statistics.instance.github_forks(@set)
+          statistics_provider.github_forks(@set)
         end
 
         # @return [String] the relative time of the last push of the repo the Pod.
         #
         def github_last_activity
-          distance_from_now_in_words(Statistics.instance.github_pushed_at(@set))
+          distance_from_now_in_words(statistics_provider.github_pushed_at(@set))
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         private
 
@@ -222,6 +227,9 @@ module Pod
             "more than a year ago"
           end
         end
+
+        #---------------------------------------------------------------------#
+
       end
     end
   end

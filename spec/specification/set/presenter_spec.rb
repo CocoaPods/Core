@@ -14,6 +14,10 @@ module Pod
         @presenter.set.name.should == 'JSONKit'
       end
 
+      it "initializes the default statistics provider is one is not given" do
+        @presenter.statistics_provider.class.should == Spec::Set::Statistics
+      end
+
       it "returns the name" do
         @presenter.name.should == 'JSONKit'
       end
