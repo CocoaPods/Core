@@ -97,6 +97,43 @@ module Pod
     def self.correct? version
       version.to_s =~ ANCHORED_VERSION_PATTERN
     end
+
+    #-------------------------------------------------------------------------#
+
+    # @!group Semantic Versioning
+
+    SEMANTIC_VERSION_PATTERN = '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z\-\.]+)?'
+    ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMANTIC_VERSION_PATTERN})*\s*\z/
+
+    # @return [Bool] Whether the version conforms to the Semantic Versioning
+    #         specification (2.0.0-rc.1).
+    #
+    # @note   It doesn't support build identifiers.
+    #
+    def semantic?
+      version.to_s =~ ANCHORED_SEMANTIC_VERSION_PATTERN
+    end
+
+    # @return [Fixnum] The semver major identifier.
+    #
+    def major
+      segments[0]
+    end
+
+    # @return [Fixnum] The semver minor identifier.
+    #
+    def minor
+      segments[1]
+    end
+
+    # @return [Fixnum] The semver patch identifier.
+    #
+    def patch
+      segments[2]
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
 

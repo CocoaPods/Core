@@ -62,5 +62,49 @@ module Pod
         version.should.be.prerelease
       end
     end
+
+    #-------------------------------------------------------------------------#
+
+    describe "Semantic Versioning" do
+
+      it "reports a version as semantic" do
+        Version.new("1.9.0").should.be.semantic
+        Version.new("1.10.0").should.be.semantic
+      end
+
+      it "reports a pre-release version as semantic" do
+        Version.new("1.0.0-alpha").should.be.semantic
+        Version.new("1.0.0-alpha.1").should.be.semantic
+        Version.new("1.0.0-0.3.7").should.be.semantic
+        Version.new("1.0.0-x.7.z.92").should.be.semantic
+      end
+
+      it "reports version with two segments version a non semantic" do
+        Version.new("1.0").should.not.be.semantic
+      end
+
+      it "reports version with more than 3 segments not separated by a dash as non semantic" do
+        Version.new("1.0.2.3").should.not.be.semantic
+      end
+
+      it "returns the major identifier" do
+        Version.new("1.9.0").major.should == 1
+        Version.new("1.0.0-alpha").major.should == 1
+      end
+
+      it "returns the minor identifier" do
+        Version.new("1.9.0").minor.should == 9
+        Version.new("1.0.0-alpha").minor.should == 0
+      end
+
+      it "returns the patch identifier" do
+        Version.new("1.9.0").patch.should == 0
+        Version.new("1.0.1-alpha").patch.should == 1
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end
