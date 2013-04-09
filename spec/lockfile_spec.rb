@@ -152,6 +152,10 @@ module Pod
           @lockfile.dependency_to_lock_pod_named('Missing')
         end.message.should.match /without an known dependency/
       end
+
+      it "returns the version of CocoaPods which generated the lockfile" do
+        @lockfile.cocoapods_version.should == Version.new(CORE_VERSION)
+      end
     end
 
     #-------------------------------------------------------------------------#

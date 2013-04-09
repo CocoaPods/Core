@@ -148,6 +148,12 @@ module Pod
       locked_dependency
     end
 
+    # @return [Version] The version of CocoaPods which generated this lockfile.
+    #
+    def cocoapods_version
+      Version.new(internal_data['COCOAPODS'])
+    end
+
     #--------------------------------------#
 
     # !@group Accessing the internal data.
@@ -193,7 +199,6 @@ module Pod
     def checksum_data
       internal_data['SPEC CHECKSUMS'] || {}
     end
-
 
     #-------------------------------------------------------------------------#
 
