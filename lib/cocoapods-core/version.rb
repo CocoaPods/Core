@@ -102,11 +102,13 @@ module Pod
 
     # @!group Semantic Versioning
 
-    SEMANTIC_VERSION_PATTERN = '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z\-\.]+)?'
+    SEMANTIC_VERSION_PATTERN = '[0-9]+(\.[0-9]+(\.[0-9]+(-[0-9A-Za-z\-\.]+)?)?)?'
     ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMANTIC_VERSION_PATTERN})*\s*\z/
 
     # @return [Bool] Whether the version conforms to the Semantic Versioning
     #         specification (2.0.0-rc.1).
+    #
+    # @note   This comparison is lenient.
     #
     # @note   It doesn't support build identifiers.
     #
@@ -123,13 +125,13 @@ module Pod
     # @return [Fixnum] The semver minor identifier.
     #
     def minor
-      segments[1]
+      segments[1] || 0
     end
 
     # @return [Fixnum] The semver patch identifier.
     #
     def patch
-      segments[2]
+      segments[2] || 0
     end
 
     #-------------------------------------------------------------------------#
