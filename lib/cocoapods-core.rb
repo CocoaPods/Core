@@ -28,6 +28,10 @@ module Pod
   autoload :StandardError,  'cocoapods-core/standard_error'
   autoload :YAMLConverter,  'cocoapods-core/yaml_converter'
 
+  # TODO: Fix
+  #
+  Spec = Specification
+
   # TODO: Temporary support for FileList
   #
   require 'rake'
