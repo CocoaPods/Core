@@ -15,18 +15,18 @@ module Pod
   require 'pathname'
   require 'cocoapods-core/vendor'
 
-  require 'cocoapods-core/version'
-  require 'cocoapods-core/requirement'
-  require 'cocoapods-core/dependency'
+  autoload :Version,        'cocoapods-core/version'
+  autoload :Requirement,    'cocoapods-core/requirement'
+  autoload :Dependency,     'cocoapods-core/dependency'
 
-  require 'cocoapods-core/core_ui'
-  require 'cocoapods-core/lockfile'
-  require 'cocoapods-core/platform'
-  require 'cocoapods-core/podfile'
-  require 'cocoapods-core/source'
-  require 'cocoapods-core/specification'
-  require 'cocoapods-core/standard_error'
-  require 'cocoapods-core/yaml_converter'
+  autoload :CoreUI,         'cocoapods-core/core_ui'
+  autoload :Lockfile,       'cocoapods-core/lockfile'
+  autoload :Platform,       'cocoapods-core/platform'
+  autoload :Podfile,        'cocoapods-core/podfile'
+  autoload :Source,         'cocoapods-core/source'
+  autoload :Specification,  'cocoapods-core/specification'
+  autoload :StandardError,  'cocoapods-core/standard_error'
+  autoload :YAMLConverter,  'cocoapods-core/yaml_converter'
 
   # TODO: Temporary support for FileList
   #
