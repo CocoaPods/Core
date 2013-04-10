@@ -96,6 +96,18 @@ module Pod
         end
       end
 
+      it "doesn't take into account case" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        source.search_by_name('BANANALIB', true).map(&:name).should == ['BananaLib']
+        source.search_by_name('BANANALIB', false).map(&:name).should == ['BananaLib']
+      end
+
+      it "returns partial matches" do
+        source = Source.new(fixture('spec-repos/test_repo'))
+        source.search_by_name('Banana', true).map(&:name).should == ['BananaLib']
+        source.search_by_name('Banana', false).map(&:name).should == ['BananaLib']
+      end
+
     end
 
     #-------------------------------------------------------------------------#

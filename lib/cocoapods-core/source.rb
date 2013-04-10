@@ -181,7 +181,7 @@ module Pod
           set if text && text.downcase.include?(query.downcase)
         end.compact
       else
-        names = pods.select { |pod_name| pod_name == query }
+        names = pods.select { |pod_name| pod_name.downcase.include?(query.downcase) }
         names.map { |pod_name| set(pod_name) }
       end
     end
