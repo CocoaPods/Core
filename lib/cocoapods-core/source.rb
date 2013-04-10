@@ -52,16 +52,31 @@ module Pod
 
     # @return [Array<String>] the list of the name of all the Pods.
     #
+    # @note   Using Pathname#children is sensibly slower.
+    #
     def pods
-      specs_dir.children.map do |child|
-        child.basename.to_s if child.directory? && child.basename.to_s != '.git'
-      end.compact
+      specs_dir_as_string = specs_dir.to_s
+      Dir.entries(specs_dir).select do |entry|
+        valid_name = !(entry =='.' || entry == '..' || entry == '.git')
+        valid_name && File.directory?(File.join(specs_dir_as_string, entry))
+      end
+    end
+
+    # Returns the set for the Pod with the given name.
+    #
+    # @param  [String] pod_name
+    #         The name of the Pod.
+    #
+    # @return [Sets] the set.
+    #
+    def set(pod_name)
+      Specification::Set.new(pod_name, self)
     end
 
     # @return [Array<Sets>] the sets of all the Pods.
     #
     def pod_sets
-      pods.map { |pod| Specification::Set.new(pod, self) }
+      pods.map { |pod_name| set(pod_name) }
     end
 
     # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -155,19 +170,20 @@ module Pod
     #         hence is considerably slower.
     #
     def search_by_name(query, full_text_search = false)
-      pod_sets.map do |set|
-        if full_text_search
+      if full_text_search
+        pod_sets.map do |set|
           begin
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
           rescue
             CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
           end
-        else
-          text = set.name
-        end
-        set if text && text.downcase.include?(query.downcase)
-      end.compact
+          set if text && text.downcase.include?(query.downcase)
+        end.compact
+      else
+        names = pods.select { |pod_name| pod_name == query }
+        names.map { |pod_name| set(pod_name) }
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -210,8 +226,8 @@ module Pod
     def specs_dir
       unless @specs_dir
         specs_sub_dir = repo + 'Specs'
-        if repo.children.include?(specs_sub_dir)
-          @specs_dir = repo + 'Specs'
+        if specs_sub_dir.exist?
+          @specs_dir = specs_sub_dir
         else
           @specs_dir = repo
         end
