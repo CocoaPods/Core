@@ -26,6 +26,7 @@ module Pod
   autoload :Source,         'cocoapods-core/source'
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
+  autoload :DSLError,       'cocoapods-core/standard_error'
   autoload :YAMLConverter,  'cocoapods-core/yaml_converter'
 
   # TODO: Fix
