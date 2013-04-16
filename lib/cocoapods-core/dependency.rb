@@ -363,7 +363,6 @@ module Pod
         desc = "`#{source[:path]}`"
       elsif source.key?(:local)
         desc = "`#{source[:local]}`"
-        CoreUI.warn "Using :local is deprecated. Please use :path instead."
       else
         desc = "`#{source.to_s}`"
       end
