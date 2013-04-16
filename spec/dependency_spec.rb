@@ -24,6 +24,22 @@ module Pod
         dep.should.be.external
       end
 
+      it "knows if it's local" do
+        dep = Dependency.new("cocoapods", :path => "/tmp/cocoapods")
+        dep.should.be.local
+      end
+
+      it "says it's not local if nothing was passed in" do
+        dep = Dependency.new("cocoapods")
+        dep.should.not.be.local
+      end
+
+      it "keeps the backward compatibility with :local" do
+        dep = Dependency.new("cocoapods", :local => "/tmp/cocoapods")
+        dep.should.be.local
+      end
+
+
       it "raises if initialized with an external source and requirements are provided" do
         should.raise Informative do
           Dependency.new("cocoapods", "1.0", :git => "git://github.com/cocoapods/cocoapods")
@@ -264,6 +280,7 @@ module Pod
           @dep.send(:external_source_description, :hg => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :svn => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :podspec => 'example.com').should == 'from `example.com`'
+          @dep.send(:external_source_description, :path => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :local => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :other => 'example.com').should.match /from.*example.com/
         end

@@ -128,7 +128,7 @@ module Pod
         # @return [String] the URL of the source of the Pod.
         #
         def source_url
-          url_keys = [:git, :svn, :http, :hg, :local ]
+          url_keys = [:git, :svn, :http, :hg, :path ]
           key = spec.source.keys.find { |k| url_keys.include?(k) }
           key ? spec.source[key] : 'No source url'
         end

@@ -203,7 +203,7 @@ module Pod
         :svn   => [:folder, :tag, :revision],
         :hg    => [:revision],
         :http  => nil,
-        :local => nil
+        :path => nil
       }.freeze
 
       # @!method source=(source)

@@ -54,7 +54,7 @@ module Pod
     #   @example  Initialization with an external source.
     #
     #             Dependency.new('libPusher', {:git     => 'example.com/repo.git'})
-    #             Dependency.new('libPusher', {:local   => 'path/to/folder'})
+    #             Dependency.new('libPusher', {:path   => 'path/to/folder'})
     #             Dependency.new('libPusher', {:podspec => 'example.com/libPusher.podspec'})
     #
     # @overload   initialize(name, is_head)
@@ -116,7 +116,13 @@ module Pod
     # @return [Bool] whether the dependency points to an external source.
     #
     def external?
-      !@external_source.nil?
+      !!@external_source
+    end
+
+    # @return [Bool] whether the dependency points to a local path.
+    #
+    def local?
+      external_source && !!(external_source[:path] || external_source[:local])
     end
 
     # Creates a new dependency with the name of the top level spec and the same
@@ -353,6 +359,8 @@ module Pod
         desc =  "`#{source[:svn]}`"
       elsif source.key?(:podspec)
         desc = "`#{source[:podspec]}`"
+      elsif source.key?(:path)
+        desc = "`#{source[:path]}`"
       elsif source.key?(:local)
         desc = "`#{source[:local]}`"
       else
@@ -361,4 +369,5 @@ module Pod
       "from #{desc}"
     end
   end
+
 end
