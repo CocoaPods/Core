@@ -231,7 +231,12 @@ module Pod
         @subspec = @spec.subspecs.first
       end
 
-      it "it reports if it is locally sourced" do
+      it "reports if it is locally sourced" do
+        @spec.source = {"path" => '/tmp/local/path'}
+        @spec.local?.should.be.true
+      end
+
+      it "[0.18 backwards compatibility] reports if it is locally sourced" do
         @spec.source = {"local" => '/tmp/local/path'}
         @spec.local?.should.be.true
       end

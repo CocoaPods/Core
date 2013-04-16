@@ -94,7 +94,7 @@ module Pod
       #  If you wold like to use develop a Pod in tandem with its client
       #  project you can use the `local` option.
       #
-      #     pod 'AFNetworking', :local => '~/Documents/AFNetworking'
+      #     pod 'AFNetworking', :path => '~/Documents/AFNetworking'
       #
       #  Using this option CocoaPods will assume the given folder to be the
       #  root of the Pod and will link the files directly from there in the
