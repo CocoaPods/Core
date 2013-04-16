@@ -122,7 +122,7 @@ module Pod
     # @return [Bool] whether the dependency points to a local path.
     #
     def local?
-      external_source && (external_source[:path] || external_source[:local])
+      external_source && !!(external_source[:path] || external_source[:local])
     end
 
     # Creates a new dependency with the name of the top level spec and the same
