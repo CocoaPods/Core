@@ -417,11 +417,13 @@ module Pod
       #
       # ---
       #
-      # Dependencies can specify versions requirements. The use of the spermy
-      # indicator `~>` is recommended because it provides a good compromise
-      # between control on the version without being too restrictive.
+      # Dependencies can specify versions requirements. The use of the approximate
+      # version indicator `~>` is recommended because it provides good
+      # control over the version without being too restrictive. For example,
+      # `~> 1.0.1` is equivalent to `>= 1.0.1` combined with `< 1.1`. Similarly,
+      # `~> 1.0` will match `1.0`, `1.0.1`, `1.1`, but will not upgrade to `2.0`.
       #
-      # Pods with too restrictive dependencies, limit their compatibility with
+      # Pods with overly restrictive dependencies limit their compatibility with
       # other Pods.
       #
       # @example
