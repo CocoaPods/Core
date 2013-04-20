@@ -62,6 +62,10 @@ module Pod
       super(version)
     end
 
+    # An instance that represents version 0.
+    #
+    ZERO = new('0')
+
     # @return [String] a string representation that indicates if the version is
     #         head.
     #

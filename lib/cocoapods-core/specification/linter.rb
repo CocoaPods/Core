@@ -198,6 +198,10 @@ module Pod
         end
       end
 
+      def _validate_version(v)
+        error "The version of the spec should be higher than 0." unless v > Version::ZERO
+      end
+
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)

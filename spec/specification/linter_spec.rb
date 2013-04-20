@@ -137,6 +137,13 @@ module Pod
 
       #------------------#
 
+      it "checks the version is higher than 0" do
+        @spec.version = nil
+        message_should_include('version', '0')
+      end
+
+      #------------------#
+
       it "checks the summary length" do
         @spec.stubs(:summary).returns('sample ' * 100 + '.')
         @spec.stubs(:description).returns(nil)

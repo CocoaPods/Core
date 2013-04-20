@@ -95,7 +95,7 @@ module Pod
     #         clients.
     #
     def to_s
-      if name && version.version != ""
+      if name && !version.version.empty?
         "#{name} (#{version})"
       elsif name
         name
