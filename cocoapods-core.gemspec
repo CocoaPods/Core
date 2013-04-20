@@ -20,12 +20,9 @@ Gem::Specification.new do |s|
   s.require_paths =  %w{ lib }
 
   s.add_runtime_dependency 'activesupport', '~> 3.2.13'
-  s.add_runtime_dependency 'faraday',       '~> 0.8.1'
-  s.add_runtime_dependency 'octokit',       '~> 1.7'
+  s.add_runtime_dependency 'rake', '~> 10.0.0' # TEMPORARY SUPPORT
 
   s.add_development_dependency 'bacon', '~> 1.1'
-
-  s.add_runtime_dependency 'rake', '~> 10.0.0' # TEMPORARY SUPPORT
 
   ## Make sure you can build the gem on older versions of RubyGems too:
   s.rubygems_version = "1.6.2"

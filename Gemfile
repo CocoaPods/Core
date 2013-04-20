@@ -2,6 +2,9 @@ source "http://rubygems.org"
 
 gemspec
 
+gem 'faraday', '~> 0.8.1'
+gem 'octokit', '~> 1.7'
+
 group :development do
   gem 'coveralls', :require => false
 
