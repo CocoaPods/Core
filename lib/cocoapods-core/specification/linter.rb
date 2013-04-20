@@ -201,7 +201,7 @@ module Pod
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)
-        warning "The summary should be short use `description` (max 140 characters)." if s.length > 140
+        warning "The summary should be a short version of `description` (max 140 characters)." if s.length > 140
         warning "The summary is not meaningful." if s =~ /A short description of/
         warning "The summary should end with proper punctuation." if s !~ /(\.|\?|!)$/
       end
