@@ -219,7 +219,7 @@ module Pod
       end
 
       case path.extname
-      when ''
+      when '', '.local'
         Podfile.from_ruby(string, path)
       when '.yaml', '.cocoapods'
         Podfile.from_yaml(string, path)
