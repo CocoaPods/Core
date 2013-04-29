@@ -92,6 +92,12 @@ module Pod
         name.should == "RestKit/JSON"
       end
 
+      it "raises if an invalid string representation is provided" do
+        should.raise Informative do
+          Specification.name_and_version_from_string("missing_version")
+        end.message.should.match /Invalid string representation/
+      end
+
       it "returns the root name of a given specification name" do
         Specification.root_name('Pod').should == 'Pod'
         Specification.root_name('Pod/Subspec').should == 'Pod'
