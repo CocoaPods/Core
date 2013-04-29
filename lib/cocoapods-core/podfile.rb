@@ -212,17 +212,12 @@ module Pod
       unless path.exist?
         raise Informative, "No Podfile exists at path `#{path}`."
       end
-      string = File.open(path, 'r:utf-8')  { |f| f.read }
-      # Work around for Rubinius incomplete encoding in 1.9 mode
-      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-        string.encode!('UTF-8')
-      end
 
       case path.extname
-      when ''
-        Podfile.from_ruby(string, path)
-      when '.yaml', '.cocoapods'
-        Podfile.from_yaml(string, path)
+      when '', '.podfile'
+        Podfile.from_ruby(path)
+      when '.yaml'
+        Podfile.from_yaml(path)
       else
         raise Informative, "Unsupported Podfile format `#{path}`."
       end
@@ -238,7 +233,12 @@ module Pod
     #
     # @return [Podfile] the new Podfile
     #
-    def self.from_ruby(string, path = nil)
+    def self.from_ruby(path)
+      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      # Work around for Rubinius incomplete encoding in 1.9 mode
+      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+        string.encode!('UTF-8')
+      end
       podfile = Podfile.new(path) do
         begin
           eval(string, nil, path.to_s)
@@ -247,6 +247,27 @@ module Pod
         end
       end
       podfile
+    end
+
+    # Configures a new Podfile from the given YAML representation.
+    #
+    # @param  [String] yaml
+    #         The YAML encoded hash which contains the information of the
+    #         Podfile.
+    #
+    # @param  [Pathname] path
+    #         The path from which the Podfile is loaded.
+    #
+    # @return [Podfile] the new Podfile
+    #
+    def self.from_yaml(path)
+      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      # Work around for Rubinius incomplete encoding in 1.9 mode
+      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+        string.encode!('UTF-8')
+      end
+      hash = YAML.load(string)
+      from_hash(hash, path)
     end
 
     # Configures a new Podfile from the given hash.
@@ -268,22 +289,6 @@ module Pod
         podfile.root_target_definitions << definition
       end
       podfile
-    end
-
-    # Configures a new Podfile from the given YAML representation.
-    #
-    # @param  [String] yaml
-    #         The YAML encoded hash which contains the information of the
-    #         Podfile.
-    #
-    # @param  [Pathname] path
-    #         The path from which the Podfile is loaded.
-    #
-    # @return [Podfile] the new Podfile
-    #
-    def self.from_yaml(yaml, path = nil)
-      hash = YAML.load(yaml)
-      from_hash(hash)
     end
 
     #-------------------------------------------------------------------------#
