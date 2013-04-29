@@ -224,6 +224,11 @@ module Pod
         @spec.attributes_hash["public_header_files"].should == [ "include/**/*" ]
       end
 
+      it "allows to specify the private headers files" do
+        @spec.private_header_files = [ "private/**/*" ]
+        @spec.attributes_hash["private_header_files"].should == [ "private/**/*" ]
+      end
+
       it "allows to specify the resources files" do
         @spec.resources = ['frameworks/CrashReporter.framework']
         @spec.attributes_hash["resources"].should == ['frameworks/CrashReporter.framework']

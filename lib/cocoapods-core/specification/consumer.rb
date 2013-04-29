@@ -119,6 +119,10 @@ module Pod
       #
       spec_attr_accessor :public_header_files
 
+      # @return [Array<String>] the private headers of the Pod.
+      #
+      spec_attr_accessor :private_header_files
+
       # @return [Array<String>] A hash where the key represents the
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.

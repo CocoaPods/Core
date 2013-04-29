@@ -264,6 +264,11 @@ module Pod
         @consumer.public_header_files.should == [ "include/**/*" ]
       end
 
+      it "returns the public headers files" do
+        @spec.private_header_files = [ "private/**/*" ]
+        @consumer.private_header_files.should == [ "private/**/*" ]
+      end
+
       #------------------#
 
       it "returns the resources files" do
