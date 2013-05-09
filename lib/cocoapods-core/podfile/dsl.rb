@@ -89,10 +89,10 @@ module Pod
       # Dependencies can be obtained also from external sources.
       #
       #
-      # ### Using the files from a folder local to the machine.
+      # ### Using the files from a local path.
       #
       #  If you wold like to use develop a Pod in tandem with its client
-      #  project you can use the `local` option.
+      #  project you can use the `path` option.
       #
       #     pod 'AFNetworking', :path => '~/Documents/AFNetworking'
       #
