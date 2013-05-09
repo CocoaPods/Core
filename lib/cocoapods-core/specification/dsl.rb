@@ -945,6 +945,8 @@ module Pod
       # for each Pods library and only for installations where the Pod is
       # installed.
       #
+      # This hook should be used to generate and modify the files of the Pod.
+      #
       # It receives the
       # [`Pod::Hooks::PodRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/podrepresentation/)
       # and the
@@ -967,6 +969,9 @@ module Pod
       # downloaded, installed, and the Xcode project and related files have
       # been generated. Note that this hook is called for each Pods library and
       # only for installations where the Pod is installed.
+      #
+      # To modify and generate files for the Pod the pre install hook should be
+      # used instead of this one.
       #
       # It receives a
       # [`Pod::Hooks::LibraryRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)
