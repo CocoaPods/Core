@@ -212,10 +212,15 @@ module Pod
         @root.should.inhibits_warnings_for_pod?('ObjectiveSugar')
       end
 
-      it "inherits the option to inhibit all warnings from the parent" do
+      it "inherits the option to inhibit all warnings" do
         @root.inhibit_all_warnings = true
         @child.store_pod('ASIHTTPRequest')
         @child.should.inhibits_warnings_for_pod?('ASIHTTPRequest')
+      end
+
+      it "inherits the option to inhibit warnings per pod" do
+        @root.store_pod('Objective-Record', :inhibit_warnings => true)
+        @child.should.inhibits_warnings_for_pod?('Objective-Record')
       end
 
       #--------------------------------------#

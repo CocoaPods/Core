@@ -272,7 +272,7 @@ module Pod
       #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
-        return true if inhibit_warnings_hash['all'] || (parent.inhibits_warnings_for_pod?(name) unless root?)
+        return true if inhibit_warnings_hash['all'] || (parent.inhibits_warnings_for_pod?(pod_name) unless root?)
 
         inhibit_warnings_hash['for_pods'] ||= []
         inhibit_warnings_hash['for_pods'].include? pod_name
