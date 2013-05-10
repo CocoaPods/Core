@@ -191,11 +191,6 @@ module Pod
 
       #--------------------------------------#
 
-      it "doesn't inhibit all warnings by default" do
-        @root.store_pod("ObjectiveSugar")
-        @root.should.not.inhibits_warnings_for_pod?("ObjectiveSugar")
-      end
-
       it "doesn't inhibit warnings per pod by default" do
         @root.store_pod("ObjectiveSugar")
         @root.should.not.inhibits_warnings_for_pod?("ObjectiveSugar")
