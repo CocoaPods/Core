@@ -191,7 +191,7 @@ module Pod
       #
       def _validate_name(n)
         if spec.name && file
-          names_match = (file.basename.to_s == spec.root.name + '.podspec')
+          names_match = (file.basename.to_s == spec.root.name + '.podspec') || (file.basename.to_s == spec.root.name + '.podspec.yaml')
           unless names_match
             error "The name of the spec should match the name of the file."
           end
