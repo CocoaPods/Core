@@ -30,7 +30,7 @@ module Pod
       def analyze(spec, previous_spec = nil)
         errors = []
         check_spec_source_change(spec, errors)
-        check_if_untagged_version_is_acceptable(spec, errors)
+        check_if_untagged_version_is_acceptable(spec, previous_spec, errors)
         check_commit_change_for_untagged_version(spec, previous_spec, errors)
         check_dependencies(spec, errors)
         errors
@@ -81,9 +81,10 @@ module Pod
       #
       # @return [void]
       #
-      def check_if_untagged_version_is_acceptable(spec, errors)
+      def check_if_untagged_version_is_acceptable(spec, previous_spec, errors)
         return if !spec.source[:git] || spec.source[:tag]
         return unless related_specifications(spec)
+        return if previous_spec
         has_tagged_spec = related_specifications(spec).any? { |s| s.version != '0.0.1' }
         if has_tagged_spec
           errors << "There is already at least one versioned specification so " \
