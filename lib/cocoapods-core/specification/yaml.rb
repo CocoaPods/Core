@@ -57,13 +57,13 @@ module Pod
     #
     # @return [Specification] the specification
     #
-    def self.from_hash(hash)
-      spec = Spec.new
+    def self.from_hash(hash, parent = nil)
+      spec = Spec.new(parent)
       attributes_hash = hash.dup
       subspecs = attributes_hash.delete('subspecs')
       spec.attributes_hash = attributes_hash
       if subspecs
-        spec.subspecs = subspecs.map { |s_hash| Specification.from_hash(s_hash) }
+        spec.subspecs = subspecs.map { |s_hash| Specification.from_hash(s_hash, spec) }
       end
       spec
     end

@@ -21,6 +21,12 @@ module Pod
         spec_from_yaml.attributes_hash.should == @spec.attributes_hash
       end
 
+      it "properly sets the parent of subspecs when initialized from a YAML file" do
+        yaml_path = fixture('BananaLib.podspec.yaml')
+        spec = Specification.from_file(yaml_path)
+        spec.subspecs.should.all { |sp| sp.parent == spec }
+      end
+
       it "returns whether it safe to convert a specification to hash" do
         @spec.safe_to_hash?.should.be.true
       end
