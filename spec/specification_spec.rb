@@ -406,6 +406,7 @@ module Pod
 
       it "presents an informative if it can't handle the specification format" do
         Pathname.any_instance.stubs(:exist?).returns(true)
+        File.stubs(:open).returns('')
         should.raise Informative do
           Spec.from_file('Missing.podspec.json')
         end.message.should.match /Unsupported specification format/

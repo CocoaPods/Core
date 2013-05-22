@@ -532,14 +532,35 @@ module Pod
         raise Informative, "No podspec exists at path `#{path}`."
       end
 
+      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      # Work around for Rubinius incomplete encoding in 1.9 mode
+      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+        string.encode!('UTF-8')
+      end
+
+      from_string(string, path, subspec_name)
+    end
+
+    # Loads a specification with the given string.
+    #
+    # @param  [String] spec_contents
+    #         A string describing a specification.
+    #
+    # @param  [Pathname, String] path @see from_file
+    # @param  [String] subspec_name @see from_file
+    #
+    # @return [Specification] the specification
+    #
+    def self.from_string(spec_contents, path, subspec_name = nil)
+      path = Pathname.new(path)
       case path.extname
       when '.podspec'
-        spec = ::Pod._eval_podspec(path)
+        spec = ::Pod._eval_podspec(spec_contents, path)
         unless spec.is_a?(Specification)
           raise Informative, "Invalid podspec file at path `#{path}`."
         end
       when '.yaml'
-        spec = Specification.from_yaml(path.read)
+        spec = Specification.from_yaml(spec_contents)
       else
         raise Informative, "Unsupported specification format `#{path.extname}`."
       end
@@ -567,20 +588,22 @@ module Pod
 
   #---------------------------------------------------------------------------#
 
-  # Evaluates the file at the given path in the namespace of the Pod module.
+  # @visibility private
+  #
+  # Evaluates the given string in the namespace of the Pod module.
+  #
+  # @param  [String] string
+  #         The string containing the Ruby description of the Object to
+  #         evaluate.
+  #
+  # @param  [Pathname] path
+  #         The path where the object to evaluate is stored.
   #
   # @return [Object] it can return any object but, is expected to be called on
   #         `podspec` files that should return a #{Specification}.
   #
-  # @private
   #
-  def self._eval_podspec(path)
-    string = File.open(path, 'r:utf-8')  { |f| f.read }
-    # Work around for Rubinius incomplete encoding in 1.9 mode
-    if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
-      string.encode!('UTF-8')
-    end
-
+  def self._eval_podspec(string, path)
     begin
       eval(string, nil, path.to_s)
     rescue Exception => e
