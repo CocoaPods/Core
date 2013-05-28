@@ -99,10 +99,10 @@ module Pod
 
     def sources
       sources = get_hash_value('sources')
-      if sources
-        sources
+      unless sources
+        return [default_source]
       else
-        []
+        sources
       end
     end
 
@@ -193,6 +193,8 @@ module Pod
     #
     def to_hash
       hash = {}
+      # ignore sources if only default source present
+      hash['sources'] = sources unless sources.size == 1 && sources.include?(default_source)
       hash['target_definitions'] = root_target_definitions.map(&:to_hash)
       hash.merge!(internal_hash)
       hash
@@ -298,6 +300,10 @@ module Pod
         definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition
       end
+
+      sources.each do |source|
+        podfile.source(source)
+      end
       podfile
     end
 
@@ -306,6 +312,12 @@ module Pod
     private
 
     # @!group Private helpers
+
+    # @return [String] the default specs location
+    #
+    def default_source
+      "https://github.com/CocoaPods/Specs.git"
+    end
 
     # @return [Hash] The hash which store the attributes of the Podfile.
     #
