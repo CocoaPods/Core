@@ -445,6 +445,37 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
+      # @!group Sources
+      #
+      #   The Podfile retrieves specs from a given source.
+      #   This group manage these sources
+      #
+      #   Sources are __global__ and not stored per target definition.
+
+      #-----------------------------------------------------------------------#
+      # Specifies the location of specs
+      #
+      # -----
+      #
+      # By default, the github Cocoapods/specs repository is used. Use this method
+      # to specify another source.
+      #
+      # @param    [String] source
+      #           url to specs repo.
+      #
+      # @example  Specifying a source
+      #
+      #           source 'http://github.com/myusername/myspecsrepo'
+      #
+      # @return   [void]
+      #
+      def source(source)
+        hash_sources = get_hash_value('sources') || []
+        hash_sources << source
+        set_hash_value('sources', hash_sources.uniq)
+      end
+
+      #-----------------------------------------------------------------------#
 
       # @!group Hooks
       #   The Podfile provides hooks that will be called during the

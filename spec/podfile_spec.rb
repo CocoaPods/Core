@@ -117,6 +117,30 @@ module Pod
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
 
+      describe "source" do
+
+        it 'always has at least one source' do
+          Podfile.new {}.sources.should.include "https://github.com/CocoaPods/Specs.git"
+
+          Podfile.new do
+            source 'http://source.cocoapods.com/specs'
+          end.sources.should.include "http://source.cocoapods.com/specs"
+        end
+
+        it 'can have multiple sources' do
+          Podfile.new do
+            source 'http://source.cocoapods.com/specs'
+            source 'http://source2.cocoapods.com/specs'
+          end.sources.size.should  == 2
+
+          Podfile.new do
+            source 'http://source.cocoapods.com/specs'
+            source 'http://source2.cocoapods.com/specs'
+            source 'https://github.com/CocoaPods/Specs.git'
+          end.sources.size.should  == 3
+        end
+
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -233,6 +257,22 @@ module Pod
         }
       end
 
+      it "includes the specified sources in the hash representation" do
+        podfile = Podfile.new do
+          source 'http://othersource.cocoapods.com/specs'
+          pod 'ASIHTTPRequest'
+        end
+        podfile.to_hash.should == {
+          "sources" => ['http://othersource.cocoapods.com/specs'],
+          "target_definitions"=>[
+            {
+              "name" => "Pods",
+              "link_with_first_target"=>true,
+              "dependencies"=>["ASIHTTPRequest"]
+            }
+          ]
+        }
+      end
     end
 
     #-------------------------------------------------------------------------#
