@@ -11,3 +11,4 @@ spec/fixtures/vcr
 coverage/
 .coveralls.yml
 .idea/
+documentation/
