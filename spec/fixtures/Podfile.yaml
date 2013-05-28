@@ -1,8 +1,12 @@
 ---
+sources:
+  - 'myrepo1'
+  - 'myrepo2'
 target_definitions:
   - name: Pods
     link_with_first_target: true
     platform: ios
+
     dependencies:
     - SSZipArchive:
       - '>= 1'

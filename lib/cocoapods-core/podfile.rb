@@ -95,6 +95,12 @@ module Pod
 
     # @!group Attributes
 
+    # @return [Array<String>] all the specs source names.
+
+    def sources
+      get_hash_value('sources') || []
+    end
+
     # @return [String] the path of the workspace if specified by the user.
     #
     def workspace_path
@@ -173,6 +179,7 @@ module Pod
     HASH_KEYS = %w(
       target_definitions
       workspace
+      sources
       generate_bridge_support
       set_arc_compatibility_flag
     ).freeze

@@ -117,6 +117,21 @@ module Pod
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
 
+      describe 'source' do
+        it 'can have multiple sources' do
+          Podfile.new do
+            source 'new_repo_1'
+            source 'new_repo_2'
+          end.sources.size.should  == 2
+
+          Podfile.new do
+            source 'new_repo_1'
+            source 'new_repo_2'
+            source 'master'
+          end.sources.size.should  == 3
+        end
+
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -234,6 +249,22 @@ module Pod
         }
       end
 
+      it 'includes the specified sources in the hash representation' do
+        podfile = Podfile.new do
+          source 'new_ASIHTTPRequest_source'
+          pod 'ASIHTTPRequest'
+        end
+        podfile.to_hash.should == {
+          'sources' => %w(new_ASIHTTPRequest_source),
+          'target_definitions' => [
+            {
+              'name' => 'Pods',
+              'link_with_first_target' => true,
+              'dependencies' => %w(ASIHTTPRequest)
+            }
+          ]
+        }
+      end
     end
 
     #-------------------------------------------------------------------------#
