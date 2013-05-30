@@ -6,25 +6,35 @@ module Pod
   #
   module GitHub
 
-    # @return [Hash]
+    # Returns the information of a user.
     #
-    def self.user(name)
-      peform_request("https://api.github.com/users/#{name}")
+    # @param  [String] login
+    #         The name of the user.
+    #
+    # @return [Hash] The data of user.
+    #
+    def self.user(login)
+      peform_request("https://api.github.com/users/#{login}")
     end
 
-    # Returns the information about a GitHub repo.
+    # Returns the information of a repo.
     #
-    # @param  [String] The URL of the repo.
+    # @param  [String] url
+    #         The URL of the repo.
     #
     # @return [Hash] The hash containing the data as reported by GitHub.
     #
-    def self.fetch_github_repo_data(url)
+    def self.repo(url)
       if repo_id = repo_id_from_url(url)
         peform_request("https://api.github.com/repos/#{repo_id}")
       end
     end
 
-    # @return [Array]
+    # Returns the tags of a repo.
+    #
+    # @param  [String] url @see #repo
+    #
+    # @return [Array] The list of the tags.
     #
     def self.tags(url)
       if repo_id = repo_id_from_url(url)
@@ -32,7 +42,11 @@ module Pod
       end
     end
 
-    # @return [Array]
+    # Returns the branches of a repo.
+    #
+    # @param  [String] url @see #repo
+    #
+    # @return [Array] The list of the branches.
     #
     def self.branches(url)
       if repo_id = repo_id_from_url(url)
@@ -46,12 +60,24 @@ module Pod
 
     # @!group Private helpers
 
-    # @return [String]
+    # Returns the repo ID given it's URL.
+    #
+    # @param [String] url
+    #        The URL of the repo.
+    #
+    # @return [String] the repo ID.
     #
     def self.repo_id_from_url(url)
       url[/github.com\/([^\/\.]*\/[^\/\.]*)\.*/, 1]
     end
 
+    # Performs a get request with the given URL.
+    #
+    # @param [String] url
+    #        The URL of the resource.
+    #
+    # @return [Array, Hash] The information of the resource as Ruby objects.
+    #
     def self.peform_request(url)
       require 'rest'
       require 'json'

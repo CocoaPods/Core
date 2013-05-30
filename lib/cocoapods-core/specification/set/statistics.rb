@@ -247,7 +247,7 @@ module Pod
 
           spec = set.specification
           url = spec.source[:git] || ''
-          repo = GitHub.fetch_github_repo_data(url)
+          repo = GitHub.repo(url)
 
           if repo
             set_value(set, :gh_watchers, repo['watchers'])
