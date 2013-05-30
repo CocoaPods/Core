@@ -28,12 +28,12 @@ $:.unshift((ROOT + 'spec').to_s)
 require 'bundler/setup'
 require 'bacon'
 require 'mocha-on-bacon'
+require 'pretty_bacon'
 require 'cocoapods-core'
 
 # Helpers
 #-----------------------------------------------------------------------------#
 
-require 'spec_helper/bacon'
 require 'spec_helper/fixture'
 require 'spec_helper/temporary_directory'
 
