@@ -25,7 +25,7 @@ module Pod
     # @return [Hash] The hash containing the data as reported by GitHub.
     #
     def self.repo(url)
-      if repo_id = repo_id_from_url(url)
+      if repo_id = normalized_repo_id(url)
         peform_request("https://api.github.com/repos/#{repo_id}")
       end
     end
@@ -37,7 +37,7 @@ module Pod
     # @return [Array] The list of the tags.
     #
     def self.tags(url)
-      if repo_id = repo_id_from_url(url)
+      if repo_id = normalized_repo_id(url)
         peform_request("https://api.github.com/repos/#{repo_id}/tags")
       end
     end
@@ -49,7 +49,7 @@ module Pod
     # @return [Array] The list of the branches.
     #
     def self.branches(url)
-      if repo_id = repo_id_from_url(url)
+      if repo_id = normalized_repo_id(url)
         peform_request("https://api.github.com/repos/#{repo_id}/branches")
       end
     end
@@ -60,12 +60,24 @@ module Pod
 
     # @!group Private helpers
 
+    # Returns the repo ID as it is or converting a GitHub URL.
+    #
+    # @param [String] url_or_id
+    #        A repo ID or the URL of the repo.
+    #
+    # @return [String] the repo ID.
+    #
+    def self.normalized_repo_id(url_or_id)
+      repo_id_from_url(url_or_id) || url_or_id
+    end
+
     # Returns the repo ID given it's URL.
     #
     # @param [String] url
     #        The URL of the repo.
     #
     # @return [String] the repo ID.
+    # @return [Nil] if the given url is not a valid github repo url.
     #
     def self.repo_id_from_url(url)
       url[/github.com\/([^\/\.]*\/[^\/\.]*)\.*/, 1]

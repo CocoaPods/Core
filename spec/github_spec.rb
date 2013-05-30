@@ -39,10 +39,42 @@ module Pod
 
     describe "Private helpers" do
 
-      it "returns the repo id from a given github URL" do
-        id = GitHub.send(:repo_id_from_url, "https://github.com/CocoaPods/CocoaPods")
-        id.should == "CocoaPods/CocoaPods"
+      describe "#normalized_repo_id" do
+
+        it "returns a repo id as it is" do
+          id = GitHub.send(:normalized_repo_id, "CocoaPods/CocoaPods")
+          id.should == "CocoaPods/CocoaPods"
+        end
+
+        it "convertns an url to a repo id" do
+          id = GitHub.send(:normalized_repo_id, "https://github.com/CocoaPods/CocoaPods")
+          id.should == "CocoaPods/CocoaPods"
+        end
+
       end
+
+      #----------------------------------------#
+
+      describe "#repo_id_from_url" do
+
+        it "returns the repo id from a given github URL" do
+          id = GitHub.send(:repo_id_from_url, "https://github.com/CocoaPods/CocoaPods")
+          id.should == "CocoaPods/CocoaPods"
+        end
+
+        it "returns the repo id from a given github https git URL" do
+          id = GitHub.send(:repo_id_from_url, "https://github.com/CocoaPods/CocoaPods.git")
+          id.should == "CocoaPods/CocoaPods"
+        end
+
+        it "returns nil if the given url is not a valid github URL" do
+          id = GitHub.send(:repo_id_from_url, "CocoaPods/CocoaPods")
+          id.should.be.nil
+        end
+
+      end
+
+      #----------------------------------------#
 
     end
 
