@@ -14,7 +14,7 @@ module Pod
     #
     def self.fetch_github_repo_data(url)
       require 'rest'
-      require 'json'
+      require 'multi_json'
       if repo_id = url[/github.com\/([^\/\.]*\/[^\/\.]*)\.*/, 1]
         url = "https://api.github.com/repos/#{repo_id}"
         response = REST.get(url)
