@@ -27,19 +27,19 @@ module Pod
 
       it "returns the GitHub watchers of a Pod" do
         repo_data = { 'watchers' => 2771 }
-        GitHub.expects(:repo).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
+        GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_watchers(@set).should == 2771
       end
 
       it "returns the GitHub forks of a Pod" do
         repo_data = { 'forks' => 423 }
-        GitHub.expects(:repo).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
+        GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_forks(@set).should == 423
       end
 
       it "returns the time of the last push from GitHub" do
         repo_data = { 'pushed_at' => "2012-07-12T17:36:21Z" }
-        GitHub.expects(:repo).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
+        GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_pushed_at(@set).should == Time.parse("2012-07-12T17:36:21Z")
       end
 
@@ -66,7 +66,7 @@ module Pod
 
       it "uses an in memory cache" do
         repo_data = { 'watchers' => 2771 }
-        GitHub.expects(:repo).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
+        GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_watchers(@set).should == 2771
         GitHub.expects(:repo).never
         @stats.github_watchers(@set).should == 2771
@@ -121,7 +121,7 @@ module Pod
       before do
         @repo_fixture = { 'watchers' => 2771, 'forks' => 423, 'pushed_at' => "2012-07-12T17:36:21Z" }
         File.open(@cache_file, 'w') { |f| f.write(YAML.dump({ 'JSONKit' => {}})) }
-        GitHub.expects(:repo).with('git://github.com/johnezang/JSONKit.git').returns(@repo_fixture)
+        GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(@repo_fixture)
       end
 
       it "saves the cache after retrieving GitHub information" do

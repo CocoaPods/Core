@@ -290,15 +290,6 @@ module Pod
         message.should.include('source_files')
       end
 
-      xit "announces deprecations for the Rake::FileList [TEMPORARY]" do
-        @spec.source_files = ::Rake::FileList.new('FileList-Classes')
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('FileList')
-        message.should.include('deprecated')
-        message.should.include('source_files')
-      end
-
       it "checks if a specification is empty" do
         consumer = Specification::Consumer
         consumer.any_instance.stubs(:source_files).returns([])

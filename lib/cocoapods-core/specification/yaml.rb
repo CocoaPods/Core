@@ -21,33 +21,9 @@ module Pod
       #         without loss of information.
       #
       def safe_to_hash?
-        !has_file_list(self) && pre_install_callback.nil? && post_install_callback.nil?
+        pre_install_callback.nil? && post_install_callback.nil?
       end
 
-      # @return [Bool] If any of the specs uses the FileList class.
-      #
-      def has_file_list(spec)
-        result = false
-        all_specs = [ spec, *spec.recursive_subspecs ]
-        all_specs.each do |current_spec|
-          current_spec.available_platforms.each do |platform|
-            consumer = Specification::Consumer.new(current_spec, platform)
-            attributes = DSL.attributes.values.select(&:file_patterns?)
-            attributes.each do |attrb|
-              patterns = consumer.send(attrb.name)
-              if patterns.is_a?(Hash)
-                patterns = patterns.values.flatten(1)
-              end
-              patterns.each do |pattern|
-                if pattern.is_a?(Rake::FileList)
-                  result = true
-                end
-              end
-            end
-          end
-        end
-        result
-      end
     end
 
     # Configures a new specification from the given hash.

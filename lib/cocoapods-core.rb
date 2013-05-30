@@ -34,14 +34,6 @@ module Pod
   #
   Spec = Specification
 
-  # TODO: Temporary support for FileList
-  #
-  if RUBY_VERSION >= '1.9'
-    require 'rake/file_list'
-  else
-    require 'rake'
-  end
-  FileList = Rake::FileList
 end
 
 

@@ -35,7 +35,7 @@ module Pod
       end
 
       it "returns the available versions of a Pod" do
-        @sut.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 2.0.4 |
+        @sut.versions('Reachability').map(&:to_s).should == %w| 3.1.0 3.0.0 2.0.5 |
       end
 
       it "returns the specification for the given name and version" do

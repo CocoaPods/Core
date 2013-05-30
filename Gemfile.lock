@@ -22,7 +22,6 @@ PATH
       activesupport (~> 3.2.13)
       json (~> 1.8.0)
       nap (~> 0.5.1)
-      rake (~> 10.0.0)
 
 GEM
   remote: http://rubygems.org/

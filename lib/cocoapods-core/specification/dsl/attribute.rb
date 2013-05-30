@@ -219,10 +219,6 @@ module Pod
                   "#{to_s}. Allowed keys: `#{allowed_keys.inspect}`"
               end
             end
-
-            if defined?(Rake) && value.is_a?(Rake::FileList)
-              # UI.warn "Rake::FileList is deprecated, use `exclude_files` (#{attrb.name})."
-            end
           end
 
           # @return [Array] the flattened list of the allowed keys for the

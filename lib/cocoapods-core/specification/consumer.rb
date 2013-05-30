@@ -268,11 +268,7 @@ module Pod
       #
       def prepare_value(attr, value)
         if attr.container ==  Array
-          if value.class == Rake::FileList
-            value = [value]
-          else
-            value = [*value].compact
-          end
+          value = [*value].compact
         end
 
         hook_name = prepare_hook_name(attr)

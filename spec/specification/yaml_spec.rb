@@ -35,11 +35,6 @@ module Pod
         @spec.pre_install do; end
         @spec.safe_to_hash?.should.be.false
       end
-
-      it "returns that it is not safe to convert a specification to a hash if it uses the FileList class" do
-        @spec.source_files = FileList['Classes']
-        @spec.safe_to_hash?.should.be.false
-      end
     end
 
     #-------------------------------------------------------------------------#

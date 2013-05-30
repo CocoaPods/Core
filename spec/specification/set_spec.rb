@@ -14,15 +14,16 @@ module Pod
       end
 
       it "returns the versions available for the pod ordered from highest to lowest" do
-        @set.versions.should == %w[1.6 1.3.3 1.3.2 1.3.1 1.3 1.2.3 1.2.2 1.2.1 1.2 1.1 1.0].map { |v| Version.new(v) }
+        @set.versions.should.all { |v| v.is_a?(Version) }
+        @set.versions.map(&:to_s).should == %w[1.6.2 1.6.1 1.6 1.3.3 1.3.2 1.3.1 1.3 1.2.3 1.2.2 1.2.1 1.2 1.1 1.0]
       end
 
       it "returns the highest version available for the pod" do
-        @set.highest_version.should == Version.new('1.6')
+        @set.highest_version.should == Version.new('1.6.2')
       end
 
       it "returns the path of the spec with the highest version" do
-        @set.highest_version_spec_path.should == @source.repo + 'CocoaLumberjack/1.6/CocoaLumberjack.podspec'
+        @set.highest_version_spec_path.should == @source.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
       end
 
       it "checks if the dependency of the specification is compatible with existing requirements" do
@@ -47,16 +48,16 @@ module Pod
       end
 
       it "returns a hash representation" do
-        spec_path = @source.repo + 'CocoaLumberjack/1.6/CocoaLumberjack.podspec'
+        spec_path = @source.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
         @set.to_hash.should == {
           "name" => "CocoaLumberjack",
           "versions" => {
             "master" => [
-              "1.6", "1.3.3", "1.3.2", "1.3.1", "1.3", "1.2.3", "1.2.2",
-              "1.2.1", "1.2.0", "1.1.0", "1.0.0"
+              "1.6.2", "1.6.1", "1.6", "1.3.3", "1.3.2", "1.3.1", "1.3", "1.2.3", "1.2.2",
+              "1.2.1", "1.2", "1.1", "1.0"
             ]
           },
-          "highest_version" => "1.6",
+          "highest_version" => "1.6.2",
           "highest_version_spec" => spec_path.to_s
         }
       end

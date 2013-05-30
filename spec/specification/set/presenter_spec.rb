@@ -95,10 +95,7 @@ module Pod
         @presenter = Spec::Set::Presenter.new(set)
         subspecs = @presenter.subspecs
         subspecs.last.class.should == Specification
-        subspecs.map(&:name).should == [
-          "RestKit/JSON", "RestKit/XML", "RestKit/Network", "RestKit/UI",
-          "RestKit/ObjectMapping", "RestKit/ObjectMapping/JSON", "RestKit/ObjectMapping/XML",
-          "RestKit/ObjectMapping/CoreData", "RestKit/Testing"]
+        subspecs.map(&:name).should == ["RestKit/Core", "RestKit/ObjectMapping", "RestKit/Network", "RestKit/CoreData", "RestKit/Testing", "RestKit/Search", "RestKit/Support"]
       end
     end
 

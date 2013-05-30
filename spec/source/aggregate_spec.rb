@@ -43,7 +43,7 @@ module Pod
       end
 
       it "searches the sets specifying a dependency on a subspec" do
-        dep = Dependency.new('RestKit/JSON')
+        dep = Dependency.new('RestKit/Network')
         set = @sut.search(dep)
         set.name.should == 'RestKit'
         set.sources.map(&:name).should == %w| master |
