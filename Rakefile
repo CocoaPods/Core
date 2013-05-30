@@ -77,6 +77,9 @@ namespace :gem do
     # Ensure that the branches are up to date with the remote
     sh "git pull"
 
+    puts "* Updating Bundler"
+    silent_sh('bundle update')
+
     puts "* Running specs"
     silent_sh('rake spec:all')
 

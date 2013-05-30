@@ -8,6 +8,5 @@ tmp
 spec/fixtures/vcr
 .yardoc
 .rbx/
-Gemfile.lock
 coverage/
 .coveralls.yml
