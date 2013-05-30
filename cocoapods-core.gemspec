@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activesupport', '~> 3.2.13'
   s.add_runtime_dependency 'rake', '~> 10.0.0' # TEMPORARY SUPPORT
+  s.add_runtime_dependency 'nap', "~> 0.5.1"
 
   s.add_development_dependency 'bacon', '~> 1.1'
 

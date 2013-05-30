@@ -20,13 +20,14 @@ module Pod
   autoload :Dependency,     'cocoapods-core/dependency'
 
   autoload :CoreUI,         'cocoapods-core/core_ui'
+  autoload :DSLError,       'cocoapods-core/standard_error'
+  autoload :GitHub,         'cocoapods-core/github'
   autoload :Lockfile,       'cocoapods-core/lockfile'
   autoload :Platform,       'cocoapods-core/platform'
   autoload :Podfile,        'cocoapods-core/podfile'
   autoload :Source,         'cocoapods-core/source'
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
-  autoload :DSLError,       'cocoapods-core/standard_error'
   autoload :YAMLConverter,  'cocoapods-core/yaml_converter'
 
   # TODO: Fix

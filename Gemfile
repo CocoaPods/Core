@@ -2,12 +2,8 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'faraday', '~> 0.8.1'
-gem 'octokit', '~> 1.7'
-
 group :development do
   gem 'coveralls', :require => false
-
   gem "mocha", "~> 0.11.4"
   gem "bacon"
   gem "mocha-on-bacon"

@@ -3,6 +3,8 @@ require File.expand_path('../../../spec_helper', __FILE__)
 module Pod
   describe Specification::Set::Statistics do
 
+    #-------------------------------------------------------------------------#
+
     describe "In general" do
       before do
         @source = Source.new(fixture('spec-repos/master'))
@@ -24,17 +26,20 @@ module Pod
       end
 
       it "returns the GitHub watchers of a Pod" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').returns({ 'watchers' => 2771 })
+        repo_data = { 'watchers' => 2771 }
+        GitHub.expects(:fetch_github_repo_data).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_watchers(@set).should == 2771
       end
 
       it "returns the GitHub forks of a Pod" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').returns({ 'forks' => 423 })
+        repo_data = { 'forks' => 423 }
+        GitHub.expects(:fetch_github_repo_data).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_forks(@set).should == 423
       end
 
       it "returns the time of the last push from GitHub" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').returns({ 'pushed_at' => "2012-07-12T17:36:21Z" })
+        repo_data = { 'pushed_at' => "2012-07-12T17:36:21Z" }
+        GitHub.expects(:fetch_github_repo_data).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_pushed_at(@set).should == Time.parse("2012-07-12T17:36:21Z")
       end
 
@@ -45,6 +50,8 @@ module Pod
         @stats.github_pushed_at(@set).should == nil
       end
     end
+
+    #-------------------------------------------------------------------------#
 
     describe "Cache" do
       before do
@@ -58,9 +65,10 @@ module Pod
       end
 
       it "uses an in memory cache" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').returns({ 'watchers' => 2771 })
+        repo_data = { 'watchers' => 2771 }
+        GitHub.expects(:fetch_github_repo_data).with('git://github.com/johnezang/JSONKit.git').returns(repo_data)
         @stats.github_watchers(@set).should == 2771
-        Octokit.expects(:repo).never
+        GitHub.expects(:fetch_github_repo_data).never
         @stats.github_watchers(@set).should == 2771
       end
 
@@ -79,7 +87,7 @@ module Pod
       end
 
       it "uses a cache file, if provided" do
-        Octokit.expects(:repo).never
+        GitHub.expects(:fetch_github_repo_data).never
         @stats.github_watchers(@set).should == 2771
       end
 
@@ -104,19 +112,19 @@ module Pod
       end
 
       it "uses the cache of GitHub values if still valid" do
-        Octokit.expects(:repo).never
+        GitHub.expects(:fetch_github_repo_data).never
         @stats.github_watchers(@set).should  == 2771
         @stats.github_forks(@set).should     == 423
         @stats.github_pushed_at(@set).should == Time.parse("2012-07-12T17:36:21Z")
       end
 
       before do
-        @octokit_return = { 'watchers' => 2771, 'forks' => 423, 'pushed_at' => "2012-07-12T17:36:21Z" }
+        @repo_fixture = { 'watchers' => 2771, 'forks' => 423, 'pushed_at' => "2012-07-12T17:36:21Z" }
         File.open(@cache_file, 'w') { |f| f.write(YAML.dump({ 'JSONKit' => {}})) }
+        GitHub.expects(:fetch_github_repo_data).with('git://github.com/johnezang/JSONKit.git').returns(@repo_fixture)
       end
 
       it "saves the cache after retrieving GitHub information" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').once.returns(@octokit_return)
         @stats.github_watchers(@set)
         saved_cache = YAML.load(@cache_file.read)
         saved_cache['JSONKit'][:gh_date] = nil
@@ -125,27 +133,19 @@ module Pod
       end
 
       it "updates the GitHub cache if not valid" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').once.returns(@octokit_return)
         @cache_hash['JSONKit'][:gh_date] = (Time.now - 60 * 60 * 24 * 5)
         @stats.github_forks(@set).should == 423
       end
 
       it "stores in the cache time of the last access to the GitHub API" do
-        Octokit.expects(:repo).with('johnezang/JSONKit').once.returns(@octokit_return)
         @stats.github_watchers(@set)
         saved_cache = YAML.load(@cache_file.read)
         time_delta = (Time.now - saved_cache['JSONKit'][:gh_date])
         time_delta.should < 60
       end
-
-      it "handles gracefully any Octokit exception" do
-        def Octokit.repo(repo_id)
-          raise StandardError
-        end
-        should.not.raise do
-          @stats.github_watchers(@set)
-        end
-      end
     end
+
+    #-------------------------------------------------------------------------#
+
   end
 end

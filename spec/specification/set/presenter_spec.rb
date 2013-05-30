@@ -105,6 +105,7 @@ module Pod
     describe "Statistics" do
       before do
         Spec::Set::Statistics.instance = nil
+        @stats = Spec::Set::Statistics.instance
         @source = Source.new(fixture('spec-repos/master'))
         set = Spec::Set.new('CocoaLumberjack', @source)
         @presenter = Spec::Set::Presenter.new(set)
@@ -115,19 +116,19 @@ module Pod
       end
 
       it "returns the GitHub likes" do
-        Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'watchers' => 731 })
+        @stats.expects(:github_watchers).with(@presenter.set).returns(731)
         @presenter.github_watchers.should == 731
       end
 
       it "returns the GitHub forks" do
-        Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'forks' => 109 })
+        @stats.expects(:github_forks).with(@presenter.set).returns(109)
         @presenter.github_forks.should == 109
       end
 
       it "returns the GitHub last activity" do
-        Octokit.expects(:repo).with('robbiehanson/CocoaLumberjack').returns({ 'pushed_at' => "2012-08-01T15:54:18Z" })
+        @stats.expects(:github_pushed_at).with(@presenter.set).returns(Time.parse("2012-07-12T17:36:21Z"))
         Time.stubs(:now).returns(Time.parse("2012-11-01 00:00:00 +0100"))
-        @presenter.github_last_activity.should == "3 months ago"
+        @presenter.github_last_activity.should == "4 months ago"
       end
     end
 

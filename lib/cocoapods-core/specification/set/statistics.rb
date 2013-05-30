@@ -54,19 +54,6 @@ module Pod
         #
         def initialize(cache_file = nil, cache_expiration = (60 * 60 * 24 * 3))
           require 'yaml'
-          begin
-            # This is to make sure Faraday doesn't warn the user about the
-            # `system_timer` gem missing.
-            old_warn, $-w = $-w, nil
-            begin
-              require 'faraday'
-            ensure
-              $-w = old_warn
-            end
-            require 'octokit'
-          rescue LoadError
-            raise PlainInformative, 'The `octokit` gem is required in order to use the Statistics class.'
-          end
 
           @cache_file       = cache_file
           @cache_expiration = cache_expiration
@@ -258,23 +245,21 @@ module Pod
           update_date = get_value(set, :gh_date)
           return if update_date && update_date > (Time.now - cache_expiration)
 
-          spec    = set.specification
-          url     = spec.source[:git] || ''
-          repo_id = url[/github.com\/([^\/\.]*\/[^\/\.]*)\.*/, 1]
-          return unless repo_id
+          spec = set.specification
+          url = spec.source[:git] || ''
+          repo = GitHub.fetch_github_repo_data(url)
 
-          begin
-            repo = Octokit.repo(repo_id)
-          rescue
-            return
+          if repo
+            set_value(set, :gh_watchers, repo['watchers'])
+            set_value(set, :gh_forks,    repo['forks'])
+            set_value(set, :pushed_at,   repo['pushed_at'])
+            set_value(set, :gh_date,     Time.now)
+            save_cache
           end
-
-          set_value(set, :gh_watchers, repo['watchers'])
-          set_value(set, :gh_forks,    repo['forks'])
-          set_value(set, :pushed_at,   repo['pushed_at'])
-          set_value(set, :gh_date,     Time.now)
-          save_cache
         end
+
+        #---------------------------------------------------------------------#
+
       end
     end
   end
