@@ -60,6 +60,12 @@ module Pod
         d.external_source.should.be.nil
       end
 
+      it "creates a dependency from a string with multiple version requirements" do
+        d =  Dependency.from_string("FontAwesomeIconFactory (< 2.0, >= 1.0.1)")
+        d.name.should == "FontAwesomeIconFactory"
+        d.requirement.should == Requirement.new('< 2.0', '>= 1.0.1')
+      end
+
       it "doesn't include external source when initialized from a string as incomplete and thus it should be provided by the client" do
         d = Dependency.from_string("BananaLib (from `www.example.com', tag `1.0')")
         d.name.should == "BananaLib"

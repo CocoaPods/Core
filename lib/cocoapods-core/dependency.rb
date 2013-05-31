@@ -320,7 +320,8 @@ module Pod
       when /HEAD/
         Dependency.new(name, :head)
       else
-        Dependency.new(name, version)
+        version_requirements =  version.split(',') if version
+        Dependency.new(name, version_requirements)
       end
     end
 
