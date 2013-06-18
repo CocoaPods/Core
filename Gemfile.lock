@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/alloy/kicker.git
-  revision: 6430787ebf8b9305acc2d2f89ae5cf01d2cd5488
+  revision: 885b3d274372af0b9839d1172d1ac3bc5552c604
   branch: 3.0.0
   specs:
-    kicker (3.0.0pre1)
-      listen
-      terminal-notifier
+    kicker (3.0.0pre2)
+      listen (~> 1.1.0)
+      notify (~> 0.5.2)
 
 GIT
   remote: https://github.com/irrationalfab/PrettyBacon.git
@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (0.20.2)
+    cocoapods-core (0.21.0.rc1)
       activesupport (~> 3.2.13)
       json (~> 1.8.0)
       nap (~> 0.5.1)
@@ -39,11 +39,11 @@ GEM
       rest-client
       simplecov (>= 0.7)
       thor
-    ffi (1.8.1)
+    ffi (1.9.0)
     github-markup (0.7.5)
     i18n (0.6.1)
     json (1.8.0)
-    listen (1.1.4)
+    listen (1.1.6)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
@@ -54,8 +54,9 @@ GEM
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.1)
       mocha (>= 0.9.8)
-    multi_json (1.7.4)
+    multi_json (1.7.7)
     nap (0.5.1)
+    notify (0.5.2)
     posix-spawn (0.3.6)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -78,7 +79,6 @@ GEM
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
     slop (3.4.5)
-    terminal-notifier (1.4.2)
     thor (0.18.1)
     yajl-ruby (1.1.0)
     yard (0.8.6.1)
