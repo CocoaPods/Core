@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (0.21.0.rc1)
+    cocoapods-core (0.21.0)
       activesupport (~> 3.2.13)
       json (~> 1.8.0)
       nap (~> 0.5.1)
@@ -62,10 +62,10 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    pygments.rb (0.5.0)
+    pygments.rb (0.5.1)
       posix-spawn (~> 0.3.6)
       yajl-ruby (~> 1.1.0)
-    rake (10.0.4)
+    rake (10.1.0)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
@@ -81,7 +81,7 @@ GEM
     slop (3.4.5)
     thor (0.18.1)
     yajl-ruby (1.1.0)
-    yard (0.8.6.1)
+    yard (0.8.6.2)
 
 PLATFORMS
   ruby
