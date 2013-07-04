@@ -212,12 +212,12 @@ module Pod
       #
       #   @example Specifying a Git source with a tag.
       #
-      #     spec.source = { :git => 'git://github.com/AFNetworking/AFNetworking.git',
+      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :tag => 'v0.0.1' }
       #
       #   @example Using the version of the Pod to identify the Git tag.
       #
-      #     spec.source = { :git => 'git://github.com/AFNetworking/AFNetworking.git',
+      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :tag => "v#{spec.version}" }
       #
       #   @param  [Hash{Symbol=>String}] source
