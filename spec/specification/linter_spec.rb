@@ -171,6 +171,17 @@ module Pod
         linter.results.first.message.should.match /Comments must be deleted./
       end
 
+      it "checks that there are not too many comments in the file" do
+        valid_text = File.read(@podspec_path)
+        podspec = "# some comment\n" << valid_text
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        File.open(path, 'w') {|f| f.puts(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        linter.results.count.should == 1
+        linter.results.first.message.should.match /Comments placed at the top of the specification must be deleted./
+      end
+
       it "should not count #define's as comments" do
         podspec = "#define\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
