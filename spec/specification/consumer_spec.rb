@@ -272,8 +272,8 @@ module Pod
       #------------------#
 
       it "returns the frameworks bundles" do
-        @spec.private_header_files = [ "MyFramework.framework", "MyOtherFramework.framework" ]
-        @consumer.private_header_files.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @spec.framework_bundles = [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @consumer.framework_bundles.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
       end
 
       #------------------#

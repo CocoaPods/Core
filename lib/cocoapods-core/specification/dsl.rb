@@ -812,7 +812,7 @@ module Pod
 
       # @!method framework_bundles=(*frameworks)
       #
-      #   The list of the paths of the framework bundles of the Pod.
+      #   The paths of the framework bundles that come shipped with the Pod.
       #
       #   @example
       #
@@ -820,7 +820,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.framework_bundles = 'MyFramework.framework', 'TheirsFramework.framework'
+      #     spec.framework_bundles = 'MyFramework.framework', 'TheirFramework.framework'
       #
       #   @param  [String, Array<String>] framework_bundles
       #           A list of framework bundles paths.

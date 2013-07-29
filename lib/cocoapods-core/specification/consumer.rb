@@ -123,7 +123,7 @@ module Pod
       #
       spec_attr_accessor :private_header_files
 
-      # @return [Array<String>] The paths of the frameworks bundles of the Pod.
+      # @return [Array<String>] The paths of the framework bundles of the Pod.
       #
       spec_attr_accessor :framework_bundles
 
