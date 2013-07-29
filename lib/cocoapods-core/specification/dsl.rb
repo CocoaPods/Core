@@ -473,7 +473,8 @@ module Pod
 
       # @!method frameworks=(*frameworks)
       #
-      #   A list of frameworks that the user’s target needs to link against.
+      #   A list of system frameworks that the user’s target needs to link
+      #   against.
       #
       #   @example
       #
@@ -805,6 +806,29 @@ module Pod
       attribute :private_header_files, {
         :container => Array,
         :file_patterns => true,
+      }
+
+      #------------------#
+
+      # @!method framework_bundles=(*frameworks)
+      #
+      #   The list of the paths of the framework bundles of the Pod.
+      #
+      #   @example
+      #
+      #     spec.ios.framework_bundles = 'Frameworks/MyFramework.framework'
+      #
+      #   @example
+      #
+      #     spec.framework_bundles = 'MyFramework.framework', 'TheirsFramework.framework'
+      #
+      #   @param  [String, Array<String>] framework_bundles
+      #           A list of framework bundles paths.
+      #
+      attribute :framework_bundles, {
+        :container   => Array,
+        :file_patterns => true,
+        :singularize => true,
       }
 
       #------------------#

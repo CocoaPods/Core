@@ -9,7 +9,7 @@ GIT
 
 GIT
   remote: https://github.com/irrationalfab/PrettyBacon.git
-  revision: c42de649708149bbfb5fb5beefa65440855cf876
+  revision: 0da7e231bf597005aaa4efb4c2cd837336a6b42b
   branch: master
   specs:
     prettybacon (0.0.1)
@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (0.22.1)
+    cocoapods-core (0.22.3)
       activesupport (~> 3.2.13)
       json (~> 1.8.0)
       nap (~> 0.5.1)
@@ -26,8 +26,8 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (3.2.13)
-      i18n (= 0.6.1)
+    activesupport (3.2.14)
+      i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
     awesome_print (1.1.0)
     bacon (1.2.0)
@@ -41,7 +41,7 @@ GEM
       thor
     ffi (1.9.0)
     github-markup (0.7.5)
-    i18n (0.6.1)
+    i18n (0.6.4)
     json (1.8.0)
     listen (1.1.6)
       rb-fsevent (>= 0.9.3)

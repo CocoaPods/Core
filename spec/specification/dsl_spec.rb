@@ -229,6 +229,11 @@ module Pod
         @spec.attributes_hash["private_header_files"].should == [ "private/**/*" ]
       end
 
+      it "allows to specify the frameworks bundles of the Pod" do
+        @spec.framework_bundles = [ "Parse.framework" ]
+        @spec.attributes_hash["framework_bundles"].should == [ "Parse.framework" ]
+      end
+
       it "allows to specify the resources files" do
         @spec.resources = ['frameworks/CrashReporter.framework']
         @spec.attributes_hash["resources"].should == ['frameworks/CrashReporter.framework']
@@ -343,7 +348,7 @@ module Pod
           spec.should.respond_to(attr.writer_name)
         end
         singularized.map{ |attr| attr.name.to_s }.sort.should == %w[
-          authors compiler_flags frameworks libraries
+          authors compiler_flags framework_bundles frameworks libraries
           preserve_paths resources screenshots weak_frameworks
         ]
       end

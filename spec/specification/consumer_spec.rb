@@ -271,6 +271,13 @@ module Pod
 
       #------------------#
 
+      it "returns the frameworks bundles" do
+        @spec.private_header_files = [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @consumer.private_header_files.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
+      end
+
+      #------------------#
+
       it "returns the resources files" do
         @spec.resources = ['frameworks/CrashReporter.framework']
         @consumer.resources.should == ['frameworks/CrashReporter.framework']

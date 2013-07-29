@@ -123,6 +123,10 @@ module Pod
       #
       spec_attr_accessor :private_header_files
 
+      # @return [Array<String>] The paths of the frameworks bundles of the Pod.
+      #
+      spec_attr_accessor :framework_bundles
+
       # @return [Array<String>] A hash where the key represents the
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
