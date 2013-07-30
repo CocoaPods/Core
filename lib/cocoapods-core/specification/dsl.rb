@@ -501,7 +501,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.framework = 'Twitter'
+      #     spec.weak_framework = 'Twitter'
       #
       #   @param  [String, Array<String>] weak_frameworks
       #           A list of frameworks names.
