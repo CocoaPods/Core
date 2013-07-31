@@ -858,7 +858,8 @@ module Pod
 
       # @!method resource_bundles=(*frameworks)
       #
-      #   The paths of the resources bundles that come shipped with the Pod.
+      #   This attribute allows to define the name and the file of the resource
+      #   bundles which should be built for the Pod.
       #
       #   @example
       #
@@ -866,9 +867,9 @@ module Pod
       #
       #   @example
       #
-      #     spec.resource_bundle = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
+      #     spec.resource_bundles = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
       #
-      #   @param  [String, Array<String>] resource_bundles
+      #   @param  [Hash] resource_bundles
       #           A list of resource bundles paths.
       #
       attribute :resource_bundles, {
@@ -892,7 +893,8 @@ module Pod
       #
       #     spec.resources = ["Images/*.png", "Sounds/*"]
       #
-      #   @param  [String, Array<String>] resources the resources of the Pod.
+      #   @param  [String, Array<String>] resources
+      #           The resources shipped with the Pod.
       #
       attribute :resources, {
         :container     => Array,
