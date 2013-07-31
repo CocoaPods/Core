@@ -199,10 +199,10 @@ module Pod
       # The keys accepted by the hash of the source attribute.
       #
       SOURCE_KEYS = {
-        :git   => [:tag, :branch, :commit, :submodules],
-        :svn   => [:folder, :tag, :revision],
-        :hg    => [:revision],
-        :http  => nil,
+        :git => [:tag, :branch, :commit, :submodules],
+        :svn => [:folder, :tag, :revision],
+        :hg => [:revision],
+        :http => nil,
         :path => nil
       }.freeze
 
@@ -338,8 +338,8 @@ module Pod
       # @todo This currently is not used in the Ruby DSL.
       #
       attribute :platforms, {
-        :container      => Hash,
-        :keys           => PLATFORMS,
+        :container => Hash,
+        :keys => PLATFORMS,
         :multi_platform => false,
         :inherited => true,
       }
@@ -826,7 +826,54 @@ module Pod
       #           A list of framework bundles paths.
       #
       attribute :framework_bundles, {
-        :container   => Array,
+        :container => Array,
+        :file_patterns => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
+      # @!method library_files=(*frameworks)
+      #
+      #   The paths of the libraries that come shipped with the Pod.
+      #
+      #   @example
+      #
+      #     spec.ios.library_file = 'Libraries/libProj4.a'
+      #
+      #   @example
+      #
+      #     spec.library_files = 'libProj4.a', 'libJavaScriptCore.a'
+      #
+      #   @param  [String, Array<String>] library_files
+      #           A list of library paths.
+      #
+      attribute :library_files, {
+        :container => Array,
+        :file_patterns => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
+      # @!method resource_bundles=(*frameworks)
+      #
+      #   The paths of the resources bundles that come shipped with the Pod.
+      #
+      #   @example
+      #
+      #     spec.ios.resource_bundle = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+      #
+      #   @example
+      #
+      #     spec.resource_bundle = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
+      #
+      #   @param  [String, Array<String>] resource_bundles
+      #           A list of resource bundles paths.
+      #
+      attribute :resource_bundles, {
+        :types => [String, Array],
+        :container => Hash,
         :file_patterns => true,
         :singularize => true,
       }
@@ -852,56 +899,6 @@ module Pod
         :file_patterns => true,
         :singularize   => true,
       }
-
-      #------------------#
-
-      # The possible destinations for the `resources` attribute. Extracted form
-      # `Xcodeproj::Constants.COPY_FILES_BUILD_PHASE_DESTINATIONS`.
-      #
-      RESOURCES_DESTINATIONS = [
-        :products_directory,
-        :wrapper,
-        :resources,
-        :executables,
-        :java_resources,
-        :frameworks,
-        :shared_frameworks,
-        :shared_support,
-        :plug_ins,
-      ].freeze
-
-      # @todo Implement in CP 0.18
-      # method resources_bundle=(resources)
-      #
-      #   A list of resources that should be copied into the target bundle.
-      #
-      #   ---
-      #
-      #   It is possible to specify a destination, if not specified the files
-      #   are copied to the `resources` folder of the bundle.
-      #
-      #   @example
-      #
-      #     spec.resource = "Resources/HockeySDK.bundle"
-      #
-      #   @example
-      #
-      #     spec.resources = "Resources/*.png"
-      #
-      #   @example
-      #
-      #     spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
-      #
-      #   @param  [Hash, String, Array<String>] resources
-      #           the resources of the Pod.
-      #
-      # attribute :resources_bundle, {
-      #   :types         => [String, Array],
-      #   :file_patterns => true,
-      #   :container     => Hash,
-      #   :keys          => RESOURCES_DESTINATIONS,
-      #   :singularize   => true,
-      # }
 
       #------------------#
 

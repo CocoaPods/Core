@@ -229,9 +229,20 @@ module Pod
         @spec.attributes_hash["private_header_files"].should == [ "private/**/*" ]
       end
 
-      it "allows to specify the frameworks bundles of the Pod" do
+      it "allows to specify the frameworks bundles shipped with the Pod" do
         @spec.framework_bundles = [ "Parse.framework" ]
         @spec.attributes_hash["framework_bundles"].should == [ "Parse.framework" ]
+      end
+
+
+      it "allows to specify the libraries shipped with the Pod" do
+        @spec.library_files = [ "libProj4.a" ]
+        @spec.attributes_hash["library_files"].should == [ "libProj4.a" ]
+      end
+
+      it "allows to specify the resources bundles shipped with the Pod" do
+        @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+        @spec.attributes_hash["resource_bundles"].should == { 'MapBox' => 'MapView/Map/Resources/*.png' }
       end
 
       it "allows to specify the resources files" do
@@ -349,7 +360,8 @@ module Pod
         end
         singularized.map{ |attr| attr.name.to_s }.sort.should == %w[
           authors compiler_flags framework_bundles frameworks libraries
-          preserve_paths resources screenshots weak_frameworks
+          library_files preserve_paths resource_bundles resources screenshots
+          weak_frameworks
         ]
       end
     end
