@@ -300,6 +300,33 @@ module Pod
         :container      => Array,
       }
 
+      #------------------#
+
+      # @!method prepare_command=(command)
+      #
+      #   A command that will be executed after the Pod is downloaded. This
+      #   command can be used to create or modify any file which be picked up
+      #   by the other attributes of the specification.
+      #
+      #   This command is executed before the Pod is cleaned and before the
+      #   Pods project is created.
+      #
+      #   @example
+      #
+      #     spec.prepare_command = 'ruby build_files.rb'
+      #
+      #   @example
+      #
+      #     spec.prepare_command = <<-CMD
+      #                             sed -i 's/MyNameSpacedHeader/Header/g' ./**/*.h
+      #                             sed -i 's/MyNameOtherSpacedHeader/OtherHeader/g' ./**/*.h
+      #                        CMD
+      #
+      #   @param  [String] command
+      #           the name of the pod.
+      #
+      root_attribute :prepare_command
+
       #-----------------------------------------------------------------------#
 
       # @!group Platform
@@ -985,6 +1012,9 @@ module Pod
       #   end
       #
       def pre_install(&block)
+        CoreUI.warn "The pre install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes."
         @pre_install_callback = block
       end
 
@@ -1012,6 +1042,9 @@ module Pod
       #   end
       #
       def post_install(&block)
+        CoreUI.warn "The post install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes."
         @post_install_callback = block
       end
 

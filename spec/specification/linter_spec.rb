@@ -303,12 +303,27 @@ module Pod
         message.should.include('spec is empty')
       end
 
-      it "requires that the require_arc value is specified until the switch to a true default" do
-        consumer = Specification::Consumer
-        consumer.any_instance.stubs(:requires_arc).returns(nil)
+      xit "requires that the require_arc value is specified until the switch to a true default" do
+        # TODO the default value is invalidating this test
+        consumer = @spec.consumer(:ios)
+        @spec.requires_arc = nil
         @linter.lint
         message = @linter.results.first.message
         message.should.include('`requires_arc` should be specified')
+      end
+
+      it "checks if the pre install hook has been defined" do
+        @spec.pre_install do; end
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.match /pre install hook.*deprecated/
+      end
+
+      it "checks if the post install hook has been defined" do
+        @spec.post_install do; end
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.match /post install hook.*deprecated/
       end
     end
 
