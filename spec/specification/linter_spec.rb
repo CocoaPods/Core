@@ -155,11 +155,6 @@ module Pod
         message_should_include('summary', 'meaningful')
       end
 
-      it "checks the summary punctuation" do
-        @spec.stubs(:summary).returns('sample')
-        message_should_include('summary', 'punctuation')
-      end
-
       it "checks that there are not too many comments in the file" do
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
@@ -197,11 +192,6 @@ module Pod
       it "checks the description for the example value" do
         @spec.stubs(:description).returns('An optional longer description of.')
         message_should_include('description', 'meaningful')
-      end
-
-      it "checks the description punctuation" do
-        @spec.stubs(:description).returns('sample ' * 100)
-        message_should_include('description', 'punctuation')
       end
 
       it "checks if the description is equal to the summary" do
