@@ -864,7 +864,7 @@ module Pod
       #
       #   @param  [Hash{String=>String}] resource_bundles
       #           A hash where the keys are the names of the resource bundles
-      #           and the values are they relative file patterns.
+      #           and the values are their relative file patterns.
       #
       attribute :resource_bundles, {
         :types => [String, Array],
@@ -881,7 +881,9 @@ module Pod
       #
       #   We strongly **recommend** library developers to adopt [resource
       #   bundles](http://docs.cocoapods.org/specification.html#resources) as
-      #   there can be name collisions using the resources attribute.
+      #   there can be name collisions using the resources attribute. Moreover
+      #   resources specified with this attribute are copied directly to the
+      #   client target and therefore they are not optimized by Xcode.
       #
       #   @example
       #
