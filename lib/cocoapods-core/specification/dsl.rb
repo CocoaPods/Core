@@ -859,7 +859,19 @@ module Pod
       # @!method resource_bundles=(*frameworks)
       #
       #   This attribute allows to define the name and the file of the resource
-      #   bundles which should be built for the Pod.
+      #   bundles which should be built for the Pod. They are specified as a
+      #   hash where the keys represent the name of the bundles and the values
+      #   the file patterns that they should include.
+      #
+      #   We strongly **recommend** library developers to adopt resource
+      #   bundles as there can be name collisions using the resources
+      #   attribute.
+      #
+      #   The name of the bundle should at least include the name of the Pod
+      #   to minimize the change of name collisions.
+      #
+      #   To provide different resources per platform namespaced bundles *must*
+      #   be used.
       #
       #   @example
       #
@@ -884,6 +896,10 @@ module Pod
       # @!method resources=(resources)
       #
       #   A list of resources that should be copied into the target bundle.
+      #
+      #   We strongly **recommend** library developers to adopt [resource
+      #   bundles](http://docs.cocoapods.org/specification.html#resources) as
+      #   there can be name collisions using the resources attribute.
       #
       #   @example
       #
