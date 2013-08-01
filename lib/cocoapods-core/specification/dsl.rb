@@ -199,10 +199,10 @@ module Pod
       # The keys accepted by the hash of the source attribute.
       #
       SOURCE_KEYS = {
-        :git   => [:tag, :branch, :commit, :submodules],
-        :svn   => [:folder, :tag, :revision],
-        :hg    => [:revision],
-        :http  => nil,
+        :git => [:tag, :branch, :commit, :submodules],
+        :svn => [:folder, :tag, :revision],
+        :hg => [:revision],
+        :http => nil,
         :path => nil
       }.freeze
 
@@ -319,8 +319,8 @@ module Pod
       # @todo This currently is not used in the Ruby DSL.
       #
       attribute :platforms, {
-        :container      => Hash,
-        :keys           => PLATFORMS,
+        :container => Hash,
+        :keys => PLATFORMS,
         :multi_platform => false,
         :inherited => true,
       }
@@ -454,7 +454,8 @@ module Pod
 
       # @!method frameworks=(*frameworks)
       #
-      #   A list of frameworks that the user’s target needs to link against.
+      #   A list of system frameworks that the user’s target needs to link
+      #   against.
       #
       #   @example
       #
@@ -790,9 +791,99 @@ module Pod
 
       #------------------#
 
+      # @!method vendored_frameworks=(*frameworks)
+      #
+      #   The paths of the framework bundles that come shipped with the Pod.
+      #
+      #   @example
+      #
+      #     spec.ios.vendored_frameworks = 'Frameworks/MyFramework.framework'
+      #
+      #   @example
+      #
+      #     spec.vendored_frameworks = 'MyFramework.framework', 'TheirFramework.framework'
+      #
+      #   @param  [String, Array<String>] vendored_frameworks
+      #           A list of framework bundles paths.
+      #
+      attribute :vendored_frameworks, {
+        :container => Array,
+        :file_patterns => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
+      # @!method vendored_libraries=(*frameworks)
+      #
+      #   The paths of the libraries that come shipped with the Pod.
+      #
+      #   @example
+      #
+      #     spec.ios.vendored_library = 'Libraries/libProj4.a'
+      #
+      #   @example
+      #
+      #     spec.vendored_libraries = 'libProj4.a', 'libJavaScriptCore.a'
+      #
+      #   @param  [String, Array<String>] vendored_libraries
+      #           A list of library paths.
+      #
+      attribute :vendored_libraries, {
+        :container => Array,
+        :file_patterns => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
+      # @!method resource_bundles=(*frameworks)
+      #
+      #   This attribute allows to define the name and the file of the resource
+      #   bundles which should be built for the Pod. They are specified as a
+      #   hash where the keys represent the name of the bundles and the values
+      #   the file patterns that they should include.
+      #
+      #   We strongly **recommend** library developers to adopt resource
+      #   bundles as there can be name collisions using the resources
+      #   attribute.
+      #
+      #   The names of the bundles should at least include the name of the Pod
+      #   to minimize the change of name collisions.
+      #
+      #   To provide different resources per platform namespaced bundles *must*
+      #   be used.
+      #
+      #   @example
+      #
+      #     spec.ios.resource_bundle = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+      #
+      #   @example
+      #
+      #     spec.resource_bundles = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
+      #
+      #   @param  [Hash{String=>String}] resource_bundles
+      #           A hash where the keys are the names of the resource bundles
+      #           and the values are their relative file patterns.
+      #
+      attribute :resource_bundles, {
+        :types => [String, Array],
+        :container => Hash,
+        :file_patterns => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
       # @!method resources=(resources)
       #
       #   A list of resources that should be copied into the target bundle.
+      #
+      #   We strongly **recommend** library developers to adopt [resource
+      #   bundles](http://docs.cocoapods.org/specification.html#resources) as
+      #   there can be name collisions using the resources attribute. Moreover
+      #   resources specified with this attribute are copied directly to the
+      #   client target and therefore they are not optimized by Xcode.
       #
       #   @example
       #
@@ -802,63 +893,14 @@ module Pod
       #
       #     spec.resources = ["Images/*.png", "Sounds/*"]
       #
-      #   @param  [String, Array<String>] resources the resources of the Pod.
+      #   @param  [String, Array<String>] resources
+      #           The resources shipped with the Pod.
       #
       attribute :resources, {
         :container     => Array,
         :file_patterns => true,
         :singularize   => true,
       }
-
-      #------------------#
-
-      # The possible destinations for the `resources` attribute. Extracted form
-      # `Xcodeproj::Constants.COPY_FILES_BUILD_PHASE_DESTINATIONS`.
-      #
-      RESOURCES_DESTINATIONS = [
-        :products_directory,
-        :wrapper,
-        :resources,
-        :executables,
-        :java_resources,
-        :frameworks,
-        :shared_frameworks,
-        :shared_support,
-        :plug_ins,
-      ].freeze
-
-      # @todo Implement in CP 0.18
-      # method resources_bundle=(resources)
-      #
-      #   A list of resources that should be copied into the target bundle.
-      #
-      #   ---
-      #
-      #   It is possible to specify a destination, if not specified the files
-      #   are copied to the `resources` folder of the bundle.
-      #
-      #   @example
-      #
-      #     spec.resource = "Resources/HockeySDK.bundle"
-      #
-      #   @example
-      #
-      #     spec.resources = "Resources/*.png"
-      #
-      #   @example
-      #
-      #     spec.resources = { :frameworks => 'frameworks/CrashReporter.framework' }
-      #
-      #   @param  [Hash, String, Array<String>] resources
-      #           the resources of the Pod.
-      #
-      # attribute :resources_bundle, {
-      #   :types         => [String, Array],
-      #   :file_patterns => true,
-      #   :container     => Hash,
-      #   :keys          => RESOURCES_DESTINATIONS,
-      #   :singularize   => true,
-      # }
 
       #------------------#
 

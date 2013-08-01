@@ -271,6 +271,53 @@ module Pod
 
       #------------------#
 
+      it "returns the frameworks bundles" do
+        @spec.vendored_frameworks = [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @consumer.vendored_frameworks.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
+      end
+
+      #------------------#
+
+      it "returns the library files" do
+        @spec.vendored_libraries = ['libProj4.a', 'libJavaScriptCore.a']
+        @consumer.vendored_libraries.should == ['libProj4.a', 'libJavaScriptCore.a']
+      end
+
+      #------------------#
+
+      it "returns the resource bundles" do
+        @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+        @consumer.resource_bundles.should == { 'MapBox' => ['MapView/Map/Resources/*.png'] }
+      end
+
+      it "handles multi-platform resource bundles" do
+        @spec.ios.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+        @consumer.resource_bundles.should == { 'MapBox' => ['MapView/Map/Resources/*.png'] }
+      end
+
+      it "merges multi platform resource bundles if needed" do
+        @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+        @spec.ios.resource_bundles = { 'MapBox-iOS' => ['MapView/Map/iOS/Resources/*.png'] }
+        @consumer.resource_bundles.should == {
+          'MapBox' => ['MapView/Map/Resources/*.png'],
+          'MapBox-iOS' => ['MapView/Map/iOS/Resources/*.png'],
+        }
+      end
+
+      it "merges the file patterns of multi platform resource bundles if needed" do
+        @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
+        @spec.ios.resource_bundles = { 'MapBox' => ['MapView/Map/iOS/Resources/*.png'] }
+        @consumer.resource_bundles.should == {
+          'MapBox' => ['MapView/Map/Resources/*.png', 'MapView/Map/iOS/Resources/*.png'],
+        }
+      end
+
+      it "returns the empty hash if no resource bundles have been specified" do
+        @consumer.resource_bundles.should == {}
+      end
+
+      #------------------#
+
       it "returns the resources files" do
         @spec.resources = ['frameworks/CrashReporter.framework']
         @consumer.resources.should == ['frameworks/CrashReporter.framework']

@@ -123,6 +123,22 @@ module Pod
       #
       spec_attr_accessor :private_header_files
 
+      # @return [Array<String>] The paths of the framework bundles shipped with
+      #         the Pod.
+      #
+      spec_attr_accessor :vendored_frameworks
+
+      # @return [Array<String>] The paths of the libraries shipped with the
+      #         Pod.
+      #
+      spec_attr_accessor :vendored_libraries
+
+      # @return [Hash{String=>String}]]  hash where the keys are the names of
+      #         the resource bundles and the values are their relative file
+      #         patterns.
+      #
+      spec_attr_accessor :resource_bundles
+
       # @return [Array<String>] A hash where the key represents the
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
@@ -332,22 +348,23 @@ module Pod
         value.is_a?(Array) ? value * "\n" : value
       end
 
-      # Converts the resources file patterns to a hash defaulting to the
-      # resource key if they are defined as an Array or a String.
+      # Ensures that the file patterns of the resource bundles are contained in
+      # an array.
       #
       # @param  [String, Array, Hash] value.
       #         The value of the attribute as specified by the user.
       #
       # @return [Hash] the resources.
       #
-      # def _prepare_resources_bundle(value)
-      #   value = { :resources => value } unless value.is_a?(Hash)
-      #   result = {}
-      #   value.each do |key, patterns|
-      #     result[key] = [*patterns].compact
-      #   end
-      #   result
-      # end
+      def _prepare_resource_bundles(value)
+        result = {}
+        if value
+          value.each do |key, patterns|
+            result[key] = [*patterns].compact
+          end
+        end
+        result
+      end
 
       #-----------------------------------------------------------------------#
 
