@@ -57,12 +57,6 @@ module Pod
         @spec.attributes_hash["description"].should == 'text'
       end
 
-      it "allows to specify the documentation settings" do
-        settings =  { "appledoc" => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
-        @spec.documentation = settings
-        @spec.attributes_hash["documentation"].should == settings
-      end
-
     end
 
     #-----------------------------------------------------------------------------#

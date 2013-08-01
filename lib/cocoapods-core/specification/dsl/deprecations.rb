@@ -34,6 +34,10 @@ module Pod
           end
         end
 
+        def documentation=(value)
+          CoreUI.warn "The `documentation` DSL directive of the podspec format has been deprecated."
+        end
+
         def clean_paths=(value)
           raise Informative, "[#{to_s}] Clean paths are deprecated. CocoaPods now " \
             "cleans unused files by default. Use the `preserve_paths` attribute if needed."

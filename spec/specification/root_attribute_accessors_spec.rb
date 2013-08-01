@@ -117,10 +117,5 @@ module Pod
       @spec.screenshots.should == ['www.example.com/img1.png']
     end
 
-    it "returns any setting to pass to the appledoc tool" do
-      settings =  { :appledoc => ['--no-repeat-first-par', '--no-warn-invalid-crossref'] }
-      @spec.documentation = settings
-      @spec.documentation.should == settings
-    end
   end
 end
