@@ -230,14 +230,14 @@ module Pod
       end
 
       it "allows to specify the frameworks bundles shipped with the Pod" do
-        @spec.framework_bundles = [ "Parse.framework" ]
-        @spec.attributes_hash["framework_bundles"].should == [ "Parse.framework" ]
+        @spec.vendored_frameworks = [ "Parse.framework" ]
+        @spec.attributes_hash["vendored_frameworks"].should == [ "Parse.framework" ]
       end
 
 
       it "allows to specify the libraries shipped with the Pod" do
-        @spec.library_files = [ "libProj4.a" ]
-        @spec.attributes_hash["library_files"].should == [ "libProj4.a" ]
+        @spec.vendored_libraries = [ "libProj4.a" ]
+        @spec.attributes_hash["vendored_libraries"].should == [ "libProj4.a" ]
       end
 
       it "allows to specify the resources bundles shipped with the Pod" do
@@ -359,9 +359,9 @@ module Pod
           spec.should.respond_to(attr.writer_name)
         end
         singularized.map{ |attr| attr.name.to_s }.sort.should == %w[
-          authors compiler_flags framework_bundles frameworks libraries
-          library_files preserve_paths resource_bundles resources screenshots
-          weak_frameworks
+          authors compiler_flags  frameworks libraries preserve_paths
+          resource_bundles resources screenshots vendored_frameworks
+          vendored_libraries weak_frameworks
         ]
       end
     end

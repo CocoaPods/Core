@@ -810,22 +810,22 @@ module Pod
 
       #------------------#
 
-      # @!method framework_bundles=(*frameworks)
+      # @!method vendored_frameworks=(*frameworks)
       #
       #   The paths of the framework bundles that come shipped with the Pod.
       #
       #   @example
       #
-      #     spec.ios.framework_bundles = 'Frameworks/MyFramework.framework'
+      #     spec.ios.vendored_frameworks = 'Frameworks/MyFramework.framework'
       #
       #   @example
       #
-      #     spec.framework_bundles = 'MyFramework.framework', 'TheirFramework.framework'
+      #     spec.vendored_frameworks = 'MyFramework.framework', 'TheirFramework.framework'
       #
-      #   @param  [String, Array<String>] framework_bundles
+      #   @param  [String, Array<String>] vendored_frameworks
       #           A list of framework bundles paths.
       #
-      attribute :framework_bundles, {
+      attribute :vendored_frameworks, {
         :container => Array,
         :file_patterns => true,
         :singularize => true,
@@ -833,22 +833,22 @@ module Pod
 
       #------------------#
 
-      # @!method library_files=(*frameworks)
+      # @!method vendored_libraries=(*frameworks)
       #
       #   The paths of the libraries that come shipped with the Pod.
       #
       #   @example
       #
-      #     spec.ios.library_file = 'Libraries/libProj4.a'
+      #     spec.ios.vendored_library = 'Libraries/libProj4.a'
       #
       #   @example
       #
-      #     spec.library_files = 'libProj4.a', 'libJavaScriptCore.a'
+      #     spec.vendored_libraries = 'libProj4.a', 'libJavaScriptCore.a'
       #
-      #   @param  [String, Array<String>] library_files
+      #   @param  [String, Array<String>] vendored_libraries
       #           A list of library paths.
       #
-      attribute :library_files, {
+      attribute :vendored_libraries, {
         :container => Array,
         :file_patterns => true,
         :singularize => true,

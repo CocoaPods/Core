@@ -272,15 +272,15 @@ module Pod
       #------------------#
 
       it "returns the frameworks bundles" do
-        @spec.framework_bundles = [ "MyFramework.framework", "MyOtherFramework.framework" ]
-        @consumer.framework_bundles.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @spec.vendored_frameworks = [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @consumer.vendored_frameworks.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
       end
 
       #------------------#
 
       it "returns the library files" do
-        @spec.library_files = ['libProj4.a', 'libJavaScriptCore.a']
-        @consumer.library_files.should == ['libProj4.a', 'libJavaScriptCore.a']
+        @spec.vendored_libraries = ['libProj4.a', 'libJavaScriptCore.a']
+        @consumer.vendored_libraries.should == ['libProj4.a', 'libJavaScriptCore.a']
       end
 
       #------------------#

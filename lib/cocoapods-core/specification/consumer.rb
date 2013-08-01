@@ -126,12 +126,12 @@ module Pod
       # @return [Array<String>] The paths of the framework bundles shipped with
       #         the Pod.
       #
-      spec_attr_accessor :framework_bundles
+      spec_attr_accessor :vendored_frameworks
 
       # @return [Array<String>] The paths of the libraries shipped with the
       #         Pod.
       #
-      spec_attr_accessor :library_files
+      spec_attr_accessor :vendored_libraries
 
       # @return [Array<String>] The paths of the resource bundles shipped with
       #         the Pod.
