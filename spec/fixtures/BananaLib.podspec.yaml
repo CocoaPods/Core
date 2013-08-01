@@ -16,13 +16,6 @@ license:
   type: MIT
   file: LICENSE
   text: Permission is hereby granted ...
-documentation:
-  html: http://banana-corp.local/banana-lib/docs.html
-  appledoc:
-  - "--project-company"
-  - Banana Corp
-  - "--company-id"
-  - com.banana
 
 # Root attributes
 platforms:

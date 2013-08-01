@@ -155,11 +155,6 @@ module Pod
         message_should_include('summary', 'meaningful')
       end
 
-      it "checks the summary punctuation" do
-        @spec.stubs(:summary).returns('sample')
-        message_should_include('summary', 'punctuation')
-      end
-
       it "checks that there are not too many comments in the file" do
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
@@ -169,6 +164,17 @@ module Pod
         linter.lint
         linter.results.count.should == 1
         linter.results.first.message.should.match /Comments must be deleted./
+      end
+
+      it "checks that there are not too many comments in the file" do
+        valid_text = File.read(@podspec_path)
+        podspec = "# some comment\n" << valid_text
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        File.open(path, 'w') {|f| f.puts(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        linter.results.count.should == 1
+        linter.results.first.message.should.match /Comments placed at the top of the specification must be deleted./
       end
 
       it "should not count #define's as comments" do
@@ -186,11 +192,6 @@ module Pod
       it "checks the description for the example value" do
         @spec.stubs(:description).returns('An optional longer description of.')
         message_should_include('description', 'meaningful')
-      end
-
-      it "checks the description punctuation" do
-        @spec.stubs(:description).returns('sample ' * 100)
-        message_should_include('description', 'punctuation')
       end
 
       it "checks if the description is equal to the summary" do

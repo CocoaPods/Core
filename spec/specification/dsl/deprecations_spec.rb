@@ -53,6 +53,11 @@ module Pod
       end.message.should.match /copy_header_mapping.*deprecated/
     end
 
+    it "warns about the deprecated `documentation` attribute" do
+      @spec.documentation = {}
+      CoreUI.warnings.should.match /documentation.*deprecated/
+    end
+
     it "raises for the deprecated `clean_paths` attribute" do
       lambda { @spec.clean_paths = 'value' }.should.raise Informative
     end

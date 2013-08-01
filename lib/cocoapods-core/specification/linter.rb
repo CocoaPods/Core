@@ -96,6 +96,7 @@ module Pod
         comments_lines_count = text.scan(/^\s*#\s+/).length
         comments_ratio = comments_lines_count.fdiv(all_lines_count)
         warning "Comments must be deleted." if comments_lines_count > 20 && comments_ratio > 0.2
+        warning "Comments placed at the top of the specification must be deleted." if text.lines.first =~ /^\s*#\s+/
       end
 
       # Checks that every root only attribute which is required has a value.
@@ -207,14 +208,12 @@ module Pod
       def _validate_summary(s)
         warning "The summary should be a short version of `description` (max 140 characters)." if s.length > 140
         warning "The summary is not meaningful." if s =~ /A short description of/
-        warning "The summary should end with proper punctuation." if s !~ /(\.|\?|!)$/
       end
 
       # Performs validations related to the `description` attribute.
       #
       def _validate_description(d)
         warning "The description is not meaningful." if d =~ /An optional longer description of/
-        warning "The description should end with proper punctuation." if d !~ /(\.|\?|!)$/
         warning "The description is equal to the summary." if d == spec.summary
         warning "The description is shorter than the summary." if d.length < spec.summary.length
       end

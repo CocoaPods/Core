@@ -118,13 +118,6 @@ module Pod
           [*value]
         end
 
-        # @return [Hash{Symbol=>Array<String>}] The options to pass to the
-        #         appledoc tool.
-        #
-        def documentation
-          convert_keys_to_symbol(attributes_hash["documentation"])
-        end
-
         #-----------------------------------------------------------------------#
 
         private
