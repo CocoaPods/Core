@@ -848,7 +848,7 @@ module Pod
       #   bundles as there can be name collisions using the resources
       #   attribute.
       #
-      #   The name of the bundle should at least include the name of the Pod
+      #   The names of the bundles should at least include the name of the Pod
       #   to minimize the change of name collisions.
       #
       #   To provide different resources per platform namespaced bundles *must*
@@ -862,8 +862,9 @@ module Pod
       #
       #     spec.resource_bundles = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
       #
-      #   @param  [Hash] resource_bundles
-      #           A list of resource bundles paths.
+      #   @param  [Hash{String=>String}] resource_bundles
+      #           A hash where the keys are the names of the resource bundles
+      #           and the values are they relative file patterns.
       #
       attribute :resource_bundles, {
         :types => [String, Array],

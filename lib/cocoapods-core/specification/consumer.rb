@@ -133,8 +133,9 @@ module Pod
       #
       spec_attr_accessor :vendored_libraries
 
-      # @return [Array<String>] The paths of the resource bundles shipped with
-      #         the Pod.
+      # @return [Hash{String=>String}]]  hash where the keys are the names of
+      #         the resource bundles and the values are they relative file
+      #         patterns.
       #
       spec_attr_accessor :resource_bundles
 
