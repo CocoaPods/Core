@@ -146,6 +146,7 @@ module Pod
             validate_file_patterns
             check_tmp_arc_not_nil
             check_if_spec_is_empty
+            check_install_hooks
             @consumer = nil
           end
         end
@@ -299,6 +300,18 @@ module Pod
         if empty
           error "The #{consumer.spec} spec is empty (no source files, resources, preserve paths, dependencies or subspecs)."
         end
+      end
+
+      # Check the hooks
+      #
+      def check_install_hooks
+        warning "The pre install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes." unless consumer.spec.pre_install_callback.nil?
+
+        warning "The post install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes." unless consumer.spec.post_install_callback.nil?
       end
 
       #-----------------------------------------------------------------------#

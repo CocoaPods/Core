@@ -117,5 +117,10 @@ module Pod
       @spec.screenshots.should == ['www.example.com/img1.png']
     end
 
+    it "returns the prepare_command" do
+      @spec.prepare_command = 'ruby prepare_script.rb'
+      @spec.prepare_command.should == 'ruby prepare_script.rb'
+    end
+
   end
 end

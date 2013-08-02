@@ -118,6 +118,10 @@ module Pod
           [*value]
         end
 
+        def prepare_command
+          attributes_hash["prepare_command"]
+        end
+
         #-----------------------------------------------------------------------#
 
         private
