@@ -57,6 +57,10 @@ module Pod
         @spec.attributes_hash["description"].should == 'text'
       end
 
+      it "allows to specify a prepare command" do
+        @spec.prepare_command = "ruby build_files.rb"
+        @spec.attributes_hash["prepare_command"].should == "ruby build_files.rb"
+      end
     end
 
     #-----------------------------------------------------------------------------#
