@@ -304,9 +304,9 @@ module Pod
 
       # @!method prepare_command=(command)
       #
-      #   A command that will be executed after the Pod is downloaded. This
-      #   command can be used to create or modify any file which be picked up
-      #   by the other attributes of the specification.
+      # A bash script that will be executed after the Pod is downloaded. This
+      # command can be used to create, delete and modify any file downloaded
+      # and will be ran before other attributes from the specification.
       #
       #   This command is executed before the Pod is cleaned and before the
       #   Pods project is created.
@@ -323,7 +323,7 @@ module Pod
       #                        CMD
       #
       #   @param  [String] command
-      #           the name of the pod.
+      #           the prepare command of the pod.
       #
       root_attribute :prepare_command
 
