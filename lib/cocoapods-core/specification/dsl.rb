@@ -674,8 +674,10 @@ module Pod
 
       # @!group File patterns
       #
-      #   These paths should be specified **relative** to the **root** of the
-      #   source and may contain the following wildcard patterns:
+      #   Podspecs should be located at the **root** of the repository, and paths
+      #   to files should be specified **relative** to the root of the repository
+      #   as well. File patterns do not support traversing the parent directory ( `..` ).
+      #   File patterns may contain the following wildcard patterns:
       #
       #   ---
       #
