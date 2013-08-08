@@ -310,7 +310,11 @@ module Pod
       #   specification are collected.
       #
       #   This command is executed before the Pod is cleaned and before the
-      #   Pods project is created.
+      #   Pods project is created. The working directory is the root of the
+      #   Pod.
+      #
+      #   If the pod is installed with the `:path` option this command will not
+      #   be executed.
       #
       #   @example
       #
