@@ -78,9 +78,9 @@ module Pod
       # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
       #
       # Finally, instead of a version, you can specify the `:head` flag. This
-      # will use the pod’s latest version spec version, but force the download
-      # of the ‘bleeding edge’ version. Use this with caution, as the spec
-      # might not be compatible anymore.
+      # will use the spec of the newest available version in your spec repo(s),
+      # but force the download of the ‘bleeding edge’ version (HEAD). Use this
+      # with caution, as the spec _might_ not be compatible anymore.
       #
       #     pod 'Objection', :head
       #
