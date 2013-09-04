@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (0.23.0)
+    cocoapods-core (0.24.0)
       activesupport (~> 3.0)
       json (~> 1.8)
       nap (~> 0.5)
