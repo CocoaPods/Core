@@ -19,9 +19,9 @@ Gem::Specification.new do |s|
   s.files         =  Dir["lib/**/*.rb"] + %w{ README.md LICENSE }
   s.require_paths =  %w{ lib }
 
-  s.add_runtime_dependency 'activesupport', '~> 3.2.13'
-  s.add_runtime_dependency 'nap', "~> 0.5.1"
-  s.add_runtime_dependency "json", "~> 1.8.0"
+  s.add_runtime_dependency 'activesupport', '~> 3.0'
+  s.add_runtime_dependency 'nap', "~> 0.5"
+  s.add_runtime_dependency "json", "~> 1.8"
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
