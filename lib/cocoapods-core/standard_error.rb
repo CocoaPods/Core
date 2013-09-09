@@ -9,7 +9,7 @@ module Pod
   # Wraps an exception raised by a DSL file in order to show to the user the
   # contents of the line that raised the exception.
   #
-  class DSLError < StandardError
+  class DSLError < Informative
 
     # @return [String] the description that should be presented to the user.
     #
@@ -53,11 +53,14 @@ module Pod
     #
     def message
       unless @message
-        m = description.dup
+        m = "\n[!] "
+        m << description
+        m << ". Updating CocoaPods might fix the issue.\n"
+        m = m.red if m.respond_to?(:red)
 
         return m unless backtrace && dsl_path && File.exist?(dsl_path)
 
-        trace_line = backtrace.find { |l| l =~ /#{dsl_path}/ }
+        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) }
         return m unless trace_line
         line_numer = trace_line.split(':')[1].to_i - 1
         return m unless line_numer
@@ -67,7 +70,7 @@ module Pod
         first_line = ( line_numer.zero? )
         last_line  = ( line_numer == (lines.count - 1) )
 
-        m << "\n #\n"
+        m << "\n"
         m << "#{indent}from #{trace_line.gsub(/:in.*$/,'')}\n"
         m << "#{indent}-------------------------------------------\n"
         m << "#{indent}#{    lines[line_numer - 1] }" unless first_line
@@ -75,7 +78,7 @@ module Pod
         m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
         m << "\n" unless m.end_with?("\n")
         m << "#{indent}-------------------------------------------\n"
-        m << " #"
+        m << ""
         @message = m
       end
       @message

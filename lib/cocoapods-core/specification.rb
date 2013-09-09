@@ -607,8 +607,7 @@ module Pod
     begin
       eval(string, nil, path.to_s)
     rescue Exception => e
-      raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}",
-                         path, e.backtrace)
+      raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}", path, e.backtrace)
     end
   end
 end
