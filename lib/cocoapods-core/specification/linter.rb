@@ -46,7 +46,7 @@ module Pod
           perform_textual_analysis
           check_required_root_attributes
           run_root_validation_hooks
-          perform_all_specs_ananlysis
+          perform_all_specs_analysis
         else
           error "The specification defined in `#{file}` could not be loaded." \
             "\n\n#{@raise_message}"
@@ -137,7 +137,7 @@ module Pod
       #
       # @return [void]
       #
-      def perform_all_specs_ananlysis
+      def perform_all_specs_analysis
         all_specs = [ spec, *spec.recursive_subspecs ]
         all_specs.each do |current_spec|
           current_spec.available_platforms.each do |platform|

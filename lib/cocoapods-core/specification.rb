@@ -123,10 +123,10 @@ module Pod
     # @return   [Array<String, Version>] the name and the version of a
     #           pod.
     #
-    def self.name_and_version_from_string(string_reppresenation)
-      match_data = string_reppresenation.match(/(\S*) \((.*)\)/)
+    def self.name_and_version_from_string(string_representation)
+      match_data = string_representation.match(/(\S*) \((.*)\)/)
       unless match_data
-        raise Informative, "Invalid string representation for a Specification: `#{string_reppresenation}`."
+        raise Informative, "Invalid string representation for a Specification: `#{string_representation}`."
       end
       name = match_data[1]
       vers = Version.new(match_data[2])
