@@ -49,6 +49,75 @@ module Pod
           end
         end
 
+        # @!group Hooks
+        #
+        #   The specification class provides hooks which are called by CocoaPods
+        #   when a Pod is installed.
+
+        #-----------------------------------------------------------------------#
+
+        # This is a convenience method which gets called after all pods have been
+        # downloaded but before they have been installed, and the Xcode project
+        # and related files have been generated. Note that this hook is called
+        # for each Pods library and only for installations where the Pod is
+        # installed.
+        #
+        # This hook should be used to generate and modify the files of the Pod.
+        #
+        # It receives the
+        # [`Pod::Hooks::PodRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/podrepresentation/)
+        # and the
+        # [`Pod::Hooks::LibraryRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)
+        # instances.
+        #
+        # Override this to, for instance, to run any build script.
+        #
+        # @example
+        #
+        #   spec.pre_install do |pod, target_definition|
+        #     Dir.chdir(pod.root){ `sh make.sh` }
+        #   end
+        #
+        def pre_install(&block)
+          CoreUI.warn "[#{to_s}] The pre install hook of the specification " \
+            "DSL has been deprecated, use the `resource_bundles` or the " \
+              "`prepare_command` attributes."
+            @pre_install_callback = block
+        end
+
+        # This is a convenience method which gets called after all pods have been
+        # downloaded, installed, and the Xcode project and related files have
+        # been generated. Note that this hook is called for each Pods library and
+        # only for installations where the Pod is installed.
+        #
+        # To modify and generate files for the Pod the pre install hook should be
+        # used instead of this one.
+        #
+        # It receives a
+        # [`Pod::Hooks::LibraryRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/libraryrepresentation/)
+        # instance for the current target.
+        #
+        # Override this to, for instance, add to the prefix header.
+        #
+        # @example
+        #
+        #   spec.post_install do |library_representation|
+        #     prefix_header = library_representation.prefix_header_path
+        #     prefix_header.open('a') do |file|
+        #       file.puts('#ifdef __OBJC__\n#import "SSToolkitDefines.h"\n#endif')
+        #     end
+        #   end
+        #
+        def post_install(&block)
+          CoreUI.warn "[#{to_s}] The post install hook of the specification " \
+            "DSL has been deprecated, use the `resource_bundles` or the " \
+              "`prepare_command` attributes."
+            @post_install_callback = block
+        end
+
+        #-----------------------------------------------------------------------#
+
+
       end
 
     end

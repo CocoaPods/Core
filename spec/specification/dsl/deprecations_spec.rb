@@ -46,7 +46,7 @@ module Pod
       end.message.should.match /header_mappings.*deprecated/
     end
 
-   it "raises if the copy_header_mapping hook is defined" do
+    it "raises if the copy_header_mapping hook is defined" do
       should.raise Informative do
         def @spec.copy_header_mapping
         end
@@ -73,6 +73,40 @@ module Pod
     it "raises for the deprecated `exclude_header_search_paths` attribute" do
       lambda { @spec.exclude_header_search_paths = 'value' }.should.raise Informative
     end
+
+    #-----------------------------------------------------------------------------#
+
+    describe "Hooks" do
+      before do
+        @spec = Spec.new
+      end
+
+      it "stores a block to run before the installation" do
+        value = ''
+        @spec.post_install do value << 'modified' end
+        @spec.post_install!(nil)
+        value.should == 'modified'
+      end
+
+      it "stores a block to run after the installation" do
+        value = ''
+        @spec.post_install do value << 'modified' end
+        @spec.post_install!(nil)
+        value.should == 'modified'
+      end
+
+      it "warns about the deprecated `pre_install` hook" do
+        @spec.pre_install {}
+        CoreUI.warnings.should.match /pre install hook.*deprecated/
+      end
+
+      it "warns about the deprecated `pre_install` hook" do
+        @spec.post_install {}
+        CoreUI.warnings.should.match /post install hook.*deprecated/
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
 
   end
 end

@@ -372,11 +372,10 @@ module Pod
       end
     end
 
-    #-------------------------------------------------------------------------#
-
     public
 
-    # @!group Hooks support
+    # @!group Deprecated Hooks support
+    #-------------------------------------------------------------------------#
 
     # @return [Proc] the pre install callback if defined.
     #
