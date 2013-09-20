@@ -35,7 +35,7 @@ module Pod
         end
 
         def documentation=(value)
-          CoreUI.warn "The `documentation` DSL directive of the podspec format has been deprecated."
+          CoreUI.warn "[#{to_s}] The `documentation` DSL directive of the podspec format has been deprecated."
         end
 
         def clean_paths=(value)
