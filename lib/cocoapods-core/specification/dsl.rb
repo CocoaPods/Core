@@ -302,6 +302,22 @@ module Pod
 
       #------------------#
 
+      # @!method documentation_url=(documentation_url)
+      #
+      #   An URL for the documentation of the Pod which will be honored by
+      #   CocoaPods web properties.
+      #
+      #   @example
+      #
+      #     spec.documentation_url = 'www.example.com/docs.html'
+      #
+      #   @param  [String] documentation_url
+      #           The link of the web documentation of the Pod.
+      #
+      root_attribute :documentation_url
+
+      #------------------#
+
       # @!method prepare_command=(command)
       #
       #   A bash script that will be executed after the Pod is downloaded. This

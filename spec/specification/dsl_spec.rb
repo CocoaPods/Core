@@ -42,7 +42,7 @@ module Pod
         @spec.attributes_hash["homepage"].should == 'www.example.com'
       end
 
-      it "allows to specify the homepage" do
+      it "allows to specify the source" do
         @spec.source = { :git => 'www.example.com/repo.git' }
         @spec.attributes_hash["source"].should == { "git" => 'www.example.com/repo.git' }
       end
@@ -55,6 +55,11 @@ module Pod
       it "allows to specify the description" do
         @spec.description = 'text'
         @spec.attributes_hash["description"].should == 'text'
+      end
+
+      it "allows to specify the documentation URL" do
+        @spec.documentation_url = 'www.example.com'
+        @spec.attributes_hash["documentation_url"].should == 'www.example.com'
       end
 
       it "allows to specify a prepare command" do

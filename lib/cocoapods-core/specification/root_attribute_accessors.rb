@@ -3,7 +3,7 @@ module Pod
     module DSL
 
       # Provides the accessors methods for the root attributes. Root attributes
-      # do not support multiplatform values and inheritance.
+      # do not support multi-platform values and inheritance.
       #
       module RootAttributesAccessors
 
@@ -35,7 +35,7 @@ module Pod
         # @return [Hash] a hash containing the authors as the keys and their
         #         email address as the values.
         #
-        # @note   The value is coherced to a hash with a nil email if needed.
+        # @note   The value is coerced to a hash with a nil email if needed.
         #
         # @example Possible values
         #
@@ -111,13 +111,21 @@ module Pod
         # @return [Array<String>] The list of the URL for the screenshots of the
         #         Pod.
         #
-        # @note   The value is coherced to an array.
+        # @note   The value is coerced to an array.
         #
         def screenshots
           value = attributes_hash["screenshots"]
           [*value]
         end
 
+        # @return [String, Nil] The documentation URL of the Pod if specified.
+        #
+        def documentation_url
+          attributes_hash["documentation_url"]
+        end
+
+        # @return [String, Nil] The prepare command of the Pod if specified.
+        #
         def prepare_command
           attributes_hash["prepare_command"]
         end

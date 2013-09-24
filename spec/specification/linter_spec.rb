@@ -137,6 +137,11 @@ module Pod
 
       #------------------#
 
+      it "checks that the version has been specified" do
+        @spec.stubs(:version).returns(Pod::Version.new(nil))
+        message_should_include('version', 'required')
+      end
+
       it "checks the version is higher than 0" do
         @spec.stubs(:version).returns(Pod::Version.new('0'))
         message_should_include('version', '0')
