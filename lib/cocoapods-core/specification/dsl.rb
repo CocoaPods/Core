@@ -406,7 +406,38 @@ module Pod
 
       #------------------#
 
-      # The deployment targets of the supported platforms.
+      # The minimum deployment targets of the supported platforms.
+      #
+      # ---
+      #
+      # The following behavior is regarding the use of GCD and the
+      # `OS_OBJECT_USE_OBJC` flag. When set to `0`, it will allow code to use
+      # `dispatch_release()` on >= iOS 6.0 and OS X >= 10.8.
+      #
+      # * New libraries that do *not* require ARC don’t need to care about this
+      #   issue at all.
+      #
+      # * New libraries that *do* require ARC _and_ have a deployment target of
+      #   >= iOS 6.0 or OS X >= 10.8:
+      #
+      #   These *no longer* use `dispatch_release()` and should have the
+      #   `OS_OBJECT_USE_OBJC` flag set to `1`.
+      #
+      #   **Note:** this means that these libraries *have* to specify the
+      #             deployment target in their specifications in order to have
+      #             CocoaPods set the flag to `1` and ensure proper behavior.
+      #
+      # * New libraries that *do* require ARC, but have a deployment target of
+      #   < iOS 6.0 or OS X < 10.8:
+      #
+      #   These contain `dispatch_release()` calls and as such need the
+      #   `OS_OBJECT_USE_OBJC` flag set to `0`.
+      #
+      #   **Note:** libraries that do *not* specify a platform version are
+      #             assumed to have a deployment target of < iOS 6.0 or OS X < 10.8.
+      #
+      #  For more information, see: http://opensource.apple.com/source/libdispatch/libdispatch-228.18/os/object.h
+      #
       #
       # @example
       #
