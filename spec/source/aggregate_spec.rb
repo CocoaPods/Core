@@ -55,13 +55,6 @@ module Pod
         set.should == nil
       end
 
-      it "raises if a subspec can't be found" do
-        lambda {
-          dep = Dependency.new('RestKit/Does-not-exist')
-          set = @sut.search(dep)
-        }.should.raise Informative
-      end
-
       it "returns the directories where the repos are defined" do
         @sut.dirs.map { |d| d.basename.to_s }.sort.should == ["master", "test_repo"]
       end

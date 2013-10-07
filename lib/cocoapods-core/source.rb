@@ -150,10 +150,7 @@ module Pod
     def search(dependency)
       pod_sets.find do |set|
         # First match the (top level) name, which does not yet load the spec from disk
-        set.name == dependency.root_name &&
-          # Now either check if it's a dependency on the top level spec, or if it's not
-          # check if the requested subspec exists in the top level spec.
-          set.specification.subspec_by_name(dependency.name)
+        set.name == dependency.root_name
       end
     end
 
