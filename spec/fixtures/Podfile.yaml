@@ -1,7 +1,7 @@
 ---
 sources:
-  - 'http://source.cocoapods.com/specs'
-  - 'http://source2.cocoapods.com/specs'
+  - 'myrepo1'
+  - 'myrepo2'
 target_definitions:
   - name: Pods
     link_with_first_target: true

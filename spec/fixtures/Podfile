@@ -1,5 +1,5 @@
-source 'http://source.cocoapods.com/specs'
-source 'http://source2.cocoapods.com/specs'
+source 'myrepo1'
+source 'myrepo2'
 platform :ios
 pod 'SSZipArchive',      '>= 1'
 pod 'ASIHTTPRequest',    '~> 1.8.0'

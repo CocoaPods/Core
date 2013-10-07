@@ -445,6 +445,7 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
+
       # @!group Sources
       #
       #   The Podfile retrieves specs from a given source.
@@ -453,6 +454,7 @@ module Pod
       #   Sources are __global__ and not stored per target definition.
 
       #-----------------------------------------------------------------------#
+
       # Specifies the location of specs
       #
       # -----
@@ -461,11 +463,12 @@ module Pod
       # to specify another source.
       #
       # @param    [String] source
-      #           url to specs repo.
+      #           name of specs repo. Previously specified by user
+      #           via pod repo add command
       #
       # @example  Specifying a source
       #
-      #           source 'http://github.com/myusername/myspecsrepo'
+      #           source 'myprivaterepo'
       #
       # @return   [void]
       #

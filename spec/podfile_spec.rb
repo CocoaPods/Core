@@ -120,23 +120,23 @@ module Pod
       describe "source" do
 
         it 'always has at least one source' do
-          Podfile.new {}.sources.should.include "https://github.com/CocoaPods/Specs.git"
+          Podfile.new {}.sources.should.include "master"
 
           Podfile.new do
-            source 'http://source.cocoapods.com/specs'
-          end.sources.should.include "http://source.cocoapods.com/specs"
+            source 'new_repo'
+          end.sources.should.include "new_repo"
         end
 
         it 'can have multiple sources' do
           Podfile.new do
-            source 'http://source.cocoapods.com/specs'
-            source 'http://source2.cocoapods.com/specs'
+            source 'new_repo_1'
+            source 'new_repo_2'
           end.sources.size.should  == 2
 
           Podfile.new do
-            source 'http://source.cocoapods.com/specs'
-            source 'http://source2.cocoapods.com/specs'
-            source 'https://github.com/CocoaPods/Specs.git'
+            source 'new_repo_1'
+            source 'new_repo_2'
+            source 'master'
           end.sources.size.should  == 3
         end
 

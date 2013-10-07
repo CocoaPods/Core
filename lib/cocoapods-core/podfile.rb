@@ -95,7 +95,7 @@ module Pod
 
     # @!group Attributes
 
-    # @return [Array<Source>] all the specs source locations.
+    # @return [Array<String>] all the specs source names.
 
     def sources
       sources = get_hash_value('sources')
@@ -193,8 +193,6 @@ module Pod
     #
     def to_hash
       hash = {}
-      # ignore sources if only default source present
-      hash['sources'] = sources unless sources.size == 1 && sources.include?(default_source)
       hash['target_definitions'] = root_target_definitions.map(&:to_hash)
       hash.merge!(internal_hash)
       hash
@@ -295,16 +293,10 @@ module Pod
     def self.from_hash(hash, path = nil)
       internal_hash = hash.dup
       target_definitions = internal_hash.delete('target_definitions') || []
-      sources = internal_hash.delete('sources') || []
       podfile = Podfile.new(path, internal_hash)
-
       target_definitions.each do |definition_hash|
         definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition
-      end
-
-      sources.each do |source|
-        podfile.source(source)
       end
       podfile
     end
@@ -315,10 +307,10 @@ module Pod
 
     # @!group Private helpers
 
-    # @return [String] the default specs location
+    # @return [String] the default specs source name
     #
     def default_source
-      "https://github.com/CocoaPods/Specs.git"
+      "master"
     end
 
     # @return [Hash] The hash which store the attributes of the Podfile.
