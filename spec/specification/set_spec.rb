@@ -109,7 +109,8 @@ module Pod
 
       before do
         # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
-        @set = Source::Aggregate.new(fixture('spec-repos')).search_by_name('JSONKit').first
+        repos_dirs = [fixture('spec-repos/master'), fixture('spec-repos/test_repo')]
+        @set = Source::Aggregate.new(repos_dirs).search_by_name('JSONKit').first
       end
 
       it 'returns the sources where a podspec is available' do

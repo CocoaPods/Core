@@ -3,20 +3,25 @@ module Pod
     # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
-      # @return [Pathname] the directory were the repositories are stored.
-      #
-      attr_reader :repos_dir
+      # @return [<Array<Pathname] Collection of directories
+      #         where the repositories are stored.
+      attr_reader :dirs
 
-      # @param [Pathname] repos_dir @see repos_dir.
-      #
-      def initialize(repos_dir)
-        @repos_dir = repos_dir
+      # @param [<Array<Pathname] repos_dirs @see repos_dirs
+      def initialize(repos_dirs)
+        if repos_dirs.is_a? Array
+          @dirs = repos_dirs
+        else
+          @dirs = []
+        end
       end
 
       # @return [Array<Source>] all the sources.
+      #         The sources specified via source, searching each source in your Podifle
+      #         from first added (top of the file) to last added.
       #
       def all
-        @sources ||= dirs.map { |repo| Source.new(repo) }.sort_by(&:name)
+        @sources ||= dirs.map { |repo| Source.new(repo) }
       end
 
       # @return [Array<String>] the names of all the pods available.
@@ -44,20 +49,6 @@ module Pod
           pod_sources = sources.select { |s| pods_by_source[s].include?(pod) }
           pod_sources = pod_sources.compact
           Specification::Set.new(pod, pod_sources)
-        end
-      end
-
-      # @return [Array<Pathname>] the directories where the sources are stored.
-      #
-      # @note   If the repos dir doesn't exits this will return an empty array.
-      #
-      # @raise  If the repos dir doesn't exits.
-      #
-      def dirs
-        if repos_dir.exist?
-          repos_dir.children.select(&:directory?)
-        else
-          []
         end
       end
 
