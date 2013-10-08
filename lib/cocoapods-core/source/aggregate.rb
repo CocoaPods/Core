@@ -3,20 +3,29 @@ module Pod
     # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
+      # @return [<Array<Pathname] Collection of repos_dir  @see repos_dir.
+      #
+      attr_reader :repos_dirs
+
       # @return [Pathname] the directory were the repositories are stored.
       #
       attr_reader :repos_dir
 
-      # @param [Pathname] repos_dir @see repos_dir.
-      #
-      def initialize(repos_dir)
-        @repos_dir = repos_dir
+      # @param [Pathname] or [<Array<Pathname] repos_dir @see repos_dirs.
+      #                   in priority order
+      def initialize(arg)
+        if arg.is_a? Array
+          @repos_dirs = arg
+        else
+          @repos_dir = arg
+          @repos_dirs = []
+        end
       end
 
       # @return [Array<Source>] all the sources.
       #
       def all
-        @sources ||= dirs.map { |repo| Source.new(repo) }.sort_by(&:name)
+        @sources ||= dirs.map { |repo| Source.new(repo) }
       end
 
       # @return [Array<String>] the names of all the pods available.
@@ -54,10 +63,10 @@ module Pod
       # @raise  If the repos dir doesn't exits.
       #
       def dirs
-        if repos_dir.exist?
+        if repos_dir && repos_dir.exist?
           repos_dir.children.select(&:directory?)
         else
-          []
+          repos_dirs
         end
       end
 
