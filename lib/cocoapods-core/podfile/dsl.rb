@@ -460,15 +460,17 @@ module Pod
       # -----
       #
       # By default, the github Cocoapods/specs repository is used. Use this method
-      # to specify another source.
+      # to specify (an) other(s) source(s).
+      # Sources are prioritised by appearance in Podfile
       #
       # @param    [String] source
       #           name of specs repo. Previously specified by user
       #           via pod repo add command
       #
-      # @example  Specifying a source
+      # @example  Specifying to use first myprivaterepo and then cocoapods master
       #
       #           source 'myprivaterepo'
+      #           source 'master'
       #
       # @return   [void]
       #
