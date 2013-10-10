@@ -131,6 +131,15 @@ module Pod
           @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => []}
         end
 
+        it "allows a dependency whose name matches part of one of its parents names" do
+          @spec.subspec 'subspectest' do |sp|
+            sp.subspec 'subsubspec' do |ssp|
+              ssp.dependency('subspec')
+              ssp.attributes_hash["dependencies"].should == {'subspec' => []}
+            end
+          end
+        end
+
         it "raises if the specification requires itself" do
           should.raise Informative do
             @spec.dependency('Pod')
@@ -144,6 +153,15 @@ module Pod
           should.raise Informative do
             subspec.dependency('Pod')
           end.message.should.match /can't require one of its parents/
+          
+          #Ensure nested subspecs are prevented from requiring one of their parents
+          @spec.subspec 'subspec' do |sp|
+            sp.subspec 'subsubspec' do |ssp|
+              should.raise Informative do
+                ssp.dependency('Pod/subspec')
+              end.message.should.match /can't require one of its parents/
+            end
+          end
         end
 
         it "raises if the requirements are not supported" do
