@@ -498,7 +498,17 @@ module Pod
       def dependency(*args)
         name, *version_requirements = args
         raise Informative, "A specification can't require itself as a subspec" if name == self.name
-        raise Informative, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
+        if @parent
+          composed_name = ""
+          @parent.name.split("/").each do |component|
+            composed_name << component
+            if name == composed_name
+              raise Informative, "A subspec can't require one of its parents specifications"
+              break
+            end
+            composed_name << "/"
+          end
+        end
         raise Informative, "Unsupported version requirements" unless version_requirements.all? { |req| req.is_a?(String) }
         attributes_hash["dependencies"] ||= {}
         attributes_hash["dependencies"][name] = version_requirements
