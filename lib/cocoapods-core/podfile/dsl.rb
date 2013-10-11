@@ -345,18 +345,18 @@ module Pod
       # @param    [String, Array<String>] targets
       #           the target or the targets to link with.
       #
-      # @example  Link with an user project target
+      # @example  Link with a user project target
       #
       #           link_with 'MyApp'
       #
-      # @example  Link with a more user project targets
+      # @example  Link with multiple user project targets
       #
-      #           link_with ['MyApp', 'MyOtherApp']
+      #           link_with 'MyApp', 'MyOtherApp'
       #
       # @return   [void]
       #
-      def link_with(targets)
-        current_target_definition.link_with = targets
+      def link_with(*targets)
+        current_target_definition.link_with = targets.flatten
       end
 
       # Inhibits **all** the warnings from the CocoaPods libraries.

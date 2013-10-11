@@ -107,6 +107,16 @@ module Pod
         podfile.target_definitions["Pods"].link_with.should == ['app_target']
       end
 
+      it "allows to specify multiple user targets a Target definition should link with" do
+        podfile = Podfile.new { link_with 'app_target', 'test_target' }
+        podfile.target_definitions["Pods"].link_with.should == ['app_target', 'test_target']
+      end
+
+      it "allows to specify an array of user targets a Target definition should link with" do
+        podfile = Podfile.new { link_with ['app_target'] }
+        podfile.target_definitions["Pods"].link_with.should == ['app_target']
+      end
+
       it "allows to inhibit all the warnings of a Target definition" do
         podfile = Podfile.new { pod 'ObjectiveRecord'; inhibit_all_warnings! }
         podfile.target_definitions["Pods"].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
