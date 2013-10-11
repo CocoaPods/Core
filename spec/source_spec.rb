@@ -108,6 +108,26 @@ module Pod
         source.search_by_name('Banana', false).map(&:name).should == ['BananaLib']
       end
 
+      it "returns pods with similar names" do
+        source = Source.new(fixture('spec-repos/master'))
+        source.pods_with_similar_names('abmultiton').should == 'ABMultiton'
+      end
+
+      it "returns pods with similar names" do
+        source = Source.new(fixture('spec-repos/master'))
+        source.pods_with_similar_names('ABMuton').should == 'ABMultiton'
+      end
+
+      it "returns pods with similar names" do
+        source = Source.new(fixture('spec-repos/master'))
+        source.pods_with_similar_names('ObjSugar').should == "ObjectiveSugar"
+      end
+
+      it "returns pods with similar names" do
+        source = Source.new(fixture('spec-repos/master'))
+        source.pods_with_similar_names('table').should == "ObjectiveSugar"
+      end
+
     end
 
     #-------------------------------------------------------------------------#
