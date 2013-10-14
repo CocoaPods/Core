@@ -171,6 +171,17 @@ module Pod
         osx_consumer.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
+      #----------------#
+
+      it "allows to specify Xcode subprojects" do
+        @spec.xcodeproj = { :project => 'Project.xcproj' }
+        @consumer.xcodeproj.should == { 'project' => 'Project.xcproj' }
+      end
+
+      it "returns empty hash if no Xcode subproject has been specified" do
+        @consumer.xcodeproj.should == {}
+      end
+
       #------------------#
 
       it "allows to specify the contents of the prefix header" do
