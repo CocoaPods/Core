@@ -36,8 +36,11 @@ module Pod
     module DSL
 
       # @!group Dependencies
-      #   The Podfile specifies the dependencies of each user target.
-
+      #   The Podfile specifies the dependencies of each user target. Starting 
+      #   with `pod` for offering a specific dependency, `podspec` provides an 
+      #   easy creation of local podspecs, and `target` which allows you to scope
+      #   your dependencies to specific targets in your Xcode projects.
+      
       #-----------------------------------------------------------------------#
 
       # Specifies a dependency of the project.
