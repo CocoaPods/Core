@@ -18,6 +18,8 @@ module Pod
       end
 
       # @return [Array<Source>] all the sources.
+      #         The sources specified via source, searching each source in your Podifle
+      #         from first added (top of the file) to last added.
       #
       def all
         @sources ||= dirs.map { |repo| Source.new(repo) }
