@@ -118,15 +118,6 @@ module Pod
       end
 
       describe "source" do
-
-        it 'always has at least one source' do
-          Podfile.new {}.sources.should.include "master"
-
-          Podfile.new do
-            source 'new_repo'
-          end.sources.should.include "new_repo"
-        end
-
         it 'can have multiple sources' do
           Podfile.new do
             source 'new_repo_1'

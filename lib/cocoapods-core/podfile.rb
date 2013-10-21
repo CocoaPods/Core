@@ -98,12 +98,7 @@ module Pod
     # @return [Array<String>] all the specs source names.
 
     def sources
-      sources = get_hash_value('sources')
-      unless sources
-        return [default_source]
-      else
-        sources
-      end
+      get_hash_value('sources')
     end
 
     # @return [String] the path of the workspace if specified by the user.
@@ -306,12 +301,6 @@ module Pod
     private
 
     # @!group Private helpers
-
-    # @return [String] the default specs source name
-    #
-    def default_source
-      "master"
-    end
 
     # @return [Hash] The hash which store the attributes of the Podfile.
     #
