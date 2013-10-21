@@ -4,22 +4,16 @@ module Pod
     #
     class Aggregate
 
-      # @return [<Array<Pathname] Collection of repos_dir  @see repos_dir.
-      #
-      attr_reader :repos_dirs
+      # @return [<Array<Pathname] Collection of directories
+      #         where the repositories are stored.
+      attr_reader :dirs
 
-      # @return [Pathname] the directory were the repositories are stored.
-      #
-      attr_reader :repos_dir
-
-      # @param [Pathname] or [<Array<Pathname] repos_dir @see repos_dirs.
-      #                   in priority order
-      def initialize(arg)
-        if arg.is_a? Array
-          @repos_dirs = arg
+      # @param [<Array<Pathname] repos_dirs @see repos_dirs
+      def initialize(repos_dirs)
+        if repos_dirs.is_a? Array
+          @dirs = repos_dirs
         else
-          @repos_dir = arg
-          @repos_dirs = []
+          @dirs = []
         end
       end
 
@@ -59,19 +53,6 @@ module Pod
         end
       end
 
-      # @return [Array<Pathname>] the directories where the sources are stored.
-      #
-      # @note   If the repos dir doesn't exits this will return an empty array.
-      #
-      # @raise  If the repos dir doesn't exits.
-      #
-      def dirs
-        if repos_dir && repos_dir.exist?
-          repos_dir.children.select(&:directory?)
-        else
-          repos_dirs
-        end
-      end
 
       # Returns a set configured with the source which contains the highest
       # version in the aggregate.
