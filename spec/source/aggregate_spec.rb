@@ -7,7 +7,8 @@ module Pod
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
     #
     before do
-      @subject = Source::Aggregate.new(fixture('spec-repos'))
+      repos = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
+      @sut = Source::Aggregate.new(repos)
     end
 
     #-------------------------------------------------------------------------#
