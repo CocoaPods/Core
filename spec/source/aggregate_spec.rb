@@ -16,7 +16,7 @@ module Pod
     describe 'In general' do
 
       it 'returns all the sources' do
-        @subject.all.map(&:name).should == %w(master test_repo)
+        @subject.all.map(&:name).sort.should == %w(master test_repo)
       end
 
       it 'returns the name of all the available pods' do
