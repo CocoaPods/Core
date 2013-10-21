@@ -36,10 +36,12 @@ module Pod
     module DSL
 
       # @!group Dependencies
-      #   The Podfile specifies the dependencies of each user target. Starting 
-      #   with `pod` for offering a specific dependency, `podspec` provides an 
-      #   easy creation of local podspecs, and `target` which allows you to scope
-      #   your dependencies to specific targets in your Xcode projects.
+      #   The Podfile specifies the dependencies of each user target. 
+      #
+      #   * `pod` is the way to declare a specific dependency.
+      #   * `podspec` provides an easy creation API for local podspecs.
+      #   * `target` allows you to scope your dependencies to specific 
+      #   targets in your Xcode projects.
       
       #-----------------------------------------------------------------------#
 
@@ -48,20 +50,16 @@ module Pod
       # A dependency requirement is defined by the name of the Pod and
       # optionally a list of version requirements.
       #
-      # ------
-      #
       # When starting out with a project it is likely that you will want to use
       # the latest version of a Pod. If this is the case, simply omit the
       # version requirements.
       #
       #     pod 'SSZipArchive'
       #
-      #
       # Later on in the project you may want to freeze to a specific version of
       # a Pod, in which case you can specify that version number.
       #
       #     pod 'Objection', '0.9'
-      #
       #
       # Besides no version, or a specific one, it is also possible to use
       # operators:
@@ -249,18 +247,18 @@ module Pod
       #-----------------------------------------------------------------------#
 
       # @!group Target configuration
-      #   This group list the options to configure a target.
-
+      #   These settings are used to control the  CocoaPods generated project.
+      #
+      #   This starts out simply with stating what `platform` you are working
+      #   on. `xcodeproj` allows you to state specifically which project to 
+      #   link with. 
+      
       #-----------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
       #
-      # -----
-      #
       # CocoaPods provides a default deployment target if one is not specified.
       # The current default values are `4.3` for iOS and `10.6` for OS X.
-      #
-      # -----
       #
       # If the deployment target requires it (iOS < `4.3`), `armv6`
       # architecture will be added to `ARCHS`.
