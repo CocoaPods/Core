@@ -193,4 +193,7 @@ end
 desc "Run all specs"
 task :spec => 'spec:all'
 
+require 'tailor/rake_task'
+Tailor::RakeTask.new
+
 task :default => :spec
