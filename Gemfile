@@ -9,6 +9,7 @@ group :development do
   gem "mocha-on-bacon"
   gem "rake"
   gem 'prettybacon', :git => 'https://github.com/irrationalfab/PrettyBacon.git', :branch => 'master'
+  gem 'tailor'
 end
 
 group :debugging do
