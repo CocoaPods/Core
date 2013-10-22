@@ -193,7 +193,14 @@ end
 desc "Run all specs"
 task :spec => 'spec:all'
 
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.3')
 require 'tailor/rake_task'
 Tailor::RakeTask.new
+else
+  desc "Check style"
+  task :tailor do
+    puts "[!] Ruby > 1.9 is required to run tailor"
+  end
+end
 
 task :default => :spec
