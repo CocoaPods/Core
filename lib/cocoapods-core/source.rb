@@ -173,12 +173,13 @@ module Pod
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
           rescue
-            CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
+            CoreUI.warn "Skipping `#{set.name}` because the podspec " \
+              "contains errors."
           end
           set if text && text.downcase.include?(query.downcase)
         end.compact
       else
-        names = pods.select { |pod_name| pod_name.downcase.include?(query.downcase) }
+        names = pods.select { |name| name.downcase.include?(query.downcase) }
         names.map { |pod_name| set(pod_name) }
       end
     end

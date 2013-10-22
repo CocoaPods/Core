@@ -128,7 +128,7 @@ module Pod
         # @return [String] the URL of the source of the Pod.
         #
         def source_url
-          url_keys = [:git, :svn, :http, :hg, :path ]
+          url_keys = [:git, :svn, :http, :hg, :path]
           key = spec.source.keys.find { |k| url_keys.include?(k) }
           key ? spec.source[key] : 'No source url'
         end
@@ -141,7 +141,10 @@ module Pod
         #   "iOS - OS X"
         #
         def platform
-          spec.available_platforms.sort { |a,b| a.to_s.downcase <=> b.to_s.downcase }.join(' - ')
+          sorted_platforms = spec.available_platforms.sort do |a,b|
+            a.to_s.downcase <=> b.to_s.downcase
+          end
+          sorted_platforms.join(' - ')
         end
 
         # @return [String] the type of the license of the Pod.
@@ -234,4 +237,3 @@ module Pod
     end
   end
 end
-

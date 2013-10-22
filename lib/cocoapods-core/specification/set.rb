@@ -1,5 +1,4 @@
 require 'active_support/core_ext/array/conversions'
-
 require 'cocoapods-core/specification/set/presenter'
 require 'cocoapods-core/specification/set/statistics'
 
@@ -60,15 +59,18 @@ module Pod
       # @return [void]
       #
       def required_by(dependency, dependent_name)
-        unless @required_by.empty? || dependency.requirement.satisfied_by?(Version.new(required_version.to_s))
-          raise Informative, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
+        # TODO
+        unless @required_by.empty? || dependency.requirement.satisfied_by?(required_version)
+          raise Informative, "#{dependent_name} tries to activate " \
+            "`#{dependency}', but already activated version " \
+              "`#{required_version}' by #{@required_by.to_sentence}."
         end
         @specification = nil
         @required_by  << dependent_name
         @dependencies << dependency
       end
 
-      # @return [Dependency] a dependency that includes all the versions
+      # @return [Dependency] A dependency that includes all the versions
       #         requirements of the stored dependencies.
       #
       def dependency
@@ -85,9 +87,12 @@ module Pod
       #         used to disambiguate.
       #
       def specification
-        @specification ||= Specification.from_file(specification_path_for_version(required_version))
+        path = specification_path_for_version(required_version)
+        @specification ||= Specification.from_file(path)
       end
 
+      # TODO
+      #
       def specification_path_for_version(version)
         sources = []
         versions_by_source.each do |source, source_versions|
@@ -142,11 +147,14 @@ module Pod
       end
 
       def ==(other)
-        self.class === other && @name == other.name && @sources.map(&:name) == other.sources.map(&:name)
+        self.class === other &&
+          @name == other.name &&
+          @sources.map(&:name) == other.sources.map(&:name)
       end
 
       def to_s
-        "#<#{self.class.name} for `#{name}' with required version `#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
+        "#<#{self.class.name} for `#{name}' with required version " \
+          "`#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
       end
       alias_method :inspect, :to_s
 

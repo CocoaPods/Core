@@ -73,14 +73,16 @@ module Pod
       if requirements.last.is_a?(Hash)
         @external_source = requirements.pop
         unless requirements.empty?
-          raise Informative, "A dependency with an external source may not specify version requirements (#{name})."
+          raise Informative, "A dependency with an external source may not " \
+            "specify version requirements (#{name})."
         end
 
       elsif requirements.last == :head
         @head = true
         requirements.pop
         unless requirements.empty?
-          raise Informative, "A `:head` dependency may not specify version requirements (#{name})."
+          raise Informative, "A `:head` dependency may not specify version " \
+            "requirements (#{name})."
         end
       end
 
@@ -103,8 +105,11 @@ module Pod
     #         be better to add something like Version#display_string.
     #
     def requirement
-      return Requirement.new(Version.new(specific_version.version)) if specific_version
-      @requirement
+      if specific_version
+        Requirement.new(Version.new(specific_version.version))
+      else
+        @requirement
+      end
     end
 
     # @return [Bool] whether the dependency points to a subspec.
@@ -329,7 +334,7 @@ module Pod
     #
     def inspect
       "<#{self.class} name=#{self.name} requirements=#{requirement.to_s} " \
-      "external_source=#{external_source||'nil'}>"
+        "external_source=#{external_source||'nil'}>"
     end
 
     #--------------------------------------#

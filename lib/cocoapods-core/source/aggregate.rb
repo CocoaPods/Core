@@ -43,7 +43,8 @@ module Pod
         pods = pods_by_source.values.flatten.uniq
 
         pods.map do |pod|
-          pod_sources = sources.select{ |s| pods_by_source[s].include?(pod) }.compact
+          pod_sources = sources.select { |s| pods_by_source[s].include?(pod) }
+          pod_sources = pod_sources.compact
           Specification::Set.new(pod, pod_sources)
         end
       end
@@ -102,7 +103,9 @@ module Pod
       #
       def search(dependency)
         sources = all.select { |s| !s.search(dependency).nil? }
-        Specification::Set.new(dependency.root_name, sources) unless sources.empty?
+        unless sources.empty?
+          Specification::Set.new(dependency.root_name, sources)
+        end
       end
 
       # @return [Array<Set>]  the sets that contain the search term.
@@ -116,17 +119,22 @@ module Pod
       def search_by_name(query, full_text_search = false)
         pods_by_source = {}
         result = []
-        all.each { |s| pods_by_source[s] = s.search_by_name(query, full_text_search).map(&:name) }
+        all.each do |s|
+          source_pods = s.search_by_name(query, full_text_search)
+          pods_by_source[s] = source_pods.map(&:name)
+        end
         root_spec_names = pods_by_source.values.flatten.uniq
         root_spec_names.each do |pod|
           sources = []
-          pods_by_source.each{ |source, pods| sources << source if pods.include?(pod) }
+          pods_by_source.each do |source, pods|
+            sources << source if pods.include?(pod)
+          end
           result << Specification::Set.new(pod, sources)
         end
         if result.empty?
           extra = ", author, summary, or description" if full_text_search
-          raise(Informative, "Unable to find a pod with name" \
-                "#{extra} matching `#{query}'")
+          raise Informative, "Unable to find a pod with name" \
+            "#{extra} matching `#{query}'"
         end
         result
       end
@@ -170,8 +178,12 @@ module Pod
           enumerated_names << set.name
           set_data = search_data[set.name]
           has_data = set_data && set_data['version']
-          needs_update = !has_data || Version.new(set_data['version']) < set.required_version
-          if needs_update
+          if has_data
+            stored_version = Version.new(set_data['version'])
+            if stored_version < set.required_version
+              search_data[set.name] = search_data_from_set(set)
+            end
+          else
             search_data[set.name] = search_data_from_set(set)
           end
         end
@@ -218,7 +230,8 @@ module Pod
         result['authors'] = spec.authors.keys.sort * ', '
         result
       rescue
-        CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
+        CoreUI.warn "Skipping `#{set.name}` because the podspec contains " \
+          "errors."
         result
       end
 

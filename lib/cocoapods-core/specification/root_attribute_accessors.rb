@@ -29,7 +29,11 @@ module Pod
         #         robust handling of head versions (like a dedicated section).
         #
         def version
-           @version ||= root? ? Version.new(attributes_hash["version"]) : root.version
+          if root?
+            @version ||= Version.new(attributes_hash["version"])
+          else
+            @version ||= root.version
+          end
         end
 
         # @return [Hash] a hash containing the authors as the keys and their
@@ -108,8 +112,8 @@ module Pod
           description.strip_heredoc if description
         end
 
-        # @return [Array<String>] The list of the URL for the screenshots of the
-        #         Pod.
+        # @return [Array<String>] The list of the URL for the screenshots of
+        #         the Pod.
         #
         # @note   The value is coerced to an array.
         #
@@ -130,7 +134,7 @@ module Pod
           attributes_hash["prepare_command"]
         end
 
-        #-----------------------------------------------------------------------#
+        #---------------------------------------------------------------------#
 
         private
 
@@ -150,6 +154,8 @@ module Pod
           end
           result
         end
+
+        #---------------------------------------------------------------------#
 
       end
     end
