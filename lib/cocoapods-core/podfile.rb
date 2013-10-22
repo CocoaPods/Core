@@ -98,7 +98,12 @@ module Pod
     # @return [Array<String>] all the specs source names.
 
     def sources
-      get_hash_value('sources')
+      sources = get_hash_value('sources')
+      if sources
+        sources
+      else
+        []
+      end
     end
 
     # @return [String] the path of the workspace if specified by the user.
