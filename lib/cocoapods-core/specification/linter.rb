@@ -142,7 +142,7 @@ module Pod
         all_specs.each do |current_spec|
           current_spec.available_platforms.each do |platform|
             @consumer = Specification::Consumer.new(current_spec, platform)
-            run_all_specs_valudation_hooks
+            run_all_specs_validation_hooks
             validate_file_patterns
             check_tmp_arc_not_nil
             check_if_spec_is_empty
@@ -160,7 +160,7 @@ module Pod
       #
       # @return [void]
       #
-      def run_all_specs_valudation_hooks
+      def run_all_specs_validation_hooks
         attributes = DSL.attributes.values.reject(&:root_only?)
         attributes.each do |attr|
           validation_hook = "_validate_#{attr.name}"
