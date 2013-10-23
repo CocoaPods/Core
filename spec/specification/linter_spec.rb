@@ -211,6 +211,13 @@ module Pod
 
       #------------------#
 
+      it "checks if the homepage has been changed from default" do
+        @spec.stubs(:homepage).returns('http://EXAMPLE/test')
+        message_should_include('homepage', 'default')
+      end
+
+      #------------------#
+
       it "checks whether the license type" do
         @spec.stubs(:license).returns({ :file => 'License' })
         message_should_include('license', 'type')

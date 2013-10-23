@@ -223,6 +223,10 @@ module Pod
         warning "The description is shorter than the summary." if d.length < spec.summary.length
       end
 
+      def _validate_homepage(h)
+        warning "The homepage has not been updated from default" if h =~ /http:\/\/EXAMPLE/
+      end
+
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)
