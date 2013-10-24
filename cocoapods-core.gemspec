@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.require_paths =  %w{ lib }
 
   s.add_runtime_dependency 'activesupport', '>= 3.2.15', '< 4'
-  s.add_runtime_dependency 'nap', "~> 0.5"
-  s.add_runtime_dependency "json", "~> 1.8"
+  s.add_runtime_dependency 'nap',           '~> 0.5'
+  s.add_runtime_dependency 'json_pure',     '~> 1.8'
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
