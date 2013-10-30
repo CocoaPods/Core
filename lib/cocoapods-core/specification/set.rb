@@ -37,7 +37,7 @@ module Pod
         @name    = name
         sources  = sources.is_a?(Array) ? sources : [sources]
         @sources = sources.sort_by(&:name)
-        @required_by  = []
+        @dependencies_by_requirer_name = {}
         @dependencies = []
       end
 
@@ -59,22 +59,26 @@ module Pod
       # @return [void]
       #
       def required_by(dependency, dependent_name)
-        # TODO
-        unless @required_by.empty? || dependency.requirement.satisfied_by?(required_version)
-          raise Informative, "#{dependent_name} tries to activate " \
-            "`#{dependency}', but already activated version " \
-              "`#{required_version}' by #{@required_by.to_sentence}."
+        dependencies_by_requirer_name[dependent_name] ||= []
+        dependencies_by_requirer_name[dependent_name] << dependency
+        dependencies << dependency
+
+        if acceptable_versions.empty?
+          message = "Unable to satisfy the following requirements:\n"
+          dependencies_by_requirer_name.each do |name, dependencies|
+            dependencies.each do |dep|
+              message << "- `#{dep.to_s}` required by `#{name}`"
+            end
+          end
+          raise Informative, message
         end
-        @specification = nil
-        @required_by  << dependent_name
-        @dependencies << dependency
       end
 
       # @return [Dependency] A dependency that includes all the versions
       #         requirements of the stored dependencies.
       #
       def dependency
-        @dependencies.inject(Dependency.new(name)) do |previous, dependency|
+        dependencies.inject(Dependency.new(name)) do |previous, dependency|
           previous.merge(dependency.to_root_dependency)
         end
       end
@@ -88,7 +92,7 @@ module Pod
       #
       def specification
         path = specification_path_for_version(required_version)
-        @specification ||= Specification.from_file(path)
+        specification = Specification.from_file(path)
       end
 
       # TODO
@@ -114,6 +118,13 @@ module Pod
             "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"
         end
         version
+      end
+
+      # @return [Array<Version>] All the versions which are acceptable given
+      #         the requirements.
+      #
+      def acceptable_versions
+        versions.select { |v| dependency.match?(name, v) }
       end
 
       # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -181,6 +192,14 @@ module Pod
         }
       end
 
+
+      #-----------------------------------------------------------------------#
+
+
+      attr_accessor :dependencies_by_requirer_name
+      attr_accessor :dependencies
+
+
       #-----------------------------------------------------------------------#
 
       # The Set::External class handles Pods from external sources. Pods from
@@ -199,14 +218,7 @@ module Pod
         end
 
         def ==(other)
-          self.class === other && @specification == other.specification
-        end
-
-        def required_by(dependency, dependent_name)
-          before = @specification
-          super(dependency, dependent_name)
-        ensure
-          @specification = before
+          self.class === other && specification == other.specification
         end
 
         def specification_path
@@ -214,7 +226,7 @@ module Pod
         end
 
         def versions
-          [@specification.version]
+          [specification.version]
         end
       end
     end

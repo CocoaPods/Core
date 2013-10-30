@@ -82,7 +82,7 @@ module Pod
         #         highest available version.
         #
         def spec
-          @set.specification
+          @spec ||= @set.specification
         end
 
         # @return   [String] the list of the authors of the Pod in sentence
