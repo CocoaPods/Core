@@ -2,6 +2,9 @@ source "http://rubygems.org"
 
 gemspec
 
+# Ruby 1.8.7
+gem "mime-types", "< 2.0"
+
 group :development do
   gem 'coveralls', :require => false
   gem "mocha", "~> 0.11.4"
