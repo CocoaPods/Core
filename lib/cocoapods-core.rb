@@ -35,5 +35,3 @@ module Pod
   Spec = Specification
 
 end
-
-

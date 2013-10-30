@@ -30,7 +30,7 @@ module Pod
         @children = []
 
         unless internal_hash
-          self.name = name 
+          self.name = name
         end
         if parent.is_a?(TargetDefinition)
           parent.children << self
@@ -75,7 +75,11 @@ module Pod
       #         definition including the inherited ones.
       #
       def dependencies
-        non_inherited_dependencies + ((exclusive? || parent.nil?) ? [] : parent.dependencies)
+        if exclusive? || parent.nil?
+          non_inherited_dependencies
+        else
+          non_inherited_dependencies + parent.dependencies
+        end
       end
 
       # @return [Array] The list of the dependencies of the target definition,
@@ -153,8 +157,10 @@ module Pod
       def exclusive?
         if root?
           true
+        elsif get_hash_value('exclusive')
+          true
         else
-          get_hash_value('exclusive') || ( platform && parent && parent.platform != platform )
+          platform && parent && parent.platform != platform
         end
       end
 
@@ -250,7 +256,11 @@ module Pod
       #         represents their type (`:debug` or `:release`).
       #
       def build_configurations
-        get_hash_value('build_configurations') || (parent.build_configurations unless root?)
+        if root?
+          get_hash_value('build_configurations')
+        else
+          get_hash_value('build_configurations') || parent.build_configurations
+        end
       end
 
       # Sets the build configurations for this target.
@@ -272,10 +282,14 @@ module Pod
       #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
-        return true if inhibit_warnings_hash['all'] || (parent.inhibits_warnings_for_pod?(pod_name) unless root?)
-
-        inhibit_warnings_hash['for_pods'] ||= []
-        inhibit_warnings_hash['for_pods'].include? pod_name
+        if inhibit_warnings_hash['all']
+          true
+        elsif !root? && parent.inhibits_warnings_for_pod?(pod_name)
+          true
+        else
+          inhibit_warnings_hash['for_pods'] ||= []
+          inhibit_warnings_hash['for_pods'].include? pod_name
+        end
       end
 
       # Sets whether the target definition should inhibit the warnings during
@@ -339,11 +353,12 @@ module Pod
       #
       def set_platform(name, target = nil)
         unless [:ios, :osx].include?(name)
-          raise StandardError, "Unsupported platform `#{name}`. Platform must be `:ios` or `:osx`."
+          raise StandardError, "Unsupported platform `#{name}`. Platform " \
+            "must be `:ios` or `:osx`."
         end
 
         if target
-          value = {name.to_s => target}
+          value = { name.to_s => target }
         else
           value = name.to_s
         end
@@ -401,7 +416,8 @@ module Pod
       def store_podspec(options = nil)
         if options
           unless options.keys.all? { |key| [:name, :path].include?(key) }
-            raise StandardError, "Unrecognized options for the podspec method `#{options}`"
+            raise StandardError, "Unrecognized options for the podspec " \
+              "method `#{options}`"
           end
           get_hash_value('podspecs', []) << options
         else
@@ -488,7 +504,9 @@ module Pod
       # @return [void]
       #
       def set_hash_value(key, value)
-        raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+        unless HASH_KEYS.include?(key)
+          raise StandardError, "Unsupported hash key `#{key}`"
+        end
         internal_hash[key] = value
       end
 
@@ -506,14 +524,16 @@ module Pod
       # @return [Object] The value for the key.
       #
       def get_hash_value(key, base_value = nil)
-        raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+        unless HASH_KEYS.include?(key)
+          raise StandardError, "Unsupported hash key `#{key}`"
+        end
         internal_hash[key] ||= base_value
       end
 
-      # Returns the inhibit_warnings hash prepopulated with default values
+      # Returns the inhibit_warnings hash pre-populated with default values.
       #
-      # @return [Hash<String, Array>] Hash with :all key for inhibiting all warnings,
-      #         and :for_pods key for inhibiting warnings per pod
+      # @return [Hash<String, Array>] Hash with :all key for inhibiting all
+      #         warnings, and :for_pods key for inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
         get_hash_value('inhibit_warnings', {})
@@ -550,7 +570,7 @@ module Pod
           file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
           all_specs = [spec, *spec.recursive_subspecs]
-          all_deps = all_specs.map{ |s| s.dependencies(platform) }.flatten
+          all_deps = all_specs.map { |s| s.dependencies(platform) }.flatten
           all_deps.reject { |dep| dep.root_name == spec.root.name }
         end.flatten.uniq
       end
@@ -565,14 +585,19 @@ module Pod
       #
       def podspec_path_from_options(options)
         if path = options[:path]
-          path_with_ext = File.extname(path) == '.podspec' ? path : "#{path}.podspec"
+          if File.extname(path) == '.podspec'
+            path_with_ext = path
+          else
+            path_with_ext = "#{path}.podspec"
+          end
           path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
           file = podfile.defined_in_file.dirname + path_without_tilde
         elsif name = options[:name]
           name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
           file = podfile.defined_in_file.dirname + name
         elsif options[:autodetect]
-          file = Pathname.glob(podfile.defined_in_file.dirname + '*.podspec').first
+          glob_pattern = podfile.defined_in_file.dirname + '*.podspec'
+          file = Pathname.glob(glob_pattern).first
         end
       end
 
@@ -582,7 +607,7 @@ module Pod
       # @param [String] pod name
       #
       # @param [Array] requirements
-      #        If :inhibit_warnings is the only key in the hash, the hash 
+      #        If :inhibit_warnings is the only key in the hash, the hash
       #        should be destroyed because it confuses Gem::Dependency.
       #
       # @return [void]

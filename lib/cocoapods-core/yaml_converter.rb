@@ -67,7 +67,8 @@ module Pod
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
         else
-          raise StandardError, "Unsupported class for YAML conversion #{value.class}"
+          raise StandardError, "Unsupported class for YAML conversion " \
+            "#{value.class}"
         end
       end
 

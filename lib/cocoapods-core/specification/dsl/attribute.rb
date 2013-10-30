@@ -59,7 +59,7 @@ module Pod
         #
         def inspect
           "<#{self.class} name=#{self.name} types=#{types} " \
-          "multi_platform=#{multi_platform?}>"
+            "multi_platform=#{multi_platform?}>"
         end
 
         #---------------------------------------------------------------------#
@@ -209,7 +209,8 @@ module Pod
         #
         def validate_for_writing(spec, value)
           if root_only? && !spec.root?
-            raise StandardError, "Can't set `#{name}` attribute for subspecs (in `#{spec.name}`)."
+            raise StandardError, "Can't set `#{name}` attribute for " \
+              "subspecs (in `#{spec.name}`)."
           end
 
           if keys

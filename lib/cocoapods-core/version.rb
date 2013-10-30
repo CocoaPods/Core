@@ -106,8 +106,8 @@ module Pod
 
     # @!group Semantic Versioning
 
-    SEMANTIC_VERSION_PATTERN = '[0-9]+(\.[0-9]+(\.[0-9]+(-[0-9A-Za-z\-\.]+)?)?)?'
-    ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMANTIC_VERSION_PATTERN})*\s*\z/
+    SEMVER_PATTERN = '[0-9]+(\.[0-9]+(\.[0-9]+(-[0-9A-Za-z\-\.]+)?)?)?'
+    ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMVER_PATTERN})*\s*\z/
 
     # @return [Bool] Whether the version conforms to the Semantic Versioning
     #         specification (2.0.0-rc.1).
@@ -142,4 +142,3 @@ module Pod
 
   end
 end
-

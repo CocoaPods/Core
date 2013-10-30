@@ -36,13 +36,13 @@ module Pod
     module DSL
 
       # @!group Dependencies
-      #   The Podfile specifies the dependencies of each user target. 
+      #   The Podfile specifies the dependencies of each user target.
       #
       #   * `pod` is the way to declare a specific dependency.
       #   * `podspec` provides an easy creation API for local podspecs.
-      #   * `target` allows you to scope your dependencies to specific 
+      #   * `target` allows you to scope your dependencies to specific
       #   targets in your Xcode projects.
-      
+
       #-----------------------------------------------------------------------#
 
       # Specifies a dependency of the project.
@@ -149,7 +149,8 @@ module Pod
       #
       def pod(name = nil, *requirements, &block)
         if block
-          raise StandardError, "Inline specifications are deprecated. Please store the specification in a `podspec` file."
+          raise StandardError, "Inline specifications are deprecated. " \
+            "Please store the specification in a `podspec` file."
         end
 
         unless name
@@ -232,7 +233,8 @@ module Pod
       #
       def target(name, options = {})
         if options && !options.keys.all? { |key| [:exclusive].include?(key) }
-          raise Informative, "Unsupported options `#{options}` for target `#{name}`"
+          raise Informative, "Unsupported options `#{options}` for " \
+            "target `#{name}`"
         end
 
         parent = current_target_definition
@@ -250,9 +252,9 @@ module Pod
       #   These settings are used to control the  CocoaPods generated project.
       #
       #   This starts out simply with stating what `platform` you are working
-      #   on. `xcodeproj` allows you to state specifically which project to 
-      #   link with. 
-      
+      #   on. `xcodeproj` allows you to state specifically which project to
+      #   link with.
+
       #-----------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
@@ -366,7 +368,7 @@ module Pod
       #
       # This attribute is inherited by child target definitions.
       #
-      # If you would like to inhibit warnings per Pod you can use the 
+      # If you would like to inhibit warnings per Pod you can use the
       # following syntax:
       #
       #     pod 'SSZipArchive', :inhibit_warnings => true
@@ -493,4 +495,3 @@ module Pod
     end
   end
 end
-

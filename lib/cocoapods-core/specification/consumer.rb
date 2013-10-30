@@ -224,10 +224,12 @@ module Pod
         value = the_spec.attributes_hash[attr.name.to_s]
         value = prepare_value(attr, value)
 
-        if attr.multi_platform? && the_spec.attributes_hash[platform_name.to_s]
-          platform_value = the_spec.attributes_hash[platform_name.to_s][attr.name.to_s]
-          platform_value = prepare_value(attr, platform_value)
-          value = merge_values(attr, value, platform_value)
+        if attr.multi_platform?
+          if platform_hash = the_spec.attributes_hash[platform_name.to_s]
+            platform_value = platform_hash[attr.name.to_s]
+            platform_value = prepare_value(attr, platform_value)
+            value = merge_values(attr, value, platform_value)
+          end
         end
         value
       end
