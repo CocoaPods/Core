@@ -1,3 +1,5 @@
+require 'rake/file_list'
+
 #------------------------------------------------------------------------------
 # Horizontal Whitespace
 #------------------------------------------------------------------------------
@@ -81,7 +83,23 @@
 #
 Tailor.config do |config|
   config.formatters "text"
-  config.file_set 'lib/**/*.rb' do |style|
+
+  config.file_set 'lib/cocoapods-core/specification/dsl/attribute.rb', :dsl do |style|
+    style.spaces_before_rbrace 1, level: :off
+    style.spaces_before_lbrace 1, level: :off
+    style.spaces_before_rbracket 1, level: :off
+  end
+
+  excluded = [
+    "lib/cocoapods-core/specification/dsl/attribute.rb",
+    "lib/cocoapods-core/vendor/*.rb",
+    "lib/cocoapods-core/specification/dsl/deprecations.rb", # Bug with indentation check
+  ]
+  file_list = Rake::FileList['lib/**/*.rb']
+  excluded.each { |file| file_list.exclude(file) }
+  files = file_list.to_a
+
+  config.file_set(files) do |style|
     style.allow_camel_case_methods false, level: :error
     style.allow_hard_tabs false, level: :error
     style.allow_screaming_snake_case_classes false, level: :error
