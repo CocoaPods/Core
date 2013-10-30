@@ -49,7 +49,7 @@ GEM
     log_switch (0.4.0)
     metaclass (0.0.1)
     method_source (0.8.2)
-    mime-types (1.25)
+    mime-types (2.0)
     mocha (0.11.4)
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.1)
