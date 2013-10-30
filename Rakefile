@@ -118,9 +118,11 @@ namespace :spec do
   task :all do
     ENV['GENERATE_COVERAGE'] = 'true'
     sh "bundle exec bacon #{specs('**')}"
+    puts "Checking code style..."
+    Rake::Task["tailor"].invoke
   end
 
-  desc "Checks that the gem is campable of loading all the specs of the master repo."
+  desc "Checks that the gem is capable of loading all the specs of the master repo."
   task :repo do
     puts "Checking compatibility with master repo"
     require 'pathname'
@@ -194,12 +196,12 @@ desc "Run all specs"
 task :spec => 'spec:all'
 
 if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.3')
-require 'tailor/rake_task'
-Tailor::RakeTask.new
+  require 'tailor/rake_task'
+  Tailor::RakeTask.new
 else
   desc "Check style"
   task :tailor do
-    puts "[!] Ruby > 1.9 is required to run tailor"
+    puts "[!] Ruby > 1.9 is required to run style checks"
   end
 end
 
