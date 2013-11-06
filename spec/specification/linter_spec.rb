@@ -311,6 +311,7 @@ module Pod
         consumer.any_instance.stubs(:subspecs).returns([])
         consumer.any_instance.stubs(:dependencies).returns([])
         consumer.any_instance.stubs(:vendored_libraries).returns([])
+        consumer.any_instance.stubs(:vendored_frameworks).returns([])
         @linter.lint
         message = @linter.results.first.message
         message.should.include('spec is empty')
