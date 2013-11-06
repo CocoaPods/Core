@@ -167,6 +167,15 @@ module Pod
           sut = Source.new(repo)
           sut.send(:specs_dir).should == repo
         end
+
+        it "raises if unable to find the source with the given name" do
+          repo = fixture('spec-repos/non_existing')
+          sut = Source.new(repo)
+          e = should.raise Informative do
+            sut.send(:specs_dir)
+          end
+          e.message.should == 'Unable to find a source named: `non_existing`'
+        end
       end
 
     end

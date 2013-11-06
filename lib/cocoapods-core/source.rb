@@ -230,8 +230,10 @@ module Pod
         specs_sub_dir = repo + 'Specs'
         if specs_sub_dir.exist?
           @specs_dir = specs_sub_dir
-        else
+        elsif repo.exist?
           @specs_dir = repo
+        else
+          raise Informative, "Unable to find a source named: `#{name}`"
         end
       end
       @specs_dir
