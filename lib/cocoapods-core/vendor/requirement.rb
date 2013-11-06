@@ -38,7 +38,7 @@ module Pod::Vendor
     # If the input is "weird", the default version requirement is
     # returned.
 
-    def self.create input
+    def self.create(input)
       case input
       when Gem::Requirement then
         input
@@ -76,14 +76,14 @@ module Pod::Vendor
     #     parse("1.0")                   # => ["=", "1.0"]
     #     parse(Gem::Version.new("1.0")) # => ["=,  "1.0"]
 
-    def self.parse obj
+    def self.parse(obj)
       return ["=", obj] if Gem::Version === obj
 
       unless PATTERN =~ obj.to_s
         raise ArgumentError, "Illformed requirement [#{obj.inspect}]"
       end
 
-      [$1 || "=", Gem::Version.new($2)]
+      [Regexp.last_match[1] || "=", Gem::Version.new(Regexp.last_match[2])]
     end
 
     ##
@@ -98,7 +98,7 @@ module Pod::Vendor
     # requirements are ignored. An empty set of +requirements+ is the
     # same as <tt>">= 0"</tt>.
 
-    def initialize *requirements
+    def initialize(*requirements)
       requirements = requirements.flatten
       requirements.compact!
       requirements.uniq!
@@ -126,7 +126,7 @@ module Pod::Vendor
       [@requirements]
     end
 
-    def marshal_load array # :nodoc:
+    def marshal_load(array) # :nodoc:
       @requirements = array[0]
 
       fix_syck_default_key_in_requirements
@@ -140,7 +140,7 @@ module Pod::Vendor
     fix_syck_default_key_in_requirements
     end
 
-    def init_with coder # :nodoc:
+    def init_with(coder) # :nodoc:
       yaml_initialize coder.tag, coder.map
     end
 
@@ -148,7 +148,7 @@ module Pod::Vendor
       requirements.any? { |r| r.last.prerelease? }
     end
 
-    def pretty_print q # :nodoc:
+    def pretty_print(q) # :nodoc:
       q.group 1, 'Gem::Requirement.new(', ')' do
       q.pp as_list
     end
@@ -157,7 +157,7 @@ module Pod::Vendor
     ##
     # True if +version+ satisfies this Requirement.
 
-    def satisfied_by? version
+    def satisfied_by?(version)
       # #28965: syck has a bug with unquoted '=' YAML.loading as YAML::DefaultKey
       requirements.all? { |op, rv| (OPS[op] || OPS["="]).call version, rv }
     end
@@ -178,7 +178,7 @@ module Pod::Vendor
       as_list.join ", "
     end
 
-    def <=> other # :nodoc:
+    def <=>(other) # :nodoc:
       to_s <=> other.to_s
     end
 

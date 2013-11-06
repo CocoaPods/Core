@@ -172,11 +172,11 @@ module Pod
 
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
-    HASH_KEYS = [
-      'target_definitions',
-      'workspace',
-      'generate_bridge_support',
-      'set_arc_compatibility_flag',
+    HASH_KEYS = %w[
+      target_definitions
+      workspace
+      generate_bridge_support
+      set_arc_compatibility_flag
     ].freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -241,7 +241,9 @@ module Pod
       end
       podfile = Podfile.new(path) do
         begin
+          # rubocop:disable Eval
           eval(string, nil, path.to_s)
+          # rubocop:enable Eval
         rescue Exception => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
           raise DSLError.new(message, path, e.backtrace)
@@ -284,7 +286,7 @@ module Pod
     def self.from_hash(hash, path = nil)
       internal_hash = hash.dup
       target_definitions = internal_hash.delete('target_definitions') || []
-      podfile = Podfile.new(path,internal_hash)
+      podfile = Podfile.new(path, internal_hash)
       target_definitions.each do |definition_hash|
         definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition

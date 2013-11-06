@@ -507,9 +507,9 @@ module Pod
             if name == composed_name
               raise Informative, "A subspec can't require one of its " \
                 "parents specifications"
-              break
+            else
+              composed_name << "/"
             end
-            composed_name << "/"
           end
         end
         unless version_requirements.all? { |req| req.is_a?(String) }
@@ -698,7 +698,6 @@ module Pod
       attribute :prefix_header_file, {
         :inherited => true
       }
-
 
       #------------------#
 

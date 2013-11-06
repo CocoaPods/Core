@@ -260,7 +260,7 @@ module Pod
           r = [*existing_value] + [*new_value]
           r.compact
         elsif attr.container == Hash
-          existing_value = existing_value.merge(new_value) do |_, old, new|
+          existing_value.merge(new_value) do |_, old, new|
             if new.is_a?(Array) || old.is_a?(Array)
               r = [*old] + [*new]
               r.compact
@@ -291,7 +291,7 @@ module Pod
 
         hook_name = prepare_hook_name(attr)
         if self.respond_to?(hook_name, true)
-          value = self.send(hook_name, value)
+          value = send(hook_name, value)
         else
           value
         end

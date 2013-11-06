@@ -160,7 +160,7 @@ module Pod::Vendor
       ##
       # True if the +version+ string matches RubyGems' requirements.
 
-      def self.correct? version
+      def self.correct?(version)
         version.to_s =~ ANCHORED_VERSION_PATTERN
       end
 
@@ -172,7 +172,7 @@ module Pod::Vendor
       #   ver2 = Version.create(ver1)       # -> (ver1)
       #   ver3 = Version.create(nil)        # -> nil
 
-      def self.create input
+      def self.create(input)
         if input.respond_to? :version then
           input
         elsif input.nil? then
@@ -186,7 +186,7 @@ module Pod::Vendor
       # Constructs a Version from the +version+ string.  A version string is a
       # series of digits or ASCII letters separated by dots.
 
-      def initialize version
+      def initialize(version)
         unless self.class.correct?(version)
           raise ArgumentError, "Malformed version number string #{version}"
         end
@@ -214,7 +214,7 @@ module Pod::Vendor
       # A Version is only eql? to another version if it's specified to the
       # same precision. Version "1.0" is not the same as version "1".
 
-      def eql? other
+      def eql?(other)
         self.class === other and @version == other.version
       end
 
@@ -222,7 +222,7 @@ module Pod::Vendor
         @hash ||= segments.hash
       end
 
-      def init_with coder # :nodoc:
+      def init_with(coder) # :nodoc:
         yaml_initialize coder.tag, coder.map
       end
 
@@ -242,7 +242,7 @@ module Pod::Vendor
       # Load custom marshal format. It's a string for backwards (RubyGems
       # 1.3.5 and earlier) compatibility.
 
-      def marshal_load array
+      def marshal_load(array)
         initialize array[0]
       end
 
@@ -259,7 +259,7 @@ module Pod::Vendor
         @prerelease ||= @version =~ /[a-zA-Z]/
       end
 
-      def pretty_print q # :nodoc:
+      def pretty_print(q) # :nodoc:
         q.text "Gem::Version.new(#{version.inspect})"
       end
 
@@ -304,7 +304,7 @@ module Pod::Vendor
       # one. Attempts to compare to something that's not a
       # <tt>Gem::Version</tt> return +nil+.
 
-      def <=> other
+      def <=>(other)
         return unless Gem::Version === other
         return 0 if @version == other.version
 
@@ -328,7 +328,7 @@ module Pod::Vendor
           return lhs <=> rhs
         end
 
-        return 0
+        0
       end
     end
 

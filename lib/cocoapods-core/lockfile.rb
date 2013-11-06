@@ -12,7 +12,7 @@ module Pod
   #
   class Lockfile
 
-    # TODO    The symbols should be converted to a String and back to symbol
+    # @todo   The symbols should be converted to a String and back to symbol
     #         when reading (EXTERNAL SOURCES Download options)
 
     # @return [String] the hash used to initialize the Lockfile.
@@ -56,7 +56,7 @@ module Pod
     # @return [Bool] Whether the Podfiles are equal.
     #
     def ==(other)
-      other && self.to_hash == other.to_hash
+      other && to_hash == other.to_hash
     end
 
     # @return [String] a string representation suitable for debugging.

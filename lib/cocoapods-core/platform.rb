@@ -137,10 +137,10 @@ module Pod
     # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
     #         than, equal to, or greater than other.
     #
-    def <=> other
-      name_sort = self.name.to_s <=> other.name.to_s
+    def <=>(other)
+      name_sort = name.to_s <=> other.name.to_s
       if name_sort.zero?
-        self.deployment_target <=> other.deployment_target
+        deployment_target <=> other.deployment_target
       else
         name_sort
       end

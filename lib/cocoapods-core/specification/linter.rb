@@ -270,7 +270,7 @@ module Pod
           tag, commit = s.values_at(:tag, :commit)
           version = spec.version.to_s
 
-          if git =~ /http:\/\/EXAMPLE/
+          if git =~ %r[http://EXAMPLE]
             error "Example source."
           end
           if commit && commit.downcase =~ /head/
@@ -303,7 +303,7 @@ module Pod
         if git = s[:git]
           is_github = git.include?('github.com')
           if is_github
-            if !git.end_with?('.git')
+            unless git.end_with?('.git')
               warning "Github repositories should end in `.git`."
             end
             unless supported_domains.find { |domain| git.start_with?(domain) }

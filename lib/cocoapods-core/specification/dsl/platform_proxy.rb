@@ -30,15 +30,15 @@ module Pod
         # @return [void]
         #
         def method_missing(meth, *args, &block)
-          attr = Specification::DSL.attributes.values.find do |attr|
+          attribute = Specification::DSL.attributes.values.find do |attr|
             if attr.writer_name.to_sym == meth
               true
             elsif attr.writer_singular_form
               attr.writer_singular_form.to_sym == meth
             end
           end
-          if attr && attr.multi_platform?
-            spec.store_attribute(attr.name, args.first, platform)
+          if attribute && attribute.multi_platform?
+            spec.store_attribute(attribute.name, args.first, platform)
           else
             super
           end

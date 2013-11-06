@@ -141,7 +141,7 @@ module Pod
         #   "iOS - OS X"
         #
         def platform
-          sorted_platforms = spec.available_platforms.sort do |a,b|
+          sorted_platforms = spec.available_platforms.sort do |a, b|
             a.to_s.downcase <=> b.to_s.downcase
           end
           sorted_platforms.join(' - ')
@@ -215,7 +215,7 @@ module Pod
           return nil unless from_time
           from_time = Time.parse(from_time) unless from_time.is_a?(Time)
           to_time = Time.now
-          distance_in_days = (((to_time - from_time).abs)/60/60/24).round
+          distance_in_days = (((to_time - from_time).abs) / 60 / 60 / 24).round
 
           case distance_in_days
           when 0..7

@@ -42,7 +42,7 @@ module Pod
           @default_value  = options.delete(:default_value)  { nil       }
           @ios_default    = options.delete(:ios_default)    { nil       }
           @osx_default    = options.delete(:osx_default)    { nil       }
-          @types          = options.delete(:types)          { [String ] }
+          @types          = options.delete(:types)          { [String] }
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{to_s}"
@@ -58,7 +58,7 @@ module Pod
         # @return [String] A string representation suitable for debugging.
         #
         def inspect
-          "<#{self.class} name=#{self.name} types=#{types} " \
+          "<#{self.class} name=#{name} types=#{types} " \
             "multi_platform=#{multi_platform?}>"
         end
 

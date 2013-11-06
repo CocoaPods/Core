@@ -174,8 +174,8 @@ module Pod
       #   podspec :path => '/Documents/PrettyKit/PrettyKit.podspec'
       #
       # @param    [Hash {Symbol=>String}] options
-      #           the path where to load the {Specification}. If not provided the
-      #           first podspec in the directory of the podfile is used.
+      #           the path where to load the {Specification}. If not provided
+      #           the first podspec in the directory of the podfile is used.
       #
       # @option   options [String] :path
       #           the path of the podspec file
@@ -196,9 +196,10 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a new static library target and scopes dependencies defined from
-      # the given block. The target will by default include the dependencies
-      # defined outside of the block, unless the `:exclusive => true` option is
+      # Defines a new static library target and scopes dependencies defined
+      # from the given block. The target will by default include the
+      # dependencies defined outside of the block, unless the `:exclusive =>
+      # true` option is
       # given.
       #
       # ---
@@ -286,8 +287,8 @@ module Pod
         current_target_definition.set_platform(name, target)
       end
 
-      # Specifies the Xcode project that contains the target that the Pods library
-      # should be linked with.
+      # Specifies the Xcode project that contains the target that the Pods
+      # library should be linked with.
       #
       # -----
       #
@@ -306,12 +307,12 @@ module Pod
       #           the path of the project to link with
       #
       # @param    [Hash{String => symbol}] build_configurations
-      #           a hash where the keys are the name of the build configurations
-      #           in your Xcode project and the values are Symbols that specify
-      #           if the configuration should be based on the `:debug` or
-      #           `:release` configuration. If no explicit mapping is specified
-      #           for a configuration in your project, it will default to
-      #           `:release`.
+      #           a hash where the keys are the name of the build
+      #           configurations in your Xcode project and the values are
+      #           Symbols that specify if the configuration should be based on
+      #           the `:debug` or `:release` configuration. If no explicit
+      #           mapping is specified for a configuration in your project, it
+      #           will default to `:release`.
       #
       # @example  Specifying the user project
       #

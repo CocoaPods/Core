@@ -56,7 +56,7 @@ module Pod
         version = version.version
         @head = true
       elsif version.is_a?(String) && version =~ /HEAD (based on|from) (.*)/
-        version = $2
+        version = Regexp.last_match[2]
         @head = true
       end
       super(version)
@@ -82,7 +82,7 @@ module Pod
     # @return [String] a string representation suitable for debugging.
     #
     def inspect
-      "<#{self.class} version=#{self.version}>"
+      "<#{self.class} version=#{version}>"
     end
 
     # @return [Boolean] indicates whether or not the version is a prerelease.
@@ -98,7 +98,7 @@ module Pod
 
     # @return [Bool] Whether a string representation is correct.
     #
-    def self.correct? version
+    def self.correct?(version)
       version.to_s =~ ANCHORED_VERSION_PATTERN
     end
 

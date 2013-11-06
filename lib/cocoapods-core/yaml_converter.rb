@@ -84,7 +84,7 @@ module Pod
         sorted_array(array).each do |array_value|
           result << process_according_to_class(array_value)
         end
-        "- #{result*"\n- "}"
+        "- #{result * "\n- "}"
       end
 
       # Converts a hash to YAML after sorting its keys. Optionally accepts a

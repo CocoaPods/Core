@@ -109,7 +109,7 @@ module Pod
         end
       end
 
-      alias :to_s :label
+      alias_method :to_s, :label
 
       # @return [String] A string representation suitable for debug.
       #
@@ -434,18 +434,18 @@ module Pod
       # @return [Array] The keys used by the hash representation of the
       #         target definition.
       #
-      HASH_KEYS = [
-        'name',
-        'platform',
-        'podspecs',
-        'exclusive',
-        'link_with',
-        'link_with_first_target',
-        'inhibit_warnings',
-        'user_project_path',
-        'build_configurations',
-        'dependencies',
-        'children'
+      HASH_KEYS = %w[
+        name
+        platform
+        podspecs
+        exclusive
+        link_with
+        link_with_first_target
+        inhibit_warnings
+        user_project_path
+        build_configurations
+        dependencies
+        children
       ].freeze
 
       # @return [Hash] The hash representation of the target definition.
@@ -539,7 +539,6 @@ module Pod
         get_hash_value('inhibit_warnings', {})
       end
 
-
       # @return [Array<Dependency>] The dependencies specified by the user for
       #         this target definition.
       #
@@ -591,13 +590,13 @@ module Pod
             path_with_ext = "#{path}.podspec"
           end
           path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
-          file = podfile.defined_in_file.dirname + path_without_tilde
+          podfile.defined_in_file.dirname + path_without_tilde
         elsif name = options[:name]
           name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
-          file = podfile.defined_in_file.dirname + name
+          podfile.defined_in_file.dirname + name
         elsif options[:autodetect]
           glob_pattern = podfile.defined_in_file.dirname + '*.podspec'
-          file = Pathname.glob(glob_pattern).first
+          Pathname.glob(glob_pattern).first
         end
       end
 

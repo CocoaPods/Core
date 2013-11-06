@@ -2,7 +2,6 @@ require 'active_support/core_ext/array/conversions'
 require 'cocoapods-core/specification/set/presenter'
 require 'cocoapods-core/specification/set/statistics'
 
-
 module Pod
   class Specification
 
@@ -78,7 +77,7 @@ module Pod
       #         requirements of the stored dependencies.
       #
       def dependency
-        dependencies.inject(Dependency.new(name)) do |previous, dependency|
+        dependencies.reduce(Dependency.new(name)) do |previous, dependency|
           previous.merge(dependency.to_root_dependency)
         end
       end
@@ -92,7 +91,7 @@ module Pod
       #
       def specification
         path = specification_path_for_version(required_version)
-        specification = Specification.from_file(path)
+        Specification.from_file(path)
       end
 
       # TODO
@@ -158,7 +157,7 @@ module Pod
       end
 
       def ==(other)
-        self.class === other &&
+        self.class == other.class &&
           @name == other.name &&
           @sources.map(&:name) == other.sources.map(&:name)
       end
@@ -181,8 +180,9 @@ module Pod
       # @return [Hash] The hash representation.
       #
       def to_hash
-        versions = versions_by_source.inject({}) do |memo, (source, version)|
-          memo[source.name] = version.map(&:to_s); memo
+        versions = versions_by_source.reduce({}) do |memo, (source, version)|
+          memo[source.name] = version.map(&:to_s)
+          memo
         end
         {
           'name' => name,
@@ -192,13 +192,10 @@ module Pod
         }
       end
 
-
       #-----------------------------------------------------------------------#
-
 
       attr_accessor :dependencies_by_requirer_name
       attr_accessor :dependencies
-
 
       #-----------------------------------------------------------------------#
 
@@ -218,7 +215,7 @@ module Pod
         end
 
         def ==(other)
-          self.class === other && specification == other.specification
+          self.class == other.class && specification == other.specification
         end
 
         def specification_path

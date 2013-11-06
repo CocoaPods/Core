@@ -17,14 +17,14 @@ module Pod
             CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding " \
               "the method is deprecated."
             @pre_install_callback = Proc.new do |pod, target_definition|
-              self.pre_install(pod, target_definition)
+              pre_install(pod, target_definition)
             end
 
           elsif method == :post_install
             CoreUI.warn "[#{to_s}] The use of `#{method}` by overriding the " \
               "method is deprecated."
             @post_install_callback = Proc.new do |target_installer|
-              self.post_install(target_installer)
+              post_install(target_installer)
             end
 
           elsif method == :header_mappings
@@ -131,9 +131,7 @@ module Pod
 
         #-----------------------------------------------------------------------#
 
-
       end
-
     end
   end
 end

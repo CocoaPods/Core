@@ -180,7 +180,7 @@ module Pod
       return false unless external_source == other.external_source
 
       other.requirement.requirements.all? do | operator, version |
-        self.requirement.satisfied_by? Version.new(version)
+        requirement.satisfied_by? Version.new(version)
       end
     end
 
@@ -189,13 +189,13 @@ module Pod
     #         external source.
     #
     def ==(other)
-      Dependency === other &&
+      self.class == other.class &&
         name == other.name &&
         requirement == other.requirement &&
         head? == other.head? &&
         external_source == other.external_source
     end
-    alias :eql? :==
+    alias_method :eql?, :==
 
     #  @return [Fixnum] The hash value based on the name and on the
     #  requirements.
@@ -207,8 +207,8 @@ module Pod
     # @return [Fixnum] How the dependency should be sorted respect to another
     #         one according to its name.
     #
-    def <=> other
-      self.name <=> other.name
+    def <=>(other)
+      name <=> other.name
     end
 
     # Merges the version requirements of the dependency with another one.
@@ -223,11 +223,11 @@ module Pod
     #         includes also the version requirements of the given one.
     #
     def merge(other)
-      unless name == other.name then
+      unless name == other.name
         raise ArgumentError, "#{self} and #{other} have different names"
       end
       default   = Requirement.default
-      self_req  = self.requirement
+      self_req  = requirement
       other_req = other.requirement
 
       if other_req == default
@@ -259,7 +259,7 @@ module Pod
     # @return [Bool] Whether the dependency is satisfied.
     #
     def match?(name, version)
-      return false unless self.name === name
+      return false unless self.name == name
       return true if requirement.none?
       requirement.satisfied_by?(Version.new(version))
     end
@@ -318,7 +318,7 @@ module Pod
       match_data = string.match(/(\S*)( (.*))?/)
       name = match_data[1]
       version = match_data[2]
-      version = version.gsub(/[()]/,'') if version
+      version = version.gsub(/[()]/, '') if version
       case version
       when nil || /from `(.*)(`|')/
         Dependency.new(name)
@@ -333,8 +333,8 @@ module Pod
     # @return [String] a string representation suitable for debugging.
     #
     def inspect
-      "<#{self.class} name=#{self.name} requirements=#{requirement.to_s} " \
-        "external_source=#{external_source||'nil'}>"
+      "<#{self.class} name=#{name} requirements=#{requirement.to_s} " \
+        "external_source=#{external_source || 'nil'}>"
     end
 
     #--------------------------------------#
