@@ -248,7 +248,7 @@ module Pod
           error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
           warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
           warning "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
-          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('git://gist.github.com')
+          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('https://gist.github.com')
 
           if version == '0.0.1'
             error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
