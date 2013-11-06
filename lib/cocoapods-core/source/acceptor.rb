@@ -68,10 +68,11 @@ module Pod
         source = spec.source.values_at(*keys).compact.first
         old_source = reference_spec(spec).source.values_at(*keys).compact.first
         unless source == old_source
-          errors << "The source of the spec doesn't match with the recorded ones." \
-            "Source: `#{source}`. Previous: `#{old_source}`.\n " \
-            "Please contact the specs repo maintainers if the library changed " \
-            "location."
+          message = "The source of the spec doesn't match with the recorded "
+          message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
+          message << "Please contact the specs repo maintainers if the"
+          message << "library changed location."
+          errors << message
         end
       end
 
@@ -85,10 +86,12 @@ module Pod
         return if !spec.source[:git] || spec.source[:tag]
         return unless related_specifications(spec)
         return if previous_spec
-        has_tagged_spec = related_specifications(spec).any? { |s| s.version != '0.0.1' }
+        has_tagged_spec = related_specifications(spec).any? do |s|
+          s.version != '0.0.1'
+        end
         if has_tagged_spec
-          errors << "There is already at least one versioned specification so " \
-            "untagged versions cannot be accepted."
+          errors << "There is already at least one versioned specification " \
+            "so untagged versions cannot be accepted."
         end
       end
 
@@ -114,7 +117,8 @@ module Pod
         spec.dependencies.each do |dep|
           set = source.search(dep)
           unless set && set.specification
-            errors << "Unable to find a specification for the `#{dep}` dependency."
+            errors << "Unable to find a specification for the `#{dep}` " \
+              "dependency."
           end
         end
       end

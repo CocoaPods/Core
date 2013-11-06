@@ -38,8 +38,9 @@ module Pod
       end
 
       it "raises if the required version doesn't exist" do
-        @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0'), 'Spec')
-        lambda { @set.required_version }.should.raise Informative
+        should.raise Informative do
+          @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0'), 'Spec')
+        end
       end
 
       it "can test if it is equal to another set" do
@@ -72,19 +73,33 @@ module Pod
         @set.required_version.should == Version.new('1.2')
       end
 
+      it "returns the acceptable versions according to the requirements stored" do
+        @set.acceptable_versions.map(&:to_s).should == ['1.2', '1.1', '1.0']
+      end
+
       it "returns the specification for the required version" do
         @set.specification.name.should == 'CocoaLumberjack'
         @set.specification.version.should == Version.new('1.2')
       end
 
-      it "ignores dotfiles when getting the version directories" do
+      it "ignores dot files when getting the version directories" do
         `touch #{fixture('spec-repos/master/CocoaLumberjack/.DS_Store')}`
-        lambda { @set.versions }.should.not.raise
+        should.not.raise do
+          @set.versions
+        end
       end
 
       it "raises if a version is incompatible with the activated version" do
-        spec = Dependency.new('CocoaLumberjack', '1.2.1')
-        lambda { @set.required_by(spec, 'Spec') }.should.raise Informative
+        dep = Dependency.new('CocoaLumberjack', '1.2.1')
+        should.raise Informative do
+          @set.required_by(dep, 'Spec')
+        end
+      end
+
+      it "accepts a requirement if it allows supported versions" do
+        dep = Dependency.new('CocoaLumberjack', '< 1.1')
+        @set.required_by(dep, 'Spec')
+        @set.acceptable_versions.map(&:to_s).should == ['1.0']
       end
     end
 
@@ -179,8 +194,9 @@ module Pod
     end
 
     it "raises if the required version doesn't match the specification" do
-      @set.required_by(Dependency.new('BananaLib', '< 1.0'), 'Spec')
-      lambda { @set.required_version }.should.raise Informative
+      should.raise Informative do
+        @set.required_by(Dependency.new('BananaLib', '< 1.0'), 'Spec')
+      end
     end
   end
 end

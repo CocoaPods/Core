@@ -1,0 +1,71 @@
+HashSyntax:
+  EnforcedStyle: hash_rockets
+
+StringLiterals:
+  Enabled: false
+  EnforcedStyle: double_quotes
+
+SignalException:
+  EnforcedStyle: only_raise
+
+ConstantName:
+  Enabled: false
+
+IfUnlessModifier:
+  Enabled: false
+
+EmptyLinesAroundBody:
+  Enabled: false
+
+AsciiComments:
+  Enabled: false
+
+Proc:
+  Enabled: false
+
+BracesAroundHashParameters:
+  Enabled: false
+
+Encoding:
+  Enabled: false
+
+#------------------------------------------------------------------------------
+# Needs fixing
+#------------------------------------------------------------------------------
+
+CyclomaticComplexity:
+  Max: 6
+  Max: 11
+
+ClassLength:
+  Max: 100
+  Max: 300
+
+MethodLength:
+  Max: 10
+  Max: 27
+
+# Disabled because it includes comments
+LineLength:
+  Enabled: false
+
+#------------------------------------------------------------------------------
+# $ rubocop lib --auto-gen-config
+#
+# Temporarily disabled cops, many of them do not work on the vendored classes.
+#------------------------------------------------------------------------------
+
+AssignmentInCondition:
+  Enabled: false
+
+Documentation:
+  Enabled: false
+
+RescueException:
+  Enabled: false
+
+SingleLineMethods:
+  Enabled: false
+
+TrivialAccessors:
+  Enabled: false

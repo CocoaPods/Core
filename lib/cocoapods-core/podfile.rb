@@ -172,11 +172,11 @@ module Pod
 
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
-    HASH_KEYS = [
-      'target_definitions',
-      'workspace',
-      'generate_bridge_support',
-      'set_arc_compatibility_flag',
+    HASH_KEYS = %w[
+      target_definitions
+      workspace
+      generate_bridge_support
+      set_arc_compatibility_flag
     ].freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -234,16 +234,19 @@ module Pod
     # @return [Podfile] the new Podfile
     #
     def self.from_ruby(path)
-      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      string = File.open(path, 'r:utf-8') { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
       if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
         string.encode!('UTF-8')
       end
       podfile = Podfile.new(path) do
         begin
+          # rubocop:disable Eval
           eval(string, nil, path.to_s)
+          # rubocop:enable Eval
         rescue Exception => e
-          raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}", path, e.backtrace)
+          message = "Invalid `#{path.basename}` file: #{e.message}"
+          raise DSLError.new(message, path, e.backtrace)
         end
       end
       podfile
@@ -261,7 +264,7 @@ module Pod
     # @return [Podfile] the new Podfile
     #
     def self.from_yaml(path)
-      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      string = File.open(path, 'r:utf-8') { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
       if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
         string.encode!('UTF-8')
@@ -283,7 +286,7 @@ module Pod
     def self.from_hash(hash, path = nil)
       internal_hash = hash.dup
       target_definitions = internal_hash.delete('target_definitions') || []
-      podfile = Podfile.new(path,internal_hash)
+      podfile = Podfile.new(path, internal_hash)
       target_definitions.each do |definition_hash|
         definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition
@@ -314,7 +317,9 @@ module Pod
     # @return [void]
     #
     def set_hash_value(key, value)
-      raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+      unless HASH_KEYS.include?(key)
+        raise StandardError, "Unsupported hash key `#{key}`"
+      end
       internal_hash[key] = value
     end
 
@@ -328,7 +333,9 @@ module Pod
     # @return [Object] The value for the key.
     #
     def get_hash_value(key)
-      raise StandardError, "Unsupported hash key `#{key}`" unless HASH_KEYS.include?(key)
+      unless HASH_KEYS.include?(key)
+        raise StandardError, "Unsupported hash key `#{key}`"
+      end
       internal_hash[key]
     end
 

@@ -134,6 +134,11 @@ module Pod
         @root.link_with.should.be == ['appTarget1']
       end
 
+      it "allows targets to be passed in the argument list instead of as an array" do
+        @root.link_with = 'appTarget1', 'appTarget2'
+        @root.link_with.should.be == ['appTarget1', 'appTarget2']
+      end
+
       it "returns nil if the link_with array is empty" do
         @root.link_with = []
         @root.link_with.should.be.nil

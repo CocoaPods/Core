@@ -32,8 +32,9 @@ namespace :gem do
   end
 
   def silent_sh(command)
+    require 'english'
     output = `#{command} 2>&1`
-    unless $?.success?
+    unless $CHILD_STATUS.success?
       puts output
       exit 1
     end
@@ -117,15 +118,20 @@ namespace :spec do
 
   task :all do
     ENV['GENERATE_COVERAGE'] = 'true'
+
+    title "Running Unit Tests"
     sh "bundle exec bacon #{specs('**')}"
+
+    title "Checking code style..."
+    Rake::Task["rubocop"].invoke
   end
 
-  desc "Checks that the gem is campable of loading all the specs of the master repo."
+  desc "Checks that the gem is capable of loading all the specs of the master repo."
   task :repo do
     puts "Checking compatibility with master repo"
     require 'pathname'
     root = Pathname.new(File.expand_path('../', __FILE__))
-    $:.unshift((root + 'lib').to_s)
+    $LOAD_PATH.unshift((root + 'lib').to_s)
     require 'cocoapods-core'
 
     master_repo_path       =  ENV['HOME'] + "/.cocoapods/master"
@@ -147,7 +153,7 @@ namespace :spec do
         puts "\e[0m\n"
         puts e.message
         puts
-        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile')}
+        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile') }
         FALSE
       end
     end
@@ -160,8 +166,11 @@ namespace :spec do
         spec_with_errors_count += 1
         puts "\n#{s.name} #{s.version}"
         results = linter.errors.map do |r|
-          if r.type == :error then "\e[1;33m  #{r.to_s}\e[0m"
-          else "  " + r.to_s end
+          if r.type == :error
+            "\e[1;33m  #{r.to_s}\e[0m"
+          else
+            "  " + r.to_s
+          end
         end
         puts results * "\n"
       end
@@ -189,8 +198,32 @@ task :bootstrap do
   `bundle install`
 end
 
-
 desc "Run all specs"
 task :spec => 'spec:all'
 
+#-----------------------------------------------------------------------------#
+
+desc 'Checks code style'
+task :rubocop do
+  if RUBY_VERSION >= '1.9.3'
+    require 'rubocop'
+    cli = Rubocop::CLI.new
+    result = cli.run(FileList['lib/**/*.rb'].exclude('lib/cocoapods-core/vendor/**/*').to_a)
+    abort('RuboCop failed!') unless result == 0
+  else
+    puts "[!] Ruby > 1.9 is required to run style checks"
+  end
+end
+
+#-----------------------------------------------------------------------------#
+
 task :default => :spec
+
+def title(title)
+  cyan_title = "\033[0;36m#{title}\033[0m"
+  puts
+  puts "-" * 80
+  puts cyan_title
+  puts "-" * 80
+  puts
+end

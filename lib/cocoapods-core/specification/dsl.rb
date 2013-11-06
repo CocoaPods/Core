@@ -124,7 +124,7 @@ module Pod
       #           the list of the authors of the library and their emails.
       #
       root_attribute :authors, {
-        :types       => [ String, Array, Hash ],
+        :types       => [String, Array, Hash],
         :container   => Hash,
         :required    => true,
         :singularize => true,
@@ -134,7 +134,7 @@ module Pod
 
       # The keys accepted by the license attribute.
       #
-      LICENSE_KEYS = [ :type, :file, :text ].freeze
+      LICENSE_KEYS = [:type, :file, :text].freeze
 
       # @!method license=(license)
       #
@@ -396,9 +396,7 @@ module Pod
       def platform=(args)
         name, deployment_target = args
         if name
-        attributes_hash["platforms"] = {
-          name.to_s => deployment_target
-        }
+          attributes_hash["platforms"] = { name.to_s => deployment_target }
         else
           attributes_hash["platforms"] = {}
         end
@@ -451,7 +449,8 @@ module Pod
       #           The deployment target of the platform.
       #
       def deployment_target=(*args)
-        raise Informative, "The deployment target can be declared only per platform."
+        raise Informative, "The deployment target can be declared only per " \
+          "platform."
       end
 
       #-----------------------------------------------------------------------#
@@ -497,9 +496,25 @@ module Pod
       #
       def dependency(*args)
         name, *version_requirements = args
-        raise Informative, "A specification can't require itself as a subspec" if name == self.name
-        raise Informative, "A subspec can't require one of its parents specifications" if @parent && @parent.name.include?(name)
-        raise Informative, "Unsupported version requirements" unless version_requirements.all? { |req| req.is_a?(String) }
+        if name == self.name
+          raise Informative, "A specification can't require itself as a " \
+            "subspec"
+        end
+        if @parent
+          composed_name = ""
+          @parent.name.split("/").each do |component|
+            composed_name << component
+            if name == composed_name
+              raise Informative, "A subspec can't require one of its " \
+                "parents specifications"
+            else
+              composed_name << "/"
+            end
+          end
+        end
+        unless version_requirements.all? { |req| req.is_a?(String) }
+          raise Informative, "Unsupported version requirements"
+        end
         attributes_hash["dependencies"] ||= {}
         attributes_hash["dependencies"][name] = version_requirements
       end
@@ -683,7 +698,6 @@ module Pod
       attribute :prefix_header_file, {
         :inherited => true
       }
-
 
       #------------------#
 

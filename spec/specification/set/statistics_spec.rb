@@ -44,7 +44,7 @@ module Pod
       end
 
       it "returns nil for GitHub based methods if the Pod is not hosted by GitHub" do
-        @set.specification.source = { :git => 'example.com/repo.git' }
+        Specification.any_instance.stubs(:source).returns({:git => 'example.com/repo.git'})
         @stats.github_watchers(@set).should  == nil
         @stats.github_forks(@set).should     == nil
         @stats.github_pushed_at(@set).should == nil

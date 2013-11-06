@@ -1,8 +1,6 @@
 require 'active_support/core_ext/array/conversions'
-
 require 'cocoapods-core/specification/set/presenter'
 require 'cocoapods-core/specification/set/statistics'
-
 
 module Pod
   class Specification
@@ -38,7 +36,7 @@ module Pod
         @name    = name
         sources  = sources.is_a?(Array) ? sources : [sources]
         @sources = sources.sort_by(&:name)
-        @required_by  = []
+        @dependencies_by_requirer_name = {}
         @dependencies = []
       end
 
@@ -60,19 +58,26 @@ module Pod
       # @return [void]
       #
       def required_by(dependency, dependent_name)
-        unless @required_by.empty? || dependency.requirement.satisfied_by?(Version.new(required_version.to_s))
-          raise Informative, "#{dependent_name} tries to activate `#{dependency}', but already activated version `#{required_version}' by #{@required_by.to_sentence}."
+        dependencies_by_requirer_name[dependent_name] ||= []
+        dependencies_by_requirer_name[dependent_name] << dependency
+        dependencies << dependency
+
+        if acceptable_versions.empty?
+          message = "Unable to satisfy the following requirements:\n"
+          dependencies_by_requirer_name.each do |name, dependencies|
+            dependencies.each do |dep|
+              message << "- `#{dep.to_s}` required by `#{name}`"
+            end
+          end
+          raise Informative, message
         end
-        @specification = nil
-        @required_by  << dependent_name
-        @dependencies << dependency
       end
 
-      # @return [Dependency] a dependency that includes all the versions
+      # @return [Dependency] A dependency that includes all the versions
       #         requirements of the stored dependencies.
       #
       def dependency
-        @dependencies.inject(Dependency.new(name)) do |previous, dependency|
+        dependencies.reduce(Dependency.new(name)) do |previous, dependency|
           previous.merge(dependency.to_root_dependency)
         end
       end
@@ -85,9 +90,12 @@ module Pod
       #         used to disambiguate.
       #
       def specification
-        @specification ||= Specification.from_file(specification_path_for_version(required_version))
+        path = specification_path_for_version(required_version)
+        Specification.from_file(path)
       end
 
+      # TODO
+      #
       def specification_path_for_version(version)
         sources = []
         versions_by_source.each do |source, source_versions|
@@ -109,6 +117,13 @@ module Pod
             "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"
         end
         version
+      end
+
+      # @return [Array<Version>] All the versions which are acceptable given
+      #         the requirements.
+      #
+      def acceptable_versions
+        versions.select { |v| dependency.match?(name, v) }
       end
 
       # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -142,11 +157,14 @@ module Pod
       end
 
       def ==(other)
-        self.class === other && @name == other.name && @sources.map(&:name) == other.sources.map(&:name)
+        self.class == other.class &&
+          @name == other.name &&
+          @sources.map(&:name) == other.sources.map(&:name)
       end
 
       def to_s
-        "#<#{self.class.name} for `#{name}' with required version `#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
+        "#<#{self.class.name} for `#{name}' with required version " \
+          "`#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
       end
       alias_method :inspect, :to_s
 
@@ -162,8 +180,9 @@ module Pod
       # @return [Hash] The hash representation.
       #
       def to_hash
-        versions = versions_by_source.inject({}) do |memo, (source, version)|
-          memo[source.name] = version.map(&:to_s); memo
+        versions = versions_by_source.reduce({}) do |memo, (source, version)|
+          memo[source.name] = version.map(&:to_s)
+          memo
         end
         {
           'name' => name,
@@ -172,6 +191,11 @@ module Pod
           'highest_version_spec' => highest_version_spec_path.to_s
         }
       end
+
+      #-----------------------------------------------------------------------#
+
+      attr_accessor :dependencies_by_requirer_name
+      attr_accessor :dependencies
 
       #-----------------------------------------------------------------------#
 
@@ -191,14 +215,7 @@ module Pod
         end
 
         def ==(other)
-          self.class === other && @specification == other.specification
-        end
-
-        def required_by(dependency, dependent_name)
-          before = @specification
-          super(dependency, dependent_name)
-        ensure
-          @specification = before
+          self.class == other.class && specification == other.specification
         end
 
         def specification_path
@@ -206,7 +223,7 @@ module Pod
         end
 
         def versions
-          [@specification.version]
+          [specification.version]
         end
       end
     end

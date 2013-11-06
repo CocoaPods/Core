@@ -37,6 +37,11 @@ module Pod
 
       # @!group Dependencies
       #   The Podfile specifies the dependencies of each user target.
+      #
+      #   * `pod` is the way to declare a specific dependency.
+      #   * `podspec` provides an easy creation API for local podspecs.
+      #   * `target` allows you to scope your dependencies to specific
+      #   targets in your Xcode projects.
 
       #-----------------------------------------------------------------------#
 
@@ -45,20 +50,16 @@ module Pod
       # A dependency requirement is defined by the name of the Pod and
       # optionally a list of version requirements.
       #
-      # ------
-      #
       # When starting out with a project it is likely that you will want to use
       # the latest version of a Pod. If this is the case, simply omit the
       # version requirements.
       #
       #     pod 'SSZipArchive'
       #
-      #
       # Later on in the project you may want to freeze to a specific version of
       # a Pod, in which case you can specify that version number.
       #
       #     pod 'Objection', '0.9'
-      #
       #
       # Besides no version, or a specific one, it is also possible to use
       # operators:
@@ -148,7 +149,8 @@ module Pod
       #
       def pod(name = nil, *requirements, &block)
         if block
-          raise StandardError, "Inline specifications are deprecated. Please store the specification in a `podspec` file."
+          raise StandardError, "Inline specifications are deprecated. " \
+            "Please store the specification in a `podspec` file."
         end
 
         unless name
@@ -172,8 +174,8 @@ module Pod
       #   podspec :path => '/Documents/PrettyKit/PrettyKit.podspec'
       #
       # @param    [Hash {Symbol=>String}] options
-      #           the path where to load the {Specification}. If not provided the
-      #           first podspec in the directory of the podfile is used.
+      #           the path where to load the {Specification}. If not provided
+      #           the first podspec in the directory of the podfile is used.
       #
       # @option   options [String] :path
       #           the path of the podspec file
@@ -194,9 +196,10 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a new static library target and scopes dependencies defined from
-      # the given block. The target will by default include the dependencies
-      # defined outside of the block, unless the `:exclusive => true` option is
+      # Defines a new static library target and scopes dependencies defined
+      # from the given block. The target will by default include the
+      # dependencies defined outside of the block, unless the `:exclusive =>
+      # true` option is
       # given.
       #
       # ---
@@ -231,7 +234,8 @@ module Pod
       #
       def target(name, options = {})
         if options && !options.keys.all? { |key| [:exclusive].include?(key) }
-          raise Informative, "Unsupported options `#{options}` for target `#{name}`"
+          raise Informative, "Unsupported options `#{options}` for " \
+            "target `#{name}`"
         end
 
         parent = current_target_definition
@@ -246,18 +250,18 @@ module Pod
       #-----------------------------------------------------------------------#
 
       # @!group Target configuration
-      #   This group list the options to configure a target.
+      #   These settings are used to control the  CocoaPods generated project.
+      #
+      #   This starts out simply with stating what `platform` you are working
+      #   on. `xcodeproj` allows you to state specifically which project to
+      #   link with.
 
       #-----------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
       #
-      # -----
-      #
       # CocoaPods provides a default deployment target if one is not specified.
       # The current default values are `4.3` for iOS and `10.6` for OS X.
-      #
-      # -----
       #
       # If the deployment target requires it (iOS < `4.3`), `armv6`
       # architecture will be added to `ARCHS`.
@@ -283,8 +287,8 @@ module Pod
         current_target_definition.set_platform(name, target)
       end
 
-      # Specifies the Xcode project that contains the target that the Pods library
-      # should be linked with.
+      # Specifies the Xcode project that contains the target that the Pods
+      # library should be linked with.
       #
       # -----
       #
@@ -303,12 +307,12 @@ module Pod
       #           the path of the project to link with
       #
       # @param    [Hash{String => symbol}] build_configurations
-      #           a hash where the keys are the name of the build configurations
-      #           in your Xcode project and the values are Symbols that specify
-      #           if the configuration should be based on the `:debug` or
-      #           `:release` configuration. If no explicit mapping is specified
-      #           for a configuration in your project, it will default to
-      #           `:release`.
+      #           a hash where the keys are the name of the build
+      #           configurations in your Xcode project and the values are
+      #           Symbols that specify if the configuration should be based on
+      #           the `:debug` or `:release` configuration. If no explicit
+      #           mapping is specified for a configuration in your project, it
+      #           will default to `:release`.
       #
       # @example  Specifying the user project
       #
@@ -345,18 +349,18 @@ module Pod
       # @param    [String, Array<String>] targets
       #           the target or the targets to link with.
       #
-      # @example  Link with an user project target
+      # @example  Link with a user project target
       #
       #           link_with 'MyApp'
       #
-      # @example  Link with a more user project targets
+      # @example  Link with multiple user project targets
       #
-      #           link_with ['MyApp', 'MyOtherApp']
+      #           link_with 'MyApp', 'MyOtherApp'
       #
       # @return   [void]
       #
-      def link_with(targets)
-        current_target_definition.link_with = targets
+      def link_with(*targets)
+        current_target_definition.link_with = targets.flatten
       end
 
       # Inhibits **all** the warnings from the CocoaPods libraries.
@@ -365,7 +369,7 @@ module Pod
       #
       # This attribute is inherited by child target definitions.
       #
-      # If you would like to inhibit warnings per Pod you can use the 
+      # If you would like to inhibit warnings per Pod you can use the
       # following syntax:
       #
       #     pod 'SSZipArchive', :inhibit_warnings => true
@@ -492,4 +496,3 @@ module Pod
     end
   end
 end
-
