@@ -108,24 +108,26 @@ module Pod
         source.search_by_name('Banana', false).map(&:name).should == ['BananaLib']
       end
 
-      it "returns pods with similar names" do
-        source = Source.new(fixture('spec-repos/master'))
-        source.pods_with_similar_names('abmultiton').should == 'ABMultiton'
-      end
+      describe "pods_with_similar_names" do
+        it "is case insensitive" do
+          source = Source.new(fixture('spec-repos/master'))
+          source.pods_with_similar_names('abmultiton').should == 'ABMultiton'
+        end
 
-      it "returns pods with similar names" do
-        source = Source.new(fixture('spec-repos/master'))
-        source.pods_with_similar_names('ABMuton').should == 'ABMultiton'
-      end
+        it "matches misspells" do
+          source = Source.new(fixture('spec-repos/master'))
+          source.pods_with_similar_names('ABMuton').should == 'ABMultiton'
+        end
 
-      it "returns pods with similar names" do
-        source = Source.new(fixture('spec-repos/master'))
-        source.pods_with_similar_names('ObjSugar').should == "ObjectiveSugar"
-      end
+        it "matches abbreviations" do
+          source = Source.new(fixture('spec-repos/master'))
+          source.pods_with_similar_names('ObjSugar').should == "ObjectiveSugar"
+        end
 
-      it "returns pods with similar names" do
-        source = Source.new(fixture('spec-repos/master'))
-        source.pods_with_similar_names('table').should == "ObjectiveSugar"
+        it "matches suffixes" do
+          source = Source.new(fixture('spec-repos/master'))
+          source.pods_with_similar_names('table').should == "Routable"
+        end
       end
 
     end
