@@ -32,8 +32,9 @@ namespace :gem do
   end
 
   def silent_sh(command)
+    require 'english'
     output = `#{command} 2>&1`
-    unless $?.success?
+    unless $CHILD_STATUS.success?
       puts output
       exit 1
     end
@@ -130,7 +131,7 @@ namespace :spec do
     puts "Checking compatibility with master repo"
     require 'pathname'
     root = Pathname.new(File.expand_path('../', __FILE__))
-    $:.unshift((root + 'lib').to_s)
+    $LOAD_PATH.unshift((root + 'lib').to_s)
     require 'cocoapods-core'
 
     master_repo_path       =  ENV['HOME'] + "/.cocoapods/master"
@@ -152,7 +153,7 @@ namespace :spec do
         puts "\e[0m\n"
         puts e.message
         puts
-        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile')}
+        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile') }
         FALSE
       end
     end
@@ -165,8 +166,11 @@ namespace :spec do
         spec_with_errors_count += 1
         puts "\n#{s.name} #{s.version}"
         results = linter.errors.map do |r|
-          if r.type == :error then "\e[1;33m  #{r.to_s}\e[0m"
-          else "  " + r.to_s end
+          if r.type == :error
+            "\e[1;33m  #{r.to_s}\e[0m"
+          else
+            "  " + r.to_s
+          end
         end
         puts results * "\n"
       end
@@ -194,7 +198,6 @@ task :bootstrap do
   `bundle install`
 end
 
-
 desc "Run all specs"
 task :spec => 'spec:all'
 
@@ -204,13 +207,9 @@ desc 'Checks code style'
 task :rubocop do
   if RUBY_VERSION >= '1.9.3'
     require 'rubocop'
-    patterns = ['lib/**/*.rb']
-    fail_on_error = false
-    verbose = false
     cli = Rubocop::CLI.new
-    puts 'Running RuboCop...' if verbose
-    result = cli.run(patterns)
-    abort('RuboCop failed!') if fail_on_error unless result == 0
+    result = cli.run(FileList['lib/**/*.rb'].exclude('lib/cocoapods-core/vendor/**/*').to_a)
+    abort('RuboCop failed!') unless result == 0
   else
     puts "[!] Ruby > 1.9 is required to run style checks"
   end
