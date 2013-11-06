@@ -100,7 +100,7 @@ module Pod
     def supports?(other)
       other = Platform.new(other)
       if other.deployment_target && deployment_target
-      (other.name == name) && (other.deployment_target <= deployment_target)
+        (other.name == name) && (other.deployment_target <= deployment_target)
       else
         other.name == name
       end
@@ -119,7 +119,7 @@ module Pod
     #
     def inspect
       "#<#{self.class.name} name=#{name.inspect} " \
-      "deployment_target=#{deployment_target.inspect}>"
+        "deployment_target=#{deployment_target.inspect}>"
     end
 
     # @return [Symbol] a symbol representing the name of the platform.
@@ -137,10 +137,10 @@ module Pod
     # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
     #         than, equal to, or greater than other.
     #
-    def <=> other
-      name_sort = self.name.to_s <=> other.name.to_s
+    def <=>(other)
+      name_sort = name.to_s <=> other.name.to_s
       if name_sort.zero?
-        self.deployment_target <=> other.deployment_target
+        deployment_target <=> other.deployment_target
       else
         name_sort
       end
@@ -150,7 +150,11 @@ module Pod
     #         iOS.
     #
     def requires_legacy_ios_archs?
-      (name == :ios) && deployment_target && (deployment_target < Version.new("4.3"))
+      if name == :ios
+        deployment_target && (deployment_target < Version.new("4.3"))
+      else
+        false
+      end
     end
 
     # Converts the symbolic name of a platform to a string name suitable to be

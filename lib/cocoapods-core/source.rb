@@ -34,7 +34,6 @@ module Pod
 
     alias_method :to_s, :name
 
-
     # @return [Integer] compares a source with another one for sorting
     #         purposes.
     #
@@ -42,7 +41,7 @@ module Pod
     #         this convention should be used in any case where sources need to
     #         be disambiguated.
     #
-    def <=> (other)
+    def <=>(other)
       name <=> other.name
     end
 
@@ -57,7 +56,7 @@ module Pod
     def pods
       specs_dir_as_string = specs_dir.to_s
       Dir.entries(specs_dir).select do |entry|
-        valid_name = !(entry =='.' || entry == '..' || entry == '.git')
+        valid_name = !(entry == '.' || entry == '..' || entry == '.git')
         valid_name && File.directory?(File.join(specs_dir_as_string, entry))
       end
     end
@@ -90,7 +89,7 @@ module Pod
       return unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
-        Version.new(basename) if v.directory? && basename[0,1] != '.'
+        Version.new(basename) if v.directory? && basename[0, 1] != '.'
       end.compact.sort.reverse
     end
 
@@ -173,12 +172,13 @@ module Pod
             s = set.specification
             text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
           rescue
-            CoreUI.warn "Skipping `#{set.name}` because the podspec contains errors."
+            CoreUI.warn "Skipping `#{set.name}` because the podspec " \
+              "contains errors."
           end
           set if text && text.downcase.include?(query.downcase)
         end.compact
       else
-        names = pods.select { |pod_name| pod_name.downcase.include?(query.downcase) }
+        names = pods.select { |name| name.downcase.include?(query.downcase) }
         names.map { |pod_name| set(pod_name) }
       end
     end

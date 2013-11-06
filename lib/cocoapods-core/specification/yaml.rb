@@ -13,7 +13,9 @@ module Pod
       #
       def to_hash
         hash = attributes_hash.dup
-        hash["subspecs"] = subspecs.map { |spec| spec.to_hash } unless subspecs.empty?
+        unless subspecs.empty?
+          hash["subspecs"] = subspecs.map { |spec| spec.to_hash }
+        end
         hash
       end
 
@@ -39,7 +41,9 @@ module Pod
       subspecs = attributes_hash.delete('subspecs')
       spec.attributes_hash = attributes_hash
       if subspecs
-        spec.subspecs = subspecs.map { |s_hash| Specification.from_hash(s_hash, spec) }
+        spec.subspecs = subspecs.map do |s_hash|
+          Specification.from_hash(s_hash, spec)
+        end
       end
       spec
     end

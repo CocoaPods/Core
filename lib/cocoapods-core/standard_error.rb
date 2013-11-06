@@ -67,11 +67,11 @@ module Pod
         lines      = File.readlines(dsl_path.to_s)
         indent     = " #  "
         indicator  = indent.dup.gsub("#", ">")
-        first_line = ( line_numer.zero? )
-        last_line  = ( line_numer == (lines.count - 1) )
+        first_line = (line_numer.zero?)
+        last_line  = (line_numer == (lines.count - 1))
 
         m << "\n"
-        m << "#{indent}from #{trace_line.gsub(/:in.*$/,'')}\n"
+        m << "#{indent}from #{trace_line.gsub(/:in.*$/, '')}\n"
         m << "#{indent}-------------------------------------------\n"
         m << "#{indent}#{    lines[line_numer - 1] }" unless first_line
         m << "#{indicator}#{ lines[line_numer] }"

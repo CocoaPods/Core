@@ -68,7 +68,7 @@ module Pod
       #   subspecs == other.subspecs &&
       #   pre_install_callback == other.pre_install_callback &&
       #   post_install_callback == other.post_install_callback
-      self.to_s == other.to_s
+      to_s == other.to_s
     end
 
     # @see ==
@@ -126,7 +126,8 @@ module Pod
     def self.name_and_version_from_string(string_representation)
       match_data = string_representation.match(/(\S*) \((.*)\)/)
       unless match_data
-        raise Informative, "Invalid string representation for a Specification: `#{string_representation}`."
+        raise Informative, "Invalid string representation for a " \
+          "Specification: `#{string_representation}`."
       end
       name = match_data[1]
       vers = Version.new(match_data[2])
@@ -202,12 +203,12 @@ module Pod
       if relative_name.nil? || relative_name == base_name
         self
       else
-        remainder = relative_name[base_name.size+1..-1]
+        remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
-        subspec = subspecs.find { |s| s.name == "#{self.name}/#{subspec_name}" }
+        subspec = subspecs.find { |s| s.name == "#{name}/#{subspec_name}" }
         unless subspec
           raise Informative, "Unable to find a specification named " \
-            "`#{relative_name}` in `#{self.name} (#{self.version})`."
+            "`#{relative_name}` in `#{name} (#{version})`."
         end
         subspec.subspec_by_name(remainder)
       end
@@ -368,7 +369,7 @@ module Pod
       when Hash
         value
       else
-        Hash.new
+        {}
       end
     end
 
@@ -531,7 +532,7 @@ module Pod
         raise Informative, "No podspec exists at path `#{path}`."
       end
 
-      string = File.open(path, 'r:utf-8')  { |f| f.read }
+      string = File.open(path, 'r:utf-8') { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
       if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
         string.encode!('UTF-8')
@@ -603,10 +604,11 @@ module Pod
   #
   #
   def self._eval_podspec(string, path)
-    begin
-      eval(string, nil, path.to_s)
-    rescue Exception => e
-      raise DSLError.new("Invalid `#{path.basename}` file: #{e.message}", path, e.backtrace)
-    end
+    # rubocop:disable Eval
+    eval(string, nil, path.to_s)
+    # rubocop:enable Eval
+  rescue Exception => e
+    message = "Invalid `#{path.basename}` file: #{e.message}"
+    raise DSLError.new(message, path, e.backtrace)
   end
 end

@@ -224,10 +224,12 @@ module Pod
         value = the_spec.attributes_hash[attr.name.to_s]
         value = prepare_value(attr, value)
 
-        if attr.multi_platform? && the_spec.attributes_hash[platform_name.to_s]
-          platform_value = the_spec.attributes_hash[platform_name.to_s][attr.name.to_s]
-          platform_value = prepare_value(attr, platform_value)
-          value = merge_values(attr, value, platform_value)
+        if attr.multi_platform?
+          if platform_hash = the_spec.attributes_hash[platform_name.to_s]
+            platform_value = platform_hash[attr.name.to_s]
+            platform_value = prepare_value(attr, platform_value)
+            value = merge_values(attr, value, platform_value)
+          end
         end
         value
       end
@@ -258,7 +260,7 @@ module Pod
           r = [*existing_value] + [*new_value]
           r.compact
         elsif attr.container == Hash
-          existing_value = existing_value.merge(new_value) do |_, old, new|
+          existing_value.merge(new_value) do |_, old, new|
             if new.is_a?(Array) || old.is_a?(Array)
               r = [*old] + [*new]
               r.compact
@@ -289,7 +291,7 @@ module Pod
 
         hook_name = prepare_hook_name(attr)
         if self.respond_to?(hook_name, true)
-          value = self.send(hook_name, value)
+          value = send(hook_name, value)
         else
           value
         end

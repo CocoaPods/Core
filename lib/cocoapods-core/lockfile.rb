@@ -12,7 +12,7 @@ module Pod
   #
   class Lockfile
 
-    # TODO    The symbols should be converted to a String and back to symbol
+    # @todo   The symbols should be converted to a String and back to symbol
     #         when reading (EXTERNAL SOURCES Download options)
 
     # @return [String] the hash used to initialize the Lockfile.
@@ -56,7 +56,7 @@ module Pod
     # @return [Bool] Whether the Podfiles are equal.
     #
     def ==(other)
-      other && self.to_hash == other.to_hash
+      other && to_hash == other.to_hash
     end
 
     # @return [String] a string representation suitable for debugging.
@@ -89,7 +89,9 @@ module Pod
     def version(pod_name)
       version = pod_versions[pod_name]
       return version if version
-      root_name = pod_versions.keys.find { |name| Specification.root_name(name) == pod_name }
+      root_name = pod_versions.keys.find do |name|
+        Specification.root_name(name) == pod_name
+      end
       pod_versions[root_name]
     end
 
@@ -140,7 +142,8 @@ module Pod
       version = version(name)
 
       unless dep && version
-        raise StandardError, "Attempt to lock the `#{name}` Pod without an known dependency."
+        raise StandardError, "Attempt to lock the `#{name}` Pod without an " \
+          "known dependency."
       end
 
       locked_dependency = dep.dup
@@ -229,9 +232,11 @@ module Pod
     #
     def detect_changes_with_podfile(podfile)
       result = {}
-      [ :added, :changed, :removed, :unchanged ].each { |k| result[k] = [] }
+      [:added, :changed, :removed, :unchanged].each { |k| result[k] = [] }
 
-      installed_deps = dependencies.map { |d| dependency_to_lock_pod_named(d.name) }
+      installed_deps = dependencies.map do |dep|
+        dependency_to_lock_pod_named(dep.name)
+      end
       all_dep_names  = (dependencies + podfile.dependencies).map(&:name).uniq
       all_dep_names.each do |name|
         installed_dep = installed_deps.find { |d| d.name == name }
@@ -239,7 +244,7 @@ module Pod
 
         if installed_dep.nil?  then key = :added
         elsif podfile_dep.nil? then key = :removed
-        elsif podfile_dep.compatible?(installed_dep ) then key = :unchanged
+        elsif podfile_dep.compatible?(installed_dep) then key = :unchanged
         else key = :changed
         end
         result[key] << name
@@ -262,7 +267,7 @@ module Pod
     #
     def write_to_disk(path)
       path.dirname.mkpath unless path.dirname.exist?
-      File.open(path, 'w') {|f| f.write(to_yaml) }
+      File.open(path, 'w') { |f| f.write(to_yaml) }
       self.defined_in_file = path
     end
 
@@ -391,7 +396,7 @@ module Pod
       # @return   [Array] the generated data.
       #
       def generate_dependencies_data(podfile)
-        podfile.dependencies.map{ |d| d.to_s }.sort
+        podfile.dependencies.map { |d| d.to_s }.sort
       end
 
       # Generates the information of the external sources.
@@ -409,7 +414,7 @@ module Pod
       #
       def generate_external_sources_data(podfile)
         deps = podfile.dependencies.select(&:external?)
-        deps = deps.sort { |d, other| d.name <=> other.name}
+        deps = deps.sort { |d, other| d.name <=> other.name }
         sources = {}
         deps.each { |d| sources[d.root_name] = d.external_source }
         sources
@@ -437,4 +442,3 @@ module Pod
     end
   end
 end
-

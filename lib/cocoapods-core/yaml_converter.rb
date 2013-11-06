@@ -67,7 +67,8 @@ module Pod
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
         else
-          raise StandardError, "Unsupported class for YAML conversion #{value.class}"
+          raise StandardError, "Unsupported class for YAML conversion " \
+            "#{value.class}"
         end
       end
 
@@ -83,7 +84,7 @@ module Pod
         sorted_array(array).each do |array_value|
           result << process_according_to_class(array_value)
         end
-        "- #{result*"\n- "}"
+        "- #{result * "\n- "}"
       end
 
       # Converts a hash to YAML after sorting its keys. Optionally accepts a

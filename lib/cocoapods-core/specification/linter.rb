@@ -90,13 +90,23 @@ module Pod
       def perform_textual_analysis
         return unless @file
         text = @file.read
-        error "`config.ios?` and `config.osx?` are deprecated."  if text =~ /config\..?os.?/
-        error "clean_paths are deprecated (use preserve_paths)." if text =~ /clean_paths/
+        if text =~ /config\..?os.?/
+          error "`config.ios?` and `config.osx?` are deprecated."
+        end
+        if text =~ /clean_paths/
+          error "clean_paths are deprecated (use preserve_paths)."
+        end
+
         all_lines_count = text.lines.count
         comments_lines_count = text.scan(/^\s*#\s+/).length
         comments_ratio = comments_lines_count.fdiv(all_lines_count)
-        warning "Comments must be deleted." if comments_lines_count > 20 && comments_ratio > 0.2
-        warning "Comments placed at the top of the specification must be deleted." if text.lines.first =~ /^\s*#\s+/
+        if comments_lines_count > 20 && comments_ratio > 0.2
+          warning "Comments must be deleted."
+        end
+        if text.lines.first =~ /^\s*#\s+/
+          warning "Comments placed at the top of the specification must be " \
+            "deleted."
+        end
       end
 
       # Checks that every root only attribute which is required has a value.
@@ -138,7 +148,7 @@ module Pod
       # @return [void]
       #
       def perform_all_specs_analysis
-        all_specs = [ spec, *spec.recursive_subspecs ]
+        all_specs = [spec, *spec.recursive_subspecs]
         all_specs.each do |current_spec|
           current_spec.available_platforms.each do |platform|
             @consumer = Specification::Consumer.new(current_spec, platform)
@@ -193,7 +203,11 @@ module Pod
       #
       def _validate_name(n)
         if spec.name && file
-          names_match = (file.basename.to_s == spec.root.name + '.podspec') || (file.basename.to_s == spec.root.name + '.podspec.yaml')
+          acceptable_names = [
+            spec.root.name + '.podspec',
+            spec.root.name + '.podspec.yaml'
+          ]
+          names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
             error "The name of the spec should match the name of the file."
           end
@@ -203,37 +217,56 @@ module Pod
       def _validate_version(v)
         if v.to_s.empty?
           error "A version is required."
-        else
-          error "The version of the spec should be higher than 0." unless v > Version::ZERO
+        elsif v <= Version::ZERO
+          error "The version of the spec should be higher than 0."
         end
       end
 
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)
-        warning "The summary should be a short version of `description` (max 140 characters)." if s.length > 140
-        warning "The summary is not meaningful." if s =~ /A short description of/
+        if s.length > 140
+          warning "The summary should be a short version of `description` " \
+            "(max 140 characters)."
+        end
+        if s =~ /A short description of/
+          warning "The summary is not meaningful."
+        end
       end
 
       # Performs validations related to the `description` attribute.
       #
       def _validate_description(d)
-        warning "The description is not meaningful." if d =~ /An optional longer description of/
-        warning "The description is equal to the summary." if d == spec.summary
-        warning "The description is shorter than the summary." if d.length < spec.summary.length
+        if d =~ /An optional longer description of/
+          warning "The description is not meaningful."
+        end
+        if d == spec.summary
+          warning "The description is equal to the summary."
+        end
+        if d.length < spec.summary.length
+          warning "The description is shorter than the summary."
+        end
       end
 
       def _validate_homepage(h)
-        warning "The homepage has not been updated from default" if h =~ /http:\/\/EXAMPLE/
+        if h =~ %r[http://EXAMPLE]
+          warning "The homepage has not been updated from default"
+        end
       end
 
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)
         type = l[:type]
-        warning "Missing license type." if type.nil?
-        warning "Invalid license type." if type && type.gsub(' ', '').gsub("\n", '').empty?
-        error   "Sample license type."  if type && type =~ /\(example\)/
+        if type.nil?
+          warning "Missing license type."
+        end
+        if type && type.gsub(' ', '').gsub("\n", '').empty?
+          warning "Invalid license type."
+        end
+        if type && type =~ /\(example\)/
+          error "Sample license type."
+        end
       end
 
       # Performs validations related to the `source` attribute.
@@ -241,19 +274,47 @@ module Pod
       def _validate_source(s)
         if git = s[:git]
           tag, commit = s.values_at(:tag, :commit)
-          github      = git.include?('github.com')
-          version     = spec.version.to_s
+          version = spec.version.to_s
 
-          error "Example source." if git =~ /http:\/\/EXAMPLE/
-          error 'The commit of a Git source cannot be `HEAD`.'    if commit && commit.downcase =~ /head/
-          warning 'The version should be included in the Git tag.' if tag && !tag.include?(version)
-          warning "Github repositories should end in `.git`."      if github && !git.end_with?('.git')
-          warning "Github repositories should use `https` link."   if github && !git.start_with?('https://github.com') && !git.start_with?('https://gist.github.com')
+          if git =~ %r[http://EXAMPLE]
+            error "Example source."
+          end
+          if commit && commit.downcase =~ /head/
+            error 'The commit of a Git source cannot be `HEAD`.'
+          end
+          if tag && !tag.include?(version)
+            warning 'The version should be included in the Git tag.'
+          end
 
           if version == '0.0.1'
-            error 'Git sources should specify either a commit or a tag.' if commit.nil? && tag.nil?
+            if commit.nil? && tag.nil?
+              error 'Git sources should specify either a commit or a tag.'
+            end
           else
             warning 'Git sources should specify a tag.' if tag.nil?
+          end
+        end
+
+        perform_github_source_checks(s)
+      end
+
+      # Performs validations related to github sources.
+      #
+      def perform_github_source_checks(s)
+        supported_domains = [
+          'https://github.com',
+          'https://gist.github.com',
+        ]
+
+        if git = s[:git]
+          is_github = git.include?('github.com')
+          if is_github
+            unless git.end_with?('.git')
+              warning "Github repositories should end in `.git`."
+            end
+            unless supported_domains.find { |domain| git.start_with?(domain) }
+              warning "Github repositories should use `https` link."
+            end
           end
         end
       end
@@ -285,7 +346,8 @@ module Pod
           end
           patterns.each do |pattern|
             if pattern.start_with?('/')
-              error "File patterns must be relative and cannot start with a slash (#{attrb.name})."
+              error "File patterns must be relative and cannot start with a " \
+                "slash (#{attrb.name})."
             end
           end
         end
@@ -295,7 +357,8 @@ module Pod
       #
       def check_tmp_arc_not_nil
         if consumer.requires_arc.nil?
-          warning "A value for `requires_arc` should be specified until the migration to a `true` default."
+          warning "A value for `requires_arc` should be specified until the " \
+            "migration to a `true` default."
         end
       end
 
@@ -306,20 +369,26 @@ module Pod
         empty_patterns = methods.all? { |m| consumer.send(m).empty? }
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
-          error "The #{consumer.spec} spec is empty (no source files, resources, preserve paths, vendored_libraries, vendored_frameworks, dependencies or subspecs)."
+          error "The #{consumer.spec} spec is empty (no source files, " \
+            "resources, preserve paths, , vendored_libraries, " \
+              "vendored_frameworks dependencies or subspecs)."
         end
       end
 
       # Check the hooks
       #
       def check_install_hooks
-        warning "The pre install hook of the specification DSL has been " \
-          "deprecated, use the `resource_bundles` or the `prepare_command` " \
-          "attributes." unless consumer.spec.pre_install_callback.nil?
+        unless consumer.spec.pre_install_callback.nil?
+          warning "The pre install hook of the specification DSL has been " \
+            "deprecated, use the `resource_bundles` or the " \
+              "`prepare_command` attributes."
+        end
 
-        warning "The post install hook of the specification DSL has been " \
-          "deprecated, use the `resource_bundles` or the `prepare_command` " \
-          "attributes." unless consumer.spec.post_install_callback.nil?
+        unless consumer.spec.post_install_callback.nil?
+          warning "The post install hook of the specification DSL has been " \
+            "deprecated, use the `resource_bundles` or the " \
+              " `prepare_command` attributes."
+        end
       end
 
       #-----------------------------------------------------------------------#
@@ -403,7 +472,9 @@ module Pod
         def to_s
           r = "[#{type.to_s.upcase}] #{message}"
           if platforms != Specification::PLATFORMS
-            platforms_names = platforms.uniq.map { |p| Platform.string_name(p) }
+            platforms_names = platforms.uniq.map do |p|
+              Platform.string_name(p)
+            end
             r << " [#{platforms_names * ' - '}]" unless platforms.empty?
           end
           r

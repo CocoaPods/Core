@@ -36,13 +36,13 @@ module Pod
     module DSL
 
       # @!group Dependencies
-      #   The Podfile specifies the dependencies of each user target. 
+      #   The Podfile specifies the dependencies of each user target.
       #
       #   * `pod` is the way to declare a specific dependency.
       #   * `podspec` provides an easy creation API for local podspecs.
-      #   * `target` allows you to scope your dependencies to specific 
+      #   * `target` allows you to scope your dependencies to specific
       #   targets in your Xcode projects.
-      
+
       #-----------------------------------------------------------------------#
 
       # Specifies a dependency of the project.
@@ -149,7 +149,8 @@ module Pod
       #
       def pod(name = nil, *requirements, &block)
         if block
-          raise StandardError, "Inline specifications are deprecated. Please store the specification in a `podspec` file."
+          raise StandardError, "Inline specifications are deprecated. " \
+            "Please store the specification in a `podspec` file."
         end
 
         unless name
@@ -173,8 +174,8 @@ module Pod
       #   podspec :path => '/Documents/PrettyKit/PrettyKit.podspec'
       #
       # @param    [Hash {Symbol=>String}] options
-      #           the path where to load the {Specification}. If not provided the
-      #           first podspec in the directory of the podfile is used.
+      #           the path where to load the {Specification}. If not provided
+      #           the first podspec in the directory of the podfile is used.
       #
       # @option   options [String] :path
       #           the path of the podspec file
@@ -195,9 +196,10 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a new static library target and scopes dependencies defined from
-      # the given block. The target will by default include the dependencies
-      # defined outside of the block, unless the `:exclusive => true` option is
+      # Defines a new static library target and scopes dependencies defined
+      # from the given block. The target will by default include the
+      # dependencies defined outside of the block, unless the `:exclusive =>
+      # true` option is
       # given.
       #
       # ---
@@ -232,7 +234,8 @@ module Pod
       #
       def target(name, options = {})
         if options && !options.keys.all? { |key| [:exclusive].include?(key) }
-          raise Informative, "Unsupported options `#{options}` for target `#{name}`"
+          raise Informative, "Unsupported options `#{options}` for " \
+            "target `#{name}`"
         end
 
         parent = current_target_definition
@@ -250,9 +253,9 @@ module Pod
       #   These settings are used to control the  CocoaPods generated project.
       #
       #   This starts out simply with stating what `platform` you are working
-      #   on. `xcodeproj` allows you to state specifically which project to 
-      #   link with. 
-      
+      #   on. `xcodeproj` allows you to state specifically which project to
+      #   link with.
+
       #-----------------------------------------------------------------------#
 
       # Specifies the platform for which a static library should be build.
@@ -284,8 +287,8 @@ module Pod
         current_target_definition.set_platform(name, target)
       end
 
-      # Specifies the Xcode project that contains the target that the Pods library
-      # should be linked with.
+      # Specifies the Xcode project that contains the target that the Pods
+      # library should be linked with.
       #
       # -----
       #
@@ -304,12 +307,12 @@ module Pod
       #           the path of the project to link with
       #
       # @param    [Hash{String => symbol}] build_configurations
-      #           a hash where the keys are the name of the build configurations
-      #           in your Xcode project and the values are Symbols that specify
-      #           if the configuration should be based on the `:debug` or
-      #           `:release` configuration. If no explicit mapping is specified
-      #           for a configuration in your project, it will default to
-      #           `:release`.
+      #           a hash where the keys are the name of the build
+      #           configurations in your Xcode project and the values are
+      #           Symbols that specify if the configuration should be based on
+      #           the `:debug` or `:release` configuration. If no explicit
+      #           mapping is specified for a configuration in your project, it
+      #           will default to `:release`.
       #
       # @example  Specifying the user project
       #
@@ -366,7 +369,7 @@ module Pod
       #
       # This attribute is inherited by child target definitions.
       #
-      # If you would like to inhibit warnings per Pod you can use the 
+      # If you would like to inhibit warnings per Pod you can use the
       # following syntax:
       #
       #     pod 'SSZipArchive', :inhibit_warnings => true
@@ -493,4 +496,3 @@ module Pod
     end
   end
 end
-

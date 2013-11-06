@@ -11,8 +11,8 @@ module Pod
         #
         attr_accessor :spec
 
-        # @return [Symbol] the platform described by this proxy. Can be either `:ios` or
-        #         `:osx`.
+        # @return [Symbol] the platform described by this proxy. Can be either
+        #         `:ios` or `:osx`.
         #
         attr_accessor :platform
 
@@ -23,18 +23,22 @@ module Pod
           @spec, @platform = spec, platform
         end
 
-        # Defines a setter method for each attribute of the specification class,
-        # that forwards the message to the {#specification} using the
+        # Defines a setter method for each attribute of the specification
+        # class, that forwards the message to the {#specification} using the
         # {Specification#on_platform} method.
         #
         # @return [void]
         #
         def method_missing(meth, *args, &block)
-          attr = Specification::DSL.attributes.values.find do |attr|
-            attr.writer_name.to_sym == meth || (attr.writer_singular_form && attr.writer_singular_form.to_sym == meth)
+          attribute = Specification::DSL.attributes.values.find do |attr|
+            if attr.writer_name.to_sym == meth
+              true
+            elsif attr.writer_singular_form
+              attr.writer_singular_form.to_sym == meth
+            end
           end
-          if attr && attr.multi_platform?
-            spec.store_attribute(attr.name, args.first, platform)
+          if attribute && attribute.multi_platform?
+            spec.store_attribute(attribute.name, args.first, platform)
           else
             super
           end
@@ -47,9 +51,10 @@ module Pod
         def dependency(*args)
           name, *version_requirements = args
           platform_name = platform.to_s
-          spec.attributes_hash[platform_name] ||= {}
-          spec.attributes_hash[platform_name]["dependencies"] ||= {}
-          spec.attributes_hash[platform_name]["dependencies"][name] = version_requirements
+          platform_hash = spec.attributes_hash[platform_name] || {}
+          platform_hash["dependencies"] ||= {}
+          platform_hash["dependencies"][name] = version_requirements
+          spec.attributes_hash[platform_name] = platform_hash
         end
 
         # Allows to set the deployment target for the platform.

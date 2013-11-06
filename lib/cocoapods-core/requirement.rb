@@ -63,8 +63,8 @@ module Pod
         raise ArgumentError, "Illformed requirement `#{input.inspect}`"
       end
 
-      operator = $1 || "="
-      version = Version.new($2)
+      operator = Regexp.last_match[1] || "="
+      version = Version.new(Regexp.last_match[2])
       [operator, version]
     end
 
