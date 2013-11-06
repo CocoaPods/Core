@@ -117,9 +117,12 @@ namespace :spec do
 
   task :all do
     ENV['GENERATE_COVERAGE'] = 'true'
+
+    title "Running Unit Tests"
     sh "bundle exec bacon #{specs('**')}"
-    puts "Checking code style..."
-    Rake::Task["tailor"].invoke
+
+    title "Checking code style..."
+    Rake::Task["rubocop"].invoke
   end
 
   desc "Checks that the gem is capable of loading all the specs of the master repo."
@@ -195,14 +198,33 @@ end
 desc "Run all specs"
 task :spec => 'spec:all'
 
-if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('1.9.3')
-  require 'tailor/rake_task'
-  Tailor::RakeTask.new
-else
-  desc "Check style"
-  task :tailor do
+#-----------------------------------------------------------------------------#
+
+desc 'Checks code style'
+task :rubocop do
+  if RUBY_VERSION >= '1.9.3'
+    require 'rubocop'
+    patterns = ['lib/**/*.rb']
+    fail_on_error = false
+    verbose = false
+    cli = Rubocop::CLI.new
+    puts 'Running RuboCop...' if verbose
+    result = cli.run(patterns)
+    abort('RuboCop failed!') if fail_on_error unless result == 0
+  else
     puts "[!] Ruby > 1.9 is required to run style checks"
   end
 end
 
+#-----------------------------------------------------------------------------#
+
 task :default => :spec
+
+def title(title)
+  cyan_title = "\033[0;36m#{title}\033[0m"
+  puts
+  puts "-" * 80
+  puts cyan_title
+  puts "-" * 80
+  puts
+end
