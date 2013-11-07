@@ -302,7 +302,7 @@ module Pod
       # Check empty subspec attributes
       #
       def check_if_spec_is_empty
-        methods = %w[ source_files resources preserve_paths dependencies xcodeproj ]
+        methods = %w[ source_files resources preserve_paths dependencies xcodeprojs ]
         empty_patterns = methods.all? { |m| consumer.send(m).empty? }
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
