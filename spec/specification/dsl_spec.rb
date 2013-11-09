@@ -32,6 +32,11 @@ module Pod
         @spec.attributes_hash["authors"].should == { 'orta' => 'orta.therox@gmail.com' }
       end
 
+      it "allows to specify the social media contact" do
+        @spec.social_media_url = "https://twitter.com/cocoapods"
+        @spec.attributes_hash["social_media_url"].should == "https://twitter.com/cocoapods"
+      end
+
       it "allows to specify the license" do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
         @spec.attributes_hash["license"].should == { "type" => 'MIT', "file" => 'MIT-LICENSE' }

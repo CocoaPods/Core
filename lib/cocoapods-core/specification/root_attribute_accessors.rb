@@ -67,6 +67,12 @@ module Pod
           end
         end
 
+        # @return [String] The social media URL.
+        #
+        def social_media_url
+          attributes_hash["social_media_url"]
+        end
+
         # @return [Hash] A hash containing the license information of the Pod.
         #
         # @note   The indentation is stripped from the license text.

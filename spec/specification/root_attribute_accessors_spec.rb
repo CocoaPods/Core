@@ -60,6 +60,11 @@ module Pod
       }
     end
 
+    it "returns the social media url" do
+      @spec.social_media_url = 'www.example.com'
+      @spec.social_media_url.should == 'www.example.com'
+    end
+
     it "supports the license attribute specified as a string" do
       @spec.license = 'MIT'
       @spec.license.should == { :type => 'MIT' }

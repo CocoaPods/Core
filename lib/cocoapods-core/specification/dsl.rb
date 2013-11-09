@@ -132,6 +132,31 @@ module Pod
 
       #------------------#
 
+      # @!method social_media_url=(social_media_url)
+      #
+      #   The URL for the social media contact of the Pod, CocoaPods web
+      #   services can use this.
+      #
+      #   For example, the @CocoaPodsFeed notifications will include the
+      #   Twitter handle (shortening the description) if the URL is relative to
+      #   Twitter. This does **not** necessarily have to be a Twitter URL, but
+      #   only those are included in the Twitter @CocoaPodsFeed notifications.
+      #
+      #   @example
+      #
+      #     spec.social_media_url = 'https://twitter.com/cocoapods'
+      #
+      #   @example
+      #
+      #     spec.social_media_url = 'https://groups.google.com/forum/#!forum/cocoapods'
+      #
+      #   @param  [String] social_media_url
+      #           the social media URL.
+      #
+      root_attribute :social_media_url
+
+      #------------------#
+
       # The keys accepted by the license attribute.
       #
       LICENSE_KEYS = [:type, :file, :text].freeze
