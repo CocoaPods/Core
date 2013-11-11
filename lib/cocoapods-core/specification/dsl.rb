@@ -105,7 +105,8 @@ module Pod
 
       # @!method authors=(authors)
       #
-      #   The name and email address of each of the library’s the authors.
+      #   The name and email addresses of the library maintainers, not the 
+      #   Podspec maintainer.
       #
       #   @example
       #
