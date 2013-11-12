@@ -79,54 +79,80 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe "Searching the source" do
+      describe "#search" do
+        it "searches for the Pod with the given name" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          source.search('BananaLib').name.should == 'BananaLib'
+        end
 
-      it "properly configures the sources of a set in search by name" do
-        source = Source.new(fixture('spec-repos/test_repo'))
-        sets = source.search_by_name('monkey', true)
-        sets.count.should == 1
-        set = sets.first
-        set.name.should == 'BananaLib'
-        set.sources.map(&:name).should == %w| test_repo |
+        it "searches for the pod with the given dependency" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          dep = Dependency.new('BananaLib')
+          source.search(dep).name.should == 'BananaLib'
+        end
+
+        it "supports dependencies on subspecs" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          dep = Dependency.new('BananaLib/subspec')
+          source.search(dep).name.should == 'BananaLib'
+        end
+
       end
 
-      it "handles gracefully specification which can't load in search by name" do
-        source = Source.new(fixture('spec-repos/test_repo'))
-        should.not.raise do
-          source.search_by_name('monkey', true)
+      describe "#search_by_name" do
+        it "properly configures the sources of a set in search by name" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          sets = source.search_by_name('monkey', true)
+          sets.count.should == 1
+          set = sets.first
+          set.name.should == 'BananaLib'
+          set.sources.map(&:name).should == %w| test_repo |
+        end
+
+        it "handles gracefully specification which can't load in search by name" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          should.not.raise do
+            source.search_by_name('monkey', true)
+          end
+        end
+
+        it "doesn't take into account case" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          source.search_by_name('BANANALIB', true).map(&:name).should == ['BananaLib']
+          source.search_by_name('BANANALIB', false).map(&:name).should == ['BananaLib']
+        end
+
+        it "returns partial matches" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          source.search_by_name('Banana', true).map(&:name).should == ['BananaLib']
+          source.search_by_name('Banana', false).map(&:name).should == ['BananaLib']
         end
       end
 
-      it "doesn't take into account case" do
-        source = Source.new(fixture('spec-repos/test_repo'))
-        source.search_by_name('BANANALIB', true).map(&:name).should == ['BananaLib']
-        source.search_by_name('BANANALIB', false).map(&:name).should == ['BananaLib']
-      end
-
-      it "returns partial matches" do
-        source = Source.new(fixture('spec-repos/test_repo'))
-        source.search_by_name('Banana', true).map(&:name).should == ['BananaLib']
-        source.search_by_name('Banana', false).map(&:name).should == ['BananaLib']
-      end
-
-      describe "pods_with_similar_names" do
+      describe "#fuzzy_search" do
         it "is case insensitive" do
           source = Source.new(fixture('spec-repos/master'))
-          source.pods_with_similar_names('abmultiton').should == 'ABMultiton'
+          source.fuzzy_search('abmultiton').name.should == 'ABMultiton'
         end
 
         it "matches misspells" do
           source = Source.new(fixture('spec-repos/master'))
-          source.pods_with_similar_names('ABMuton').should == 'ABMultiton'
+          source.fuzzy_search('ABMuton').name.should == 'ABMultiton'
         end
 
         it "matches abbreviations" do
           source = Source.new(fixture('spec-repos/master'))
-          source.pods_with_similar_names('ObjSugar').should == "ObjectiveSugar"
+          source.fuzzy_search('ObjSugar').name.should == "ObjectiveSugar"
         end
 
         it "matches suffixes" do
           source = Source.new(fixture('spec-repos/master'))
-          source.pods_with_similar_names('table').should == "Routable"
+          source.fuzzy_search('table').name.should == "Routable"
+        end
+
+        it "returns nil if there is no match" do
+          source = Source.new(fixture('spec-repos/master'))
+          source.fuzzy_search('12345').should.be.nil
         end
       end
 

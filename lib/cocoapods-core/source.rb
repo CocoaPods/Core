@@ -146,10 +146,16 @@ module Pod
     # @return [Set] a set for a given dependency. The set is identified by the
     #               name of the dependency and takes into account subspecs.
     #
-    def search(dependency)
+    # @todo   Rename to #load_set
+    #
+    def search(query)
+      if query.is_a?(Dependency)
+        name = query.root_name
+      else
+        name = query
+      end
       pod_sets.find do |set|
-        # First match the (top level) name, which does not yet load the spec from disk
-        set.name == dependency.root_name
+        set.name == name
       end
     end
 
@@ -183,9 +189,20 @@ module Pod
       end
     end
 
-    def pods_with_similar_names(search_name, suggestions_max_count = 3)
+    # Returns the set of the Pod whose name fuzzily matches the given query.
+    #
+    # @param  [String] query
+    #         The query to search for.
+    #
+    # @return [Set] The name of the Pod.
+    # @return [Nil] If no Pod with a suitable name was found.
+    #
+    def fuzzy_search(query)
       require 'fuzzy_match'
-      FuzzyMatch.new(pods).find(search_name)
+      pod_name = FuzzyMatch.new(pods).find(query)
+      if pod_name
+        search(pod_name)
+      end
     end
 
     #-------------------------------------------------------------------------#
