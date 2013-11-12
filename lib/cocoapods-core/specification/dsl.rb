@@ -236,15 +236,32 @@ module Pod
       #
       #   The location from where the library should be retrieved.
       #
-      #   @example Specifying a Git source with a tag.
-      #
+      #   @example Specifying a Git source with a tag. This is how most OSS Podspecs work.
+      # 
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :tag => 'v0.0.1' }
       #
-      #   @example Using the version of the Pod to identify the Git tag.
+      #   @example Using the version of the Pod to identify the Git commit and using submodules.
       #
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :tag => "v#{spec.version}" }
+      #                     :commit => "v#{spec.version}", :submodules => true }
+      #
+      #   @example Using the version of the Pod to identify the Git branch.
+      #
+      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
+      #                     :branch => "orta_fixes"}
+      #
+      #   @example Using Subversion with a tag.
+      #
+      #     spec.source = { :svn => "http://svn.code.sf.net/p/polyclipping/code", :tag => '4.8.8' }
+      #
+      #   @example Using Mercurial with the same revision as the spec's semantic version string.
+      #
+      #     spec.source = { :hg => "https://bitbucket.org/dcutting/hyperbek", :revision => "#{s.version}" }
+      #
+      #   @example Using HTTP to download a compressed file of the code. It supports zip, tgz, bz2 and tar.
+      #
+      #     spec.source = { :http => "http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip" }
       #
       #   @param  [Hash{Symbol=>String}] source
       #           The location from where the library should be retrieved.
