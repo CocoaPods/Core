@@ -105,7 +105,7 @@ module Pod
 
       # @!method authors=(authors)
       #
-      #   The name and email addresses of the library maintainers, not the 
+      #   The name and email addresses of the library maintainers, not the
       #   Podspec maintainer.
       #
       #   @example
@@ -237,7 +237,7 @@ module Pod
       #   The location from where the library should be retrieved.
       #
       #   @example Specifying a Git source with a tag. This is how most OSS Podspecs work.
-      # 
+      #
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :tag => 'v0.0.1' }
       #
