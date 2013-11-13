@@ -347,8 +347,9 @@ module Pod
 
       # @!method documentation_url=(documentation_url)
       #
-      #   An URL for the documentation of the Pod which will be honored by
-      #   CocoaPods web properties.
+      #   An optional URL for the documentation of the Pod which will be honored by
+      #   CocoaPods web properties. Leaving it blank will default to a CocoaDocs
+      #   generated URL for your library.
       #
       #   @example
       #
