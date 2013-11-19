@@ -259,7 +259,7 @@ module Pod
       #
       #     spec.source = { :hg => "https://bitbucket.org/dcutting/hyperbek", :revision => "#{s.version}" }
       #
-      #   @example Using HTTP to download a compressed file of the code. It supports zip, tgz, bz2 and tar.
+      #   @example Using HTTP to download a compressed file of the code. It supports zip, tgz, bz2, txz and tar.
       #
       #     spec.source = { :http => "http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip" }
       #
