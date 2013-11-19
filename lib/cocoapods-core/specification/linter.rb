@@ -211,6 +211,10 @@ module Pod
           unless names_match
             error "The name of the spec should match the name of the file."
           end
+
+          if spec.root.name =~ /\s/
+            error "The name of a spec should not contain whitespace."
+          end
         end
       end
 

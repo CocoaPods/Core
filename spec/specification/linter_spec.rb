@@ -135,6 +135,13 @@ module Pod
         message_should_include('name', 'match')
       end
 
+      it "fails a specification whose name contains whitespace" do
+        @spec.stubs(:name).returns('bad name')
+        @linter.lint
+        @linter.results.count.should == 2
+        @linter.results[2].message.should.match /should not contain whitespace/
+      end
+
       #------------------#
 
       it "checks that the version has been specified" do
