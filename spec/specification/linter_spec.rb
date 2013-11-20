@@ -43,7 +43,7 @@ module Pod
 
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
-        podspec_path = fixture(fixture_path)
+        @podspec_path = fixture(fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
       end
 
@@ -95,10 +95,14 @@ module Pod
 
       def message_should_include(*values)
         @linter.lint
-        result = @linter.results.first
-        result.should.not.be.nil
-        @linter.results.map(&:message).should == [result.message]
-        message = result.message.downcase
+        results = @linter.results
+        results.should.not.be.nil
+
+        results.each do |result|
+          results.map(&:message).should.include(result.message)
+        end
+
+        message = results.to_s.downcase
         values.each do |value|
           message.should.include(value.downcase)
         end
@@ -137,9 +141,7 @@ module Pod
 
       it "fails a specification whose name contains whitespace" do
         @spec.stubs(:name).returns('bad name')
-        @linter.lint
-        @linter.results.count.should == 2
-        @linter.results[2].message.should.match /should not contain whitespace/
+        message_should_include('name', 'whitespace')
       end
 
       #------------------#
