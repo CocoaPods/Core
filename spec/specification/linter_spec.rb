@@ -98,14 +98,13 @@ module Pod
         results = @linter.results
         results.should.not.be.nil
 
-        results.each do |result|
-          results.map(&:message).should.include(result.message)
+        matched = results.select do |result|
+          values.any? do |value|
+            result.message.include?(value.downcase)
+          end
         end
 
-        message = results.to_s.downcase
-        values.each do |value|
-          message.should.include(value.downcase)
-        end
+        matched.size.should >= 1
       end
 
       #------------------#
