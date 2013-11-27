@@ -99,12 +99,12 @@ module Pod
         results.should.not.be.nil
 
         matched = results.select do |result|
-          values.any? do |value|
-            result.message.include?(value.downcase)
+          values.all? do |value|
+            result.message.downcase.include?(value.downcase)
           end
         end
 
-        matched.size.should >= 1
+        matched.size.should == 1
       end
 
       #------------------#
