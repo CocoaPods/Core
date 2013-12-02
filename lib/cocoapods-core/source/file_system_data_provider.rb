@@ -44,7 +44,7 @@ module Pod
         Dir.entries(specs_dir).select do |entry|
           valid_name = !(entry == '.' || entry == '..' || entry == '.git')
           valid_name && File.directory?(File.join(specs_dir_as_string, entry))
-        end
+        end.sort
       end
 
       # @return [Array<String>] All the available versions of a given Pod,
