@@ -93,8 +93,16 @@ module Pod
     def self.peform_request(url)
       require 'rest'
       require 'json'
-      response = REST.get(url)
-      JSON.parse(response.body)
+      headers = { "User-Agent" => "CocoaPods" }
+      response = REST.get(url, headers)
+      body = JSON.parse(response.body)
+      if response.ok?
+        body
+      else
+        CoreUI.warn "Request to #{url} failed - #{response.status_code}"
+        CoreUI.warn body['message']
+        nil
+      end
     end
 
     #-------------------------------------------------------------------------#

@@ -44,10 +44,12 @@ module Pod
       end
 
       it "returns nil for GitHub based methods if the Pod is not hosted by GitHub" do
-        Specification.any_instance.stubs(:source).returns({:git => 'example.com/repo.git'})
-        @stats.github_watchers(@set).should  == nil
-        @stats.github_forks(@set).should     == nil
-        @stats.github_pushed_at(@set).should == nil
+        VCR.use_cassette('Specification::Set::Statistics', :record => :new_episodes) do
+          Specification.any_instance.stubs(:source).returns({:git => 'example.com/repo.git'})
+          @stats.github_watchers(@set).should  == nil
+          @stats.github_forks(@set).should     == nil
+          @stats.github_pushed_at(@set).should == nil
+        end
       end
     end
 
