@@ -47,7 +47,8 @@ module Pod
       #
       def pods
         root_contents = get_github_contents("Specs")
-        dir_names(root_contents)
+        pods = dir_names(root_contents)
+        pods.sort if pods
       end
 
       # @return [Array<String>] All the available versions of a given Pod,
