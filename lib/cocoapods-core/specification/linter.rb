@@ -404,11 +404,10 @@ module Pod
       end
 
       def check_frameworks(frameworks)
-        if frameworks.any? { |framework| framework.end_with?('.framework')}
+        if frameworks.any? { |framework| framework.end_with?('.framework') }
           error "Frameworks should be specified by their name only."
         end
       end
-
 
       #-----------------------------------------------------------------------#
 
