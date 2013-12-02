@@ -1,6 +1,7 @@
 require 'cocoapods-core/source/acceptor'
 require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
+require 'cocoapods-core/source/abstract_data_provider'
 
 module Pod
 
