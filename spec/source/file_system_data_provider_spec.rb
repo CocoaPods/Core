@@ -20,7 +20,7 @@ module Pod
 
     describe "#pods" do
       it "returns the available Pods" do
-        @sut.pods.should == ["BananaLib", "Faulty_spec", "JSONKit", "YAMLSpec"]
+        @sut.pods.should == ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
       end
 
       it "returns nil if no Pods could be found" do
@@ -38,7 +38,6 @@ module Pod
         File.stubs(:directory?).returns(false)
         @sut.pods.should == []
       end
-
 
       it "uses the `Specs` dir if it is present" do
         @sut.send(:specs_dir).to_s.should.end_with('test_repo/Specs')
@@ -109,10 +108,10 @@ module Pod
         path.to_s.should.end_with?('test_repo/Specs/JSONKit/1.4/JSONKit.podspec')
       end
 
-      it "prefers YAML podspecs if one exists" do
+      it "prefers JSON podspecs if one exists" do
         Pathname.any_instance.stubs(:exist?).returns(true)
-        path = @sut.specification_path('JSONKit', "1.4")
-        path.to_s.should.end_with?('test_repo/Specs/JSONKit/1.4/JSONKit.podspec.yaml')
+        path = @sut.specification_path('JSONSpec', "0.9")
+        path.to_s.should.end_with?('Specs/JSONSpec/0.9/JSONSpec.podspec.json')
       end
 
       it "raises if the name of the Pod is not provided" do

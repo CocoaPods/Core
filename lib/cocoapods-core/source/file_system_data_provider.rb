@@ -111,7 +111,7 @@ module Pod
         raise ArgumentError, "No version" unless version
         return nil unless specs_dir
         path = specs_dir + name + version.to_s
-        specification_path = path + "#{name}.podspec.yaml"
+        specification_path = path + "#{name}.podspec.json"
         specification_path.exist?
         unless specification_path.exist?
           specification_path = path + "#{name}.podspec"
