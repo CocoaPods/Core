@@ -258,6 +258,14 @@ module Pod
         end
       end
 
+      def _validate_frameworks(frameworks)
+        check_frameworks(frameworks)
+      end
+
+      def _validate_weak_frameworks(frameworks)
+        check_frameworks(frameworks)
+      end
+
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)
@@ -394,6 +402,13 @@ module Pod
               " `prepare_command` attributes."
         end
       end
+
+      def check_frameworks(frameworks)
+        if frameworks.any? { |framework| framework.end_with?('.framework')}
+          error "Frameworks should be specified by their name only."
+        end
+      end
+
 
       #-----------------------------------------------------------------------#
 
