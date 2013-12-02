@@ -31,6 +31,13 @@ module Pod
           branches.find { |t| t["name"] == "master" }.should.not.be.nil
         end
       end
+
+      it "returns the contents of a repo" do
+        VCR.use_cassette('GitHub', :record => :new_episodes) do
+          contents = GitHub.contents("https://github.com/CocoaPods/CocoaPods")
+          contents.find { |t| t["name"] == "README.md" }.should.not.be.nil
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#
