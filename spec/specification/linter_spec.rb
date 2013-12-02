@@ -285,12 +285,12 @@ module Pod
       #------------------#
 
       it "checks that frameworks do not end with a .framework extension" do
-        @spec.stubs(:frameworks).returns(['AddressBook.framework', 'QuartzCore.framework'])
+        @spec.frameworks = %w{ AddressBook.framework QuartzCore.framework }
         message_should_include('framework', 'name only')
       end
 
       it "checks that weak frameworks do not end with a .framework extension" do
-        @spec.stubs(:weak_frameworks).returns(['AddressBook.framework', 'QuartzCore.framework'])
+        @spec.weak_frameworks = %w{ AddressBook.framework QuartzCore.framework }
         message_should_include('framework', 'name only')
       end
     end
