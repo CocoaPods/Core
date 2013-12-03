@@ -5,6 +5,7 @@ module Pod
       # @return [String] the yaml representation of the specification.
       #
       def to_yaml
+        require 'yaml'
         to_hash.to_yaml
       end
 
@@ -57,6 +58,7 @@ module Pod
     # @return [Specification] the specification
     #
     def self.from_yaml(yaml)
+      require 'yaml'
       hash = YAML.load(yaml)
       from_hash(hash)
     end

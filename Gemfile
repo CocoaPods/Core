@@ -12,6 +12,8 @@ group :development do
   gem "mocha-on-bacon"
   gem "rake"
   gem 'prettybacon', :git => 'https://github.com/irrationalfab/PrettyBacon.git', :branch => 'master'
+  gem 'vcr'
+  gem 'webmock'
   if RUBY_VERSION >= '1.9.3'
     gem 'rubocop'
   end

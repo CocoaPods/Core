@@ -47,6 +47,15 @@ def copy_fixture_to_pod(name, pod)
   FileUtils.cp_r(path, pod.root)
 end
 
+# VCR
+#--------------------------------------#
+
+require 'vcr'
+VCR.configure do |c|
+  c.cassette_library_dir = ROOT + 'spec/fixtures/vcr_cassettes'
+  c.hook_into :webmock
+end
+
 # Silence the output
 #--------------------------------------#
 
