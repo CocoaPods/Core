@@ -108,6 +108,12 @@ module Pod
           set.name.should == 'BananaLib'
           set.sources.map(&:name).should == %w| test_repo |
         end
+        
+        it "can use regular expressions" do
+          source = Source.new(fixture('spec-repos/test_repo'))
+          sets = source.search_by_name('mon[ijk]ey', true)
+          sets.first.name.should == 'BananaLib'
+        end
 
         it "handles gracefully specification which can't load in search by name" do
           source = Source.new(fixture('spec-repos/test_repo'))
