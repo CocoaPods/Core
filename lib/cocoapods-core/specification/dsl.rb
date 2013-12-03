@@ -988,7 +988,7 @@ module Pod
       #   attribute.
       #
       #   The names of the bundles should at least include the name of the Pod
-      #   to minimize the change of name collisions.
+      #   to minimize the chance of name collisions.
       #
       #   To provide different resources per platform namespaced bundles *must*
       #   be used.
