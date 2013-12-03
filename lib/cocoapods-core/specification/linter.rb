@@ -252,18 +252,28 @@ module Pod
         end
       end
 
+      # Performs validations related to the `homepage` attribute.
+      #
       def _validate_homepage(h)
         if h =~ %r[http://EXAMPLE]
           warning "The homepage has not been updated from default"
         end
       end
 
+      # Performs validations related to the `frameworks` attribute.
+      #
       def _validate_frameworks(frameworks)
-        check_frameworks(frameworks)
+        if frameworks_invalid?(frameworks)
+          error "A framework should only be specified by its name"
+        end
       end
 
+      # Performs validations related to the `weak frameworks` attribute.
+      #
       def _validate_weak_frameworks(frameworks)
-        check_frameworks(frameworks)
+        if frameworks_invalid?(frameworks)
+          error "A weak framework should only be specified by its name"
+        end
       end
 
       # Performs validations related to the `license` attribute.
@@ -403,10 +413,15 @@ module Pod
         end
       end
 
-      def check_frameworks(frameworks)
-        if frameworks.any? { |framework| framework.end_with?('.framework') }
-          error "Frameworks should be specified by their name only."
-        end
+      # Returns whether the frameworks are valid
+      #
+      # @params frameworks [Array<String>]
+      # The frameworks to be validated
+      #
+      # @return [Boolean] true if a framework ends in `.framework`
+      #
+      def frameworks_invalid?(frameworks)
+        frameworks.any? { |framework| framework.end_with?('.framework') }
       end
 
       #-----------------------------------------------------------------------#
