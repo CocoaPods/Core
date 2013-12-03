@@ -1,6 +1,9 @@
 require 'cocoapods-core/source/acceptor'
 require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
+require 'cocoapods-core/source/abstract_data_provider'
+require 'cocoapods-core/source/file_system_data_provider'
+require 'cocoapods-core/source/github_data_provider'
 
 module Pod
 
@@ -16,20 +19,31 @@ module Pod
   #
   class Source
 
-    # @return [Pathname] the location of the repo of the source.
+    # @return [AbstractDataProvider] the data provider for this source.
     #
-    attr_reader :repo
+    attr_accessor :data_provider
 
     # @param  [Pathname, String] repo @see #repo.
     #
-    def initialize(repo)
-      @repo = Pathname.new(repo)
+    def initialize(repo = nil)
+      # TODO: Temporary solution to aide the transition
+      if repo.is_a?(String) || repo.is_a?(Pathname)
+        @data_provider = FileSystemDataProvider.new(repo)
+      else
+        @data_provider = repo
+      end
     end
 
-    # @return [String] the name of the source.
+    # @return [String] The name of the source.
     #
     def name
-      repo.basename.to_s
+      data_provider.name
+    end
+
+    # @return [String] The type of the source.
+    #
+    def type
+      data_provider.type
     end
 
     alias_method :to_s, :name
@@ -45,20 +59,66 @@ module Pod
       name <=> other.name
     end
 
-    #-------------------------------------------------------------------------#
+    # @return [String] A description suitable for debugging.
+    #
+    def inspect
+      "#<#{self.class} name:#{name} type:#{type}>"
+    end
+
+    public
 
     # @!group Queering the source
+    #-------------------------------------------------------------------------#
 
     # @return [Array<String>] the list of the name of all the Pods.
     #
-    # @note   Using Pathname#children is sensibly slower.
     #
     def pods
-      specs_dir_as_string = specs_dir.to_s
-      Dir.entries(specs_dir).select do |entry|
-        valid_name = !(entry == '.' || entry == '..' || entry == '.git')
-        valid_name && File.directory?(File.join(specs_dir_as_string, entry))
+      pods = data_provider.pods
+      unless pods
+        raise Informative, "Unable to find the #{data_provider.type} source " \
+          "named: `#{data_provider.name}`"
       end
+      pods
+    end
+
+    # @return [Array<Version>] all the available versions for the Pod, sorted
+    #         from highest to lowest.
+    #
+    # @param  [String] name
+    #         the name of the Pod.
+    #
+    def versions(name)
+      versions = data_provider.versions(name)
+      versions.map { |version| Version.new(version) } if versions
+    end
+
+    # @return [Specification] the specification for a given version of Pod.
+    #
+    # @param  @see specification_path
+    #
+    def specification(name, version)
+      spec = data_provider.specification(name, version.to_s)
+      unless spec
+        raise Informative, "Unable to find the specification for #{name} " \
+          "#{version} in the `#{data_provider.name}` source."
+      end
+      spec
+    end
+
+    # @return [Array<Specification>] all the specifications contained by the
+    #         source.
+    #
+    def all_specs
+      specs = pods.map do |name|
+        begin
+          versions(name).map { |version| specification(name, version) }
+        rescue
+          CoreUI.warn "Skipping `#{name}` because the podspec contains errors."
+          next
+        end
+      end
+      specs.flatten.compact
     end
 
     # Returns the set for the Pod with the given name.
@@ -78,29 +138,6 @@ module Pod
       pods.map { |pod_name| set(pod_name) }
     end
 
-    # @return [Array<Version>] all the available versions for the Pod, sorted
-    #         from highest to lowest.
-    #
-    # @param  [String] name
-    #         the name of the Pod.
-    #
-    def versions(name)
-      pod_dir = specs_dir + name
-      return unless pod_dir.exist?
-      pod_dir.children.map do |v|
-        basename = v.basename.to_s
-        Version.new(basename) if v.directory? && basename[0, 1] != '.'
-      end.compact.sort.reverse
-    end
-
-    # @return [Specification] the specification for a given version of Pod.
-    #
-    # @param  @see specification_path
-    #
-    def specification(name, version)
-      Specification.from_file(specification_path(name, version))
-    end
-
     # Returns the path of the specification with the given name and version.
     #
     # @param  [String] name
@@ -111,37 +148,16 @@ module Pod
     #
     # @return [Pathname] The path of the specification.
     #
-    def specification_path(name, version)
-      path = specs_dir + name + version.to_s
-      specification_path = path + "#{name}.podspec.yaml"
-      unless specification_path.exist?
-        specification_path = path + "#{name}.podspec"
-      end
-      unless specification_path.exist?
-        raise StandardError, "Unable to find the specification #{name} " \
-          "(#{version}) in the #{name} source."
-      end
-      specification_path
-    end
-
-    # @return [Array<Specification>] all the specifications contained by the
-    #         source.
+    # @todo   Remove.
     #
-    def all_specs
-      specs = pods.map do |name|
-        begin
-          versions(name).map { |version| specification(name, version) }
-        rescue
-          CoreUI.warn "Skipping `#{name}` because the podspec contains errors."
-          next
-        end
-      end
-      specs.flatten.compact
+    def specification_path(name, version)
+      data_provider.specification_path(name, version)
     end
 
-    #-------------------------------------------------------------------------#
+    public
 
     # @!group Searching the source
+    #-------------------------------------------------------------------------#
 
     # @return [Set] a set for a given dependency. The set is identified by the
     #               name of the dependency and takes into account subspecs.
@@ -171,18 +187,22 @@ module Pod
     # @note   full text search requires to load the specification for each pod,
     #         hence is considerably slower.
     #
+    # @todo   Rename to #search
+    #
     def search_by_name(query, full_text_search = false)
       if full_text_search
-        pod_sets.map do |set|
-          begin
-            s = set.specification
-            text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
-          rescue
-            CoreUI.warn "Skipping `#{set.name}` because the podspec " \
-              "contains errors."
+        if data_provider.is_a?(FileSystemDataProvider)
+          names = pods.select do |pod|
+            if spec = load_spec_gracefully(pod)
+              text = "#{spec.name} #{spec.authors}"
+              text << " #{spec.summary} #{spec.description}"
+              text.downcase.include?(query.downcase)
+            end
           end
-          set if text && text.downcase.include?(query.downcase)
-        end.compact
+        else
+          []
+        end
+        names.map { |pod_name| set(pod_name) }
       else
         names = pods.select { |name| name.downcase.include?(query.downcase) }
         names.map { |pod_name| set(pod_name) }
@@ -205,9 +225,10 @@ module Pod
       end
     end
 
-    #-------------------------------------------------------------------------#
+    public
 
     # @!group Representations
+    #-------------------------------------------------------------------------#
 
     # @return [Hash{String=>{String=>Specification}}] the static representation
     #         of all the specifications grouped first by name and then by
@@ -231,29 +252,26 @@ module Pod
 
     private
 
+    # @group Private Helpers
     #-------------------------------------------------------------------------#
 
-    # @group Private Helpers
-
-    # @return [Pathname] The directory where the specs are stored.
+    # Loads the specification for the given Pod gracefully.
     #
-    # @note   In previous versions of CocoaPods they used to be stored in
-    #         the root of the repo. This lead to issues, especially with
-    #         the GitHub interface and now the are stored in a dedicated
-    #         folder.
+    # @param  [String] name
+    #         the name of the Pod.
     #
-    def specs_dir
-      unless @specs_dir
-        specs_sub_dir = repo + 'Specs'
-        if specs_sub_dir.exist?
-          @specs_dir = specs_sub_dir
-        elsif repo.exist?
-          @specs_dir = repo
-        else
-          raise Informative, "Unable to find a source named: `#{name}`"
-        end
-      end
-      @specs_dir
+    # @return [Specification] The specification for the last version of the
+    #         Pod.
+    # @return [Nil] If the spec could not be loaded.
+    #
+    def load_spec_gracefully(name)
+      versions = versions(name)
+      version = versions.sort.last if versions
+      specification(name, version) if version
+    rescue Informative
+      Pod::CoreUI.warn "Skipping `#{name}` because the podspec " \
+        "contains errors."
+      nil
     end
 
     #-------------------------------------------------------------------------#

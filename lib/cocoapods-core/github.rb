@@ -54,11 +54,34 @@ module Pod
       end
     end
 
+    # Returns the contents of a file or directory in a repository.
+    #
+    # @param  [String] url @see #repo
+    #
+    # @param  [#to_s] path
+    #         The path for which the contents are needed.
+    #
+    # @param  [String] branch
+    #         The branch for which to fetch the contents of the path.
+    #
+    # @return [Array] The list of the files and of the directories if the given
+    #         path is a directory.
+    #
+    # @return [Hash] The contents of the file (usually base64 encoded).
+    #
+    def self.contents(url, path = nil, branch = nil)
+      if repo_id = normalized_repo_id(url)
+        request_url = "https://api.github.com/repos/#{repo_id}/contents"
+        request_url << "/#{path}" if path
+        request_url << "?ref=#{branch}" if branch
+        peform_request(request_url)
+      end
+    end
+
     private
 
-    #-------------------------------------------------------------------------#
-
     # @!group Private helpers
+    #-------------------------------------------------------------------------#
 
     # Returns the repo ID as it is or converting a GitHub URL.
     #
