@@ -281,6 +281,18 @@ module Pod
         @spec.stubs(:source).returns({:git => 'www.banana-empire.git'})
         message_should_include('sources', 'specify a tag.')
       end
+
+      #------------------#
+
+      it "checks that frameworks do not end with a .framework extension" do
+        @spec.frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        message_should_include('framework', 'name')
+      end
+
+      it "checks that weak frameworks do not end with a .framework extension" do
+        @spec.weak_frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        message_should_include('weak framework', 'name')
+      end
     end
 
     #--------------------------------------#
