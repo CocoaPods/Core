@@ -72,7 +72,7 @@ module Pod
       # @return [Set] The most representative set for the Pod with the given
       #         name.
       #
-      def represenative_set(name)
+      def representative_set(name)
         representative_source = nil
         highest_version = nil
         all.each do |source|

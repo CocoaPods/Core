@@ -65,7 +65,7 @@ module Pod
       end
 
       it "returns a set configured to use only the source which contains the highest version" do
-        set = @sut.represenative_set('JSONKit')
+        set = @sut.representative_set('JSONKit')
         set.versions.map(&:to_s).should == ["999.999.999", "1.4"]
       end
 
