@@ -300,6 +300,11 @@ module Pod
         @spec.libraries = %w{z.a xml.a}
         message_should_include('library', 'name')
       end
+
+      it "checks that libraries do not end with a .dylib extension" do
+        @spec.libraries = %w{libssl.dylib libz.dylib}
+        message_should_include('library', 'name')
+      end
     end
 
     #--------------------------------------#

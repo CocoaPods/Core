@@ -279,7 +279,7 @@ module Pod
       # Performs validations related to the `libraries` attribute.
       #
       def _validate_libraries(libs)
-        if libs.any? { |lib| lib.end_with?('.a') }
+        if libs.any? { |lib| lib.end_with?('.a', '.dylib') }
           error "A library should only be specified by its name"
         end
       end
