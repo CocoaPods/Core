@@ -276,6 +276,14 @@ module Pod
         end
       end
 
+      # Performs validations related to the `libraries` attribute.
+      #
+      def _validate_libraries(libs)
+        if libs.any? { |lib| lib.end_with?('.a') }
+          error "A library should only be specified by its name"
+        end
+      end
+
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)

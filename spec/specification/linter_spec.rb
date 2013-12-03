@@ -293,6 +293,13 @@ module Pod
         @spec.weak_frameworks = %w{ AddressBook.framework QuartzCore.framework }
         message_should_include('weak framework', 'name')
       end
+
+      #------------------#
+
+      it "checks that libraries do not end with a .a extension" do
+        @spec.libraries = %w{z.a xml.a}
+        message_should_include('library', 'name')
+      end
     end
 
     #--------------------------------------#
