@@ -302,7 +302,12 @@ module Pod
       end
 
       it "checks that libraries do not end with a .dylib extension" do
-        @spec.libraries = %w{libssl.dylib libz.dylib}
+        @spec.libraries = %w{ssl.dylib z.dylib}
+        message_should_include('library', 'name')
+      end
+
+      it "checks that libraries do not begin with lib" do
+        @spec.libraries = %w{libz libssl}
         message_should_include('library', 'name')
       end
     end

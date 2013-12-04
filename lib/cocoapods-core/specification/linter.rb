@@ -279,7 +279,7 @@ module Pod
       # Performs validations related to the `libraries` attribute.
       #
       def _validate_libraries(libs)
-        if libs.any? { |lib| lib.end_with?('.a', '.dylib') }
+        if libraries_invalid?(libs)
           error "A library should only be specified by its name"
         end
       end
@@ -430,6 +430,19 @@ module Pod
       #
       def frameworks_invalid?(frameworks)
         frameworks.any? { |framework| framework.end_with?('.framework') }
+      end
+
+      # Returns whether the libraries are valid
+      #
+      # @params libs [Array<String>]
+      # The libraries to be validated
+      #
+      # @return [Boolean] true if a library ends with `.a`, `.dylib`, or
+      # starts with `lib`.
+      def libraries_invalid?(libs)
+        libs.any? do |lib|
+          lib.end_with?('.a', '.dylib') || lib.start_with?('lib')
+        end
       end
 
       #-----------------------------------------------------------------------#
