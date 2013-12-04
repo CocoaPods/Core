@@ -162,7 +162,7 @@ module Pod
     # @return [Array<Set>] The list of the sets that contain the search term.
     #
     # @param  [String] query
-    #         the search term.
+    #         the search term. Can be a regular expression.
     #
     # @param  [Bool] full_text_search
     #         whether the search should be limited to the name of the Pod or
@@ -172,19 +172,24 @@ module Pod
     #         hence is considerably slower.
     #
     def search_by_name(query, full_text_search = false)
+      regexp_query = /#{query}/i
       if full_text_search
-        pod_sets.map do |set|
+        pod_sets.reject do |set|
+          texts = []
           begin
             s = set.specification
-            text = "#{s.name} #{s.authors} #{s.summary} #{s.description}"
+            texts << s.name
+            texts += s.authors.keys
+            texts << s.summary
+            texts << s.description
           rescue
             CoreUI.warn "Skipping `#{set.name}` because the podspec " \
               "contains errors."
           end
-          set if text && text.downcase.include?(query.downcase)
-        end.compact
+          texts.grep(regexp_query).empty?
+        end
       else
-        names = pods.select { |name| name.downcase.include?(query.downcase) }
+        names = pods.grep(regexp_query)
         names.map { |pod_name| set(pod_name) }
       end
     end
