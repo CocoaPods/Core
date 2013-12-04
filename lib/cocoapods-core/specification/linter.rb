@@ -189,9 +189,9 @@ module Pod
       #
       # @return [void]
       #
-      def run_validation_hooks(attributes)
-
-      end
+      # def run_validation_hooks(attributes)
+      #
+      # end
 
       #-----------------------------------------------------------------------#
 
@@ -281,6 +281,14 @@ module Pod
       def _validate_libraries(libs)
         if libraries_invalid?(libs)
           error "A library should only be specified by its name"
+        end
+      end
+
+      # Performs validations related to the `vendored_libraries` attribute.
+      #
+      def _validate_vendored_libraries(libs)
+        if libraries_invalid?(libs)
+          error "A vendored library should only be specified by its name"
         end
       end
 
@@ -440,9 +448,7 @@ module Pod
       # @return [Boolean] true if a library ends with `.a`, `.dylib`, or
       # starts with `lib`.
       def libraries_invalid?(libs)
-        libs.any? do |lib|
-          lib.end_with?('.a', '.dylib') || lib.start_with?('lib')
-        end
+        libs.any? { |lib| lib.end_with?('.a', '.dylib') || lib.start_with?('lib') }
       end
 
       #-----------------------------------------------------------------------#

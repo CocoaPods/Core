@@ -310,6 +310,23 @@ module Pod
         @spec.libraries = %w{libz libssl}
         message_should_include('library', 'name')
       end
+
+      #------------------#
+
+      it "checks that vendored libraries do not end with a .a extension" do
+        @spec.vendored_libraries = %w{magic.a foo.a}
+        message_should_include('library', 'name')
+      end
+
+      it "checks that vendored libraries do not end with a .dylib extension" do
+        @spec.vendored_libraries = %w{magic.dylib foo.dylib}
+        message_should_include('library', 'name')
+      end
+
+      it "checks that vendored libraries do not begin with lib" do
+        @spec.vendored_libraries = %w{libfoo libbar}
+        message_should_include('library', 'name')
+      end
     end
 
     #--------------------------------------#
