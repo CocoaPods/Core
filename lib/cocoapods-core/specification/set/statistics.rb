@@ -246,8 +246,8 @@ module Pod
           return if update_date && update_date > (Time.now - cache_expiration)
 
           spec = set.specification
-          url = spec.source[:git] || ''
-          repo = GitHub.repo(url)
+          url = spec.source[:git]
+          repo = GitHub.repo(url) if url
 
           if repo
             set_value(set, :gh_watchers, repo['watchers'])
