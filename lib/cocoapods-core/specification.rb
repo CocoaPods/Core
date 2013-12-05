@@ -127,7 +127,9 @@ module Pod
       match_data = string_representation.match(/(\S*) \((.*)\)/)
       unless match_data
         raise Informative, "Invalid string representation for a " \
-          "Specification: `#{string_representation}`."
+          "Specification: `#{string_representation}`." \
+          "String representation should include the name and " \
+          "the version of a pod."
       end
       name = match_data[1]
       vers = Version.new(match_data[2])
