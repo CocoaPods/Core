@@ -136,13 +136,7 @@ module Pod
       #
       def run_root_validation_hooks
         attributes = DSL.attributes.values.select(&:root_only?)
-        attributes.each do |attr|
-          validation_hook = "_validate_#{attr.name}"
-          next unless respond_to?(validation_hook, true)
-          value = spec.send(attr.name)
-          next unless value
-          send(validation_hook, value)
-        end
+        run_validation_hooks(attributes, spec)
       end
 
       # Run validations for multi-platform attributes activating .
@@ -174,13 +168,7 @@ module Pod
       #
       def run_all_specs_validation_hooks
         attributes = DSL.attributes.values.reject(&:root_only?)
-        attributes.each do |attr|
-          validation_hook = "_validate_#{attr.name}"
-          next unless respond_to?(validation_hook, true)
-          value = consumer.send(attr.name)
-          next unless value
-          send(validation_hook, value)
-        end
+        run_validation_hooks(attributes, consumer)
       end
 
       # Runs the validation hook for each attribute.
@@ -191,9 +179,15 @@ module Pod
       #
       # @return [void]
       #
-      # def run_validation_hooks(attributes)
-      #
-      # end
+      def run_validation_hooks(attributes, target)
+        attributes.each do |attr|
+          validation_hook = "_validate_#{attr.name}"
+          next unless respond_to?(validation_hook, true)
+          value = target.send(attr.name)
+          next unless value
+          send(validation_hook, value)
+        end
+      end
 
       #-----------------------------------------------------------------------#
 
