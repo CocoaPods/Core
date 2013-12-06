@@ -10,3 +10,4 @@ spec/fixtures/vcr
 .rbx/
 coverage/
 .coveralls.yml
+.idea/
