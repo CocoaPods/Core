@@ -38,6 +38,52 @@ module Pod
           r
         end
       end
+
+      private
+
+      # Adds an error result with the given message.
+      #
+      # @param  [String] message
+      #         The message of the result.
+      #
+      # @return [void]
+      #
+      def error(message)
+        add_result(:error, message)
+      end
+
+      # Adds an warning result with the given message.
+      #
+      # @param  [String] message
+      #         The message of the result.
+      #
+      # @return [void]
+      #
+      def warning(message)
+        add_result(:warning, message)
+      end
+
+      # Adds a result of the given type with the given message. If there is a
+      # current platform it is added to the result. If a result with the same
+      # type and the same message is already available the current platform is
+      # added to the existing result.
+      #
+      # @param  [Symbol] type
+      #         The type of the result (`:error`, `:warning`).
+      #
+      # @param  [String] message
+      #         The message of the result.
+      #
+      # @return [void]
+      #
+      def add_result(type, message)
+        result = results.find { |r| r.type == type && r.message == message }
+        unless result
+          result = Result.new(type, message)
+          results << result
+        end
+        result.platforms << consumer.platform_name if consumer
+      end
     end
   end
 end
