@@ -39,8 +39,6 @@ module Pod
         end
       end
 
-      private
-
       # Adds an error result with the given message.
       #
       # @param  [String] message
@@ -61,6 +59,23 @@ module Pod
       #
       def warning(message)
         add_result(:warning, message)
+      end
+
+      # Merges results passed in with the current results
+      #
+      # @param  [Array<Resul>] results
+      #         The results to be merged.
+      #
+      # @return [void]
+      #
+      def add_results(results)
+        results.each do |result|
+          if result.type == :warning
+            warning(result.message)
+          else
+            error(result.message)
+          end
+        end
       end
 
       # Adds a result of the given type with the given message. If there is a
