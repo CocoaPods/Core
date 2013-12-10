@@ -8,14 +8,14 @@ module Pod
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
-        @linter = Specification::Linter.new(podspec_path)
-        @spec = @linter.spec
-        @analyzer = Specification::Linter::Analyzer.new(@linter, @spec.consumer(:ios))
+        linter = Specification::Linter.new(podspec_path)
+        @spec = linter.spec
+        @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
       end
 
       def message_should_include(*values)
-        @linter.lint
-        results = @linter.results
+        @analyzer.analyze
+        results = @analyzer.results
         results.should.not.be.nil
 
         matched = results.select do |result|
