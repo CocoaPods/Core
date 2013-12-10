@@ -40,9 +40,13 @@ module Pod
       end
 
       module ResultHelpers
+        public
+
         # @return [Array<Result>] all of the generated results.
         #
         attr_reader :results
+
+        private
 
         # Adds an error result with the given message.
         #
