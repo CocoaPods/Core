@@ -318,6 +318,48 @@ module Pod
 
       #--------------------------------------#
 
+      # Whether a specific pod should be linked to the target when building for
+      # a specific configuration. If a pod has not been explicitly whitelisted
+      # for any configuration, it is implicitly whitelisted.
+      #
+      # @param  [String] pod_name
+      #         The pod that we're querying about inclusion for in the given configuration.
+      # @param  [String] configuration_name
+      #         The configuration that we're querying about inclusion of the pod in
+      #
+      # @return [Bool] flag
+      #         Whether the pod should be linked with the target
+      #
+      def is_pod_whitelisted_for_configuration?(pod_name, configuration_name)
+        found = false
+        configuration_pod_whitelist.each { |configuration, pods|
+          if pods.include?(pod_name)
+            found = true
+            return true if configuration.to_s == configuration_name.to_s
+          end
+        }
+        return !found
+      end
+
+      # Whitelists a pod for a specific configuration. If a pod is whitelisted
+      # for any configuration, it will only be linked with the target in the
+      # configuration(s) specified. If it is not whitelisted for any configuration,
+      # it is implicitly included in all configurations.
+      #
+      # @param  [String] pod_name
+      #         The pod that should be included in the given configuration.
+      # @param  [String] configuration_name
+      #         The configuration that the pod should be included in
+      #
+      # @return [void]
+      #
+      def whitelist_pod_for_configuration(pod_name, configuration_name)
+        configuration_pod_whitelist[configuration_name] ||= []
+        configuration_pod_whitelist[configuration_name] << pod_name
+      end
+
+      #--------------------------------------#
+
       # @return [Platform] the platform of the target definition.
       #
       # @note   If no deployment target has been specified a default value is
@@ -386,6 +428,7 @@ module Pod
       #
       def store_pod(name, *requirements)
         parse_inhibit_warnings(name, requirements)
+        parse_configuration_whitelist(name, requirements)
 
         if requirements && !requirements.empty?
           pod = { name => requirements }
@@ -446,6 +489,7 @@ module Pod
         build_configurations
         dependencies
         children
+        configuration_pod_whitelist
       ].freeze
 
       # @return [Hash] The hash representation of the target definition.
@@ -539,6 +583,16 @@ module Pod
         get_hash_value('inhibit_warnings', {})
       end
 
+      # Returns the configuration_pod_whitelist hash
+      #
+      # @return [Hash<String, Array>] Hash with configuration name as key,
+      #         array of pod names to be linked in builds with that configuration
+      #         as value.
+      #
+      def configuration_pod_whitelist
+        get_hash_value('configuration_pod_whitelist', {})
+      end
+
       # @return [Array<Dependency>] The dependencies specified by the user for
       #         this target definition.
       #
@@ -617,6 +671,32 @@ module Pod
 
         should_inhibit = options.delete(:inhibit_warnings)
         inhibit_warnings_for_pod(name) if should_inhibit
+
+        requirements.pop if options.empty?
+      end
+
+      # Removes :configurations from the requirements list,
+      # and adds the pod's name into internal hash for which pods should be
+      # linked in which configuration only.
+      #
+      # @param [String] pod name
+      #
+      # @param [Array] requirements
+      #        If :configurations is the only key in the hash, the hash
+      #        should be destroyed because it confuses Gem::Dependency.
+      #
+      # @return [void]
+      #
+      def parse_configuration_whitelist(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
+
+        configurations_to_whitelist_in = options.delete(:configurations)
+        if configurations_to_whitelist_in
+          configurations_to_whitelist_in.each{ |configuration|
+            whitelist_pod_for_configuration(name, configuration)
+          }
+        end
 
         requirements.pop if options.empty?
       end
