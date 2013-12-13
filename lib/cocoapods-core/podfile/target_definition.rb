@@ -332,13 +332,13 @@ module Pod
       #
       def is_pod_whitelisted_for_configuration?(pod_name, configuration_name)
         found = false
-        configuration_pod_whitelist.each { |configuration, pods|
+        configuration_pod_whitelist.each do |configuration, pods|
           if pods.include?(pod_name)
             found = true
             return true if configuration.to_s == configuration_name.to_s
           end
-        }
-        return !found
+        end
+        !found
       end
 
       # Whitelists a pod for a specific configuration. If a pod is whitelisted
@@ -693,9 +693,9 @@ module Pod
 
         configurations_to_whitelist_in = options.delete(:configurations)
         if configurations_to_whitelist_in
-          configurations_to_whitelist_in.each{ |configuration|
+          configurations_to_whitelist_in.each do |configuration|
             whitelist_pod_for_configuration(name, configuration)
-          }
+          end
         end
 
         requirements.pop if options.empty?
