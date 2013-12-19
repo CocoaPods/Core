@@ -392,8 +392,8 @@ module Pod
         spec.name.should == 'BananaLib'
       end
 
-      it "can be initialized from a YAML file" do
-        spec = Spec.from_file(fixture('BananaLib.podspec.yaml'))
+      it "can be initialized from a JSON file" do
+        spec = Spec.from_file(fixture('BananaLib.podspec.json'))
         spec.class.should == Spec
         spec.name.should == 'BananaLib'
       end
@@ -408,7 +408,7 @@ module Pod
         Pathname.any_instance.stubs(:exist?).returns(true)
         File.stubs(:open).returns('')
         should.raise Informative do
-          Spec.from_file('Missing.podspec.json')
+          Spec.from_file('Missing.podspec.csv')
         end.message.should.match /Unsupported specification format/
       end
 

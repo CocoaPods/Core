@@ -23,7 +23,7 @@ module Pod
 
       it "analyzes all the specifications of a repo" do
         @sut.analyze
-        @sut.report.analyzed_paths.count.should == 8
+        @sut.report.analyzed_paths.count.should == 9
       end
 
       it "is robust against malformed specifications" do
@@ -35,6 +35,7 @@ module Pod
       it "lints the specifications" do
         @sut.analyze
         errors = @sut.report.pods_by_error.keys.join(' - ')
+        p errors
         errors.should.match /Missing required attribute/
       end
 

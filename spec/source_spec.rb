@@ -49,29 +49,29 @@ module Pod
         path.should == @sut.repo + 'Reachability/3.0.0/Reachability.podspec'
       end
 
-      it "returns the path of YAML specification with a given name and version" do
+      it "returns the path of JSON specification with a given name and version" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        path = source.specification_path('YAMLSpec', Version.new('1.0'))
-        path.should == source.repo + 'Specs/YAMLSpec/1.0/YAMLSpec.podspec.yaml'
+        path = source.specification_path('JSONSpec', Version.new('1.0'))
+        path.should == source.repo + 'Specs/JSONSpec/1.0/JSONSpec.podspec.json'
       end
 
-      it "favors the YAML version of a specification if both are available" do
+      it "favors the JSON version of a specification if both are available" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        ruby_path = source.repo + 'Specs/YAMLSpec/0.9/YAMLSpec.podspec.yaml'
-        path = source.specification_path('YAMLSpec', Version.new('0.9'))
+        ruby_path = source.repo + 'Specs/JSONSpec/0.9/JSONSpec.podspec.json'
+        path = source.specification_path('JSONSpec', Version.new('0.9'))
         ruby_path.should.exist
-        path.should == source.repo + 'Specs/YAMLSpec/0.9/YAMLSpec.podspec.yaml'
+        path.should == source.repo + 'Specs/JSONSpec/0.9/JSONSpec.podspec.json'
       end
 
       it "raises if it can't find a specification for the given version and name" do
         should.raise StandardError do
-          @sut.specification_path('YAMLSpec', Version.new('999'))
-        end.message.should.match(/Unable to find the specification YAMLSpec/)
+          @sut.specification_path('JSONSpec', Version.new('999'))
+        end.message.should.match(/Unable to find the specification JSONSpec/)
       end
 
       it "returns all the specifications" do
         source = Source.new(fixture('spec-repos/test_repo'))
-        source.all_specs.map(&:name).sort.uniq.should == ["BananaLib", "JSONKit", "YAMLSpec"]
+        source.all_specs.map(&:name).sort.uniq.should == ["BananaLib", "IncorrectPath", "JSONKit", "JSONSpec"]
       end
 
     end

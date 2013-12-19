@@ -205,7 +205,7 @@ module Pod
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
-            spec.root.name + '.podspec.yaml'
+            spec.root.name + '.podspec.json'
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
