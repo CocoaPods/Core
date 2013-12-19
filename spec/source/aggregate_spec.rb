@@ -118,7 +118,7 @@ module Pod
 
       it "generates the search index from scratch" do
         index = @sut.generate_search_index
-        index.keys.sort.should == ["BananaLib", "Faulty_spec", "JSONKit", "YAMLSpec"]
+        index.keys.sort.should == ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
         index["BananaLib"]["version"].should == '1.0'
         index["BananaLib"]["summary"].should == 'Chunky bananas!'
         index["BananaLib"]["description"].should == 'Full of chunky bananas.'
@@ -126,9 +126,9 @@ module Pod
       end
 
       it "updates a given index" do
-        old_index = {"Faulty_spec" => {}, "JSONKit" => {}, "YAMLSpec" => {}}
+        old_index = {"Faulty_spec" => {}, "JSONKit" => {}, "JSONSpec" => {}}
         index = @sut.update_search_index(old_index)
-        index.keys.sort.should == ["BananaLib", "Faulty_spec", "JSONKit", "YAMLSpec"]
+        index.keys.sort.should == ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
         index["BananaLib"]["version"].should == '1.0'
       end
 

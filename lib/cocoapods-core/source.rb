@@ -113,7 +113,7 @@ module Pod
     #
     def specification_path(name, version)
       path = specs_dir + name + version.to_s
-      specification_path = path + "#{name}.podspec.yaml"
+      specification_path = path + "#{name}.podspec.json"
       unless specification_path.exist?
         specification_path = path + "#{name}.podspec"
       end
