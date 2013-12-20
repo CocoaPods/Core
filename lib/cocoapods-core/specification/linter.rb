@@ -448,7 +448,10 @@ module Pod
       # @return [Boolean] true if a library ends with `.a`, `.dylib`, or
       # starts with `lib`.
       def libraries_invalid?(libs)
-        libs.any? { |lib| lib.end_with?('.a', '.dylib') || lib.start_with?('lib') }
+        libs.any? do |lib|
+          name = File.basename(lib)
+          name.end_with?('.a', '.dylib') || name.start_with?('lib')
+        end
       end
 
       #-----------------------------------------------------------------------#
