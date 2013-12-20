@@ -101,9 +101,9 @@ GEM
     thor (0.18.1)
     tins (0.13.1)
     vcr (2.8.0)
-    webmock (1.16.1)
+    webmock (1.8.11)
       addressable (>= 2.2.7)
-      crack (>= 0.3.2)
+      crack (>= 0.1.7)
     yajl-ruby (1.1.0)
     yard (0.8.7.3)
 
@@ -128,5 +128,5 @@ DEPENDENCIES
   redcarpet
   rubocop
   vcr
-  webmock
+  webmock (< 1.16)
   yard
