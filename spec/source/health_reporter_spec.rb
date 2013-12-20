@@ -35,7 +35,6 @@ module Pod
       it "lints the specifications" do
         @sut.analyze
         errors = @sut.report.pods_by_error.keys.join(' - ')
-        p errors
         errors.should.match /Missing required attribute/
       end
 
