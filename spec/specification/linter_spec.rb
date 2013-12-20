@@ -327,6 +327,18 @@ module Pod
         @spec.vendored_libraries = %w{libfoo libbar}
         message_should_include('library', 'name')
       end
+
+      it "checks that vendored libraries in paths follow the rules" do
+        @spec.vendored_libraries = %w{foo/libbar foo/bar.a foo/libbar.a}
+        message_should_include('library', 'name')
+      end
+
+      it "only checks the library name" do
+        @spec.vendored_libraries = %w{lib/foo libraries.a/bar}
+        @linter.lint
+        results = @linter.results
+        results.should.be.empty?
+      end
     end
 
     #--------------------------------------#
