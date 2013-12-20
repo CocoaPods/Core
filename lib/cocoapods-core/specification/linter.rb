@@ -284,14 +284,6 @@ module Pod
         end
       end
 
-      # Performs validations related to the `vendored_libraries` attribute.
-      #
-      def _validate_vendored_libraries(libs)
-        if libraries_invalid?(libs)
-          error "A vendored library should only be specified by its name"
-        end
-      end
-
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)
