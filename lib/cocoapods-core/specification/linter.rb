@@ -449,7 +449,7 @@ module Pod
       # starts with `lib`.
       def libraries_invalid?(libs)
         libs.any? do |lib|
-          name = lib.split('/').last
+          name = File.basename(lib)
           name.end_with?('.a', '.dylib') || name.start_with?('lib')
         end
       end
