@@ -1,4 +1,6 @@
+
 # Travis support
+#-----------------------------------------------------------------------------#
 
 def rvm_ruby_dir
   @rvm_ruby_dir ||= File.expand_path('../..', `which ruby`.strip)
@@ -10,6 +12,10 @@ namespace :travis do
     sh "env CFLAGS='-I#{rvm_ruby_dir}/include' bundle install --without debugging documentation"
   end
 end
+
+
+# Gem
+#-----------------------------------------------------------------------------#
 
 namespace :gem do
   def gem_version
@@ -106,6 +112,9 @@ namespace :gem do
   end
 end
 
+# Spec
+#-----------------------------------------------------------------------------#
+
 namespace :spec do
   def specs(dir)
     FileList["spec/#{dir}/*_spec.rb"].shuffle.join(' ')
@@ -125,69 +134,10 @@ namespace :spec do
     title "Checking code style..."
     Rake::Task["rubocop"].invoke
   end
-
-  desc "Checks that the gem is capable of loading all the specs of the master repo."
-  task :repo do
-    puts "Checking compatibility with master repo"
-    require 'pathname'
-    root = Pathname.new(File.expand_path('../', __FILE__))
-    $LOAD_PATH.unshift((root + 'lib').to_s)
-    require 'cocoapods-core'
-
-    master_repo_path       =  ENV['HOME'] + "/.cocoapods/master"
-    glob_pattern           =  (master_repo_path + "/**/*.podspec").to_s
-    total_count            =  0
-    incompatible_count     =  0
-    spec_with_errors_count =  0
-    specs                  =  []
-
-    Dir.glob(glob_pattern).each do |filename|
-      Pathname(filename)
-      begin
-        total_count += 1
-        specs << Pod::Specification.from_file(Pathname(filename))
-      rescue Exception => e
-        incompatible_count += 1
-        puts "\n\e[1;33m"
-        puts e.class
-        puts "\e[0m\n"
-        puts e.message
-        puts
-        puts e.backtrace.reject { |l| !l.include?(Dir.pwd) || l.include?('/Rakefile') }
-        FALSE
-      end
-    end
-
-    puts "\n\n---\n"
-    specs.each do |s|
-      linter = Pod::Specification::Linter.new(s)
-      linter.lint
-      unless linter.errors.empty?
-        spec_with_errors_count += 1
-        puts "\n#{s.name} #{s.version}"
-        results = linter.errors.map do |r|
-          if r.type == :error
-            "\e[1;33m  #{r.to_s}\e[0m"
-          else
-            "  " + r.to_s
-          end
-        end
-        puts results * "\n"
-      end
-    end
-
-    puts
-    if incompatible_count.zero? && spec_with_errors_count.zero?
-      message = "#{total_count} podspecs analyzed. All compatible."
-      puts "\e[1;32m#{message}\e[0m" # Print in green
-    else
-      message = "#{incompatible_count} podspecs out of #{total_count} did fail to load."
-      message << "\n#{spec_with_errors_count} podspecs presents errors."
-      STDERR.puts "\e[1;31m#{message}\e[0m" # Print in red
-      exit 1
-    end
-  end
 end
+
+# Bootstrap
+#-----------------------------------------------------------------------------#
 
 desc "Initializes your working copy to run the specs"
 task :bootstrap do
@@ -201,6 +151,7 @@ end
 desc "Run all specs"
 task :spec => 'spec:all'
 
+# Rubocop
 #-----------------------------------------------------------------------------#
 
 desc 'Checks code style'
