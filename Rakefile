@@ -126,8 +126,6 @@ namespace :spec do
   end
 
   task :all do
-    ENV['GENERATE_COVERAGE'] = 'true'
-
     title "Running Unit Tests"
     sh "bundle exec bacon #{specs('**')}"
 
@@ -153,6 +151,14 @@ task :spec => 'spec:all'
 
 # Rubocop
 #-----------------------------------------------------------------------------#
+
+desc 'Generates a coverage report'
+task :coverage do
+    title "Generating Coverage Report"
+    sh    "GENERATE_COVERAGE=true bundle exec bacon --quiet #{specs('**')}"
+    puts  "\nCoverage report available at `coverage/index.html`"
+    sh    "open coverage/index.html"
+end
 
 desc 'Checks code style'
 task :rubocop do
