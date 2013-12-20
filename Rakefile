@@ -152,12 +152,12 @@ task :spec => 'spec:all'
 # Rubocop
 #-----------------------------------------------------------------------------#
 
-desc 'Generates a coverage report'
+desc 'Generates & opens the coverage report'
 task :coverage do
-    title "Generating Coverage Report"
-    sh    "GENERATE_COVERAGE=true bundle exec bacon --quiet #{specs('**')}"
-    puts  "\nCoverage report available at `coverage/index.html`"
-    sh    "open coverage/index.html"
+  title "Generating Coverage Report"
+  sh    "bundle exec bacon --quiet #{specs('**')}"
+  puts  "\nCoverage report available at `coverage/index.html`"
+  sh    "open coverage/index.html"
 end
 
 desc 'Checks code style'
