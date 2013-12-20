@@ -6,6 +6,8 @@ gemspec
 gem "mime-types", "< 2.0"
 
 group :development do
+  # Simplecov is affecting bacon exit code
+  gem 'simplecov', "0.8.0.pre2", :require => false
   gem 'coveralls', :require => false
   gem "mocha", "~> 0.11.4"
   gem "bacon"
