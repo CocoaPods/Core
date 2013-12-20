@@ -7,17 +7,15 @@ module Pod
       it "returns the json representation" do
         sut = Specification.new(nil, "BananaLib")
         sut.version = "1.0"
-        expected = <<-DOC.strip_heredoc
-        {
-          "name": "BananaLib",
-          "version": "1.0"
+        expected = {
+          "name" => "BananaLib",
+          "version" => "1.0"
         }
-        DOC
-        sut.to_json.should == expected.chomp
+        JSON.parse(sut.to_json).should == expected
       end
 
       it "allows to specify multi-platform attributes" do
-        json = <<-DOC.strip_heredoc
+        json = <<-DOC
         {
           "name": "BananaLib",
           "ios": {
