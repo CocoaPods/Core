@@ -4,9 +4,9 @@ module Pod
 
       # @return [String] the json representation of the specification.
       #
-      def to_json
+      def to_json(*a)
         require 'json'
-        JSON.pretty_generate(to_hash)
+        to_hash.to_json(*a)
       end
 
       #-----------------------------------------------------------------------#
