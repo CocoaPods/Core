@@ -18,7 +18,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (0.28.0)
+    cocoapods-core (0.29.0)
       activesupport (>= 3.2.15, < 4)
       fuzzy_match (~> 2.0.4)
       json_pure (~> 1.8)
@@ -64,7 +64,7 @@ GEM
     multi_json (1.8.2)
     nap (0.6.0)
     notify (0.5.2)
-    parser (2.0.0)
+    parser (2.1.0)
       ast (~> 1.1)
       slop (~> 3.4, >= 3.4.5)
     posix-spawn (0.3.8)
@@ -86,8 +86,8 @@ GEM
     redcarpet (3.0.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rubocop (0.15.0)
-      parser (~> 2.0)
+    rubocop (0.16.0)
+      parser (~> 2.1)
       powerpack (~> 0.0.6)
       rainbow (>= 1.1.4)
     safe_yaml (0.9.7)
