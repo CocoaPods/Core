@@ -307,7 +307,7 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r[http://EXAMPLE]
-            error "Example source."
+            error "The Git source still contains the example URL."
           end
           if commit && commit.downcase =~ /head/
             error 'The commit of a Git source cannot be `HEAD`.'
