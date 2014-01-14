@@ -2,20 +2,18 @@
 # Set up coverage analysis
 #-----------------------------------------------------------------------------#
 
-if ENV['CI'] || ENV['GENERATE_COVERAGE']
-  require 'simplecov'
-  require 'coveralls'
-
-  if ENV['CI']
-    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  elsif ENV['GENERATE_COVERAGE']
-    SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
-  end
-  SimpleCov.start do
-    add_filter "/spec_helper/"
-    add_filter "vendor"
-  end
-end
+# require 'simplecov'
+# if ENV['CI']
+#   require 'coveralls'
+#   SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+# else
+#   SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
+# end
+# SimpleCov.start do
+#   add_filter "/spec_helper/"
+#   add_filter "vendor"
+#   minimum_coverage 98
+# end
 
 # Set up
 #-----------------------------------------------------------------------------#

@@ -23,7 +23,7 @@ module Pod
       end
 
       it "returns the path of the spec with the highest version" do
-        @set.highest_version_spec_path.should == @source.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
+        @set.highest_version_spec_path.should == @source.data_provider.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
       end
 
       it "checks if the dependency of the specification is compatible with existing requirements" do
@@ -49,7 +49,7 @@ module Pod
       end
 
       it "returns a hash representation" do
-        spec_path = @source.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
+        spec_path = @source.data_provider.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
         @set.to_hash.should == {
           "name" => "CocoaLumberjack",
           "versions" => {

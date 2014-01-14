@@ -124,7 +124,7 @@ module Pod
       # @return [void]
       #
       def check_stray_specs
-        all_paths = Pathname.glob(source.repo + '**/*.podspec{,.yaml}')
+        all_paths = Pathname.glob(source.data_provider.repo + '**/*.podspec{,.json}')
         stray_specs = all_paths - report.analyzed_paths
         stray_specs.each do |path|
           report.add_message(:error, "Stray spec", path)

@@ -199,7 +199,7 @@ module Pod
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
-            spec.root.name + '.podspec.yaml'
+            spec.root.name + '.podspec.json'
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
@@ -278,14 +278,6 @@ module Pod
         end
       end
 
-      # Performs validations related to the `vendored_libraries` attribute.
-      #
-      def _validate_vendored_libraries(libs)
-        if libraries_invalid?(libs)
-          error "A vendored library should only be specified by its name"
-        end
-      end
-
       # Performs validations related to the `license` attribute.
       #
       def _validate_license(l)
@@ -309,7 +301,7 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r[http://EXAMPLE]
-            error "Example source."
+            error "The Git source still contains the example URL."
           end
           if commit && commit.downcase =~ /head/
             error 'The commit of a Git source cannot be `HEAD`.'

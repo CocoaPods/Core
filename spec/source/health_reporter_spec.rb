@@ -23,7 +23,7 @@ module Pod
 
       it "analyzes all the specifications of a repo" do
         @sut.analyze
-        @sut.report.analyzed_paths.count.should == 8
+        @sut.report.analyzed_paths.count.should == 9
       end
 
       it "is robust against malformed specifications" do

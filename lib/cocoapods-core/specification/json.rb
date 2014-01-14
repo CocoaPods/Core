@@ -1,13 +1,15 @@
 module Pod
   class Specification
-    module YAMLSupport
+    module JSONSupport
 
-      # @return [String] the yaml representation of the specification.
+      # @return [String] the json representation of the specification.
       #
-      def to_yaml
-        require 'yaml'
-        to_hash.to_yaml
+      def to_json(*a)
+        require 'json'
+        to_hash.to_json(*a)
       end
+
+      #-----------------------------------------------------------------------#
 
       # @return [Hash] the hash representation of the specification including
       #         subspecs.
@@ -26,7 +28,20 @@ module Pod
       def safe_to_hash?
         pre_install_callback.nil? && post_install_callback.nil?
       end
+    end
 
+    # Configures a new specification from the given JSON representation.
+    #
+    # @param  [String] the JSON encoded hash which contains the information of
+    #         the specification.
+    #
+    #
+    # @return [Specification] the specification
+    #
+    def self.from_json(json)
+      require 'json'
+      hash = JSON.parse(json)
+      from_hash(hash)
     end
 
     # Configures a new specification from the given hash.
@@ -49,18 +64,7 @@ module Pod
       spec
     end
 
-    # Configures a new specification from the given YAML representation.
-    #
-    # @param  [String] the YAML encoded hash which contains the information of
-    #         the specification.
-    #
-    #
-    # @return [Specification] the specification
-    #
-    def self.from_yaml(yaml)
-      require 'yaml'
-      hash = YAML.load(yaml)
-      from_hash(hash)
-    end
+    #-----------------------------------------------------------------------#
+
   end
 end

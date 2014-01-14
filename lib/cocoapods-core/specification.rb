@@ -3,7 +3,7 @@ require 'cocoapods-core/specification/dsl'
 require 'cocoapods-core/specification/linter'
 require 'cocoapods-core/specification/root_attribute_accessors'
 require 'cocoapods-core/specification/set'
-require 'cocoapods-core/specification/yaml'
+require 'cocoapods-core/specification/json'
 
 module Pod
 
@@ -18,7 +18,7 @@ module Pod
     include Pod::Specification::DSL
     include Pod::Specification::DSL::Deprecations
     include Pod::Specification::RootAttributesAccessors
-    include Pod::Specification::YAMLSupport
+    include Pod::Specification::JSONSupport
 
     # @return [Specification] the parent of the specification unless the
     #         specification is a root.
@@ -561,8 +561,8 @@ module Pod
         unless spec.is_a?(Specification)
           raise Informative, "Invalid podspec file at path `#{path}`."
         end
-      when '.yaml'
-        spec = Specification.from_yaml(spec_contents)
+      when '.json'
+        spec = Specification.from_json(spec_contents)
       else
         raise Informative, "Unsupported specification format `#{path.extname}`."
       end

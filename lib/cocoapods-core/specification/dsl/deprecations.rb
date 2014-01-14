@@ -96,7 +96,7 @@ module Pod
           CoreUI.warn "[#{to_s}] The pre install hook of the specification " \
             "DSL has been deprecated, use the `resource_bundles` or the " \
               "`prepare_command` attributes."
-            @pre_install_callback = block
+          @pre_install_callback = block
         end
 
         # This is a convenience method which gets called after all pods have been
@@ -126,7 +126,7 @@ module Pod
           CoreUI.warn "[#{to_s}] The post install hook of the specification " \
             "DSL has been deprecated, use the `resource_bundles` or the " \
               "`prepare_command` attributes."
-            @post_install_callback = block
+          @post_install_callback = block
         end
 
         #-----------------------------------------------------------------------#
