@@ -156,6 +156,19 @@ module Pod
       #
       root_attribute :social_media_url
 
+      # @!method docset_url=(docset_url)
+      #
+      #   The URL for the docset for the Pod
+      #
+      #   @example
+      #
+      #     spec.docset_url = 'http://example.org/KFData/1.0.0/xcode-docset.atom'
+      #
+      #   @param  [String] docset_url
+      #           the docset URL.
+      #
+      root_attribute :docset_url
+
       #------------------#
 
       # The keys accepted by the license attribute.
