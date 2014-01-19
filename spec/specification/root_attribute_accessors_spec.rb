@@ -65,6 +65,11 @@ module Pod
       @spec.social_media_url.should == 'www.example.com'
     end
 
+    it "returns the docset url" do
+      @spec.docset_url = 'http://example.org/KFData/1.0.0/xcode-docset.atom'
+      @spec.docset_url.should == 'http://example.org/KFData/1.0.0/xcode-docset.atom'
+    end
+
     it "supports the license attribute specified as a string" do
       @spec.license = 'MIT'
       @spec.license.should == { :type => 'MIT' }
