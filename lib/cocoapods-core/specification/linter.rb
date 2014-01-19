@@ -400,8 +400,8 @@ module Pod
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty
           error "The #{consumer.spec} spec is empty (no source files, " \
-            "resources, preserve paths, , vendored_libraries, " \
-              "vendored_frameworks dependencies or subspecs)."
+            "resources, preserve paths, vendored libraries, " \
+              "vendored frameworks, dependencies or subspecs)."
         end
       end
 
