@@ -335,7 +335,7 @@ module Pod
         configuration_pod_whitelist.each do |configuration, pods|
           if pods.include?(pod_name)
             found = true
-            return true if configuration.to_s == configuration_name.to_s
+            return true if configuration == configuration_name
           end
         end
         !found
@@ -348,12 +348,13 @@ module Pod
       #
       # @param  [String] pod_name
       #         The pod that should be included in the given configuration.
-      # @param  [String] configuration_name
+      # @param  [String, Symbol] configuration_name
       #         The configuration that the pod should be included in
       #
       # @return [void]
       #
       def whitelist_pod_for_configuration(pod_name, configuration_name)
+        configuration_name = configuration_name.to_s
         configuration_pod_whitelist[configuration_name] ||= []
         configuration_pod_whitelist[configuration_name] << pod_name
       end

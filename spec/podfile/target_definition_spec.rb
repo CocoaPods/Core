@@ -247,6 +247,11 @@ module Pod
         @root.should.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
       end
 
+      it "coerces configuration names to strings" do
+        @root.whitelist_pod_for_configuration("ObjectiveSugar", :Release)
+        @root.should.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
+      end
+
       #--------------------------------------#
 
       it "returns its platform" do
