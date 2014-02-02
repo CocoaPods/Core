@@ -330,7 +330,7 @@ module Pod
       # @return [Bool] flag
       #         Whether the pod should be linked with the target
       #
-      def is_pod_whitelisted_for_configuration?(pod_name, configuration_name)
+      def pod_whitelisted_for_configuration?(pod_name, configuration_name)
         found = false
         configuration_pod_whitelist.each do |configuration, pods|
           if pods.include?(pod_name)
