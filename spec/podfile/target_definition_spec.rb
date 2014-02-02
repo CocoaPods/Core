@@ -252,6 +252,13 @@ module Pod
         @root.should.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
       end
 
+      it "returns a unique list of all whitelisted configurations" do
+        @root.all_whitelisted_configurations.should == []
+        @root.whitelist_pod_for_configuration("ObjectiveSugar", "Release")
+        @root.whitelist_pod_for_configuration("AFNetworking", "Release")
+        @root.all_whitelisted_configurations.should == ["Release"]
+      end
+
       #--------------------------------------#
 
       it "returns its platform" do

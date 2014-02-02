@@ -359,6 +359,13 @@ module Pod
         configuration_pod_whitelist[configuration_name] << pod_name
       end
 
+      # @return [Array<String>] unique list of all configurations for which
+      #         pods have been whitelisted.
+      #
+      def all_whitelisted_configurations
+        configuration_pod_whitelist.keys.uniq
+      end
+
       #--------------------------------------#
 
       # @return [Platform] the platform of the target definition.
