@@ -683,8 +683,8 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :configurations from the requirements list,
-      # and adds the pod's name into internal hash for which pods should be
+      # Removes :configurations or :configuration from the requirements list,
+      # and adds the pod's name into the internal hash for which pods should be
       # linked in which configuration only.
       #
       # @param [String] pod name
@@ -699,9 +699,10 @@ module Pod
         options = requirements.last
         return requirements unless options.is_a?(Hash)
 
-        configurations_to_whitelist_in = options.delete(:configurations)
-        if configurations_to_whitelist_in
-          configurations_to_whitelist_in.each do |configuration|
+        configurations = options.delete(:configurations)
+        configurations ||= options.delete(:configuration)
+        if configurations
+          Array(configurations).each do |configuration|
             whitelist_pod_for_configuration(name, configuration)
           end
         end

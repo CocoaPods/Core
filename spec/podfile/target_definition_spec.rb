@@ -242,14 +242,18 @@ module Pod
       end
 
       it "enables pods for configurations they are whitelisted for" do
-        @root.store_pod("ObjectiveSugar")
-        @root.whitelist_pod_for_configuration("ObjectiveSugar", "Release")
+        @root.store_pod("ObjectiveSugar", :configuration => "Release")
         @root.should.pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
+        @root.should.not.pod_whitelisted_for_configuration?("ObjectiveSugar", "Debug")
+        @root.store_pod("AFNetworking", :configurations => ["Debug"])
+        @root.should.pod_whitelisted_for_configuration?("AFNetworking", "Debug")
+        @root.should.not.pod_whitelisted_for_configuration?("AFNetworking", "Release")
       end
 
       it "coerces configuration names to strings" do
-        @root.whitelist_pod_for_configuration("ObjectiveSugar", :Release)
+        @root.store_pod("ObjectiveSugar", :configuration => :Release)
         @root.should.pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
+        @root.should.not.pod_whitelisted_for_configuration?("ObjectiveSugar", "Debug")
       end
 
       it "returns a unique list of all whitelisted configurations" do
@@ -257,6 +261,8 @@ module Pod
         @root.whitelist_pod_for_configuration("ObjectiveSugar", "Release")
         @root.whitelist_pod_for_configuration("AFNetworking", "Release")
         @root.all_whitelisted_configurations.should == ["Release"]
+        @root.whitelist_pod_for_configuration("Objective-Record", "Debug")
+        @root.all_whitelisted_configurations.should == ["Release", "Debug"]
       end
 
       #--------------------------------------#
