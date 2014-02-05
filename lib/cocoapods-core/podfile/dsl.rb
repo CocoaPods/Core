@@ -64,11 +64,15 @@ module Pod
       # Besides no version, or a specific one, it is also possible to use
       # operators:
       #
-      # * `> 0.1`    Any version higher than 0.1
-      # * `>= 0.1`   Version 0.1 and any higher version
-      # * `< 0.1`    Any version lower than 0.1
-      # * `<= 0.1`   Version 0.1 and any lower version
-      # * `~> 0.1.2` Version 0.1.2 and the versions up to 0.2, not including 0.2
+      # * `> 0.1`    Any version higher than 0.1.
+      # * `>= 0.1`   Version 0.1 and any higher version.
+      # * `< 0.1`    Any version lower than 0.1.
+      # * `<= 0.1`   Version 0.1 and any lower version.
+      # * `~> 0.1.2` Version 0.1.2 and the versions up to 0.2, not including 0.2.
+      #              This operator works based on _the last component_ that you
+      #              specify in your version requirement. The example is equal to
+      #              `>= 0.1.2` combined with `< 0.2.0` and will always match the
+      #              latest known version matching your requirements.
       #
       # A list of version requirements can be specified for even more fine
       # grained control.
