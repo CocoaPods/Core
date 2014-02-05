@@ -323,9 +323,12 @@ module Pod
       # for any configuration, it is implicitly whitelisted.
       #
       # @param  [String] pod_name
-      #         The pod that we're querying about inclusion for in the given configuration.
+      #         The pod that we're querying about inclusion for in the given
+      #         configuration.
+      #
       # @param  [String] configuration_name
-      #         The configuration that we're querying about inclusion of the pod in
+      #         The configuration that we're querying about inclusion of the
+      #         pod in.
       #
       # @return [Bool] flag
       #         Whether the pod should be linked with the target
@@ -348,6 +351,7 @@ module Pod
       #
       # @param  [String] pod_name
       #         The pod that should be included in the given configuration.
+      #
       # @param  [String, Symbol] configuration_name
       #         The configuration that the pod should be included in
       #
