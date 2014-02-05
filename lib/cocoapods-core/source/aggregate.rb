@@ -53,7 +53,6 @@ module Pod
         end
       end
 
-
       # Returns a set configured with the source which contains the highest
       # version in the aggregate.
       #
