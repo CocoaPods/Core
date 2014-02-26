@@ -19,7 +19,7 @@ module Pod
     #     platform :ios, '6.0'
     #     inhibit_all_warnings!
     #
-    #     xcodeproj `MyProject`
+    #     xcodeproj 'MyProject'
     #
     #     pod 'ObjectiveSugar', '~> 0.5'
     #
@@ -322,16 +322,16 @@ module Pod
       #
       #           # Look for target to link with in an Xcode project called
       #           # `MyProject.xcodeproj`.
-      #           xcodeproj `MyProject`
+      #           xcodeproj 'MyProject'
       #
       #           target :test do
       #             # This Pods library links with a target in another project.
-      #             xcodeproj `TestProject`
+      #             xcodeproj 'TestProject'
       #           end
       #
       # @example  Using custom build configurations
       #
-      #           xcodeproj `TestProject`, 'Mac App Store' => :release, 'Test' => :debug
+      #           xcodeproj 'TestProject', 'Mac App Store' => :release, 'Test' => :debug
       #
       #
       # @return   [void]
