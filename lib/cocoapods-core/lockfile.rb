@@ -40,7 +40,7 @@ module Pod
     def self.from_file(path)
       return nil unless path.exist?
       require 'yaml'
-      hash = YAML.load(File.open(path))
+      hash = File.open(path) { |f| YAML.load(f) }
       unless hash && hash.is_a?(Hash)
         raise Informative, "Invalid Lockfile in `#{path}`"
       end
