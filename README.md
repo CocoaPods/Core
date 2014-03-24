@@ -1,8 +1,8 @@
 # CocoaPods Core
 
 [![Build Status](https://travis-ci.org/CocoaPods/Core.svg?branch=master)](https://travis-ci.org/CocoaPods/Core)
-[![Coverage Status](https://coveralls.io/repos/CocoaPods/Core/badge.png?branch=master)](https://coveralls.io/r/CocoaPods/Core)
-[![Code Climate](https://codeclimate.com/github/CocoaPods/Core.png)](https://codeclimate.com/github/CocoaPods/Core)
+[![Coverage Status](http://img.shields.io/coveralls/CocoaPods/Core.svg)](https://coveralls.io/r/CocoaPods/Core)
+[![Code Climate](http://img.shields.io/codeclimate/github/CocoaPods/Core.svg)](https://codeclimate.com/github/CocoaPods/Core)
 
 The CocoaPods-Core gem provides support to work with the models of CocoaPods.
 It is intended to be used in place of the CocoaPods when the installation
