@@ -29,6 +29,10 @@ BracesAroundHashParameters:
 Encoding:
   Enabled: false
 
+TrailingComma:
+  EnforcedStyleForMultiline: comma
+
+
 #------------------------------------------------------------------------------
 # Needs fixing
 #------------------------------------------------------------------------------
