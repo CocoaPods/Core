@@ -26,7 +26,7 @@ module Pod
       it "catches specification load errors" do
         podspec = "Pod::Spec.new do |s|; error; end"
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.write(podspec) }
+        File.open(path, 'w') { |f| f.write(podspec) }
         lambda { Specification.from_file(path) }.should.raise Pod::DSLError
         lambda { Specification::Linter.new(path) }.should.not.raise
       end
@@ -34,7 +34,7 @@ module Pod
       it "includes an error indicating that the specification could not be loaded" do
         podspec = "Pod::Spec.new do |s|; error; end"
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.write(podspec) }
+        File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -58,7 +58,7 @@ module Pod
         @linter.spec.source_files = '/Absolute'
         @linter.lint
         @linter.results.count.should == 1
-        @linter.results.first.platforms.map(&:to_s).sort.should == %w[ios osx]
+        @linter.results.first.platforms.map(&:to_s).sort.should == %w(ios osx)
       end
 
       before do
@@ -69,8 +69,8 @@ module Pod
       end
 
       it "returns the results of the lint" do
-        results = @linter.results.map{ |r| r.type.to_s }.sort.uniq
-        results.should == %w[ error warning ]
+        results = @linter.results.map { |r| r.type.to_s }.sort.uniq
+        results.should == %w(error warning)
       end
 
       it "returns the errors results of the lint" do
@@ -172,7 +172,7 @@ module Pod
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         FileUtils.cp @podspec_path, path
-        File.open(path, 'a') {|f| f.puts(podspec) }
+        File.open(path, 'a') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -183,7 +183,7 @@ module Pod
         valid_text = File.read(@podspec_path)
         podspec = "# some comment\n" << valid_text
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.puts(podspec) }
+        File.open(path, 'w') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -194,7 +194,7 @@ module Pod
         podspec = "#define\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         FileUtils.cp @podspec_path, path
-        File.open(path, 'a') {|f| f.puts(podspec) }
+        File.open(path, 'a') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 0
@@ -232,82 +232,82 @@ module Pod
       end
 
       it "checks the license type for the sample value" do
-        @spec.stubs(:license).returns({:type => '(example)'})
+        @spec.stubs(:license).returns({ :type => '(example)' })
         message_should_include('license', 'type')
       end
 
       it "checks whether the license type is empty" do
-        @spec.stubs(:license).returns({:type => ' '})
+        @spec.stubs(:license).returns({ :type => ' ' })
         message_should_include('license', 'type')
       end
 
       #------------------#
 
       it "checks for the example source" do
-        @spec.stubs(:source).returns({:git => 'http://EXAMPLE.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://EXAMPLE.git', :tag => '1.0' })
         message_should_include('source', 'example')
       end
 
       it "checks that the commit is not specified as `HEAD`" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns({:git => 'http://repo.git', :commit => 'HEAD'})
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :commit => 'HEAD' })
         message_should_include('source', 'HEAD')
       end
 
       it "checks that the version is included in the git tag" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
-        @spec.stubs(:source).returns({:git => 'http://repo.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => '1.0' })
         message_should_include('git', 'version', 'tag')
       end
 
       it "checks that Github repositories use the `https` form (for compatibility)" do
-        @spec.stubs(:source).returns({:git => 'http://github.com/repo.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://github.com/repo.git', :tag => '1.0' })
         message_should_include('Github', 'https')
       end
 
       it "checks that Github repositories end in .git (for compatibility)" do
-        @spec.stubs(:source).returns({:git => 'https://github.com/repo', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'https://github.com/repo', :tag => '1.0' })
         message_should_include('Github', '.git')
       end
 
       it "checks the source of 0.0.1 specifications for commit or a tag" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns({:git => 'www.banana-empire.git'})
+        @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
         message_should_include('sources', 'either', 'tag', 'commit')
       end
 
       it "checks the source of a non 0.0.1 specifications for a tag" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
-        @spec.stubs(:source).returns({:git => 'www.banana-empire.git'})
+        @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
         message_should_include('sources', 'specify a tag.')
       end
 
       #------------------#
 
       it "checks that frameworks do not end with a .framework extension" do
-        @spec.frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        @spec.frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('framework', 'name')
       end
 
       it "checks that weak frameworks do not end with a .framework extension" do
-        @spec.weak_frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        @spec.weak_frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('weak framework', 'name')
       end
 
       #------------------#
 
       it "checks that libraries do not end with a .a extension" do
-        @spec.libraries = %w{z.a xml.a}
+        @spec.libraries = %w(z.a xml.a)
         message_should_include('library', 'name')
       end
 
       it "checks that libraries do not end with a .dylib extension" do
-        @spec.libraries = %w{ssl.dylib z.dylib}
+        @spec.libraries = %w(ssl.dylib z.dylib)
         message_should_include('library', 'name')
       end
 
       it "checks that libraries do not begin with lib" do
-        @spec.libraries = %w{libz libssl}
+        @spec.libraries = %w(libz libssl)
         message_should_include('library', 'name')
       end
     end

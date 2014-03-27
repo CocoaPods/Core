@@ -121,13 +121,15 @@ module Pod
     # @return [Bool] whether the dependency points to an external source.
     #
     def external?
-      !!@external_source
+      !@external_source.nil?
     end
 
     # @return [Bool] whether the dependency points to a local path.
     #
     def local?
-      external_source && !!(external_source[:path] || external_source[:local])
+      if external_source
+        !(external_source[:path] || external_source[:local]).nil?
+      end
     end
 
     # Creates a new dependency with the name of the top level spec and the same
@@ -333,7 +335,7 @@ module Pod
     # @return [String] a string representation suitable for debugging.
     #
     def inspect
-      "<#{self.class} name=#{name} requirements=#{requirement.to_s} " \
+      "<#{self.class} name=#{name} requirements=#{requirement} " \
         "external_source=#{external_source || 'nil'}>"
     end
 
@@ -370,7 +372,7 @@ module Pod
       elsif source.key?(:local)
         desc = "`#{source[:local]}`"
       else
-        desc = "`#{source.to_s}`"
+        desc = "`#{source}`"
       end
       "from #{desc}"
     end

@@ -122,30 +122,30 @@ module Pod
       describe "dependency" do
 
         it "allows to specify a dependencies" do
-          @spec.dependencies = {'SVStatusHUD' => ['~>1.0', '< 1.4']}
-          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+          @spec.dependencies = { 'SVStatusHUD' => ['~>1.0', '< 1.4'] }
+          @spec.attributes_hash["dependencies"].should == { 'SVStatusHUD' => ['~>1.0', '< 1.4'] }
         end
 
         it "allows to specify a single dependency as a shortcut" do
           @spec.dependency('SVStatusHUD', '~>1.0', '< 1.4')
-          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0', '< 1.4']}
+          @spec.attributes_hash["dependencies"].should == { 'SVStatusHUD' => ['~>1.0', '< 1.4'] }
         end
 
         it "allows to specify a single dependency as a shortcut with one version requirement" do
           @spec.dependency('SVStatusHUD', '~>1.0')
-          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => ['~>1.0']}
+          @spec.attributes_hash["dependencies"].should == { 'SVStatusHUD' => ['~>1.0'] }
         end
 
         it "allows to specify a single dependency as a shortcut with no version requirements" do
           @spec.dependency('SVStatusHUD')
-          @spec.attributes_hash["dependencies"].should == {'SVStatusHUD' => []}
+          @spec.attributes_hash["dependencies"].should == { 'SVStatusHUD' => [] }
         end
 
         it "allows a dependency whose name matches part of one of its parents names" do
           @spec.subspec 'subspectest' do |sp|
             sp.subspec 'subsubspec' do |ssp|
               ssp.dependency('subspec')
-              ssp.attributes_hash["dependencies"].should == {'subspec' => []}
+              ssp.attributes_hash["dependencies"].should == { 'subspec' => [] }
             end
           end
         end
@@ -163,8 +163,8 @@ module Pod
           should.raise Informative do
             subspec.dependency('Pod')
           end.message.should.match /can't require one of its parents/
-          
-          #Ensure nested subspecs are prevented from requiring one of their parents
+
+          # Ensure nested subspecs are prevented from requiring one of their parents
           @spec.subspec 'subspec' do |sp|
             sp.subspec 'subsubspec' do |ssp|
               should.raise Informative do
@@ -190,23 +190,23 @@ module Pod
       end
 
       it "allows to specify the frameworks" do
-        @spec.framework = %w[ QuartzCore CoreData ]
-        @spec.attributes_hash["frameworks"].should == %w[ QuartzCore CoreData ]
+        @spec.framework = %w(QuartzCore CoreData)
+        @spec.attributes_hash["frameworks"].should == %w(QuartzCore CoreData)
       end
 
       it "allows to specify the weak frameworks" do
-        @spec.weak_frameworks = %w[ Twitter iAd ]
-        @spec.attributes_hash["weak_frameworks"].should == %w[ Twitter iAd ]
+        @spec.weak_frameworks = %w(Twitter iAd)
+        @spec.attributes_hash["weak_frameworks"].should == %w(Twitter iAd)
       end
 
       it "allows to specify the libraries" do
         @spec.libraries = 'z', 'xml2'
-        @spec.attributes_hash["libraries"].should == %w[ z xml2 ]
+        @spec.attributes_hash["libraries"].should == %w(z xml2)
       end
 
       it "allows to specify compiler flags" do
-        @spec.compiler_flags = %w[ -Wdeprecated-implementations -Wunused-value ]
-        @spec.attributes_hash["compiler_flags"].should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @spec.compiler_flags = %w(-Wdeprecated-implementations -Wunused-value)
+        @spec.attributes_hash["compiler_flags"].should == %w(-Wdeprecated-implementations -Wunused-value)
       end
 
       it "allows to specify xcconfig settings" do
@@ -246,29 +246,28 @@ module Pod
       end
 
       it "allows to specify the source files" do
-        @spec.source_files = [ "lib_classes/**/*" ]
-        @spec.attributes_hash["source_files"].should == [ "lib_classes/**/*" ]
+        @spec.source_files = ["lib_classes/**/*"]
+        @spec.attributes_hash["source_files"].should == ["lib_classes/**/*"]
       end
 
       it "allows to specify the public headers files" do
-        @spec.public_header_files = [ "include/**/*" ]
-        @spec.attributes_hash["public_header_files"].should == [ "include/**/*" ]
+        @spec.public_header_files = ["include/**/*"]
+        @spec.attributes_hash["public_header_files"].should == ["include/**/*"]
       end
 
       it "allows to specify the private headers files" do
-        @spec.private_header_files = [ "private/**/*" ]
-        @spec.attributes_hash["private_header_files"].should == [ "private/**/*" ]
+        @spec.private_header_files = ["private/**/*"]
+        @spec.attributes_hash["private_header_files"].should == ["private/**/*"]
       end
 
       it "allows to specify the frameworks bundles shipped with the Pod" do
-        @spec.vendored_frameworks = [ "Parse.framework" ]
-        @spec.attributes_hash["vendored_frameworks"].should == [ "Parse.framework" ]
+        @spec.vendored_frameworks = ["Parse.framework"]
+        @spec.attributes_hash["vendored_frameworks"].should == ["Parse.framework"]
       end
 
-
       it "allows to specify the libraries shipped with the Pod" do
-        @spec.vendored_libraries = [ "libProj4.a" ]
-        @spec.attributes_hash["vendored_libraries"].should == [ "libProj4.a" ]
+        @spec.vendored_libraries = ["libProj4.a"]
+        @spec.attributes_hash["vendored_libraries"].should == ["libProj4.a"]
       end
 
       it "allows to specify the resources bundles shipped with the Pod" do
@@ -330,15 +329,15 @@ module Pod
       end
 
       it "allows to specify iOS attributes" do
-        @spec.ios.preserve_paths = [ 'APath' ]
-        @spec.attributes_hash["ios"]["preserve_paths"].should == [ 'APath' ]
+        @spec.ios.preserve_paths = ['APath']
+        @spec.attributes_hash["ios"]["preserve_paths"].should == ['APath']
         @spec.attributes_hash["preserve_paths"].should.be.nil
         @spec.attributes_hash["osx"].should.be.nil
       end
 
       it "allows to specify OS X attributes" do
-        @spec.osx.preserve_paths = [ 'APath' ]
-        @spec.attributes_hash["osx"]["preserve_paths"].should == [ 'APath' ]
+        @spec.osx.preserve_paths = ['APath']
+        @spec.attributes_hash["osx"]["preserve_paths"].should == ['APath']
         @spec.attributes_hash["preserve_paths"].should.be.nil
         @spec.attributes_hash["ios"].should.be.nil
       end
@@ -367,11 +366,11 @@ module Pod
         singularized.each do |attr|
           spec.should.respond_to(attr.writer_name)
         end
-        singularized.map{ |attr| attr.name.to_s }.sort.should == %w[
+        singularized.map { |attr| attr.name.to_s }.sort.should == %w(
           authors compiler_flags  frameworks libraries preserve_paths
           resource_bundles resources screenshots vendored_frameworks
           vendored_libraries weak_frameworks
-        ]
+        )
       end
     end
 

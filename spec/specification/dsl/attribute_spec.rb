@@ -10,7 +10,7 @@ module Pod
       end
 
       it "raises for not recognized options" do
-        opts = {:unrecognized => true}
+        opts = { :unrecognized => true }
         lambda { Attribute.new('name', opts) }.should.raise StandardError
       end
 
@@ -20,7 +20,7 @@ module Pod
       end
 
       it "returns the accepted classes for the value of the attribute" do
-        opts = {:types => [String], :container => Array}
+        opts = { :types => [String], :container => Array }
         Attribute.new('name', opts).supported_types.should == [String, Array]
       end
     end
@@ -69,7 +69,7 @@ module Pod
       end
 
       it "doesn't specifies a default value by default (no multi platform)" do
-        @attr = Attribute.new('name', {:multi_platform => false})
+        @attr = Attribute.new('name', { :multi_platform => false })
         @attr.default_value.should.be.nil
       end
 
@@ -78,7 +78,7 @@ module Pod
       end
 
       it "is not inherited if it is root only" do
-        attr = Attribute.new('name', {:root_only => true})
+        attr = Attribute.new('name', { :root_only => true })
         attr.should.not.be.inherited
       end
 
@@ -91,28 +91,28 @@ module Pod
       it "returns the default value" do
         attr1 = Attribute.new(:frameworks, :multi_platform => false)
         attr1.default.should.be.nil?
-        attr2 = Attribute.new(:frameworks, :multi_platform => false, :default_value => ['Cocoa'] )
+        attr2 = Attribute.new(:frameworks, :multi_platform => false, :default_value => ['Cocoa'])
         attr2.default.should == ['Cocoa']
       end
 
       it "returns the default value for a platform" do
-        attr = Attribute.new(:frameworks, :default_value => ['CoreGraphics'] )
+        attr = Attribute.new(:frameworks, :default_value => ['CoreGraphics'])
         attr.default(:ios).should == ['CoreGraphics']
       end
 
       it "allows to specify the default value per platform" do
-        attr = Attribute.new(:frameworks, :ios_default => ['CoreGraphics'] )
+        attr = Attribute.new(:frameworks, :ios_default => ['CoreGraphics'])
         attr.default(:ios).should == ['CoreGraphics']
         attr.default(:osx).should.be.nil
       end
 
       it "returns the name of the writer method" do
-        attr = Attribute.new(:frameworks, {:singularize => true})
+        attr = Attribute.new(:frameworks, { :singularize => true })
         attr.writer_name.should == 'frameworks='
       end
 
       it "returns the singular form of the writer method" do
-        attr = Attribute.new(:frameworks, {:singularize => true})
+        attr = Attribute.new(:frameworks, { :singularize => true })
         attr.writer_singular_form.should == 'framework='
       end
     end
@@ -121,9 +121,8 @@ module Pod
 
     describe "Writer method support" do
 
-
       it "validates a value to check whether it is compatible with the accepted types" do
-        attr = Attribute.new(:frameworks, {:types => [String], :container => Array})
+        attr = Attribute.new(:frameworks, { :types => [String], :container => Array })
         lambda { attr.validate_type('a string') }.should.not.raise
         lambda { attr.validate_type(['with container']) }.should.not.raise
         lambda { attr.validate_type(:non_accepted) }.should.raise StandardError
@@ -143,8 +142,8 @@ module Pod
       it "validates the allowed keys for hashes before writing" do
         attr = Attribute.new(:source, :keys => [:git])
         spec = Spec.new
-        lambda { attr.validate_for_writing(spec, {:git => 'repo'}) }.should.not.raise
-        lambda { attr.validate_for_writing(spec, {:snail_mail => 'repo'}) }.should.raise StandardError
+        lambda { attr.validate_for_writing(spec, { :git => 'repo' }) }.should.not.raise
+        lambda { attr.validate_for_writing(spec, { :snail_mail => 'repo' }) }.should.raise StandardError
       end
 
       it "returns the allowed keys" do
@@ -153,8 +152,8 @@ module Pod
       end
 
       it "returns the allowed keys flattening keys specified in a hash" do
-        attr = Attribute.new(:source, :keys => {:git => [:tag, :commit], :http => nil})
-        attr.allowed_keys.map(&:to_s).sort.should == %w[commit git http tag]
+        attr = Attribute.new(:source, :keys => { :git => [:tag, :commit], :http => nil })
+        attr.allowed_keys.map(&:to_s).sort.should == %w(commit git http tag)
       end
     end
   end

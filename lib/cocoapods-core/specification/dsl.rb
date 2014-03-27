@@ -242,7 +242,7 @@ module Pod
         :svn => [:folder, :tag, :revision],
         :hg => [:revision],
         :http => nil,
-        :path => nil
+        :path => nil,
       }.freeze
 
       # @!method source=(source)
@@ -753,7 +753,7 @@ module Pod
       #           The path to the prefix header file.
       #
       attribute :prefix_header_file, {
-        :inherited => true
+        :inherited => true,
       }
 
       #------------------#
@@ -771,7 +771,7 @@ module Pod
       #           the headers directory.
       #
       attribute :header_dir, {
-        :inherited => true
+        :inherited => true,
       }
 
       #------------------#
@@ -789,7 +789,7 @@ module Pod
       #           the directory from where to preserve the headers namespacing.
       #
       attribute :header_mappings_dir, {
-        :inherited => true
+        :inherited => true,
       }
 
       #-----------------------------------------------------------------------#
@@ -1102,7 +1102,7 @@ module Pod
       attribute :preserve_paths, {
         :container     => Array,
         :file_patterns => true,
-        :singularize   => true
+        :singularize   => true,
       }
 
       #-----------------------------------------------------------------------#

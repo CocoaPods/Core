@@ -70,7 +70,7 @@ module Pod
       end
 
       it "loads from a file" do
-        File.open(@tmp_path, 'w') {|f| f.write(Sample.yaml) }
+        File.open(@tmp_path, 'w') { |f| f.write(Sample.yaml) }
         lockfile = Lockfile.from_file(@tmp_path)
         lockfile.internal_data.should == YAML.load(Sample.yaml)
       end
@@ -81,13 +81,13 @@ module Pod
       end
 
       it "returns the file in which is defined" do
-        File.open(@tmp_path, 'w') {|f| f.write(Sample.yaml) }
+        File.open(@tmp_path, 'w') { |f| f.write(Sample.yaml) }
         lockfile = Lockfile.from_file(@tmp_path)
         lockfile.defined_in_file.should == @tmp_path
       end
 
       it "raises if the provided YAML doesn't returns a hash" do
-        File.open(@tmp_path, 'w') {|f| f.write("value") }
+        File.open(@tmp_path, 'w') { |f| f.write("value") }
         should.raise Informative do
           Lockfile.from_file(@tmp_path)
         end.message.should.match /Invalid Lockfile/
@@ -109,7 +109,7 @@ module Pod
       end
 
       it "returns the list of the names of the  installed pods" do
-        @lockfile.pod_names.should == %w| BananaLib JSONKit monkey |
+        @lockfile.pod_names.should == %w(BananaLib JSONKit monkey)
       end
 
       it "returns the versions of a given pod" do
@@ -119,7 +119,7 @@ module Pod
       end
 
       it "returns the versions of a given pod handling the case in which the root spec was not stored" do
-        @lockfile.stubs(:pod_versions).returns({"BananaLib/Subspec"=>Version.new(1.0)})
+        @lockfile.stubs(:pod_versions).returns({ "BananaLib/Subspec" => Version.new(1.0) })
         @lockfile.version("BananaLib").should == Version.new("1.0")
       end
 
@@ -175,7 +175,7 @@ module Pod
           Specification.new do |s|
             s.name = "JSONKit"
             s.version = "1.4"
-          end ]
+          end]
         @lockfile = Lockfile.generate(@podfile, @specs)
       end
 
@@ -187,10 +187,10 @@ module Pod
           pod 'TTTAttributedLabel'
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>[],
-          :removed=>[],
-          :unchanged=>["BlocksKit", "JSONKit"],
-          :added=>["TTTAttributedLabel"]
+          :changed => [],
+          :removed => [],
+          :unchanged => %w(BlocksKit JSONKit),
+          :added => ["TTTAttributedLabel"]
         }
       end
 
@@ -200,10 +200,10 @@ module Pod
           pod 'BlocksKit'
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>[],
-          :removed=>["JSONKit"],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => [],
+          :removed => ["JSONKit"],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
       end
 
@@ -214,10 +214,10 @@ module Pod
           pod 'JSONKit', "> 1.4"
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>["JSONKit"],
-          :removed=>[],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => ["JSONKit"],
+          :removed => [],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
       end
 
@@ -228,10 +228,10 @@ module Pod
           pod 'JSONKit', "> 1.0"
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>[],
-          :removed=>[],
-          :unchanged=>["BlocksKit", "JSONKit"],
-          :added=>[]
+          :changed => [],
+          :removed => [],
+          :unchanged => %w(BlocksKit JSONKit),
+          :added => []
         }
       end
 
@@ -242,10 +242,10 @@ module Pod
           pod 'JSONKit', :git => "example1.com"
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>["JSONKit"],
-          :removed=>[],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => ["JSONKit"],
+          :removed => [],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
         @lockfile = Lockfile.generate(podfile, @specs)
         podfile = Podfile.new do
@@ -254,10 +254,10 @@ module Pod
           pod 'JSONKit', :git => "example2.com"
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>["JSONKit"],
-          :removed=>[],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => ["JSONKit"],
+          :removed => [],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
       end
 
@@ -268,10 +268,10 @@ module Pod
           pod 'JSONKit', :head
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>["JSONKit"],
-          :removed=>[],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => ["JSONKit"],
+          :removed => [],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
         @specs = [
           Specification.new do |s|
@@ -282,7 +282,7 @@ module Pod
             s.name = "JSONKit"
             s.version = "1.4"
             s.version.head = true
-          end ]
+          end]
         @lockfile = Lockfile.generate(podfile, @specs)
         podfile = Podfile.new do
           platform :ios
@@ -291,10 +291,10 @@ module Pod
         end
 
         @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed=>["JSONKit"],
-          :removed=>[],
-          :unchanged=>["BlocksKit"],
-          :added=>[]
+          :changed => ["JSONKit"],
+          :removed => [],
+          :unchanged => ["BlocksKit"],
+          :added => []
         }
       end
     end
@@ -317,12 +317,12 @@ module Pod
         hash = @lockfile.to_hash
         hash.delete("COCOAPODS")
         hash.should == {
-          "PODS"=> [
-            {"BananaLib (1.0)" => ["monkey (< 1.0.9, ~> 1.0.1)"]},
+          "PODS" => [
+            { "BananaLib (1.0)" => ["monkey (< 1.0.9, ~> 1.0.1)"] },
             "JSONKit (1.4)", "monkey (1.0.8)"],
-          "DEPENDENCIES"=>["BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"],
-          "EXTERNAL SOURCES"=>{"JSONKit"=>{:podspec=>"path/JSONKit.podspec"}},
-          "SPEC CHECKSUMS"=>{"BananaLib"=>"439d9f683377ecf4a27de43e8cf3bce6be4df97b", "JSONKit"=>"92ae5f71b77c8dec0cd8d0744adab79d38560949"},
+          "DEPENDENCIES" => ["BananaLib (~> 1.0)", "JSONKit (from `path/JSONKit.podspec`)"],
+          "EXTERNAL SOURCES" => { "JSONKit" => { :podspec => "path/JSONKit.podspec" } },
+          "SPEC CHECKSUMS" => { "BananaLib" => "439d9f683377ecf4a27de43e8cf3bce6be4df97b", "JSONKit" => "92ae5f71b77c8dec0cd8d0744adab79d38560949" },
           }
       end
 
@@ -384,7 +384,7 @@ module Pod
 
       it "stores the information of the installed pods and of their dependencies" do
         @lockfile.internal_data['PODS'].should == [
-          {"BananaLib (1.0)"=>["monkey (< 1.0.9, ~> 1.0.1)"]},
+          { "BananaLib (1.0)" => ["monkey (< 1.0.9, ~> 1.0.1)"] },
           "JSONKit (1.4)",
           "monkey (1.0.8)"
         ]
@@ -398,14 +398,14 @@ module Pod
 
       it "stores the information of the external sources" do
         @lockfile.internal_data['EXTERNAL SOURCES'].should == {
-          "JSONKit"=>{:podspec=>"path/JSONKit.podspec"}
+          "JSONKit" => { :podspec => "path/JSONKit.podspec" }
         }
       end
 
       it "stores the checksum of the specifications" do
         @lockfile.internal_data['SPEC CHECKSUMS'].should == {
-          "BananaLib"=>"439d9f683377ecf4a27de43e8cf3bce6be4df97b",
-          "JSONKit"=>"92ae5f71b77c8dec0cd8d0744adab79d38560949"
+          "BananaLib" => "439d9f683377ecf4a27de43e8cf3bce6be4df97b",
+          "JSONKit" => "92ae5f71b77c8dec0cd8d0744adab79d38560949"
         }
       end
 
@@ -424,18 +424,18 @@ module Pod
 
       describe "#generate_pods_data" do
         it "groups multiple dependencies for the same pod" do
-        specs = [
-          Specification.new do |s|
-            s.name = "BananaLib"
-            s.version = "1.0"
-            s.dependency 'monkey', '< 1.0.9'
-          end,
-          Specification.new do |s|
-            s.name = "BananaLib"
-            s.version = "1.0"
-            s.dependency 'tree', '~> 1.0.1'
-          end
-        ]
+          specs = [
+            Specification.new do |s|
+              s.name = "BananaLib"
+              s.version = "1.0"
+              s.dependency 'monkey', '< 1.0.9'
+            end,
+            Specification.new do |s|
+              s.name = "BananaLib"
+              s.version = "1.0"
+              s.dependency 'tree', '~> 1.0.1'
+            end
+          ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
           pods_data.should == [{
             "BananaLib (1.0)" => ["monkey (< 1.0.9)", "tree (~> 1.0.1)"]

@@ -8,7 +8,7 @@ module Pod
     end
 
     it "warns about the renamed `preferred_dependency`" do
-      @spec.preferred_dependency='args'
+      @spec.preferred_dependency = 'args'
       @spec.attributes_hash['default_subspec'].should == 'args'
       CoreUI.warnings.should.match /preferred_dependency.*default_subspec/
     end

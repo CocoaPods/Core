@@ -434,7 +434,7 @@ module Pod
       # @return [Array] The keys used by the hash representation of the
       #         target definition.
       #
-      HASH_KEYS = %w[
+      HASH_KEYS = %w(
         name
         platform
         podspecs
@@ -446,7 +446,7 @@ module Pod
         build_configurations
         dependencies
         children
-      ].freeze
+      ).freeze
 
       # @return [Hash] The hash representation of the target definition.
       #

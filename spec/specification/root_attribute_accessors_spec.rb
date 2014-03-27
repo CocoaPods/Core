@@ -52,8 +52,8 @@ module Pod
     end
 
     it "supports the author attribute specified as an array of strings and hashes" do
-      @spec.authors = [ 'Darth Vader',
-                        { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' } ]
+      @spec.authors = ['Darth Vader',
+                       { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }]
       @spec.authors.should == {
         'Darth Vader' => nil,
         'Wookiee' => 'wookiee@aggrrttaaggrrt.com'

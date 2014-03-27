@@ -155,7 +155,7 @@ module Pod::Vendor
       # A string representation of this Version.
 
       attr_reader :version
-      alias to_s version
+      alias_method :to_s, :version
 
       ##
       # True if the +version+ string matches RubyGems' requirements.

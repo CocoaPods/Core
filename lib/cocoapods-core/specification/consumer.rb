@@ -37,7 +37,7 @@ module Pod
         @platform_name = platform.is_a?(Symbol) ? platform : platform.name
 
         unless spec.supported_on_platform?(platform)
-          raise StandardError, "#{to_s} is not compatible with #{platform}."
+          raise StandardError, "#{self} is not compatible with #{platform}."
         end
       end
 

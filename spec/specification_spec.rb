@@ -19,8 +19,8 @@ module Pod
       end
 
       it "returns the attributes hash" do
-        @spec.attributes_hash.should == {"name"=>"Pod", "version"=>"1.0"}
-        @subspec.attributes_hash.should == {"name"=>"Subspec"}
+        @spec.attributes_hash.should == { "name" => "Pod", "version" => "1.0" }
+        @subspec.attributes_hash.should == { "name" => "Subspec" }
       end
 
       it "returns the subspecs" do
@@ -180,7 +180,7 @@ module Pod
       it "returns the dependencies on its subspecs" do
         @spec.subspec_dependencies.sort.should == [
           Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX') ]
+          Dependency.new('Pod/SubspecOSX')]
       end
 
       it "returns the dependencies on its subspecs for a given platform" do
@@ -199,15 +199,15 @@ module Pod
       it "returns all the dependencies" do
         @spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
-          Dependency.new('MagicalRecord') ]
+          Dependency.new('MagicalRecord')]
       end
 
       it "returns the dependencies given the platform" do
-        @spec.dependencies(:ios).sort.should == [ Dependency.new('AFNetworking') ]
+        @spec.dependencies(:ios).sort.should == [Dependency.new('AFNetworking')]
       end
 
       it "inherits the dependencies of the parent" do
-        @subsubspec.dependencies(:ios).sort.should == [ Dependency.new('AFNetworking'), Dependency.new('libPusher') ]
+        @subsubspec.dependencies(:ios).sort.should == [Dependency.new('AFNetworking'), Dependency.new('libPusher')]
       end
 
       it "returns all the dependencies including the ones on subspecs given a platform" do
@@ -215,13 +215,13 @@ module Pod
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX') ]
+          Dependency.new('Pod/SubspecOSX')]
       end
 
       it "returns all the dependencies for a given platform" do
         @spec.all_dependencies(:ios).sort.should == [
           Dependency.new('AFNetworking'),
-          Dependency.new('Pod/Subspec') ]
+          Dependency.new('Pod/Subspec')]
       end
     end
 
@@ -238,12 +238,12 @@ module Pod
       end
 
       it "reports if it is locally sourced" do
-        @spec.source = {"path" => '/tmp/local/path'}
+        @spec.source = { "path" => '/tmp/local/path' }
         @spec.local?.should.be.true
       end
 
       it "[0.18 backwards compatibility] reports if it is locally sourced" do
-        @spec.source = {"local" => '/tmp/local/path'}
+        @spec.source = { "local" => '/tmp/local/path' }
         @spec.local?.should.be.true
       end
 

@@ -36,7 +36,6 @@ module Pod
 
     end
 
-
     #-------------------------------------------------------------------------#
 
     describe "Create factory method" do

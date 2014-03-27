@@ -205,7 +205,7 @@ module Pod
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
-            spec.root.name + '.podspec.json'
+            spec.root.name + '.podspec.json',
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
@@ -255,7 +255,7 @@ module Pod
       # Performs validations related to the `homepage` attribute.
       #
       def _validate_homepage(h)
-        if h =~ %r[http://EXAMPLE]
+        if h =~ %r{http://EXAMPLE}
           warning "The homepage has not been updated from default"
         end
       end
@@ -306,7 +306,7 @@ module Pod
           tag, commit = s.values_at(:tag, :commit)
           version = spec.version.to_s
 
-          if git =~ %r[http://EXAMPLE]
+          if git =~ %r{http://EXAMPLE}
             error "The Git source still contains the example URL."
           end
           if commit && commit.downcase =~ /head/
@@ -395,7 +395,7 @@ module Pod
       # Check empty subspec attributes
       #
       def check_if_spec_is_empty
-        methods = %w[ source_files resources preserve_paths dependencies vendored_libraries vendored_frameworks ]
+        methods = %w(source_files resources preserve_paths dependencies vendored_libraries vendored_frameworks)
         empty_patterns = methods.all? { |m| consumer.send(m).empty? }
         empty = empty_patterns && consumer.spec.subspecs.empty?
         if empty

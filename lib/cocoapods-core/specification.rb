@@ -290,7 +290,7 @@ module Pod
     #         source.
     #
     def local?
-      !!(source[:path] || source[:local]) rescue false
+      !(source[:path] || source[:local]).nil? rescue false
     end
 
     # @return     [Bool] whether the specification is supported in the given

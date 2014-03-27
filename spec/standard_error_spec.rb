@@ -41,7 +41,7 @@ module Pod
     end
 
     it "is robust against a backtrace that doesn't include the line number of the dsl file that originated the error" do
-      @err.stubs(:backtrace).returns [ @dsl_path.to_s ]
+      @err.stubs(:backtrace).returns [@dsl_path.to_s]
       lambda { @err.message }.should.not.raise
     end
 
@@ -56,14 +56,14 @@ module Pod
     end
 
     it "can handle the first line of the dsl file" do
-      @err.stubs(:backtrace).returns [ "#{@dsl_path}:1", ]
+      @err.stubs(:backtrace).returns ["#{@dsl_path}:1", ]
       lambda { @err.message }.should.not.raise
       @err.message.should.include?("first line")
       @err.message.should.not.include?("last line")
     end
 
     it "can handle the last line of the dsl file" do
-      @err.stubs(:backtrace).returns [ "#{@dsl_path}:3", ]
+      @err.stubs(:backtrace).returns ["#{@dsl_path}:3", ]
       lambda { @err.message }.should.not.raise
       @err.message.should.not.include?("first line")
       @err.message.should.include?("last line")

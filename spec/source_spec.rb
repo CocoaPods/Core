@@ -32,7 +32,7 @@ module Pod
 
     describe "#pods" do
       it "returns the available Pods" do
-        @sut.pods.should == ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
+        @sut.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
       end
 
       it "raises if the repo doesn't exists" do
@@ -72,7 +72,7 @@ module Pod
 
     describe "#all_specs" do
       it "returns all the specifications" do
-        expected = ["BananaLib", "IncorrectPath", "JSONKit", "JSONSpec"]
+        expected = %w(BananaLib IncorrectPath JSONKit JSONSpec)
         @sut.all_specs.map(&:name).sort.uniq.should == expected
       end
     end
@@ -91,7 +91,7 @@ module Pod
 
     describe "#pod_sets" do
       it "returns all the pod sets" do
-        expected = ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
+        expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
         @sut.pod_sets.map(&:name).sort.uniq.should == expected
       end
     end
@@ -120,7 +120,7 @@ module Pod
           sets.count.should == 1
           set = sets.first
           set.name.should == 'BananaLib'
-          set.sources.map(&:name).should == %w| test_repo |
+          set.sources.map(&:name).should == %w(test_repo)
         end
 
         it "can use regular expressions" do
@@ -203,5 +203,3 @@ module Pod
 
   end
 end
-
-

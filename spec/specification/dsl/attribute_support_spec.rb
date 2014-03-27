@@ -16,9 +16,9 @@ module Pod
     #-------------------------------------------------------------------------#
 
     it "stores the attributes" do
-       TestClass.attributes.keys.sort_by(&:to_s).should == [
-         :test_attribute, :test_root_attribute
-       ]
+      TestClass.attributes.keys.sort_by(&:to_s).should == [
+        :test_attribute, :test_root_attribute
+      ]
     end
 
     it "declares a root attribute" do

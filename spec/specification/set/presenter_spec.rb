@@ -36,7 +36,7 @@ module Pod
       end
 
       it "returns the sources" do
-        @presenter.sources.should == ["master", "test_repo"]
+        @presenter.sources.should == %w(master test_repo)
       end
     end
 
