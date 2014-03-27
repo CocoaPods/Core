@@ -230,6 +230,25 @@ module Pod
 
       #--------------------------------------#
 
+      it "whitelists pods by default" do
+        @root.store_pod("ObjectiveSugar")
+        @root.should.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
+      end
+
+      it "does not enable pods for un-whitelisted configurations if it is whitelisted for another" do
+        @root.store_pod("ObjectiveSugar")
+        @root.whitelist_pod_for_configuration("ObjectiveSugar", "Release")
+        @root.should.not.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Debug")
+      end
+
+      it "enables pods for configurations they are whitelisted for" do
+        @root.store_pod("ObjectiveSugar")
+        @root.whitelist_pod_for_configuration("ObjectiveSugar", "Release")
+        @root.should.is_pod_whitelisted_for_configuration?("ObjectiveSugar", "Release")
+      end
+
+      #--------------------------------------#
+
       it "returns its platform" do
         @root.platform.should == Pod::Platform.new(:ios, '6.0')
       end
