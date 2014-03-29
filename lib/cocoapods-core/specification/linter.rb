@@ -386,7 +386,7 @@ module Pod
       # @todo remove in 0.18 and switch the default to true.
       #
       def check_tmp_arc_not_nil
-        if consumer.requires_arc.nil?
+        if consumer.spec.attributes_hash["requires_arc"].nil?
           warning "A value for `requires_arc` should be specified until the " \
             "migration to a `true` default."
         end
