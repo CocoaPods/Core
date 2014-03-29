@@ -2,6 +2,10 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Linter do
+    before do
+      WebMock::API.stub_request(:head ,/banana-corp.local/).to_return(status: 200)
+    end
+
     describe 'In general' do
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
@@ -222,6 +226,12 @@ module Pod
       it "checks if the homepage has been changed from default" do
         @spec.stubs(:homepage).returns('http://EXAMPLE/test')
         message_should_include('homepage', 'default')
+      end
+
+      it "checks if the homepage is valid" do
+        WebMock::API.stub_request(:head, /not-found/).to_return(status: 404)
+        @spec.stubs(:homepage).returns('http://banana-corp.local/not-found')
+        message_should_include('homepage', 'is not', 'accessible')
       end
 
       #------------------#
