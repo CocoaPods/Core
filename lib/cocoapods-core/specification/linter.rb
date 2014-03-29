@@ -312,10 +312,9 @@ module Pod
           if commit && commit.downcase =~ /head/
             error 'The commit of a Git source cannot be `HEAD`.'
           end
-          if tag && !tag.include?(version)
+          if tag && !tag.to_s.include?(version)
             warning 'The version should be included in the Git tag.'
           end
-
           if version == '0.0.1'
             if commit.nil? && tag.nil?
               error 'Git sources should specify either a commit or a tag.'

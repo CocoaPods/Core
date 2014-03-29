@@ -254,9 +254,15 @@ module Pod
         message_should_include('source', 'HEAD')
       end
 
-      it "checks that the version is included in the git tag" do
+      it "checks that the version is included in the git tag when the version is a string" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => '1.0' })
+        message_should_include('git', 'version', 'tag')
+      end
+      
+      it "checks that the version is included in the git tag  when the version is a Version" do
+        @spec.stubs(:version).returns(Version.new '1.0.1')
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => (Version.new '1.0') })
         message_should_include('git', 'version', 'tag')
       end
 
