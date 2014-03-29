@@ -370,9 +370,7 @@ module Pod
         message.should.include('spec is empty')
       end
 
-      xit "requires that the require_arc value is specified until the switch to a true default" do
-        # TODO the default value is invalidating this test
-        consumer = @spec.consumer(:ios)
+      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
         @spec.requires_arc = nil
         @linter.lint
         message = @linter.results.first.message
