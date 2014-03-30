@@ -180,7 +180,7 @@ module Pod::Vendor
       return false if @requirements.length > 1 # GIGO, > 1, > 2 is silly
 
       # check for = operator, which is implicit if no operator is specified
-      "=" == @requirements.first.first 
+      %w(= <=).include? @requirements.first.first 
     end
 
     def to_s # :nodoc:

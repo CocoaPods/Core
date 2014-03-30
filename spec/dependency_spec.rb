@@ -264,6 +264,11 @@ module Pod
         dep.exact_version?.should.be.true
       end
 
+      it "exact_version? is true if a version is specified with <= operator" do
+        dep = Dependency.new('bananas', '<= 1.0')
+        dep.exact_version?.should.be.true
+      end
+
       it "exact_version? is false if a version is specified with an operator" do
         dep = Dependency.new('bananas', '< 1.0')
         dep.exact_version?.should.be.false
