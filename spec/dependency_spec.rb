@@ -258,6 +258,17 @@ module Pod
         dep.match?('bananas', '1.0-rc1').should.be.true
       end
 
+      #--------------------------------------#
+      it "exact_version? is true if a version is specified with no operator" do
+        dep = Dependency.new('bananas', '1.0')
+        dep.exact_version?.should.be.true
+      end
+
+      it "exact_version? is false if a version is specified with an operator" do
+        dep = Dependency.new('bananas', '< 1.0')
+        dep.exact_version?.should.be.false
+      end
+
     end
     
     describe "With regards to pre-release versions" do
