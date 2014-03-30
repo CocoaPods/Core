@@ -174,6 +174,15 @@ module Pod::Vendor
       not %w(> >=).include? @requirements.first.first # grab the operator
     end
 
+    ##
+    # Is this requirement that specifies an exact version?.
+    def exact_version?
+      return false if @requirements.length > 1 # GIGO, > 1, > 2 is silly
+
+      # check for = operator, which is implicit if no operator is specified
+      "=" == @requirements.first.first 
+    end
+
     def to_s # :nodoc:
       as_list.join ", "
     end
