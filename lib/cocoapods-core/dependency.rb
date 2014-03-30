@@ -338,14 +338,13 @@ module Pod
       "<#{self.class} name=#{name} requirements=#{requirement} " \
         "external_source=#{external_source || 'nil'}>"
     end
-    
+
     ##
     # Is this dependency one that specifies an exact version?
     # No operator should be found in the version requirement.
     def exact_version?
       requirement.exact_version?
     end
-    
 
     #--------------------------------------#
 
@@ -385,5 +384,5 @@ module Pod
       "from #{desc}"
     end
   end
-  
+
 end
