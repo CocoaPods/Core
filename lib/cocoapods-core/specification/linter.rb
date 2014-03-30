@@ -258,8 +258,19 @@ module Pod
         require 'rest'
         if h =~ %r{http://EXAMPLE}
           warning "The homepage has not been updated from default"
-        elsif (resp = ::REST.head(h)) && !resp.success?
-          warning "The homepage is not accessible (HTTP #{resp.status_code})"
+        else
+          h += '/' unless h.end_with?('/')
+
+          begin
+            resp = ::REST.head(h)
+          rescue
+            warning "There was a problem validating the homepage."
+            resp = nil
+          end
+
+          if resp && !resp.success?
+            warning "The homepage is not accessible (HTTP #{resp.status_code})"
+          end
         end
       end
 
