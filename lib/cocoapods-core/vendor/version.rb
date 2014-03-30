@@ -131,7 +131,7 @@ module Pod::Vendor
   # specify your dependency as ">= 2.0.0" then, you're good, right? What
   # happens if fnord 3.0 comes out and it isn't backwards compatible
   # with 2.y.z? Your stuff will break as a result of using ">=". The
-  # better route is to specify your dependency with a "approximate" version
+  # better route is to specify your dependency with an "approximate" version
   # specifier. They're a tad confusing, so here is how the dependency
   # specifiers work:
   #
