@@ -234,6 +234,15 @@ module Pod
         message_should_include('homepage', 'is not', 'accessible')
       end
 
+      it "checks if that the homepage validates without a trailing slash" do
+        WebMock::API.stub_request(:head, /ok/).to_return(:status => 200)
+        @spec.stubs(:homepage).returns('http://banana-corp.local')
+
+        @linter.lint
+        results = @linter.results
+        results.should == []
+      end
+
       #------------------#
 
       it "checks whether the license type" do
