@@ -533,7 +533,7 @@ module Pod
       #
       # ---
       #
-      # Dependencies can specify versions requirements. The use of the approximate
+      # Dependencies can specify versions requirements. The use of the optimistic
       # version indicator `~>` is recommended because it provides good
       # control over the version without being too restrictive. For example,
       # `~> 1.0.1` is equivalent to `>= 1.0.1` combined with `< 1.1`. Similarly,
