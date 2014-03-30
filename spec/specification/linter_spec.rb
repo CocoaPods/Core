@@ -243,6 +243,12 @@ module Pod
         results.should == []
       end
 
+      it "checks that if we don't have internet a homepage is not valid" do
+        WebMock::API.stub_request(:head, 'banana-corp.local').to_raise(SocketError)
+        @spec.stubs(:homepage).returns('http://banana-corp.local')
+        message_should_include('problem', 'homepage')
+      end
+
       #------------------#
 
       it "checks whether the license type" do
