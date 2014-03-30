@@ -286,6 +286,12 @@ module Pod
         message_should_include('Github', '.git')
       end
 
+      it "does not warn for Github repositories with OAuth authentication" do
+        @spec.stubs(:source).returns({ :git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
       it "checks the source of 0.0.1 specifications for commit or a tag" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })

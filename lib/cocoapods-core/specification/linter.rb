@@ -333,18 +333,15 @@ module Pod
       # Performs validations related to github sources.
       #
       def perform_github_source_checks(s)
-        supported_domains = [
-          'https://github.com',
-          'https://gist.github.com',
-        ]
+        require 'uri'
 
         if git = s[:git]
-          is_github = git.include?('github.com')
-          if is_github
+          git_uri = URI.parse(git)
+          if git_uri.host == 'github.com'
             unless git.end_with?('.git')
               warning "Github repositories should end in `.git`."
             end
-            unless supported_domains.find { |domain| git.start_with?(domain) }
+            unless git_uri.scheme == 'https'
               warning "Github repositories should use `https` link."
             end
           end
