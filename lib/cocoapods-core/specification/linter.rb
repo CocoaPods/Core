@@ -334,7 +334,7 @@ module Pod
 
         if git = s[:git]
           git_uri = URI.parse(git)
-          if git_uri.host == 'github.com'
+          if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
               warning "Github repositories should end in `.git`."
             end

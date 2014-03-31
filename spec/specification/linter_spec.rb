@@ -286,6 +286,11 @@ module Pod
         @linter.results.should.be.empty
       end
 
+      it "performs checks for Gist Github repositories" do
+        @spec.stubs(:source).returns({ :git => "git://gist.github.com/2823399.git", :tag => "1.0" })
+        message_should_include('Github', 'https')
+      end
+
       it "checks the source of 0.0.1 specifications for commit or a tag" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
