@@ -165,7 +165,7 @@ module Pod
       end
 
       it "returns a subspec given the relative name" do
-        @subspec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
+        @spec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
       end
 
       it "raises if it can't find a subspec with the given name" do
