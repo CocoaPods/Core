@@ -255,22 +255,8 @@ module Pod
       # Performs validations related to the `homepage` attribute.
       #
       def _validate_homepage(h)
-        require 'rest'
         if h =~ %r{http://EXAMPLE}
           warning "The homepage has not been updated from default"
-        else
-          h += '/' unless h.end_with?('/')
-
-          begin
-            resp = ::REST.head(h)
-          rescue
-            warning "There was a problem validating the homepage."
-            resp = nil
-          end
-
-          if resp && !resp.success?
-            warning "The homepage is not accessible (HTTP #{resp.status_code})"
-          end
         end
       end
 
