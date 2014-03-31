@@ -202,17 +202,18 @@ module Pod
     # @return   [Specification] the subspec with the given name or self.
     #
     def subspec_by_name(relative_name)
-      if relative_name.nil? || relative_name == base_name
+      if relative_name.nil?
         self
       else
-        remainder = relative_name[base_name.size + 1..-1]
-        subspec_name = remainder.split('/').shift
+        parts = relative_name.split('/')
+        parts = parts[1..-1] if parts.first == name
+        subspec_name, *remainder = parts
         subspec = subspecs.find { |s| s.name == "#{name}/#{subspec_name}" }
         unless subspec
           raise Informative, "Unable to find a specification named " \
             "`#{relative_name}` in `#{name} (#{version})`."
         end
-        subspec.subspec_by_name(remainder)
+        subspec.subspec_by_name(remainder.empty? ? nil : remainder.join('/'))
       end
     end
 
