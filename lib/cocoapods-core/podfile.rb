@@ -1,5 +1,8 @@
 require 'cocoapods-core/podfile/dsl'
 require 'cocoapods-core/podfile/target_definition'
+require 'cocoapods-core/podfile/base_model'
+require 'cocoapods-core/podfile/workspace'
+require 'cocoapods-core/podfile/project'
 
 module Pod
 
@@ -45,6 +48,8 @@ module Pod
     def initialize(defined_in_file = nil, internal_hash = {}, &block)
       self.defined_in_file = defined_in_file
       @internal_hash = internal_hash
+      @podfile_workspace = Workspace.new
+
       if block
         default_target_def = TargetDefinition.new("Pods", self)
         default_target_def.link_with_first_target = true
@@ -55,6 +60,10 @@ module Pod
         @root_target_definitions = []
       end
     end
+
+    # TODO
+    #
+    attr_reader :podfile_workspace
 
     # @return [String] a string useful to represent the Podfile in a message
     #         presented to the user.

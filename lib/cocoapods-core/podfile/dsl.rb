@@ -409,7 +409,15 @@ module Pod
       # @return   [void]
       #
       def workspace(path)
-        set_hash_value('workspace', path.to_s)
+        # TODO: do we need to support a path, or can we just support a name?
+        raise Informative, "No name given for the workspace" unless path
+        podfile_workspace.name = path
+
+        if block_given?
+          yield
+        else
+          CoreUI.warn "Workspaces now require a block in the Podfile DSL"
+        end
       end
 
       # Specifies that a BridgeSupport metadata document should be generated
@@ -497,6 +505,7 @@ module Pod
       def post_install(&block)
         @post_install_callback = block
       end
+
     end
   end
 end
