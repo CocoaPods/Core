@@ -9,6 +9,10 @@
   [#67](https://github.com/CocoaPods/Core/issues/67)
   [#85](https://github.com/CocoaPods/Core/pull/85)
 
+* Partial refactor of `Pod::Linter` class.
+  [Joshua Kalpin][Kapin]
+  [#50](https://github.com/CocoaPods/Core/pull/50)
+
 ## 0.31.1
 
 ##### Enhancements
@@ -45,3 +49,4 @@
 Introduction of the Changelog.
 
 [irrationalfab]: https://github.com/irrationalfab
+[Kapin]: https://github.com/Kapin
