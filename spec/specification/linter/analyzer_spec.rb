@@ -46,12 +46,10 @@ module Pod
         message_should_include('spec', 'empty')
       end
 
-      xit "requires that the require_arc value is specified until the switch to a true default" do
-        # TODO the default value is invalidating this test
-        @consumer.requires_arc = nil
+      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
+        @spec.requires_arc = nil
         @analyzer.analyze
-        message = @analyzer.results.first.message
-        message.should.include('`requires_arc` should be specified')
+        message_should_include('`requires_arc` should be specified')
       end
 
       it "checks if the pre install hook has been defined" do

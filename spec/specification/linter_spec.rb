@@ -360,50 +360,6 @@ module Pod
         message.should.include('Warnings')
         message.should.include('disabled')
       end
-
-      it "checks if any file patterns is absolute" do
-        @spec.source_files = '/Classes'
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('patterns')
-        message.should.include('relative')
-        message.should.include('source_files')
-      end
-
-      it "checks if a specification is empty" do
-        consumer = Specification::Consumer
-        consumer.any_instance.stubs(:source_files).returns([])
-        consumer.any_instance.stubs(:resources).returns({})
-        consumer.any_instance.stubs(:preserve_paths).returns([])
-        consumer.any_instance.stubs(:subspecs).returns([])
-        consumer.any_instance.stubs(:dependencies).returns([])
-        consumer.any_instance.stubs(:vendored_libraries).returns([])
-        consumer.any_instance.stubs(:vendored_frameworks).returns([])
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('spec is empty')
-      end
-
-      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
-        @spec.requires_arc = nil
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('`requires_arc` should be specified')
-      end
-
-      it "checks if the pre install hook has been defined" do
-        @spec.pre_install do; end
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.match /pre install hook.*deprecated/
-      end
-
-      it "checks if the post install hook has been defined" do
-        @spec.post_install do; end
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.match /post install hook.*deprecated/
-      end
     end
   end
 end
