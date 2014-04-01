@@ -286,6 +286,24 @@ module Pod
         @linter.results.should.be.empty
       end
 
+      it "does not warn for local repositories with spaces" do
+        @spec.stubs(:source).returns({ :git => '/Users/kylef/Projects X', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "does not warn for SSH repositories" do
+        @spec.stubs(:source).returns({ :git => 'git@bitbucket.org:kylef/test.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "does not warn for SSH repositories on Github" do
+        @spec.stubs(:source).returns({ :git => 'git@github.com:kylef/test.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
       it "performs checks for Gist Github repositories" do
         @spec.stubs(:source).returns({ :git => "git://gist.github.com/2823399.git", :tag => "1.0" })
         message_should_include('Github', 'https')

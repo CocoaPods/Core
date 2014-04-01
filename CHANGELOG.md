@@ -10,6 +10,12 @@
   [Fabio Pelosin][irrationalfab]
   [#51](https://github.com/CocoaPods/Core/issues/51)
 
+##### Bug Fixes
+
+* Fix linting source of a spec for certain URLs.
+  [Boris Bügling](https://github.com/neonichu)
+  [#82](https://github.com/CocoaPods/Core/issues/82)
+
 ## 0.31.0
 
 ##### Enhancements
