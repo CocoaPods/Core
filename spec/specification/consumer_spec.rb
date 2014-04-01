@@ -179,7 +179,16 @@ module Pod
       end
 
       it "allows to specify the contents of the prefix header as an array" do
-        @spec.prefix_header_contents = '#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>'
+        @spec.prefix_header_contents = ['#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>']
+        @consumer.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
+      end
+
+      it "strips the indentation of the prefix headers" do
+        headers = <<-DESC
+          #import <UIKit/UIKit.h>
+          #import <Foundation/Foundation.h>
+        DESC
+        @spec.prefix_header_contents = headers
         @consumer.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
       end
 

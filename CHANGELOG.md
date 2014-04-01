@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* The specification now strips the indentation of the `prefix_header` and
+  `prepare_command` to aide their declaration as a here document (similarly to
+  what it already does with the description).  
+  [Fabio Pelosin][irrationalfab]
+  [#51](https://github.com/CocoaPods/Core/issues/51)
+
 ## 0.31.0
 
 ##### Enhancements
@@ -18,3 +28,6 @@
 ## 0.30.0
 
 Introduction of the Changelog.
+
+[irrationalfab]: https://github.com/irrationalfab
+

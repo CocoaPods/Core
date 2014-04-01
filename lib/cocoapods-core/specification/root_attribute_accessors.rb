@@ -121,7 +121,7 @@ module Pod
         #
         def description
           description = attributes_hash["description"]
-          description.strip_heredoc if description
+          description.strip_heredoc.chomp if description
         end
 
         # @return [Array<String>] The list of the URL for the screenshots of
@@ -143,7 +143,8 @@ module Pod
         # @return [String, Nil] The prepare command of the Pod if specified.
         #
         def prepare_command
-          attributes_hash["prepare_command"]
+          command = attributes_hash["prepare_command"]
+          command.strip_heredoc.chomp if command
         end
 
         #---------------------------------------------------------------------#

@@ -347,7 +347,10 @@ module Pod
       # @return [String] the prefix header.
       #
       def _prepare_prefix_header_contents(value)
-        value.is_a?(Array) ? value * "\n" : value
+        if value
+          value = value.join("\n") if value.is_a?(Array)
+          value.strip_heredoc.chomp
+        end
       end
 
       # Ensures that the file patterns of the resource bundles are contained in

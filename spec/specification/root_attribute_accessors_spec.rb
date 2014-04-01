@@ -114,7 +114,7 @@ module Pod
         Line2
       DESC
       @spec.description = desc
-      @spec.description.should == "Line1\nLine2\n"
+      @spec.description.should == "Line1\nLine2"
     end
 
     it "returns the screenshots" do
@@ -127,8 +127,11 @@ module Pod
       @spec.screenshots.should == ['www.example.com/img1.png']
     end
 
-    it "returns the prepare_command" do
-      @spec.prepare_command = 'ruby prepare_script.rb'
+    it "returns the prepare command stripping the indentation" do
+      command = <<-DESC
+        ruby prepare_script.rb
+      DESC
+      @spec.prepare_command = command
       @spec.prepare_command.should == 'ruby prepare_script.rb'
     end
 
