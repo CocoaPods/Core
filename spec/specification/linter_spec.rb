@@ -356,98 +356,17 @@ module Pod
         @spec.libraries = %w(libz libssl)
         message_should_include('library', 'name')
       end
-    end
 
-    #--------------------------------------#
-
-    describe 'File patterns & Build settings' do
-
-      before do
-        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
-        podspec_path = fixture(fixture_path)
-        @linter = Specification::Linter.new(podspec_path)
-        @spec = @linter.spec
-      end
+      #------------------#
 
       it "checks if the compiler flags disable warnings" do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
+        message_should_include('warnings', 'disabled')
         @linter.lint
         message = @linter.results.first.message
         message.should.include('Warnings')
         message.should.include('disabled')
       end
-
-      it "checks if any file patterns is absolute" do
-        @spec.source_files = '/Classes'
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('patterns')
-        message.should.include('relative')
-        message.should.include('source_files')
-      end
-
-      it "checks if a specification is empty" do
-        consumer = Specification::Consumer
-        consumer.any_instance.stubs(:source_files).returns([])
-        consumer.any_instance.stubs(:resources).returns({})
-        consumer.any_instance.stubs(:preserve_paths).returns([])
-        consumer.any_instance.stubs(:subspecs).returns([])
-        consumer.any_instance.stubs(:dependencies).returns([])
-        consumer.any_instance.stubs(:vendored_libraries).returns([])
-        consumer.any_instance.stubs(:vendored_frameworks).returns([])
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('spec is empty')
-      end
-
-      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
-        @spec.requires_arc = nil
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('`requires_arc` should be specified')
-      end
-
-      it "checks if the pre install hook has been defined" do
-        @spec.pre_install do; end
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.match /pre install hook.*deprecated/
-      end
-
-      it "checks if the post install hook has been defined" do
-        @spec.post_install do; end
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.match /post install hook.*deprecated/
-      end
-    end
-
-  end
-
-  #---------------------------------------------------------------------------#
-
-  describe Specification::Linter::Result do
-    before do
-      @result = Specification::Linter::Result.new(:error, 'This is a sample error.')
-    end
-
-    it "returns the type" do
-      @result.type.should == :error
-    end
-
-    it "returns the message" do
-      @result.message.should == 'This is a sample error.'
-    end
-
-    it "can store the platforms that generated the result" do
-      @result.platforms << :ios
-      @result.platforms.should == [:ios]
-    end
-
-    it "returns a string representation suitable for UI" do
-      @result.to_s.should == '[ERROR] This is a sample error.'
-      @result.platforms << :ios
-      @result.to_s.should == '[ERROR] This is a sample error. [iOS]'
     end
   end
 end
