@@ -20,7 +20,7 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    class Pod::Podfile::StandardError < StandardError; end
+    class StandardError < ::StandardError; end
 
     #-------------------------------------------------------------------------#
 
@@ -172,12 +172,12 @@ module Pod
 
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
-    HASH_KEYS = %w[
+    HASH_KEYS = %w(
       target_definitions
       workspace
       generate_bridge_support
       set_arc_compatibility_flag
-    ].freeze
+    ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
     #

@@ -1,3 +1,4 @@
+require "bundler/gem_tasks"
 
 # Travis support
 #-----------------------------------------------------------------------------#
@@ -10,105 +11,6 @@ namespace :travis do
   task :setup do
     sh "git submodule update --init"
     sh "env CFLAGS='-I#{rvm_ruby_dir}/include' bundle install --without debugging documentation"
-  end
-end
-
-
-# Gem
-#-----------------------------------------------------------------------------#
-
-namespace :gem do
-  def gem_version
-    require File.expand_path('../lib/cocoapods-core/gem_version', __FILE__)
-    Pod::CORE_VERSION
-  end
-
-  def gem_filename
-    "cocoapods-core-#{gem_version}.gem"
-  end
-
-  desc "Build a gem for the current version"
-  task :build do
-    sh "gem build cocoapods-core.gemspec"
-  end
-
-  desc "Install a gem version of the current code"
-  task :install => :build do
-    sh "gem install #{gem_filename}"
-  end
-
-  def silent_sh(command)
-    require 'english'
-    output = `#{command} 2>&1`
-    unless $CHILD_STATUS.success?
-      puts output
-      exit 1
-    end
-    output
-  end
-
-  desc "Run all specs, build and install gem, commit version change, tag version change, and push everything"
-  task :release do
-
-    unless ENV['SKIP_CHECKS']
-      if `git symbolic-ref HEAD 2>/dev/null`.strip.split('/').last != 'master'
-        $stderr.puts "[!] You need to be on the `master' branch in order to be able to do a release."
-        exit 1
-      end
-
-      if `git tag`.strip.split("\n").include?(gem_version)
-        $stderr.puts "[!] A tag for version `#{gem_version}' already exists. Change the version in lib/cocoapods-core/.rb"
-        exit 1
-      end
-
-      puts "You are about to release `#{gem_version}', is that correct? [y/n]"
-      exit if $stdin.gets.strip.downcase != 'y'
-
-      diff_lines = `git diff --name-only`.strip.split("\n")
-
-      if diff_lines.size == 0
-        $stderr.puts "[!] Change the version number yourself in lib/cocoapods-core/gem_version.rb"
-        exit 1
-      end
-
-      diff_lines.delete('Gemfile.lock')
-      if diff_lines != ['lib/cocoapods-core/gem_version.rb']
-        $stderr.puts "[!] Only change the version number in a release commit!"
-        $stderr.puts diff_lines
-        exit 1
-      end
-    end
-
-    require 'date'
-
-    # Ensure that the branches are up to date with the remote
-    sh "git pull"
-
-    puts "* Updating Bundler"
-    silent_sh('bundle update')
-
-    puts "* Running specs"
-    silent_sh('rake spec:all')
-
-    # puts "* Checking compatibility with the master repo"
-    # silent_sh('rake spec:repo')
-
-    tmp = File.expand_path('../tmp', __FILE__)
-    tmp_gems = File.join(tmp, 'gems')
-
-    Rake::Task['gem:build'].invoke
-
-    puts "* Testing gem installation (tmp/gems)"
-    silent_sh "rm -rf '#{tmp}'"
-    silent_sh "gem install --install-dir='#{tmp_gems}' #{gem_filename}"
-
-    # Then release
-    sh "git commit lib/cocoapods-core/gem_version.rb -m 'Release #{gem_version}'"
-    sh "git tag -a #{gem_version} -m 'Release #{gem_version}'"
-    sh "git push origin master"
-    sh "git push origin --tags"
-    sh "gem push #{gem_filename}"
-
   end
 end
 
@@ -149,7 +51,7 @@ end
 desc "Run all specs"
 task :spec => 'spec:all'
 
-# Rubocop
+# Coverage
 #-----------------------------------------------------------------------------#
 
 desc 'Generates & opens the coverage report'
@@ -159,6 +61,9 @@ task :coverage do
   puts  "\nCoverage report available at `coverage/index.html`"
   sh    "open coverage/index.html"
 end
+
+# Rubocop
+#-----------------------------------------------------------------------------#
 
 desc 'Checks code style'
 task :rubocop do

@@ -55,22 +55,22 @@ module Pod
       it "returns dependencies" do
         @root.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
-        @root.dependencies.map(&:name).should  == %w[ BlocksKit ]
-        @child.dependencies.map(&:name).should == %w[ OCMockito BlocksKit ]
+        @root.dependencies.map(&:name).should  == %w(BlocksKit)
+        @child.dependencies.map(&:name).should == %w(OCMockito BlocksKit)
       end
 
       it "doesn't inherit dependencies if it is exclusive" do
         @root.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
         @child.exclusive = true
-        @child.dependencies.map(&:name).should == %w[ OCMockito ]
+        @child.dependencies.map(&:name).should == %w(OCMockito)
       end
 
       it "returns the non inherited dependencies" do
         @root.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
-        @root.non_inherited_dependencies.map(&:name).should == %w[ BlocksKit ]
-        @child.non_inherited_dependencies.map(&:name).should == %w[ OCMockito ]
+        @root.non_inherited_dependencies.map(&:name).should == %w(BlocksKit)
+        @child.non_inherited_dependencies.map(&:name).should == %w(OCMockito)
       end
 
       it "returns whether it is empty" do
@@ -136,7 +136,7 @@ module Pod
 
       it "allows targets to be passed in the argument list instead of as an array" do
         @root.link_with = 'appTarget1', 'appTarget2'
-        @root.link_with.should.be == ['appTarget1', 'appTarget2']
+        @root.link_with.should.be == %w(appTarget1 appTarget2)
       end
 
       it "returns nil if the link_with array is empty" do
@@ -263,7 +263,7 @@ module Pod
       it "stores a dependency on a pod as a hash if requirements provided" do
         @root.store_pod('Reachability', '1.0')
         @root.send(:get_hash_value, 'dependencies').should == [
-          {"Reachability"=>["1.0"]}
+          { "Reachability" => ["1.0"] }
         ]
       end
 
@@ -272,12 +272,12 @@ module Pod
       it "stores a dependency on a podspec" do
         @root.store_podspec(:name => 'BlocksKit')
         @root.send(:get_hash_value, 'podspecs').should == [
-          {:name=>"BlocksKit"}
+          { :name => "BlocksKit" }
         ]
       end
 
       it "stores a dependency on a podspec and sets is as auto-detect if no options are provided" do
-        @root.store_podspec()
+        @root.store_podspec
         @root.send(:get_hash_value, 'podspecs').should == [
           { :autodetect => true }
         ]
@@ -299,8 +299,8 @@ module Pod
         @child.set_platform(:ios)
         @child.to_hash.should == {
           "name" => "MyAppTests",
-          "dependencies"=>["BlocksKit"],
-          "platform"=>"ios"
+          "dependencies" => ["BlocksKit"],
+          "platform" => "ios"
         }
       end
 
@@ -310,12 +310,12 @@ module Pod
         @child.store_pod('RestKit')
         @root.to_hash.should == {
           "name" => "MyApp",
-          "platform"=>{"ios"=>"6.0"},
-          "dependencies"=> ["BlocksKit"],
-          "children"=> [
+          "platform" => { "ios" => "6.0" },
+          "dependencies" => ["BlocksKit"],
+          "children" => [
             {
               "name" => "MyAppTests",
-              "dependencies"=> [ "RestKit"]
+              "dependencies" => ["RestKit"]
             },
             {
               "name" => "MoarTests",
@@ -425,38 +425,38 @@ module Pod
       describe "#podspec_path_from_options" do
 
         it "resolves a podspec given the absolute path" do
-          options = {:path => SpecHelper::Fixture.fixture('BananaLib')}
+          options = { :path => SpecHelper::Fixture.fixture('BananaLib') }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
 
         it "resolves a podspec given the relative path" do
-          options = {:path => 'BananaLib.podspec'}
+          options = { :path => 'BananaLib.podspec' }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
 
         it "add the extension if needed" do
-          options = {:path => 'BananaLib'}
+          options = { :path => 'BananaLib' }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
 
         it "it expands the tilde in the provided path" do
           home_dir = File.expand_path("~")
-          options = {:path => '~/BananaLib.podspec'}
+          options = { :path => '~/BananaLib.podspec' }
           file = @root.send(:podspec_path_from_options, options)
           file.should == Pathname.new("#{home_dir}/BananaLib.podspec")
         end
 
         it "resolves a podspec given its name" do
-          options = {:name => 'BananaLib'}
+          options = { :name => 'BananaLib' }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
 
         it "auto-detects the podspec" do
-          options = {:autodetect => true}
+          options = { :autodetect => true }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end

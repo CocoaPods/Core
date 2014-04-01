@@ -199,7 +199,7 @@ module Pod
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
-            spec.root.name + '.podspec.json'
+            spec.root.name + '.podspec.json',
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
@@ -249,7 +249,7 @@ module Pod
       # Performs validations related to the `homepage` attribute.
       #
       def _validate_homepage(h)
-        if h =~ %r[http://EXAMPLE]
+        if h =~ %r{http://EXAMPLE}
           warning "The homepage has not been updated from default"
         end
       end
@@ -300,16 +300,15 @@ module Pod
           tag, commit = s.values_at(:tag, :commit)
           version = spec.version.to_s
 
-          if git =~ %r[http://EXAMPLE]
+          if git =~ %r{http://EXAMPLE}
             error "The Git source still contains the example URL."
           end
           if commit && commit.downcase =~ /head/
             error 'The commit of a Git source cannot be `HEAD`.'
           end
-          if tag && !tag.include?(version)
+          if tag && !tag.to_s.include?(version)
             warning 'The version should be included in the Git tag.'
           end
-
           if version == '0.0.1'
             if commit.nil? && tag.nil?
               error 'Git sources should specify either a commit or a tag.'
@@ -325,18 +324,16 @@ module Pod
       # Performs validations related to github sources.
       #
       def perform_github_source_checks(s)
-        supported_domains = [
-          'https://github.com',
-          'https://gist.github.com',
-        ]
+        require 'uri'
 
         if git = s[:git]
-          is_github = git.include?('github.com')
-          if is_github
+          return unless git =~ /^#{URI.regexp}$/
+          git_uri = URI.parse(git)
+          if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
               warning "Github repositories should end in `.git`."
             end
-            unless supported_domains.find { |domain| git.start_with?(domain) }
+            unless git_uri.scheme == 'https'
               warning "Github repositories should use `https` link."
             end
           end

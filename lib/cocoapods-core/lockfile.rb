@@ -40,7 +40,7 @@ module Pod
     def self.from_file(path)
       return nil unless path.exist?
       require 'yaml'
-      hash = YAML.load(File.open(path))
+      hash = File.open(path) { |f| YAML.load(f) }
       unless hash && hash.is_a?(Hash)
         raise Informative, "Invalid Lockfile in `#{path}`"
       end
@@ -310,7 +310,7 @@ module Pod
         "DEPENDENCIES",
         "EXTERNAL SOURCES",
         "SPEC CHECKSUMS",
-        "COCOAPODS"
+        "COCOAPODS",
       ]
       YAMLConverter.convert_hash(to_hash, keys_hint, "\n\n")
     end
@@ -342,7 +342,7 @@ module Pod
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'SPEC CHECKSUMS'   => generate_checksums(specs),
-          'COCOAPODS'        => CORE_VERSION
+          'COCOAPODS'        => CORE_VERSION,
         }
         Lockfile.new(hash)
       end

@@ -46,7 +46,7 @@ module Pod
         # @todo remove in 0.18 and switch the default to true.
         #
         def check_tmp_arc_not_nil
-          if consumer.requires_arc.nil?
+          if consumer.spec.attributes_hash["requires_arc"].nil?
             warning "A value for `requires_arc` should be specified until the " \
             "migration to a `true` default."
           end
@@ -55,7 +55,7 @@ module Pod
         # Check empty subspec attributes
         #
         def check_if_spec_is_empty
-          methods = %w[ source_files resources preserve_paths dependencies vendored_libraries vendored_frameworks ]
+          methods = %w( source_files resources preserve_paths dependencies vendored_libraries vendored_frameworks )
           empty_patterns = methods.all? { |m| consumer.send(m).empty? }
           empty = empty_patterns && consumer.spec.subspecs.empty?
           if empty

@@ -17,10 +17,10 @@ module Pod
       end
 
       it "returns the creation date of more Pods" do
-        sets = [@set, @source.search_by_name('libPusher').first ]
+        sets = [@set, @source.search_by_name('libPusher').first]
         expected = {
-          "JSONKit"=> Time.parse('2011-09-12 10:49:04 +0200'),
-          "libPusher"=> Time.parse('2012-02-01 17:05:58 +0100'),
+          "JSONKit" => Time.parse('2011-09-12 10:49:04 +0200'),
+          "libPusher" => Time.parse('2012-02-01 17:05:58 +0100'),
         }
         @stats.creation_dates(sets).should == expected
       end
@@ -45,7 +45,7 @@ module Pod
 
       it "returns nil for GitHub based methods if the Pod is not hosted by GitHub" do
         VCR.use_cassette('Specification::Set::Statistics', :record => :new_episodes) do
-          Specification.any_instance.stubs(:source).returns({:git => 'example.com/repo.git'})
+          Specification.any_instance.stubs(:source).returns({ :git => 'example.com/repo.git' })
           @stats.github_watchers(@set).should  == nil
           @stats.github_forks(@set).should     == nil
           @stats.github_pushed_at(@set).should == nil
@@ -82,7 +82,7 @@ module Pod
           :gh_forks    => 423,
           :pushed_at   => "2012-07-12T17:36:21Z",
           :gh_date     => Time.now
-        }}
+        } }
         @cache_file = temporary_directory + 'cache_file.yaml'
         File.open(@cache_file, 'w') { |f| f.write(YAML.dump(@cache_hash)) }
         @stats.cache_file = @cache_file
@@ -100,7 +100,7 @@ module Pod
       end
 
       it "saves the cache after computing the creation date of many sets" do
-        sets = [@set, @source.search_by_name('libPusher').first ]
+        sets = [@set, @source.search_by_name('libPusher').first]
         @stats.creation_dates(sets)
         cache_hash = YAML.load(@cache_file.read)
         cache_hash['JSONKit'][:creation_date].should == Time.parse('2011-09-12 10:49:04 +0200')
@@ -109,7 +109,7 @@ module Pod
 
       it "saves the cache only one time cache after computing the creation date of many sets" do
         @stats.expects(:save_cache).once
-        sets = [@set, @source.search_by_name('libPusher').first ]
+        sets = [@set, @source.search_by_name('libPusher').first]
         @stats.creation_dates(sets)
       end
 
@@ -122,7 +122,7 @@ module Pod
 
       before do
         @repo_fixture = { 'watchers' => 2771, 'forks' => 423, 'pushed_at' => "2012-07-12T17:36:21Z" }
-        File.open(@cache_file, 'w') { |f| f.write(YAML.dump({ 'JSONKit' => {}})) }
+        File.open(@cache_file, 'w') { |f| f.write(YAML.dump({ 'JSONKit' => {} })) }
         GitHub.expects(:repo).with('https://github.com/johnezang/JSONKit.git').returns(@repo_fixture)
       end
 

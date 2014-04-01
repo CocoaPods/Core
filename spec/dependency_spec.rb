@@ -39,7 +39,6 @@ module Pod
         dep.should.be.local
       end
 
-
       it "raises if initialized with an external source and requirements are provided" do
         should.raise Informative do
           Dependency.new("cocoapods", "1.0", :git => "git://github.com/cocoapods/cocoapods")
@@ -119,7 +118,7 @@ module Pod
       #--------------------------------------#
 
       it "preserves the external source on duplication" do
-        dep = Dependency.new('bananas', :podspec => 'bananas' )
+        dep = Dependency.new('bananas', :podspec => 'bananas')
         dep.dup.external_source.should == { :podspec => 'bananas' }
       end
 
@@ -165,7 +164,7 @@ module Pod
       end
 
       it "is not compatible with another if the external sources differ" do
-        dep1 = Dependency.new('bananas', :podspec => 'bananas' )
+        dep1 = Dependency.new('bananas', :podspec => 'bananas')
         dep2 = Dependency.new('bananas', '1.9')
         dep1.compatible?(dep2).should.be.false
       end
@@ -221,7 +220,7 @@ module Pod
 
       it "it preserves the external source while merging with another dependency" do
         dep1 = Dependency.new('bananas', '1.9')
-        dep2 = Dependency.new('bananas', :podspec => 'bananas' )
+        dep2 = Dependency.new('bananas', :podspec => 'bananas')
         result = dep1.merge(dep2)
         result.should.be.external
         result.requirement.as_list.should == ['= 1.9']

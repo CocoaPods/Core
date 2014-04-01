@@ -20,7 +20,7 @@ module Pod
 
     describe "#pods" do
       it "returns the available Pods" do
-        @sut.pods.should == ["BananaLib", "Faulty_spec", "IncorrectPath", "JSONKit", "JSONSpec"]
+        @sut.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
       end
 
       it "returns nil if no Pods could be found" do
@@ -131,18 +131,18 @@ module Pod
 
     describe "#specification_contents" do
       it "returns the specification given the name and the version" do
-          spec = @sut.specification_contents('JSONKit', "1.4")
-          spec.should.match /s.name += 'JSONKit'\n +s.version += '1.4'/
+        spec = @sut.specification_contents('JSONKit', "1.4")
+        spec.should.match /s.name += 'JSONKit'\n +s.version += '1.4'/
       end
 
       it "returns nil if the Pod is unknown" do
-          spec = @sut.specification_contents('Unknown_Pod', "1.4")
-          spec.should.be.nil
+        spec = @sut.specification_contents('Unknown_Pod', "1.4")
+        spec.should.be.nil
       end
 
       it "returns nil if the version of the Pod doesn't exists" do
-          spec = @sut.specification_contents('JSONKit', "0.99.0")
-          spec.should.be.nil
+        spec = @sut.specification_contents('JSONKit', "0.99.0")
+        spec.should.be.nil
       end
 
       it "raises if the name of the Pod is not provided" do

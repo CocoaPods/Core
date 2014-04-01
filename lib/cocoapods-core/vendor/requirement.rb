@@ -137,7 +137,7 @@ module Pod::Vendor
       instance_variable_set "@#{ivar}", val
     end
 
-    fix_syck_default_key_in_requirements
+      fix_syck_default_key_in_requirements
     end
 
     def init_with(coder) # :nodoc:
@@ -162,8 +162,8 @@ module Pod::Vendor
       requirements.all? { |op, rv| (OPS[op] || OPS["="]).call version, rv }
     end
 
-    alias :=== :satisfied_by?
-    alias :=~ :satisfied_by?
+    alias_method :===, :satisfied_by?
+    alias_method :=~, :satisfied_by?
 
     ##
     # True if the requirement will not always match the latest version.
@@ -171,7 +171,7 @@ module Pod::Vendor
     def specific?
       return true if @requirements.length > 1 # GIGO, > 1, > 2 is silly
 
-      not %w[> >=].include? @requirements.first.first # grab the operator
+      not %w(> >=).include? @requirements.first.first # grab the operator
     end
 
     def to_s # :nodoc:

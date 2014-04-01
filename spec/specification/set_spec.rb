@@ -15,7 +15,7 @@ module Pod
 
       it "returns the versions available for the pod ordered from highest to lowest" do
         @set.versions.should.all { |v| v.is_a?(Version) }
-        @set.versions.map(&:to_s).should == %w[1.6.2 1.6.1 1.6 1.3.3 1.3.2 1.3.1 1.3 1.2.3 1.2.2 1.2.1 1.2 1.1 1.0]
+        @set.versions.map(&:to_s).should == %w(1.6.2 1.6.1 1.6 1.3.3 1.3.2 1.3.1 1.3 1.2.3 1.2.2 1.2.1 1.2 1.1 1.0)
       end
 
       it "returns the highest version available for the pod" do
@@ -32,9 +32,9 @@ module Pod
         @set.required_by(Dependency.new('CocoaLumberjack', '> 1.1'), 'Spec')
         @set.required_by(Dependency.new('CocoaLumberjack', '~> 1.2.0'), 'Spec')
         @set.required_by(Dependency.new('CocoaLumberjack'), 'Spec')
-        lambda {
-          @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0' ), 'Spec')
-        }.should.raise Informative
+        lambda do
+          @set.required_by(Dependency.new('CocoaLumberjack', '< 1.0'), 'Spec')
+        end.should.raise Informative
       end
 
       it "raises if the required version doesn't exist" do
@@ -113,19 +113,19 @@ module Pod
       end
 
       it "returns the sources where a podspec is available" do
-        @set.sources.map(&:name).should == %w| master test_repo |
+        @set.sources.map(&:name).should == %w(master test_repo)
       end
 
       it "returns all the available versions sorted from biggest to lowest" do
-        @set.versions.map(&:to_s).should == %w| 999.999.999 1.5pre 1.4 |
+        @set.versions.map(&:to_s).should == %w(999.999.999 1.5pre 1.4)
       end
 
       it "returns all the available versions by source sorted from biggest to lowest" do
         hash = {}
         @set.versions_by_source.each { |source, versions| hash[source.name] = versions.map(&:to_s) }
-        hash['master'].should == %w| 1.5pre 1.4 |
-        hash['test_repo'].should == %w| 999.999.999 1.4 |
-        hash.keys.sort.should == %w| master test_repo |
+        hash['master'].should == %w(1.5pre 1.4)
+        hash['test_repo'].should == %w(999.999.999 1.4)
+        hash.keys.sort.should == %w(master test_repo)
       end
 
       it "returns the specification from the `master` source for the required version" do

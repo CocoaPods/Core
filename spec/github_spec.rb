@@ -46,7 +46,7 @@ module Pod
       it "sets the user agent" do
         VCR.use_cassette('GitHub', :record => :new_episodes) do
           url = 'https://api.github.com/repos/CocoaPods/CocoaPods'
-          headers = {'User-Agent' => 'CocoaPods'}
+          headers = { 'User-Agent' => 'CocoaPods' }
           response = stub(:body => '{}', :ok? => true)
           REST.expects(:get).with(url, headers).returns(response)
           repo = GitHub.repo("http://github.com/CocoaPods/CocoaPods")

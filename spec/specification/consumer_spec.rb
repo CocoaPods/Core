@@ -29,7 +29,7 @@ module Pod
 
       it "raises if the specification does not supports the given platform" do
         platform = Platform.new(:ios, '4.3')
-        e = lambda {Specification::Consumer.new(@spec, platform)}.should.raise StandardError
+        e = lambda { Specification::Consumer.new(@spec, platform) }.should.raise StandardError
         e.message.should.match /not compatible with iOS 4.3/
       end
     end
@@ -73,81 +73,81 @@ module Pod
       #----------------#
 
       it "allows to specify the frameworks" do
-        @spec.framework = %w[ QuartzCore CoreData ]
-        @consumer.frameworks.should == %w[ QuartzCore CoreData ]
+        @spec.framework = %w(QuartzCore CoreData)
+        @consumer.frameworks.should == %w(QuartzCore CoreData)
       end
 
       it "allows to specify a single framework" do
         @spec.framework = 'QuartzCore'
-        @consumer.frameworks.should == %w[ QuartzCore ]
+        @consumer.frameworks.should == %w(QuartzCore)
       end
 
       it "inherits the frameworks of the parent" do
         @spec.framework = 'QuartzCore'
         @subspec.framework = 'CoreData'
-        @subspec_consumer.frameworks.should == %w[ QuartzCore CoreData ]
+        @subspec_consumer.frameworks.should == %w(QuartzCore CoreData)
       end
 
       #------------------#
 
       it "allows to specify the weak frameworks" do
-        @spec.weak_frameworks = %w[ Twitter iAd ]
-        @consumer.weak_frameworks.should == %w[ Twitter iAd ]
+        @spec.weak_frameworks = %w(Twitter iAd)
+        @consumer.weak_frameworks.should == %w(Twitter iAd)
       end
 
       it "allows to specify a single weak framework" do
         @spec.weak_framework = 'Twitter'
-        @consumer.weak_frameworks.should == %w[ Twitter ]
+        @consumer.weak_frameworks.should == %w(Twitter)
       end
 
       it "inherits the weak frameworks of the parent" do
         @spec.weak_framework    = 'Twitter'
         @subspec.weak_framework = 'iAd'
-        @subspec_consumer.weak_frameworks.should == %w[ Twitter iAd ]
+        @subspec_consumer.weak_frameworks.should == %w(Twitter iAd)
       end
 
       #------------------#
 
       it "allows to specify the libraries" do
         @spec.libraries = 'z', 'xml2'
-        @consumer.libraries.should  == %w[ z xml2 ]
+        @consumer.libraries.should  == %w(z xml2)
       end
 
       it "allows to specify a single library" do
         @spec.library = 'z'
-        @consumer.libraries.should  == %w[ z ]
+        @consumer.libraries.should  == %w(z)
       end
 
       it "inherits the libraries from the parent" do
         @spec.library    = 'z'
         @subspec.library = 'xml2'
-        @subspec_consumer.libraries.should == %w[ z xml2 ]
+        @subspec_consumer.libraries.should == %w(z xml2)
       end
 
       #------------------#
 
       it "allows to specify compiler flags" do
-        @spec.compiler_flags = %w[ -Wdeprecated-implementations -Wunused-value ]
-        @consumer.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @spec.compiler_flags = %w(-Wdeprecated-implementations -Wunused-value)
+        @consumer.compiler_flags.should == %w(-Wdeprecated-implementations -Wunused-value)
       end
 
       it "allows to specify a single compiler flag" do
         @spec.compiler_flag = '-Wdeprecated-implementations'
-        @consumer.compiler_flags.should == %w[ -Wdeprecated-implementations ]
+        @consumer.compiler_flags.should == %w(-Wdeprecated-implementations)
       end
 
       it "inherits the compiler flags from the parent" do
         @spec.compiler_flag = '-Wdeprecated-implementations'
         @subspec.compiler_flag = '-Wunused-value'
-        @subspec_consumer.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @subspec_consumer.compiler_flags.should == %w(-Wdeprecated-implementations -Wunused-value)
       end
 
       it "merges the compiler flags so values for platforms can be specified" do
         @spec.compiler_flags = '-Wdeprecated-implementations'
         @spec.ios.compiler_flags = '-Wunused-value'
-        @consumer.compiler_flags.should == %w[ -Wdeprecated-implementations -Wunused-value ]
+        @consumer.compiler_flags.should == %w(-Wdeprecated-implementations -Wunused-value)
         osx_consumer = Specification::Consumer.new(@spec, :osx)
-        osx_consumer.compiler_flags.should == %w[ -Wdeprecated-implementations ]
+        osx_consumer.compiler_flags.should == %w(-Wdeprecated-implementations)
       end
 
       #------------------#
@@ -179,7 +179,16 @@ module Pod
       end
 
       it "allows to specify the contents of the prefix header as an array" do
-        @spec.prefix_header_contents = '#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>'
+        @spec.prefix_header_contents = ['#import <UIKit/UIKit.h>', '#import <Foundation/Foundation.h>']
+        @consumer.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
+      end
+
+      it "strips the indentation of the prefix headers" do
+        headers = <<-DESC
+          #import <UIKit/UIKit.h>
+          #import <Foundation/Foundation.h>
+        DESC
+        @spec.prefix_header_contents = headers
         @consumer.prefix_header_contents.should == "#import <UIKit/UIKit.h>\n#import <Foundation/Foundation.h>"
       end
 
@@ -240,40 +249,40 @@ module Pod
       end
 
       it "doesn't inherits the files patterns from the parent" do
-        @spec.source_files = [ "lib_classes/**/*" ]
-        @subspec.source_files = [ "subspec_classes/**/*" ]
-        @subspec_consumer.source_files.should == [ "subspec_classes/**/*" ]
+        @spec.source_files = ["lib_classes/**/*"]
+        @subspec.source_files = ["subspec_classes/**/*"]
+        @subspec_consumer.source_files.should == ["subspec_classes/**/*"]
       end
 
       it "wraps strings in an array" do
         @spec.source_files = "lib_classes/**/*"
-        @consumer.source_files.should == [ "lib_classes/**/*" ]
+        @consumer.source_files.should == ["lib_classes/**/*"]
       end
 
       #------------------#
 
       it "returns the source files" do
-        @spec.source_files = [ "lib_classes/**/*" ]
-        @consumer.source_files.should == [ "lib_classes/**/*" ]
+        @spec.source_files = ["lib_classes/**/*"]
+        @consumer.source_files.should == ["lib_classes/**/*"]
       end
 
       #------------------#
 
       it "returns the public headers files" do
-        @spec.public_header_files = [ "include/**/*" ]
-        @consumer.public_header_files.should == [ "include/**/*" ]
+        @spec.public_header_files = ["include/**/*"]
+        @consumer.public_header_files.should == ["include/**/*"]
       end
 
       it "returns the public headers files" do
-        @spec.private_header_files = [ "private/**/*" ]
-        @consumer.private_header_files.should == [ "private/**/*" ]
+        @spec.private_header_files = ["private/**/*"]
+        @consumer.private_header_files.should == ["private/**/*"]
       end
 
       #------------------#
 
       it "returns the frameworks bundles" do
-        @spec.vendored_frameworks = [ "MyFramework.framework", "MyOtherFramework.framework" ]
-        @consumer.vendored_frameworks.should == [ "MyFramework.framework", "MyOtherFramework.framework" ]
+        @spec.vendored_frameworks = ["MyFramework.framework", "MyOtherFramework.framework"]
+        @consumer.vendored_frameworks.should == ["MyFramework.framework", "MyOtherFramework.framework"]
       end
 
       #------------------#
@@ -374,18 +383,18 @@ module Pod
       end
 
       it "returns the dependencies on other Pods for the activated platform" do
-        @consumer.dependencies.should == [ Dependency.new('AFNetworking') ]
+        @consumer.dependencies.should == [Dependency.new('AFNetworking')]
       end
 
       it "inherits the dependencies of the parent" do
         @subspec_consumer.dependencies.sort.should == [
-          Dependency.new('AFNetworking'), Dependency.new('libPusher', '1.0') ]
+          Dependency.new('AFNetworking'), Dependency.new('libPusher', '1.0')]
       end
 
       it "takes into account the dependencies specified for a platform" do
         osx_consumer = Specification::Consumer.new(@spec, :osx)
         osx_consumer.dependencies.sort.should == [
-          Dependency.new('AFNetworking'), Dependency.new('MagicalRecord') ]
+          Dependency.new('AFNetworking'), Dependency.new('MagicalRecord')]
       end
 
     end
@@ -415,11 +424,11 @@ module Pod
       describe "#value_for_attribute" do
 
         it "takes into account inheritance" do
-          @subspec_consumer.frameworks.should == ["spec_framework", "subspec_framework"]
+          @subspec_consumer.frameworks.should == %w(spec_framework subspec_framework)
         end
 
         it "takes into account multiplatform values" do
-          @consumer.source_files.should == ["spec_files", "ios_files"]
+          @consumer.source_files.should == %w(spec_files ios_files)
           osx_consumer = Specification::Consumer.new(@spec, :osx)
           osx_consumer.source_files.should == ["spec_files"]
         end
@@ -441,13 +450,13 @@ module Pod
         it "handles root specs" do
           attr = Specification::DSL.attributes[:source_files]
           value = @consumer.send(:value_with_inheritance, @spec, attr)
-          value.should == ["spec_files", "ios_files"]
+          value.should == %w(spec_files ios_files)
         end
 
         it "takes into account the value of the parent if needed" do
           attr = Specification::DSL.attributes[:frameworks]
           value = @consumer.send(:value_with_inheritance, @subspec, attr)
-          value.should ==  ["spec_framework", "subspec_framework"]
+          value.should ==  %w(spec_framework subspec_framework)
         end
 
         it "doesn't inherits value of the parent if the attribute is not inherited" do
@@ -472,7 +481,7 @@ module Pod
         it "takes into account the multi-platform values" do
           attr = Specification::DSL.attributes[:source_files]
           value = @consumer.send(:raw_value_for_attribute, @spec, attr)
-          value.should ==  ["spec_files", "ios_files"]
+          value.should ==  %w(spec_files ios_files)
         end
       end
 
@@ -503,12 +512,12 @@ module Pod
         it "concatenates the values of attributes contained in an array" do
           attr = Specification::DSL::Attribute.new(:test, { :container => Array })
           result = @consumer.send(:merge_values, attr, 'CoreGraphics', 'CoreData')
-          result.should == ['CoreGraphics', 'CoreData']
+          result.should == %w(CoreGraphics CoreData)
         end
 
         it "handles hashes while merging values" do
           attr = Specification::DSL::Attribute.new(:test, { :container => Hash })
-          result = @consumer.send(:merge_values, attr, {:value1 => '1'}, {:value2 => '2'})
+          result = @consumer.send(:merge_values, attr, { :value1 => '1' }, { :value2 => '2' })
           result.should == {
             :value1 => '1',
             :value2 => '2',
@@ -517,18 +526,18 @@ module Pod
 
         it "merges the values of the keys of hashes contained in an array" do
           attr = Specification::DSL::Attribute.new(:test, { :container => Hash })
-          value = {:resources => ['A', 'B']}
-          value_to_mege = {:resources => 'C'}
+          value = { :resources => %w(A B) }
+          value_to_mege = { :resources => 'C' }
           result = @consumer.send(:merge_values, attr, value, value_to_mege)
-          result.should == {:resources => ['A', 'B', 'C']}
+          result.should == { :resources => %w(A B C) }
         end
 
         it "merges the values of the keys of hashes contained in a string" do
           attr = Specification::DSL::Attribute.new(:test, { :container => Hash })
-          value = {'OTHER_LDFLAGS' => '-lObjC'}
-          value_to_mege = {'OTHER_LDFLAGS' => '-framework SystemConfiguration'}
+          value = { 'OTHER_LDFLAGS' => '-lObjC' }
+          value_to_mege = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
           result = @consumer.send(:merge_values, attr, value, value_to_mege)
-          result.should == {'OTHER_LDFLAGS' => '-lObjC -framework SystemConfiguration'}
+          result.should == { 'OTHER_LDFLAGS' => '-lObjC -framework SystemConfiguration' }
         end
 
         it "returns the original value if the attribute is a string" do

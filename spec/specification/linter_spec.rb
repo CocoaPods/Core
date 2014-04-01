@@ -2,6 +2,10 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Linter do
+    before do
+      WebMock::API.stub_request(:head ,/banana-corp.local/).to_return(:status => 200)
+    end
+
     describe 'In general' do
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
@@ -26,7 +30,7 @@ module Pod
       it "catches specification load errors" do
         podspec = "Pod::Spec.new do |s|; error; end"
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.write(podspec) }
+        File.open(path, 'w') { |f| f.write(podspec) }
         lambda { Specification.from_file(path) }.should.raise Pod::DSLError
         lambda { Specification::Linter.new(path) }.should.not.raise
       end
@@ -34,7 +38,7 @@ module Pod
       it "includes an error indicating that the specification could not be loaded" do
         podspec = "Pod::Spec.new do |s|; error; end"
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.write(podspec) }
+        File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -58,7 +62,7 @@ module Pod
         @linter.spec.source_files = '/Absolute'
         @linter.lint
         @linter.results.count.should == 1
-        @linter.results.first.platforms.map(&:to_s).sort.should == %w[ios osx]
+        @linter.results.first.platforms.map(&:to_s).sort.should == %w(ios osx)
       end
 
       before do
@@ -69,8 +73,8 @@ module Pod
       end
 
       it "returns the results of the lint" do
-        results = @linter.results.map{ |r| r.type.to_s }.sort.uniq
-        results.should == %w[ error warning ]
+        results = @linter.results.map { |r| r.type.to_s }.sort.uniq
+        results.should == %w(error warning)
       end
 
       it "returns the errors results of the lint" do
@@ -172,7 +176,7 @@ module Pod
         podspec = "# some comment\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         FileUtils.cp @podspec_path, path
-        File.open(path, 'a') {|f| f.puts(podspec) }
+        File.open(path, 'a') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -183,7 +187,7 @@ module Pod
         valid_text = File.read(@podspec_path)
         podspec = "# some comment\n" << valid_text
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') {|f| f.puts(podspec) }
+        File.open(path, 'w') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 1
@@ -194,7 +198,7 @@ module Pod
         podspec = "#define\n" * 30
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         FileUtils.cp @podspec_path, path
-        File.open(path, 'a') {|f| f.puts(podspec) }
+        File.open(path, 'a') { |f| f.puts(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
         linter.results.count.should == 0
@@ -232,82 +236,117 @@ module Pod
       end
 
       it "checks the license type for the sample value" do
-        @spec.stubs(:license).returns({:type => '(example)'})
+        @spec.stubs(:license).returns({ :type => '(example)' })
         message_should_include('license', 'type')
       end
 
       it "checks whether the license type is empty" do
-        @spec.stubs(:license).returns({:type => ' '})
+        @spec.stubs(:license).returns({ :type => ' ' })
         message_should_include('license', 'type')
       end
 
       #------------------#
 
       it "checks for the example source" do
-        @spec.stubs(:source).returns({:git => 'http://EXAMPLE.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://EXAMPLE.git', :tag => '1.0' })
         message_should_include('source', 'example')
       end
 
       it "checks that the commit is not specified as `HEAD`" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns({:git => 'http://repo.git', :commit => 'HEAD'})
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :commit => 'HEAD' })
         message_should_include('source', 'HEAD')
       end
 
-      it "checks that the version is included in the git tag" do
+      it "checks that the version is included in the git tag when the version is a string" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
-        @spec.stubs(:source).returns({:git => 'http://repo.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => '1.0' })
+        message_should_include('git', 'version', 'tag')
+      end
+      
+      it "checks that the version is included in the git tag  when the version is a Version" do
+        @spec.stubs(:version).returns(Version.new '1.0.1')
+        @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => (Version.new '1.0') })
         message_should_include('git', 'version', 'tag')
       end
 
       it "checks that Github repositories use the `https` form (for compatibility)" do
-        @spec.stubs(:source).returns({:git => 'http://github.com/repo.git', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'http://github.com/repo.git', :tag => '1.0' })
         message_should_include('Github', 'https')
       end
 
       it "checks that Github repositories end in .git (for compatibility)" do
-        @spec.stubs(:source).returns({:git => 'https://github.com/repo', :tag => '1.0'})
+        @spec.stubs(:source).returns({ :git => 'https://github.com/repo', :tag => '1.0' })
         message_should_include('Github', '.git')
+      end
+
+      it "does not warn for Github repositories with OAuth authentication" do
+        @spec.stubs(:source).returns({ :git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "does not warn for local repositories with spaces" do
+        @spec.stubs(:source).returns({ :git => '/Users/kylef/Projects X', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "does not warn for SSH repositories" do
+        @spec.stubs(:source).returns({ :git => 'git@bitbucket.org:kylef/test.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "does not warn for SSH repositories on Github" do
+        @spec.stubs(:source).returns({ :git => 'git@github.com:kylef/test.git', :tag => '1.0' })
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it "performs checks for Gist Github repositories" do
+        @spec.stubs(:source).returns({ :git => "git://gist.github.com/2823399.git", :tag => "1.0" })
+        message_should_include('Github', 'https')
       end
 
       it "checks the source of 0.0.1 specifications for commit or a tag" do
         @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns({:git => 'www.banana-empire.git'})
+        @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
         message_should_include('sources', 'either', 'tag', 'commit')
       end
 
       it "checks the source of a non 0.0.1 specifications for a tag" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
-        @spec.stubs(:source).returns({:git => 'www.banana-empire.git'})
+        @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
         message_should_include('sources', 'specify a tag.')
       end
 
       #------------------#
 
       it "checks that frameworks do not end with a .framework extension" do
-        @spec.frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        @spec.frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('framework', 'name')
       end
 
       it "checks that weak frameworks do not end with a .framework extension" do
-        @spec.weak_frameworks = %w{ AddressBook.framework QuartzCore.framework }
+        @spec.weak_frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('weak framework', 'name')
       end
 
       #------------------#
 
       it "checks that libraries do not end with a .a extension" do
-        @spec.libraries = %w{z.a xml.a}
+        @spec.libraries = %w(z.a xml.a)
         message_should_include('library', 'name')
       end
 
       it "checks that libraries do not end with a .dylib extension" do
-        @spec.libraries = %w{ssl.dylib z.dylib}
+        @spec.libraries = %w(ssl.dylib z.dylib)
         message_should_include('library', 'name')
       end
 
       it "checks that libraries do not begin with lib" do
-        @spec.libraries = %w{libz libssl}
+        @spec.libraries = %w(libz libssl)
         message_should_include('library', 'name')
       end
 
@@ -316,6 +355,54 @@ module Pod
       it "checks if the compiler flags disable warnings" do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
         message_should_include('warnings', 'disabled')
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.include('Warnings')
+        message.should.include('disabled')
+      end
+
+      it "checks if any file patterns is absolute" do
+        @spec.source_files = '/Classes'
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.include('patterns')
+        message.should.include('relative')
+        message.should.include('source_files')
+      end
+
+      it "checks if a specification is empty" do
+        consumer = Specification::Consumer
+        consumer.any_instance.stubs(:source_files).returns([])
+        consumer.any_instance.stubs(:resources).returns({})
+        consumer.any_instance.stubs(:preserve_paths).returns([])
+        consumer.any_instance.stubs(:subspecs).returns([])
+        consumer.any_instance.stubs(:dependencies).returns([])
+        consumer.any_instance.stubs(:vendored_libraries).returns([])
+        consumer.any_instance.stubs(:vendored_frameworks).returns([])
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.include('spec is empty')
+      end
+
+      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
+        @spec.requires_arc = nil
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.include('`requires_arc` should be specified')
+      end
+
+      it "checks if the pre install hook has been defined" do
+        @spec.pre_install do; end
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.match /pre install hook.*deprecated/
+      end
+
+      it "checks if the post install hook has been defined" do
+        @spec.post_install do; end
+        @linter.lint
+        message = @linter.results.first.message
+        message.should.match /post install hook.*deprecated/
       end
     end
   end

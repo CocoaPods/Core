@@ -45,7 +45,7 @@ module Pod
           @types          = options.delete(:types)          { [String] }
 
           unless options.empty?
-            raise StandardError, "Unrecognized options: #{options} for #{to_s}"
+            raise StandardError, "Unrecognized options: #{options} for #{self}"
           end
         end
 
@@ -195,7 +195,7 @@ module Pod
           return if value.nil?
           unless supported_types.any? { |klass| value.class == klass }
             raise StandardError, "Non acceptable type `#{value.class}` for "\
-              "#{to_s}. Allowed values: `#{types.inspect}`"
+              "#{self}. Allowed values: `#{types.inspect}`"
           end
         end
 
@@ -217,7 +217,7 @@ module Pod
             value.keys.each do |key|
               unless allowed_keys.include?(key)
                 raise StandardError, "Unknown key `#{key}` for "\
-                  "#{to_s}. Allowed keys: `#{allowed_keys.inspect}`"
+                  "#{self}. Allowed keys: `#{allowed_keys.inspect}`"
               end
             end
           end

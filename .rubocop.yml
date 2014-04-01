@@ -29,6 +29,12 @@ BracesAroundHashParameters:
 Encoding:
   Enabled: false
 
+TrailingComma:
+  EnforcedStyleForMultiline: comma
+
+FileName:
+  Enabled: false
+
 #------------------------------------------------------------------------------
 # Needs fixing
 #------------------------------------------------------------------------------
@@ -39,7 +45,7 @@ CyclomaticComplexity:
 
 ClassLength:
   Max: 100
-  Max: 300
+  Max: 310
 
 MethodLength:
   Max: 10

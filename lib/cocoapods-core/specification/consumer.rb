@@ -37,7 +37,7 @@ module Pod
         @platform_name = platform.is_a?(Symbol) ? platform : platform.name
 
         unless spec.supported_on_platform?(platform)
-          raise StandardError, "#{to_s} is not compatible with #{platform}."
+          raise StandardError, "#{self} is not compatible with #{platform}."
         end
       end
 
@@ -347,7 +347,10 @@ module Pod
       # @return [String] the prefix header.
       #
       def _prepare_prefix_header_contents(value)
-        value.is_a?(Array) ? value * "\n" : value
+        if value
+          value = value.join("\n") if value.is_a?(Array)
+          value.strip_heredoc.chomp
+        end
       end
 
       # Ensures that the file patterns of the resource bundles are contained in

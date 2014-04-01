@@ -52,8 +52,8 @@ module Pod
     end
 
     it "supports the author attribute specified as an array of strings and hashes" do
-      @spec.authors = [ 'Darth Vader',
-                        { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' } ]
+      @spec.authors = ['Darth Vader',
+                       { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }]
       @spec.authors.should == {
         'Darth Vader' => nil,
         'Wookiee' => 'wookiee@aggrrttaaggrrt.com'
@@ -63,6 +63,11 @@ module Pod
     it "returns the social media url" do
       @spec.social_media_url = 'www.example.com'
       @spec.social_media_url.should == 'www.example.com'
+    end
+
+    it "returns the docset url" do
+      @spec.docset_url = 'http://example.org/KFData/1.0.0/xcode-docset.atom'
+      @spec.docset_url.should == 'http://example.org/KFData/1.0.0/xcode-docset.atom'
     end
 
     it "supports the license attribute specified as a string" do
@@ -109,7 +114,7 @@ module Pod
         Line2
       DESC
       @spec.description = desc
-      @spec.description.should == "Line1\nLine2\n"
+      @spec.description.should == "Line1\nLine2"
     end
 
     it "returns the screenshots" do
@@ -122,8 +127,11 @@ module Pod
       @spec.screenshots.should == ['www.example.com/img1.png']
     end
 
-    it "returns the prepare_command" do
-      @spec.prepare_command = 'ruby prepare_script.rb'
+    it "returns the prepare command stripping the indentation" do
+      command = <<-DESC
+        ruby prepare_script.rb
+      DESC
+      @spec.prepare_command = command
       @spec.prepare_command.should == 'ruby prepare_script.rb'
     end
 

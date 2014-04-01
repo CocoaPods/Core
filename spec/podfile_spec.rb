@@ -80,9 +80,8 @@ module Pod
       end
 
       it "returns all dependencies of all targets combined" do
-        @podfile.dependencies.map(&:name).sort.should == %w[ ASIHTTPRequest JSONKit Reachability SSZipArchive ]
+        @podfile.dependencies.map(&:name).sort.should == %w(ASIHTTPRequest JSONKit Reachability SSZipArchive)
       end
-
 
       it "indicates if the pod install hook was executed" do
         Podfile.new {}.post_install!(:an_installer).should.be == false
@@ -129,10 +128,10 @@ module Pod
           pod 'ASIHTTPRequest'
         end
         podfile.to_hash.should == {
-          "target_definitions"=> [
+          "target_definitions" => [
             "name" => "Pods",
-            "link_with_first_target"=>true,
-            "dependencies"=>["ASIHTTPRequest"]
+            "link_with_first_target" => true,
+            "dependencies" => ["ASIHTTPRequest"]
           ]
         }
       end
@@ -144,10 +143,10 @@ module Pod
           set_arc_compatibility_flag!
         end
         podfile.to_hash.should == {
-          "target_definitions"=>[{ "name" => "Pods", "link_with_first_target"=>true }],
-          "workspace"=>"MyApp.xcworkspace",
-          "generate_bridge_support"=>true,
-          "set_arc_compatibility_flag"=>true
+          "target_definitions" => [{ "name" => "Pods", "link_with_first_target" => true }],
+          "workspace" => "MyApp.xcworkspace",
+          "generate_bridge_support" => true,
+          "set_arc_compatibility_flag" => true
         }
       end
 
@@ -159,15 +158,15 @@ module Pod
           end
         end
         podfile.to_hash.should == {
-          "target_definitions"=>[
+          "target_definitions" => [
             {
               "name" => "Pods",
-              "link_with_first_target"=>true,
-              "dependencies"=>["ASIHTTPRequest"],
-              "children"=> [
+              "link_with_first_target" => true,
+              "dependencies" => ["ASIHTTPRequest"],
+              "children" => [
                 {
                   "name" => "sub-target",
-                  "dependencies"=> ["JSONKit"]
+                  "dependencies" => ["JSONKit"]
                 }
               ]
             }
@@ -197,7 +196,7 @@ module Pod
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF
-        YAML::load(podfile.to_yaml).should == YAML::load(expected)
+        YAML.load(podfile.to_yaml).should == YAML.load(expected)
       end
 
       it "includes inhibit warnings per pod" do
@@ -210,9 +209,9 @@ module Pod
             "name" => "Pods",
             "link_with_first_target" => true,
             "inhibit_warnings" => {
-              "for_pods" => [ "ASIHTTPRequest" ]
+              "for_pods" => ["ASIHTTPRequest"]
             },
-            "dependencies" => ["ASIHTTPRequest", "ObjectiveSugar"]
+            "dependencies" => %w(ASIHTTPRequest ObjectiveSugar)
           ]
         }
       end
@@ -243,12 +242,7 @@ module Pod
       it "can be initialized from a ruby DSL file" do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
         ruby_podfile.target_definitions.keys.should == ["Pods"]
-        ruby_podfile.dependencies.map(&:name).should == [
-          "SSZipArchive",
-          "ASIHTTPRequest",
-          "Reachability",
-          "ASIWebPageRequest"
-        ]
+        ruby_podfile.dependencies.map(&:name).should == %w(SSZipArchive ASIHTTPRequest Reachability ASIWebPageRequest)
       end
 
       it "handles the `podfile` extension" do

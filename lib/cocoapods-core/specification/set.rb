@@ -66,7 +66,7 @@ module Pod
           message = "Unable to satisfy the following requirements:\n"
           dependencies_by_requirer_name.each do |name, dependencies|
             dependencies.each do |dep|
-              message << "- `#{dep.to_s}` required by `#{name}`"
+              message << "- `#{dep}` required by `#{name}`"
             end
           end
           raise Informative, message
@@ -188,7 +188,7 @@ module Pod
           'name' => name,
           'versions' => versions,
           'highest_version' => highest_version.to_s,
-          'highest_version_spec' => highest_version_spec_path.to_s
+          'highest_version_spec' => highest_version_spec_path.to_s,
         }
       end
 

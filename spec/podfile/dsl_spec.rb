@@ -10,22 +10,22 @@ module Pod
           pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
         end
         podfile.dependencies.size.should == 2
-        podfile.dependencies.find {|d| d.root_name == 'ASIHTTPRequest'}.should == Dependency.new('ASIHTTPRequest')
-        podfile.dependencies.find {|d| d.root_name == 'SSZipArchive'}.should   == Dependency.new('SSZipArchive', '>= 0.1')
+        podfile.dependencies.find { |d| d.root_name == 'ASIHTTPRequest' }.should == Dependency.new('ASIHTTPRequest')
+        podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should   == Dependency.new('SSZipArchive', '>= 0.1')
       end
 
       it "raises if no name is specified for a Pod" do
-        lambda { Podfile.new do
+        lambda do Podfile.new do
           pod
-        end }.should.raise Podfile::StandardError
+        end end.should.raise Podfile::StandardError
       end
 
       it "raises if an inlide podspec is specified" do
-        lambda { Podfile.new do
+        lambda do Podfile.new do
           pod do |s|
             s.name = 'mypod'
           end
-        end }.should.raise Podfile::StandardError
+        end end.should.raise Podfile::StandardError
       end
 
       it "it can use use the dependencies of a podspec" do
@@ -34,7 +34,7 @@ module Pod
           platform :ios
           podspec :path => banalib_path
         end
-        podfile.dependencies.map(&:name).should == %w[ monkey ]
+        podfile.dependencies.map(&:name).should == %w(monkey)
       end
 
       it "allows to specify a child target definition" do
@@ -109,7 +109,7 @@ module Pod
 
       it "allows to specify multiple user targets a Target definition should link with" do
         podfile = Podfile.new { link_with 'app_target', 'test_target' }
-        podfile.target_definitions["Pods"].link_with.should == ['app_target', 'test_target']
+        podfile.target_definitions["Pods"].link_with.should == %w(app_target test_target)
       end
 
       it "allows to specify an array of user targets a Target definition should link with" do

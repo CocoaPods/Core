@@ -20,8 +20,8 @@
 
 require 'pathname'
 ROOT = Pathname.new(File.expand_path('../../', __FILE__))
-$:.unshift((ROOT + 'lib').to_s)
-$:.unshift((ROOT + 'spec').to_s)
+$LOAD_PATH.unshift((ROOT + 'lib').to_s)
+$LOAD_PATH.unshift((ROOT + 'spec').to_s)
 
 require 'bundler/setup'
 require 'bacon'
@@ -88,9 +88,9 @@ module Bacon
 
     old_run_requirement = instance_method(:run_requirement)
     define_method(:run_requirement) do |description, spec|
-    ::Pod::CoreUI.output = ''
-    ::Pod::CoreUI.warnings = ''
-    old_run_requirement.bind(self).call(description, spec)
+      ::Pod::CoreUI.output = ''
+      ::Pod::CoreUI.warnings = ''
+      old_run_requirement.bind(self).call(description, spec)
     end
   end
 end
