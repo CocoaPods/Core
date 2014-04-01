@@ -5,9 +5,9 @@
 ##### Enhancements
 
 * Check social_media_url changed from default value
-  [Richard Lee][dlackty]
+  [Richard Lee](https://github.com/dlackty)
   [#67](https://github.com/CocoaPods/Core/issues/67)
-  [#85](https://github.com/CocoaPods/Core/pulls/85)
+  [#85](https://github.com/CocoaPods/Core/pull/85)
 
 ## 0.31.1
 
