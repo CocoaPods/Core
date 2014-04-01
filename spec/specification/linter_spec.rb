@@ -263,7 +263,7 @@ module Pod
         @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => '1.0' })
         message_should_include('git', 'version', 'tag')
       end
-      
+
       it "checks that the version is included in the git tag  when the version is a Version" do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns({ :git => 'http://repo.git', :tag => (Version.new '1.0') })
@@ -319,6 +319,13 @@ module Pod
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns({ :git => 'www.banana-empire.git' })
         message_should_include('sources', 'specify a tag.')
+      end
+
+      #------------------#
+
+      it "checks if the social_media_url has been changed from default" do
+        @spec.stubs(:social_media_url).returns('https://twitter.com/EXAMPLE')
+        message_should_include('social media URL', 'default')
       end
 
       #------------------#
