@@ -340,6 +340,20 @@ module Pod
         end
       end
 
+      # Performs validations related to the `social_media_url` attribute.
+      #
+      def _validate_social_media_url(s)
+        if s =~ %r{https://twitter.com/EXAMPLE}
+          warning "The social media URL has not been updated from default"
+        end
+      end
+
+      #-----------------------------------------------------------------------#
+
+      # @!group All specs validation helpers
+
+      private
+
       # Performs validations related to the `compiler_flags` attribute.
       #
       def _validate_compiler_flags(flags)

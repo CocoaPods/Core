@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Check social_media_url changed from default value
+  [Richard Lee](https://github.com/dlackty)
+  [#67](https://github.com/CocoaPods/Core/issues/67)
+  [#85](https://github.com/CocoaPods/Core/pull/85)
+
 ## 0.31.1
 
 ##### Enhancements
@@ -36,4 +45,3 @@
 Introduction of the Changelog.
 
 [irrationalfab]: https://github.com/irrationalfab
-
