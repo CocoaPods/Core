@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.31.1
 
 ##### Enhancements
 
@@ -12,7 +12,7 @@
 
 ##### Bug Fixes
 
-* Fix linting source of a spec for certain URLs.
+* Fix linting for Pods which declare a private repo as the source.  
   [Boris Bügling](https://github.com/neonichu)
   [#82](https://github.com/CocoaPods/Core/issues/82)
 
