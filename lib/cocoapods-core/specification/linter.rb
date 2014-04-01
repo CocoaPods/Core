@@ -333,15 +333,14 @@ module Pod
         require 'uri'
 
         if git = s[:git]
-          if git =~ /^#{URI::regexp}$/
-            git_uri = URI.parse(git)
-            if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
-              unless git.end_with?('.git')
-                warning "Github repositories should end in `.git`."
-              end
-              unless git_uri.scheme == 'https'
-                warning "Github repositories should use `https` link."
-              end
+          return unless git =~ /^#{URI.regexp}$/
+          git_uri = URI.parse(git)
+          if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
+            unless git.end_with?('.git')
+              warning "Github repositories should end in `.git`."
+            end
+            unless git_uri.scheme == 'https'
+              warning "Github repositories should use `https` link."
             end
           end
         end
