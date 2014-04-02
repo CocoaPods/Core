@@ -13,6 +13,11 @@
   [Joshua Kalpin][Kapin]
   [#50](https://github.com/CocoaPods/Core/pull/50)
 
+* Added `deprecated` and `deprecated_in_favor_of` attributes to Specification
+  DSL.
+  [Paul Young](https://github.com/paulyoung)
+  [#87](https://github.com/CocoaPods/Core/pull/87)
+
 ## 0.31.1
 
 ##### Enhancements
