@@ -135,5 +135,15 @@ module Pod
       @spec.prepare_command.should == 'ruby prepare_script.rb'
     end
 
+    it "returns whether the Pod has been deprecated" do
+      @spec.deprecated = true
+      @spec.deprecated.should == true
+    end
+
+    it "returns the name of the Pod that this one has been deprecated in favor of" do
+      @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+      @spec.deprecated_in_favor_of.should == 'NewMoreAwesomePod'
+    end
+
   end
 end

@@ -76,6 +76,16 @@ module Pod
         @spec.prepare_command = "ruby build_files.rb"
         @spec.attributes_hash["prepare_command"].should == "ruby build_files.rb"
       end
+
+      it "allows to specify whether the Pod has been deprecated" do
+        @spec.deprecated = true
+        @spec.attributes_hash["deprecated"].should == true
+      end
+
+      it "allows to specify the name of the Pod that this one has been deprecated in favor of" do
+        @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+        @spec.attributes_hash["deprecated_in_favor_of"].should == 'NewMoreAwesomePod'
+      end
     end
 
     #-----------------------------------------------------------------------------#
