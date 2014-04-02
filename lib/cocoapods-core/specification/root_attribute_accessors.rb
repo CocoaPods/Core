@@ -147,6 +147,19 @@ module Pod
           command.strip_heredoc.chomp if command
         end
 
+        # @return [Bool] Whether the Pod has been deprecated.
+        #
+        def deprecated
+          attributes_hash["deprecated"]
+        end
+
+        # @return [String] The name of the Pod that this one has been
+        #         deprecated in favor of.
+        #
+        def deprecated_in_favor_of
+          attributes_hash["deprecated_in_favor_of"]
+        end
+
         #---------------------------------------------------------------------#
 
         private

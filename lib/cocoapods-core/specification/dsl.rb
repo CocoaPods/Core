@@ -405,6 +405,38 @@ module Pod
       #
       root_attribute :prepare_command
 
+      #------------------#
+
+      # @!method deprecated=(flag)
+      #
+      #   Whether the library has been deprecated.
+      #
+      #   @example
+      #
+      #     spec.deprecated = true
+      #
+      #   @param [Bool] flag
+      #           whether the library has been deprecated.
+      #
+      root_attribute :deprecated, {
+        :types => [TrueClass, FalseClass],
+        :default_value => false,
+      }
+
+      # @!method deprecated_in_favor_of=(deprecated_in_favor_of)
+      #
+      #   The name of the Pod that this one has been deprecated in favor of.
+      #
+      #   @example
+      #
+      #     spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+      #
+      #   @param  [String] deprecated_in_favor_of
+      #           the name of the Pod that this one has been deprecated in
+      #           favor of.
+      #
+      root_attribute :deprecated_in_favor_of
+
       #-----------------------------------------------------------------------#
 
       # @!group Platform
