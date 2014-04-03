@@ -295,25 +295,6 @@ module Pod
         end
       end
 
-      # Converts the keys of the given hash to a string.
-      #
-      # @todo   Removed if not used by `resources_bundle`
-      #
-      # @param  [Object] value
-      #         the value that needs to be stripped from the Symbols.
-      #
-      # @return [Hash] the hash with the strings instead of the keys.
-      #
-      # def convert_keys_to_symbol(value)
-      #   return unless value
-      #   result = {}
-      #   value.each do |key, subvalue|
-      #     subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
-      #     result[key.to_sym] = subvalue
-      #   end
-      #   result
-      # end
-
       # @!group Preparing Values
       #-----------------------------------------------------------------------#
 
