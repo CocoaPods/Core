@@ -24,6 +24,7 @@
 * Added logic to handle subspecs and platform scopes to linter check of 
   the `requries_arc` attribute.  
   [Fabio Pelosin][irrationalfab]
+  [CocoaPods#2005](https://github.com/CocoaPods/CocoaPods/issues/2005)
 
 
 ## 0.31.1
