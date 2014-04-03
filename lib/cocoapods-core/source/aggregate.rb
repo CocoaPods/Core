@@ -102,7 +102,7 @@ module Pod
       # @see    Source#search
       #
       def search(dependency)
-        sources = all.select { |s| !s.search(dependency).nil? }
+        sources = all.select { |s| s.search(dependency) }
         unless sources.empty?
           Specification::Set.new(dependency.root_name, sources)
         end

@@ -194,11 +194,8 @@ module Pod
       to_hash.to_yaml
     end
 
-    #-------------------------------------------------------------------------#
-
-    public
-
     # @!group Class methods
+    #-------------------------------------------------------------------------#
 
     # Initializes a podfile from the file with the given path.
     #

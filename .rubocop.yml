@@ -75,3 +75,13 @@ SingleLineMethods:
 
 TrivialAccessors:
   Enabled: false
+
+NonNilCheck:
+  Enabled: false
+
+AllCops:
+  Include:
+    - Rakefile
+  Exclude:
+    - lib/cocoapods-core/vendor/**
+    - spec/**

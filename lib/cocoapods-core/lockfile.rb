@@ -434,7 +434,7 @@ module Pod
       #
       def generate_checksums(specs)
         checksums = {}
-        specs.select { |spec| !spec.defined_in_file.nil? }.each do |spec|
+        specs.select { |spec| spec.defined_in_file }.each do |spec|
           checksums[spec.root.name] = spec.checksum
         end
         checksums

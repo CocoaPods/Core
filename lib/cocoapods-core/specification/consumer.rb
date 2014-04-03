@@ -157,8 +157,6 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      # @!group Dependencies
-
       # @return [Array<Dependency>] the dependencies on other Pods.
       #
       def dependencies
@@ -168,9 +166,9 @@ module Pod
         end
       end
 
+      # Raw values need to be prepared as soon as they are read so they can be
+      # safely merged to support multi platform attributes and inheritance
       #-----------------------------------------------------------------------#
-
-      private
 
       # Returns the value for the attribute with the given name for the
       # specification. It takes into account inheritance, multi-platform
@@ -297,10 +295,6 @@ module Pod
         end
       end
 
-      #-----------------------------------------------------------------------#
-
-      private
-
       # Converts the keys of the given hash to a string.
       #
       # @todo   Removed if not used by `resources_bundle`
@@ -320,14 +314,8 @@ module Pod
       #   result
       # end
 
-      #-----------------------------------------------------------------------#
-
-      private
-
       # @!group Preparing Values
-      #
-      # Raw values need to be prepared as soon as they are read so they can be
-      # safely merged to support multi platform attributes and inheritance
+      #-----------------------------------------------------------------------#
 
       # @return [String] the name of the prepare hook for this attribute.
       #
