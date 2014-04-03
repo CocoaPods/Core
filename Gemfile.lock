@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/irrationalfab/PrettyBacon.git
-  revision: eaf7e6c786fd5ccc6fb88e943bf7c5e6c27569a3
+  revision: 1eeb06f7d381acd65414b86b42fdf3538faae01c
   branch: master
   specs:
-    prettybacon (0.0.1)
+    prettybacon (0.0.2)
       bacon (~> 1.2)
 
 PATH
