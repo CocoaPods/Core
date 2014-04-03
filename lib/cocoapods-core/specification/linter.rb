@@ -398,7 +398,8 @@ end
       # #
       # def _prepare_deployment_target(deployment_target)
       #   unless @define_for_platforms.count == 1
-      #     raise StandardError, "The deployment target must be defined per platform like `s.ios.deployment_target = '5.0'`."
+      #     raise StandardError, "The deployment target must be defined " \
+      #       "per platform like `s.ios.deployment_target = '5.0'`."
       #   end
       #   Version.new(deployment_target)
       # end

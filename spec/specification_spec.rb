@@ -232,7 +232,8 @@ module Pod
         @spec = Spec.new do |s|
           s.name = "Pod"
           s.version = "1.0"
-          s.subspec 'Subspec' do |sp| end
+          s.subspec 'Subspec' do |sp|
+          end
         end
         @subspec = @spec.subspecs.first
       end
@@ -322,13 +323,13 @@ module Pod
 
       it "it executes the pre install hook and returns whether it was executed" do
         @spec.pre_install!(nil, nil).should == FALSE
-        @spec.pre_install do; end
+        @spec.pre_install {; }
         @spec.pre_install!(nil, nil).should == TRUE
       end
 
       it "it executes the post install hook and returns whether it was executed" do
         @spec.post_install!(nil).should == FALSE
-        @spec.post_install do; end
+        @spec.post_install {; }
         @spec.post_install!(nil).should == TRUE
       end
     end
@@ -436,7 +437,8 @@ module Pod
         spec = Spec.new do |s|
           s.name = "Pod"
           s.version = "1.0"
-          s.subspec 'Subspec' do |sp| end
+          s.subspec 'Subspec' do |sp|
+          end
         end
         should.raise StandardError do
           spec.subspecs.first.defined_in_file = 'Some-file'

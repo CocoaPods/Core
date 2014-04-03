@@ -35,7 +35,7 @@ module Pod
     #       spec.license      = { :type => 'BSD' }
     #       spec.homepage     = 'https://github.com/tonymillion/Reachability'
     #       spec.authors      = { 'Tony Million' => 'tonymillion@gmail.com' }
-    #       spec.summary      = 'ARC and GCD Compatible Reachability Class for iOS and OS X. Drop in replacement for Apple Reachability.'
+    #       spec.summary      = 'ARC and GCD Compatible Reachability Class for iOS and OS X.'
     #       spec.source       = { :git => 'https://github.com/tonymillion/Reachability.git', :tag => 'v3.1.0' }
     #       spec.source_files = 'Reachability.{h,m}'
     #       spec.framework    = 'SystemConfiguration'
@@ -1044,7 +1044,10 @@ module Pod
       #
       #   @example
       #
-      #     spec.resource_bundles = { 'MapBox' => ['MapView/Map/Resources/*.png'], 'OtherResources' => ['MapView/Map/OtherResources/*.png'] }
+      #     spec.resource_bundles = {
+      #         'MapBox' => ['MapView/Map/Resources/*.png'],
+      #         'OtherResources' => ['MapView/Map/OtherResources/*.png']
+      #       }
       #
       #   @param  [Hash{String=>String}] resource_bundles
       #           A hash where the keys are the names of the resource bundles

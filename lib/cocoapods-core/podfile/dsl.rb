@@ -141,13 +141,13 @@ module Pod
       # If a podspec is available from another source outside of the library’s
       # repo. Consider, for instance, a podspec available via HTTP:
       #
-      #     pod 'JSONKit', :podspec => 'https://raw.github.com/gist/1346394/1d26570f68ca27377a27430c65841a0880395d72/JSONKit.podspec'
+      #     pod 'JSONKit', :podspec => 'https://example.com/JSONKit.podspec'
       #
       #
       # @note       This method allow a nil name and the raises to be more
       #             informative.
       #
-      # @note       Support for inline podspecs has been deprecated.
+        # @note       Support for inline podspecs has been deprecated.
       #
       # @return     [void]
       #
