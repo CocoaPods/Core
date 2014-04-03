@@ -373,7 +373,7 @@ module Pod
 
       it "leaves the name of the target, to link with, to be automatically resolved" do
         target = @podfile.target_definitions["Pods"]
-        target.link_with.should == nil
+        target.link_with.should.nil?
       end
 
       it "returns the names of the explicit targets to link with" do

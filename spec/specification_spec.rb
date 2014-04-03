@@ -323,13 +323,13 @@ module Pod
 
       it "it executes the pre install hook and returns whether it was executed" do
         @spec.pre_install!(nil, nil).should == FALSE
-        @spec.pre_install {; }
+        @spec.pre_install { ; }
         @spec.pre_install!(nil, nil).should == TRUE
       end
 
       it "it executes the post install hook and returns whether it was executed" do
         @spec.post_install!(nil).should == FALSE
-        @spec.post_install {; }
+        @spec.post_install { ; }
         @spec.post_install!(nil).should == TRUE
       end
     end

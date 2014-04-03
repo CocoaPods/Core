@@ -77,7 +77,7 @@ module Pod
 
       it "returns nil if it can't find the initialization file" do
         lockfile = Lockfile.from_file(temporary_directory + 'Podfile.lock_not_existing')
-        lockfile.should == nil
+        lockfile.should.nil?
       end
 
       it "returns the file in which is defined" do

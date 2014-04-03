@@ -83,14 +83,14 @@ module Pod
 
       it "stores a block to run before the installation" do
         value = ''
-        @spec.post_install do value << 'modified' end
+        @spec.post_install { value << 'modified' }
         @spec.post_install!(nil)
         value.should == 'modified'
       end
 
       it "stores a block to run after the installation" do
         value = ''
-        @spec.post_install do value << 'modified' end
+        @spec.post_install { value << 'modified' }
         @spec.post_install!(nil)
         value.should == 'modified'
       end

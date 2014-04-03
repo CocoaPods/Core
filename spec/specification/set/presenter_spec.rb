@@ -89,7 +89,7 @@ module Pod
       end
 
       it "returns the subspecs" do
-        @presenter.subspecs.should == nil
+        @presenter.subspecs.should.nil?
 
         set = Spec::Set.new('RestKit', @source)
         @presenter = Spec::Set::Presenter.new(set)

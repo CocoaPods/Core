@@ -52,7 +52,7 @@ module Pod
       it "returns nil if a specification can't be found" do
         dep = Dependency.new('Does-not-exist')
         set = @sut.search(dep)
-        set.should == nil
+        set.should.nil?
       end
 
       it "returns the directories where the repos are defined" do

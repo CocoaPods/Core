@@ -55,19 +55,19 @@ module Pod
       end
 
       it "converts an array" do
-        value = ["Value_1", "Value_2"]
+        value = %w(Value_1 Value_2)
         result = YAMLConverter.convert(value)
         result.should == "- Value_1\n- Value_2\n"
       end
 
       it "converts an hash" do
-        value = {"Key" => "Value"}
+        value = { "Key" => "Value" }
         result = YAMLConverter.convert(value)
         result.should == "Key: Value\n"
       end
 
       it "converts an hash which contains and array as one of the values" do
-        value = {"Key" => ["Value_1", "Value_2"] }
+        value = { "Key" => %w(Value_1 Value_2) }
         result = YAMLConverter.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
@@ -77,7 +77,7 @@ module Pod
       end
 
       it "converts an hash which contains and array as one of the values" do
-        value = {"Key" => {"Subkey" => ["Value_1", "Value_2"] } }
+        value = { "Key" => { "Subkey" => %w(Value_1 Value_2) } }
         result = YAMLConverter.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
@@ -101,29 +101,29 @@ module Pod
 
       describe "#sorted_array_with_hint" do
         it "sorts an array according to its string representation" do
-          values = ["JSONKit", "BananaLib"]
+          values = %w(JSONKit BananaLib)
           result = YAMLConverter.send(:sorted_array, values)
-          result.should == ["BananaLib", "JSONKit"]
+          result.should == %w(BananaLib JSONKit)
         end
 
         it "sorts an array containing strings and hashes according to its string representation" do
           values = ["JSONKit", "BananaLib", { "c_hash_key" => "a_value" }]
           result = YAMLConverter.send(:sorted_array, values)
-          result.should == ["BananaLib", {"c_hash_key"=>"a_value"}, "JSONKit"]
+          result.should == ["BananaLib", { "c_hash_key" => "a_value" }, "JSONKit"]
         end
 
         it "sorts an array with a given hint" do
-          values = ["non-hinted", "second", "first"]
-          hint = ["first", "second", "hinted-missing"]
+          values = %w(non-hinted second first)
+          hint = %w(first second hinted-missing)
           result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
-          result.should == ["first", "second", "non-hinted"]
+          result.should == %w(first second non-hinted)
         end
 
         it "sorts an array with a given nil hint" do
-          values = ["JSONKit", "BananaLib"]
+          values = %w(JSONKit BananaLib)
           hint = nil
           result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
-          result.should == ["BananaLib", "JSONKit"]
+          result.should == %w(BananaLib JSONKit)
         end
       end
 
@@ -148,7 +148,7 @@ module Pod
         end
 
         it "sorts arrays using the first element ignoring case" do
-          value = ['String_2','String_1']
+          value = %w(String_2 String_1)
           result = YAMLConverter.send(:sorting_string, value)
           result.should == "string_2"
         end

@@ -72,7 +72,7 @@ module Pod
       end
 
       it "returns that it is not safe to convert a specification to a hash if there is hook defined" do
-        @sut.pre_install do; end
+        @sut.pre_install { ; }
         @sut.safe_to_hash?.should.be.false
       end
     end

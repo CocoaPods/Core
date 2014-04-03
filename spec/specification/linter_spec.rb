@@ -3,7 +3,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 module Pod
   describe Specification::Linter do
     before do
-      WebMock::API.stub_request(:head ,/banana-corp.local/).to_return(:status => 200)
+      WebMock::API.stub_request(:head , /banana-corp.local/).to_return(:status => 200)
     end
 
     describe 'In general' do
