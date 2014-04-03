@@ -219,7 +219,7 @@ module Pod
         end
 
         def specification_path
-          raise StandardError, "specification_path"
+          raise StandardError, 'specification_path'
         end
 
         def versions

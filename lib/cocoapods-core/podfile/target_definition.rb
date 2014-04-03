@@ -100,8 +100,8 @@ module Pod
       #         name.
       #
       def label
-        if root? && name == "Pods"
-          "Pods"
+        if root? && name == 'Pods'
+          'Pods'
         elsif exclusive? || parent.nil?
           "Pods-#{name}"
         else

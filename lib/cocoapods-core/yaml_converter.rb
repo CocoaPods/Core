@@ -111,7 +111,7 @@ module Pod
           processed_key = process_according_to_class(key)
           case key_value
           when Array, Hash
-            key_partial_yaml = processed.lines.map { |line| "  #{line}" } * ""
+            key_partial_yaml = processed.lines.map { |line| "  #{line}" } * ''
             key_lines << "#{processed_key}:\n#{key_partial_yaml}"
           else
             key_lines << "#{processed_key}: #{processed}"
@@ -179,7 +179,7 @@ module Pod
       # @return [String] A string useful to compare the value with other ones.
       #
       def sorting_string(value)
-        return "" unless value
+        return '' unless value
         case value
         when String then value.downcase
         when Symbol then sorting_string(value.to_s)

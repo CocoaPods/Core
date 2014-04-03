@@ -65,8 +65,8 @@ module Pod
         line_numer = trace_line.split(':')[1].to_i - 1
         return m unless line_numer
         lines      = File.readlines(dsl_path.to_s)
-        indent     = " #  "
-        indicator  = indent.dup.gsub("#", ">")
+        indent     = ' #  '
+        indicator  = indent.dup.gsub('#', '>')
         first_line = (line_numer.zero?)
         last_line  = (line_numer == (lines.count - 1))
 
@@ -78,7 +78,7 @@ module Pod
         m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
         m << "\n" unless m.end_with?("\n")
         m << "#{indent}-------------------------------------------\n"
-        m << ""
+        m << ''
         @message = m
       end
       @message

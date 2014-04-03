@@ -49,7 +49,7 @@ module Pod
           spec = consumer.spec
           declared = false
           loop do
-            declared = true unless spec.attributes_hash["requires_arc"].nil?
+            declared = true unless spec.attributes_hash['requires_arc'].nil?
             declared = true unless spec.attributes_hash[consumer.platform_name.to_s].nil?
             spec = spec.parent
             break unless spec

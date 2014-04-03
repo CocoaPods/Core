@@ -158,7 +158,7 @@ module Pod
         end
 
         unless name
-          raise StandardError, "A dependency requires a name."
+          raise StandardError, 'A dependency requires a name.'
         end
 
         current_target_definition.store_pod(name, *requirements)

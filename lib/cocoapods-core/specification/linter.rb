@@ -92,17 +92,17 @@ module Pod
         return unless @file
         text = @file.read
         if text =~ /config\..?os.?/
-          error "`config.ios?` and `config.osx?` are deprecated."
+          error '`config.ios?` and `config.osx?` are deprecated.'
         end
         if text =~ /clean_paths/
-          error "clean_paths are deprecated (use preserve_paths)."
+          error 'clean_paths are deprecated (use preserve_paths).'
         end
 
         all_lines_count = text.lines.count
         comments_lines_count = text.scan(/^\s*#\s+/).length
         comments_ratio = comments_lines_count.fdiv(all_lines_count)
         if comments_lines_count > 20 && comments_ratio > 0.2
-          warning "Comments must be deleted."
+          warning 'Comments must be deleted.'
         end
         if text.lines.first =~ /^\s*#\s+/
           warning "Comments placed at the top of the specification must be " \
@@ -203,20 +203,20 @@ module Pod
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
-            error "The name of the spec should match the name of the file."
+            error 'The name of the spec should match the name of the file.'
           end
 
           if spec.root.name =~ /\s/
-            error "The name of a spec should not contain whitespace."
+            error 'The name of a spec should not contain whitespace.'
           end
         end
       end
 
       def _validate_version(v)
         if v.to_s.empty?
-          error "A version is required."
+          error 'A version is required.'
         elsif v <= Version::ZERO
-          error "The version of the spec should be higher than 0."
+          error 'The version of the spec should be higher than 0.'
         end
       end
 
@@ -228,7 +228,7 @@ module Pod
             "(max 140 characters)."
         end
         if s =~ /A short description of/
-          warning "The summary is not meaningful."
+          warning 'The summary is not meaningful.'
         end
       end
 
@@ -236,13 +236,13 @@ module Pod
       #
       def _validate_description(d)
         if d =~ /An optional longer description of/
-          warning "The description is not meaningful."
+          warning 'The description is not meaningful.'
         end
         if d == spec.summary
-          warning "The description is equal to the summary."
+          warning 'The description is equal to the summary.'
         end
         if d.length < spec.summary.length
-          warning "The description is shorter than the summary."
+          warning 'The description is shorter than the summary.'
         end
       end
 
@@ -250,7 +250,7 @@ module Pod
       #
       def _validate_homepage(h)
         if h =~ %r{http://EXAMPLE}
-          warning "The homepage has not been updated from default"
+          warning 'The homepage has not been updated from default'
         end
       end
 
@@ -258,7 +258,7 @@ module Pod
       #
       def _validate_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error "A framework should only be specified by its name"
+          error 'A framework should only be specified by its name'
         end
       end
 
@@ -266,7 +266,7 @@ module Pod
       #
       def _validate_weak_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error "A weak framework should only be specified by its name"
+          error 'A weak framework should only be specified by its name'
         end
       end
 
@@ -274,7 +274,7 @@ module Pod
       #
       def _validate_libraries(libs)
         if libraries_invalid?(libs)
-          error "A library should only be specified by its name"
+          error 'A library should only be specified by its name'
         end
       end
 
@@ -283,13 +283,13 @@ module Pod
       def _validate_license(l)
         type = l[:type]
         if type.nil?
-          warning "Missing license type."
+          warning 'Missing license type.'
         end
         if type && type.gsub(' ', '').gsub("\n", '').empty?
-          warning "Invalid license type."
+          warning 'Invalid license type.'
         end
         if type && type =~ /\(example\)/
-          error "Sample license type."
+          error 'Sample license type.'
         end
       end
 
@@ -301,7 +301,7 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r{http://EXAMPLE}
-            error "The Git source still contains the example URL."
+            error 'The Git source still contains the example URL.'
           end
           if commit && commit.downcase =~ /head/
             error 'The commit of a Git source cannot be `HEAD`.'
@@ -331,10 +331,10 @@ module Pod
           git_uri = URI.parse(git)
           if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
-              warning "Github repositories should end in `.git`."
+              warning 'Github repositories should end in `.git`.'
             end
             unless git_uri.scheme == 'https'
-              warning "Github repositories should use `https` link."
+              warning 'Github repositories should use `https` link.'
             end
           end
         end
@@ -344,7 +344,7 @@ module Pod
       #
       def _validate_social_media_url(s)
         if s =~ %r{https://twitter.com/EXAMPLE}
-          warning "The social media URL has not been updated from default"
+          warning 'The social media URL has not been updated from default'
         end
       end
 

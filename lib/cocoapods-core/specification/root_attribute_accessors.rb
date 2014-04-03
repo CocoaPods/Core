@@ -11,7 +11,7 @@ module Pod
         #         names of the parents, in case of ‘sub-specifications’.
         #
         def base_name
-          attributes_hash["name"]
+          attributes_hash['name']
         end
 
         # @return [String] The name of the specification including the names of
@@ -30,7 +30,7 @@ module Pod
         #
         def version
           if root?
-            @version ||= Version.new(attributes_hash["version"])
+            @version ||= Version.new(attributes_hash['version'])
           else
             @version ||= root.version
           end
@@ -49,7 +49,7 @@ module Pod
         #   'Author'
         #
         def authors
-          authors = attributes_hash["authors"]
+          authors = attributes_hash['authors']
           if authors.is_a?(Hash)
             authors
           elsif authors.is_a?(Array)
@@ -70,13 +70,13 @@ module Pod
         # @return [String] The social media URL.
         #
         def social_media_url
-          attributes_hash["social_media_url"]
+          attributes_hash['social_media_url']
         end
 
         # @return [String] The docset URL.
         #
         def docset_url
-          attributes_hash["docset_url"]
+          attributes_hash['docset_url']
         end
 
         # @return [Hash] A hash containing the license information of the Pod.
@@ -84,7 +84,7 @@ module Pod
         # @note   The indentation is stripped from the license text.
         #
         def license
-          license = attributes_hash["license"]
+          license = attributes_hash['license']
           if license.is_a?(String)
             { :type => license }
           elsif license.is_a?(Hash)
@@ -99,20 +99,20 @@ module Pod
         # @return [String] The URL of the homepage of the Pod.
         #
         def homepage
-          attributes_hash["homepage"]
+          attributes_hash['homepage']
         end
 
         # @return [Hash{Symbol=>String}] The location from where the library
         #         should be retrieved.
         #
         def source
-          convert_keys_to_symbol(attributes_hash["source"])
+          convert_keys_to_symbol(attributes_hash['source'])
         end
 
         # @return [String] A short description of the Pod.
         #
         def summary
-          attributes_hash["summary"]
+          attributes_hash['summary']
         end
 
         # @return [String] A longer description of the Pod.
@@ -120,7 +120,7 @@ module Pod
         # @note   The indentation is stripped from the description.
         #
         def description
-          description = attributes_hash["description"]
+          description = attributes_hash['description']
           description.strip_heredoc.chomp if description
         end
 
@@ -130,34 +130,34 @@ module Pod
         # @note   The value is coerced to an array.
         #
         def screenshots
-          value = attributes_hash["screenshots"]
+          value = attributes_hash['screenshots']
           [*value]
         end
 
         # @return [String, Nil] The documentation URL of the Pod if specified.
         #
         def documentation_url
-          attributes_hash["documentation_url"]
+          attributes_hash['documentation_url']
         end
 
         # @return [String, Nil] The prepare command of the Pod if specified.
         #
         def prepare_command
-          command = attributes_hash["prepare_command"]
+          command = attributes_hash['prepare_command']
           command.strip_heredoc.chomp if command
         end
 
         # @return [Bool] Whether the Pod has been deprecated.
         #
         def deprecated
-          attributes_hash["deprecated"]
+          attributes_hash['deprecated']
         end
 
         # @return [String] The name of the Pod that this one has been
         #         deprecated in favor of.
         #
         def deprecated_in_favor_of
-          attributes_hash["deprecated_in_favor_of"]
+          attributes_hash['deprecated_in_favor_of']
         end
 
         #---------------------------------------------------------------------#

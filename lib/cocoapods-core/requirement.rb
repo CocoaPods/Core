@@ -11,7 +11,7 @@ module Pod
   #
   class Requirement < Pod::Vendor::Gem::Requirement
 
-    quoted_operators = OPS.keys.map { |k| Regexp.quote k }.join "|"
+    quoted_operators = OPS.keys.map { |k| Regexp.quote k }.join '|'
 
     # @return [Regexp] The regular expression used to validate input strings.
     #
@@ -57,13 +57,13 @@ module Pod
     # @return [Array] A tuple representing the requirement.
     #
     def self.parse(input)
-      return ["=", input] if input.is_a?(Version)
+      return ['=', input] if input.is_a?(Version)
 
       unless PATTERN =~ input.to_s
         raise ArgumentError, "Illformed requirement `#{input.inspect}`"
       end
 
-      operator = Regexp.last_match[1] || "="
+      operator = Regexp.last_match[1] || '='
       version = Version.new(Regexp.last_match[2])
       [operator, version]
     end

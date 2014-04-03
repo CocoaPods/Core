@@ -6,9 +6,8 @@ module Pod
 
     # @return [Symbol, String] the name of the SDK represented by the platform.
     #
-    def name
-      @symbolic_name
-    end
+    attr_reader :symbolic_name
+    alias_method :name, :symbolic_name
 
     # @return [Version] the deployment target of the platform.
     #
@@ -151,7 +150,7 @@ module Pod
     #
     def requires_legacy_ios_archs?
       if name == :ios
-        deployment_target && (deployment_target < Version.new("4.3"))
+        deployment_target && (deployment_target < Version.new('4.3'))
       else
         false
       end

@@ -46,7 +46,7 @@ module Pod
       self.defined_in_file = defined_in_file
       @internal_hash = internal_hash
       if block
-        default_target_def = TargetDefinition.new("Pods", self)
+        default_target_def = TargetDefinition.new('Pods', self)
         default_target_def.link_with_first_target = true
         @root_target_definitions = [default_target_def]
         @current_target_definition = default_target_def
@@ -60,7 +60,7 @@ module Pod
     #         presented to the user.
     #
     def to_s
-      "Podfile"
+      'Podfile'
     end
 
     #-------------------------------------------------------------------------#
@@ -233,7 +233,7 @@ module Pod
     def self.from_ruby(path)
       string = File.open(path, 'r:utf-8') { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
-      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+      if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')
       end
       podfile = Podfile.new(path) do
@@ -263,7 +263,7 @@ module Pod
     def self.from_yaml(path)
       string = File.open(path, 'r:utf-8') { |f| f.read }
       # Work around for Rubinius incomplete encoding in 1.9 mode
-      if string.respond_to?(:encoding) && string.encoding.name != "UTF-8"
+      if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')
       end
       hash = YAML.load(string)

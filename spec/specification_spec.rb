@@ -336,7 +336,6 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-
     describe "DSL Attribute writers" do
 
       before do

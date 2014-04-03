@@ -116,7 +116,7 @@ module Pod
     def self.peform_request(url)
       require 'rest'
       require 'json'
-      headers = { "User-Agent" => "CocoaPods" }
+      headers = { 'User-Agent' => 'CocoaPods' }
       response = REST.get(url, headers)
       body = JSON.parse(response.body)
       if response.ok?

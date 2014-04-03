@@ -5,55 +5,54 @@ AllCops:
     - lib/cocoapods-core/vendor/**
     - spec/fixtures/**
 
+# https://github.com/bbatsov/rubocop/issues/946
+NonNilCheck:
+  Enabled: false
+
+# https://github.com/bbatsov/rubocop/issues/947
+Documentation:
+  Enabled: false
+
 # Remove once the support for Ruby 1.8.7 has been phased out
 HashSyntax:
   EnforcedStyle: hash_rockets
 
-StringLiterals:
-  Enabled: false
-  EnforcedStyle: double_quotes
-
+# fail vs raise https://github.com/bbatsov/ruby-style-guide/issues/233
 SignalException:
   EnforcedStyle: only_raise
 
-ConstantName:
-  Enabled: false
-
-IfUnlessModifier:
-  Enabled: false
-
+# Warns about having a new line before the comment of the first method.
 EmptyLinesAroundBody:
   Enabled: false
 
-AsciiComments:
+# The indentation is preferred to show branching.
+IfUnlessModifier:
   Enabled: false
 
-Proc:
-  Enabled: false
-
-BracesAroundHashParameters:
-  Enabled: false
-
-Encoding:
-  Enabled: false
-
+# This can be changes as soon as rubocop can automatically fix it
 TrailingComma:
   EnforcedStyleForMultiline: comma
-
-FileName:
-  Enabled: false
 
 AssignmentInCondition:
   Enabled: false
 
-RescueException:
-  Enabled: false
-
+# Warns about class methods.
 TrivialAccessors:
   Enabled: false
 
-NonNilCheck:
+# Do not want!
+AsciiComments:
   Enabled: false
+
+#------------------------------------------------------------------------------
+
+BracesAroundHashParameters:
+  Exclude:
+    - lib/**/dsl.rb
+
+FileName:
+  Exclude:
+    - lib/cocoapods-core.rb
 
 #------------------------------------------------------------------------------
 # Needs fixing
@@ -75,37 +74,6 @@ LineLength:
   Max: 80
   Max: 120
 
-Documentation:
+RescueException:
   Enabled: false
 
-Lambda:
-  Exclude:
-    - spec/**
-
-Blocks:
-  Exclude:
-    - spec/**
-
-Semicolon:
-  Exclude:
-    - spec/**
-
-Void:
-  Exclude:
-    - spec/**
-
-UselessAssignment:
-  Exclude:
-    - spec/**
-
-AmbiguousRegexpLiteral:
-  Exclude:
-    - spec/**
-
-EmptyLines:
-  Exclude:
-    - spec/**
-
-SpaceBeforeFirstArg:
-  Exclude:
-    - spec/**

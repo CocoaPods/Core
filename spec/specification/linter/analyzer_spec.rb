@@ -76,7 +76,6 @@ module Pod
 
       #----------------------------------------#
 
-
       it "checks if the pre install hook has been defined" do
         @spec.pre_install {}
         @sut.analyze

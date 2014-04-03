@@ -1,4 +1,4 @@
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
 
 # Travis support
 #-----------------------------------------------------------------------------#
@@ -9,7 +9,7 @@ end
 
 namespace :travis do
   task :setup do
-    sh "git submodule update --init"
+    sh 'git submodule update --init'
     sh "env CFLAGS='-I#{rvm_ruby_dir}/include' bundle install --without debugging documentation"
   end
 end
@@ -22,33 +22,33 @@ namespace :spec do
     FileList["spec/#{dir}/*_spec.rb"].shuffle.join(' ')
   end
 
-  desc "Automatically run specs for updated files"
+  desc 'Automatically run specs for updated files'
   task :kick do
-    exec "bundle exec kicker -c"
+    exec 'bundle exec kicker -c'
   end
 
   task :all do
-    title "Running Unit Tests"
+    title 'Running Unit Tests'
     sh "bundle exec bacon #{specs('**')}"
 
-    title "Checking code style..."
-    Rake::Task["rubocop"].invoke
+    title 'Checking code style...'
+    Rake::Task['rubocop'].invoke
   end
 end
 
 # Bootstrap
 #-----------------------------------------------------------------------------#
 
-desc "Initializes your working copy to run the specs"
+desc 'Initializes your working copy to run the specs'
 task :bootstrap do
-  puts "Updating submodules..."
+  puts 'Updating submodules...'
   `git submodule update --init --recursive`
 
-  puts "Installing gems"
+  puts 'Installing gems'
   `bundle install`
 end
 
-desc "Run all specs"
+desc 'Run all specs'
 task :spec => 'spec:all'
 
 # Coverage
@@ -56,10 +56,10 @@ task :spec => 'spec:all'
 
 desc 'Generates & opens the coverage report'
 task :coverage do
-  title "Generating Coverage Report"
+  title 'Generating Coverage Report'
   sh "bundle exec bacon --quiet #{specs('**')}"
   puts "\nCoverage report available at `coverage/index.html`"
-  sh "open coverage/index.html"
+  sh 'open coverage/index.html'
 end
 
 # Rubocop
@@ -73,7 +73,7 @@ task :rubocop do
     result = cli.run(FileList['lib/**/*.rb'].exclude('lib/cocoapods-core/vendor/**/*').to_a)
     abort('RuboCop failed!') unless result == 0
   else
-    puts "[!] Ruby > 1.9 is required to run style checks"
+    puts '[!] Ruby > 1.9 is required to run style checks'
   end
 end
 
@@ -84,8 +84,8 @@ task :default => :spec
 def title(title)
   cyan_title = "\033[0;36m#{title}\033[0m"
   puts
-  puts "-" * 80
+  puts '-' * 80
   puts cyan_title
-  puts "-" * 80
+  puts '-' * 80
   puts
 end

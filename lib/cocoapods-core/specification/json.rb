@@ -17,7 +17,7 @@ module Pod
       def to_hash
         hash = attributes_hash.dup
         unless subspecs.empty?
-          hash["subspecs"] = subspecs.map { |spec| spec.to_hash }
+          hash['subspecs'] = subspecs.map { |spec| spec.to_hash }
         end
         hash
       end

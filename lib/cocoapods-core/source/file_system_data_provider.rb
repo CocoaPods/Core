@@ -30,7 +30,7 @@ module Pod
       # @return [String] The user friendly type of the source.
       #
       def type
-        "file system"
+        'file system'
       end
 
       # @return [Array<String>] The list of the name of all the Pods known to
@@ -55,7 +55,7 @@ module Pod
       #
       def versions(name)
         return nil unless specs_dir
-        raise ArgumentError, "No name" unless name
+        raise ArgumentError, 'No name' unless name
         pod_dir = specs_dir + name
         return unless pod_dir.exist?
         pod_dir.children.map do |v|
@@ -107,8 +107,8 @@ module Pod
       # @return [Pathname] The path of the specification.
       #
       def specification_path(name, version)
-        raise ArgumentError, "No name" unless name
-        raise ArgumentError, "No version" unless version
+        raise ArgumentError, 'No name' unless name
+        raise ArgumentError, 'No version' unless version
         return nil unless specs_dir
         path = specs_dir + name + version.to_s
         specification_path = path + "#{name}.podspec.json"

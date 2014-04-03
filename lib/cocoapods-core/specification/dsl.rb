@@ -79,9 +79,8 @@ module Pod
       #   @param  [String] name
       #           the name of the pod.
       #
-      root_attribute :name, {
-        :required => true,
-      }
+      root_attribute :name,
+                     :required => true
 
       #------------------#
 
@@ -97,9 +96,8 @@ module Pod
       #   @param  [String] version
       #           the version of the Pod.
       #
-      root_attribute :version, {
-        :required => true,
-      }
+      root_attribute :version,
+                     :required => true
 
       #------------------#
 
@@ -124,12 +122,11 @@ module Pod
       #   @param  [String, Hash{String=>String}] authors
       #           the list of the authors of the library and their emails.
       #
-      root_attribute :authors, {
-        :types       => [String, Array, Hash],
-        :container   => Hash,
-        :required    => true,
-        :singularize => true,
-      }
+      root_attribute :authors,
+                     :types       => [String, Array, Hash],
+                     :container   => Hash,
+                     :required    => true,
+                     :singularize => true
 
       #------------------#
 
@@ -210,11 +207,10 @@ module Pod
       #           allows to use the library (or the relative path to the file
       #           that contains it).
       #
-      root_attribute :license, {
-        :container => Hash,
-        :keys      => LICENSE_KEYS,
-        :required  => true,
-      }
+      root_attribute :license,
+                     :container => Hash,
+                     :keys      => LICENSE_KEYS,
+                     :required  => true
 
       #------------------#
 
@@ -229,9 +225,8 @@ module Pod
       #   @param  [String] homepage
       #           the URL of the homepage of the Pod.
       #
-      root_attribute :homepage, {
-        :required => true,
-      }
+      root_attribute :homepage,
+                     :required => true
 
       #------------------#
 
@@ -279,11 +274,10 @@ module Pod
       #   @param  [Hash{Symbol=>String}] source
       #           The location from where the library should be retrieved.
       #
-      root_attribute :source, {
-        :container => Hash,
-        :keys      => SOURCE_KEYS,
-        :required  => true,
-      }
+      root_attribute :source,
+                     :container => Hash,
+                     :keys      => SOURCE_KEYS,
+                     :required  => true
 
       #------------------#
 
@@ -307,9 +301,8 @@ module Pod
       #   @param  [String] summary
       #           A short description of the Pod.
       #
-      root_attribute :summary, {
-        :required => true,
-      }
+      root_attribute :summary,
+                     :required => true
 
       #------------------#
 
@@ -351,10 +344,9 @@ module Pod
       #   @param  [String] screenshots
       #           An URL for the screenshot of the Pod.
       #
-      root_attribute :screenshots, {
-        :singularize    => true,
-        :container      => Array,
-      }
+      root_attribute :screenshots,
+                     :singularize    => true,
+                     :container      => Array
 
       #------------------#
 
@@ -418,10 +410,9 @@ module Pod
       #   @param [Bool] flag
       #           whether the library has been deprecated.
       #
-      root_attribute :deprecated, {
-        :types => [TrueClass, FalseClass],
-        :default_value => false,
-      }
+      root_attribute :deprecated,
+                     :types => [TrueClass, FalseClass],
+                     :default_value => false
 
       # @!method deprecated_in_favor_of=(deprecated_in_favor_of)
       #
@@ -455,12 +446,11 @@ module Pod
 
       # @todo This currently is not used in the Ruby DSL.
       #
-      attribute :platforms, {
-        :container => Hash,
-        :keys => PLATFORMS,
-        :multi_platform => false,
-        :inherited => true,
-      }
+      attribute :platforms,
+                :container => Hash,
+                :keys => PLATFORMS,
+                :multi_platform => false,
+                :inherited => true
 
       # The platform on which this Pod is supported. Leaving this blank
       # means the Pod is supported on all platforms.
@@ -485,9 +475,9 @@ module Pod
       def platform=(args)
         name, deployment_target = args
         if name
-          attributes_hash["platforms"] = { name.to_s => deployment_target }
+          attributes_hash['platforms'] = { name.to_s => deployment_target }
         else
-          attributes_hash["platforms"] = {}
+          attributes_hash['platforms'] = {}
         end
       end
 
@@ -556,10 +546,9 @@ module Pod
 
       # @todo This currently is not used in the Ruby DSL.
       #
-      attribute :dependencies, {
-        :container => Hash,
-        :inherited => true,
-      }
+      attribute :dependencies,
+                :container => Hash,
+                :inherited => true
 
       # Any dependency on other Pods or to a ‘sub-specification’.
       #
@@ -590,22 +579,22 @@ module Pod
             "subspec"
         end
         if @parent
-          composed_name = ""
-          @parent.name.split("/").each do |component|
+          composed_name = ''
+          @parent.name.split('/').each do |component|
             composed_name << component
             if name == composed_name
               raise Informative, "A subspec can't require one of its " \
                 "parents specifications"
             else
-              composed_name << "/"
+              composed_name << '/'
             end
           end
         end
         unless version_requirements.all? { |req| req.is_a?(String) }
-          raise Informative, "Unsupported version requirements"
+          raise Informative, 'Unsupported version requirements'
         end
-        attributes_hash["dependencies"] ||= {}
-        attributes_hash["dependencies"][name] = version_requirements
+        attributes_hash['dependencies'] ||= {}
+        attributes_hash['dependencies'][name] = version_requirements
       end
 
       #------------------#
@@ -627,11 +616,10 @@ module Pod
       #   @param [Bool] flag
       #           whether the source files require ARC.
       #
-      attribute :requires_arc, {
-        :types => [TrueClass, FalseClass],
-        :default_value => false,
-        :inherited => true,
-      }
+      attribute :requires_arc,
+                :types => [TrueClass, FalseClass],
+                :default_value => false,
+                :inherited => true
 
       #------------------#
 
@@ -651,11 +639,10 @@ module Pod
       #   @param  [String, Array<String>] frameworks
       #           A list of framework names.
       #
-      attribute :frameworks, {
-        :container   => Array,
-        :singularize => true,
-        :inherited => true,
-      }
+      attribute :frameworks,
+                :container   => Array,
+                :singularize => true,
+                :inherited => true
 
       #------------------#
 
@@ -671,11 +658,10 @@ module Pod
       #   @param  [String, Array<String>] weak_frameworks
       #           A list of frameworks names.
       #
-      attribute :weak_frameworks, {
-        :container   => Array,
-        :singularize => true,
-        :inherited => true,
-      }
+      attribute :weak_frameworks,
+                :container   => Array,
+                :singularize => true,
+                :inherited => true
 
       #------------------#
 
@@ -695,11 +681,10 @@ module Pod
       #   @param  [String, Array<String>] libraries
       #           A list of library names.
       #
-      attribute :libraries, {
-        :container   => Array,
-        :singularize => true,
-        :inherited => true,
-      }
+      attribute :libraries,
+                :container   => Array,
+                :singularize => true,
+                :inherited => true
 
       #------------------#
 
@@ -714,11 +699,10 @@ module Pod
       #   @param  [String, Array<String>] flags
       #           A list of flags.
       #
-      attribute :compiler_flags, {
-        :container   => Array,
-        :singularize => true,
-        :inherited => true,
-      }
+      attribute :compiler_flags,
+                :container   => Array,
+                :singularize => true,
+                :inherited => true
 
       #------------------#
 
@@ -733,10 +717,9 @@ module Pod
       #   @param  [Hash{String => String}] value
       #           A representing an xcconfig.
       #
-      attribute :xcconfig, {
-        :container => Hash,
-        :inherited => true,
-      }
+      attribute :xcconfig,
+                :container => Hash,
+                :inherited => true
 
       #------------------#
 
@@ -760,10 +743,9 @@ module Pod
       #   @param  [String] content
       #           The contents of the prefix header.
       #
-      attribute :prefix_header_contents, {
-        :types => [Array, String],
-        :inherited => true,
-      }
+      attribute :prefix_header_contents,
+                :types => [Array, String],
+                :inherited => true
 
       #------------------#
 
@@ -784,9 +766,8 @@ module Pod
       #   @param  [String] path
       #           The path to the prefix header file.
       #
-      attribute :prefix_header_file, {
-        :inherited => true,
-      }
+      attribute :prefix_header_file,
+                :inherited => true
 
       #------------------#
 
@@ -802,9 +783,8 @@ module Pod
       #   @param  [String] dir
       #           the headers directory.
       #
-      attribute :header_dir, {
-        :inherited => true,
-      }
+      attribute :header_dir,
+                :inherited => true
 
       #------------------#
 
@@ -820,9 +800,8 @@ module Pod
       #   @param  [String] dir
       #           the directory from where to preserve the headers namespacing.
       #
-      attribute :header_mappings_dir, {
-        :inherited => true,
-      }
+      attribute :header_mappings_dir,
+                :inherited => true
 
       #-----------------------------------------------------------------------#
 
@@ -919,10 +898,9 @@ module Pod
       #   @param  [String, Array<String>] source_files
       #           the source files of the Pod.
       #
-      attribute :source_files, {
-        :container     => Array,
-        :file_patterns => true,
-      }
+      attribute :source_files,
+                :container     => Array,
+                :file_patterns => true
 
       #------------------#
 
@@ -943,10 +921,9 @@ module Pod
       #   @param  [String, Array<String>] public_header_files
       #           the public headers of the Pod.
       #
-      attribute :public_header_files, {
-        :container => Array,
-        :file_patterns => true,
-      }
+      attribute :public_header_files,
+                :container => Array,
+                :file_patterns => true
 
       #------------------#
 
@@ -968,10 +945,9 @@ module Pod
       #   @param  [String, Array<String>] private_header_files
       #           the private headers of the Pod.
       #
-      attribute :private_header_files, {
-        :container => Array,
-        :file_patterns => true,
-      }
+      attribute :private_header_files,
+                :container => Array,
+                :file_patterns => true
 
       #------------------#
 
@@ -990,11 +966,10 @@ module Pod
       #   @param  [String, Array<String>] vendored_frameworks
       #           A list of framework bundles paths.
       #
-      attribute :vendored_frameworks, {
-        :container => Array,
-        :file_patterns => true,
-        :singularize => true,
-      }
+      attribute :vendored_frameworks,
+                :container => Array,
+                :file_patterns => true,
+                :singularize => true
 
       #------------------#
 
@@ -1013,11 +988,10 @@ module Pod
       #   @param  [String, Array<String>] vendored_libraries
       #           A list of library paths.
       #
-      attribute :vendored_libraries, {
-        :container => Array,
-        :file_patterns => true,
-        :singularize => true,
-      }
+      attribute :vendored_libraries,
+                :container => Array,
+                :file_patterns => true,
+                :singularize => true
 
       #------------------#
 
@@ -1053,12 +1027,11 @@ module Pod
       #           A hash where the keys are the names of the resource bundles
       #           and the values are their relative file patterns.
       #
-      attribute :resource_bundles, {
-        :types => [String, Array],
-        :container => Hash,
-        :file_patterns => true,
-        :singularize => true,
-      }
+      attribute :resource_bundles,
+                :types => [String, Array],
+                :container => Hash,
+                :file_patterns => true,
+                :singularize => true
 
       #------------------#
 
@@ -1083,11 +1056,10 @@ module Pod
       #   @param  [String, Array<String>] resources
       #           The resources shipped with the Pod.
       #
-      attribute :resources, {
-        :container     => Array,
-        :file_patterns => true,
-        :singularize   => true,
-      }
+      attribute :resources,
+                :container     => Array,
+                :file_patterns => true,
+                :singularize   => true
 
       #------------------#
 
@@ -1107,10 +1079,9 @@ module Pod
       #   @param  [String, Array<String>] exclude_files
       #           the file patterns that the Pod should ignore.
       #
-      attribute :exclude_files, {
-        :container     => Array,
-        :file_patterns => true,
-      }
+      attribute :exclude_files,
+                :container     => Array,
+                :file_patterns => true
 
       #------------------#
 
@@ -1134,11 +1105,10 @@ module Pod
       #   @param  [String, Array<String>] preserve_paths
       #           the paths that should be not cleaned.
       #
-      attribute :preserve_paths, {
-        :container     => Array,
-        :file_patterns => true,
-        :singularize   => true,
-      }
+      attribute :preserve_paths,
+                :container     => Array,
+                :file_patterns => true,
+                :singularize   => true
 
       #-----------------------------------------------------------------------#
 
@@ -1247,9 +1217,8 @@ module Pod
       #           the name of the subspec that should be inherited as
       #           dependency.
       #
-      attribute :default_subspec, {
-        :multi_platform => false,
-      }
+      attribute :default_subspec,
+                :multi_platform => false
 
       #-----------------------------------------------------------------------#
 
