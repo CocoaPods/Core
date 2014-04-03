@@ -4,7 +4,8 @@
 
 ##### Enhancements
 
-* Added a check to the linter to ensure that the `social_media_url` has been changed from the example value.  
+* Added a check to the linter to ensure that the `social_media_url` has 
+  been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
   [#67](https://github.com/CocoaPods/Core/issues/67)
   [#85](https://github.com/CocoaPods/Core/pull/85)
@@ -20,7 +21,8 @@
 
 ##### Bug Fixes
 
-* Added logic to handle subspecs and platform scopes to linter check of the `requries_arc` attribute. 
+* Added logic to handle subspecs and platform scopes to linter check of 
+  the `requries_arc` attribute.  
   [Fabio Pelosin][irrationalfab]
 
 
