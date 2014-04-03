@@ -10,12 +10,12 @@ module Pod
         podspec_path = fixture(fixture_path)
         linter = Specification::Linter.new(podspec_path)
         @spec = linter.spec
-        @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
+        @sut = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
       end
 
       def message_should_include(*values)
-        @analyzer.analyze
-        results = @analyzer.results
+        @sut.analyze
+        results = @sut.results
         results.should.not.be.nil
 
         matched = results.select do |result|
@@ -29,7 +29,7 @@ module Pod
 
       it "checks if any file patterns is absolute" do
         @spec.source_files = '/Classes'
-        @analyzer.analyze
+        @sut.analyze
         message_should_include('patterns', 'relative', 'source_files')
       end
 
@@ -42,7 +42,7 @@ module Pod
         consumer.any_instance.stubs(:dependencies).returns([])
         consumer.any_instance.stubs(:vendored_libraries).returns([])
         consumer.any_instance.stubs(:vendored_frameworks).returns([])
-        @analyzer.analyze
+        @sut.analyze
         message_should_include('spec', 'empty')
       end
 
@@ -51,15 +51,15 @@ module Pod
       describe 'File patterns & Build settings' do
         it "that the attribute is not nil" do
           @spec.requires_arc = nil
-          @analyzer.analyze
-          @analyzer.results.should.not.be.empty?
-          @analyzer.results.first.message.should.include?('`requires_arc` should be specified')
+          @sut.analyze
+          @sut.results.should.not.be.empty?
+          @sut.results.first.message.should.include?('`requires_arc` should be specified')
         end
 
         it "supports the declaration of the attribute per platform" do
           @spec.ios.requires_arc = true
-          @analyzer.analyze
-          @analyzer.results.should.be.empty?
+          @sut.analyze
+          @sut.results.should.be.empty?
         end
 
         it "supports the declaration of the attribute in the parent" do
@@ -68,9 +68,9 @@ module Pod
             s.subspec 'SubSpec' do |sp|
             end
           end
-          @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
-          @analyzer.analyze
-          @analyzer.results.should.be.empty?
+          @sut = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
+          @sut.analyze
+          @sut.results.should.be.empty?
         end
       end
 
@@ -79,13 +79,13 @@ module Pod
 
       it "checks if the pre install hook has been defined" do
         @spec.pre_install {}
-        @analyzer.analyze
+        @sut.analyze
         message_should_include('pre install hook', 'deprecated')
       end
 
       it "checks if the post install hook has been defined" do
         @spec.post_install {}
-        @analyzer.analyze
+        @sut.analyze
         message_should_include('post install hook', 'deprecated')
       end
     end
