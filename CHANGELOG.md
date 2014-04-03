@@ -4,19 +4,25 @@
 
 ##### Enhancements
 
-* Check social_media_url changed from default value
+* Added a check to the linter to ensure that the `social_media_url` has been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
   [#67](https://github.com/CocoaPods/Core/issues/67)
   [#85](https://github.com/CocoaPods/Core/pull/85)
 
-* Partial refactor of `Pod::Linter` class.
+* Partial refactor of `Pod::Linter` class.  
   [Joshua Kalpin][Kapin]
   [#50](https://github.com/CocoaPods/Core/pull/50)
 
 * Added `deprecated` and `deprecated_in_favor_of` attributes to Specification
-  DSL.
+  DSL.  
   [Paul Young](https://github.com/paulyoung)
   [#87](https://github.com/CocoaPods/Core/pull/87)
+
+##### Bug Fixes
+
+* Added logic to handle subspecs and platform scopes to linter check of the `requries_arc` attribute. 
+  [Fabio Pelosin][irrationalfab]
+
 
 ## 0.31.1
 
