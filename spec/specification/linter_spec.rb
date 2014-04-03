@@ -345,6 +345,11 @@ module Pod
         message_should_include('weak framework', 'name')
       end
 
+      it 'checks that weak frameworks do not include unwanted characters' do
+        @spec.weak_frameworks = ["AddressBook, QuartzCore"]
+        message_should_include('weak framework', 'name')
+      end
+
       #------------------#
 
       it 'checks that libraries do not end with a .a extension' do
@@ -359,6 +364,11 @@ module Pod
 
       it 'checks that libraries do not begin with lib' do
         @spec.libraries = %w(libz libssl)
+        message_should_include('library', 'name')
+      end
+
+      it 'checks that libraries do not contain unwanted characters' do
+        @spec.libraries = ["ssl, z"]
         message_should_include('library', 'name')
       end
 
