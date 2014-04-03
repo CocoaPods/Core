@@ -27,6 +27,7 @@ module Pod
           consumer = Specification::Consumer
           consumer.any_instance.stubs(:source_files).returns([])
           consumer.any_instance.stubs(:resources).returns({})
+          consumer.any_instance.stubs(:resource_bundles).returns([])
           consumer.any_instance.stubs(:preserve_paths).returns([])
           consumer.any_instance.stubs(:subspecs).returns([])
           consumer.any_instance.stubs(:dependencies).returns([])
