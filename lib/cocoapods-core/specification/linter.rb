@@ -370,7 +370,8 @@ module Pod
       # @return [Boolean] true if a framework ends in `.framework`
       #
       def frameworks_invalid?(frameworks)
-        frameworks.any? { |framework| framework.end_with?('.framework') }
+        #frameworks.any? { |framework| framework.end_with?('.framework') }
+        frameworks.any? { |framework| framework =~ /[^a-zA-Z\d]/ }
       end
 
       # Returns whether the libraries are valid

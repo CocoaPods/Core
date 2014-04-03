@@ -335,6 +335,11 @@ module Pod
         message_should_include('framework', 'name')
       end
 
+      it 'checks that frameworks do not include unwanted characters' do
+        @spec.frameworks = ["AddressBook, QuartzCore"]
+        message_should_include('framework', 'name')
+      end
+
       it 'checks that weak frameworks do not end with a .framework extension' do
         @spec.weak_frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('weak framework', 'name')
