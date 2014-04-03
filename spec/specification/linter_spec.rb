@@ -335,8 +335,18 @@ module Pod
         message_should_include('framework', 'name')
       end
 
+      it 'checks that frameworks do not include unwanted characters' do
+        @spec.frameworks = ["AddressBook, QuartzCore"]
+        message_should_include('framework', 'name')
+      end
+
       it 'checks that weak frameworks do not end with a .framework extension' do
         @spec.weak_frameworks = %w(AddressBook.framework QuartzCore.framework)
+        message_should_include('weak framework', 'name')
+      end
+
+      it 'checks that weak frameworks do not include unwanted characters' do
+        @spec.weak_frameworks = ["AddressBook, QuartzCore"]
         message_should_include('weak framework', 'name')
       end
 
@@ -354,6 +364,11 @@ module Pod
 
       it 'checks that libraries do not begin with lib' do
         @spec.libraries = %w(libz libssl)
+        message_should_include('library', 'name')
+      end
+
+      it 'checks that libraries do not contain unwanted characters' do
+        @spec.libraries = ["ssl, z"]
         message_should_include('library', 'name')
       end
 
