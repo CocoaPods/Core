@@ -4,62 +4,55 @@ module Pod
   describe Specification::Linter::Analyzer do
 
     describe 'File patterns & Build settings' do
-
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
         podspec_path = fixture(fixture_path)
         linter = Specification::Linter.new(podspec_path)
         @spec = linter.spec
-        @sut = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
-      end
-
-      def message_should_include(*values)
-        @sut.analyze
-        results = @sut.results
-        results.should.not.be.nil
-
-        matched = results.select do |result|
-          values.all? do |value|
-            result.message.downcase.include?(value.downcase)
-          end
-        end
-
-        matched.size.should == 1
-      end
-
-      it 'checks if any file patterns is absolute' do
-        @spec.source_files = '/Classes'
-        @sut.analyze
-        message_should_include('patterns', 'relative', 'source_files')
-      end
-
-      it 'checks if a specification is empty' do
-        consumer = Specification::Consumer
-        consumer.any_instance.stubs(:source_files).returns([])
-        consumer.any_instance.stubs(:resources).returns({})
-        consumer.any_instance.stubs(:preserve_paths).returns([])
-        consumer.any_instance.stubs(:subspecs).returns([])
-        consumer.any_instance.stubs(:dependencies).returns([])
-        consumer.any_instance.stubs(:vendored_libraries).returns([])
-        consumer.any_instance.stubs(:vendored_frameworks).returns([])
-        @sut.analyze
-        message_should_include('spec', 'empty')
+        @subject = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
       end
 
       #----------------------------------------#
 
-      describe 'File patterns & Build settings' do
+      describe "File Patterns" do
+        it 'checks if any file patterns is absolute' do
+          @spec.source_files = '/Classes'
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'patterns must be relative'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'checks if a specification is empty' do
+          consumer = Specification::Consumer
+          consumer.any_instance.stubs(:source_files).returns([])
+          consumer.any_instance.stubs(:resources).returns({})
+          consumer.any_instance.stubs(:preserve_paths).returns([])
+          consumer.any_instance.stubs(:subspecs).returns([])
+          consumer.any_instance.stubs(:dependencies).returns([])
+          consumer.any_instance.stubs(:vendored_libraries).returns([])
+          consumer.any_instance.stubs(:vendored_frameworks).returns([])
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          @subject.results.first.message.should.include?('spec is empty')
+        end
+      end
+
+      #----------------------------------------#
+
+      describe 'Requires ARC' do
         it 'that the attribute is not nil' do
           @spec.requires_arc = nil
-          @sut.analyze
-          @sut.results.should.not.be.empty?
-          @sut.results.first.message.should.include?('`requires_arc` should be specified')
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = '`requires_arc` should be specified'
+          @subject.results.first.message.should.include?(expected)
         end
 
         it 'supports the declaration of the attribute per platform' do
           @spec.ios.requires_arc = true
-          @sut.analyze
-          @sut.results.should.be.empty?
+          @subject.analyze
+          @subject.results.should.be.empty?
         end
 
         it 'supports the declaration of the attribute in the parent' do
@@ -68,24 +61,31 @@ module Pod
             s.subspec 'SubSpec' do |sp|
             end
           end
-          @sut = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
-          @sut.analyze
-          @sut.results.should.be.empty?
+          consumer = @spec.consumer(:ios)
+          @subject = Specification::Linter::Analyzer.new(consumer)
+          @subject.analyze
+          @subject.results.should.be.empty?
         end
       end
 
       #----------------------------------------#
 
-      it 'checks if the pre install hook has been defined' do
-        @spec.pre_install {}
-        @sut.analyze
-        message_should_include('pre install hook', 'deprecated')
-      end
+      describe 'Hooks' do
+        it 'checks if the pre install hook has been defined' do
+          @spec.pre_install {}
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'pre install hook has been deprecated'
+          @subject.results.first.message.should.include?(expected)
+        end
 
-      it 'checks if the post install hook has been defined' do
-        @spec.post_install {}
-        @sut.analyze
-        message_should_include('post install hook', 'deprecated')
+        it 'checks if the post install hook has been defined' do
+          @spec.post_install {}
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'post install hook has been deprecated'
+          @subject.results.first.message.should.include?(expected)
+        end
       end
     end
   end

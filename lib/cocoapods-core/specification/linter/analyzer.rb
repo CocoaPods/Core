@@ -78,15 +78,13 @@ module Pod
         #
         def check_install_hooks
           unless consumer.spec.pre_install_callback.nil?
-            warning "The pre install hook of the specification DSL has been " \
-            "deprecated, use the `resource_bundles` or the " \
-              "`prepare_command` attributes."
+            warning "The pre install hook has been deprecated, " \
+            "use the `resource_bundles` or the  `prepare_command` attributes."
           end
 
           unless consumer.spec.post_install_callback.nil?
-            warning "The post install hook of the specification DSL has been " \
-            "deprecated, use the `resource_bundles` or the " \
-              " `prepare_command` attributes."
+            warning "The post install hook has been deprecated, " \
+            "use the `resource_bundles` or the  `prepare_command` attributes."
           end
         end
       end
