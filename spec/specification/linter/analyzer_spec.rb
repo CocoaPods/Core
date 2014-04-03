@@ -46,11 +46,36 @@ module Pod
         message_should_include('spec', 'empty')
       end
 
-      it "requires that the requires_arc value is specified explcitly until the switch to a true default" do
-        @spec.requires_arc = nil
-        @analyzer.analyze
-        message_should_include('`requires_arc` should be specified')
+      #----------------------------------------#
+
+      describe 'File patterns & Build settings' do
+        it "that the attribute is not nil" do
+          @spec.requires_arc = nil
+          @analyzer.analyze
+          @analyzer.results.should.not.be.empty?
+          @analyzer.results.first.message.should.include?('`requires_arc` should be specified')
+        end
+
+        it "supports the declaration of the attribute per platform" do
+          @spec.ios.requires_arc = true
+          @analyzer.analyze
+          @analyzer.results.should.be.empty?
+        end
+
+        it "supports the declaration of the attribute in the parent" do
+          @spec = Spec.new do |s|
+            s.requires_arc = true
+            s.subspec 'SubSpec' do |sp|
+            end
+          end
+          @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios))
+          @analyzer.analyze
+          @analyzer.results.should.be.empty?
+        end
       end
+
+      #----------------------------------------#
+
 
       it "checks if the pre install hook has been defined" do
         @spec.pre_install {}

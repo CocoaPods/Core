@@ -43,10 +43,19 @@ module Pod
           end
         end
 
-        # @todo remove in 0.18 and switch the default to true.
+        # @todo remove after the switch to true
         #
         def check_tmp_arc_not_nil
-          if consumer.spec.attributes_hash["requires_arc"].nil?
+          spec = consumer.spec
+          declared = false
+          loop do
+            declared = true unless spec.attributes_hash["requires_arc"].nil?
+            declared = true unless spec.attributes_hash[consumer.platform_name.to_s].nil?
+            spec = spec.parent
+            break unless spec
+          end
+
+          unless declared
             warning "A value for `requires_arc` should be specified until the " \
             "migration to a `true` default."
           end
