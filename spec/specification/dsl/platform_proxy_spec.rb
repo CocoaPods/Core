@@ -7,7 +7,7 @@ module Pod
       @proxy = Specification::DSL::PlatformProxy.new(@spec, :ios)
     end
 
-    it "forwards multi-platform attributes to the specification" do
+    it 'forwards multi-platform attributes to the specification' do
       attrs = Specification::DSL.attributes.values.select { |a| a.multi_platform? }
       attrs.each do |attr|
         @spec.expects(:store_attribute).with(attr.name, 'a_value', :ios).once
@@ -15,7 +15,7 @@ module Pod
       end
     end
 
-    it "supports the singular form of attributes" do
+    it 'supports the singular form of attributes' do
       attrs = Specification::DSL.attributes.values.select { |a| a.multi_platform? }
       singular_attrs = attrs.select { |a| a.writer_singular_form }
       singular_attrs.each do |attr|
@@ -24,37 +24,37 @@ module Pod
       end
     end
 
-    it "does not respond to non multiplatform attributes" do
+    it 'does not respond to non multiplatform attributes' do
       attrs = Specification::DSL.attributes.values.select { |a| !a.multi_platform? }
       attrs.each do |attr|
         lambda { @proxy.send(attr.writer_name, 'a_value') }.should.raise NoMethodError
       end
     end
 
-    it "allows to specify a dependency" do
+    it 'allows to specify a dependency' do
       @proxy.dependency('A-pod', '~> 1.0')
-      @spec.attributes_hash["ios"]["dependencies"].should == {
+      @spec.attributes_hash['ios']['dependencies'].should == {
         'A-pod' => ['~> 1.0']
       }
     end
 
-    it "allows to specify a dependency without version requirements" do
+    it 'allows to specify a dependency without version requirements' do
       @proxy.dependency('A-pod')
-      @spec.attributes_hash["ios"]["dependencies"].should == {
+      @spec.attributes_hash['ios']['dependencies'].should == {
         'A-pod' => []
       }
     end
 
-    it "allows to specify a dependency with multiple version requirements" do
+    it 'allows to specify a dependency with multiple version requirements' do
       @proxy.dependency('A-pod', '~> 1.0', '< 2.0')
-      @spec.attributes_hash["ios"]["dependencies"].should == {
+      @spec.attributes_hash['ios']['dependencies'].should == {
         'A-pod' => ['~> 1.0', '< 2.0']
       }
     end
 
-    it "allows to declare the deployment target" do
+    it 'allows to declare the deployment target' do
       @proxy.deployment_target = '6.0'
-      @spec.attributes_hash["platforms"]["ios"].should == '6.0'
+      @spec.attributes_hash['platforms']['ios'].should == '6.0'
     end
 
   end

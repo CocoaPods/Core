@@ -27,46 +27,46 @@ end
 #-----------------------------------------------------------------------------#
 
 module Pod
-  describe "In general" do
+  describe 'In general' do
 
     describe YAMLConverter do
 
-      it "converts a string" do
-        value = "Value"
+      it 'converts a string' do
+        value = 'Value'
         result = YAMLConverter.convert(value)
         result.should == "Value\n"
       end
 
-      it "converts a symbol" do
+      it 'converts a symbol' do
         value = :value
         result = YAMLConverter.convert(value)
         result.should == ":value\n"
       end
 
-      it "converts the true class" do
+      it 'converts the true class' do
         result = YAMLConverter.convert(true)
         result.should == "true\n"
       end
 
-      it "converts the false class" do
+      it 'converts the false class' do
         result = YAMLConverter.convert(false)
         result.should == "false\n"
       end
 
-      it "converts an array" do
+      it 'converts an array' do
         value = %w(Value_1 Value_2)
         result = YAMLConverter.convert(value)
         result.should == "- Value_1\n- Value_2\n"
       end
 
-      it "converts an hash" do
-        value = { "Key" => "Value" }
+      it 'converts an hash' do
+        value = { 'Key' => 'Value' }
         result = YAMLConverter.convert(value)
         result.should == "Key: Value\n"
       end
 
-      it "converts an hash which contains and array as one of the values" do
-        value = { "Key" => %w(Value_1 Value_2) }
+      it 'converts an hash which contains and array as one of the values' do
+        value = { 'Key' => %w(Value_1 Value_2) }
         result = YAMLConverter.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
@@ -75,8 +75,8 @@ module Pod
         EOT
       end
 
-      it "converts an hash which contains and array as one of the values" do
-        value = { "Key" => { "Subkey" => %w(Value_1 Value_2) } }
+      it 'converts an hash which contains and array as one of the values' do
+        value = { 'Key' => { 'Subkey' => %w(Value_1 Value_2) } }
         result = YAMLConverter.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
@@ -96,29 +96,29 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe "Private Helpers" do
+    describe 'Private Helpers' do
 
-      describe "#sorted_array_with_hint" do
-        it "sorts an array according to its string representation" do
+      describe '#sorted_array_with_hint' do
+        it 'sorts an array according to its string representation' do
           values = %w(JSONKit BananaLib)
           result = YAMLConverter.send(:sorted_array, values)
           result.should == %w(BananaLib JSONKit)
         end
 
-        it "sorts an array containing strings and hashes according to its string representation" do
-          values = ["JSONKit", "BananaLib", { "c_hash_key" => "a_value" }]
+        it 'sorts an array containing strings and hashes according to its string representation' do
+          values = ['JSONKit', 'BananaLib', { 'c_hash_key' => 'a_value' }]
           result = YAMLConverter.send(:sorted_array, values)
-          result.should == ["BananaLib", { "c_hash_key" => "a_value" }, "JSONKit"]
+          result.should == ['BananaLib', { 'c_hash_key' => 'a_value' }, 'JSONKit']
         end
 
-        it "sorts an array with a given hint" do
+        it 'sorts an array with a given hint' do
           values = %w(non-hinted second first)
           hint = %w(first second hinted-missing)
           result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
           result.should == %w(first second non-hinted)
         end
 
-        it "sorts an array with a given nil hint" do
+        it 'sorts an array with a given nil hint' do
           values = %w(JSONKit BananaLib)
           hint = nil
           result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
@@ -126,50 +126,50 @@ module Pod
         end
       end
 
-      describe "#sorting_string" do
+      describe '#sorting_string' do
 
-        it "returns the empty string if a nil value is passed" do
+        it 'returns the empty string if a nil value is passed' do
           value = nil
           result = YAMLConverter.send(:sorting_string, value)
-          result.should == ""
+          result.should == ''
         end
 
-        it "sorts strings ignoring case" do
-          value = "String"
+        it 'sorts strings ignoring case' do
+          value = 'String'
           result = YAMLConverter.send(:sorting_string, value)
-          result.should == "string"
+          result.should == 'string'
         end
 
-        it "sorts symbols ignoring case" do
+        it 'sorts symbols ignoring case' do
           value = :Symbol
           result = YAMLConverter.send(:sorting_string, value)
-          result.should == "symbol"
+          result.should == 'symbol'
         end
 
-        it "sorts arrays using the first element ignoring case" do
+        it 'sorts arrays using the first element ignoring case' do
           value = %w(String_2 String_1)
           result = YAMLConverter.send(:sorting_string, value)
-          result.should == "string_2"
+          result.should == 'string_2'
         end
 
-        it "sorts a hash using first key in alphabetical order" do
+        it 'sorts a hash using first key in alphabetical order' do
           value = {
             :key_2 => 'a_value',
             :key_1 => 'a_value',
           }
           result = YAMLConverter.send(:sorting_string, value)
-          result.should == "key_1"
+          result.should == 'key_1'
         end
       end
     end
 
     #-------------------------------------------------------------------------#
 
-    describe "Lockfile generation" do
+    describe 'Lockfile generation' do
 
-      it "converts a complex file" do
+      it 'converts a complex file' do
         value = YAML.load(sample_yaml)
-        sorted_keys = ["PODS", "DEPENDENCIES", "EXTERNAL SOURCES", "SPEC CHECKSUMS", "COCOAPODS"]
+        sorted_keys = ['PODS', 'DEPENDENCIES', 'EXTERNAL SOURCES', 'SPEC CHECKSUMS', 'COCOAPODS']
         result = YAMLConverter.convert_hash(value, sorted_keys, "\n\n")
         YAML.load(result).should == value
         result.should == sample_yaml

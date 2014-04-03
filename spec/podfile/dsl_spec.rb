@@ -3,9 +3,9 @@ require File.expand_path('../../spec_helper', __FILE__)
 module Pod
   describe Podfile::DSL do
 
-    describe "Dependencies" do
+    describe 'Dependencies' do
 
-      it "adds dependencies" do
+      it 'adds dependencies' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
         end
@@ -14,13 +14,13 @@ module Pod
         podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should   == Dependency.new('SSZipArchive', '>= 0.1')
       end
 
-      it "raises if no name is specified for a Pod" do
+      it 'raises if no name is specified for a Pod' do
         lambda do Podfile.new do
           pod
         end end.should.raise Podfile::StandardError
       end
 
-      it "raises if an inlide podspec is specified" do
+      it 'raises if an inlide podspec is specified' do
         lambda do Podfile.new do
           pod do |s|
             s.name = 'mypod'
@@ -28,7 +28,7 @@ module Pod
         end end.should.raise Podfile::StandardError
       end
 
-      it "it can use use the dependencies of a podspec" do
+      it 'it can use use the dependencies of a podspec' do
         banalib_path = fixture('BananaLib.podspec').to_s
         podfile = Podfile.new(fixture('Podfile')) do
           platform :ios
@@ -37,7 +37,7 @@ module Pod
         podfile.dependencies.map(&:name).should == %w(monkey)
       end
 
-      it "allows to specify a child target definition" do
+      it 'allows to specify a child target definition' do
         podfile = Podfile.new do
           target :tests do
             pod 'OCMock'
@@ -50,36 +50,36 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe "Target configuration" do
+    describe 'Target configuration' do
 
-      it "allows to specify a platform" do
+      it 'allows to specify a platform' do
         podfile = Podfile.new do
-          platform :ios, "6.0"
+          platform :ios, '6.0'
           target :osx_target do
-            platform :osx, "10.8"
+            platform :osx, '10.8'
           end
         end
-        podfile.target_definitions["Pods"].platform.should == Platform.new(:ios, "6.0")
-        podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, "10.8")
+        podfile.target_definitions['Pods'].platform.should == Platform.new(:ios, '6.0')
+        podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, '10.8')
       end
 
-      it "allows to specify whether the target is exclusive" do
+      it 'allows to specify whether the target is exclusive' do
         podfile = Podfile.new do
           target 'Pods', :exclusive => true do
           end
         end
-        podfile.target_definitions["Pods"].should.be.exclusive
+        podfile.target_definitions['Pods'].should.be.exclusive
       end
 
-      it "is not exclusive by default" do
+      it 'is not exclusive by default' do
         podfile = Podfile.new do
           target 'Pods' do
           end
         end
-        podfile.target_definitions["Pods"].should.not.be.exclusive
+        podfile.target_definitions['Pods'].should.not.be.exclusive
       end
 
-      it "raises if unrecognized keys are passed during the initialization of a target" do
+      it 'raises if unrecognized keys are passed during the initialization of a target' do
         should.raise Informative do
           podfile = Podfile.new do
             target 'Pods', :unrecognized => true do
@@ -88,52 +88,52 @@ module Pod
         end
       end
 
-      it "allows to specify the user xcode project for a Target definition" do
+      it 'allows to specify the user xcode project for a Target definition' do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
-        podfile.target_definitions["Pods"].user_project_path.should == 'App.xcodeproj'
+        podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
       end
 
-      it "allows to specify the build configurations of a user project" do
+      it 'allows to specify the build configurations of a user project' do
         podfile = Podfile.new do
           xcodeproj 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
-        podfile.target_definitions["Pods"].build_configurations.should == {
+        podfile.target_definitions['Pods'].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug
         }
       end
 
-      it "allows to specify the user targets a Target definition should link with" do
+      it 'allows to specify the user targets a Target definition should link with' do
         podfile = Podfile.new { link_with 'app_target' }
-        podfile.target_definitions["Pods"].link_with.should == ['app_target']
+        podfile.target_definitions['Pods'].link_with.should == ['app_target']
       end
 
-      it "allows to specify multiple user targets a Target definition should link with" do
+      it 'allows to specify multiple user targets a Target definition should link with' do
         podfile = Podfile.new { link_with 'app_target', 'test_target' }
-        podfile.target_definitions["Pods"].link_with.should == %w(app_target test_target)
+        podfile.target_definitions['Pods'].link_with.should == %w(app_target test_target)
       end
 
-      it "allows to specify an array of user targets a Target definition should link with" do
+      it 'allows to specify an array of user targets a Target definition should link with' do
         podfile = Podfile.new { link_with ['app_target'] }
-        podfile.target_definitions["Pods"].link_with.should == ['app_target']
+        podfile.target_definitions['Pods'].link_with.should == ['app_target']
       end
 
-      it "allows to inhibit all the warnings of a Target definition" do
+      it 'allows to inhibit all the warnings of a Target definition' do
         podfile = Podfile.new { pod 'ObjectiveRecord'; inhibit_all_warnings! }
-        podfile.target_definitions["Pods"].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
+        podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
       end
     end
 
     #-------------------------------------------------------------------------#
 
-    describe "Workspace" do
+    describe 'Workspace' do
 
-      it "specifies the Xcode workspace to use" do
+      it 'specifies the Xcode workspace to use' do
         Podfile.new do
           workspace 'MyWorkspace.xcworkspace'
         end.workspace_path.should == 'MyWorkspace.xcworkspace'
       end
 
-      it "specifies that BridgeSupport metadata should be generated" do
+      it 'specifies that BridgeSupport metadata should be generated' do
         Podfile.new {}.should.not.generate_bridge_support
         Podfile.new { generate_bridge_support! }.should.generate_bridge_support
       end
@@ -147,9 +147,9 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe "Hooks" do
+    describe 'Hooks' do
 
-      it "stores a block that will be called before integrating the targets" do
+      it 'stores a block that will be called before integrating the targets' do
         yielded = nil
         Podfile.new do
           pre_install do |installer|
@@ -159,7 +159,7 @@ module Pod
         yielded.should == :an_installer
       end
 
-      it "stores a block that will be called with the Installer instance once installation is finished" do
+      it 'stores a block that will be called with the Installer instance once installation is finished' do
         yielded = nil
         Podfile.new do
           post_install do |installer|
