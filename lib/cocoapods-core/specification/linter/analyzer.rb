@@ -12,6 +12,7 @@ module Pod
         end
 
         def analyze
+          check_for_unknown_keys
           validate_file_patterns
           check_if_spec_is_empty
         end
@@ -19,6 +20,45 @@ module Pod
         private
 
         attr_reader :consumer
+
+        # Checks the attributes hash for any unknown key which might be the
+        # result of a misspell in JSON file.
+        #
+        # @note Sub-keys are not checked per-platform as
+        #       there is no attribute supporting this combination.
+        #
+        # @note The keys of sub-keys are not checked as they are only used by 
+        #       the `source` attribute and they are subject
+        #       to change according the support in the
+        #       `cocoapods-downloader` gem.
+        #
+        def check_for_unknown_keys
+          Pod::Specification::DSL.attributes
+          attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
+          platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
+          valid_keys = attributes_keys + platform_keys
+          keys = consumer.spec.attributes_hash.keys
+          unknown_keys = keys - valid_keys
+
+          unknown_keys.each do |key|
+            warning "Unrecognized `#{key}` key"
+          end
+
+         Pod::Specification::DSL.attributes.each do |key, attribute|
+           if attribute.keys
+             value = consumer.spec.attributes_hash[key.to_s]
+             if value
+               if attribute.keys.is_a?(Array)
+                 unknown_keys = value.keys - attribute.keys.map(&:to_s)
+                 unknown_keys.each do |key|
+                   warning "Unrecognized `#{key}` key for " \
+                     "`#{attribute.name}` attribute"
+                 end
+               end
+             end
+           end
+         end
+        end
 
         # Checks the attributes that represent file patterns.
         #
