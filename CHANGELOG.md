@@ -26,6 +26,11 @@
   [Fabio Pelosin][irrationalfab]
   [CocoaPods#2005](https://github.com/CocoaPods/CocoaPods/issues/2005)
 
+* Linter should check frameworks and library attributes for invalid strings
+  [Paul Williamson](https://github.com/squarefrog)
+  [#66](https://github.com/CocoaPods/Core/issues/66)
+  [#96](https://github.com/CocoaPods/Core/pull/96)
+
 
 ## 0.31.1
 
