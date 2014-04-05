@@ -118,11 +118,21 @@ module Pod
         should.raise StandardError do
           YAMLConverter.convert(value)
         end.message.should.match /Unsupported class/
-      end
-      
+      end      
+    end
+    
+    #-------------------------------------------------------------------------#
+    
+    describe 'Loading' do
       it "raises an Informative error when it encounters a merge conflict" do
         should.raise Informative do
           value = YAMLConverter.load(yaml_with_merge_conflict)
+        end
+      end
+
+      it "should not raise an Informative error when there is no merge conflict" do
+        should.not.raise Informative do
+          value = YAMLConverter.load(sample_yaml)
         end
       end
     end
