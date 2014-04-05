@@ -145,7 +145,7 @@ module Pod
       end
       
       it "raises another error when it encounters an error that is not a merge conflict" do
-        should.raise YAMLHelper.syntax_error_class do
+        should.raise do
           YAMLHelper.load(bad_yaml)
         end
       end

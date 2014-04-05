@@ -45,23 +45,12 @@ module Pod
       # @param A YAML string.
       def load(yaml_string)
         YAML.load(yaml_string)
-        rescue syntax_error_class => original_syntax_error
+        rescue Exception => exception
           if yaml_has_merge_error(yaml_string)
             raise Informative, 'Merge conflict(s) detected'
           else
-            raise original_syntax_error
+            raise exception
           end
-      end
-
-      # When parsing a YAML string, we can get a syntax error.
-      # In 1.8.7, the error was an ArgumentError
-      # After 1.8.7, syntax errors are Psych::SyntaxErrors.
-      # @return The class of the error that we expect when parsing a YAML and getting a syntax error.
-      def syntax_error_class
-        require 'Psych'
-        Psych::SyntaxError
-        rescue LoadError
-          ArgumentError
       end
 
       #-----------------------------------------------------------------------#
