@@ -367,10 +367,14 @@ module Pod
       # @params frameworks [Array<String>]
       # The frameworks to be validated
       #
-      # @return [Boolean] true if a framework ends in `.framework`
+      # @return [Boolean] true if a framework contains any
+      # non-alphanumeric character or includes an extension.
       #
       def frameworks_invalid?(frameworks)
-        frameworks.any? { |framework| framework.end_with?('.framework') }
+        frameworks.any? do |framework|
+          framework_regex = /[^a-zA-Z\d]/
+          framework =~ framework_regex
+        end
       end
 
       # Returns whether the libraries are valid
@@ -378,10 +382,13 @@ module Pod
       # @params libs [Array<String>]
       # The libraries to be validated
       #
-      # @return [Boolean] true if a library ends with `.a`, `.dylib`, or
-      # starts with `lib`.
+      # @return [Boolean] true if a library ends with `.a`, `.dylib`,
+      # starts with `lib` or contains any non-alphanumeric character.
       def libraries_invalid?(libs)
-        libs.any? { |lib| lib.end_with?('.a', '.dylib') || lib.start_with?('lib') }
+        libs.any? do |lib| 
+          lib_regex = /^(lib)|([^a-zA-Z\d])/
+          lib =~ lib_regex
+        end
       end
     end
   end
