@@ -55,7 +55,7 @@ module Pod
 
       # When parsing a YAML string, we can get a syntax error.
       # In 1.8.7, the error was an ArgumentError
-      # After 1.8.7, syntax errors are Psych::SyntaxErrors. 
+      # After 1.8.7, syntax errors are Psych::SyntaxErrors.
       # @return The class of the error that we expect when parsing a YAML and getting a syntax error.
       def syntax_error_class
         require 'Psych'
