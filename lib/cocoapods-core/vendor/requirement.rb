@@ -158,7 +158,7 @@ module Pod::Vendor
     # True if +version+ satisfies this Requirement.
 
     def satisfied_by?(version)
-      # #28965: syck has a bug with unquoted '=' YAML.loading as YAML::DefaultKey
+      # #28965: syck has a bug with unquoted '=' YAMLConverter.loading as YAML::DefaultKey
       requirements.all? { |op, rv| (OPS[op] || OPS["="]).call version, rv }
     end
 

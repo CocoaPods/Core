@@ -231,10 +231,10 @@ module Pod
     describe 'Lockfile generation' do
 
       it 'converts a complex file' do
-        value = YAML.load(sample_yaml)
+        value = YAMLConverter.load(sample_yaml)
         sorted_keys = ['PODS', 'DEPENDENCIES', 'EXTERNAL SOURCES', 'SPEC CHECKSUMS', 'COCOAPODS']
         result = YAMLConverter.convert_hash(value, sorted_keys, "\n\n")
-        YAML.load(result).should == value
+        YAMLConverter.load(result).should == value
         result.should == sample_yaml
       end
     end
