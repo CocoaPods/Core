@@ -385,7 +385,7 @@ module Pod
       # @return [Boolean] true if a library ends with `.a`, `.dylib`,
       # starts with `lib` or contains any non-alphanumeric character.
       def libraries_invalid?(libs)
-        libs.any? do |lib| 
+        libs.any? do |lib|
           lib_regex = /^(lib)|([^a-zA-Z\d])/
           lib =~ lib_regex
         end
