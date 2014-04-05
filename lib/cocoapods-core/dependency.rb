@@ -339,6 +339,13 @@ module Pod
         "external_source=#{external_source || 'nil'}>"
     end
 
+    ##
+    # Is this dependency one that specifies an exact version?
+    # No operator should be found in the version requirement.
+    def exact_version?
+      requirement.exact_version?
+    end
+
     #--------------------------------------#
 
     private

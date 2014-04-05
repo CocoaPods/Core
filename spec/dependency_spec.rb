@@ -258,6 +258,84 @@ module Pod
         dep.match?('bananas', '1.0-rc1').should.be.true
       end
 
+      #--------------------------------------#
+      it "exact_version? is true if a version is specified with no operator" do
+        dep = Dependency.new('bananas', '1.0')
+        dep.exact_version?.should.be.true
+      end
+
+      it "exact_version? is true if a version is specified with <= operator" do
+        dep = Dependency.new('bananas', '<= 1.0')
+        dep.exact_version?.should.be.true
+      end
+
+      it "exact_version? is false if a version is specified with an operator" do
+        dep = Dependency.new('bananas', '< 1.0')
+        dep.exact_version?.should.be.false
+      end
+
+    end
+    
+    describe "With regards to pre-release versions" do
+            
+      it "should match a pre-release version specified explicitly" do
+        dep = Dependency.new('AFNetworking', '1.0RC3')
+        dep.match?('AFNetworking', '0.10.1').should.be.false
+        dep.match?('AFNetworking', '1.0RC3').should.be.true
+        dep.match?('AFNetworking', '1.0').should.be.false
+        dep.match?('AFNetworking', '1.2.1').should.be.false
+      end
+      
+      it "should not match a pre-release version implicitly when specifying non pre-release version explicitly" do
+        dep = Dependency.new('AFNetworking', '1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.false
+        dep.match?('AFNetworking', '1.0RC3').should.be.false
+        dep.match?('AFNetworking', '1.0').should.be.true
+        dep.match?('AFNetworking', '1.2.1').should.be.false
+      end
+
+      # The pre-release version will be filtered out at a higher level by Set
+      it "should match a pre-release version implicitly when using < operator" do
+        dep = Dependency.new('AFNetworking', '< 1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.true
+        dep.match?('AFNetworking', '1.0RC3').should.be.true
+        dep.match?('AFNetworking', '1.0').should.be.false
+        dep.match?('AFNetworking', '1.2.1').should.be.false
+      end
+
+      it "should not match a pre-release version implicitly when using <= operator" do
+        dep = Dependency.new('AFNetworking', '<= 1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.true
+        dep.match?('AFNetworking', '1.0RC3').should.be.true
+        dep.match?('AFNetworking', '1.0').should.be.true
+        dep.match?('AFNetworking', '1.2.1').should.be.false
+      end
+
+      it "should not match a pre-release version implicitly when using > operator" do
+        dep = Dependency.new('AFNetworking', '> 1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.false
+        dep.match?('AFNetworking', '1.0RC3').should.be.false
+        dep.match?('AFNetworking', '1.0').should.be.false
+        dep.match?('AFNetworking', '1.2.1').should.be.true
+      end
+
+      it "should not match a pre-release version implicitly when using >= operator" do
+        dep = Dependency.new('AFNetworking', '>= 1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.false
+        dep.match?('AFNetworking', '1.0RC3').should.be.false
+        dep.match?('AFNetworking', '1.0').should.be.true
+        dep.match?('AFNetworking', '1.2.1').should.be.true
+      end
+      
+      it "should not match a pre-release version implicitly when using ~> operator" do
+        dep = Dependency.new('AFNetworking', '~> 1.0')
+        dep.match?('AFNetworking', '0.10.1').should.be.false
+        dep.match?('AFNetworking', '1.0RC3').should.be.false
+        dep.match?('AFNetworking', '1.0').should.be.true
+        dep.match?('AFNetworking', '1.2.1').should.be.true
+      end
+      
+      
     end
 
     #-------------------------------------------------------------------------#

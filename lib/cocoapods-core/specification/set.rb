@@ -106,12 +106,19 @@ module Pod
       end
 
       # @return [Version] the highest version that satisfies the stored
-      #         dependencies.
+      #         dependencies, except for pre-releases.
+      #         Pre-releases can satisfy the dependencies, but only if specified explicitly.
       #
       # @todo   This should simply return nil. CocoaPods should raise instead.
       #
       def required_version
-        version = versions.find { |v| dependency.match?(name, v) }
+        # pre-release can be specified explicitly
+        if dependency.exact_version?
+          version = versions.find { |v| dependency.match?(name, v) }
+        else
+          # otherwise pre-releases are not utilized and are excluded from the highest version matching
+          version = versions.find { |v| dependency.match?(name, v) && !v.prerelease? }
+        end
         unless version
           raise Informative, "Required version (#{dependency}) not found " \
             "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"

@@ -102,6 +102,43 @@ module Pod
         @set.acceptable_versions.map(&:to_s).should == ['1.0']
       end
     end
+    
+    #-------------------------------------------------------------------------#
+    # Reproduce issue #73: Pre-release versions should not be matched when using the < version operator 
+    describe "Regarding pre-release versions" do
+      before do
+        @source = Source.new(fixture('spec-repos/master'))
+        @set = Spec::Set.new('AFNetworking', @source)
+        @set.required_by(Dependency.new('AFNetworking', '< 1.0'), 'Spec')
+      end
+      
+      it "returns the highest non-pre-release version for the dependency that uses the < operator" do
+        @set.required_version.should == Version.new('0.10.1')
+      end
+            
+      # Pre-release version can be explicitly specified
+      before do
+        @source = Source.new(fixture('spec-repos/master'))
+        @set = Spec::Set.new('AFNetworking', @source)
+        @set.required_by(Dependency.new('AFNetworking', '1.0RC3'), 'Spec')
+      end
+      
+      it "returns the pre-release version specified explicitly for the dependency" do
+        @set.required_version.should == Version.new('1.0RC3')
+      end
+      
+      before do
+        @source = Source.new(fixture('spec-repos/master'))
+        @set = Spec::Set.new('AFNetworking', @source)
+        @set.required_by(Dependency.new('AFNetworking', '<= 1.0RC3'), 'Spec')
+      end
+      
+      it "returns the highest pre-release version for the dependency that uses the <= operator" do
+        @set.required_version.should == Version.new('1.0RC3')
+      end
+            
+    end
+
 
     #-------------------------------------------------------------------------#
 

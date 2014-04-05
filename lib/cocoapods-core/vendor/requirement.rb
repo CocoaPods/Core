@@ -158,7 +158,7 @@ module Pod::Vendor
     # True if +version+ satisfies this Requirement.
 
     def satisfied_by?(version)
-      # #28965: syck has a bug with unquoted '=' YAML.loading as YAML::DefaultKey
+      # #28965: syck has a bug with unquoted '=' YAMLHelper.loading as YAML::DefaultKey
       requirements.all? { |op, rv| (OPS[op] || OPS["="]).call version, rv }
     end
 
@@ -172,6 +172,15 @@ module Pod::Vendor
       return true if @requirements.length > 1 # GIGO, > 1, > 2 is silly
 
       not %w(> >=).include? @requirements.first.first # grab the operator
+    end
+
+    ##
+    # Is this requirement that specifies an exact version?.
+    def exact_version?
+      return false if @requirements.length > 1 # GIGO, > 1, > 2 is silly
+
+      # check for = operator, which is implicit if no operator is specified
+      %w(= <=).include? @requirements.first.first 
     end
 
     def to_s # :nodoc:
