@@ -155,7 +155,7 @@ module Pod
         def cache
           unless @cache
             if cache_file && cache_file.exist?
-              @cache = YAML.load(cache_file.read)
+              @cache = YAMLHelper.load(cache_file.read)
             else
               @cache = {}
             end

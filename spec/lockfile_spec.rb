@@ -65,14 +65,14 @@ module Pod
       end
 
       it 'stores the initialization hash' do
-        lockfile = Lockfile.new(YAML.load(Sample.yaml))
-        lockfile.internal_data.should == YAML.load(Sample.yaml)
+        lockfile = Lockfile.new(YAMLHelper.load(Sample.yaml))
+        lockfile.internal_data.should == YAMLHelper.load(Sample.yaml)
       end
 
       it 'loads from a file' do
         File.open(@tmp_path, 'w') { |f| f.write(Sample.yaml) }
         lockfile = Lockfile.from_file(@tmp_path)
-        lockfile.internal_data.should == YAML.load(Sample.yaml)
+        lockfile.internal_data.should == YAMLHelper.load(Sample.yaml)
       end
 
       it "returns nil if it can't find the initialization file" do
@@ -331,7 +331,7 @@ module Pod
       end
 
       it 'generates a valid YAML representation' do
-        YAML.load(@lockfile.to_yaml).should == YAML.load(Sample.yaml)
+        YAMLHelper.load(@lockfile.to_yaml).should == YAMLHelper.load(Sample.yaml)
       end
 
       it "serializes correctly `:head' dependencies" do
@@ -414,7 +414,7 @@ module Pod
       end
 
       it 'it includes all the information that it is expected to store' do
-        @lockfile.internal_data.should == YAML.load(Sample.yaml)
+        @lockfile.internal_data.should == YAMLHelper.load(Sample.yaml)
       end
     end
 
