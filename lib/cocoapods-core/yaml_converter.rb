@@ -41,6 +41,14 @@ module Pod
         result << "\n"
       end
 
+      # Load a YAML file and provide more informative error messages in special cases like merge conflict.
+      # @todo Check for merge conflict.
+      def load(yaml_string)
+        super(yaml_string)
+        rescue LoadError
+          raise Informative, 'test'
+      end
+
       #-----------------------------------------------------------------------#
 
       private
