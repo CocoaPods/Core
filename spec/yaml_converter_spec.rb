@@ -130,8 +130,8 @@ module Pod
         end
       end
 
-      it "should not raise an Informative error when there is no merge conflict" do
-        should.not.raise Informative do
+      it "should not raise when there is no merge conflict" do
+        should.not.raise do
           value = YAMLConverter.load(sample_yaml)
         end
       end
