@@ -24,6 +24,33 @@ def sample_yaml
   LOCKFILE
 end
 
+def yaml_with_merge_conflict
+  text = <<-LOCKFILE.strip_heredoc
+    PODS:
+      - Kiwi (2.2)
+      - ObjectiveSugar (1.1.1)
+
+    DEPENDENCIES:
+      - Kiwi
+      - ObjectiveSugar (from `../`)
+
+    EXTERNAL SOURCES:
+      ObjectiveSugar:
+        :path: ../
+
+    SPEC CHECKSUMS:
+    <<<<<<< HEAD
+      Kiwi: 05f988748c5136c6daed8dab3563eca929399a72
+      ObjectiveSugar: 7377622e35ec89ce893b05dd0af4bede211b01a4
+    =======
+      Kiwi: db174bba4ee8068b15d7122f1b22fb64b7c1d378
+      ObjectiveSugar: 27c680bb74f0b0415e9e743d5d61d77bc3292d3f
+    >>>>>>> b65623cbf5e105acbc3e2dec48f8024fa82003ce
+
+    COCOAPODS: 0.29.0
+  LOCKFILE
+end
+
 #-----------------------------------------------------------------------------#
 
 module Pod
@@ -91,6 +118,12 @@ module Pod
         should.raise StandardError do
           YAMLConverter.convert(value)
         end.message.should.match /Unsupported class/
+      end
+      
+      it "raises an more reasonable error when it encounters a merge conflict" do
+        should.raise Informative do
+          value = YAML.load(yaml_with_merge_conflict)
+        end
       end
     end
 
