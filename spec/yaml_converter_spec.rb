@@ -70,45 +70,45 @@ end
 module Pod
   describe 'In general' do
 
-    describe YAMLConverter do
+    describe YAMLHelper do
 
       it 'converts a string' do
         value = 'Value'
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == "Value\n"
       end
 
       it 'converts a symbol' do
         value = :value
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == ":value\n"
       end
 
       it 'converts the true class' do
-        result = YAMLConverter.convert(true)
+        result = YAMLHelper.convert(true)
         result.should == "true\n"
       end
 
       it 'converts the false class' do
-        result = YAMLConverter.convert(false)
+        result = YAMLHelper.convert(false)
         result.should == "false\n"
       end
 
       it 'converts an array' do
         value = %w(Value_1 Value_2)
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == "- Value_1\n- Value_2\n"
       end
 
       it 'converts an hash' do
         value = { 'Key' => 'Value' }
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == "Key: Value\n"
       end
 
       it 'converts an hash which contains and array as one of the values' do
         value = { 'Key' => %w(Value_1 Value_2) }
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
           - Value_1
@@ -118,7 +118,7 @@ module Pod
 
       it 'converts an hash which contains and array as one of the values' do
         value = { 'Key' => { 'Subkey' => %w(Value_1 Value_2) } }
-        result = YAMLConverter.convert(value)
+        result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
         Key:
           Subkey:
@@ -130,7 +130,7 @@ module Pod
       it "raises if it can't handle the class of the given object" do
         value = Pathname.new('a-path')
         should.raise StandardError do
-          YAMLConverter.convert(value)
+          YAMLHelper.convert(value)
         end.message.should.match /Unsupported class/
       end      
     end
@@ -140,19 +140,19 @@ module Pod
     describe 'Loading' do
       it "raises an Informative error when it encounters a merge conflict" do
         should.raise Informative do
-          YAMLConverter.load(yaml_with_merge_conflict)
+          YAMLHelper.load(yaml_with_merge_conflict)
         end.message.should.match /Merge conflict\(s\) detected/
       end
       
       it "raises another error when it encounters an error that is not a merge conflict" do
         should.raise Psych::SyntaxError do
-          YAMLConverter.load(bad_yaml)
+          YAMLHelper.load(bad_yaml)
         end
       end
 
       it "should not raise when there is no merge conflict" do
         should.not.raise do
-          YAMLConverter.load(sample_yaml)
+          YAMLHelper.load(sample_yaml)
         end
       end
     end
@@ -164,27 +164,27 @@ module Pod
       describe '#sorted_array_with_hint' do
         it 'sorts an array according to its string representation' do
           values = %w(JSONKit BananaLib)
-          result = YAMLConverter.send(:sorted_array, values)
+          result = YAMLHelper.send(:sorted_array, values)
           result.should == %w(BananaLib JSONKit)
         end
 
         it 'sorts an array containing strings and hashes according to its string representation' do
           values = ['JSONKit', 'BananaLib', { 'c_hash_key' => 'a_value' }]
-          result = YAMLConverter.send(:sorted_array, values)
+          result = YAMLHelper.send(:sorted_array, values)
           result.should == ['BananaLib', { 'c_hash_key' => 'a_value' }, 'JSONKit']
         end
 
         it 'sorts an array with a given hint' do
           values = %w(non-hinted second first)
           hint = %w(first second hinted-missing)
-          result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
+          result = YAMLHelper.send(:sorted_array_with_hint, values, hint)
           result.should == %w(first second non-hinted)
         end
 
         it 'sorts an array with a given nil hint' do
           values = %w(JSONKit BananaLib)
           hint = nil
-          result = YAMLConverter.send(:sorted_array_with_hint, values, hint)
+          result = YAMLHelper.send(:sorted_array_with_hint, values, hint)
           result.should == %w(BananaLib JSONKit)
         end
       end
@@ -193,25 +193,25 @@ module Pod
 
         it 'returns the empty string if a nil value is passed' do
           value = nil
-          result = YAMLConverter.send(:sorting_string, value)
+          result = YAMLHelper.send(:sorting_string, value)
           result.should == ''
         end
 
         it 'sorts strings ignoring case' do
           value = 'String'
-          result = YAMLConverter.send(:sorting_string, value)
+          result = YAMLHelper.send(:sorting_string, value)
           result.should == 'string'
         end
 
         it 'sorts symbols ignoring case' do
           value = :Symbol
-          result = YAMLConverter.send(:sorting_string, value)
+          result = YAMLHelper.send(:sorting_string, value)
           result.should == 'symbol'
         end
 
         it 'sorts arrays using the first element ignoring case' do
           value = %w(String_2 String_1)
-          result = YAMLConverter.send(:sorting_string, value)
+          result = YAMLHelper.send(:sorting_string, value)
           result.should == 'string_2'
         end
 
@@ -220,7 +220,7 @@ module Pod
             :key_2 => 'a_value',
             :key_1 => 'a_value',
           }
-          result = YAMLConverter.send(:sorting_string, value)
+          result = YAMLHelper.send(:sorting_string, value)
           result.should == 'key_1'
         end
       end
@@ -231,10 +231,10 @@ module Pod
     describe 'Lockfile generation' do
 
       it 'converts a complex file' do
-        value = YAMLConverter.load(sample_yaml)
+        value = YAMLHelper.load(sample_yaml)
         sorted_keys = ['PODS', 'DEPENDENCIES', 'EXTERNAL SOURCES', 'SPEC CHECKSUMS', 'COCOAPODS']
-        result = YAMLConverter.convert_hash(value, sorted_keys, "\n\n")
-        YAMLConverter.load(result).should == value
+        result = YAMLHelper.convert_hash(value, sorted_keys, "\n\n")
+        YAMLHelper.load(result).should == value
         result.should == sample_yaml
       end
     end
