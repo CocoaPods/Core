@@ -120,9 +120,9 @@ module Pod
         end.message.should.match /Unsupported class/
       end
       
-      it "raises an more reasonable error when it encounters a merge conflict" do
+      it "raises an Informative error when it encounters a merge conflict" do
         should.raise Informative do
-          value = YAML.load(yaml_with_merge_conflict)
+          value = YAMLConverter.load(yaml_with_merge_conflict)
         end
       end
     end
