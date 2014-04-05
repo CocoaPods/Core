@@ -51,6 +51,20 @@ def yaml_with_merge_conflict
   LOCKFILE
 end
 
+def bad_yaml
+  text = <<-LOCKFILE.strip_heredoc
+    PODS:
+      - Kiwi (2.2)
+      SOME BAD TEXT
+      
+    DEPENDENCIES:
+      - Kiwi
+      - ObjectiveSugar (from `../`)
+      
+    COCOAPODS: 0.29.0
+  LOCKFILE
+end
+
 #-----------------------------------------------------------------------------#
 
 module Pod
@@ -127,6 +141,12 @@ module Pod
       it "raises an Informative error when it encounters a merge conflict" do
         should.raise Informative do
           value = YAMLConverter.load(yaml_with_merge_conflict)
+        end
+      end
+
+      it "raises another error when it encounters an error that is not a merge conflict" do
+        should.raise Psych::SyntaxError do
+          value = YAMLConverter.load(bad_yaml)
         end
       end
 
