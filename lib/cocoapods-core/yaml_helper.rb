@@ -15,7 +15,7 @@ module Pod
   #       The missing features include:
   #       - Strings are never quoted even when ambiguous.
   #
-  class YAMLConverter
+  class YAMLHelper
 
     class << self
 
@@ -39,6 +39,18 @@ module Pod
       def convert_hash(value, hash_keys_hint, line_separator = "\n")
         result = process_hash(value, hash_keys_hint, line_separator)
         result << "\n"
+      end
+
+      # Load a YAML file and provide more informative error messages in special cases like merge conflict.
+      # @param A YAML string.
+      def load(yaml_string)
+        YAML.load(yaml_string)
+        rescue Exception => exception
+          if yaml_has_merge_error(yaml_string)
+            raise Informative, 'Merge conflict(s) detected'
+          else
+            raise exception
+          end
       end
 
       #-----------------------------------------------------------------------#
@@ -118,6 +130,13 @@ module Pod
           end
         end
         key_lines * line_separator
+      end
+
+      # Check for merge errors in a YAML string.
+      # @param A YAML string.
+      # @return If a merge error was detected or not.
+      def yaml_has_merge_error(yaml_string)
+        yaml_string.include?('<<<<<<< HEAD')
       end
 
       #-----------------------------------------------------------------------#

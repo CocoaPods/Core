@@ -196,7 +196,7 @@ module Pod
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF
-        YAML.load(podfile.to_yaml).should == YAML.load(expected)
+        YAMLHelper.load(podfile.to_yaml).should == YAMLHelper.load(expected)
       end
 
       it 'includes inhibit warnings per pod' do

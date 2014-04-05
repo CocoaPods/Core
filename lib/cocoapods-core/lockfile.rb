@@ -40,7 +40,7 @@ module Pod
     def self.from_file(path)
       return nil unless path.exist?
       require 'yaml'
-      hash = File.open(path) { |f| YAML.load(f) }
+      hash = File.open(path) { |f| YAMLHelper.load(f) }
       unless hash && hash.is_a?(Hash)
         raise Informative, "Invalid Lockfile in `#{path}`"
       end
@@ -312,7 +312,7 @@ module Pod
         'SPEC CHECKSUMS',
         'COCOAPODS',
       ]
-      YAMLConverter.convert_hash(to_hash, keys_hint, "\n\n")
+      YAMLHelper.convert_hash(to_hash, keys_hint, "\n\n")
     end
 
     #-------------------------------------------------------------------------#
