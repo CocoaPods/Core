@@ -44,8 +44,8 @@ module Pod
       # Load a YAML file and provide more informative error messages in special cases like merge conflict.
       # @todo Check for merge conflict.
       def load(yaml_string)
-        super(yaml_string)
-        rescue LoadError
+        YAML.load(yaml_string)
+        rescue Psych::SyntaxError
           raise Informative, 'test'
       end
 
