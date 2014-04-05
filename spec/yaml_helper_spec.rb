@@ -145,7 +145,7 @@ module Pod
       end
       
       it "raises another error when it encounters an error that is not a merge conflict" do
-        should.raise do
+        should.raise Exception do
           YAMLHelper.load(bad_yaml)
         end
       end
