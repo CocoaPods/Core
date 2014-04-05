@@ -157,8 +157,6 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      # @!group Dependencies
-
       # @return [Array<Dependency>] the dependencies on other Pods.
       #
       def dependencies
@@ -168,9 +166,9 @@ module Pod
         end
       end
 
+      # Raw values need to be prepared as soon as they are read so they can be
+      # safely merged to support multi platform attributes and inheritance
       #-----------------------------------------------------------------------#
-
-      private
 
       # Returns the value for the attribute with the given name for the
       # specification. It takes into account inheritance, multi-platform
@@ -297,37 +295,8 @@ module Pod
         end
       end
 
-      #-----------------------------------------------------------------------#
-
-      private
-
-      # Converts the keys of the given hash to a string.
-      #
-      # @todo   Removed if not used by `resources_bundle`
-      #
-      # @param  [Object] value
-      #         the value that needs to be stripped from the Symbols.
-      #
-      # @return [Hash] the hash with the strings instead of the keys.
-      #
-      # def convert_keys_to_symbol(value)
-      #   return unless value
-      #   result = {}
-      #   value.each do |key, subvalue|
-      #     subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
-      #     result[key.to_sym] = subvalue
-      #   end
-      #   result
-      # end
-
-      #-----------------------------------------------------------------------#
-
-      private
-
       # @!group Preparing Values
-      #
-      # Raw values need to be prepared as soon as they are read so they can be
-      # safely merged to support multi platform attributes and inheritance
+      #-----------------------------------------------------------------------#
 
       # @return [String] the name of the prepare hook for this attribute.
       #
@@ -347,7 +316,10 @@ module Pod
       # @return [String] the prefix header.
       #
       def _prepare_prefix_header_contents(value)
-        value.is_a?(Array) ? value * "\n" : value
+        if value
+          value = value.join("\n") if value.is_a?(Array)
+          value.strip_heredoc.chomp
+        end
       end
 
       # Ensures that the file patterns of the resource bundles are contained in

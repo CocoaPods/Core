@@ -52,8 +52,8 @@ module Pod
           name, *version_requirements = args
           platform_name = platform.to_s
           platform_hash = spec.attributes_hash[platform_name] || {}
-          platform_hash["dependencies"] ||= {}
-          platform_hash["dependencies"][name] = version_requirements
+          platform_hash['dependencies'] ||= {}
+          platform_hash['dependencies'][name] = version_requirements
           spec.attributes_hash[platform_name] = platform_hash
         end
 
@@ -63,8 +63,8 @@ module Pod
         #
         def deployment_target=(value)
           platform_name = platform.to_s
-          spec.attributes_hash["platforms"] ||= {}
-          spec.attributes_hash["platforms"][platform_name] = value
+          spec.attributes_hash['platforms'] ||= {}
+          spec.attributes_hash['platforms'][platform_name] = value
         end
       end
     end

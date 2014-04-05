@@ -26,7 +26,7 @@ module Pod
     #         `head` of the source repository.
     #
     attr_accessor :head
-    alias_method  :head?, :head
+    alias_method :head?, :head
 
     # @overload   initialize(name, requirements)
     #

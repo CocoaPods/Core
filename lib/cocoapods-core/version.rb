@@ -43,7 +43,7 @@ module Pod
     # @return [Bool] whether the version represents the `head` of repository.
     #
     attr_accessor :head
-    alias_method  :head?, :head
+    alias_method :head?, :head
 
     # @param  [String,Version] version
     #         A string representing a version, or another version.

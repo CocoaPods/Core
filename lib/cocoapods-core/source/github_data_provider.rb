@@ -39,14 +39,14 @@ module Pod
       # @return [String] The user friendly type of the source.
       #
       def type
-        "GitHub API"
+        'GitHub API'
       end
 
       # @return [Array<String>] The list of the name of all the Pods known to
       #         the Source.
       #
       def pods
-        root_contents = get_github_contents("Specs")
+        root_contents = get_github_contents('Specs')
         pods = dir_names(root_contents)
         pods.sort if pods
       end
@@ -58,7 +58,7 @@ module Pod
       #         The name of the Pod.
       #
       def versions(name)
-        raise ArgumentError, "No name" unless name
+        raise ArgumentError, 'No name' unless name
         contents = get_github_contents("Specs/#{name}")
         dir_names(contents)
       end
@@ -72,8 +72,8 @@ module Pod
       #         The version of the Pod.
       #
       def specification(name, version)
-        raise ArgumentError, "No name" unless name
-        raise ArgumentError, "No version" unless version
+        raise ArgumentError, 'No name' unless name
+        raise ArgumentError, 'No version' unless version
         spec_content = specification_contents(name, version)
         if spec_content
           Pod::Specification.from_json(spec_content)
@@ -90,13 +90,13 @@ module Pod
       #         the version of the Pod.
       #
       def specification_contents(name, version)
-        raise ArgumentError, "No name" unless name
-        raise ArgumentError, "No version" unless version
+        raise ArgumentError, 'No name' unless name
+        raise ArgumentError, 'No version' unless version
         path = "Specs/#{name}/#{version}/#{name}.podspec.json"
         file_contents = get_github_contents(path)
         if file_contents
           if file_contents['encoding'] == 'base64'
-            require "base64"
+            require 'base64'
             Base64.decode64(file_contents['content'])
           end
         end

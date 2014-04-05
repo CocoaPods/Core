@@ -16,14 +16,14 @@ module Pod
           if method == :pre_install
             CoreUI.warn "[#{self}] The use of `#{method}` by overriding " \
               "the method is deprecated."
-            @pre_install_callback = Proc.new do |pod, target_definition|
+            @pre_install_callback = proc do |pod, target_definition|
               pre_install(pod, target_definition)
             end
 
           elsif method == :post_install
             CoreUI.warn "[#{self}] The use of `#{method}` by overriding the " \
               "method is deprecated."
-            @post_install_callback = Proc.new do |target_installer|
+            @post_install_callback = proc do |target_installer|
               post_install(target_installer)
             end
 

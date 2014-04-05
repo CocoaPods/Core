@@ -184,7 +184,7 @@ module Pod
     #         that required the pod.
     #
     def external_sources_data
-      @external_sources_data ||= internal_data["EXTERNAL SOURCES"] || {}
+      @external_sources_data ||= internal_data['EXTERNAL SOURCES'] || {}
     end
 
     # @return [Hash{String => Version}] a Hash containing the name of the root
@@ -306,11 +306,11 @@ module Pod
     #
     def to_yaml
       keys_hint = [
-        "PODS",
-        "DEPENDENCIES",
-        "EXTERNAL SOURCES",
-        "SPEC CHECKSUMS",
-        "COCOAPODS",
+        'PODS',
+        'DEPENDENCIES',
+        'EXTERNAL SOURCES',
+        'SPEC CHECKSUMS',
+        'COCOAPODS',
       ]
       YAMLConverter.convert_hash(to_hash, keys_hint, "\n\n")
     end
@@ -434,7 +434,7 @@ module Pod
       #
       def generate_checksums(specs)
         checksums = {}
-        specs.select { |spec| !spec.defined_in_file.nil? }.each do |spec|
+        specs.select { |spec| spec.defined_in_file }.each do |spec|
           checksums[spec.root.name] = spec.checksum
         end
         checksums

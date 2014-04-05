@@ -9,38 +9,38 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe "Optional methods" do
-      it "raises for the #name method" do
+    describe 'Optional methods' do
+      it 'raises for the #name method' do
         should.raise StandardError do
           @sut.name
         end.message.should.match /Abstract method/
       end
 
-      it "raises for the #type method" do
+      it 'raises for the #type method' do
         should.raise StandardError do
           @sut.type
         end.message.should.match /Abstract method/
       end
 
-      it "raises for the #pods method" do
+      it 'raises for the #pods method' do
         should.raise StandardError do
           @sut.pods
         end.message.should.match /Abstract method/
       end
 
-      it "raises for the #versions method" do
+      it 'raises for the #versions method' do
         should.raise StandardError do
           @sut.versions('Pod')
         end.message.should.match /Abstract method/
       end
 
-      it "raises for the #specification method" do
+      it 'raises for the #specification method' do
         should.raise StandardError do
           @sut.specification('Pod', '0.1.0')
         end.message.should.match /Abstract method/
       end
 
-      it "raises for the #specification_contents method" do
+      it 'raises for the #specification_contents method' do
         should.raise StandardError do
           @sut.specification_contents('Pod', '0.1.0')
         end.message.should.match /Abstract method/

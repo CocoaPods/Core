@@ -13,20 +13,20 @@ module Pod
       # @return [String] The name of the source.
       #
       def name
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       # @return [String] The user friendly type of the source.
       #
       def type
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       # @return [Array<String>] The list of the name of all the Pods known to
       #         the Source.
       #
       def pods
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       # @return [Array<String>] All the available versions of a given Pod,
@@ -36,7 +36,7 @@ module Pod
       #         The name of the Pod.
       #
       def versions(name)
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       # @return [Specification] The specification for a given version of a Pod.
@@ -48,7 +48,7 @@ module Pod
       #         The version of the Pod.
       #
       def specification(name, version)
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       # @return [Specification] The contents of the specification for a given
@@ -61,7 +61,7 @@ module Pod
       #         the version of the Pod.
       #
       def specification_contents(name, version)
-        raise StandardError, "Abstract method."
+        raise StandardError, 'Abstract method.'
       end
 
       #-----------------------------------------------------------------------#

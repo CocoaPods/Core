@@ -45,7 +45,7 @@ module Pod
         spec = Specification.from_file(spec_path)
         analyze(spec)
       rescue
-        ["Unable to load the specification."]
+        ['Unable to load the specification.']
       end
 
       private
@@ -70,8 +70,8 @@ module Pod
         unless source == old_source
           message = "The source of the spec doesn't match with the recorded "
           message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
-          message << "Please contact the specs repo maintainers if the"
-          message << "library changed location."
+          message << 'Please contact the specs repo maintainers if the'
+          message << 'library changed location.'
           errors << message
         end
       end
@@ -104,7 +104,7 @@ module Pod
         return unless previous_spec
         return unless spec.version == Version.new('0.0.1')
         unless spec.source[:commit] == previous_spec.source[:commit]
-          errors << "Attempt to rewrite the commit of a 0.0.1 version."
+          errors << 'Attempt to rewrite the commit of a 0.0.1 version.'
         end
       end
 

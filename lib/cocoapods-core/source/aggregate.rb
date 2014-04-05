@@ -102,7 +102,7 @@ module Pod
       # @see    Source#search
       #
       def search(dependency)
-        sources = all.select { |s| !s.search(dependency).nil? }
+        sources = all.select { |s| s.search(dependency) }
         unless sources.empty?
           Specification::Set.new(dependency.root_name, sources)
         end
@@ -132,7 +132,7 @@ module Pod
           result << Specification::Set.new(pod, sources)
         end
         if result.empty?
-          extra = ", author, summary, or description" if full_text_search
+          extra = ', author, summary, or description' if full_text_search
           raise Informative, "Unable to find a pod with name" \
             "#{extra} matching `#{query}'"
         end
