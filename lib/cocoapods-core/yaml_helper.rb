@@ -15,7 +15,7 @@ module Pod
   #       The missing features include:
   #       - Strings are never quoted even when ambiguous.
   #
-  class YAMLConverter
+  class YAMLHelper
 
     class << self
 
