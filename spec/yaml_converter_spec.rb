@@ -140,19 +140,19 @@ module Pod
     describe 'Loading' do
       it "raises an Informative error when it encounters a merge conflict" do
         should.raise Informative do
-          value = YAMLConverter.load(yaml_with_merge_conflict)
-        end
+          YAMLConverter.load(yaml_with_merge_conflict)
+        end.message.should.match /Merge conflict\(s\) detected/
       end
-
+      
       it "raises another error when it encounters an error that is not a merge conflict" do
         should.raise Psych::SyntaxError do
-          value = YAMLConverter.load(bad_yaml)
+          YAMLConverter.load(bad_yaml)
         end
       end
 
       it "should not raise when there is no merge conflict" do
         should.not.raise do
-          value = YAMLConverter.load(sample_yaml)
+          YAMLConverter.load(sample_yaml)
         end
       end
     end

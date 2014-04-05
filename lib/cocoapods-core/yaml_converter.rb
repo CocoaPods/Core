@@ -42,11 +42,14 @@ module Pod
       end
 
       # Load a YAML file and provide more informative error messages in special cases like merge conflict.
-      # @todo Check for merge conflict.
       def load(yaml_string)
         YAML.load(yaml_string)
-        rescue Psych::SyntaxError
-          raise Informative, 'test'
+        rescue Psych::SyntaxError => original_syntax_error
+          if yaml_has_merge_error(yaml_string)
+            raise Informative, 'Merge conflict(s) detected'
+          else
+            raise original_syntax_error
+          end
       end
 
       #-----------------------------------------------------------------------#
@@ -126,6 +129,10 @@ module Pod
           end
         end
         key_lines * line_separator
+      end
+
+      def yaml_has_merge_error(yaml_string)
+        yaml_string.include?('<<<<<<< HEAD')
       end
 
       #-----------------------------------------------------------------------#
