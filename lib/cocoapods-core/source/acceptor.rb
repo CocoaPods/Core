@@ -53,20 +53,26 @@ module Pod
       # @!group Private helpers
       #-----------------------------------------------------------------------#
 
+      MAX_HTTP_REDIRECTS = 3
+
       # Resolve potential redirects and return the final URL.
       #
       # @return [string]
       #
       def get_actual_url(url)
+        redirects = 0
         loop do
           require 'rest'
           response = REST.head(url)
 
-          if response.status_code == 301
+          if [301, 302, 303, 307, 308].include? response.status_code
             url = response.headers['location'].first
+            redirects += 1
           else
             break
           end
+
+          break unless redirects < MAX_HTTP_REDIRECTS
         end
 
         url
