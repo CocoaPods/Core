@@ -57,6 +57,14 @@ FileName:
   Exclude:
     - lib/cocoapods-core.rb
 
+Void:
+  Exclude:
+    - spec/**
+
+AmbiguousRegexpLiteral:
+  Exclude:
+    - spec/**
+
 #------------------------------------------------------------------------------
 # Needs fixing
 #------------------------------------------------------------------------------

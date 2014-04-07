@@ -14,7 +14,7 @@ module Pod
 
       #----------------------------------------#
 
-      describe "File Patterns" do
+      describe 'File Patterns' do
         it 'checks if any file patterns is absolute' do
           @spec.source_files = '/Classes'
           @subject.analyze

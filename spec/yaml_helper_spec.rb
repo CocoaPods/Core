@@ -56,11 +56,11 @@ def bad_yaml
     PODS:
       - Kiwi (2.2)
       SOME BAD TEXT
-      
+
     DEPENDENCIES:
       - Kiwi
       - ObjectiveSugar (from `../`)
-      
+
     COCOAPODS: 0.29.0
   LOCKFILE
 end
@@ -132,25 +132,25 @@ module Pod
         should.raise StandardError do
           YAMLHelper.convert(value)
         end.message.should.match /Unsupported class/
-      end      
+      end
     end
-    
+
     #-------------------------------------------------------------------------#
-    
+
     describe 'Loading' do
-      it "raises an Informative error when it encounters a merge conflict" do
+      it 'raises an Informative error when it encounters a merge conflict' do
         should.raise Informative do
           YAMLHelper.load(yaml_with_merge_conflict)
         end.message.should.match /Merge conflict\(s\) detected/
       end
-      
-      it "raises another error when it encounters an error that is not a merge conflict" do
+
+      it 'raises another error when it encounters an error that is not a merge conflict' do
         should.raise Exception do
           YAMLHelper.load(bad_yaml)
         end
       end
 
-      it "should not raise when there is no merge conflict" do
+      it 'should not raise when there is no merge conflict' do
         should.not.raise do
           YAMLHelper.load(sample_yaml)
         end

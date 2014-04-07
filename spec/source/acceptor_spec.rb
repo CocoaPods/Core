@@ -4,12 +4,12 @@ module Pod
   describe Source::Acceptor do
 
     before do
-      WebMock::API.stub_request( :head, /http:\/\/banana-corp.local\/banana-lib.git/ ).to_return(
-        :status => 301, :headers => { 'Location' => 'http://NEW-URL/banana-lib.git' } )
-      WebMock::API.stub_request( :head, /http:\/\/evil-gorilla-fork\/banana-lib.git/ ).to_return(
-        :status => 200 )
-      WebMock::API.stub_request( :head, /http:\/\/new-url\/banana-lib.git/).to_return(
-        :status => 200 )
+      WebMock::API.stub_request(:head, /http:\/\/banana-corp.local\/banana-lib.git/).to_return(
+        :status => 301, :headers => { 'Location' => 'http://NEW-URL/banana-lib.git' })
+      WebMock::API.stub_request(:head, /http:\/\/evil-gorilla-fork\/banana-lib.git/).to_return(
+        :status => 200)
+      WebMock::API.stub_request(:head, /http:\/\/new-url\/banana-lib.git/).to_return(
+        :status => 200)
       @spec_path =  fixture('BananaLib.podspec')
       @spec = Specification.from_file(@spec_path)
       Specification.any_instance.stubs(:dependencies).returns([])

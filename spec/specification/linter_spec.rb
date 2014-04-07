@@ -336,7 +336,7 @@ module Pod
       end
 
       it 'checks that frameworks do not include unwanted characters' do
-        @spec.frameworks = ["AddressBook, QuartzCore"]
+        @spec.frameworks = ['AddressBook, QuartzCore']
         message_should_include('framework', 'name')
       end
 
@@ -346,7 +346,7 @@ module Pod
       end
 
       it 'checks that weak frameworks do not include unwanted characters' do
-        @spec.weak_frameworks = ["AddressBook, QuartzCore"]
+        @spec.weak_frameworks = ['AddressBook, QuartzCore']
         message_should_include('weak framework', 'name')
       end
 
@@ -368,7 +368,7 @@ module Pod
       end
 
       it 'checks that libraries do not contain unwanted characters' do
-        @spec.libraries = ["ssl, z"]
+        @spec.libraries = ['ssl, z']
         message_should_include('library', 'name')
       end
 
