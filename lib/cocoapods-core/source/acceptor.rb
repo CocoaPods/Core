@@ -53,6 +53,25 @@ module Pod
       # @!group Private helpers
       #-----------------------------------------------------------------------#
 
+      # Resolve potential redirects and return the final URL.
+      #
+      # @return [string]
+      #
+      def get_actual_url(url)
+        loop do
+          require 'rest'
+          response = REST.head(url)
+
+          if response.status_code == 301
+            url = response.headers['location'].first
+          else
+            break
+          end
+        end
+
+        url
+      end
+
       # Checks whether the source of the proposed specification is different
       # from the one of the reference specification.
       #
@@ -68,11 +87,15 @@ module Pod
         source = spec.source.values_at(*keys).compact.first
         old_source = reference_spec(spec).source.values_at(*keys).compact.first
         unless source == old_source
-          message = "The source of the spec doesn't match with the recorded "
-          message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
-          message << 'Please contact the specs repo maintainers if the'
-          message << 'library changed location.'
-          errors << message
+          source = get_actual_url(source)
+          old_source = get_actual_url(old_source)
+          unless source == old_source
+            message = "The source of the spec doesn't match with the recorded "
+            message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
+            message << 'Please contact the specs repo maintainers if the'
+            message << 'library changed location.'
+            errors << message
+          end
         end
       end
 

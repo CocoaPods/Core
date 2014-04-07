@@ -4,6 +4,12 @@ module Pod
   describe Source::Acceptor do
 
     before do
+      WebMock::API.stub_request( :head, /http:\/\/banana-corp.local\/banana-lib.git/ ).to_return(
+        :status => 301, :headers => { 'Location' => 'http://NEW-URL/banana-lib.git' } )
+      WebMock::API.stub_request( :head, /http:\/\/evil-gorilla-fork\/banana-lib.git/ ).to_return(
+        :status => 200 )
+      WebMock::API.stub_request( :head, /http:\/\/new-url\/banana-lib.git/).to_return(
+        :status => 200 )
       @spec_path =  fixture('BananaLib.podspec')
       @spec = Specification.from_file(@spec_path)
       Specification.any_instance.stubs(:dependencies).returns([])
@@ -48,6 +54,12 @@ module Pod
 
       it "doesn't check if the source of the specification did change for HTTP sources" do
         @spec.source = { :http => 'http://banana-lib/lib.zip' }
+        errors = @sut.analyze(@spec).join("\n")
+        errors.should.not.match /The source of the spec doesn't match/
+      end
+
+      it "doesn't fail if the new source of the specification is a redirect" do
+        @spec.source = { :git => 'http://NEW-URL/banana-lib.git', :tag => 'v1.0' }
         errors = @sut.analyze(@spec).join("\n")
         errors.should.not.match /The source of the spec doesn't match/
       end
