@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* Accept new sources for Pods when they are just redirects of the old one.
+  [Boris Bügling](https://github.com/neonichu)
+  [#101](https://github.com/CocoaPods/Core/issues/101)
+  [#102](https://github.com/CocoaPods/Core/pull/102)
+
 * Show informative error message when a merge conflict is detected in a YAML file.
   [Luis de la Rosa](https://github.com/luisdelarosa)
   [#69](https://github.com/CocoaPods/Core/issues/69)
