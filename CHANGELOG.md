@@ -19,7 +19,7 @@
   [Paul Young](https://github.com/paulyoung)
   [#87](https://github.com/CocoaPods/Core/pull/87)
 
-* Ignore any pod directory that begins with '.'
+* Ignore any pod directory that begins with a period. 
   [Dustin Clark](https://github.com/clarkda)
   [#97](https://github.com/CocoaPods/Core/pull/97)
 
