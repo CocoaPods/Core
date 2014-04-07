@@ -128,7 +128,7 @@ module Pod
     #
     def local?
       if external_source
-        !(external_source[:path] || external_source[:local]).nil?
+        external_source[:path] || external_source[:local]
       end
     end
 

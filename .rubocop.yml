@@ -5,10 +5,6 @@ AllCops:
     - lib/cocoapods-core/vendor/**
     - spec/fixtures/**
 
-# https://github.com/bbatsov/rubocop/issues/946
-NonNilCheck:
-  Enabled: false
-
 # https://github.com/bbatsov/rubocop/issues/947
 Documentation:
   Enabled: false
