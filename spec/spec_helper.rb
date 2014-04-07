@@ -2,17 +2,19 @@
 # Set up coverage analysis
 #-----------------------------------------------------------------------------#
 
-require 'simplecov'
-if ENV['CI']
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-else
-  SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
-end
-SimpleCov.start do
-  add_filter "/spec_helper/"
-  add_filter "vendor"
-  minimum_coverage 98
+if RUBY_VERSION >= '1.9.3'
+  require 'simplecov'
+  if ENV['CI']
+    require 'coveralls'
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  else
+    SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
+  end
+  SimpleCov.start do
+    add_filter "/spec_helper/"
+    add_filter "vendor"
+    minimum_coverage 98
+  end
 end
 
 # Set up
