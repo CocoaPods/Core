@@ -42,7 +42,7 @@ module Pod
         return nil unless specs_dir
         specs_dir_as_string = specs_dir.to_s
         Dir.entries(specs_dir).select do |entry|
-          valid_name = !(entry == '.' || entry == '..' || entry == '.git')
+          valid_name = entry[0, 1] != '.'
           valid_name && File.directory?(File.join(specs_dir_as_string, entry))
         end.sort
       end

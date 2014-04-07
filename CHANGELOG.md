@@ -4,12 +4,13 @@
 
 ##### Enhancements
 
-* Accept new sources for Pods when they are just redirects of the old one.
+* Accept new sources for Pods when they are just redirects of the old one.  
   [Boris Bügling](https://github.com/neonichu)
   [#101](https://github.com/CocoaPods/Core/issues/101)
   [#102](https://github.com/CocoaPods/Core/pull/102)
 
-* Show informative error message when a merge conflict is detected in a YAML file.
+* Show informative error message when a merge conflict is detected in a YAML
+  file.  
   [Luis de la Rosa](https://github.com/luisdelarosa)
   [#69](https://github.com/CocoaPods/Core/issues/69)
   [#100](https://github.com/CocoaPods/Core/pull/100)
@@ -34,6 +35,11 @@
   [Paul Williamson](https://github.com/squarefrog)
   [#66](https://github.com/CocoaPods/Core/issues/66)
   [#96](https://github.com/CocoaPods/Core/pull/96)
+
+* Ignore any pod that begins with a `.`  
+  [Dustin Clark](https://github.com/clarkda)
+  [#97](https://github.com/CocoaPods/Core/pull/97)
+  [#98](https://github.com/CocoaPods/Core/issues/98)
 
 ##### Bug Fixes
 
