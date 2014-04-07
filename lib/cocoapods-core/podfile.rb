@@ -266,7 +266,7 @@ module Pod
       if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')
       end
-      hash = YAML.load(string)
+      hash = YAMLHelper.load(string)
       from_hash(hash, path)
     end
 

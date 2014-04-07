@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* Show informative error message when a merge conflict is detected in a YAML file.
+  [Luis de la Rosa](https://github.com/luisdelarosa)
+  [#69](https://github.com/CocoaPods/Core/issues/69)
+  [#100](https://github.com/CocoaPods/Core/pull/100)
+  
 * Added a check to the linter to ensure that the `social_media_url` has 
   been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
