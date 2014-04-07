@@ -211,7 +211,7 @@ module Pod
           end
 
           if spec.root.name[0, 1] == '.'
-            error 'The name of a spec should not being with a period.'
+            error 'The name of a spec should not begin with a period.'
           end
         end
       end
