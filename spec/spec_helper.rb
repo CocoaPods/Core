@@ -11,9 +11,11 @@ if RUBY_VERSION >= '1.9.3'
     SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
   end
   SimpleCov.start do
-    add_filter "/spec_helper/"
-    add_filter "vendor"
-    minimum_coverage 98
+    add_filter '/spec_helper/'
+    add_filter 'vendor'
+    if ENV['CI']
+      minimum_coverage 98
+    end
   end
 end
 
