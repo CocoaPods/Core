@@ -103,7 +103,7 @@ module Pod
     # @return [Nil] if the given url is not a valid github repo url.
     #
     def self.repo_id_from_url(url)
-      url[%r{github.com/([^/\.]*/[^/\.]*)\.*}, 1]
+      url[%r{github.com/([^/]*/[^/]*)\.*}, 1]
     end
 
     # Performs a get request with the given URL.
