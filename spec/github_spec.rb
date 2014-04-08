@@ -18,6 +18,13 @@ module Pod
         end
       end
 
+      it 'returns the information of a repo with dots in the name' do
+        VCR.use_cassette('GitHub', :record => :new_episodes) do
+          repo = GitHub.repo('https://github.com/contentful/contentful.objc')
+          repo['name'].should == 'contentful.objc'
+        end
+      end
+
       it 'returns the tags of a repo' do
         VCR.use_cassette('GitHub', :record => :new_episodes) do
           tags = GitHub.tags('https://github.com/CocoaPods/CocoaPods')
