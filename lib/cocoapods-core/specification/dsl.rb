@@ -330,7 +330,7 @@ module Pod
       # @!method screenshots=(screenshots)
       #
       #   A list of URLs to images showcasing the Pod. Intended for UI oriented
-      #   libraries.
+      #   libraries. CocoaPods recommends the usage of the `gif` format.
       #
       #   @example
       #
