@@ -27,7 +27,7 @@ module Pod
         # @note Sub-keys are not checked per-platform as
         #       there is no attribute supporting this combination.
         #
-        # @note The keys of sub-keys are not checked as they are only used by 
+        # @note The keys of sub-keys are not checked as they are only used by
         #       the `source` attribute and they are subject
         #       to change according the support in the
         #       `cocoapods-downloader` gem.
@@ -44,20 +44,24 @@ module Pod
             warning "Unrecognized `#{key}` key"
           end
 
-         Pod::Specification::DSL.attributes.each do |key, attribute|
-           if attribute.keys
-             value = consumer.spec.attributes_hash[key.to_s]
-             if value
-               if attribute.keys.is_a?(Array)
-                 unknown_keys = value.keys - attribute.keys.map(&:to_s)
-                 unknown_keys.each do |key|
-                   warning "Unrecognized `#{key}` key for " \
-                     "`#{attribute.name}` attribute"
-                 end
-               end
-             end
-           end
-         end
+          Pod::Specification::DSL.attributes.each do |key, attribute|
+            if attribute.keys && attribute.name != :platforms
+              if attribute.root_only?
+                value = consumer.spec.send(attribute.name)
+              else
+                value = consumer.send(attribute.name)
+              end
+              if value
+                if attribute.keys.is_a?(Array)
+                  unknown_keys = value.keys.map(&:to_s) - attribute.keys.map(&:to_s)
+                  unknown_keys.each do |unknown_key|
+                    warning "Unrecognized `#{unknown_key}` key for " \
+                      "`#{attribute.name}` attribute"
+                  end
+                end
+              end
+            end
+          end
         end
 
         # Checks the attributes that represent file patterns.

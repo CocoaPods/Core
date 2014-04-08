@@ -44,7 +44,6 @@ module Pod
           @spec.license = { :is_safe_for_work => true }
           @subject.analyze
           @subject.results.count.should.be.equal(1)
-          true.should.be.false
           expected = 'Unrecognized `is_safe_for_work` key'
           @subject.results.first.message.should.include?(expected)
         end
