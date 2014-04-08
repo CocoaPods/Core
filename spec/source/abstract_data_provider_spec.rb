@@ -4,7 +4,7 @@ module Pod
   describe Source::AbstractDataProvider do
 
     before do
-      @sut = Source::AbstractDataProvider.new
+      @subject = Source::AbstractDataProvider.new
     end
 
     #-------------------------------------------------------------------------#
@@ -12,37 +12,37 @@ module Pod
     describe 'Optional methods' do
       it 'raises for the #name method' do
         should.raise StandardError do
-          @sut.name
+          @subject.name
         end.message.should.match /Abstract method/
       end
 
       it 'raises for the #type method' do
         should.raise StandardError do
-          @sut.type
+          @subject.type
         end.message.should.match /Abstract method/
       end
 
       it 'raises for the #pods method' do
         should.raise StandardError do
-          @sut.pods
+          @subject.pods
         end.message.should.match /Abstract method/
       end
 
       it 'raises for the #versions method' do
         should.raise StandardError do
-          @sut.versions('Pod')
+          @subject.versions('Pod')
         end.message.should.match /Abstract method/
       end
 
       it 'raises for the #specification method' do
         should.raise StandardError do
-          @sut.specification('Pod', '0.1.0')
+          @subject.specification('Pod', '0.1.0')
         end.message.should.match /Abstract method/
       end
 
       it 'raises for the #specification_contents method' do
         should.raise StandardError do
-          @sut.specification_contents('Pod', '0.1.0')
+          @subject.specification_contents('Pod', '0.1.0')
         end.message.should.match /Abstract method/
       end
     end

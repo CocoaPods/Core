@@ -5,18 +5,18 @@ module Pod
     describe 'In general' do
 
       it 'can be initialized with no requirements' do
-        sut = Dependency.new('bananas')
-        sut.name.should == 'bananas'
+        subject = Dependency.new('bananas')
+        subject.name.should == 'bananas'
       end
 
       it 'can be initialized with multiple requirements' do
-        sut = Dependency.new('bananas', '> 1.0', '< 2.0')
-        sut.requirement.to_s.should == '< 2.0, > 1.0'
+        subject = Dependency.new('bananas', '> 1.0', '< 2.0')
+        subject.requirement.to_s.should == '< 2.0, > 1.0'
       end
 
       it 'can be initialized with a requirement on a pre-release version' do
-        sut = Dependency.new('bananas', '> 1.0-pre')
-        sut.requirement.should == '> 1.0-pre'
+        subject = Dependency.new('bananas', '> 1.0-pre')
+        subject.requirement.should == '> 1.0-pre'
       end
 
       it 'can be initialized with an external source' do
@@ -104,15 +104,15 @@ module Pod
       end
 
       it 'can store a specific version which is used in place of the requirements' do
-        sut = Dependency.new('cocoapods', '> 1.0')
-        sut.specific_version = Version.new('1.23')
-        sut.requirement.as_list.should == ['= 1.23']
+        subject = Dependency.new('cocoapods', '> 1.0')
+        subject.specific_version = Version.new('1.23')
+        subject.requirement.as_list.should == ['= 1.23']
       end
 
       it 'can handle specific version with head information' do
-        sut = Dependency.new('cocoapods', '> 1.0')
-        sut.specific_version = Version.new('HEAD based on 1.23')
-        sut.requirement.as_list.should == ['= 1.23']
+        subject = Dependency.new('cocoapods', '> 1.0')
+        subject.specific_version = Version.new('HEAD based on 1.23')
+        subject.requirement.as_list.should == ['= 1.23']
       end
 
       #--------------------------------------#

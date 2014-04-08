@@ -6,13 +6,13 @@ module Pod
 
     describe 'JSON support' do
       it 'returns the json representation' do
-        sut = Specification.new(nil, 'BananaLib')
-        sut.version = '1.0'
+        subject = Specification.new(nil, 'BananaLib')
+        subject.version = '1.0'
         expected = {
           'name' => 'BananaLib',
           'version' => '1.0'
         }
-        JSON.parse(sut.to_json).should == expected
+        JSON.parse(subject.to_json).should == expected
       end
 
       it 'allows to specify multi-platform attributes' do
@@ -35,17 +35,17 @@ module Pod
     describe 'Hash conversion' do
       before do
         path = fixture('BananaLib.podspec')
-        @sut = Spec.from_file(path)
+        @subject = Spec.from_file(path)
       end
 
       it 'can be converted to a hash' do
-        hash = @sut.to_hash
+        hash = @subject.to_hash
         hash['name'].should == 'BananaLib'
         hash['version'].should == '1.0'
       end
 
       it 'handles subspecs when converted to a hash' do
-        hash = @sut.to_hash
+        hash = @subject.to_hash
         hash['subspecs'].should == [{
           'name' => 'GreenBanana',
           'source_files' => 'GreenBanana'
@@ -63,17 +63,17 @@ module Pod
       end
 
       it 'can be safely converted back and forth to a hash' do
-        result = Specification.from_hash(@sut.to_hash)
-        result.should == @sut
+        result = Specification.from_hash(@subject.to_hash)
+        result.should == @subject
       end
 
       it 'returns whether it safe to convert a specification to hash' do
-        @sut.safe_to_hash?.should.be.true
+        @subject.safe_to_hash?.should.be.true
       end
 
       it 'returns that it is not safe to convert a specification to a hash if there is hook defined' do
-        @sut.pre_install { ; }
-        @sut.safe_to_hash?.should.be.false
+        @subject.pre_install { ; }
+        @subject.safe_to_hash?.should.be.false
       end
     end
 

@@ -6,18 +6,18 @@ module Pod
     before do
       @path = fixture('spec-repos/test_repo')
       provider = Source::FileSystemDataProvider.new(@path)
-      @sut = Source.new(provider)
+      @subject = Source.new(provider)
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'In general' do
       it 'return its name' do
-        @sut.name.should == 'test_repo'
+        @subject.name.should == 'test_repo'
       end
 
       it 'return its type' do
-        @sut.type.should == 'file system'
+        @subject.type.should == 'file system'
       end
 
       it 'can be ordered according to its name' do
@@ -32,15 +32,15 @@ module Pod
 
     describe '#pods' do
       it 'returns the available Pods' do
-        @sut.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        @subject.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
       end
 
       it "raises if the repo doesn't exists" do
         @path = fixture('spec-repos/non_existing')
         provider = Source::FileSystemDataProvider.new(@path)
-        @sut = Source.new(provider)
+        @subject = Source.new(provider)
         e = should.raise Informative do
-          @sut.pods
+          @subject.pods
         end
         e.message.should == 'Unable to find the file system source named: `non_existing`'
       end
@@ -50,11 +50,11 @@ module Pod
 
     describe '#versions' do
       it 'returns the available versions of a Pod' do
-        @sut.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.4']
+        @subject.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.4']
       end
 
       it 'returns nil if the Pod could not be found' do
-        @sut.versions('Unknown_Pod').should.be.nil
+        @subject.versions('Unknown_Pod').should.be.nil
       end
     end
 
@@ -62,7 +62,7 @@ module Pod
 
     describe '#specification' do
       it 'returns the specification for the given name and version' do
-        spec = @sut.specification('JSONKit', Version.new('1.4'))
+        spec = @subject.specification('JSONKit', Version.new('1.4'))
         spec.name.should == 'JSONKit'
         spec.version.should.to_s == '1.4'
       end
@@ -73,7 +73,7 @@ module Pod
     describe '#all_specs' do
       it 'returns all the specifications' do
         expected = %w(BananaLib IncorrectPath JSONKit JSONSpec)
-        @sut.all_specs.map(&:name).sort.uniq.should == expected
+        @subject.all_specs.map(&:name).sort.uniq.should == expected
       end
     end
 
@@ -81,9 +81,9 @@ module Pod
 
     describe '#set' do
       it 'returns the set of a given Pod' do
-        set = @sut.set('BananaLib')
+        set = @subject.set('BananaLib')
         set.name.should == 'BananaLib'
-        set.sources.should == [@sut]
+        set.sources.should == [@subject]
       end
     end
 
@@ -92,7 +92,7 @@ module Pod
     describe '#pod_sets' do
       it 'returns all the pod sets' do
         expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
-        @sut.pod_sets.map(&:name).sort.uniq.should == expected
+        @subject.pod_sets.map(&:name).sort.uniq.should == expected
       end
     end
 
@@ -100,17 +100,17 @@ module Pod
 
     describe '#search' do
       it 'searches for the Pod with the given name' do
-        @sut.search('BananaLib').name.should == 'BananaLib'
+        @subject.search('BananaLib').name.should == 'BananaLib'
       end
 
       it 'searches for the pod with the given dependency' do
         dep = Dependency.new('BananaLib')
-        @sut.search(dep).name.should == 'BananaLib'
+        @subject.search(dep).name.should == 'BananaLib'
       end
 
       it 'supports dependencies on subspecs' do
         dep = Dependency.new('BananaLib/subspec')
-        @sut.search(dep).name.should == 'BananaLib'
+        @subject.search(dep).name.should == 'BananaLib'
       end
 
       describe '#search_by_name' do
@@ -135,28 +135,28 @@ module Pod
 
     describe '#search_by_name' do
       it 'supports full text search' do
-        sets = @sut.search_by_name('monkey', true)
+        sets = @subject.search_by_name('monkey', true)
         sets.map(&:name).should == ['BananaLib']
-        sets.map(&:sources).should == [[@sut]]
+        sets.map(&:sources).should == [[@subject]]
       end
 
       it 'The search is case insensitive' do
-        pods = @sut.search_by_name('MONKEY', true)
+        pods = @subject.search_by_name('MONKEY', true)
         pods.map(&:name).should == ['BananaLib']
       end
 
       it 'supports partial matches' do
-        pods = @sut.search_by_name('MON', true)
+        pods = @subject.search_by_name('MON', true)
         pods.map(&:name).should == ['BananaLib']
       end
 
       it "handles gracefully specification which can't be loaded" do
         should.raise Informative do
-          @sut.specification('Faulty_spec', '1.0.0')
+          @subject.specification('Faulty_spec', '1.0.0')
         end.message.should.include 'Invalid podspec'
 
         should.not.raise do
-          @sut.search_by_name('monkey', true)
+          @subject.search_by_name('monkey', true)
         end
       end
     end
@@ -165,23 +165,23 @@ module Pod
 
     describe '#fuzzy_search' do
       it 'is case insensitive' do
-        @sut.fuzzy_search('bananalib').name.should == 'BananaLib'
+        @subject.fuzzy_search('bananalib').name.should == 'BananaLib'
       end
 
       it 'matches misspells' do
-        @sut.fuzzy_search('banalib').name.should == 'BananaLib'
+        @subject.fuzzy_search('banalib').name.should == 'BananaLib'
       end
 
       it 'matches suffixes' do
-        @sut.fuzzy_search('Lib').name.should == 'BananaLib'
+        @subject.fuzzy_search('Lib').name.should == 'BananaLib'
       end
 
       it 'returns nil if there is no match' do
-        @sut.fuzzy_search('12345').should.be.nil
+        @subject.fuzzy_search('12345').should.be.nil
       end
 
       it 'matches abbreviations' do
-        @sut.fuzzy_search('BLib').name.should == 'BananaLib'
+        @subject.fuzzy_search('BLib').name.should == 'BananaLib'
       end
     end
 
@@ -189,11 +189,11 @@ module Pod
 
     describe 'Representations' do
       it 'returns the hash representation' do
-        @sut.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'
+        @subject.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'
       end
 
       it 'returns the yaml representation' do
-        yaml = @sut.to_yaml
+        yaml = @subject.to_yaml
         yaml.should.match /---/
         yaml.should.match /BananaLib:/
       end
