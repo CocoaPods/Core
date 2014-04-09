@@ -12,7 +12,7 @@ module Pod
         end
 
         def analyze
-          check_for_unknown_keys
+          check_attributes
           validate_file_patterns
           check_if_spec_is_empty
         end
@@ -32,7 +32,7 @@ module Pod
         #       to change according the support in the
         #       `cocoapods-downloader` gem.
         #
-        def check_for_unknown_keys
+        def check_attributes
           Pod::Specification::DSL.attributes
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
@@ -51,18 +51,11 @@ module Pod
               else
                 value = consumer.send(attribute.name)
               end
-              if value
-                if attribute.keys.is_a?(Array)
-                  unknown_keys = value.keys.map(&:to_s) - attribute.keys.map(&:to_s)
-                  unknown_keys.each do |unknown_key|
-                    warning "Unrecognized `#{unknown_key}` key for " \
-                      "`#{attribute.name}` attribute"
-                  end
-                end
-              end
+              validate_attribute_value(attribute, value) if value
             end
           end
         end
+
 
         # Checks the attributes that represent file patterns.
         #
@@ -99,6 +92,54 @@ module Pod
             'or subspecs).'
           end
         end
+
+        private
+
+        # Validates the given value for the given attribute.
+        #
+        # @param  [Spec::DSL::Attribute] attribute
+        #         The attribute.
+        #
+        # @param  [Spec::DSL::Attribute] value
+        #         The value of the attribute.
+        #
+        def validate_attribute_value(attribute, value)
+          if attribute.keys.is_a?(Array)
+            validate_attribute_array_keys(attribute, value)
+          elsif attribute.keys.is_a?(Hash)
+            validate_attribute_hash_keys(attribute, value)
+          else
+          end
+        end
+
+        def validate_attribute_array_keys(attribute, value)
+          unknown_keys = value.keys.map(&:to_s) - attribute.keys.map(&:to_s)
+          unknown_keys.each do |unknown_key|
+            warning "Unrecognized `#{unknown_key}` key for " \
+              "`#{attribute.name}` attribute"
+          end
+        end
+
+        def validate_attribute_hash_keys(attribute, value)
+          major_keys = value.keys & attribute.keys.keys
+          if major_keys.count.zero?
+            warning "Missing primary key for `#{attribute.name}` " \
+              "attribute. The acceptable ones are: " \
+              "`#{attribute.keys.keys.join(', ')}`"
+          elsif major_keys.count == 1
+            acceptable = attribute.keys[major_keys.first]
+            unknown = value.keys - major_keys - acceptable
+            unless unknown.empty?
+              warning "Incompatible `#{unknown.join(', ')}` key(s) with " \
+                "`#{major_keys.first}` primary key for " \
+                "`#{attribute.name}` attribute"
+            end
+          else
+            warning "Incompatible `#{major_keys.join(', ')}` keys for " \
+              "`#{attribute.name}` attribute"
+          end
+        end
+
       end
     end
   end

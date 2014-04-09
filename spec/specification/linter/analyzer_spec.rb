@@ -15,6 +15,7 @@ module Pod
       #----------------------------------------#
 
       describe "Unknown keys check" do
+
         it "validates a spec with valid keys" do
           @subject.analyze
           @subject.results.should.be.empty?
@@ -48,6 +49,35 @@ module Pod
           @subject.results.first.message.should.include?(expected)
         end
 
+        it "validates a spec with valid minor sub-keys" do
+          @spec.source = { :git => 'example.com', :branch => 'master' }
+          @subject.analyze
+          @subject.results.should.be.empty?
+        end
+
+        it "fails a spec with a missing primary sub-keys" do
+          @spec.source = { :branch => 'example.com', :commit => 'MyLib' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Missing primary key for `source` attribute.'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it "fails a spec with invalid secondary sub-keys" do
+          @spec.source = { :git => 'example.com', :folder => 'MyLib' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Incompatible `folder` key(s) with `git`'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it "fails a spec with multiple primary keys" do
+          @spec.source = { :git => 'example.com', :http => 'example.com' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Incompatible `git, http` keys'
+          @subject.results.first.message.should.include?(expected)
+        end
       end
 
       #----------------------------------------#
