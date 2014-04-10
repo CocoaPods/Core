@@ -59,7 +59,7 @@ task :coverage do
   title 'Generating Coverage Report'
   sh "env GENERATE_COVERAGE=true bundle exec bacon --quiet #{specs('**')}"
   title 'Opening Report'
-  puts "Coverage report available at `coverage/index.html`"
+  puts 'Coverage report available at `coverage/index.html`'
   sh 'open coverage/index.html'
 end
 
