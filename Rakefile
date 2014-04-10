@@ -71,7 +71,7 @@ task :rubocop do
   if RUBY_VERSION >= '1.9.3'
     require 'rubocop'
     cli = Rubocop::CLI.new
-    result = cli.run(FileList['lib/**/*.rb'].exclude('lib/cocoapods-core/vendor/**/*').to_a)
+    result = cli.run
     abort('RuboCop failed!') unless result == 0
   else
     puts '[!] Ruby > 1.9 is required to run style checks'
