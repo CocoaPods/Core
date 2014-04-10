@@ -232,7 +232,7 @@ module Pod
     #
     def subspec_dependencies(platform = nil)
       if default_subspec
-        specs = [subspec_by_name("#{name}/#{default_subspec}")]
+        specs = [subspec_by_name("#{base_name}/#{default_subspec}")]
       else
         specs = subspecs.compact
       end
