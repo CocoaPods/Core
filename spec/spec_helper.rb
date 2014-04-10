@@ -2,7 +2,7 @@
 # Set up coverage analysis
 #-----------------------------------------------------------------------------#
 
-if RUBY_VERSION >= '1.9.3'
+if (ENV['GENERATE_COVERAGE'] || ENV['CI']) && RUBY_VERSION >= '1.9.3'
   require 'simplecov'
   if ENV['CI']
     require 'coveralls'
