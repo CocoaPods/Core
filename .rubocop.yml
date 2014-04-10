@@ -5,82 +5,57 @@ AllCops:
     - lib/cocoapods-core/vendor/**
     - spec/fixtures/**
 
-# https://github.com/bbatsov/rubocop/issues/947
-Documentation:
-  Enabled: false
+inherit_from: rubocop-todo.yml
 
-# Remove once the support for Ruby 1.8.7 has been phased out
-HashSyntax:
-  EnforcedStyle: hash_rockets
+#- CocoaPods -----------------------------------------------------------------#
 
-# fail vs raise https://github.com/bbatsov/ruby-style-guide/issues/233
+# We adopted raise instead of fail.
 SignalException:
   EnforcedStyle: only_raise
 
-# Warns about having a new line before the comment of the first method.
-EmptyLinesAroundBody:
-  Enabled: false
-
-# The indentation is preferred to show branching.
-IfUnlessModifier:
-  Enabled: false
-
-# This can be changes as soon as rubocop can automatically fix it
-TrailingComma:
-  EnforcedStyleForMultiline: comma
-
-Encoding:
-  Enabled: false
-
+# They are idiomatic
 AssignmentInCondition:
   Enabled: false
 
-# Warns about class methods.
-TrivialAccessors:
-  Enabled: false
-
-# Do not want!
+# Allow backticks
 AsciiComments:
   Enabled: false
 
-#------------------------------------------------------------------------------
+# Indentation clarifies logic branches in implementations
+IfUnlessModifier:
+  Enabled: false
 
-BracesAroundHashParameters:
-  Exclude:
-    - lib/**/dsl.rb
+# No enforced convention here.
+SingleLineBlockParams:
+  Enabled: false
 
-FileName:
-  Exclude:
-    - lib/cocoapods-core.rb
+#- CocoaPods support for Ruby 1.8.7 ------------------------------------------#
 
-Void:
-  Exclude:
-    - spec/**
+HashSyntax:
+  EnforcedStyle: hash_rockets
 
+Lambda:
+  Enabled: false
+
+
+#- CocoaPods specs -----------------------------------------------------------#
+
+# Allow for `should.match /regexp/`.
 AmbiguousRegexpLiteral:
   Exclude:
     - spec/**
 
-#------------------------------------------------------------------------------
-# Needs fixing
-#------------------------------------------------------------------------------
+# Allow `object.should == object` syntax.
+Void:
+  Exclude:
+    - spec/**
 
-CyclomaticComplexity:
-  Max: 6
-  Max: 11
+ClassAndModuleChildren:
+  Exclude:
+    - spec/**
 
-ClassLength:
-  Max: 100
-  Max: 280
+#- Core -----------------------------------------------------------------------
 
-MethodLength:
-  Max: 10
-  Max: 27
-
-LineLength:
-  Max: 80
-  Max: 120
-
-RescueException:
-  Enabled: false
-
+FileName:
+  Exclude:
+    - lib/cocoapods-core.rb
