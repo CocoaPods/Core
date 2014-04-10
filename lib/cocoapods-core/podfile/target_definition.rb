@@ -1,6 +1,5 @@
 module Pod
   class Podfile
-
     # The TargetDefinition stores the information of a CocoaPods static
     # library. The target definition can be linked with one or more targets of
     # the user project.
@@ -9,7 +8,6 @@ module Pod
     # of the parent.
     #
     class TargetDefinition
-
       # @return [TargetDefinition, Podfile] the parent target definition or the
       #         Podfile if the receiver is root.
       #
@@ -622,7 +620,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

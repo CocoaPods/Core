@@ -1,11 +1,9 @@
 module Pod
   class Specification
     module DSL
-
       # Provides warning and errors for the deprecated attributes of the DSL.
       #
       module Deprecations
-
         def preferred_dependency=(name)
           self.default_subspec = name
           CoreUI.warn "[#{self}] `preferred_dependency` has been renamed "\
@@ -130,7 +128,6 @@ module Pod
         end
 
         #-----------------------------------------------------------------------#
-
       end
     end
   end

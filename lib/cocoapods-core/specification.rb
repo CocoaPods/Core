@@ -6,7 +6,6 @@ require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/json'
 
 module Pod
-
   # The Specification provides a DSL to describe a Pod. A pod is defined as a
   # library originating from a source. A specification can support detailed
   # attributes for modules of code  through subspecs.
@@ -14,7 +13,6 @@ module Pod
   # Usually it is stored in files with `podspec` extension.
   #
   class Specification
-
     include Pod::Specification::DSL
     include Pod::Specification::DSL::Deprecations
     include Pod::Specification::RootAttributesAccessors

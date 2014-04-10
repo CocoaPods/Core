@@ -4,7 +4,6 @@ module Pod
   class Specification
     class Linter
       class Analyzer
-
         include Linter::ResultHelpers
 
         def initialize(consumer)

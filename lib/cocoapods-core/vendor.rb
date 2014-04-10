@@ -1,9 +1,7 @@
 module Pod
-
   # Namespaces the vendored modules.
   #
   module Vendor
-
     # Namespaces the classes of RubyGems used by CocoaPods.
     #
     # CocoaPods needs to vendor RubyGems because OS X ships with `v1.3.6` which
@@ -19,7 +17,6 @@ module Pod
     # - replaced `::Gem` with `Pod::Vendor::Gem`
     #
     module Gem
-
       require 'cocoapods-core/vendor/version'
       require 'cocoapods-core/vendor/requirement'
 
@@ -48,7 +45,6 @@ module Pod
       # CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
       # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
       # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
     end
   end
 end

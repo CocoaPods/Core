@@ -3,14 +3,12 @@ require 'cocoapods-core/specification/linter/analyzer'
 
 module Pod
   class Specification
-
     # The Linter check specifications for errors and warnings.
     #
     # It is designed not only to guarantee the formal functionality of a
     # specification, but also to support the maintenance of sources.
     #
     class Linter
-
       include ResultHelpers
 
       # @return [Specification] the specification to lint.

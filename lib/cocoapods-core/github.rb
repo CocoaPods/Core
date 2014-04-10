@@ -1,11 +1,9 @@
 module Pod
-
   # Allows to access information about the GitHub repos.
   #
   # This class is stored in Core because it might be used by web services.
   #
   module GitHub
-
     # Returns the information of a user.
     #
     # @param  [String] login
@@ -129,6 +127,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

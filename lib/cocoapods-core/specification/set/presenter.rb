@@ -3,12 +3,10 @@ require 'active_support/core_ext/array/conversions'
 module Pod
   class Specification
     class Set
-
       # Provides support for presenting a Pod described by a {Set} in a
       # consistent way across clients of CocoaPods-Core.
       #
       class Presenter
-
         # @return [Set] the set that should be presented.
         #
         attr_reader :set
@@ -232,7 +230,6 @@ module Pod
         end
 
         #---------------------------------------------------------------------#
-
       end
     end
   end

@@ -18,11 +18,6 @@ CyclomaticComplexity:
 Documentation:
   Enabled: false
 
-# Offense count: 99
-# Cop supports --auto-correct.
-EmptyLinesAroundBody:
-  Enabled: false
-
 # Offense count: 412
 LineLength:
   Max: 175

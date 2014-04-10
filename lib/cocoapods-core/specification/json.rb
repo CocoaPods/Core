@@ -1,7 +1,6 @@
 module Pod
   class Specification
     module JSONSupport
-
       # @return [String] the json representation of the specification.
       #
       def to_json(*a)
@@ -65,6 +64,5 @@ module Pod
     end
 
     #-----------------------------------------------------------------------#
-
   end
 end

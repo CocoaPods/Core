@@ -1,5 +1,4 @@
 module Pod
-
   # Converts objects to their YAML representation.
   #
   # This class was created for the need having control on how the YAML is
@@ -16,9 +15,7 @@ module Pod
   #       - Strings are never quoted even when ambiguous.
   #
   class YAMLHelper
-
     class << self
-
       # Returns the YAML representation of the given object. If the given object
       # is an Hash it accepts an optional hint for sorting the keys.
       #

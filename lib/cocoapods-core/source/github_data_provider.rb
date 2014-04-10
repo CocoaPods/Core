@@ -1,12 +1,10 @@
 module Pod
   class Source
-
     # Data provider for a `Pod::Source` backed by a repository hosted on GitHub
     # and accessed via the HTTP API. Only pure JSON repos using the `Specs`
     # subdir to store the specifications are supported.
     #
     class GitHubDataProvider < AbstractDataProvider
-
       # @return [String] The identifier of the repository (user name and repo
       #         name) or the full URL of the repo.
       #
@@ -137,7 +135,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

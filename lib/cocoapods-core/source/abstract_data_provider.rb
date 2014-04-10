@@ -1,10 +1,8 @@
 module Pod
   class Source
-
     # Defines the required and the optional methods of a data provider.
     #
     class AbstractDataProvider
-
       public
 
       # @group Required methods
@@ -65,7 +63,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

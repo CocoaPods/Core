@@ -2,7 +2,6 @@ module Pod
   class Specification
     class Linter
       class Result
-
         # @return [Symbol] the type of result.
         #
         attr_reader :type

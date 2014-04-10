@@ -1,9 +1,7 @@
 module Pod
-
   # A Platform describes an SDK name and deployment target.
   #
   class Platform
-
     # @return [Symbol, String] the name of the SDK represented by the platform.
     #
     attr_reader :symbolic_name

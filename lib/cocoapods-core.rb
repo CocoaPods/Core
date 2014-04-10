@@ -1,7 +1,6 @@
 # The Pod modules name-spaces all the classes of CocoaPods.
 #
 module Pod
-
   require 'cocoapods-core/gem_version'
 
   # Indicates a runtime error **not** caused by a bug.
@@ -33,5 +32,4 @@ module Pod
   # TODO: Fix
   #
   Spec = Specification
-
 end

@@ -1,9 +1,7 @@
 module Pod
-
   # Manages the UI output so dependent gems can customize it.
   #
   module CoreUI
-
     def self.puts(message)
       STDOUT.puts message
     end
@@ -13,6 +11,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

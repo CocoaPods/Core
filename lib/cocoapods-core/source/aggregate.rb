@@ -1,10 +1,8 @@
 module Pod
   class Source
-
     # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
-
       # @return [Pathname] the directory were the repositories are stored.
       #
       attr_reader :repos_dir
@@ -236,7 +234,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

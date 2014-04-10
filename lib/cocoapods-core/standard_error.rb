@@ -1,5 +1,4 @@
 module Pod
-
   # Namespaces all the errors raised by CocoaPods.
   #
   class StandardError < ::StandardError; end
@@ -10,7 +9,6 @@ module Pod
   # contents of the line that raised the exception.
   #
   class DSLError < Informative
-
     # @return [String] the description that should be presented to the user.
     #
     attr_reader :description

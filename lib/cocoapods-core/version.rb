@@ -1,5 +1,4 @@
 module Pod
-
   # The Version class stores information about the version of a
   # {Specification}.
   #
@@ -31,7 +30,6 @@ module Pod
   # 4. 0.9
   #
   class Version < Pod::Vendor::Gem::Version
-
     # Override the constants defined by the superclass to add Semantic
     # Versioning prerelease support (with a dash). E.g.: 1.0.0-alpha1
     #
@@ -139,6 +137,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

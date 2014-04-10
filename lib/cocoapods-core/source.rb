@@ -6,7 +6,6 @@ require 'cocoapods-core/source/file_system_data_provider'
 require 'cocoapods-core/source/github_data_provider'
 
 module Pod
-
   # The Source class is responsible to manage a collection of podspecs.
   #
   # The backing store of the podspecs collection is an implementation detail
@@ -18,7 +17,6 @@ module Pod
   #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
-
     # @return [AbstractDataProvider] the data provider for this source.
     #
     attr_accessor :data_provider
@@ -300,6 +298,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

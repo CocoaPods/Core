@@ -1,6 +1,5 @@
 module Pod
   class Podfile
-
     # The of the methods defined in this file and the order of the methods is
     # relevant for the documentation generated on
     # CocoaPods/cocoapods.github.com.
@@ -34,7 +33,6 @@ module Pod
     #     end
     #
     module DSL
-
       # @!group Dependencies
       #   The Podfile specifies the dependencies of each user target.
       #

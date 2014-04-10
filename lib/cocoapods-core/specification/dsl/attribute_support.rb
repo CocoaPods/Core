@@ -1,7 +1,6 @@
 module Pod
   class Specification
     module DSL
-
       # @return [Array<Attribute>] The attributes of the class.
       #
       def self.attributes
@@ -12,7 +11,6 @@ module Pod
       # {Specification} DSL.
       #
       module AttributeSupport
-
         # Defines a root attribute for the extended class.
         #
         # Root attributes make sense only in root specification, they never are

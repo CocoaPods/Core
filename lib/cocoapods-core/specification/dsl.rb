@@ -5,7 +5,6 @@ require 'cocoapods-core/specification/dsl/deprecations'
 
 module Pod
   class Specification
-
     #- NOTE ------------------------------------------------------------------#
     # The of the methods defined in this file and the order of the methods is
     # relevant for the documentation generated on the
@@ -43,7 +42,6 @@ module Pod
     #     end
     #
     module DSL
-
       extend Pod::Specification::DSL::AttributeSupport
 
       #-----------------------------------------------------------------------#

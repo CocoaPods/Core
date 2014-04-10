@@ -1,11 +1,9 @@
 module Pod
   class Source
-
     # Data provider for a `Pod::Source` backed by a repository hosted in the
     # file system.
     #
     class FileSystemDataProvider < AbstractDataProvider
-
       # @return [Pathname] The path where the source is stored.
       #
       attr_reader :repo
@@ -144,7 +142,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

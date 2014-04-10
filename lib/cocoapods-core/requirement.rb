@@ -1,5 +1,4 @@
 module Pod
-
   # A Requirement is a set of one or more version restrictions of a
   # {Dependency}.
   #
@@ -10,7 +9,6 @@ module Pod
   #       the Dependency class.
   #
   class Requirement < Pod::Vendor::Gem::Requirement
-
     quoted_operators = OPS.keys.map { |k| Regexp.quote k }.join '|'
 
     # @return [Regexp] The regular expression used to validate input strings.
@@ -69,7 +67,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
-
 end

@@ -1,12 +1,10 @@
 module Pod
   class Specification
     module DSL
-
       # A Specification attribute stores the information of an attribute. It
       # also provides logic to implement any required logic.
       #
       class Attribute
-
         require 'active_support/inflector/inflections'
 
         # @return [Symbol] the name of the attribute.
@@ -246,7 +244,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

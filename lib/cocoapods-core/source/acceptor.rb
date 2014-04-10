@@ -1,12 +1,10 @@
 module Pod
   class Source
-
     # Checks whether a podspec can be accepted by a source. The check takes
     # into account the introduction of 0.0.1 version if there are already
     # tagged ones or whether there is change in the source.
     #
     class Acceptor
-
       # @return [Source] the source where the podspec should be added.
       #
       attr_reader :source
@@ -190,7 +188,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

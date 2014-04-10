@@ -2,7 +2,6 @@ require 'cocoapods-core/podfile/dsl'
 require 'cocoapods-core/podfile/target_definition'
 
 module Pod
-
   # The Podfile is a specification that describes the dependencies of the
   # targets of an Xcode project.
   #
@@ -13,7 +12,6 @@ module Pod
   # information of necessary to generate the CocoaPods libraries.
   #
   class Podfile
-
     # @!group DSL support
 
     include Pod::Podfile::DSL
@@ -355,6 +353,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

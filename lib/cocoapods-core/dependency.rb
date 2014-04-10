@@ -1,5 +1,4 @@
 module Pod
-
   # The Dependency allows to specify dependencies of a {Podfile} or a
   # {Specification} on a Pod. It stores the name of the dependency, version
   # requirements and external sources information.
@@ -10,7 +9,6 @@ module Pod
   # [MIT license](https://github.com/rubygems/rubygems/blob/master/MIT.txt).
   #
   class Dependency
-
     # @return [String] The name of the Pod described by this dependency.
     #
     attr_accessor :name
@@ -377,5 +375,4 @@ module Pod
       "from #{desc}"
     end
   end
-
 end

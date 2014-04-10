@@ -1,7 +1,6 @@
 module Pod
   class Specification
     class Set
-
       # The statistics class provides information about one or more {Set} that
       # is not readily available because expensive to compute or provided by a
       # remote source.
@@ -15,7 +14,6 @@ module Pod
       # cache file a shared instance is also available.
       #
       class Statistics
-
         # @return [Statistics] the shared statistics instance.
         #
         def self.instance
@@ -259,7 +257,6 @@ module Pod
         end
 
         #---------------------------------------------------------------------#
-
       end
     end
   end

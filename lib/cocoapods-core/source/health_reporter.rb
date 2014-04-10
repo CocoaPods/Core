@@ -1,10 +1,8 @@
 module Pod
   class Source
-
     # Checks a source for errors and warnings.
     #
     class HealthReporter
-
       # @return [Source] the source to check.
       #
       attr_reader :source
@@ -136,7 +134,6 @@ module Pod
       # Encapsulates the information about the state of a repo.
       #
       class HealthReport
-
         # @return [Source] the source analyzed.
         #
         attr_reader :source
@@ -195,7 +192,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

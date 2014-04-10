@@ -1,12 +1,10 @@
 module Pod
   class Specification
     module DSL
-
       # Provides the accessors methods for the root attributes. Root attributes
       # do not support multi-platform values and inheritance.
       #
       module RootAttributesAccessors
-
         # @return [String] The name of the specification *not* including the
         #         names of the parents, in case of ‘sub-specifications’.
         #
@@ -182,7 +180,6 @@ module Pod
         end
 
         #---------------------------------------------------------------------#
-
       end
     end
   end

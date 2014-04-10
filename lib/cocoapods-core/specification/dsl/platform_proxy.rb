@@ -1,12 +1,10 @@
 module Pod
   class Specification
     module DSL
-
       # The PlatformProxy works in conjunction with Specification#_on_platform.
       # It provides support for a syntax like `spec.ios.source_files = 'file'`.
       #
       class PlatformProxy
-
         # @return [Specification] the specification for this platform proxy.
         #
         attr_accessor :spec

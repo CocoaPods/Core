@@ -1,5 +1,4 @@
 module Pod
-
   # The Lockfile stores information about the pods that were installed by
   # CocoaPods.
   #
@@ -11,7 +10,6 @@ module Pod
   # need to be installed or removed.
   #
   class Lockfile
-
     # @todo   The symbols should be converted to a String and back to symbol
     #         when reading (EXTERNAL SOURCES Download options)
 
@@ -318,7 +316,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     class << self
-
       # !@group Generation
 
       public

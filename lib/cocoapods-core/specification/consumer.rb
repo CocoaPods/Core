@@ -2,7 +2,6 @@ require 'active_support/core_ext/string/strip.rb'
 
 module Pod
   class Specification
-
     # Allows to conveniently access a Specification programmatically.
     #
     # It takes care of:
@@ -18,7 +17,6 @@ module Pod
     # serializing a specification back exactly as defined in a file.
     #
     class Consumer
-
       # @return [Specification] The specification to consume.
       #
       attr_reader :spec
@@ -341,7 +339,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

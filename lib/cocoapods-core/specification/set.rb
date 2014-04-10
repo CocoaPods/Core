@@ -4,7 +4,6 @@ require 'cocoapods-core/specification/set/statistics'
 
 module Pod
   class Specification
-
     # A Specification::Set is responsible of handling all the specifications of
     # a Pod. This class stores the information of the dependencies that required
     # a Pod in the resolution process.
@@ -16,7 +15,6 @@ module Pod
     #         of a Source.
     #
     class Set
-
       # @return [String] the name of the Pod.
       #
       attr_reader :name
@@ -206,7 +204,6 @@ module Pod
       # @note External sources *don't* support subspecs.
       #
       class External < Set
-
         attr_reader :specification
 
         def initialize(spec)
