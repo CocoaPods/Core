@@ -207,7 +207,7 @@ module Pod
       else
         remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
-        subspec = subspecs.find { |s| s.name == "#{name}/#{subspec_name}" }
+        subspec = subspecs.find { |s| s.base_name == subspec_name }
         unless subspec
           raise Informative, "Unable to find a specification named " \
             "`#{relative_name}` in `#{name} (#{version})`."
@@ -232,7 +232,7 @@ module Pod
     #
     def subspec_dependencies(platform = nil)
       if default_subspec
-        specs = [subspec_by_name("#{name}/#{default_subspec}")]
+        specs = [root.subspec_by_name("#{name}/#{default_subspec}")]
       else
         specs = subspecs.compact
       end

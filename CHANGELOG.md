@@ -43,6 +43,10 @@
 
 ##### Bug Fixes
 
+* Fixed logic for default subspec attribute in nested subspecs.  
+  [Fabio Pelosin][irrationalfab]
+  [CocoaPods#1021](https://github.com/CocoaPods/CocoaPods/issues/1021)
+
 * Added logic to handle subspecs and platform scopes to linter check of
   the `requries_arc` attribute.  
   [Fabio Pelosin][irrationalfab]

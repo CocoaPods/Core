@@ -196,6 +196,13 @@ module Pod
         ]
       end
 
+      it 'returns a dependency on a default subspec for a subspec' do
+        @subspec.default_subspec = 'Subsubspec'
+        @subspec.subspec_dependencies.should == [
+          Dependency.new('Pod/Subspec/Subsubspec')
+        ]
+      end
+
       it 'returns all the dependencies' do
         @spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
