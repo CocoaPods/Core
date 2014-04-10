@@ -218,7 +218,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.homepage = 'www.example.com'
+      #     spec.homepage = 'http://www.example.com'
       #
       #   @param  [String] homepage
       #           the URL of the homepage of the Pod.
@@ -356,7 +356,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.documentation_url = 'www.example.com/docs.html'
+      #     spec.documentation_url = 'http://www.example.com/docs.html'
       #
       #   @param  [String] documentation_url
       #           The link of the web documentation of the Pod.
