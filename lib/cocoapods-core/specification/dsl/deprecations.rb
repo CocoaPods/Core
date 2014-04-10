@@ -93,7 +93,9 @@ module Pod
         def pre_install(&block)
           CoreUI.warn "[#{self}] The pre install hook of the specification " \
             "DSL has been deprecated, use the `resource_bundles` or the " \
-              "`prepare_command` attributes."
+            "`prepare_command` attributes."
+          CoreUI.warn "[#{self}] The pre_install hook will be removed in " \
+            "the next release"
           @pre_install_callback = block
         end
 
@@ -123,7 +125,9 @@ module Pod
         def post_install(&block)
           CoreUI.warn "[#{self}] The post install hook of the specification " \
             "DSL has been deprecated, use the `resource_bundles` or the " \
-              "`prepare_command` attributes."
+            "`prepare_command` attributes."
+          CoreUI.warn "[#{self}] The post_install hook will be removed in " \
+            "the next release"
           @post_install_callback = block
         end
 
