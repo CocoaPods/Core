@@ -52,10 +52,3 @@ TrailingComma:
 TrivialAccessors:
   Enabled: false
 
-# Offense count: 13
-UselessAssignment:
-  Enabled: false
-
-# Offense count: 2
-UselessComparison:
-  Enabled: false

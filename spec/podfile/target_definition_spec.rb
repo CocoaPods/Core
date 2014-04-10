@@ -305,7 +305,7 @@ module Pod
       end
 
       it 'stores the children in the hash representation' do
-        child_2   = Podfile::TargetDefinition.new('MoarTests', @root)
+        Podfile::TargetDefinition.new('MoarTests', @root)
         @root.store_pod('BlocksKit')
         @child.store_pod('RestKit')
         @root.to_hash.should == {

@@ -5,7 +5,7 @@ module Pod
 
     describe 'Set Information' do
       before do
-        set = set = Source::Aggregate.new(fixture('spec-repos')).search_by_name('JSONKit').first
+        set = Source::Aggregate.new(fixture('spec-repos')).search_by_name('JSONKit').first
         @presenter = Spec::Set::Presenter.new(set)
       end
 

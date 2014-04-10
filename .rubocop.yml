@@ -59,3 +59,8 @@ ClassAndModuleChildren:
 FileName:
   Exclude:
     - lib/cocoapods-core.rb
+
+UselessComparison:
+  Exclude:
+    - spec/**
+

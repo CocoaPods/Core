@@ -1,7 +1,7 @@
 require File.expand_path('../spec_helper', __FILE__)
 
 def sample_yaml
-  text = <<-LOCKFILE.strip_heredoc
+  <<-LOCKFILE.strip_heredoc
       PODS:
         - BananaLib (1.0):
           - monkey (< 1.0.9, ~> 1.0.1)
@@ -25,7 +25,7 @@ def sample_yaml
 end
 
 def yaml_with_merge_conflict
-  text = <<-LOCKFILE.strip_heredoc
+  <<-LOCKFILE.strip_heredoc
     PODS:
       - Kiwi (2.2)
       - ObjectiveSugar (1.1.1)
@@ -52,7 +52,7 @@ def yaml_with_merge_conflict
 end
 
 def bad_yaml
-  text = <<-LOCKFILE.strip_heredoc
+  <<-LOCKFILE.strip_heredoc
     PODS:
       - Kiwi (2.2)
       SOME BAD TEXT

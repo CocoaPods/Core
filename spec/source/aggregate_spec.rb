@@ -154,7 +154,7 @@ module Pod
         Specification.expects(:from_file).at_least_once
         index = @subject.generate_search_index
         Specification.expects(:from_file).never
-        search_data = @subject.update_search_index(index)
+        @subject.update_search_index(index)
       end
 
       it 'deletes from the index the data of the sets which are not present in the aggregate' do

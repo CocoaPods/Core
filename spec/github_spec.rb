@@ -56,7 +56,7 @@ module Pod
           headers = { 'User-Agent' => 'CocoaPods' }
           response = stub(:body => '{}', :ok? => true)
           REST.expects(:get).with(url, headers).returns(response)
-          repo = GitHub.repo('http://github.com/CocoaPods/CocoaPods')
+          GitHub.repo('http://github.com/CocoaPods/CocoaPods')
         end
       end
 

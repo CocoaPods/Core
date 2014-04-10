@@ -85,7 +85,7 @@ module Pod
 
       it 'raises if unrecognized keys are passed during the initialization of a target' do
         should.raise Informative do
-          podfile = Podfile.new do
+          Podfile.new do
             target 'Pods', :unrecognized => true do
             end
           end

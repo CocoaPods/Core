@@ -32,17 +32,14 @@ module Pod
       end
 
       it 'is not equal to another specification if the name is different' do
-        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Seed'; s.version = '1.0' }
       end
 
       it 'is not equal to another specification if the version if different' do
-        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '2.0' }
       end
 
       it 'is equal to another if the name and the version match regardless of the attributes' do
-        spec = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
         @spec.should == Spec.new { |s| s.name = 'Pod'; s.version = '1.0'; s.source_files = 'Classes' }
       end
 
@@ -88,7 +85,8 @@ module Pod
       end
 
       it 'takes into account the full name of the subspec returning the name and the version' do
-        name, version = Specification.name_and_version_from_string('RestKit/JSON (1.0)')
+        string = 'RestKit/JSON (1.0)'
+        name = Specification.name_and_version_from_string(string).first
         name.should == 'RestKit/JSON'
       end
 
