@@ -15,17 +15,21 @@ module Pod
       end
 
       it 'raises if no name is specified for a Pod' do
-        lambda do Podfile.new do
-          pod
-        end end.should.raise Podfile::StandardError
+        lambda do
+          Podfile.new do
+            pod
+          end
+        end.should.raise Podfile::StandardError
       end
 
       it 'raises if an inlide podspec is specified' do
-        lambda do Podfile.new do
-          pod do |s|
-            s.name = 'mypod'
+        lambda do
+          Podfile.new do
+            pod do |s|
+              s.name = 'mypod'
+            end
           end
-        end end.should.raise Podfile::StandardError
+        end.should.raise Podfile::StandardError
       end
 
       it 'it can use use the dependencies of a podspec' do
