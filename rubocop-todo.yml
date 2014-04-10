@@ -42,10 +42,6 @@ RescueException:
 Semicolon:
   Enabled: false
 
-# Offense count: 1
-SpaceBeforeFirstArg:
-  Enabled: false
-
 # Offense count: 18
 # Configuration parameters: EnforcedStyleForMultiline, SupportedStyles.
 TrailingComma:

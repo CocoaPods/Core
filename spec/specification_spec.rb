@@ -315,7 +315,7 @@ module Pod
       end
 
       it 'caches the consumers per platform' do
-        @spec.consumer(:ios).should.equal?@spec.consumer(:ios)
+        @spec.consumer(:ios).should.equal @spec.consumer(:ios)
         @spec.consumer(:ios).platform_name.should == :ios
         @spec.consumer(:osx).platform_name.should == :osx
       end
