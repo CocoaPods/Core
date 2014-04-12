@@ -86,6 +86,10 @@ module Pod
       end
     end
 
+    def hash
+      name.hash ^ deployment_target.hash
+    end
+
     # Checks whether a platform supports another one.
     #
     # In the context of operating system SDKs, a platform supports another
