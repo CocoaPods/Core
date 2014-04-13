@@ -95,17 +95,6 @@ module Pod
         if text =~ /clean_paths/
           error 'clean_paths are deprecated (use preserve_paths).'
         end
-
-        all_lines_count = text.lines.count
-        comments_lines_count = text.scan(/^\s*#\s+/).length
-        comments_ratio = comments_lines_count.fdiv(all_lines_count)
-        if comments_lines_count > 20 && comments_ratio > 0.2
-          warning 'Comments must be deleted.'
-        end
-        if text.lines.first =~ /^\s*#\s+/
-          warning "Comments placed at the top of the specification must be " \
-            "deleted."
-        end
       end
 
       # Checks that every root only attribute which is required has a value.
