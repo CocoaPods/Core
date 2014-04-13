@@ -8,7 +8,11 @@
 # Offense count: 9
 # Configuration parameters: CountComments.
 ClassLength:
-  Max: 267
+  Exclude:
+    - lib/cocoapods-core/specification/linter.rb
+    - lib/cocoapods-core/specification.rb
+    - lib/cocoapods-core/podfile/target_definition.rb
+  Max: 177
 
 # Offense count: 10
 CyclomaticComplexity:
