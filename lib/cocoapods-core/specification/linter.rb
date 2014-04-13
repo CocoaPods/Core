@@ -368,22 +368,6 @@ module Pod
   end
 end
 
-      # # TODO
-      # # Converts the resources file patterns to a hash defaulting to the
-      # # resource key if they are defined as an Array or a String.
-      # #
-      # # @param  [String, Array, Hash] value.
-      # #         The value of the attribute as specified by the user.
-      # #
-      # # @return [Hash] the resources.
-      # #
-      # def _prepare_deployment_target(deployment_target)
-      #   unless @define_for_platforms.count == 1
-      #     raise StandardError, "The deployment target must be defined " \
-      #       "per platform like `s.ios.deployment_target = '5.0'`."
-      #   end
-      #   Version.new(deployment_target)
-      # end
 
       # # TODO
       # # Converts the resources file patterns to a hash defaulting to the
