@@ -247,8 +247,19 @@ module Pod
       # Performs validations related to the `libraries` attribute.
       #
       def _validate_libraries(libs)
-        if libraries_invalid?(libs)
-          error 'A library should only be specified by its name'
+        libs.each do |lib|
+          lib = lib.downcase
+          if lib.end_with?('.a') || lib.end_with?('.dylib')
+            error "Libraries should not include the extension (`#{lib}`)"
+          end
+
+          if lib.start_with?('lib')
+            error "Libraries should omit the `lib` prefix (`#{lib}`)"
+          end
+
+          if lib.include?(',')
+            error "Libraries should not include comas (`#{lib}`)"
+          end
         end
       end
 
@@ -338,7 +349,7 @@ module Pod
 
       # Returns whether the frameworks are valid
       #
-      # @params frameworks [Array<String>]
+      # @param frameworks [Array<String>]
       # The frameworks to be validated
       #
       # @return [Boolean] true if a framework contains any
@@ -350,46 +361,6 @@ module Pod
           framework =~ framework_regex
         end
       end
-
-      # Returns whether the libraries are valid
-      #
-      # @params libs [Array<String>]
-      # The libraries to be validated
-      #
-      # @return [Boolean] true if a library ends with `.a`, `.dylib`,
-      # starts with `lib` or contains any non-alphanumeric character.
-      def libraries_invalid?(libs)
-        libs.any? do |lib|
-          lib_regex = /^(lib)|([^a-zA-Z\d])/
-          lib =~ lib_regex
-        end
-      end
     end
   end
 end
-
-
-      # # TODO
-      # # Converts the resources file patterns to a hash defaulting to the
-      # # resource key if they are defined as an Array or a String.
-      # #
-      # # @param  [String, Array, Hash] value.
-      # #         The value of the attribute as specified by the user.
-      # #
-      # # @return [Hash] the resources.
-      # #
-      # def _prepare_platform(name_and_deployment_target)
-      #   return nil if name_and_deployment_target.nil?
-      #   if name_and_deployment_target.is_a?(Array)
-      #     name = name_and_deployment_target.first
-      #     deployment_target = name_and_deployment_target.last
-      #   else
-      #     name = name_and_deployment_target
-      #     deployment_target = nil
-      #   end
-      #   unless PLATFORMS.include?(name)
-      #     raise StandardError, "Unsupported platform `#{name}`. The available " \
-      #       "names are `#{PLATFORMS.inspect}`"
-      #   end
-      #   Platform.new(name, deployment_target)
-      # end

@@ -33,8 +33,10 @@
 * The linter now checks `framework` and `library` attributes for invalid
   strings.  
   [Paul Williamson](https://github.com/squarefrog)
+  [Fabio Pelosin](irrationalfab)
   [#66](https://github.com/CocoaPods/Core/issues/66)
   [#96](https://github.com/CocoaPods/Core/pull/96)
+  [#105](https://github.com/CocoaPods/Core/issues/105)
 
 * Ignore any pod that begins with a `.`.  
   [Dustin Clark](https://github.com/clarkda)

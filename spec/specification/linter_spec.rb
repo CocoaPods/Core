@@ -99,7 +99,6 @@ module Pod
       def message_should_include(*values)
         @linter.lint
         results = @linter.results
-        results.should.not.be.nil
 
         matched = results.select do |result|
           values.all? do |value|
@@ -319,24 +318,38 @@ module Pod
 
       #------------------#
 
+      it 'accepts valid libraries' do
+        @spec.libraries = %w(
+          stdc++
+          z.1
+          curl.OSX
+          stdc++.6.0.9
+          Geoloqi-$(CONFIGURATION)
+        )
+
+        @linter.lint
+        results = @linter.results
+        results.should.be.empty
+      end
+
       it 'checks that libraries do not end with a .a extension' do
-        @spec.libraries = %w(z.a xml.a)
-        message_should_include('library', 'name')
+        @spec.libraries = %w(z.a)
+        message_should_include('should not include the extension', 'z.a')
       end
 
       it 'checks that libraries do not end with a .dylib extension' do
-        @spec.libraries = %w(ssl.dylib z.dylib)
-        message_should_include('library', 'name')
+        @spec.libraries = %w(ssl.dylib)
+        message_should_include('should not include the extension', 'ssl.dylib')
       end
 
       it 'checks that libraries do not begin with lib' do
-        @spec.libraries = %w(libz libssl)
-        message_should_include('library', 'name')
+        @spec.libraries = %w(libz)
+        message_should_include('should omit the `lib` prefix', 'libz')
       end
 
       it 'checks that libraries do not contain unwanted characters' do
         @spec.libraries = ['ssl, z']
-        message_should_include('library', 'name')
+        message_should_include('should not include comas', 'ssl, z')
       end
 
       #------------------#
