@@ -46,7 +46,6 @@ module Pod
       def lint
         @results = []
         if spec
-          perform_textual_analysis
           check_required_root_attributes
           run_root_validation_hooks
           perform_all_specs_analysis
@@ -80,22 +79,6 @@ module Pod
       private
 
       # !@group Lint steps
-
-      # It reads a podspec file and checks for strings corresponding
-      # to features that are or will be deprecated
-      #
-      # @return [void]
-      #
-      def perform_textual_analysis
-        return unless @file
-        text = @file.read
-        if text =~ /config\..?os.?/
-          error '`config.ios?` and `config.osx?` are deprecated.'
-        end
-        if text =~ /clean_paths/
-          error 'clean_paths are deprecated (use preserve_paths).'
-        end
-      end
 
       # Checks that every root only attribute which is required has a value.
       #

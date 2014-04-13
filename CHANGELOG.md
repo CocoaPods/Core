@@ -14,7 +14,7 @@
   [Luis de la Rosa](https://github.com/luisdelarosa)
   [#69](https://github.com/CocoaPods/Core/issues/69)
   [#100](https://github.com/CocoaPods/Core/pull/100)
-  
+
 * Added a check to the linter to ensure that the `social_media_url` has 
   been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
@@ -36,10 +36,18 @@
   [#66](https://github.com/CocoaPods/Core/issues/66)
   [#96](https://github.com/CocoaPods/Core/pull/96)
 
-* Ignore any pod that begins with a `.`  
+* Ignore any pod that begins with a `.`.  
   [Dustin Clark](https://github.com/clarkda)
   [#97](https://github.com/CocoaPods/Core/pull/97)
   [#98](https://github.com/CocoaPods/Core/issues/98)
+
+* The Linter will not check for comments anymore.  
+  [Fabio Pelosin][irrationalfab]
+  [#108](https://github.com/CocoaPods/Core/issues/108)
+
+* Removed legacy checks from the linter.  
+  [Fabio Pelosin][irrationalfab]
+  [#108](https://github.com/CocoaPods/Core/issues/108)
 
 ##### Bug Fixes
 

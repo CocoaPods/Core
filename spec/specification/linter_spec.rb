@@ -68,7 +68,6 @@ module Pod
       before do
         @linter.spec.name = nil
         @linter.spec.summary = 'A short description of.'
-        Pathname.any_instance.stubs(:read).returns('config.ios?')
         @linter.lint
       end
 
