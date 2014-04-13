@@ -58,8 +58,8 @@ module Pod
         return unless pod_dir.exist?
         pod_dir.children.map do |v|
           basename = v.basename.to_s
-          basename if v.directory? && basename[0, 1] != '.'
-        end.compact.sort.reverse
+          Version.new(basename) if v.directory? && basename[0, 1] != '.'
+        end.compact.sort.reverse.map(&:to_s)
       end
 
       # @return [Specification] The specification for a given version of a Pod.
