@@ -357,7 +357,7 @@ module Pod
       #
       def frameworks_invalid?(frameworks)
         frameworks.any? do |framework|
-          framework_regex = /[^a-zA-Z\d]/
+          framework_regex = /[^\w\-\+]/
           framework =~ framework_regex
         end
       end

@@ -296,6 +296,13 @@ module Pod
 
       #------------------#
 
+      it 'accepts valid frameworks' do
+        @spec.frameworks = %w(AddressBook Audio-Frameworks)
+        @linter.lint
+        results = @linter.results
+        results.should.be.empty
+      end
+
       it 'checks that frameworks do not end with a .framework extension' do
         @spec.frameworks = %w(AddressBook.framework QuartzCore.framework)
         message_should_include('framework', 'name')
@@ -326,7 +333,6 @@ module Pod
           stdc++.6.0.9
           Geoloqi-$(CONFIGURATION)
         )
-
         @linter.lint
         results = @linter.results
         results.should.be.empty
