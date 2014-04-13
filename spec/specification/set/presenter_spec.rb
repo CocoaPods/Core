@@ -27,12 +27,12 @@ module Pod
       end
 
       it 'returns all the version sorted from the highest to the lowest' do
-        @presenter.versions.map(&:to_s).should == ['999.999.999', '1.5pre', '1.4']
+        @presenter.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.5pre', '1.4']
         @presenter.versions.last.class.should == Version
       end
 
       it 'returns the versions by source' do
-        @presenter.verions_by_source.should == '1.5pre, 1.4 [master repo] - 999.999.999, 1.4 [test_repo repo]'
+        @presenter.verions_by_source.should == '1.5pre, 1.4 [master repo] - 999.999.999, 1.13, 1.4 [test_repo repo]'
       end
 
       it 'returns the sources' do

@@ -54,7 +54,7 @@ module Pod
 
     describe '#versions' do
       it 'returns the versions for the given Pod' do
-        @subject.versions('JSONKit').should == ['999.999.999', '1.4']
+        @subject.versions('JSONKit').should == ['999.999.999', '1.13', '1.4']
       end
 
       it 'returns nil the Pod is unknown' do
