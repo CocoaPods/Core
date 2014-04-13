@@ -66,6 +66,10 @@
   [#63](https://github.com/CocoaPods/Core/issues/63)
   [#95](https://github.com/CocoaPods/Core/pull/95)
 
+* Fix sorting of versions coming from data providers
+  [Carson McDonald][carsonmcdonald]
+  [CocoaPods#1936](https://github.com/CocoaPods/CocoaPods/issues/1936)
+
 
 ## 0.31.1
 
