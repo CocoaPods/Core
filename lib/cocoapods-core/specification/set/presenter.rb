@@ -42,7 +42,7 @@ module Pod
         #           order.
         #
         def versions
-          @set.versions.sort.reverse
+          @set.versions
         end
 
         # @return   [String] all the versions available sorted from the highest

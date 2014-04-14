@@ -117,14 +117,14 @@ module Pod
       end
 
       it 'returns all the available versions sorted from biggest to lowest' do
-        @set.versions.map(&:to_s).should == %w(999.999.999 1.5pre 1.4)
+        @set.versions.map(&:to_s).should == %w(999.999.999 1.13 1.5pre 1.4)
       end
 
       it 'returns all the available versions by source sorted from biggest to lowest' do
         hash = {}
         @set.versions_by_source.each { |source, versions| hash[source.name] = versions.map(&:to_s) }
         hash['master'].should == %w(1.5pre 1.4)
-        hash['test_repo'].should == %w(999.999.999 1.4)
+        hash['test_repo'].should == %w(999.999.999 1.13 1.4)
         hash.keys.sort.should == %w(master test_repo)
       end
 

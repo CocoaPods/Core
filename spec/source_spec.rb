@@ -50,7 +50,7 @@ module Pod
 
     describe '#versions' do
       it 'returns the available versions of a Pod' do
-        @subject.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.4']
+        @subject.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.13', '1.4']
       end
 
       it 'returns nil if the Pod could not be found' do

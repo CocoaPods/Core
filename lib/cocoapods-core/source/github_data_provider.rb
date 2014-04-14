@@ -58,7 +58,11 @@ module Pod
       def versions(name)
         raise ArgumentError, 'No name' unless name
         contents = get_github_contents("Specs/#{name}")
-        dir_names(contents)
+        pre_vers = dir_names(contents)
+        return nil if pre_vers.nil?
+        pre_vers.each do |v|
+          Version.new(v)
+        end.sort.reverse.map(&:to_s)
       end
 
       # @return [Specification] The specification for a given version of a Pod.
