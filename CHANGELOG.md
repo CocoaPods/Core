@@ -1,10 +1,10 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.32.0
 
 ##### Enhancements
 
-* Make Platform instances usable as Hash keys.
+* Make Platform instances usable as Hash keys.  
   [Eloy Durán](https://github.com/alloy)
   [#109](https://github.com/CocoaPods/Core/pull/109)
 
