@@ -86,6 +86,18 @@ module Pod
       end
     end
 
+    # (see #==)
+    alias_method :eql?, :==
+
+    # Hashes the instance by the platform name and deployment target.
+    #
+    # This adds support to make instances usable as Hash keys.
+    #
+    # @!visibility private
+    def hash
+      name.hash ^ deployment_target.hash
+    end
+
     # Checks whether a platform supports another one.
     #
     # In the context of operating system SDKs, a platform supports another

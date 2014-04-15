@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Make Platform instances usable as Hash keys.
+  [Eloy Durán](https://github.com/alloy)
+  [#109](https://github.com/CocoaPods/Core/pull/109)
+
 * Accept new sources for Pods when they are just redirects of the old one.  
   [Boris Bügling](https://github.com/neonichu)
   [#101](https://github.com/CocoaPods/Core/issues/101)

@@ -83,6 +83,18 @@ module Pod
         Platform.new(:ios, '5.0').requires_legacy_ios_archs?.should.be.false
       end
 
+      it 'is usable as hash keys' do
+        ios   = Platform.new(:ios)
+        osx   = Platform.new(:osx)
+        ios6  = Platform.new(:ios, '6.0')
+        ios61 = Platform.new(:ios, '6.1')
+        hash  = { ios => ios, osx => osx, ios6 => ios6, ios61 => ios61 }
+        hash[Platform.new(:ios)].should.be.eql ios
+        hash[Platform.new(:osx)].should.be.eql osx
+        hash[Platform.new(:ios, '6.0')].should.be.eql ios6
+        hash[Platform.new(:ios, '6.1')].should.be.eql ios61
+      end
+
     end
 
     describe 'Supporting other platforms' do
