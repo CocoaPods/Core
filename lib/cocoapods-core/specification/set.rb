@@ -61,10 +61,10 @@ module Pod
         dependencies << dependency
 
         if acceptable_versions.empty?
-          message = "Unable to satisfy the following requirements:\n"
+          message = "Unable to satisfy the following requirements:\n\n"
           dependencies_by_requirer_name.each do |name, dependencies|
             dependencies.each do |dep|
-              message << "- `#{dep}` required by `#{name}`"
+              message << "- `#{dep}` required by `#{name}`\n"
             end
           end
           raise Informative, message
