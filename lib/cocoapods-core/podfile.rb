@@ -98,12 +98,7 @@ module Pod
     # @return [Array<String>] all the specs source names.
 
     def sources
-      sources = get_hash_value('sources')
-      if sources
-        sources
-      else
-        []
-      end
+      get_hash_value('sources') || []
     end
 
     # @return [String] the path of the workspace if specified by the user.
@@ -293,7 +288,7 @@ module Pod
     def self.from_hash(hash, path = nil)
       internal_hash = hash.dup
       target_definitions = internal_hash.delete('target_definitions') || []
-      podfile = Podfile.new(path,internal_hash)
+      podfile = Podfile.new(path, internal_hash)
       target_definitions.each do |definition_hash|
         definition = TargetDefinition.from_hash(definition_hash, podfile)
         podfile.root_target_definitions << definition

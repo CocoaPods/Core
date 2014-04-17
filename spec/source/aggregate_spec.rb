@@ -8,7 +8,7 @@ module Pod
     #
     before do
       repos = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
-      @sut = Source::Aggregate.new(repos)
+      @subject = Source::Aggregate.new(repos)
     end
 
     #-------------------------------------------------------------------------#
