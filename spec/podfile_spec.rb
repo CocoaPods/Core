@@ -117,7 +117,7 @@ module Pod
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
 
-      describe "source" do
+      describe 'source' do
         it 'can have multiple sources' do
           Podfile.new do
             source 'new_repo_1'
@@ -248,18 +248,18 @@ module Pod
         }
       end
 
-      it "includes the specified sources in the hash representation" do
+      it 'includes the specified sources in the hash representation' do
         podfile = Podfile.new do
-          source 'http://othersource.cocoapods.com/specs'
+          source 'new_ASIHTTPRequest_source'
           pod 'ASIHTTPRequest'
         end
         podfile.to_hash.should == {
-          "sources" => ['http://othersource.cocoapods.com/specs'],
-          "target_definitions"=>[
+          'sources' => %w(new_ASIHTTPRequest_source),
+          'target_definitions' => [
             {
-              "name" => "Pods",
-              "link_with_first_target"=>true,
-              "dependencies"=>["ASIHTTPRequest"]
+              'name' => 'Pods',
+              'link_with_first_target' => true,
+              'dependencies' => %w(ASIHTTPRequest)
             }
           ]
         }
