@@ -241,6 +241,11 @@ module Pod
         message_should_include('Github', 'https')
       end
 
+      it 'checks that Github repositories do not use `www` (for compatibility)' do
+        @spec.stubs(:source).returns(:git => 'https://www.github.com/repo.git', :tag => '1.0')
+        message_should_include('Github', 'www')
+      end
+
       it 'checks that Github repositories end in .git (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://github.com/repo', :tag => '1.0')
         message_should_include('Github', '.git')
