@@ -68,8 +68,8 @@ module Pod
         source = spec.source.values_at(*keys).compact.first
         old_source = reference_spec(spec).source.values_at(*keys).compact.first
         unless source == old_source
-          source = HTTP::get_actual_url(source)
-          old_source = HTTP::get_actual_url(old_source)
+          source = HTTP.get_actual_url(source)
+          old_source = HTTP.get_actual_url(old_source)
           unless source == old_source
             message = "The source of the spec doesn't match with the recorded "
             message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
