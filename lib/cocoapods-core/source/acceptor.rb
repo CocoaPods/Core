@@ -51,31 +51,6 @@ module Pod
       # @!group Private helpers
       #-----------------------------------------------------------------------#
 
-      MAX_HTTP_REDIRECTS = 3
-
-      # Resolve potential redirects and return the final URL.
-      #
-      # @return [string]
-      #
-      def get_actual_url(url)
-        redirects = 0
-        loop do
-          require 'rest'
-          response = REST.head(url)
-
-          if [301, 302, 303, 307, 308].include? response.status_code
-            url = response.headers['location'].first
-            redirects += 1
-          else
-            break
-          end
-
-          break unless redirects < MAX_HTTP_REDIRECTS
-        end
-
-        url
-      end
-
       # Checks whether the source of the proposed specification is different
       # from the one of the reference specification.
       #
@@ -84,6 +59,8 @@ module Pod
       # @return [void]
       #
       def check_spec_source_change(spec, errors)
+        require 'cocoapods-core/http'
+
         return unless spec
         return if spec.source[:http]
         return unless reference_spec(spec)
@@ -91,8 +68,8 @@ module Pod
         source = spec.source.values_at(*keys).compact.first
         old_source = reference_spec(spec).source.values_at(*keys).compact.first
         unless source == old_source
-          source = get_actual_url(source)
-          old_source = get_actual_url(old_source)
+          source = HTTP::get_actual_url(source)
+          old_source = HTTP::get_actual_url(old_source)
           unless source == old_source
             message = "The source of the spec doesn't match with the recorded "
             message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
