@@ -2,29 +2,6 @@ module Pod
   # Handles HTTP requests
   #
   module HTTP
-    private
-
-    # Does a HEAD request and in case of any errors a GET request
-    #
-    # @return [REST::response]
-    #
-    def self.perform_head_request(url)
-      require 'rest'
-
-      resp = ::REST.head(url)
-
-      if resp.status_code >= 400
-        resp = ::REST.get(url)
-      end
-
-      resp
-    end
-
-    MAX_HTTP_REDIRECTS = 3
-
-    #-------------------------------------------------------------------------#
-
-    public
 
     # Resolve potential redirects and return the final URL.
     #
@@ -75,6 +52,28 @@ module Pod
 
       resp
     end
+
+    #-------------------------------------------------------------------------#
+
+    private
+
+    # Does a HEAD request and in case of any errors a GET request
+    #
+    # @return [REST::response]
+    #
+    def self.perform_head_request(url)
+      require 'rest'
+
+      resp = ::REST.head(url)
+
+      if resp.status_code >= 400
+        resp = ::REST.get(url)
+      end
+
+      resp
+    end
+
+    MAX_HTTP_REDIRECTS = 3
 
     #-------------------------------------------------------------------------#
   end
