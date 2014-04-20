@@ -42,12 +42,7 @@ module Pod
         url = get_actual_url(url)
         resp = perform_head_request(url)
       rescue
-        UI.warn "There was a problem validating the URL #{url}."
         resp = nil
-      end
-
-      if resp && !resp.success?
-        UI.warn "The URL (#{url}) is not reachable."
       end
 
       resp

@@ -21,6 +21,7 @@ module Pod
   autoload :CoreUI,         'cocoapods-core/core_ui'
   autoload :DSLError,       'cocoapods-core/standard_error'
   autoload :GitHub,         'cocoapods-core/github'
+  autoload :HTTP,           'cocoapods-core/http'
   autoload :Lockfile,       'cocoapods-core/lockfile'
   autoload :Platform,       'cocoapods-core/platform'
   autoload :Podfile,        'cocoapods-core/podfile'
