@@ -19,7 +19,7 @@ module Pod
           if location =~ /:\/\//
             url = location
           else
-            url = url + location
+            url = URI.join(url, location).to_s
           end
 
           redirects += 1

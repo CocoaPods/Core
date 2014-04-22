@@ -19,7 +19,7 @@ module Pod
         WebMock::API.stub_request(:head, /foo/).to_return(:status => 200)
 
         resolved_url = HTTP.get_actual_url('http://SOME-URL/redirect')
-        resolved_url.should == 'http://SOME-URL/redirect/foo'
+        resolved_url.should == 'http://SOME-URL/foo'
       end
 
       it 'can successfully validate URLs' do
