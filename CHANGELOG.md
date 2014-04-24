@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Extracted URL validation into its own module.
+  [Boris Bügling](https://github.com/neonichu)
+  [#115](https://github.com/CocoaPods/Core/issues/115)
+  [#116](https://github.com/CocoaPods/Core/pull/116)
+
 ## 0.32.1
 ## 0.32.0
 
