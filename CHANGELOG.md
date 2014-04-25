@@ -9,6 +9,10 @@
   [#115](https://github.com/CocoaPods/Core/issues/115)
   [#116](https://github.com/CocoaPods/Core/pull/116)
 
+* Gracefully handle unexpected source structure
+  [Samuel E. Giddins](https://github.com/segiddins)
+  [#110](https://github.com/CocoaPods/Core/issues/110)
+
 ## 0.32.1
 ## 0.32.0
 

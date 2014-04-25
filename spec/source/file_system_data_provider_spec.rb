@@ -66,6 +66,14 @@ module Pod
           @subject.versions(nil)
         end.message.should.match /No name/
       end
+
+      it 'raises if a non-version-name directory is encountered' do
+        Pathname.any_instance.stubs(:children).returns([Pathname.new('/Hello')])
+        Pathname.any_instance.stubs(:directory?).returns(true)
+        e = lambda { @subject.versions('JSONKit') }.should.raise Informative
+        e.message.should.match /Hello/
+        e.message.should.not.match /Malformed version number string/
+      end
     end
 
     #-------------------------------------------------------------------------#
