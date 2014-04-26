@@ -38,10 +38,14 @@ module Pod
     # @return [REST::response]
     #
     def self.validate_url(url)
+      if not url =~ /^#{URI.regexp}$/
+        return nil
+      end
+
       begin
         url = get_actual_url(url)
         resp = perform_head_request(url)
-      rescue
+      rescue SocketError
         resp = nil
       end
 
