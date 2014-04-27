@@ -17,7 +17,7 @@ group :development do
   gem 'vcr'
   gem 'webmock', "< 1.16"
   if RUBY_VERSION >= '1.9.3'
-    gem 'rubocop'
+    gem 'rubocop', '~> 0.20.1'
   end
 end
 
