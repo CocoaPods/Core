@@ -46,6 +46,8 @@ module Pod
     # @return [Array<Specification>] The subspecs of the specification.
     #
     attr_accessor :subspecs
+    
+    alias_method :development_only?, :development_only
 
     # Checks if a specification is equal to the given one according its name
     # and to its version.

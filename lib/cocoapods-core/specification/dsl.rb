@@ -1217,6 +1217,17 @@ module Pod
       #
       attribute :default_subspec,
                 :multi_platform => false
+                
+      #------------------#
+
+      # @!method development_only=(development_only)
+      #
+      #   Whether the spec is only meant to be used in development.
+      #
+      #   @param  [Bool] development_only
+      #           Whether the spec is only meant to be used in development.
+      #
+      attribute :development_only
 
       #-----------------------------------------------------------------------#
 
