@@ -86,6 +86,11 @@ module Pod
         @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
         @spec.attributes_hash['deprecated_in_favor_of'].should == 'NewMoreAwesomePod'
       end
+
+      it 'allows to specify whether the Pod is only for development' do
+        @spec.development_only = true
+        @spec.attributes_hash['development_only'].should == true
+      end
     end
 
     #-----------------------------------------------------------------------------#

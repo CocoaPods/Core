@@ -1227,7 +1227,9 @@ module Pod
       #   @param  [Bool] development_only
       #           Whether the spec is only meant to be used in development.
       #
-      attribute :development_only
+      attribute :development_only,
+                :types => [TrueClass, FalseClass],
+                :default_value => false
 
       #-----------------------------------------------------------------------#
 
