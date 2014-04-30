@@ -4,6 +4,7 @@ gemspec
 
 # Ruby 1.8.7
 gem "mime-types", "< 2.0"
+gem 'activesupport', '< 4'
 
 group :development do
   # Simplecov is affecting bacon exit code

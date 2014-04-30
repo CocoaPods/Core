@@ -2,7 +2,6 @@ module Pod
   # Handles HTTP requests
   #
   module HTTP
-
     # Resolve potential redirects and return the final URL.
     #
     # @return [string]
