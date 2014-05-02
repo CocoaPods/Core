@@ -358,7 +358,7 @@ module Pod
       def _validate_compiler_flags(flags)
         if flags.join(' ').split(' ').any? { |flag| flag.start_with?('-Wno') }
           warning '[compiler_flags] Warnings must not be disabled' \
-          "(`-Wno compiler' flags)."
+          '(`-Wno compiler` flags).'
         end
       end
 
