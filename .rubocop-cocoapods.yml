@@ -1,6 +1,8 @@
 AllCops:
   Include:
     - Rakefile
+  Exclude:
+    - spec/fixtures/**
 
 #- CocoaPods -----------------------------------------------------------------#
 
