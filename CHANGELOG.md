@@ -14,6 +14,10 @@
   [Joshua Kalpin][Kapin]
   [#50](https://github.com/CocoaPods/Core/pull/122)
 
+* Introduce a new spec attribute `default_subspecs`.
+  [Kyle Fuller][kylef]
+  [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
+
 ## 0.32.1
 ## 0.32.0
 

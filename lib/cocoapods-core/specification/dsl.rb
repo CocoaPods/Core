@@ -1192,9 +1192,9 @@ module Pod
 
       #------------------#
 
-      # @!method default_subspec=(subspec_name)
+      # @!method default_subspecs=(subspec_array)
       #
-      #   The name of the subspec that should be used as preferred dependency.
+      #   An array of subspecs names that should be used as preferred dependency.
       #   If not specified a specifications requires all its subspecs as
       #   dependencies.
       #
@@ -1209,13 +1209,19 @@ module Pod
       #   they trigger dependencies on other libraries).
       #
       #   @example
+      #
       #     spec.default_subspec = 'Core'
       #
-      #   @param  [String] subspec_name
-      #           the name of the subspec that should be inherited as
+      #   @example
+      #     spec.default_subspecs = 'Core', 'UI'
+      #
+      #   @param  [Array<String>] subspec_names
+      #           An array of subspec names that should be inherited as
       #           dependency.
       #
-      attribute :default_subspec,
+      attribute :default_subspecs,
+                :container => Array,
+                :singularize => true,
                 :multi_platform => false
 
       #-----------------------------------------------------------------------#
