@@ -1209,7 +1209,7 @@ module Pod
       #   they trigger dependencies on other libraries).
       #
       #   @example
-      #     spec.default_subspec = 'Pod/Core'
+      #     spec.default_subspec = 'Core'
       #
       #   @param  [String] subspec_name
       #           the name of the subspec that should be inherited as
