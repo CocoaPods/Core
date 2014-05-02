@@ -35,8 +35,8 @@ module Pod
             end
             patterns.each do |pattern|
               if pattern.start_with?('/')
-                error "File patterns must be relative and cannot start with a " \
-                "slash (#{attrb.name})."
+                error '[File Patterns] File patterns must be relative ' \
+                "and cannot start with a slash (#{attrb.name})."
               end
             end
           end
@@ -55,8 +55,9 @@ module Pod
           end
 
           unless declared
-            warning "A value for `requires_arc` should be specified until the " \
-            "migration to a `true` default."
+            warning '[requires_arc] A value for `requires_arc` should be' \
+            ' specified until the ' \
+            'migration to a `true` default.'
           end
         end
 
@@ -68,9 +69,11 @@ module Pod
           empty_patterns = methods.all? { |m| consumer.send(m).empty? }
           empty = empty_patterns && consumer.spec.subspecs.empty?
           if empty
-            error "The #{consumer.spec} spec is empty (no source files, " \
-            "resources, resource_bundles, preserve paths, vendored_libraries, " \
-              "vendored_frameworks dependencies or subspecs)."
+            error "[File Patterns] The #{consumer.spec} spec is empty"
+            '(no source files, ' \
+            'resources, resource_bundles, preserve paths,' \
+            'vendored_libraries, vendored_frameworks dependencies' \
+            'or subspecs).'
           end
         end
 
@@ -78,13 +81,15 @@ module Pod
         #
         def check_install_hooks
           unless consumer.spec.pre_install_callback.nil?
-            warning "The pre install hook has been deprecated, " \
-            "use the `resource_bundles` or the  `prepare_command` attributes."
+            warning '[pre_install_hook] The pre install hook has been' \
+            ' deprecated, ' \
+            'use the `resource_bundles` or the  `prepare_command` attributes.'
           end
 
           unless consumer.spec.post_install_callback.nil?
-            warning "The post install hook has been deprecated, " \
-            "use the `resource_bundles` or the  `prepare_command` attributes."
+            warning '[post_install_hook] The post install hook has been' \
+            ' deprecated, ' \
+            'use the `resource_bundles` or the  `prepare_command` attributes.'
           end
         end
       end
