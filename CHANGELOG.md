@@ -12,7 +12,7 @@
 * Linter warnings and errors are now prefixed with \[`ATTRIBUTE_NAME`\].
   This `ATTRIBUTE_NAME` specifies which property caused the error/warning.  
   [Joshua Kalpin][Kapin]
-  [#50](https://github.com/CocoaPods/Core/pull/122)
+  [#122](https://github.com/CocoaPods/Core/pull/122)
 
 ## 0.32.1
 ## 0.32.0
