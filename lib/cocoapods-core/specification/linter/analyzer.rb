@@ -4,22 +4,29 @@ module Pod
   class Specification
     class Linter
       class Analyzer
-        include Linter::ResultHelpers
-
-        def initialize(consumer)
+        def initialize(consumer, results)
           @consumer = consumer
-          @results = []
+          @results = results
+          @results.consumer = @consumer
         end
 
+        # Analyzes the consumer adding a {Result} for any failed check to
+        # the {#results} object.
+        #
+        # @return [Results] the results of the analysis.
+        #
         def analyze
           check_attributes
           validate_file_patterns
           check_if_spec_is_empty
+          @results
         end
 
         private
 
         attr_reader :consumer
+
+        attr_reader :results
 
         # Checks the attributes hash for any unknown key which might be the
         # result of a misspelling in a JSON file.
@@ -74,10 +81,31 @@ module Pod
             end
             patterns.each do |pattern|
               if pattern.start_with?('/')
-                error '[File Patterns] File patterns must be relative ' \
+                @results.error '[File Patterns] File patterns must be' \
+                ' relative' \
                 "and cannot start with a slash (#{attrb.name})."
               end
             end
+          end
+        end
+
+        # @todo remove after the switch to true
+        #
+        def check_tmp_arc_not_nil
+          spec = consumer.spec
+          declared = false
+          loop do
+            declared = true unless spec.attributes_hash['requires_arc'].nil?
+            declared = true unless spec.attributes_hash[consumer.platform_name.to_s].nil?
+            spec = spec.parent
+            break unless spec
+          end
+
+          unless declared
+            @results.warning '[requires_arc] A value for `requires_arc`' \
+            ' should be' \
+            ' specified until the ' \
+            'migration to a `true` default.'
           end
         end
 
@@ -89,8 +117,8 @@ module Pod
           empty_patterns = methods.all? { |m| consumer.send(m).empty? }
           empty = empty_patterns && consumer.spec.subspecs.empty?
           if empty
-            error "[File Patterns] The #{consumer.spec} spec is empty"
-            '(no source files, ' \
+            @results.error "[File Patterns] The #{consumer.spec} spec is empty"
+            ' (no source files, ' \
             'resources, resource_bundles, preserve paths,' \
             'vendored_libraries, vendored_frameworks dependencies' \
             'or subspecs).'
@@ -127,7 +155,7 @@ module Pod
         def validate_attribute_hash_keys(attribute, value)
           major_keys = value.keys & attribute.keys.keys
           if major_keys.count.zero?
-            warning "Missing primary key for `#{attribute.name}` " \
+            @results.warning "Missing primary key for `#{attribute.name}` " \
               'attribute. The acceptable ones are: ' \
               "`#{attribute.keys.keys.map(&:to_s).sort.join(', ')}`"
           elsif major_keys.count == 1

@@ -41,8 +41,9 @@ module Pod
         File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
-        linter.results.count.should == 1
-        linter.results.first.message.should.match /spec.*could not be loaded/
+        linter.results.results.count.should == 1
+        linter.results.results.first.message
+              .should.match(/spec.*could not be loaded/)
       end
 
       before do
@@ -53,7 +54,7 @@ module Pod
 
       it 'accepts a valid podspec' do
         valid = @linter.lint
-        @linter.results.should == []
+        @linter.results.results.should == []
         valid.should.be.true
       end
 
@@ -61,8 +62,9 @@ module Pod
         @linter.spec.platform = nil
         @linter.spec.source_files = '/Absolute'
         @linter.lint
-        @linter.results.count.should == 1
-        @linter.results.first.platforms.map(&:to_s).sort.should == %w(ios osx)
+        @linter.results.results.count.should == 1
+        @linter.results.results.first.platforms.map(&:to_s).sort.should ==
+            %w(ios osx)
       end
 
       before do
@@ -72,7 +74,7 @@ module Pod
       end
 
       it 'returns the results of the lint' do
-        results = @linter.results.map { |r| r.type.to_s }.sort.uniq
+        results = @linter.results.results.map { |r| r.type.to_s }.sort.uniq
         results.should == %w(error warning)
       end
 
@@ -98,7 +100,7 @@ module Pod
 
       def message_should_include(*values)
         @linter.lint
-        results = @linter.results
+        results = @linter.results.results
 
         matched = results.select do |result|
           values.all? do |value|
@@ -277,14 +279,13 @@ module Pod
       it 'does not warn for Github repositories with OAuth authentication' do
         @spec.stubs(:source).returns(:git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0')
         @linter.lint
-        clean_results = @linter.results.reject { |r| r.message.include?('SSH') }
-        clean_results.should.be.empty
+        @linter.results.results.should.be.empty
       end
 
       it 'does not warn for local repositories with spaces' do
         @spec.stubs(:source).returns(:git => '/Users/kylef/Projects X', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        @linter.results.results.should.be.empty
       end
 
       it 'warns for SSH repositories' do
@@ -296,6 +297,17 @@ module Pod
       it 'warns for SSH repositories on Github' do
         @spec.stubs(:source).returns(:git => 'git@github.com:kylef/test.git', :tag => '1.0')
         @linter.lint
+        @linter.results.results.should.be.empty
+      end
+
+      it 'performs checks for Gist Github repositories' do
+        @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
+        message_should_include('Github', 'https')
+      end
+
+      it 'checks the source of 0.0.1 specifications for commit or a tag' do
+        @spec.stubs(:version).returns(Version.new '0.0.1')
+        @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
         message_should_include('Git', 'SSH')
       end
 
@@ -317,7 +329,7 @@ module Pod
       it 'accepts valid frameworks' do
         @spec.frameworks = %w(AddressBook Audio-Frameworks)
         @linter.lint
-        results = @linter.results
+        results = @linter.results.results
         results.should.be.empty
       end
 
@@ -352,7 +364,7 @@ module Pod
           Geoloqi-$(CONFIGURATION)
         )
         @linter.lint
-        results = @linter.results
+        results = @linter.results.results
         results.should.be.empty
       end
 
