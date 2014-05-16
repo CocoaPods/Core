@@ -41,9 +41,9 @@ module Pod
         File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
-        linter.results.results.count.should == 1
-        linter.results.results.first.message
-              .should.match(/spec.*could not be loaded/)
+        results = linter.results.results
+        results.count.should == 1
+        results.first.message.should.match /spec.*could not be loaded/
       end
 
       before do

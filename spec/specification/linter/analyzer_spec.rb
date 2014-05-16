@@ -9,8 +9,9 @@ module Pod
         podspec_path = fixture(fixture_path)
         linter = Specification::Linter.new(podspec_path)
         @spec = linter.spec
+        results = Specification::Linter::Results.new
         @subject = Specification::Linter::Analyzer.new(@spec.consumer(:ios),
-                                                       Specification::Linter::Results.new)
+                                                       results)
       end
 
       #----------------------------------------#
@@ -140,8 +141,8 @@ module Pod
             end
           end
           consumer = @spec.consumer(:ios)
-          @subject = Specification::Linter::Analyzer.new(consumer,
-                                                         Specification::Linter::Results.new)
+          results = Specification::Linter::Results.new
+          @subject = Specification::Linter::Analyzer.new(consumer, results)
           results = @subject.analyze
           results.results.should.be.empty?
         end

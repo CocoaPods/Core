@@ -3,7 +3,7 @@ module Pod
   describe Specification::Linter::Results::Result do
     before do
       @result = Specification::Linter::Results::Result.new(:error,
-                                                           'This is a sample error.')
+                                                           'error')
     end
 
     it 'returns the type' do
@@ -11,7 +11,7 @@ module Pod
     end
 
     it 'returns the message' do
-      @result.message.should == 'This is a sample error.'
+      @result.message.should == 'error'
     end
 
     it 'can store the platforms that generated the result' do
@@ -20,9 +20,9 @@ module Pod
     end
 
     it 'returns a string representation suitable for UI' do
-      @result.to_s.should == '[ERROR] This is a sample error.'
+      @result.to_s.should == '[ERROR] error'
       @result.platforms << :ios
-      @result.to_s.should == '[ERROR] This is a sample error. [iOS]'
+      @result.to_s.should == '[ERROR] error [iOS]'
     end
   end
 
