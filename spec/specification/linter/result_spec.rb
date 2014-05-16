@@ -2,8 +2,9 @@ require File.expand_path('../../../spec_helper', __FILE__)
 module Pod
   describe Specification::Linter::Results::Result do
     before do
-      @result = Specification::Linter::Results::Result.new(:error,
-                                                           'error')
+      @result =
+          Specification::Linter::Results::Result.new(:error,
+                                                     'This is an error')
     end
 
     it 'returns the type' do
@@ -11,7 +12,7 @@ module Pod
     end
 
     it 'returns the message' do
-      @result.message.should == 'error'
+      @result.message.should == 'This is an error'
     end
 
     it 'can store the platforms that generated the result' do
@@ -20,9 +21,9 @@ module Pod
     end
 
     it 'returns a string representation suitable for UI' do
-      @result.to_s.should == '[ERROR] error'
+      @result.to_s.should == '[ERROR] This is an error'
       @result.platforms << :ios
-      @result.to_s.should == '[ERROR] error [iOS]'
+      @result.to_s.should == '[ERROR] This is an error [iOS]'
     end
   end
 
@@ -32,30 +33,33 @@ module Pod
     end
 
     it 'creates an error result' do
-      @results.error('testing')
+      @results.error('This is an error')
       @results.results.count.should == 1
       @results.results.first.type.should == :error
     end
 
     it 'creates a warning result' do
-      @results.warning('testing')
+      @results.warning('This is a warning')
       @results.results.count.should == 1
       @results.results.first.type.should == :warning
     end
 
     it 'prevents duplicate results' do
-      @results.warning('bad')
-      @results.warning('bad')
+      @results.warning('I have duplicate warnings')
+      @results.warning('I have duplicate warnings')
       @results.results.count.should == 1
     end
 
-    xit 'specifies the platform on the result when there is a consumer' do
-      @results.consumer = Specification::Consumer.new(nil, [:ios])
+    it 'specifies the platform on the result when there is a consumer' do
+      fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
+      podspec_path = fixture(fixture_path)
+      linter = Specification::Linter.new(podspec_path)
+      @results.consumer = Specification::Consumer.new(linter.spec, :ios)
       @results.warning('bad')
       @results.results.first.platforms.first.should == :ios
     end
 
-    xit 'specifies no platform when there is no consumer' do
+    it 'specifies no platform when there is no consumer' do
       @results.consumer = nil
       @results.warning('bad')
       @results.results.first.platforms.should == []
