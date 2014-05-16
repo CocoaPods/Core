@@ -2,8 +2,8 @@ require File.expand_path('../../../spec_helper', __FILE__)
 module Pod
   describe Specification::Linter::Results::Result do
     before do
-      @result = Specification::Linter::Results::Result
-                .new(:error, 'This is a sample error.')
+      @result = Specification::Linter::Results::Result.new(:error,
+                                                           'This is a sample error.')
     end
 
     it 'returns the type' do
