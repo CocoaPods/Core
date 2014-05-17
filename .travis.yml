@@ -1,7 +1,13 @@
 language: ruby
 bundler_args: --without debugging documentation
+
 rvm:
   - 1.8.7
   - 1.9.3
   - 2.0.0
+
+before_install:
+  - export LANG=en_US.UTF-8
+
 script: bundle exec rake spec
+
