@@ -6,8 +6,8 @@ rvm:
   - 1.9.3
   - 2.0.0
 
-before_script:
-  - export LANG=en_US.UTF-8
+env:
+  - LANG="en_US.UTF-8"
 
 script: bundle exec rake spec
 
