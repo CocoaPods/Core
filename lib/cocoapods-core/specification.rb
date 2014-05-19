@@ -215,7 +215,8 @@ module Pod
     # @return [Array] the name of the default subspecs if provided.
     #
     def default_subspecs
-      Array(attributes_hash['default_subspecs'])
+      # TODO: remove singular form and update the JSON specs.
+      Array(attributes_hash['default_subspecs'] || attributes_hash['default_subspec'])
     end
 
     # Returns the dependencies on subspecs.
