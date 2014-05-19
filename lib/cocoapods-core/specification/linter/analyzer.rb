@@ -15,7 +15,6 @@ module Pod
           validate_file_patterns
           check_tmp_arc_not_nil
           check_if_spec_is_empty
-          check_install_hooks
         end
 
         private
@@ -74,22 +73,6 @@ module Pod
             'resources, resource_bundles, preserve paths,' \
             'vendored_libraries, vendored_frameworks dependencies' \
             'or subspecs).'
-          end
-        end
-
-        # Check the hooks
-        #
-        def check_install_hooks
-          unless consumer.spec.pre_install_callback.nil?
-            warning '[pre_install_hook] The pre install hook has been' \
-            ' deprecated, ' \
-            'use the `resource_bundles` or the  `prepare_command` attributes.'
-          end
-
-          unless consumer.spec.post_install_callback.nil?
-            warning '[post_install_hook] The post install hook has been' \
-            ' deprecated, ' \
-            'use the `resource_bundles` or the  `prepare_command` attributes.'
           end
         end
       end

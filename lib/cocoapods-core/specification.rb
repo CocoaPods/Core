@@ -64,8 +64,6 @@ module Pod
       # self.class === other &&
       #   attributes_hash == other.attributes_hash &&
       #   subspecs == other.subspecs &&
-      #   pre_install_callback == other.pre_install_callback &&
-      #   post_install_callback == other.post_install_callback
       to_s == other.to_s
     end
 
@@ -379,54 +377,7 @@ module Pod
 
     public
 
-    # @!group Deprecated Hooks support
     #-------------------------------------------------------------------------#
-
-    # @return [Proc] the pre install callback if defined.
-    #
-    attr_reader :pre_install_callback
-
-    # @return [Proc] the post install callback if defined.
-    #
-    attr_reader :post_install_callback
-
-    # Calls the pre install callback if defined.
-    #
-    # @param  [Pod::LocalPod] pod
-    #         the local pod instance that manages the files described by this
-    #         specification.
-    #
-    # @param  [Podfile::TargetDefinition] target_definition
-    #         the target definition that required this specification as a
-    #         dependency.
-    #
-    # @return [Bool] whether a pre install callback was specified and it was
-    #         called.
-    #
-    def pre_install!(pod, target_definition)
-      return false unless @pre_install_callback
-      @pre_install_callback.call(pod, target_definition)
-      true
-    end
-
-    # Calls the post install callback if defined.
-    #
-    # @param  [Pod::TargetInstaller] target_installer
-    #         the target installer that is performing the installation of the
-    #         pod.
-    #
-    # @return [Bool] whether a post install callback was specified and it was
-    #         called.
-    #
-    def post_install!(target_installer)
-      return false unless @post_install_callback
-      @post_install_callback.call(target_installer)
-      true
-    end
-
-    #-------------------------------------------------------------------------#
-
-    public
 
     # @!group DSL attribute writers
 

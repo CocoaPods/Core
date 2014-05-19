@@ -24,8 +24,10 @@ module Pod
       # @return [Bool] Whether the specification can be converted to a hash
       #         without loss of information.
       #
+      # TODO: remove
+      #
       def safe_to_hash?
-        pre_install_callback.nil? && post_install_callback.nil?
+        true
       end
     end
 

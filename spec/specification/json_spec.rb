@@ -70,11 +70,6 @@ module Pod
       it 'returns whether it safe to convert a specification to hash' do
         @subject.safe_to_hash?.should.be.true
       end
-
-      it 'returns that it is not safe to convert a specification to a hash if there is hook defined' do
-        @subject.pre_install { ; }
-        @subject.safe_to_hash?.should.be.false
-      end
     end
 
     #-------------------------------------------------------------------------#

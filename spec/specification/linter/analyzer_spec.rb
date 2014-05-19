@@ -71,28 +71,6 @@ module Pod
           @subject.results.should.be.empty?
         end
       end
-
-      #----------------------------------------#
-
-      describe 'Hooks' do
-        it 'checks if the pre install hook has been defined' do
-          @spec.pre_install {}
-          @subject.analyze
-          @subject.results.count.should.be.equal(1)
-          expected = 'pre install hook has been deprecated'
-          @subject.results.first.message.should.include?(expected)
-          @subject.results.first.message.should.include?('pre_install_hook')
-        end
-
-        it 'checks if the post install hook has been defined' do
-          @spec.post_install {}
-          @subject.analyze
-          @subject.results.count.should.be.equal(1)
-          expected = 'post install hook has been deprecated'
-          @subject.results.first.message.should.include?(expected)
-          @subject.results.first.message.should.include?('post_install_hook')
-        end
-      end
     end
   end
 end
