@@ -1,8 +1,15 @@
 AllCops:
   Include:
     - Rakefile
+    - Gemfile
+    - ./*.gemspec
   Exclude:
-    - spec/fixtures/**
+    - spec/fixtures/**/*
+
+# At the moment not ready to be used
+# https://github.com/bbatsov/rubocop/issues/947
+Documentation:
+  Enabled: false
 
 #- CocoaPods -----------------------------------------------------------------#
 
@@ -38,24 +45,26 @@ HashSyntax:
 Lambda:
   Enabled: false
 
+DotPosition:
+  EnforcedStyle: trailing
 
 #- CocoaPods specs -----------------------------------------------------------#
 
 # Allow for `should.match /regexp/`.
 AmbiguousRegexpLiteral:
   Exclude:
-    - spec/**
+    - spec/**/*
 
 # Allow `object.should == object` syntax.
 Void:
   Exclude:
-    - spec/**
+    - spec/**/*
 
 ClassAndModuleChildren:
   Exclude:
-    - spec/**
+    - spec/**/*
 
 UselessComparison:
   Exclude:
-    - spec/**
+    - spec/**/*
 
