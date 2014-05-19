@@ -65,11 +65,11 @@ module Pod
       end
 
       it 'returns the description' do
-        @presenter.description.should == "It is similar in concept to other popular " \
-          "logging frameworks such as log4j, yet is designed specifically for "       \
-          "objective-c, and takes advantage of features such as multi-threading, "    \
-          "grand central dispatch (if available), lockless atomic operations, and "   \
-          "the dynamic nature of the objective-c runtime."
+        @presenter.description.should == 'It is similar in concept to other popular ' \
+          'logging frameworks such as log4j, yet is designed specifically for '       \
+          'objective-c, and takes advantage of features such as multi-threading, '    \
+          'grand central dispatch (if available), lockless atomic operations, and '   \
+          'the dynamic nature of the objective-c runtime.'
       end
 
       it 'returns the summary' do

@@ -151,8 +151,8 @@ module Pod
       #
       def pod(name = nil, *requirements, &block)
         if block
-          raise StandardError, "Inline specifications are deprecated. " \
-            "Please store the specification in a `podspec` file."
+          raise StandardError, 'Inline specifications are deprecated. ' \
+            'Please store the specification in a `podspec` file.'
         end
 
         unless name

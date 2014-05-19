@@ -526,8 +526,8 @@ module Pod
       #           The deployment target of the platform.
       #
       def deployment_target=(*args)
-        raise Informative, "The deployment target can be declared only per " \
-          "platform."
+        raise Informative, 'The deployment target can be declared only per ' \
+          'platform.'
       end
 
       #-----------------------------------------------------------------------#
@@ -574,7 +574,7 @@ module Pod
         name, *version_requirements = args
         if name == self.name
           raise Informative, "A specification can't require itself as a " \
-            "subspec"
+            'subspec'
         end
         if @parent
           composed_name = ''
@@ -582,7 +582,7 @@ module Pod
             composed_name << component
             if name == composed_name
               raise Informative, "A subspec can't require one of its " \
-                "parents specifications"
+                'parents specifications'
             else
               composed_name << '/'
             end

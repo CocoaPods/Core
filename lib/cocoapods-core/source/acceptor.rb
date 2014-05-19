@@ -94,8 +94,8 @@ module Pod
           s.version != '0.0.1'
         end
         if has_tagged_spec
-          errors << "There is already at least one versioned specification " \
-            "so untagged versions cannot be accepted."
+          errors << 'There is already at least one versioned specification ' \
+            'so untagged versions cannot be accepted.'
         end
       end
 
@@ -122,7 +122,7 @@ module Pod
           set = source.search(dep)
           unless set && set.specification
             errors << "Unable to find a specification for the `#{dep}` " \
-              "dependency."
+              'dependency.'
           end
         end
       end

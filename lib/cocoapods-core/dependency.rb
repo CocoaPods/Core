@@ -71,7 +71,7 @@ module Pod
       if requirements.last.is_a?(Hash)
         @external_source = requirements.pop
         unless requirements.empty?
-          raise Informative, "A dependency with an external source may not " \
+          raise Informative, 'A dependency with an external source may not ' \
             "specify version requirements (#{name})."
         end
 
@@ -79,7 +79,7 @@ module Pod
         @head = true
         requirements.pop
         unless requirements.empty?
-          raise Informative, "A `:head` dependency may not specify version " \
+          raise Informative, 'A `:head` dependency may not specify version ' \
             "requirements (#{name})."
         end
       end

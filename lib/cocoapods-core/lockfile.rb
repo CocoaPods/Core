@@ -141,7 +141,7 @@ module Pod
 
       unless dep && version
         raise StandardError, "Attempt to lock the `#{name}` Pod without an " \
-          "known dependency."
+          'known dependency.'
       end
 
       locked_dependency = dep.dup

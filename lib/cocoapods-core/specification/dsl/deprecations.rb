@@ -7,20 +7,20 @@ module Pod
         def preferred_dependency=(name)
           self.default_subspecs = [name]
           CoreUI.warn "[#{self}] `preferred_dependency` has been renamed "\
-            "to `default_subspecs`."
+            'to `default_subspecs`.'
         end
 
         def singleton_method_added(method)
           if method == :pre_install
             CoreUI.warn "[#{self}] The use of `#{method}` by overriding " \
-              "the method is deprecated."
+              'the method is deprecated.'
             @pre_install_callback = proc do |pod, target_definition|
               pre_install(pod, target_definition)
             end
 
           elsif method == :post_install
             CoreUI.warn "[#{self}] The use of `#{method}` by overriding the " \
-              "method is deprecated."
+              'method is deprecated.'
             @post_install_callback = proc do |target_installer|
               post_install(target_installer)
             end
@@ -28,24 +28,24 @@ module Pod
           elsif method == :header_mappings
             raise Informative, "[#{self}] The use of the `header_mappings` " \
               "hook has been deprecated.\n Use the `header_dir` and the " \
-                "`header_mappings_dir` attributes."
+                '`header_mappings_dir` attributes.'
 
           elsif method == :copy_header_mapping
             raise Informative, "[#{self}] The use of the " \
               "`copy_header_mapping` hook has been deprecated.\nUse" \
-                "the `header_dir` and the `header_mappings_dir` attributes."
+                'the `header_dir` and the `header_mappings_dir` attributes.'
           end
         end
 
         def documentation=(value)
           CoreUI.warn "[#{self}] The `documentation` DSL directive of the " \
-            "podspec format has been deprecated."
+            'podspec format has been deprecated.'
         end
 
         def clean_paths=(value)
           raise Informative, "[#{self}] Clean paths are deprecated. " \
-            "CocoaPods now cleans unused files by default. Use the " \
-              "`preserve_paths` attribute if needed."
+            'CocoaPods now cleans unused files by default. Use the ' \
+              '`preserve_paths` attribute if needed.'
         end
 
         DEPRECATED_METHODS = [
@@ -92,10 +92,10 @@ module Pod
         #
         def pre_install(&block)
           CoreUI.warn "[#{self}] The pre install hook of the specification " \
-            "DSL has been deprecated, use the `resource_bundles` or the " \
-            "`prepare_command` attributes."
+            'DSL has been deprecated, use the `resource_bundles` or the ' \
+            '`prepare_command` attributes.'
           CoreUI.warn "[#{self}] The pre_install hook will be removed in " \
-            "the next release"
+            'the next release'
           @pre_install_callback = block
         end
 
@@ -124,10 +124,10 @@ module Pod
         #
         def post_install(&block)
           CoreUI.warn "[#{self}] The post install hook of the specification " \
-            "DSL has been deprecated, use the `resource_bundles` or the " \
-            "`prepare_command` attributes."
+            'DSL has been deprecated, use the `resource_bundles` or the ' \
+            '`prepare_command` attributes.'
           CoreUI.warn "[#{self}] The post_install hook will be removed in " \
-            "the next release"
+            'the next release'
           @post_install_callback = block
         end
 

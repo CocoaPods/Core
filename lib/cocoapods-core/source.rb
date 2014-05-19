@@ -219,7 +219,7 @@ module Pod
               texts << s.description
             rescue
               CoreUI.warn "Skipping `#{set.name}` because the podspec " \
-                "contains errors."
+                'contains errors.'
             end
             texts.grep(regexp_query).empty?
           end
@@ -293,7 +293,7 @@ module Pod
       specification(name, version) if version
     rescue Informative
       Pod::CoreUI.warn "Skipping `#{name}` because the podspec " \
-        "contains errors."
+        'contains errors.'
       nil
     end
 

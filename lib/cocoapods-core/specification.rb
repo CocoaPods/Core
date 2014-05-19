@@ -124,10 +124,10 @@ module Pod
     def self.name_and_version_from_string(string_representation)
       match_data = string_representation.match(/(\S*) \((.*)\)/)
       unless match_data
-        raise Informative, "Invalid string representation for a " \
+        raise Informative, 'Invalid string representation for a ' \
           "Specification: `#{string_representation}`." \
-          "String representation should include the name and " \
-          "the version of a pod."
+          'String representation should include the name and ' \
+          'the version of a pod.'
       end
       name = match_data[1]
       vers = Version.new(match_data[2])
@@ -207,7 +207,7 @@ module Pod
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.base_name == subspec_name }
         unless subspec
-          raise Informative, "Unable to find a specification named " \
+          raise Informative, 'Unable to find a specification named ' \
             "`#{relative_name}` in `#{name} (#{version})`."
         end
         subspec.subspec_by_name(remainder)

@@ -131,7 +131,7 @@ module Pod
         end
         if result.empty?
           extra = ', author, summary, or description' if full_text_search
-          raise Informative, "Unable to find a pod with name" \
+          raise Informative, 'Unable to find a pod with name' \
             "#{extra} matching `#{query}'"
         end
         result
@@ -229,7 +229,7 @@ module Pod
         result
       rescue
         CoreUI.warn "Skipping `#{set.name}` because the podspec contains " \
-          "errors."
+          'errors.'
         result
       end
 

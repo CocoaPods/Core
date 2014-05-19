@@ -352,7 +352,7 @@ module Pod
       def set_platform(name, target = nil)
         unless [:ios, :osx].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            "must be `:ios` or `:osx`."
+            'must be `:ios` or `:osx`.'
         end
 
         if target
@@ -414,7 +414,7 @@ module Pod
       def store_podspec(options = nil)
         if options
           unless options.keys.all? { |key| [:name, :path].include?(key) }
-            raise StandardError, "Unrecognized options for the podspec " \
+            raise StandardError, 'Unrecognized options for the podspec ' \
               "method `#{options}`"
           end
           get_hash_value('podspecs', []) << options
