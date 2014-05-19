@@ -50,7 +50,8 @@ module Pod
           run_root_validation_hooks
           perform_all_specs_analysis
         else
-          error "The specification defined in `#{file}` could not be loaded." \
+          error "[spec] The specification defined in `#{file}` could not be" \
+          ' loaded.' \
             "\n\n#{@raise_message}"
         end
         results.empty?
@@ -91,9 +92,9 @@ module Pod
           next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
-              warning("Missing required attribute `#{attr.name}`.")
+              warning("[attributes] Missing required attribute `#{attr.name}`.")
             else
-              error("Missing required attribute `#{attr.name}`.")
+              error("[attributes] Missing required attribute `#{attr.name}`.")
             end
           end
         end
@@ -173,24 +174,25 @@ module Pod
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
-            error 'The name of the spec should match the name of the file.'
+            error '[name] The name of the spec should match the name of the \
+                    file.'
           end
 
           if spec.root.name =~ /\s/
-            error 'The name of a spec should not contain whitespace.'
+            error '[name] The name of a spec should not contain whitespace.'
           end
 
           if spec.root.name[0, 1] == '.'
-            error 'The name of a spec should not begin with a period.'
+            error '[name] The name of a spec should not begin with a period.'
           end
         end
       end
 
       def _validate_version(v)
         if v.to_s.empty?
-          error 'A version is required.'
+          error '[version] A version is required.'
         elsif v <= Version::ZERO
-          error 'The version of the spec should be higher than 0.'
+          error '[version] The version of the spec should be higher than 0.'
         end
       end
 
@@ -198,11 +200,11 @@ module Pod
       #
       def _validate_summary(s)
         if s.length > 140
-          warning "The summary should be a short version of `description` " \
-            "(max 140 characters)."
+          warning '[summary] The summary should be a short version of' \
+          '`description` (max 140 characters).'
         end
         if s =~ /A short description of/
-          warning 'The summary is not meaningful.'
+          warning '[summary] The summary is not meaningful.'
         end
       end
 
@@ -210,13 +212,13 @@ module Pod
       #
       def _validate_description(d)
         if d =~ /An optional longer description of/
-          warning 'The description is not meaningful.'
+          warning '[description] The description is not meaningful.'
         end
         if d == spec.summary
-          warning 'The description is equal to the summary.'
+          warning '[description] The description is equal to the summary.'
         end
         if d.length < spec.summary.length
-          warning 'The description is shorter than the summary.'
+          warning '[description] The description is shorter than the summary.'
         end
       end
 
@@ -224,7 +226,7 @@ module Pod
       #
       def _validate_homepage(h)
         if h =~ %r{http://EXAMPLE}
-          warning 'The homepage has not been updated from default'
+          warning '[homepage] The homepage has not been updated from default'
         end
       end
 
@@ -232,7 +234,7 @@ module Pod
       #
       def _validate_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error 'A framework should only be specified by its name'
+          error '[frameworks] A framework should only be specified by its name'
         end
       end
 
@@ -240,7 +242,8 @@ module Pod
       #
       def _validate_weak_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error 'A weak framework should only be specified by its name'
+          error '[weak_frameworks] A weak framework should only be specified' \
+          'by its name'
         end
       end
 
@@ -250,15 +253,18 @@ module Pod
         libs.each do |lib|
           lib = lib.downcase
           if lib.end_with?('.a') || lib.end_with?('.dylib')
-            error "Libraries should not include the extension (`#{lib}`)"
+            error '[libraries] Libraries should not include the extension ' \
+            "(`#{lib}`)"
           end
 
           if lib.start_with?('lib')
-            error "Libraries should omit the `lib` prefix (`#{lib}`)"
+            error '[libraries] Libraries should omit the `lib` prefix' \
+            " (`#{lib}`)"
           end
 
           if lib.include?(',')
-            error "Libraries should not include comas (`#{lib}`)"
+            error '[libraries] Libraries should not include comas' \
+            "(`#{lib}`)"
           end
         end
       end
@@ -268,13 +274,13 @@ module Pod
       def _validate_license(l)
         type = l[:type]
         if type.nil?
-          warning 'Missing license type.'
+          warning '[license] Missing license type.'
         end
         if type && type.gsub(' ', '').gsub("\n", '').empty?
-          warning 'Invalid license type.'
+          warning '[license] Invalid license type.'
         end
         if type && type =~ /\(example\)/
-          error 'Sample license type.'
+          error '[license] Sample license type.'
         end
       end
 
@@ -286,20 +292,21 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r{http://EXAMPLE}
-            error 'The Git source still contains the example URL.'
+            error '[source] The Git source still contains the example URL.'
           end
           if commit && commit.downcase =~ /head/
-            error 'The commit of a Git source cannot be `HEAD`.'
+            error '[source] The commit of a Git source cannot be `HEAD`.'
           end
           if tag && !tag.to_s.include?(version)
-            warning 'The version should be included in the Git tag.'
+            warning '[source] The version should be included in the Git tag.'
           end
           if version == '0.0.1'
             if commit.nil? && tag.nil?
-              error 'Git sources should specify either a commit or a tag.'
+              error '[source] Git sources should specify either a commit or' \
+              'a tag.'
             end
           else
-            warning 'Git sources should specify a tag.' if tag.nil?
+            warning '[source] Git sources should specify a tag.' if tag.nil?
           end
         end
 
@@ -315,14 +322,17 @@ module Pod
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
           if git_uri.host == 'www.github.com'
-            warning 'Github repositories should not use `www` in URL.'
+            warning '[github_sources] Github repositories should not use' \
+            '`www` in URL.'
           end
           if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
-              warning 'Github repositories should end in `.git`.'
+              warning '[github_sources] Github repositories should end in' \
+              '`.git`.'
             end
             unless git_uri.scheme == 'https'
-              warning 'Github repositories should use `https` link.'
+              warning '[github_sources] Github repositories should use' \
+              '`https` link.'
             end
           end
         end
@@ -332,7 +342,8 @@ module Pod
       #
       def _validate_social_media_url(s)
         if s =~ %r{https://twitter.com/EXAMPLE}
-          warning 'The social media URL has not been updated from default'
+          warning '[social_media_url] The social media URL has not been' \
+          'updated from default'
         end
       end
 
@@ -346,7 +357,8 @@ module Pod
       #
       def _validate_compiler_flags(flags)
         if flags.join(' ').split(' ').any? { |flag| flag.start_with?('-Wno') }
-          warning "Warnings must not be disabled (`-Wno' compiler flags)."
+          warning '[compiler_flags] Warnings must not be disabled' \
+          '(`-Wno compiler` flags).'
         end
       end
 

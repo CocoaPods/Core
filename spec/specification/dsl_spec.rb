@@ -322,9 +322,9 @@ module Pod
         subspec.name.should == 'Spec/Subspec'
       end
 
-      it 'allows to specify a preferred dependency' do
-        @spec.default_subspec = 'Preferred-Subspec'
-        @spec.attributes_hash['default_subspec'].should == 'Preferred-Subspec'
+      it 'should allow you to specify a preferred set of dependencies' do
+        @spec.default_subspecs = 'Preferred-Subspec1', 'Preferred-Subspec2'
+        @spec.attributes_hash['default_subspecs'].should == %w(Preferred-Subspec1 Preferred-Subspec2)
       end
 
     end
@@ -377,9 +377,9 @@ module Pod
           spec.should.respond_to(attr.writer_name)
         end
         singularized.map { |attr| attr.name.to_s }.sort.should == %w(
-          authors compiler_flags  frameworks libraries preserve_paths
-          resource_bundles resources screenshots vendored_frameworks
-          vendored_libraries weak_frameworks
+          authors compiler_flags default_subspecs frameworks libraries
+          preserve_paths resource_bundles resources screenshots
+          vendored_frameworks vendored_libraries weak_frameworks
         )
       end
     end

@@ -21,6 +21,7 @@ module Pod
           @subject.results.count.should.be.equal(1)
           expected = 'patterns must be relative'
           @subject.results.first.message.should.include?(expected)
+          @subject.results.first.message.should.include?('File Patterns')
         end
 
         it 'checks if a specification is empty' do
@@ -36,6 +37,7 @@ module Pod
           @subject.analyze
           @subject.results.count.should.be.equal(1)
           @subject.results.first.message.should.include?('spec is empty')
+          @subject.results.first.message.should.include?('File Patterns')
         end
       end
 
@@ -48,6 +50,7 @@ module Pod
           @subject.results.count.should.be.equal(1)
           expected = '`requires_arc` should be specified'
           @subject.results.first.message.should.include?(expected)
+          @subject.results.first.message.should.include?('requires_arc')
         end
 
         it 'supports the declaration of the attribute per platform' do
@@ -78,6 +81,7 @@ module Pod
           @subject.results.count.should.be.equal(1)
           expected = 'pre install hook has been deprecated'
           @subject.results.first.message.should.include?(expected)
+          @subject.results.first.message.should.include?('pre_install_hook')
         end
 
         it 'checks if the post install hook has been defined' do
@@ -86,6 +90,7 @@ module Pod
           @subject.results.count.should.be.equal(1)
           expected = 'post install hook has been deprecated'
           @subject.results.first.message.should.include?(expected)
+          @subject.results.first.message.should.include?('post_install_hook')
         end
       end
     end

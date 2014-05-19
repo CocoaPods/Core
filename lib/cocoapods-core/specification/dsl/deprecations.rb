@@ -5,9 +5,9 @@ module Pod
       #
       module Deprecations
         def preferred_dependency=(name)
-          self.default_subspec = name
+          self.default_subspecs = [name]
           CoreUI.warn "[#{self}] `preferred_dependency` has been renamed "\
-            "to `default_subspec`."
+            "to `default_subspecs`."
         end
 
         def singleton_method_added(method)

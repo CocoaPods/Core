@@ -13,6 +13,15 @@
   [Samuel E. Giddins](https://github.com/segiddins)
   [#110](https://github.com/CocoaPods/Core/issues/110)
 
+* Linter warnings and errors are now prefixed with \[`ATTRIBUTE_NAME`\].
+  This `ATTRIBUTE_NAME` specifies which property caused the error/warning.  
+  [Joshua Kalpin][Kapin]
+  [#122](https://github.com/CocoaPods/Core/pull/122)
+
+* Introduce a new spec attribute `default_subspecs`.
+  [Kyle Fuller][kylef]
+  [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
+
 ## 0.32.1
 ## 0.32.0
 

@@ -147,14 +147,18 @@ module Pod
           s.subspec 'SubspecOSX' do |sp|
             sp.platform = :osx
           end
+          s.subspec 'SubspeciOS' do |sp|
+            sp.platform = :ios
+          end
         end
         @subspec = @spec.subspecs[0]
         @subspec_osx = @spec.subspecs[1]
+        @subspec_ios = @spec.subspecs[2]
         @subsubspec = @subspec.subspecs.first
       end
 
       it 'returns the recursive subspecs' do
-        @spec.recursive_subspecs.sort_by(&:name).should == [@subspec, @subsubspec, @subspec_osx]
+        @spec.recursive_subspecs.sort_by(&:name).should == [@subspec, @subsubspec, @subspec_osx, @subspec_ios]
       end
 
       it 'returns a subspec given the absolute name' do
@@ -170,34 +174,30 @@ module Pod
         lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise Informative
       end
 
-      it 'returns the default subspec' do
-        @spec.default_subspec = 'Subspec'
-        @spec.default_subspec.should == 'Subspec'
+      it 'returns the default subspecs' do
+        @spec.default_subspecs = 'Subspec1', 'Subspec2'
+        @spec.default_subspecs.should == %w(Subspec1 Subspec2)
       end
 
       it 'returns the dependencies on its subspecs' do
         @spec.subspec_dependencies.sort.should == [
           Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX')]
+          Dependency.new('Pod/SubspecOSX'),
+          Dependency.new('Pod/SubspeciOS')]
       end
 
       it 'returns the dependencies on its subspecs for a given platform' do
         @spec.subspec_dependencies(:ios).should == [
-          Dependency.new('Pod/Subspec')
+          Dependency.new('Pod/Subspec'),
+          Dependency.new('Pod/SubspeciOS'),
         ]
       end
 
-      it 'returns a dependency on a default subspec if it is specified' do
-        @spec.default_subspec = 'Subspec'
+      it 'returns a dependency on a default subspecs if it is specified' do
+        @spec.default_subspecs = 'Subspec', 'SubspeciOS'
         @spec.subspec_dependencies.should == [
-          Dependency.new('Pod/Subspec')
-        ]
-      end
-
-      it 'returns a dependency on a default subspec for a subspec' do
-        @subspec.default_subspec = 'Subsubspec'
-        @subspec.subspec_dependencies.should == [
-          Dependency.new('Pod/Subspec/Subsubspec')
+          Dependency.new('Pod/Subspec'),
+          Dependency.new('Pod/SubspeciOS'),
         ]
       end
 
@@ -220,13 +220,15 @@ module Pod
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX')]
+          Dependency.new('Pod/SubspecOSX'),
+          Dependency.new('Pod/SubspeciOS')]
       end
 
       it 'returns all the dependencies for a given platform' do
         @spec.all_dependencies(:ios).sort.should == [
           Dependency.new('AFNetworking'),
-          Dependency.new('Pod/Subspec')]
+          Dependency.new('Pod/Subspec'),
+          Dependency.new('Pod/SubspeciOS')]
       end
     end
 

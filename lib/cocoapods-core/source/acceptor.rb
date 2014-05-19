@@ -73,7 +73,7 @@ module Pod
           unless source == old_source
             message = "The source of the spec doesn't match with the recorded "
             message << "ones. Source: `#{source}`. Previous: `#{old_source}`.\n "
-            message << 'Please contact the specs repo maintainers if the'
+            message << 'Please contact the specs repo maintainers if the '
             message << 'library changed location.'
             errors << message
           end

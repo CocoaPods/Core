@@ -10,7 +10,7 @@ PATH
   remote: .
   specs:
     cocoapods-core (0.32.1)
-      activesupport (>= 3.2.15, < 4)
+      activesupport (>= 3.2.15)
       fuzzy_match (~> 2.0.4)
       json_pure (~> 1.8)
       nap (~> 0.5)
@@ -112,6 +112,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (< 4)
   awesome_print
   bacon
   cocoapods-core!

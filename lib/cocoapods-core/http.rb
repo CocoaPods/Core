@@ -2,7 +2,6 @@ module Pod
   # Handles HTTP requests
   #
   module HTTP
-
     # Resolve potential redirects and return the final URL.
     #
     # @return [string]
@@ -38,10 +37,12 @@ module Pod
     # @return [REST::response]
     #
     def self.validate_url(url)
+      return nil unless url =~ /^#{URI.regexp}$/
+
       begin
         url = get_actual_url(url)
         resp = perform_head_request(url)
-      rescue
+      rescue SocketError
         resp = nil
       end
 

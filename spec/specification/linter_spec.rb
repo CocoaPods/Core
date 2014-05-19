@@ -345,33 +345,33 @@ module Pod
 
       it 'checks that libraries do not end with a .a extension' do
         @spec.libraries = %w(z.a)
-        message_should_include('should not include the extension', 'z.a')
+        message_should_include('should not include the extension', 'z.a',
+                               'libraries')
       end
 
       it 'checks that libraries do not end with a .dylib extension' do
         @spec.libraries = %w(ssl.dylib)
-        message_should_include('should not include the extension', 'ssl.dylib')
+        message_should_include('should not include the extension', 'ssl.dylib',
+                               'libraries')
       end
 
       it 'checks that libraries do not begin with lib' do
         @spec.libraries = %w(libz)
-        message_should_include('should omit the `lib` prefix', 'libz')
+        message_should_include('should omit the `lib` prefix', 'libz',
+                               'libraries')
       end
 
       it 'checks that libraries do not contain unwanted characters' do
         @spec.libraries = ['ssl, z']
-        message_should_include('should not include comas', 'ssl, z')
+        message_should_include('should not include comas', 'ssl, z',
+                               'libraries')
       end
 
       #------------------#
 
       it 'checks if the compiler flags disable warnings' do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
-        message_should_include('warnings', 'disabled')
-        @linter.lint
-        message = @linter.results.first.message
-        message.should.include('Warnings')
-        message.should.include('disabled')
+        message_should_include('warnings', 'disabled', 'compiler_flags')
       end
     end
   end

@@ -37,7 +37,7 @@ module Pod
       #   The Podfile specifies the dependencies of each user target.
       #
       #   * `pod` is the way to declare a specific dependency.
-      #   * `podspec` provides an easy creation API for local podspecs.
+      #   * `podspec` provides an easy API for the creation of podspecs.
       #   * `target` allows you to scope your dependencies to specific
       #   targets in your Xcode projects.
 
@@ -164,7 +164,9 @@ module Pod
 
       # Use the dependencies of a Pod defined in the given podspec file. If no
       # arguments are passed the first podspec in the root of the Podfile is
-      # used. It is intended to be used by the project of a library.
+      # used. It is intended to be used by the project of a library. Note:
+      # this does not include the sources derived from the podspec just the
+      # CocoaPods infrastructure.
       #
       # @example
       #   podspec

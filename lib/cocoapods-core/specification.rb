@@ -214,23 +214,25 @@ module Pod
       end
     end
 
-    # @return [String] the name of the default subspec if provided.
+    # @return [Array] the name of the default subspecs if provided.
     #
-    def default_subspec
-      attributes_hash['default_subspec']
+    def default_subspecs
+      attributes_hash['default_subspecs']
     end
 
     # Returns the dependencies on subspecs.
     #
     # @note   A specification has a dependency on either the
-    #         {#default_subspec} or each of its children subspecs that are
+    #         {#default_subspecs} or each of its children subspecs that are
     #         compatible with its platform.
     #
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies(platform = nil)
-      if default_subspec
-        specs = [root.subspec_by_name("#{name}/#{default_subspec}")]
+      if default_subspecs
+        specs = default_subspecs.map do |subspec_name|
+          root.subspec_by_name("#{name}/#{subspec_name}")
+        end
       else
         specs = subspecs.compact
       end
