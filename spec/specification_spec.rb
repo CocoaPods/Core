@@ -175,8 +175,15 @@ module Pod
       end
 
       it 'returns the default subspecs' do
-        @spec.default_subspecs = 'Subspec1', 'Subspec2'
-        @spec.default_subspecs.should == %w(Subspec1 Subspec2)
+        spec = @spec.dup
+        spec.default_subspecs = 'Subspec1', 'Subspec2'
+        spec.default_subspecs.should == %w(Subspec1 Subspec2)
+      end
+
+      it 'supports the specification of the default subspecs as a string' do
+        spec = @spec.dup
+        spec.default_subspecs = 'Subspec1'
+        spec.default_subspecs.should == %w(Subspec1)
       end
 
       it 'returns the dependencies on its subspecs' do

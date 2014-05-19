@@ -217,7 +217,7 @@ module Pod
     # @return [Array] the name of the default subspecs if provided.
     #
     def default_subspecs
-      attributes_hash['default_subspecs']
+      Array(attributes_hash['default_subspecs'])
     end
 
     # Returns the dependencies on subspecs.
@@ -229,12 +229,12 @@ module Pod
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies(platform = nil)
-      if default_subspecs
+      if default_subspecs.empty?
+        specs = subspecs.compact
+      else
         specs = default_subspecs.map do |subspec_name|
           root.subspec_by_name("#{name}/#{subspec_name}")
         end
-      else
-        specs = subspecs.compact
       end
       if platform
         specs = specs.select { |s| s.supported_on_platform?(platform) }
