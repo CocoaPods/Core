@@ -9,6 +9,10 @@
   [#115](https://github.com/CocoaPods/Core/issues/115)
   [#116](https://github.com/CocoaPods/Core/pull/116)
 
+* Gracefully handle unexpected source structure
+  [Samuel E. Giddins](https://github.com/segiddins)
+  [#110](https://github.com/CocoaPods/Core/issues/110)
+
 * Linter warnings and errors are now prefixed with \[`ATTRIBUTE_NAME`\].
   This `ATTRIBUTE_NAME` specifies which property caused the error/warning.  
   [Joshua Kalpin][Kapin]

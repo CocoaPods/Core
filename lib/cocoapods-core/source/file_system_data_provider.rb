@@ -58,7 +58,13 @@ module Pod
         return unless pod_dir.exist?
         pod_dir.children.map do |v|
           basename = v.basename.to_s
-          Version.new(basename) if v.directory? && basename[0, 1] != '.'
+          begin
+            Version.new(basename) if v.directory? && basename[0, 1] != '.'
+          rescue ArgumentError => e
+            raise Informative, 'An unexpected version directory ' \
+             "`#{basename}` was encountered for the " \
+             "`#{pod_dir}` Pod in the `#{name}` repository."
+          end
         end.compact.sort.reverse.map(&:to_s)
       end
 
