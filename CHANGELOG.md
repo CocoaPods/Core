@@ -1,5 +1,9 @@
 # CocoaPods Core Changelog
 
+## 0.33.1
+
+This version only introduces changes in the CocoaPods gem.
+
 ## 0.33.0
 
 ##### Enhancements
