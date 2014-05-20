@@ -1,15 +1,15 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.33.0
 
 ##### Enhancements
 
-* Extracted URL validation into its own module.
+* Extracted URL validation into its own module.  
   [Boris Bügling](https://github.com/neonichu)
   [#115](https://github.com/CocoaPods/Core/issues/115)
   [#116](https://github.com/CocoaPods/Core/pull/116)
 
-* Gracefully handle unexpected source structure
+* Gracefully handle unexpected source structure.  
   [Samuel E. Giddins](https://github.com/segiddins)
   [#110](https://github.com/CocoaPods/Core/issues/110)
 
@@ -18,7 +18,7 @@
   [Joshua Kalpin][Kapin]
   [#122](https://github.com/CocoaPods/Core/pull/122)
 
-* Introduce a new spec attribute `default_subspecs`.
+* Add support for the specification of multiple `default_subspecs`.  
   [Kyle Fuller][kylef]
   [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
 
