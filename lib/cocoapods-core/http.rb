@@ -42,7 +42,7 @@ module Pod
       begin
         url = get_actual_url(url)
         resp = perform_head_request(url)
-      rescue SocketError
+      rescue SocketError, URI::InvalidURIError
         resp = nil
       end
 
