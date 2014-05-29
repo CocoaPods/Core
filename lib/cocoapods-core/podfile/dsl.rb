@@ -145,7 +145,7 @@ module Pod
       # @note       This method allow a nil name and the raises to be more
       #             informative.
       #
-        # @note       Support for inline podspecs has been deprecated.
+      # @note       Support for inline podspecs has been deprecated.
       #
       # @return     [void]
       #
