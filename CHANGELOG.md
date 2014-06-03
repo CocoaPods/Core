@@ -2,6 +2,12 @@
 
 ## 0.36.1
 
+##### Enhancements
+
+* Add support for test specifications in the podspec DSL.  
+  [Kyle Fuller](https://github.com/kylef)
+  [#142](https://github.com/CocoaPods/Core/pull/142)
+
 ##### Bug Fixes
 
 * Ensure that strings that are serialized to YAML are escaped and quoted, if

@@ -1221,6 +1221,28 @@ module Pod
         subspec
       end
 
+      # Represents a test specification for the library. Here you can place all
+      # your unit tests for your podspec along with the test dependencies.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.test_spec do |test_spec|
+      #       test_spec.source_files = 'NSAttributedString+CCLFormatTests.m'
+      #       test_spec.dependency 'Expecta'
+      #     end
+      #   end
+      #
+      def test_spec(&block)
+        subspec = Specification.new(self, 'Tests', true, &block)
+        @subspecs << subspec
+        subspec
+      end
+
       #------------------#
 
       # @!method default_subspecs=(subspec_array)
