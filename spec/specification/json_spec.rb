@@ -75,6 +75,13 @@ module Pod
         }]
       end
 
+      it 'handles a test spec when converted to a hash' do
+        hash = @spec.to_hash
+        hash['test_spec'].should == {
+          'source_files' => 'Tests/*.{h,m}',
+        }
+      end
+
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',

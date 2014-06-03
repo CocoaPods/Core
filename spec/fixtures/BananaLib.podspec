@@ -32,4 +32,8 @@ Pod::Spec.new do |s|
   s.subspec "GreenBanana" do |ss|
     ss.source_files = 'GreenBanana'
   end
+
+  s.test_spec do |test_spec|
+    test_spec.source_files = 'Tests/*.{h,m}'
+  end
 end
