@@ -599,7 +599,7 @@ module Pod
 
       # @!method requires_arc=(flag)
       #
-      #   Wether the library requires ARC to be compiled. If true the
+      #   Whether the library requires ARC to be compiled. If true the
       #   `-fobjc-arc` flag will be added to the compiler flags.
       #
       #   ---
