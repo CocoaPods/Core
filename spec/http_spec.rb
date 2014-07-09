@@ -51,8 +51,8 @@ module Pod
       end
 
       it 'uses a browser user-agent to validate URLs' do
-        WebMock::API.stub_request(:get, "http://SOME-URL/foo").
-          with(:headers => {:user_agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/538.43.40 (KHTML, like Gecko) Version/8.0 Safari/538.43.40'}).
+        WebMock::API.stub_request(:get, 'http://SOME-URL/foo').
+          with(:headers => { :user_agent => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/538.43.40 (KHTML, like Gecko) Version/8.0 Safari/538.43.40' }).
           to_return(:status => 200, :body => '')
 
         response = HTTP.validate_url('http://SOME-URL/foo')
