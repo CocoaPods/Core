@@ -60,16 +60,17 @@ module Pod
     def self.perform_head_request(url)
       require 'rest'
 
-      resp = ::REST.head(url)
+      resp = ::REST.head(url, {'User-Agent' => USER_AGENT})
 
       if resp.status_code >= 400
-        resp = ::REST.get(url)
+        resp = ::REST.get(url, {'User-Agent' => USER_AGENT})
       end
 
       resp
     end
 
     MAX_HTTP_REDIRECTS = 3
+    USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10) AppleWebKit/538.43.40 (KHTML, like Gecko) Version/8.0 Safari/538.43.40'
 
     #-------------------------------------------------------------------------#
   end
