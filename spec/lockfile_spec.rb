@@ -322,7 +322,7 @@ module Pod
           'DEPENDENCIES' => ['BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'],
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => '439d9f683377ecf4a27de43e8cf3bce6be4df97b', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
-          }
+        }
       end
 
       it 'generates an ordered YAML representation' do

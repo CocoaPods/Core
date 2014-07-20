@@ -60,10 +60,10 @@ module Pod
     def self.perform_head_request(url)
       require 'rest'
 
-      resp = ::REST.head(url, {'User-Agent' => USER_AGENT})
+      resp = ::REST.head(url, 'User-Agent' => USER_AGENT)
 
       if resp.status_code >= 400
-        resp = ::REST.get(url, {'User-Agent' => USER_AGENT})
+        resp = ::REST.get(url, 'User-Agent' => USER_AGENT)
       end
 
       resp
