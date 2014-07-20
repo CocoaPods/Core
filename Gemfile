@@ -18,10 +18,8 @@ group :development do
 
   if RUBY_VERSION >= '1.9.3'
     gem 'rubocop'
-
     gem 'codeclimate-test-reporter', :require => nil
-    # Bug: https://github.com/colszowka/simplecov/issues/281
-    gem 'simplecov', '0.7.1'
+    gem 'simplecov'
   end
 end
 
@@ -30,11 +28,4 @@ group :debugging do
   gem 'kicker'
   gem 'awesome_print'
   gem 'pry'
-end
-
-group :documentation do
-  gem 'yard'
-  gem 'redcarpet'
-  gem 'github-markup'
-  gem 'pygments.rb'
 end
