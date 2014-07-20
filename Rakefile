@@ -73,14 +73,14 @@ begin
     sh 'open coverage/index.html'
   end
 
-  # Rubocop
+  # RuboCop
   #-----------------------------------------------------------------------------#
 
   desc 'Checks code style'
   task :rubocop do
     if RUBY_VERSION >= '1.9.3'
       require 'rubocop'
-      cli = Rubocop::CLI.new
+      cli = RuboCop::CLI.new
       result = cli.run
       abort('RuboCop failed!') unless result == 0
     else
