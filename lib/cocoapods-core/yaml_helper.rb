@@ -38,16 +38,32 @@ module Pod
         result << "\n"
       end
 
-      # Load a YAML file and provide more informative error messages in special cases like merge conflict.
+      # Loads a YAML string and provide more informative 
+      # error messages in special cases like merge conflict.
+      # 
       # @param A YAML string.
-      def load(yaml_string)
+      #
+      # @return [Hash, Array] the Ruby YAML representaton
+      #
+      def load_string(yaml_string, file_path = nil)
         YAML.load(yaml_string)
         rescue Exception => exception
-          if yaml_has_merge_error(yaml_string)
+          if yaml_has_merge_error?(yaml_string)
             raise Informative, 'Merge conflict(s) detected'
           else
-            raise exception
+            raise Informative, "Podfile is damaged. Please run 'pod install'"
           end
+      end
+
+      # Loads a YAML file and leans on the #load_string imp
+      # to do error detection. 
+      # 
+      # @param A file.
+      #
+      # @return [Hash, Array] the Ruby YAML representaton
+      #
+      def load_file(file)
+        return load_string(file.read, file.path)        
       end
 
       #-----------------------------------------------------------------------#
@@ -130,11 +146,31 @@ module Pod
       end
 
       # Check for merge errors in a YAML string.
+      # 
       # @param A YAML string.
+      # 
       # @return If a merge error was detected or not.
-      def yaml_has_merge_error(yaml_string)
+      # 
+      def yaml_has_merge_error?(yaml_string)
         yaml_string.include?('<<<<<<< HEAD')
       end
+
+      # Error message describing where the error in parsing the 
+      # YAML took place. 
+      # 
+      # @param A YAML string.
+      # 
+      # @return If a merge error was detected or not.
+      # 
+      def yaml_merge_conflict_msg(yaml, path)
+        err = "Paring unable to continue due to merge conflicts present in "
+        if path
+          err += "the file located at #{path}"
+        else
+          err += "the following text:\n #{yaml}"
+        end
+        return err
+      end      
 
       #-----------------------------------------------------------------------#
 
