@@ -49,9 +49,9 @@ module Pod
         YAML.load(yaml_string)
         rescue Exception => exception
           if yaml_has_merge_error?(yaml_string)
-            raise Informative, 'Merge conflict(s) detected'
+            raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
           else
-            raise Informative, "Podfile is damaged. Please run 'pod install'"
+            raise Exception, "Error parsing YAML: #{yaml_string}"
           end
       end
 
@@ -163,7 +163,7 @@ module Pod
       # @return If a merge error was detected or not.
       # 
       def yaml_merge_conflict_msg(yaml, path)
-        err = "Paring unable to continue due to merge conflicts present in "
+        err = "Parsing unable to continue due to merge conflicts present in "
         if path
           err += "the file located at #{path}"
         else

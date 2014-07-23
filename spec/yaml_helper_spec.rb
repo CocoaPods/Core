@@ -1,11 +1,11 @@
 require File.expand_path('../spec_helper', __FILE__)
-
+require 'pry'
 module Pod
   describe 'In general' do
 
     before do
       @good_podfile_lock      = File.open(File.expand_path('../fixtures/Podfile.lock', __FILE__))
-      @bad_yaml_podfile_lock  = File.open(File.expand_path('../fixtures/PodfileWithIncorrectYAML.lock', __FILE__))      
+      @bad_yaml_podfile_lock  = File.open(File.expand_path('../fixtures/PodfileWithIncorrectYAML.lock', __FILE__))
       @conflict_podfile_lock  = File.open(File.expand_path('../fixtures/PodfileWithMergeConflicts.lock', __FILE__))
     end
 
@@ -13,8 +13,8 @@ module Pod
       @good_podfile_lock.close
       @bad_yaml_podfile_lock.close
       @conflict_podfile_lock.close
-    end    
-    
+    end
+
     describe YAMLHelper do
 
       it 'converts a string' do
@@ -86,13 +86,13 @@ module Pod
       it 'raises an Informative error when it encounters a merge conflict' do
         should.raise Informative do
           YAMLHelper.load_string(@conflict_podfile_lock.read)
-        end.message.should.match /Merge conflict\(s\) detected/
+        end.message.should.match /Parsing unable to continue due to merge conflicts/
       end
 
       it 'raises another error when it encounters an error that is not a merge conflict' do
         should.raise Exception do
           YAMLHelper.load_string(@bad_yaml_podfile_lock.read)
-        end.message.should.match /Podfile is damaged. Please run 'pod install'/
+        end
       end
 
       it 'should not raise when there is no merge conflict' do
@@ -106,13 +106,13 @@ module Pod
       it 'raises an Informative error when it encounters a merge conflict' do
         should.raise Informative do
           YAMLHelper.load_file(@conflict_podfile_lock)
-        end.message.should.match /Merge conflict\(s\) detected/
+        end.message.should.match /Parsing unable to continue due to merge conflicts/
       end
 
       it 'raises another error when it encounters an error that is not a merge conflict' do
         should.raise Exception do
           YAMLHelper.load_file(@bad_yaml_podfile_lock)
-        end.message.should.match /Podfile is damaged. Please run 'pod install'/
+        end
       end
 
       it 'should not raise when there is no merge conflict' do
@@ -121,7 +121,6 @@ module Pod
         end
       end
     end
-
 
     #-------------------------------------------------------------------------#
 
@@ -200,7 +199,7 @@ module Pod
         value = YAMLHelper.load_string(podfile_str)
         sorted_keys = ['PODS', 'DEPENDENCIES', 'SPEC CHECKSUMS', 'COCOAPODS']
         result = YAMLHelper.convert_hash(value, sorted_keys, "\n\n")
-        YAMLHelper.load_string(result).should == value        
+        YAMLHelper.load_string(result).should == value
         result.should == podfile_str
       end
     end
