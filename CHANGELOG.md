@@ -1,5 +1,9 @@
 # CocoaPods Core Changelog
 
+## Master
+* Removed legacy deprecation warnings of the Specification DSL.  
+  [Fabio Pelosin][irrationalfab]
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.

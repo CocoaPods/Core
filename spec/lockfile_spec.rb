@@ -21,7 +21,7 @@ module Pod
             :podspec: path/JSONKit.podspec
 
         SPEC CHECKSUMS:
-          BananaLib: 439d9f683377ecf4a27de43e8cf3bce6be4df97b
+          BananaLib: d46ca864666e216300a0653de197668b12e732a1
           JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
         COCOAPODS: #{CORE_VERSION}
@@ -123,7 +123,7 @@ module Pod
       end
 
       it 'returns the checksum for the given Pod' do
-        @lockfile.checksum('BananaLib').should == '439d9f683377ecf4a27de43e8cf3bce6be4df97b'
+        @lockfile.checksum('BananaLib').should == 'd46ca864666e216300a0653de197668b12e732a1'
       end
 
       it 'returns the dependencies used for the last installation' do
@@ -321,7 +321,7 @@ module Pod
             'JSONKit (1.4)', 'monkey (1.0.8)'],
           'DEPENDENCIES' => ['BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'],
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
-          'SPEC CHECKSUMS' => { 'BananaLib' => '439d9f683377ecf4a27de43e8cf3bce6be4df97b', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
+          'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
         }
       end
 
@@ -403,7 +403,7 @@ module Pod
 
       it 'stores the checksum of the specifications' do
         @lockfile.internal_data['SPEC CHECKSUMS'].should == {
-          'BananaLib' => '439d9f683377ecf4a27de43e8cf3bce6be4df97b',
+          'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1',
           'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949'
         }
       end

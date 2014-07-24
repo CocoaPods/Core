@@ -17,11 +17,4 @@ Pod::Spec.new do |s|
     :file => 'LICENSE',
     :text => 'Permission is hereby granted ...'
   }
-  s.documentation = {
-    :html => 'http://banana-corp.local/banana-lib/docs.html',
-    :appledoc => [
-       '--project-company', 'Banana Corp',
-       '--company-id', 'com.banana',
-    ]
-  }
 end
