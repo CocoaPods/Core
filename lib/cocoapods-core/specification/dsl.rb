@@ -325,24 +325,24 @@ module Pod
 
       #------------------#
 
-      # @!method screenshots=(screenshots)
+      # @!method images=(images)
       #
       #   A list of URLs to images showcasing the Pod. Intended for UI oriented
       #   libraries. CocoaPods recommends the usage of the `gif` format.
       #
       #   @example
       #
-      #     spec.screenshot  = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
+      #     spec.image  = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
       #
       #   @example
       #
-      #     spec.screenshots = [ "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png",
-      #                          "http://dl.dropbox.com/u/378729/MBProgressHUD/2.png" ]
+      #     spec.images = [ "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png",
+      #                     "http://dl.dropbox.com/u/378729/MBProgressHUD/2.png" ]
       #
-      #   @param  [String] screenshots
+      #   @param  [String] images
       #           An URL for the screenshot of the Pod.
       #
-      root_attribute :screenshots,
+      root_attribute :images,
                      :singularize    => true,
                      :container      => Array
 

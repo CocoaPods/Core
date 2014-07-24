@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* The `screenshots` directive of the Specification DSL has been renamed to
+  `images`.  
+  [Fabio Pelosin][irrationalfab]
+  [#124](https://github.com/CocoaPods/Core/issues/124)
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.

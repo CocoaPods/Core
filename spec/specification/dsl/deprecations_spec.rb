@@ -36,6 +36,18 @@ module Pod
       lambda { @spec.clean_paths = 'value' }.should.raise Informative
     end
 
+    it 'warns about the deprecated `screenshot` attribute' do
+      @spec.screenshot = 'www.example.com/img1.png'
+      @spec.images.should == ['www.example.com/img1.png']
+      CoreUI.warnings.should.match /screenshot.*renamed/
+    end
+
+    it 'warns about the deprecated `screenshots` attribute' do
+      @spec.screenshots = 'www.example.com/img1.png'
+      @spec.images.should == ['www.example.com/img1.png']
+      CoreUI.warnings.should.match /screenshots.*renamed/
+    end
+
     it 'raises for the deprecated `part_of_dependency` attribute' do
       lambda { @spec.part_of_dependency = 'value' }.should.raise Informative
     end
