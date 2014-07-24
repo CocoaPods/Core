@@ -117,14 +117,14 @@ module Pod
       @spec.description.should == "Line1\nLine2"
     end
 
-    it 'returns the screenshots' do
-      @spec.screenshots = ['www.example.com/img1.png', 'www.example.com/img2.png']
-      @spec.screenshots.should == ['www.example.com/img1.png', 'www.example.com/img2.png']
+    it 'returns the images' do
+      @spec.images = ['www.example.com/img1.png', 'www.example.com/img2.png']
+      @spec.images.should == ['www.example.com/img1.png', 'www.example.com/img2.png']
     end
 
     it 'support the specification of the attribute as a string' do
-      @spec.screenshot = 'www.example.com/img1.png'
-      @spec.screenshots.should == ['www.example.com/img1.png']
+      @spec.image = 'www.example.com/img1.png'
+      @spec.images.should == ['www.example.com/img1.png']
     end
 
     it 'returns the prepare command stripping the indentation' do

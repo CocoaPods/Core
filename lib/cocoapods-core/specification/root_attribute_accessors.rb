@@ -122,13 +122,13 @@ module Pod
           description.strip_heredoc.chomp if description
         end
 
-        # @return [Array<String>] The list of the URL for the screenshots of
+        # @return [Array<String>] The list of the URL for the images of
         #         the Pod.
         #
         # @note   The value is coerced to an array.
         #
-        def screenshots
-          value = attributes_hash['screenshots']
+        def images
+          value = attributes_hash['screenshots'] || attributes_hash['images']
           [*value]
         end
 

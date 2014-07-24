@@ -377,9 +377,9 @@ module Pod
           spec.should.respond_to(attr.writer_name)
         end
         singularized.map { |attr| attr.name.to_s }.sort.should == %w(
-          authors compiler_flags default_subspecs frameworks libraries
-          preserve_paths resource_bundles resources screenshots
-          vendored_frameworks vendored_libraries weak_frameworks
+          authors compiler_flags default_subspecs frameworks images libraries
+          preserve_paths resource_bundles resources vendored_frameworks
+          vendored_libraries weak_frameworks
         )
       end
     end

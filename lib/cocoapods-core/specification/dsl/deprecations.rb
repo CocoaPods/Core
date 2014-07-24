@@ -34,6 +34,18 @@ module Pod
               '`preserve_paths` attribute if needed.'
         end
 
+        def screenshot=(value)
+          self.images = value
+          CoreUI.warn "[#{self}] The `screenshot` DSL directive of the " \
+            'podspec format has been renamed to `image`.'
+        end
+
+        def screenshots=(value)
+          self.images = value
+          CoreUI.warn "[#{self}] The `screenshots` DSL directive of the " \
+            'podspec format has been renamed to `images`.'
+        end
+
         DEPRECATED_METHODS = [
           :part_of_dependency=,
           :part_of=,
