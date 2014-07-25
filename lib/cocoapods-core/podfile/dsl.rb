@@ -105,7 +105,7 @@ module Pod
       #
       # Alternatively you can white-list only a single build configuration.
       #
-      #     pod 'PonyDebugger', :configurations => ['Release']
+      #     pod 'PonyDebugger', :configuration => ['Release']
       #
       # ------
       #

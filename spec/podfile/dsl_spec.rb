@@ -37,7 +37,7 @@ module Pod
 
       it 'allows to white-list a dependency on a build configuration' do
         podfile = Podfile.new do
-          pod 'PonyDebugger', :configurations => 'Release'
+          pod 'PonyDebugger', :configuration => 'Release'
         end
 
         target = podfile.target_definitions['Pods']
