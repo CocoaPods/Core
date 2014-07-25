@@ -330,7 +330,8 @@ module Pod
       end
 
       it 'generates a valid YAML representation' do
-        YAMLHelper.load_string(@lockfile.to_yaml).should == YAMLHelper.load_string(Sample.yaml)
+        YAMLHelper.load_string(@lockfile.to_yaml).should ==
+        YAMLHelper.load_string(Sample.yaml)
       end
 
       it "serializes correctly `:head' dependencies" do

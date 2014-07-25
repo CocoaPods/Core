@@ -70,8 +70,8 @@ module Pod
       def load_file(file_path)
         raise(Exception, "#load_file only accepts a Pathname") unless file_path.is_a?(Pathname)
         File.open(file_path, "r") do |file|
-          return load_string(file.read, file.path)        
-        end        
+          return load_string(file.read, file.path)
+        end
       end
 
       #-----------------------------------------------------------------------#
@@ -154,31 +154,35 @@ module Pod
       end
 
       # Check for merge errors in a YAML string.
-      # 
-      # @param A YAML string.
-      # 
+      #
+      # @param [String] yaml_string
+      #        A YAML string to evaluate
+      #
       # @return If a merge error was detected or not.
-      # 
+      #
       def yaml_has_merge_error?(yaml_string)
         yaml_string.include?('<<<<<<< HEAD')
       end
 
-      # Error message describing where the error in parsing the 
-      # YAML took place. 
-      # 
-      # @param A YAML string.
-      # 
+      # Error message describing where the error in parsing the
+      # YAML took place.
+      #
+      # @param [String] yaml
+      #        Offending YAML
+      #
+      # @param [Pathname] path
+      #        The (optional) offending path
+      #
       # @return If a merge error was detected or not.
-      # 
-      def yaml_merge_conflict_msg(yaml, path)
+      #
+      def yaml_merge_conflict_msg(yaml, path = nil)
         err = "Parsing unable to continue due to merge conflicts present in "
         if path
           err += "the file located at #{path}"
         else
           err += "the following text:\n #{yaml}"
         end
-        return err
-      end      
+      end
 
       #-----------------------------------------------------------------------#
 

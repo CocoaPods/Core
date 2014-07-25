@@ -4,9 +4,15 @@ module Pod
   describe 'In general' do
 
     before do
-      @good_podfile_lock      = File.open(File.expand_path('../fixtures/Podfile.lock', __FILE__))
-      @bad_yaml_podfile_lock  = File.open(File.expand_path('../fixtures/PodfileWithIncorrectYAML.lock', __FILE__))
-      @conflict_podfile_lock  = File.open(File.expand_path('../fixtures/PodfileWithMergeConflicts.lock', __FILE__))
+      @good_podfile_lock      = File.open(
+        File.expand_path('../fixtures/Podfile.lock', __FILE__))
+
+      @bad_yaml_podfile_lock  = File.open(
+        File.expand_path('../fixtures/PodfileWithIncorrectYAML.lock', __FILE__))
+
+      @conflict_podfile_lock  = File.open(
+        File.expand_path('../fixtures/PodfileWithMergeConflicts.lock', __FILE__))
+
     end
 
     after do
@@ -86,10 +92,10 @@ module Pod
       it 'raises an Informative error when it encounters a merge conflict' do
         should.raise Informative do
           YAMLHelper.load_string(@conflict_podfile_lock.read)
-        end.message.should.match /Parsing unable to continue due to merge conflicts/
+        end.message.should.match /unable to continue due to merge conflicts/
       end
 
-      it 'raises another error when it encounters an error that is not a merge conflict' do
+      it 'raises error when encountering a non-merge conflict error' do
         should.raise Exception do
           YAMLHelper.load_string(@bad_yaml_podfile_lock.read)
         end
@@ -106,10 +112,10 @@ module Pod
       it 'raises an Informative error when it encounters a merge conflict' do
         should.raise Informative do
           YAMLHelper.load_file(Pathname.new(@conflict_podfile_lock.path))
-        end.message.should.match /Parsing unable to continue due to merge conflicts/
+        end.message.should.match /unable to continue due to merge conflicts/
       end
 
-      it 'raises another error when it encounters an error that is not a merge conflict' do
+      it 'raises error when it encounters a non-merge conflict error' do
         should.raise Exception do
           YAMLHelper.load_file(Pathname.new(@bad_yaml_podfile_lock.path))
         end
@@ -207,5 +213,5 @@ module Pod
     #-------------------------------------------------------------------------#
   end
 
-  #-----------------------------------------------------------------------------#
+  #---------------------------------------------------------------------------#
 end
