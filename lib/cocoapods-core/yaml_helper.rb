@@ -55,7 +55,7 @@ module Pod
           if yaml_has_merge_error?(yaml_string)
             raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
           else
-            raise Informative, "Error parsing YAML: #{yaml_string}"
+            raise Informative, yaml_parsing_error_msg(yaml_string, file_path)
           end
       end
 
@@ -161,8 +161,8 @@ module Pod
         yaml_string.include?('<<<<<<< HEAD')
       end
 
-      # Error message describing where the error in parsing the
-      # YAML took place.
+      # Error message describing that a merge conflict was found
+      # while parsing the YAML.
       #
       # @param [String] yaml
       #        Offending YAML
@@ -170,14 +170,36 @@ module Pod
       # @param [Pathname] path
       #        The (optional) offending path
       #
-      # @return If a merge error was detected or not.
+      # @return [String] The Error Message
       #
       def yaml_merge_conflict_msg(yaml, path = nil)
-        err = "Parsing unable to continue due to merge conflicts present in "
+        err = "ERROR: Parsing unable to continue due "
+        err += "to merge conflicts present in:\n"
         if path
-          err += "the file located at #{path}"
+          err += "the file located at #{path}\n"
         else
-          err += "the following text:\n #{yaml}"
+          err += "#{yaml}"
+        end
+      end
+
+      # Error message describing a general error took happened
+      # while parsing the YAML.
+      #
+      # @param [String] yaml
+      #        Offending YAML
+      #
+      # @param [Pathname] path
+      #        The (optional) offending path
+      #
+      # @return [String] The Error Message
+      #
+      def yaml_parsing_error_msg(yaml, path = nil)
+        err = "ERROR: Parsing unable to continue due "
+        err += "to parsing error:\n"
+        if path
+          err += "contained in the file located at #{path}\n"
+        else
+          err += "#{yaml}"
         end
       end
 
