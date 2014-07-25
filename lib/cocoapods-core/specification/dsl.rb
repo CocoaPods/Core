@@ -38,7 +38,6 @@ module Pod
     #       spec.source       = { :git => 'https://github.com/tonymillion/Reachability.git', :tag => 'v3.1.0' }
     #       spec.source_files = 'Reachability.{h,m}'
     #       spec.framework    = 'SystemConfiguration'
-    #       spec.requires_arc = true
     #     end
     #
     module DSL
@@ -601,22 +600,18 @@ module Pod
       #
       #   Whether the library requires ARC to be compiled. If true the
       #   `-fobjc-arc` flag will be added to the compiler flags.
-      #
-      #   ---
-      #
-      #   The default value of this attribute is __transitioning__ from `false`
-      #   to `true`, and in the meanwhile this attribute is always required.
+      #   The default value of this attribute is __transitioning__ is `true`.
       #
       #   @example
       #
-      #     spec.requires_arc = true
+      #     spec.requires_arc = false
       #
       #   @param [Bool] flag
       #           whether the source files require ARC.
       #
       attribute :requires_arc,
                 :types => [TrueClass, FalseClass],
-                :default_value => false,
+                :default_value => true,
                 :inherited => true
 
       #------------------#

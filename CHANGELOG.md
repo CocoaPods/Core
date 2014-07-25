@@ -1,5 +1,11 @@
 # CocoaPods Core Changelog
 
+## Master
+
+* The specification `requires_arc` attribute now defaults to true.  
+  [Fabio Pelosin][irrationalfab]
+  [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.

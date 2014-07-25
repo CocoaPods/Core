@@ -13,7 +13,6 @@ module Pod
 
         def analyze
           validate_file_patterns
-          check_tmp_arc_not_nil
           check_if_spec_is_empty
         end
 
@@ -38,25 +37,6 @@ module Pod
                 "and cannot start with a slash (#{attrb.name})."
               end
             end
-          end
-        end
-
-        # @todo remove after the switch to true
-        #
-        def check_tmp_arc_not_nil
-          spec = consumer.spec
-          declared = false
-          loop do
-            declared = true unless spec.attributes_hash['requires_arc'].nil?
-            declared = true unless spec.attributes_hash[consumer.platform_name.to_s].nil?
-            spec = spec.parent
-            break unless spec
-          end
-
-          unless declared
-            warning '[requires_arc] A value for `requires_arc` should be' \
-            ' specified until the ' \
-            'migration to a `true` default.'
           end
         end
 

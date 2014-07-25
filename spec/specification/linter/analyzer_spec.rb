@@ -44,24 +44,13 @@ module Pod
       #----------------------------------------#
 
       describe 'Requires ARC' do
-        it 'that the attribute is not nil' do
-          @spec.requires_arc = nil
-          @subject.analyze
-          @subject.results.count.should.be.equal(1)
-          expected = '`requires_arc` should be specified'
-          @subject.results.first.message.should.include?(expected)
-          @subject.results.first.message.should.include?('requires_arc')
-        end
-
         it 'supports the declaration of the attribute per platform' do
-          @spec.ios.requires_arc = true
           @subject.analyze
           @subject.results.should.be.empty?
         end
 
         it 'supports the declaration of the attribute in the parent' do
           @spec = Spec.new do |s|
-            s.requires_arc = true
             s.subspec 'SubSpec' do |sp|
             end
           end

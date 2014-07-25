@@ -51,17 +51,17 @@ module Pod
       #------------------#
 
       it 'allows to specify whether the specification requires ARC' do
-        @spec.requires_arc = true
-        @consumer.requires_arc?.should.be.true
-      end
-
-      it "doesn't requires arc by default" do
+        @spec.requires_arc = false
         @consumer.requires_arc?.should.be.false
       end
 
+      it 'requires arc by default' do
+        @consumer.requires_arc?.should.be.true
+      end
+
       it 'inherits where it requires arc from the parent' do
-        @spec.requires_arc = true
-        @subspec_consumer.requires_arc?.should.be.true
+        @spec.requires_arc = false
+        @subspec_consumer.requires_arc?.should.be.false
       end
 
       it "doesn't inherit whether it requires ARC from the parent if it is false" do
@@ -434,7 +434,7 @@ module Pod
         end
 
         it 'takes into account a default value if specified' do
-          @consumer.requires_arc.should == false
+          @consumer.requires_arc.should == true
         end
 
         it 'initializes the value to the empty container if no value could be resolved' do

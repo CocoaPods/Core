@@ -195,8 +195,8 @@ module Pod
       #------------------#
 
       it 'allows to specify whether the specification requires ARC' do
-        @spec.requires_arc = true
-        @spec.attributes_hash['requires_arc'].should == true
+        @spec.requires_arc = false
+        @spec.attributes_hash['requires_arc'].should == false
       end
 
       it 'allows to specify the frameworks' do
@@ -357,10 +357,10 @@ module Pod
 
     describe 'Attributes default values' do
 
-      it "doesn't requires arc by default" do
+      it 'does requires arc by default' do
         attr = Specification::DSL.attributes[:requires_arc]
-        attr.default(:ios).should == false
-        attr.default(:osx).should == false
+        attr.default(:ios).should == true
+        attr.default(:osx).should == true
       end
 
     end
