@@ -689,9 +689,9 @@ module Pod
         options = requirements.last
         return requirements unless options.is_a?(Hash)
 
-        configurations_to_whitelist_in = options.delete(:configurations)
-        if configurations_to_whitelist_in
-          configurations_to_whitelist_in.each do |configuration|
+        configurations = options.delete(:configurations)
+        if configurations
+          Array(configurations).each do |configuration|
             whitelist_pod_for_configuration(name, configuration)
           end
         end
