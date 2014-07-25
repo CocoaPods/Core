@@ -38,7 +38,7 @@ module Pod
         result << "\n"
       end
 
-      # Loads a YAML string and provide more informative 
+      # Loads a YAML string and provide more informative
       # error messages in special cases like merge conflict.
       #
       # @param [String] yaml_string
@@ -60,8 +60,8 @@ module Pod
       end
 
       # Loads a YAML file and leans on the #load_string imp
-      # to do error detection. 
-      # 
+      # to do error detection
+      #
       # @param [Pathname] file_path
       #        The file path to be used for read for the YAML file
       #
