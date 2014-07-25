@@ -321,9 +321,12 @@ module Pod
       # for any configuration, it is implicitly whitelisted.
       #
       # @param  [String] pod_name
-      #         The pod that we're querying about inclusion for in the given configuration.
+      #         The pod that we're querying about inclusion for in the given
+      #         configuration.
+      #
       # @param  [String] configuration_name
-      #         The configuration that we're querying about inclusion of the pod in
+      #         The configuration that we're querying about inclusion of the
+      #         pod in.
       #
       # @return [Bool] flag
       #         Whether the pod should be linked with the target
@@ -333,7 +336,7 @@ module Pod
         configuration_pod_whitelist.each do |configuration, pods|
           if pods.include?(pod_name)
             found = true
-            return true if configuration.to_s == configuration_name.to_s
+            return true if configuration == configuration_name
           end
         end
         !found
@@ -346,14 +349,23 @@ module Pod
       #
       # @param  [String] pod_name
       #         The pod that should be included in the given configuration.
-      # @param  [String] configuration_name
+      #
+      # @param  [String, Symbol] configuration_name
       #         The configuration that the pod should be included in
       #
       # @return [void]
       #
       def whitelist_pod_for_configuration(pod_name, configuration_name)
+        configuration_name = configuration_name.to_s
         configuration_pod_whitelist[configuration_name] ||= []
         configuration_pod_whitelist[configuration_name] << pod_name
+      end
+
+      # @return [Array<String>] unique list of all configurations for which
+      #         pods have been whitelisted.
+      #
+      def all_whitelisted_configurations
+        configuration_pod_whitelist.keys.uniq
       end
 
       #--------------------------------------#
@@ -673,8 +685,8 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :configurations from the requirements list,
-      # and adds the pod's name into internal hash for which pods should be
+      # Removes :configurations or :configuration from the requirements list,
+      # and adds the pod's name into the internal hash for which pods should be
       # linked in which configuration only.
       #
       # @param [String] pod name
@@ -690,12 +702,12 @@ module Pod
         return requirements unless options.is_a?(Hash)
 
         configurations = options.delete(:configurations)
+        configurations ||= options.delete(:configuration)
         if configurations
           Array(configurations).each do |configuration|
             whitelist_pod_for_configuration(name, configuration)
           end
         end
-
         requirements.pop if options.empty?
       end
 
