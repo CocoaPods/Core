@@ -68,10 +68,7 @@ module Pod
       # @return [Hash, Array] the Ruby YAML representaton
       #
       def load_file(file_path)
-        raise(Exception, "#load_file only accepts a Pathname") unless file_path.is_a?(Pathname)
-        File.open(file_path, "r") do |file|
-          return load_string(file.read, file.path)
-        end
+        load_string(File.read(file_path), file_path)
       end
 
       #-----------------------------------------------------------------------#
