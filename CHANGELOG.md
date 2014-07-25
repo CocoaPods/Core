@@ -1,5 +1,11 @@
 # CocoaPods Core Changelog
 
+##### Enhancements
+
+* Show Explicit Error Msg for Merge Conflict in Podfile. 
+  [Taylor Halliday](https://github.com/tayhalla)
+  [#147](https://github.com/CocoaPods/Core/pull/147)
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.
