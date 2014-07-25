@@ -241,6 +241,11 @@ module Pod
         message_should_include('Github', 'https')
       end
 
+      it 'performs checks for Gist Github repositories' do
+        @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
+        message_should_include('Github', 'https')
+      end
+
       it 'checks that Github repositories do not use `www` (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://www.github.com/repo.git', :tag => '1.0')
         message_should_include('Github', 'www')
@@ -249,12 +254,14 @@ module Pod
       it 'checks that Github repositories end in .git (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://github.com/repo', :tag => '1.0')
         message_should_include('Github', '.git')
+        @linter.results[0].type.should == :warning
       end
 
       it 'does not warn for Github repositories with OAuth authentication' do
         @spec.stubs(:source).returns(:git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        clean_results = @linter.results.reject { |r| r.message.include?('SSH') }
+        clean_results.should.be.empty
       end
 
       it 'does not warn for local repositories with spaces' do
@@ -263,23 +270,17 @@ module Pod
         @linter.results.should.be.empty
       end
 
-      it 'does not warn for SSH repositories' do
+      it 'warns for SSH repositories' do
         @spec.stubs(:source).returns(:git => 'git@bitbucket.org:kylef/test.git', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        message_should_include('Git', 'SSH')
       end
 
-      it 'does not warn for SSH repositories on Github' do
+      it 'warns for SSH repositories on Github' do
         @spec.stubs(:source).returns(:git => 'git@github.com:kylef/test.git', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        message_should_include('Git', 'SSH')
       end
-
-      it 'performs checks for Gist Github repositories' do
-        @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
-        message_should_include('Github', 'https')
-      end
-
       it 'checks the source of 0.0.1 specifications for commit or a tag' do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
