@@ -40,8 +40,12 @@ module Pod
 
       # Loads a YAML string and provide more informative 
       # error messages in special cases like merge conflict.
-      # 
-      # @param A YAML string.
+      #
+      # @param [String] yaml_string
+      #        The YAML String to be loaded
+      #
+      # @param [Pathname] file_path
+      #        The (optional) file path to be used for read for the YAML file
       #
       # @return [Hash, Array] the Ruby YAML representaton
       #
@@ -58,7 +62,8 @@ module Pod
       # Loads a YAML file and leans on the #load_string imp
       # to do error detection. 
       # 
-      # @param A file.
+      # @param [Pathname] file_path
+      #        The file path to be used for read for the YAML file
       #
       # @return [Hash, Array] the Ruby YAML representaton
       #
