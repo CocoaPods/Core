@@ -180,8 +180,8 @@ module Pod
       def value_for_attribute(attr_name)
         attr = Specification::DSL.attributes[attr_name]
         value = value_with_inheritance(spec, attr)
-        value ||= attr.default(platform_name)
-        value ||= attr.container.new if attr.container
+        value = attr.default(platform_name) if value.nil?
+        value = attr.container.new if value.nil? && attr.container
         value
       end
 
