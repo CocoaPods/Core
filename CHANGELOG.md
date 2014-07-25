@@ -6,6 +6,9 @@
   [Fabio Pelosin][irrationalfab]
   [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
 
+* Removed legacy deprecation warnings of the Specification DSL.  
+  [Fabio Pelosin][irrationalfab]
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.
