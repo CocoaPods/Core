@@ -244,17 +244,12 @@ module Pod
       #   @example Specifying a Git source with a tag. This is how most OSS Podspecs work.
       #
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :tag => 'v0.0.1' }
+      #                     :tag => spec.version.to_s }
       #
-      #   @example Using the version of the Pod to identify the Git commit and using submodules.
+      #   @example Using a tag prefixed with 'v' and submodules.
       #
-      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :commit => "v#{spec.version}", :submodules => true }
-      #
-      #   @example Using the version of the Pod to identify the Git branch.
-      #
-      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :branch => "orta_fixes"}
+      #     spec.source = { :git => 'https://github.com/typhoon-framework/Typhoon.git',
+      #                     :tag => "v#{spec.version}", :submodules => true }
       #
       #   @example Using Subversion with a tag.
       #
