@@ -251,11 +251,6 @@ module Pod
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :commit => "v#{spec.version}", :submodules => true }
       #
-      #   @example Using the version of the Pod to identify the Git branch.
-      #
-      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :branch => "orta_fixes"}
-      #
       #   @example Using Subversion with a tag.
       #
       #     spec.source = { :svn => "http://svn.code.sf.net/p/polyclipping/code", :tag => '4.8.8' }
