@@ -246,10 +246,10 @@ module Pod
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
       #                     :tag => spec.version.to_s }
       #
-      #   @example Using the version of the Pod to identify the Git commit and using submodules.
+      #   @example Using a tag prefixed with 'v' and submodules.
       #
-      #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :commit => "v#{spec.version}", :submodules => true }
+      #     spec.source = { :git => 'https://github.com/typhoon-framework/Typhoon.git',
+      #                     :tag => "v#{spec.version}", :submodules => true }
       #
       #   @example Using Subversion with a tag.
       #
