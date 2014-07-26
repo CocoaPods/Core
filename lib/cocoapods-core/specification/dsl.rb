@@ -244,7 +244,7 @@ module Pod
       #   @example Specifying a Git source with a tag. This is how most OSS Podspecs work.
       #
       #     spec.source = { :git => 'https://github.com/AFNetworking/AFNetworking.git',
-      #                     :tag => 'v0.0.1' }
+      #                     :tag => spec.version.to_s }
       #
       #   @example Using the version of the Pod to identify the Git commit and using submodules.
       #
