@@ -2,6 +2,9 @@
 
 ## Master
 
+* Added methods `deprecated?` and `deprecation_description` to Presenter.
+  [Hugo Tunius][k0nserv]
+
 * The specification `requires_arc` attribute now defaults to true.  
   [Fabio Pelosin][irrationalfab]
   [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
@@ -150,3 +153,4 @@ Introduction of the Changelog.
 
 [irrationalfab]: https://github.com/irrationalfab
 [Kapin]: https://github.com/Kapin
+[k0nserv]: https://github.com/k0nserv

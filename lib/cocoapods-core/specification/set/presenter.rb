@@ -123,6 +123,35 @@ module Pod
           spec.description || spec.summary
         end
 
+        # @return [Bool] Wether the pod is deprecated either in favor of some other
+        #         pod or simply deprecated.
+        #
+        def deprecated?
+         spec.deprecated || !spec.deprecated_in_favor_of.nil?
+       end
+
+       # @return [String] A string that describes the deprecation of the pod.
+       #         If the pod is deprecated in favor of another pod it will contain
+       #         information about that. If the pod is not deprecated returns nil.
+       #
+       # @example Output example
+       #
+       #          "[DEPRECATED]"
+       #          "[DEPRECATED in favor of NewAwesomePod]"
+       #
+       def deprecation_description
+         if deprecated?
+           description = "[DEPRECATED"
+           if spec.deprecated_in_favor_of.nil?
+             description += "]"
+           else
+             description += " in favor of #{spec.deprecated_in_favor_of}]"
+           end
+
+           description
+         end
+       end
+
         # @return [String] the URL of the source of the Pod.
         #
         def source_url

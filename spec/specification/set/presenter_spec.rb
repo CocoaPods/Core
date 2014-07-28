@@ -38,6 +38,26 @@ module Pod
       it 'returns the sources' do
         @presenter.sources.should == %w(master test_repo)
       end
+
+      it 'returns the correct deprecation status when the spec is deprecated' do
+        @presenter.deprecated?.should == false
+        @presenter.spec.deprecated = true
+        @presenter.deprecated?.should == true
+      end
+
+      it 'returns the correct deprecation status when the spec is deprecated in favor of another pod' do
+        @presenter.deprecated?.should == false
+        @presenter.spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+        @presenter.deprecated?.should == true
+      end
+
+      it 'returns the correct deprecation description' do
+        @presenter.deprecation_description.should.nil?
+        @presenter.spec.deprecated = true
+        @presenter.deprecation_description.should == '[DEPRECATED]'
+        @presenter.spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+        @presenter.deprecation_description.should == '[DEPRECATED in favor of NewMoreAwesomePod]'
+      end
     end
 
     describe 'Specification Information' do
