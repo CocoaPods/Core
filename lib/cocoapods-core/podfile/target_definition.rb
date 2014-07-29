@@ -328,6 +328,9 @@ module Pod
       #         The configuration that we're querying about inclusion of the
       #         pod in.
       #
+      # @note   Build configurations are case compared case-insensitively in
+      #         CocoaPods.
+      #
       # @return [Bool] flag
       #         Whether the pod should be linked with the target
       #
@@ -336,7 +339,9 @@ module Pod
         configuration_pod_whitelist.each do |configuration, pods|
           if pods.include?(pod_name)
             found = true
-            return true if configuration == configuration_name
+            if configuration.downcase == configuration_name.to_s.downcase
+              return true
+            end
           end
         end
         !found
@@ -344,14 +349,16 @@ module Pod
 
       # Whitelists a pod for a specific configuration. If a pod is whitelisted
       # for any configuration, it will only be linked with the target in the
-      # configuration(s) specified. If it is not whitelisted for any configuration,
-      # it is implicitly included in all configurations.
+      # configuration(s) specified. If it is not whitelisted for any
+      # configuration, it is implicitly included in all configurations.
       #
       # @param  [String] pod_name
       #         The pod that should be included in the given configuration.
       #
       # @param  [String, Symbol] configuration_name
       #         The configuration that the pod should be included in
+      #
+      # @note   Build configurations are stored as a String.
       #
       # @return [void]
       #
