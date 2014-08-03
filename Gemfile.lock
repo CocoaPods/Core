@@ -5,7 +5,7 @@ PATH
       activesupport (>= 3.2.15)
       fuzzy_match (~> 2.0.4)
       json_pure (~> 1.8)
-      nap (~> 0.5)
+      nap (~> 0.8.0)
 
 GEM
   remote: http://rubygems.org/
