@@ -311,6 +311,7 @@ module Pod
         end
 
         perform_github_source_checks(s)
+        check_git_ssh_source(s)
       end
 
       # Performs validations related to github sources.
@@ -334,6 +335,18 @@ module Pod
               warning '[github_sources] Github repositories should use' \
               '`https` link.'
             end
+          end
+        end
+      end
+
+      # Performs validations related to SSH sources
+      #
+      def check_git_ssh_source(s)
+        if git = s[:git]
+          if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
+            warning '[source] Git SSH URLs will NOT work for people behind' \
+              'firewalls configured to only allow HTTP, therefor HTTPS is' \
+              'preferred.'
           end
         end
       end

@@ -9,6 +9,10 @@
   [Fabio Pelosin][irrationalfab]
   [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
 
+* Now the specification linter warns if git sources use SSH URLs.  
+  [Fabio Pelosin][irrationalfab]
+  [CocoaPods#118](https://github.com/CocoaPods/Core/issues/118)
+
 * Removed legacy deprecation warnings of the Specification DSL.  
   [Fabio Pelosin][irrationalfab]
 
