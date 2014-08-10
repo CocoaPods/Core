@@ -716,6 +716,40 @@ module Pod
 
       #------------------#
 
+      # @!method xcodeprojs=
+      #
+      #    The Xcode projects to build for this pod. The passed Hashes must
+      #    specify the relative path of an .xcodeproj project for the key
+      #    project and a build target in this project for the library_target
+      #    key. It may optionally specify a target, which builds a .bundle
+      #    containing required resources.
+      #
+      #    The project will be added as a subproject to the Pods project,
+      #    the library will be added to the link frameworks phase of all
+      #    relevant targets and the resource.bundle will by added to a copy
+      #    files phase of all relevant targets.
+      #
+      #   @example
+      #
+      #     spec.ios.xcodeproj = {
+      #       :project => 'A.xcodeproj',
+      #       :library_targets => ['LibraryTarget', 'AnotherLibraryTarget'],
+      #       :resource_targets => ['ResourceTarget']
+      #     }
+      #
+      #   @param [Array<Hash>] A list of Hashes describing the Project to build
+      #          for this spec.
+      #
+      attribute :xcodeprojs, {
+        :types => [Array, Hash],
+        :default_value => [],
+        :keys => [:project, :library_targets, :resource_targets],
+        :inherited => true,
+        :singularize => true,
+      }
+
+      #------------------#
+
       # @!method prefix_header_contents=(content)
       #
       #   Any content to inject in the prefix header of the pod project.

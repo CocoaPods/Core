@@ -347,6 +347,29 @@ module Pod
         end
       end
 
+      # Check empty subspec attributes
+      #
+      def check_if_spec_is_empty
+        methods = %w[ source_files resources preserve_paths dependencies xcodeprojs ]
+        empty_patterns = methods.all? { |m| consumer.send(m).empty? }
+        empty = empty_patterns && consumer.spec.subspecs.empty?
+        if empty
+          error "The #{consumer.spec} spec is empty (no source files, resources, preserve paths, dependencies, Xcode subprojects or subspecs)."
+        end
+      end
+
+      # Check the hooks
+      #
+      def check_install_hooks
+        warning "The pre install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes." unless consumer.spec.pre_install_callback.nil?
+
+        warning "The post install hook of the specification DSL has been " \
+          "deprecated, use the `resource_bundles` or the `prepare_command` " \
+          "attributes." unless consumer.spec.post_install_callback.nil?
+      end
+
       #-----------------------------------------------------------------------#
 
       # @!group All specs validation helpers

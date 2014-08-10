@@ -88,6 +88,11 @@ module Pod
       #
       spec_attr_accessor :xcconfig
 
+      # @return [Array<Hash>] A list of Hashes describing the subprojects to
+      #         build for this spec.
+      #
+      spec_attr_accessor :xcodeprojs
+
       # @return [String] The contents of the prefix header.
       #
       spec_attr_accessor :prefix_header_contents
