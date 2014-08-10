@@ -173,17 +173,17 @@ module Pod
 
       #----------------#
 
-      it "allows to specify Xcode subprojects" do
+      it 'allows to specify Xcode subprojects' do
         @spec.xcodeprojs = [{ :project => 'Project.xcproj' }]
         @consumer.xcodeprojs.should == [{ :project => 'Project.xcproj' }]
       end
 
-      it "allows to specify a single Xcode subproject" do
+      it 'allows to specify a single Xcode subproject' do
         @spec.xcodeproj = { :project => 'Project.xcproj', :library_targets => ['LibraryTarget'] }
         @consumer.xcodeprojs.should == { 'project' => 'Project.xcproj', 'library_targets' => ['LibraryTarget'] }
       end
 
-      it "returns empty hash if no Xcode subproject has been specified" do
+      it 'returns empty hash if no Xcode subproject has been specified' do
         @consumer.xcodeprojs.should == []
       end
 

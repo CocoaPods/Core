@@ -740,13 +740,12 @@ module Pod
       #   @param [Array<Hash>] A list of Hashes describing the Project to build
       #          for this spec.
       #
-      attribute :xcodeprojs, {
-        :types => [Array, Hash],
-        :default_value => [],
-        :keys => [:project, :library_targets, :resource_targets],
-        :inherited => true,
-        :singularize => true,
-      }
+      attribute :xcodeprojs,
+                :types => [Array, Hash],
+                :default_value => [],
+                :keys => [:project, :library_targets, :resource_targets],
+                :inherited => true,
+                :singularize => true
 
       #------------------#
 
