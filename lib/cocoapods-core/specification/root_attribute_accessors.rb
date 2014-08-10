@@ -158,6 +158,13 @@ module Pod
           attributes_hash['deprecated_in_favor_of']
         end
 
+        # @return [Bool] Wether the pod is deprecated either in favor of some other
+        #         pod or simply deprecated.
+        #
+        def deprecated?
+         deprecated || !deprecated_in_favor_of.nil?
+        end
+
         #---------------------------------------------------------------------#
 
         private

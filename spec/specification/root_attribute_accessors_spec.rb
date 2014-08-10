@@ -145,5 +145,16 @@ module Pod
       @spec.deprecated_in_favor_of.should == 'NewMoreAwesomePod'
     end
 
+    it 'it returns wether it is deprecated either by deprecated or deprecated_in_favor_of' do
+      @spec.deprecated = true
+      @spec.deprecated?.should == true
+      @spec.deprecated = false
+
+      @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
+      @spec.deprecated?.should == true
+      @spec.deprecated_in_favor_of = nil
+
+      @spec.deprecated?.should == false
+    end
   end
 end
