@@ -379,7 +379,7 @@ module Pod
         singularized.map { |attr| attr.name.to_s }.sort.should == %w(
           authors compiler_flags default_subspecs frameworks libraries
           preserve_paths resource_bundles resources screenshots
-          vendored_frameworks vendored_libraries weak_frameworks
+          vendored_frameworks vendored_libraries weak_frameworks xcodeprojs
         )
       end
     end
