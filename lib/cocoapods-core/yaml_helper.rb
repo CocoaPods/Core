@@ -173,9 +173,9 @@ module Pod
       # @return [String] The Error Message
       #
       def yaml_merge_conflict_msg(yaml, path = nil)
-        err = "ERROR: Parsing unable to continue due "
+        err = 'ERROR: Parsing unable to continue due '
         err += "to merge conflicts present in:\n"
-        err += "the file located at #{path}\n" unless !path
+        err += "the file located at #{path}\n" if path
         err += "#{yaml}"
       end
 
@@ -191,9 +191,9 @@ module Pod
       # @return [String] The Error Message
       #
       def yaml_parsing_error_msg(yaml, path = nil)
-        err = "ERROR: Parsing unable to continue due "
+        err = 'ERROR: Parsing unable to continue due '
         err += "to parsing error:\n"
-        err += "contained in the file located at #{path}\n" unless !path
+        err += "contained in the file located at #{path}\n" if path
         err += "#{yaml}"
       end
 
