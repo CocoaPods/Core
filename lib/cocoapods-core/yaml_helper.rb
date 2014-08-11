@@ -38,16 +38,37 @@ module Pod
         result << "\n"
       end
 
-      # Load a YAML file and provide more informative error messages in special cases like merge conflict.
-      # @param A YAML string.
-      def load(yaml_string)
+      # Loads a YAML string and provide more informative
+      # error messages in special cases like merge conflict.
+      #
+      # @param [String] yaml_string
+      #        The YAML String to be loaded
+      #
+      # @param [Pathname] file_path
+      #        The (optional) file path to be used for read for the YAML file
+      #
+      # @return [Hash, Array] the Ruby YAML representaton
+      #
+      def load_string(yaml_string, file_path = nil)
         YAML.load(yaml_string)
-        rescue Exception => exception
-          if yaml_has_merge_error(yaml_string)
-            raise Informative, 'Merge conflict(s) detected'
+        rescue Exception
+          if yaml_has_merge_error?(yaml_string)
+            raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
           else
-            raise exception
+            raise Informative, yaml_parsing_error_msg(yaml_string, file_path)
           end
+      end
+
+      # Loads a YAML file and leans on the #load_string imp
+      # to do error detection
+      #
+      # @param [Pathname] file_path
+      #        The file path to be used for read for the YAML file
+      #
+      # @return [Hash, Array] the Ruby YAML representaton
+      #
+      def load_file(file_path)
+        load_string(File.read(file_path), file_path)
       end
 
       #-----------------------------------------------------------------------#
@@ -130,10 +151,50 @@ module Pod
       end
 
       # Check for merge errors in a YAML string.
-      # @param A YAML string.
+      #
+      # @param [String] yaml_string
+      #        A YAML string to evaluate
+      #
       # @return If a merge error was detected or not.
-      def yaml_has_merge_error(yaml_string)
+      #
+      def yaml_has_merge_error?(yaml_string)
         yaml_string.include?('<<<<<<< HEAD')
+      end
+
+      # Error message describing that a merge conflict was found
+      # while parsing the YAML.
+      #
+      # @param [String] yaml
+      #        Offending YAML
+      #
+      # @param [Pathname] path
+      #        The (optional) offending path
+      #
+      # @return [String] The Error Message
+      #
+      def yaml_merge_conflict_msg(yaml, path = nil)
+        err = "ERROR: Parsing unable to continue due "
+        err += "to merge conflicts present in:\n"
+        err += "the file located at #{path}\n" unless !path
+        err += "#{yaml}"
+      end
+
+      # Error message describing a general error took happened
+      # while parsing the YAML.
+      #
+      # @param [String] yaml
+      #        Offending YAML
+      #
+      # @param [Pathname] path
+      #        The (optional) offending path
+      #
+      # @return [String] The Error Message
+      #
+      def yaml_parsing_error_msg(yaml, path = nil)
+        err = "ERROR: Parsing unable to continue due "
+        err += "to parsing error:\n"
+        err += "contained in the file located at #{path}\n" unless !path
+        err += "#{yaml}"
       end
 
       #-----------------------------------------------------------------------#

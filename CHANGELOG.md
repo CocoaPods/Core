@@ -16,6 +16,10 @@
 * Removed legacy deprecation warnings of the Specification DSL.  
   [Fabio Pelosin][irrationalfab]
 
+* Improved error messages for merge conflicts of the Podfile.  
+  [Taylor Halliday](https://github.com/tayhalla)
+  [#147](https://github.com/CocoaPods/Core/pull/147)
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.

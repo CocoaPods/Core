@@ -95,14 +95,14 @@ module Pod
 
       it 'saves the cache after computing the creation date of a set' do
         @stats.creation_date(@set)
-        cache_hash = YAMLHelper.load(@cache_file.read)
+        cache_hash = YAMLHelper.load_string(@cache_file.read)
         cache_hash['JSONKit'][:creation_date].should == Time.parse('2011-09-12 10:49:04 +0200')
       end
 
       it 'saves the cache after computing the creation date of many sets' do
         sets = [@set, @source.search_by_name('libPusher').first]
         @stats.creation_dates(sets)
-        cache_hash = YAMLHelper.load(@cache_file.read)
+        cache_hash = YAMLHelper.load_string(@cache_file.read)
         cache_hash['JSONKit'][:creation_date].should == Time.parse('2011-09-12 10:49:04 +0200')
         cache_hash['libPusher'][:creation_date].should == Time.parse('2012-02-01 17:05:58 +0100')
       end
@@ -128,7 +128,7 @@ module Pod
 
       it 'saves the cache after retrieving GitHub information' do
         @stats.github_watchers(@set)
-        saved_cache = YAMLHelper.load(@cache_file.read)
+        saved_cache = YAMLHelper.load_string(@cache_file.read)
         saved_cache['JSONKit'][:gh_date] = nil
         @cache_hash['JSONKit'][:gh_date] = nil
         saved_cache.should == @cache_hash
@@ -141,7 +141,7 @@ module Pod
 
       it 'stores in the cache time of the last access to the GitHub API' do
         @stats.github_watchers(@set)
-        saved_cache = YAMLHelper.load(@cache_file.read)
+        saved_cache = YAMLHelper.load_string(@cache_file.read)
         time_delta = (Time.now - saved_cache['JSONKit'][:gh_date])
         time_delta.should < 60
       end
