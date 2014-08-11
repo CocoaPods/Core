@@ -162,7 +162,7 @@ module Pod
         #         pod or simply deprecated.
         #
         def deprecated?
-         deprecated || !deprecated_in_favor_of.nil?
+          deprecated || !deprecated_in_favor_of.nil?
         end
 
         #---------------------------------------------------------------------#
