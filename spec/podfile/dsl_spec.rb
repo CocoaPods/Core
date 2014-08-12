@@ -14,6 +14,37 @@ module Pod
         podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should   == Dependency.new('SSZipArchive', '>= 0.1')
       end
 
+      it 'white-list dependencies on all build configuration by default' do
+        podfile = Podfile.new do
+          pod 'PonyDebugger'
+        end
+
+        target = podfile.target_definitions['Pods']
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.true
+      end
+
+      it 'allows to white-list a dependency on multiple build configuration' do
+        podfile = Podfile.new do
+          pod 'PonyDebugger', :configurations => ['Release', 'App Store']
+        end
+
+        target = podfile.target_definitions['Pods']
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'App Store').should.be.true
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+      end
+
+      it 'allows to white-list a dependency on a build configuration' do
+        podfile = Podfile.new do
+          pod 'PonyDebugger', :configuration => 'Release'
+        end
+
+        target = podfile.target_definitions['Pods']
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+      end
+
       it 'raises if no name is specified for a Pod' do
         lambda do
           Podfile.new do
@@ -92,7 +123,7 @@ module Pod
         end
       end
 
-      it 'allows to specify the user xcode project for a Target definition' do
+      it 'allows to specify the user Xcode project for a Target definition' do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
         podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
       end
