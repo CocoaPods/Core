@@ -37,7 +37,13 @@ module Pod
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
           valid_keys = attributes_keys + platform_keys
-          keys = consumer.spec.attributes_hash.keys
+          attributes_hash = consumer.spec.attributes_hash
+          keys = attributes_hash.keys
+          Specification::DSL::PLATFORMS.each do |platform|
+            if attributes_hash[platform.to_s]
+              keys += attributes_hash[platform.to_s].keys
+            end
+          end
           unknown_keys = keys - valid_keys
 
           unknown_keys.each do |key|

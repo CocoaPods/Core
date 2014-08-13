@@ -35,6 +35,14 @@ module Pod
           @subject.results.first.message.should.include?(expected)
         end
 
+        it 'fails a spec with unknown multi-platform key' do
+          @spec.attributes_hash['ios'] = { 'unknown_key' => true }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Unrecognized `unknown_key` key'
+          @subject.results.first.message.should.include?(expected)
+        end
+
         it 'validates a spec with valid sub-keys' do
           @spec.license = { :type => 'MIT' }
           @subject.analyze
