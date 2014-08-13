@@ -56,7 +56,6 @@ module Pod
           end
         end
 
-
         # Checks the attributes that represent file patterns.
         #
         # @todo Check the attributes hash directly.
@@ -124,7 +123,7 @@ module Pod
           major_keys = value.keys & attribute.keys.keys
           if major_keys.count.zero?
             warning "Missing primary key for `#{attribute.name}` " \
-              "attribute. The acceptable ones are: " \
+              'attribute. The acceptable ones are: ' \
               "`#{attribute.keys.keys.join(', ')}`"
           elsif major_keys.count == 1
             acceptable = attribute.keys[major_keys.first]
@@ -139,7 +138,6 @@ module Pod
               "`#{attribute.name}` attribute"
           end
         end
-
       end
     end
   end
