@@ -519,7 +519,7 @@ module Pod
       # @param    [String] args
       #           The deployment target of the platform.
       #
-      def deployment_target=(*args)
+      def deployment_target=(*_args)
         raise Informative, 'The deployment target can be declared only per ' \
           'platform.'
       end

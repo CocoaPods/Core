@@ -16,7 +16,7 @@ module Pod
 
       it 'can store an option callback which is called before analyzing each specification' do
         names = []
-        @subject.pre_check do |name, version|
+        @subject.pre_check do |name, _version|
           names << name
         end
         @subject.analyze

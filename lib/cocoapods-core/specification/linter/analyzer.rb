@@ -50,7 +50,7 @@ module Pod
             warning "Unrecognized `#{key}` key"
           end
 
-          Pod::Specification::DSL.attributes.each do |key, attribute|
+          Pod::Specification::DSL.attributes.each do |_key, attribute|
             if attribute.keys && attribute.name != :platforms
               if attribute.root_only?
                 value = consumer.spec.send(attribute.name)

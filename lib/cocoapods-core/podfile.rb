@@ -239,7 +239,7 @@ module Pod
           # rubocop:disable Eval
           eval(string, nil, path.to_s)
           # rubocop:enable Eval
-        rescue Exception => e
+        rescue => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
           raise DSLError.new(message, path, e.backtrace)
         end

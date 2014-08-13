@@ -31,7 +31,7 @@ module Pod
           @file = Pathname.new(spec_or_path)
           begin
             @spec = Specification.from_file(@file)
-          rescue Exception => e
+          rescue => e
             @spec = nil
             @raise_message = e.message
           end
@@ -166,7 +166,7 @@ module Pod
 
       # Performs validations related to the `name` attribute.
       #
-      def _validate_name(n)
+      def _validate_name(_n)
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',

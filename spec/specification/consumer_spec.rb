@@ -40,7 +40,7 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = 'Pod'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         @subspec = @spec.subspecs.first
@@ -240,7 +240,7 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = 'Pod'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         @subspec = @spec.subspecs.first

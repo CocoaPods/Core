@@ -3,8 +3,8 @@ module Pod
     module DSL
       # @return [Array<Attribute>] The attributes of the class.
       #
-      def self.attributes
-        @attributes
+      class << self
+        attr_reader :attributes
       end
 
       # This module provides support for storing the runtime information of the

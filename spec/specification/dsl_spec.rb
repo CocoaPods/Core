@@ -167,7 +167,7 @@ module Pod
         end
 
         it 'raises if the specification requires one of its parents' do
-          @spec.subspec 'subspec' do |sp|
+          @spec.subspec 'subspec' do |_sp|
           end
           subspec = @spec.subspecs.first
           should.raise Informative do
@@ -306,14 +306,14 @@ module Pod
 
     describe 'Subspecs' do
       before do
-        @spec = Spec.new do |s|
+        @spec = Spec.new do |_s|
         end
       end
 
       it 'allows to specify as subspec' do
         @spec = Spec.new do |s|
           s.name = 'Spec'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         subspec = @spec.subspecs.first

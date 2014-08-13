@@ -75,7 +75,7 @@ module Pod
 
       it 'indicates if the pre install hook was executed' do
         Podfile.new {}.pre_install!(:an_installer).should.be == false
-        result = Podfile.new { pre_install { |installer| } }.pre_install!(:an_installer)
+        result = Podfile.new { pre_install { |_installer| } }.pre_install!(:an_installer)
         result.should.be == true
       end
 
@@ -85,7 +85,7 @@ module Pod
 
       it 'indicates if the pod install hook was executed' do
         Podfile.new {}.post_install!(:an_installer).should.be == false
-        result = Podfile.new { post_install { |installer| } }.post_install!(:an_installer)
+        result = Podfile.new { post_install { |_installer| } }.post_install!(:an_installer)
         result.should.be == true
       end
 

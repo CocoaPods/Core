@@ -179,7 +179,7 @@ module Pod
       return false unless head? == other.head?
       return false unless external_source == other.external_source
 
-      other.requirement.requirements.all? do | operator, version |
+      other.requirement.requirements.all? do | _operator, version |
         requirement.satisfied_by? Version.new(version)
       end
     end

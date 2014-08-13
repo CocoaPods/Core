@@ -8,8 +8,8 @@ module Pod
       root_attribute :test_root_attribute,  :types => [String]
       attribute :test_attribute,  :types => [String], :root_only => false
 
-      def self.attributes
-        @attributes
+      class << self
+        attr_reader :attributes
       end
     end
 

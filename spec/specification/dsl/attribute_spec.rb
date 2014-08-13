@@ -131,7 +131,7 @@ module Pod
       it 'validates root only values before writing' do
         attr = Attribute.new(:summary, :root_only => true)
         spec = Spec.new do |s|
-          s.subspec 'sub' do |sp|
+          s.subspec 'sub' do |_sp|
           end
         end
         subspec = spec.subspecs.first

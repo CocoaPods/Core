@@ -51,7 +51,7 @@ module Pod
       #
       def load_string(yaml_string, file_path = nil)
         YAML.load(yaml_string)
-        rescue Exception
+        rescue
           if yaml_has_merge_error?(yaml_string)
             raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
           else

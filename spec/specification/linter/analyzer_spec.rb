@@ -127,7 +127,7 @@ module Pod
 
         it 'supports the declaration of the attribute in the parent' do
           @spec = Spec.new do |s|
-            s.subspec 'SubSpec' do |sp|
+            s.subspec 'SubSpec' do |_sp|
             end
           end
           consumer = @spec.consumer(:ios)

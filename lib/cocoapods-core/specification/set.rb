@@ -94,7 +94,7 @@ module Pod
 
       # TODO
       #
-      def specification_path_for_version(version)
+      def specification_path_for_version(_version)
         sources = []
         versions_by_source.each do |source, source_versions|
           sources << source if source_versions.include?(required_version)

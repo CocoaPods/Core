@@ -8,7 +8,7 @@ module Pod
         @spec = Spec.new do |s|
           s.name = 'Pod'
           s.version = '1.0'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         @subspec = @spec.subspecs.first
@@ -108,7 +108,7 @@ module Pod
       before do
         @spec = Spec.new do |s|
           s.name = 'Pod'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         @subspec = @spec.subspecs.first
@@ -141,7 +141,7 @@ module Pod
           s.osx.dependency 'MagicalRecord'
           s.subspec 'Subspec' do |sp|
             sp.dependency 'libPusher'
-            sp.subspec 'Subsubspec' do |ssp|
+            sp.subspec 'Subsubspec' do |_ssp|
             end
           end
           s.subspec 'SubspecOSX' do |sp|
@@ -246,7 +246,7 @@ module Pod
         @spec = Spec.new do |s|
           s.name = 'Pod'
           s.version = '1.0'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         @subspec = @spec.subspecs.first
@@ -430,7 +430,7 @@ module Pod
         spec = Spec.new do |s|
           s.name = 'Pod'
           s.version = '1.0'
-          s.subspec 'Subspec' do |sp|
+          s.subspec 'Subspec' do |_sp|
           end
         end
         should.raise StandardError do

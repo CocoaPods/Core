@@ -27,8 +27,8 @@ module Pod
         #
         # @return [Statistics] the shared statistics instance.
         #
-        def self.instance=(instance)
-          @instance = instance
+        class << self
+          attr_writer :instance
         end
 
         # @return [Pathname] the path to the optional cache file.

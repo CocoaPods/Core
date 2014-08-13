@@ -33,7 +33,7 @@ module Pod
       # @param  [String] name
       #         The name of the Pod.
       #
-      def versions(name)
+      def versions(_name)
         raise StandardError, 'Abstract method.'
       end
 
@@ -45,7 +45,7 @@ module Pod
       # @param  [String] version
       #         The version of the Pod.
       #
-      def specification(name, version)
+      def specification(_name, _version)
         raise StandardError, 'Abstract method.'
       end
 
@@ -58,7 +58,7 @@ module Pod
       # @param  [String] version
       #         the version of the Pod.
       #
-      def specification_contents(name, version)
+      def specification_contents(_name, _version)
         raise StandardError, 'Abstract method.'
       end
 
