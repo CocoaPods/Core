@@ -130,17 +130,17 @@ module Pod
           if major_keys.count.zero?
             warning "Missing primary key for `#{attribute.name}` " \
               'attribute. The acceptable ones are: ' \
-              "`#{attribute.keys.keys.join(', ')}`"
+              "`#{attribute.keys.keys.sort.join(', ')}`"
           elsif major_keys.count == 1
             acceptable = attribute.keys[major_keys.first]
             unknown = value.keys - major_keys - acceptable
             unless unknown.empty?
-              warning "Incompatible `#{unknown.join(', ')}` key(s) with " \
-                "`#{major_keys.first}` primary key for " \
+              warning "Incompatible `#{unknown.sort.join(', ')}` key(s) " \
+                "with `#{major_keys.first}` primary key for " \
                 "`#{attribute.name}` attribute"
             end
           else
-            warning "Incompatible `#{major_keys.join(', ')}` keys for " \
+            warning "Incompatible `#{major_keys.sort.join(', ')}` keys for " \
               "`#{attribute.name}` attribute"
           end
         end
