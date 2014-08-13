@@ -14,7 +14,7 @@ module Pod
         # Defines a root attribute for the extended class.
         #
         # Root attributes make sense only in root specification, they never are
-        # multiplatform, they don't have inheritance, and they never have a
+        # multi platform, they don't have inheritance, and they never have a
         # default value.
         #
         # @param  [String] name

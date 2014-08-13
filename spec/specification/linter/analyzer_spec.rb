@@ -14,6 +14,82 @@ module Pod
 
       #----------------------------------------#
 
+      describe 'Unknown keys check' do
+
+        it 'validates a spec with valid keys' do
+          @subject.analyze
+          @subject.results.should.be.empty?
+        end
+
+        it 'validates a spec with multi-platform attributes' do
+          @spec.ios.requires_arc = true
+          @subject.analyze
+          @subject.results.should.be.empty?
+        end
+
+        it 'fails a spec with unknown keys' do
+          @spec.attributes_hash['unknown_key'] = true
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Unrecognized `unknown_key` key'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'fails a spec with unknown multi-platform key' do
+          @spec.attributes_hash['ios'] = { 'unknown_key' => true }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Unrecognized `unknown_key` key'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'validates a spec with valid sub-keys' do
+          @spec.license = { :type => 'MIT' }
+          @subject.analyze
+          @subject.results.should.be.empty?
+        end
+
+        it 'fails a spec with unknown sub-keys' do
+          @spec.license = { :is_safe_for_work => true }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Unrecognized `is_safe_for_work` key'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'validates a spec with valid minor sub-keys' do
+          @spec.source = { :git => 'example.com', :branch => 'master' }
+          @subject.analyze
+          @subject.results.should.be.empty?
+        end
+
+        it 'fails a spec with a missing primary sub-keys' do
+          @spec.source = { :branch => 'example.com', :commit => 'MyLib' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Missing primary key for `source` attribute.'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'fails a spec with invalid secondary sub-keys' do
+          @spec.source = { :git => 'example.com', :folder => 'MyLib' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Incompatible `folder` key(s) with `git`'
+          @subject.results.first.message.should.include?(expected)
+        end
+
+        it 'fails a spec with multiple primary keys' do
+          @spec.source = { :git => 'example.com', :http => 'example.com' }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Incompatible `git, http` keys'
+          @subject.results.first.message.should.include?(expected)
+        end
+      end
+
+      #----------------------------------------#
+
       describe 'File Patterns' do
         it 'checks if any file patterns is absolute' do
           @spec.source_files = '/Classes'
