@@ -2,12 +2,7 @@ source 'http://rubygems.org'
 
 gemspec
 
-# Ruby 1.8.7
-gem 'mime-types', '< 2.0'
-gem 'activesupport', '< 4'
-
 group :development do
-  # Simplecov is affecting bacon exit code
   gem 'mocha', '~> 0.11.4'
   gem 'bacon'
   gem 'mocha-on-bacon'
@@ -28,4 +23,9 @@ group :debugging do
   gem 'kicker'
   gem 'awesome_print'
   gem 'pry'
+end
+
+group :ruby_1_8_7 do
+  gem 'mime-types', '< 2.0'
+  gem 'activesupport', '< 4'
 end
