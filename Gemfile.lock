@@ -92,7 +92,7 @@ DEPENDENCIES
   codeclimate-test-reporter
   kicker
   mime-types (< 2.0)
-  mocha (~> 0.11.4)
+  mocha
   mocha-on-bacon
   prettybacon
   pry

@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gemspec
 
 group :development do
-  gem 'mocha', '~> 0.11.4'
+  gem 'mocha'
   gem 'bacon'
   gem 'mocha-on-bacon'
   gem 'rake'
