@@ -9,7 +9,7 @@ group :development do
   gem 'prettybacon'
   gem 'rake'
   gem 'vcr'
-  gem 'webmock', '< 1.16'
+  gem 'webmock'
 
   if RUBY_VERSION >= '1.9.3'
     gem 'codeclimate-test-reporter', :require => nil
