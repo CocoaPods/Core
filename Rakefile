@@ -54,7 +54,7 @@ begin
       sh "bundle exec bacon #{specs('**')}"
 
       title 'Checking code style...'
-      Rake::Task['rubocop'].invoke
+      Rake::Task['rubocop'].invoke if RUBY_VERSION >= '1.9.3'
     end
   end
 
@@ -73,22 +73,14 @@ begin
     sh 'open coverage/index.html'
   end
 
-  # RuboCop
-  #-----------------------------------------------------------------------------#
+  #-- RuboCop ----------------------------------------------------------------#
 
-  desc 'Checks code style'
-  task :rubocop do
-    if RUBY_VERSION >= '1.9.3'
-      require 'rubocop'
-      cli = RuboCop::CLI.new
-      result = cli.run
-      abort('RuboCop failed!') unless result == 0
-    else
-      puts '[!] Ruby > 1.9 is required to run style checks'
-    end
+  if RUBY_VERSION >= '1.9.3'
+    require 'rubocop/rake_task'
+    RuboCop::RakeTask.new
   end
 
-  #-----------------------------------------------------------------------------#
+  #---------------------------------------------------------------------------#
 
   task :default => :spec
 
