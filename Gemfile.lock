@@ -38,10 +38,10 @@ GEM
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mocha (0.11.4)
+    mocha (1.1.0)
       metaclass (~> 0.0.1)
-    mocha-on-bacon (0.2.1)
-      mocha (>= 0.9.8)
+    mocha-on-bacon (0.2.2)
+      mocha (>= 0.13.0)
     multi_json (1.10.1)
     nap (0.8.0)
     notify (0.5.2)
@@ -99,6 +99,5 @@ DEPENDENCIES
   rake
   rb-fsevent
   rubocop
-  simplecov
   vcr
   webmock (< 1.16)
