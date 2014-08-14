@@ -14,7 +14,6 @@ group :development do
   if RUBY_VERSION >= '1.9.3'
     gem 'rubocop'
     gem 'codeclimate-test-reporter', :require => nil
-    gem 'simplecov'
   end
 end
 
