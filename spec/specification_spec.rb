@@ -72,40 +72,44 @@ module Pod
         spec_1.to_s.should == 'No-name'
       end
 
-      it 'returns the name and the version of a Specification from its #to_s output' do
-        name, version = Specification.name_and_version_from_string('libPusher (1.0)')
-        name.should == 'libPusher'
-        version.should == Version.new('1.0')
+      describe '::name_and_version_from_string' do
+        it 'returns the name and the version of a Specification from its #to_s output' do
+          name, version = Specification.name_and_version_from_string('libPusher (1.0)')
+          name.should == 'libPusher'
+          version.should == Version.new('1.0')
+        end
+
+        it 'takes into account head information while returning the name and the version' do
+          name, version = Specification.name_and_version_from_string('libPusher (HEAD based on 1.0)')
+          name.should == 'libPusher'
+          version.should == Version.new('HEAD based on 1.0')
+        end
+
+        it 'takes into account the full name of the subspec returning the name and the version' do
+          string = 'RestKit/JSON (1.0)'
+          name = Specification.name_and_version_from_string(string).first
+          name.should == 'RestKit/JSON'
+        end
+
+        it 'handles names without version' do
+          string = 'RestKit/JSON'
+          name, version = Specification.name_and_version_from_string(string)
+          name.should == 'RestKit/JSON'
+          version.version.should.be.empty?
+        end
+
+        it 'raises if an invalid string representation is provided' do
+          should.raise Informative do
+            Specification.name_and_version_from_string('missing_version ()')
+          end.message.should.match /Invalid string representation/
+        end
       end
 
-      it 'takes into account head information while returning the name and the version' do
-        name, version = Specification.name_and_version_from_string('libPusher (HEAD based on 1.0)')
-        name.should == 'libPusher'
-        version.should == Version.new('HEAD based on 1.0')
-      end
-
-      it 'takes into account the full name of the subspec returning the name and the version' do
-        string = 'RestKit/JSON (1.0)'
-        name = Specification.name_and_version_from_string(string).first
-        name.should == 'RestKit/JSON'
-      end
-
-      it 'handles names without version' do
-        string = 'RestKit/JSON'
-        name, version = Specification.name_and_version_from_string(string)
-        name.should == 'RestKit/JSON'
-        version.version.should.be.empty?
-      end
-
-      it 'raises if an invalid string representation is provided' do
-        should.raise Informative do
-          Specification.name_and_version_from_string('missing_version ()')
-        end.message.should.match /Invalid string representation/
-      end
-
-      it 'returns the root name of a given specification name' do
-        Specification.root_name('Pod').should == 'Pod'
-        Specification.root_name('Pod/Subspec').should == 'Pod'
+      describe '::root_name' do
+        it 'returns the root name of a given specification name' do
+          Specification.root_name('Pod').should == 'Pod'
+          Specification.root_name('Pod/Subspec').should == 'Pod'
+        end
       end
     end
 
