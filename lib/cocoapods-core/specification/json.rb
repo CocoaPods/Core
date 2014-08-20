@@ -5,7 +5,7 @@ module Pod
       #
       def to_json(*a)
         require 'json'
-        to_hash.to_json(*a)
+        to_hash.to_json(*a) << "\n"
       end
 
       #-----------------------------------------------------------------------#
