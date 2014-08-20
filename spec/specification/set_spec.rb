@@ -56,10 +56,10 @@ module Pod
             'master' => [
               '1.6.2', '1.6.1', '1.6', '1.3.3', '1.3.2', '1.3.1', '1.3', '1.2.3', '1.2.2',
               '1.2.1', '1.2', '1.1', '1.0'
-            ]
+            ],
           },
           'highest_version' => '1.6.2',
-          'highest_version_spec' => spec_path.to_s
+          'highest_version_spec' => spec_path.to_s,
         }
       end
 

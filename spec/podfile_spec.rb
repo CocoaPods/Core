@@ -131,8 +131,8 @@ module Pod
           'target_definitions' => [
             'name' => 'Pods',
             'link_with_first_target' => true,
-            'dependencies' => ['ASIHTTPRequest']
-          ]
+            'dependencies' => ['ASIHTTPRequest'],
+          ],
         }
       end
 
@@ -146,7 +146,7 @@ module Pod
           'target_definitions' => [{ 'name' => 'Pods', 'link_with_first_target' => true }],
           'workspace' => 'MyApp.xcworkspace',
           'generate_bridge_support' => true,
-          'set_arc_compatibility_flag' => true
+          'set_arc_compatibility_flag' => true,
         }
       end
 
@@ -166,11 +166,11 @@ module Pod
               'children' => [
                 {
                   'name' => 'sub-target',
-                  'dependencies' => ['JSONKit']
-                }
-              ]
-            }
-          ]
+                  'dependencies' => ['JSONKit'],
+                },
+              ],
+            },
+          ],
         }
       end
 
@@ -210,10 +210,10 @@ module Pod
             'name' => 'Pods',
             'link_with_first_target' => true,
             'inhibit_warnings' => {
-              'for_pods' => ['ASIHTTPRequest']
+              'for_pods' => ['ASIHTTPRequest'],
             },
-            'dependencies' => %w(ASIHTTPRequest ObjectiveSugar)
-          ]
+            'dependencies' => %w(ASIHTTPRequest ObjectiveSugar),
+          ],
         }
       end
 
@@ -228,9 +228,9 @@ module Pod
             'link_with_first_target' => true,
             'dependencies' => ['ObjectiveSugar'],
             'inhibit_warnings' => {
-              'all' => true
-            }
-          ]
+              'all' => true,
+            },
+          ],
         }
       end
 
@@ -356,7 +356,7 @@ module Pod
         target.label.should == 'Pods-debug'
         target.dependencies.sort_by(&:name).should == [
           Dependency.new('ASIHTTPRequest'),
-          Dependency.new('SSZipArchive')
+          Dependency.new('SSZipArchive'),
         ]
       end
 

@@ -299,14 +299,14 @@ module Pod
       it 'stores a dependency on a pod as a sting if no requirements are provided' do
         @root.store_pod('BlocksKit')
         @root.send(:get_hash_value, 'dependencies').should == [
-          'BlocksKit'
+          'BlocksKit',
         ]
       end
 
       it 'stores a dependency on a pod as a hash if requirements provided' do
         @root.store_pod('Reachability', '1.0')
         @root.send(:get_hash_value, 'dependencies').should == [
-          { 'Reachability' => ['1.0'] }
+          { 'Reachability' => ['1.0'] },
         ]
       end
 
@@ -315,14 +315,14 @@ module Pod
       it 'stores a dependency on a podspec' do
         @root.store_podspec(:name => 'BlocksKit')
         @root.send(:get_hash_value, 'podspecs').should == [
-          { :name => 'BlocksKit' }
+          { :name => 'BlocksKit' },
         ]
       end
 
       it 'stores a dependency on a podspec and sets is as auto-detect if no options are provided' do
         @root.store_podspec
         @root.send(:get_hash_value, 'podspecs').should == [
-          { :autodetect => true }
+          { :autodetect => true },
         ]
       end
 
@@ -343,7 +343,7 @@ module Pod
         @child.to_hash.should == {
           'name' => 'MyAppTests',
           'dependencies' => ['BlocksKit'],
-          'platform' => 'ios'
+          'platform' => 'ios',
         }
       end
 
@@ -358,12 +358,12 @@ module Pod
           'children' => [
             {
               'name' => 'MyAppTests',
-              'dependencies' => ['RestKit']
+              'dependencies' => ['RestKit'],
             },
             {
               'name' => 'MoarTests',
-            }
-          ]
+            },
+          ],
         }
       end
 
@@ -410,28 +410,28 @@ module Pod
         it 'handles dependencies which only indicate the name of the Pod' do
           @root.store_pod('BlocksKit')
           @root.send(:pod_dependencies).should == [
-            Dependency.new('BlocksKit')
+            Dependency.new('BlocksKit'),
           ]
         end
 
         it 'handles requirements' do
           @root.store_pod('BlocksKit', '> 1.0', '< 2.5')
           @root.send(:pod_dependencies).should == [
-            Dependency.new('BlocksKit', ['> 1.0', '< 2.5'])
+            Dependency.new('BlocksKit', ['> 1.0', '< 2.5']),
           ]
         end
 
         it 'handles subspecs' do
           @root.store_pod('Spec/Subspec')
           @root.send(:pod_dependencies).should == [
-            Dependency.new('Spec/Subspec')
+            Dependency.new('Spec/Subspec'),
           ]
         end
 
         it 'handles dependencies options' do
           @root.store_pod('BlocksKit', :git => 'GIT-URL', :commit => '1234')
           @root.send(:pod_dependencies).should == [
-            Dependency.new('BlocksKit', :git => 'GIT-URL', :commit => '1234')
+            Dependency.new('BlocksKit', :git => 'GIT-URL', :commit => '1234'),
           ]
         end
 
@@ -445,7 +445,7 @@ module Pod
           path = SpecHelper::Fixture.fixture('BananaLib.podspec').to_s
           @root.store_podspec(:path => path)
           @root.send(:podspec_dependencies).should == [
-            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1')
+            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1'),
           ]
         end
 
@@ -457,7 +457,7 @@ module Pod
           deps = [external_dep, internal_dep]
           Specification.any_instance.stubs(:dependencies).returns([deps])
           @root.send(:podspec_dependencies).should == [
-            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1')
+            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1'),
           ]
         end
 

@@ -47,7 +47,7 @@ module Pod
         Specification.new do |s|
           s.name = 'monkey'
           s.version = '1.0.8'
-        end
+        end,
       ]
       specs
     end
@@ -131,7 +131,7 @@ module Pod
         json_dep.external_source = { :podspec => 'path/JSONKit.podspec' }
         @lockfile.dependencies.should == [
           Dependency.new('BananaLib', '~>1.0'),
-          json_dep
+          json_dep,
         ]
       end
 
@@ -189,7 +189,7 @@ module Pod
           :changed => [],
           :removed => [],
           :unchanged => %w(BlocksKit JSONKit),
-          :added => ['TTTAttributedLabel']
+          :added => ['TTTAttributedLabel'],
         }
       end
 
@@ -202,7 +202,7 @@ module Pod
           :changed => [],
           :removed => ['JSONKit'],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
       end
 
@@ -216,7 +216,7 @@ module Pod
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
       end
 
@@ -230,7 +230,7 @@ module Pod
           :changed => [],
           :removed => [],
           :unchanged => %w(BlocksKit JSONKit),
-          :added => []
+          :added => [],
         }
       end
 
@@ -244,7 +244,7 @@ module Pod
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
         @lockfile = Lockfile.generate(podfile, @specs)
         podfile = Podfile.new do
@@ -256,7 +256,7 @@ module Pod
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
       end
 
@@ -270,7 +270,7 @@ module Pod
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
         @specs = [
           Specification.new do |s|
@@ -293,7 +293,7 @@ module Pod
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
-          :added => []
+          :added => [],
         }
       end
     end
@@ -347,7 +347,7 @@ module Pod
           Specification.new do |s|
             s.name = 'monkey'
             s.version = '1.0.8'
-          end
+          end,
         ]
         lockfile = Lockfile.generate(podfile, specs)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (HEAD)'
@@ -366,7 +366,7 @@ module Pod
           Specification.new do |s|
             s.name = 'monkey'
             s.version = '1.0.8'
-          end
+          end,
         ]
         lockfile = Lockfile.generate(podfile, specs)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
@@ -386,7 +386,7 @@ module Pod
         @lockfile.internal_data['PODS'].should == [
           { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
           'JSONKit (1.4)',
-          'monkey (1.0.8)'
+          'monkey (1.0.8)',
         ]
       end
 
@@ -398,14 +398,14 @@ module Pod
 
       it 'stores the information of the external sources' do
         @lockfile.internal_data['EXTERNAL SOURCES'].should == {
-          'JSONKit' => { :podspec => 'path/JSONKit.podspec' }
+          'JSONKit' => { :podspec => 'path/JSONKit.podspec' },
         }
       end
 
       it 'stores the checksum of the specifications' do
         @lockfile.internal_data['SPEC CHECKSUMS'].should == {
           'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1',
-          'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949'
+          'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949',
         }
       end
 
@@ -434,11 +434,11 @@ module Pod
               s.name = 'BananaLib'
               s.version = '1.0'
               s.dependency 'tree', '~> 1.0.1'
-            end
+            end,
           ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
           pods_data.should == [{
-            'BananaLib (1.0)' => ['monkey (< 1.0.9)', 'tree (~> 1.0.1)']
+            'BananaLib (1.0)' => ['monkey (< 1.0.9)', 'tree (~> 1.0.1)'],
           }]
         end
       end

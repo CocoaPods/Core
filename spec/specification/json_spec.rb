@@ -10,7 +10,7 @@ module Pod
         subject.version = '1.0'
         expected = {
           'name' => 'BananaLib',
-          'version' => '1.0'
+          'version' => '1.0',
         }
         JSON.parse(subject.to_json).should == expected
       end
@@ -48,14 +48,14 @@ module Pod
         hash = @subject.to_hash
         hash['subspecs'].should == [{
           'name' => 'GreenBanana',
-          'source_files' => 'GreenBanana'
+          'source_files' => 'GreenBanana',
         }]
       end
 
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',
-          'version' => '1.0'
+          'version' => '1.0',
         }
         result = Specification.from_hash(hash)
         result.name.should == 'BananaLib'

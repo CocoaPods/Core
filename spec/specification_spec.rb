@@ -340,7 +340,7 @@ module Pod
         @spec.store_attribute(:attribute, 'value')
         @spec.attributes_hash.should == {
           'name' => nil,
-          'attribute' => 'value'
+          'attribute' => 'value',
         }
       end
 
@@ -348,7 +348,7 @@ module Pod
         @spec.store_attribute(:attribute, 'value', :ios)
         @spec.attributes_hash.should == {
           'name' => nil,
-          'ios' => { 'attribute' => 'value' }
+          'ios' => { 'attribute' => 'value' },
         }
       end
 
@@ -356,7 +356,7 @@ module Pod
         @spec.store_attribute(:attribute,  :key => 'value')
         @spec.attributes_hash.should == {
           'name' => nil,
-          'attribute' => { 'key' => 'value' }
+          'attribute' => { 'key' => 'value' },
         }
       end
 

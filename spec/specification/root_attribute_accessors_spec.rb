@@ -56,7 +56,7 @@ module Pod
                        { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }]
       @spec.authors.should == {
         'Darth Vader' => nil,
-        'Wookiee' => 'wookiee@aggrrttaaggrrt.com'
+        'Wookiee' => 'wookiee@aggrrttaaggrrt.com',
       }
     end
 

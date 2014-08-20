@@ -34,21 +34,21 @@ module Pod
     it 'allows to specify a dependency' do
       @proxy.dependency('A-pod', '~> 1.0')
       @spec.attributes_hash['ios']['dependencies'].should == {
-        'A-pod' => ['~> 1.0']
+        'A-pod' => ['~> 1.0'],
       }
     end
 
     it 'allows to specify a dependency without version requirements' do
       @proxy.dependency('A-pod')
       @spec.attributes_hash['ios']['dependencies'].should == {
-        'A-pod' => []
+        'A-pod' => [],
       }
     end
 
     it 'allows to specify a dependency with multiple version requirements' do
       @proxy.dependency('A-pod', '~> 1.0', '< 2.0')
       @spec.attributes_hash['ios']['dependencies'].should == {
-        'A-pod' => ['~> 1.0', '< 2.0']
+        'A-pod' => ['~> 1.0', '< 2.0'],
       }
     end
 

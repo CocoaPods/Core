@@ -81,7 +81,7 @@ module Pod
           :gh_watchers => 2771,
           :gh_forks    => 423,
           :pushed_at   => '2012-07-12T17:36:21Z',
-          :gh_date     => Time.now
+          :gh_date     => Time.now,
         } }
         @cache_file = temporary_directory + 'cache_file.yaml'
         File.open(@cache_file, 'w') { |f| f.write(YAML.dump(@cache_hash)) }
