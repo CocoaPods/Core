@@ -15,8 +15,8 @@ module Pod
 
     describe 'In general' do
 
-      it 'returns all the sources' do
-        @subject.all.map(&:name).sort.should == %w(master test_repo)
+      it 'returns the sources' do
+        @subject.sources.map(&:name).sort.should == %w(master test_repo)
       end
 
       it 'returns the name of all the available pods' do
@@ -56,15 +56,6 @@ module Pod
         set.should.nil?
       end
 
-      it 'returns the directories where the repos are defined' do
-        @subject.dirs.map { |d| d.basename.to_s }.sort.should == %w(master test_repo)
-      end
-
-      it "returns an empty list for the directories if the repos dir doesn't exists" do
-        aggregate = Source::Aggregate.new(Pathname.new('missing-dir'))
-        aggregate.dirs.should == []
-      end
-
       it 'returns a set configured to use only the source which contains the highest version' do
         set = @subject.representative_set('JSONKit')
         set.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.4']
@@ -93,14 +84,14 @@ module Pod
       end
 
       it 'performs a full text search' do
-        @subject.stubs(:dirs).returns([fixture('spec-repos/test_repo')])
+        @subject.stubs(:directories).returns([fixture('spec-repos/test_repo')])
         sets = @subject.search_by_name('Banana Corp', true)
         sets.count.should == 1
         sets.first.name.should == 'BananaLib'
       end
 
       it 'raises an informative if unable to find a Pod with the given name' do
-        @subject.stubs(:dirs).returns([fixture('spec-repos/test_repo')])
+        @subject.stubs(:directories).returns([fixture('spec-repos/test_repo')])
         should.raise Informative do
           @subject.search_by_name('Some-funky-name', true)
         end.message.should.match /Unable to find/
@@ -114,7 +105,7 @@ module Pod
 
       before do
         test_source = Source.new(fixture('spec-repos/test_repo'))
-        @subject.stubs(:all).returns([test_source])
+        @subject.stubs(:sources).returns([test_source])
       end
 
       it 'generates the search index from scratch' do
