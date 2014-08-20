@@ -120,12 +120,12 @@ module Pod
     #           pod.
     #
     def self.name_and_version_from_string(string_representation)
-      match_data = string_representation.match(/(\S*) \((.*)\)/)
+      match_data = string_representation.match(/\A(\S*)(?: \((.+)\))?\Z/)
       unless match_data
         raise Informative, 'Invalid string representation for a ' \
-          "Specification: `#{string_representation}`." \
-          'String representation should include the name and ' \
-          'the version of a pod.'
+          "specification: `#{string_representation}`. " \
+          'The string representation should include the name and ' \
+          'optionally the version of the Pod.'
       end
       name = match_data[1]
       vers = Version.new(match_data[2])

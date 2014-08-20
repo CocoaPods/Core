@@ -90,9 +90,16 @@ module Pod
         name.should == 'RestKit/JSON'
       end
 
+      it 'handles names without version' do
+        string = 'RestKit/JSON'
+        name, version = Specification.name_and_version_from_string(string)
+        name.should == 'RestKit/JSON'
+        version.version.should.be.empty?
+      end
+
       it 'raises if an invalid string representation is provided' do
         should.raise Informative do
-          Specification.name_and_version_from_string('missing_version')
+          Specification.name_and_version_from_string('missing_version ()')
         end.message.should.match /Invalid string representation/
       end
 
