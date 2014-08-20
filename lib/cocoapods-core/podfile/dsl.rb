@@ -468,6 +468,78 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
+      # @!group Sources
+      #
+      #   The Podfile retrieves specs from a given source.
+      #   This group manage these sources
+      #
+      #   Sources are __global__ and not stored per target definition.
+
+      #-----------------------------------------------------------------------#
+
+      # Specifies the location of specs
+      #
+      # -----
+      #
+      # By default, the github Cocoapods/specs repository is used. Use this method
+      # to specify (an) other(s) source(s).
+      # Sources are prioritised by appearance in Podfile
+      #
+      # @param    [String] source
+      #           name of specs repo. Previously specified by user
+      #           via pod repo add command
+      #
+      # @example  Specifying to use first myprivaterepo and then cocoapods master
+      #
+      #           source 'myprivaterepo'
+      #           source 'master'
+      #
+      # @return   [void]
+      #
+      def source(source)
+        hash_sources = get_hash_value('sources') || []
+        hash_sources << source
+        set_hash_value('sources', hash_sources.uniq)
+      end
+
+      #-----------------------------------------------------------------------#
+
+      # @!group Sources
+      #
+      #   The Podfile retrieves specs from a given source.
+      #   This group manage these sources
+      #
+      #   Sources are __global__ and not stored per target definition.
+
+      #-----------------------------------------------------------------------#
+
+      # Specifies the location of specs
+      #
+      # -----
+      #
+      # By default, the github Cocoapods/specs repository is used. Use this method
+      # to specify (an) other(s) source(s).
+      # Sources are prioritised by appearance in Podfile
+      #
+      # @param    [String] source
+      #           name of specs repo. Previously specified by user
+      #           via pod repo add command
+      #
+      # @example  Specifying to use first myprivaterepo and then cocoapods master
+      #
+      #           source 'myprivaterepo'
+      #           source 'master'
+      #
+      # @return   [void]
+      #
+      def source(source)
+        hash_sources = get_hash_value('sources') || []
+        hash_sources << source
+        set_hash_value('sources', hash_sources.uniq)
+      end
+
+      #-----------------------------------------------------------------------#
+
       # @!group Hooks
       #   The Podfile provides hooks that will be called during the
       #   installation process.

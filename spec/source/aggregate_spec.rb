@@ -7,7 +7,8 @@ module Pod
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
     #
     before do
-      @subject = Source::Aggregate.new(fixture('spec-repos'))
+      repos = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
+      @subject = Source::Aggregate.new(repos)
     end
 
     #-------------------------------------------------------------------------#
@@ -15,7 +16,7 @@ module Pod
     describe 'In general' do
 
       it 'returns all the sources' do
-        @subject.all.map(&:name).should == %w(master test_repo)
+        @subject.all.map(&:name).sort.should == %w(master test_repo)
       end
 
       it 'returns the name of all the available pods' do
