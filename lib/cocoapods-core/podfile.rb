@@ -95,8 +95,8 @@ module Pod
 
     # @!group Attributes
 
-    # @return [Array<String>] all the specs source names.
-
+    # @return [Array<String>] The name of the sources.
+    #
     def sources
       get_hash_value('sources') || []
     end

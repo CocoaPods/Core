@@ -260,9 +260,9 @@ module Pod
             {
               'name' => 'Pods',
               'link_with_first_target' => true,
-              'dependencies' => %w(ASIHTTPRequest)
-            }
-          ]
+              'dependencies' => %w(ASIHTTPRequest),
+            },
+          ],
         }
       end
     end

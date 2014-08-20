@@ -470,10 +470,9 @@ module Pod
 
       # @!group Sources
       #
-      #   The Podfile retrieves specs from a given source.
-      #   This group manage these sources
+      #   The Podfile retrieves specs from a given list of sources (repos).
       #
-      #   Sources are __global__ and not stored per target definition.
+      #   Sources are __global__ and they are not stored per target definition.
 
       #-----------------------------------------------------------------------#
 
@@ -481,53 +480,20 @@ module Pod
       #
       # -----
       #
-      # By default, the github Cocoapods/specs repository is used. Use this method
-      # to specify (an) other(s) source(s).
-      # Sources are prioritised by appearance in Podfile
+      # By default, the github Cocoapods/specs repository is used. Use this
+      # method to specify (an) other(s) source(s). The order of the sources is
+      # relevant. CocoaPods will use the highest version of a Pod of the first
+      # source which includes the Pod (regardless whether other sources have a
+      # higher version).
       #
       # @param    [String] source
-      #           name of specs repo. Previously specified by user
+      #           The name of a specs repo. Previously specified by user
       #           via pod repo add command
       #
-      # @example  Specifying to use first myprivaterepo and then cocoapods master
+      # @example  Specifying to use first `my_private_repo` and then the
+      #           CocoaPods Master Repo
       #
-      #           source 'myprivaterepo'
-      #           source 'master'
-      #
-      # @return   [void]
-      #
-      def source(source)
-        hash_sources = get_hash_value('sources') || []
-        hash_sources << source
-        set_hash_value('sources', hash_sources.uniq)
-      end
-
-      #-----------------------------------------------------------------------#
-
-      # @!group Sources
-      #
-      #   The Podfile retrieves specs from a given source.
-      #   This group manage these sources
-      #
-      #   Sources are __global__ and not stored per target definition.
-
-      #-----------------------------------------------------------------------#
-
-      # Specifies the location of specs
-      #
-      # -----
-      #
-      # By default, the github Cocoapods/specs repository is used. Use this method
-      # to specify (an) other(s) source(s).
-      # Sources are prioritised by appearance in Podfile
-      #
-      # @param    [String] source
-      #           name of specs repo. Previously specified by user
-      #           via pod repo add command
-      #
-      # @example  Specifying to use first myprivaterepo and then cocoapods master
-      #
-      #           source 'myprivaterepo'
+      #           source 'my_private_repo'
       #           source 'master'
       #
       # @return   [void]
