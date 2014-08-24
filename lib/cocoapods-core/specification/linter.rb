@@ -273,6 +273,7 @@ module Pod
       #
       def _validate_license(l)
         type = l[:type]
+        file = l[:file]
         if type.nil?
           warning '[license] Missing license type.'
         end
@@ -281,6 +282,9 @@ module Pod
         end
         if type && type =~ /\(example\)/
           error '[license] Sample license type.'
+        end
+        if file && Pathname.new(file).extname !~ /^(txt|md|markdown|)$/i
+          error '[license] Invalid file type'
         end
       end
 
