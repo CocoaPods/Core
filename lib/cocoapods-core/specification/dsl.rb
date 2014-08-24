@@ -178,6 +178,8 @@ module Pod
       #   Unless the source contains a file named `LICENSE.*` or `LICENCE.*`,
       #   the path of the license file **or** the integral text of the notice
       #   commonly used for the license type must be specified.
+      #   If a license file is specified, it either must be without a file
+      #   extensions or be one of `txt`, `md`, or `markdown`.
       #
       #   This information is used by CocoaPods to generate acknowledgement
       #   files (markdown and plist) which can be used in the acknowledgements
