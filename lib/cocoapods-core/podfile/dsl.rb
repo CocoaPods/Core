@@ -480,7 +480,7 @@ module Pod
       # been downloaded but before they are installed.
       #
       # It receives the
-      # [`Pod::Hooks::InstallerRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/installerrepresentation/)
+      # [`Pod::Hooks::InstallerRepresentation`](http://rubydoc.info/gems/cocoapods/Pod/Hooks/InstallerRepresentation/)
       # as its only argument.
       #
       # @example  Defining a pre install hook in a Podfile.
@@ -499,7 +499,7 @@ module Pod
       # to perform.
       #
       # It receives the
-      # [`Pod::Hooks::InstallerRepresentation`](http://docs.cocoapods.org/cocoapods/pod/hooks/installerrepresentation/)
+      # [`Pod::Hooks::InstallerRepresentation`](http://rubydoc.info/gems/cocoapods/Pod/Hooks/InstallerRepresentation/)
       # as its only argument.
       #
       # @example  Customizing the `OTHER_LDFLAGS` of all targets
