@@ -83,7 +83,7 @@ module Pod
         @podfile.dependencies.map(&:name).sort.should == %w(ASIHTTPRequest JSONKit Reachability SSZipArchive)
       end
 
-      it 'indicates if the pod install hook was executed' do
+      it 'indicates if the post install hook was executed' do
         Podfile.new {}.post_install!(:an_installer).should.be == false
         result = Podfile.new { post_install { |_installer| } }.post_install!(:an_installer)
         result.should.be == true
