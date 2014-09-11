@@ -23,9 +23,9 @@
   [Taylor Halliday](https://github.com/tayhalla)
   [#147](https://github.com/CocoaPods/Core/pull/147)
 
-* Only allow certain extensions for license files
+* Only allow certain extensions for license files.  
   [Samuel Giddins](https://github.com/segiddins)
-  [CocoaPods/CocoaPods#2407](https://github.com/CocoaPods/CocoaPods/issues/2407)
+  [CocoaPods#2407](https://github.com/CocoaPods/CocoaPods/issues/2407)
 
 ## 0.33.1
 
