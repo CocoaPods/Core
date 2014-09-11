@@ -136,20 +136,18 @@ module Pod
     # @return [Array<Dependency>] the generated dependency.
     #
     def dependencies_to_lock_pod_named(name)
-      result = []
       deps = dependencies.select { |d| d.root_name == name }
       if deps.empty?
         raise StandardError, "Attempt to lock the `#{name}` Pod without an " \
           'known dependency.'
       end
 
-      deps.each do |dep|
+      deps.map do |dep|
         version = version(dep.name)
         locked_dependency = dep.dup
         locked_dependency.specific_version = version
-        result << locked_dependency
+        locked_dependency
       end
-      result
     end
 
     # @return [Version] The version of CocoaPods which generated this lockfile.
