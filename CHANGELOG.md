@@ -43,6 +43,10 @@
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [#88](https://github.com/CocoaPods/Core/issues/88)
 
+* Exported JSON files have a trailing newline
+  [Fabio Pelosin](https://github.com/fabiopelosin)
+  [#139](https://github.com/CocoaPods/Core/issues/139)
+
 
 ## 0.33.1
 
