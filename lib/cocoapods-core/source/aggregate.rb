@@ -3,38 +3,38 @@ module Pod
     # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
-      # @return [Pathname] the directory were the repositories are stored.
+      # @return [Array<Pathname>] The ordered list of source directories.
       #
-      attr_reader :repos_dir
+      attr_reader :directories
 
-      # @param [Pathname] repos_dir @see repos_dir.
+      # @param  [Array<Pathname>] repos_dirs @see directories
       #
-      def initialize(repos_dir)
-        @repos_dir = repos_dir
+      def initialize(repos_dirs)
+        @directories = Array(repos_dirs)
       end
 
-      # @return [Array<Source>] all the sources.
+      # @return [Array<Source>] The ordered list of the sources.
       #
-      def all
-        @sources ||= dirs.map { |repo| Source.new(repo) }.sort_by(&:name)
+      def sources
+        @sources ||= directories.map { |repo| Source.new(repo) }
       end
 
       # @return [Array<String>] the names of all the pods available.
       #
       def all_pods
-        all.map(&:pods).flatten.uniq
+        sources.map(&:pods).flatten.uniq
       end
 
-      # @return [Array<Set>] the sets for all the pods available.
+      # @return [Array<Set>] The sets for all the pods available.
       #
       # @note   Implementation detail: The sources don't cache their values
       #         because they might change in response to an update. Therefore
-      #         this method to prevent slowness caches the values before
+      #         this method to preserve performance caches the values before
       #         processing them.
       #
       def all_sets
         pods_by_source = {}
-        all.each do |source|
+        sources.each do |source|
           pods_by_source[source] = source.pods
         end
         sources = pods_by_source.keys
@@ -44,20 +44,6 @@ module Pod
           pod_sources = sources.select { |s| pods_by_source[s].include?(pod) }
           pod_sources = pod_sources.compact
           Specification::Set.new(pod, pod_sources)
-        end
-      end
-
-      # @return [Array<Pathname>] the directories where the sources are stored.
-      #
-      # @note   If the repos dir doesn't exits this will return an empty array.
-      #
-      # @raise  If the repos dir doesn't exits.
-      #
-      def dirs
-        if repos_dir.exist?
-          repos_dir.children.select(&:directory?)
-        else
-          []
         end
       end
 
@@ -73,7 +59,7 @@ module Pod
       def representative_set(name)
         representative_source = nil
         highest_version = nil
-        all.each do |source|
+        sources.each do |source|
           source_versions = source.versions(name)
           if source_versions
             source_version = source_versions.first
@@ -100,9 +86,9 @@ module Pod
       # @see    Source#search
       #
       def search(dependency)
-        sources = all.select { |s| s.search(dependency) }
-        unless sources.empty?
-          Specification::Set.new(dependency.root_name, sources)
+        found_sources = sources.select { |s| s.search(dependency) }
+        unless found_sources.empty?
+          Specification::Set.new(dependency.root_name, found_sources)
         end
       end
 
@@ -117,7 +103,7 @@ module Pod
       def search_by_name(query, full_text_search = false)
         pods_by_source = {}
         result = []
-        all.each do |s|
+        sources.each do |s|
           source_pods = s.search_by_name(query, full_text_search)
           pods_by_source[s] = source_pods.map(&:name)
         end

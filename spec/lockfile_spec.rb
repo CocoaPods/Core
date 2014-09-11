@@ -143,12 +143,13 @@ module Pod
       it 'returns the dependency that locks the pod with the given name to the installed version' do
         json_dep = Dependency.new('JSONKit', '1.4')
         json_dep.external_source = { :podspec => 'path/JSONKit.podspec' }
-        @lockfile.dependency_to_lock_pod_named('JSONKit').should == json_dep
+        result = @lockfile.dependencies_to_lock_pod_named('JSONKit')
+        result.should == [json_dep]
       end
 
       it 'raises if there is a request for a locking dependency for a not stored Pod' do
         should.raise StandardError do
-          @lockfile.dependency_to_lock_pod_named('Missing')
+          @lockfile.dependencies_to_lock_pod_named('Missing')
         end.message.should.match /without an known dependency/
       end
 
