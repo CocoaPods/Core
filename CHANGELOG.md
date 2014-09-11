@@ -2,8 +2,11 @@
 
 ## Master
 
-* Added methods `deprecated?` and `deprecation_description` to Presenter.  
+* Added methods `deprecated?` and `deprecation_description` to
+  `RootAttributesAccessors`.  
   [Hugo Tunius](https://github.com/k0nserv)
+  [#157](https://github.com/CocoaPods/Core/pull/157)
+  [CocoaPods#2180](https://github.com/CocoaPods/CocoaPods/issues/2180)
 
 * The specification `requires_arc` attribute now defaults to true.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
