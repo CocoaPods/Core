@@ -22,18 +22,17 @@ module Pod
         attr_reader :consumer
 
         # Checks the attributes hash for any unknown key which might be the
-        # result of a misspell in JSON file.
+        # result of a misspelling in a JSON file.
         #
         # @note Sub-keys are not checked per-platform as
         #       there is no attribute supporting this combination.
         #
         # @note The keys of sub-keys are not checked as they are only used by
         #       the `source` attribute and they are subject
-        #       to change according the support in the
+        #       to change according to the support in the
         #       `cocoapods-downloader` gem.
         #
         def check_attributes
-          Pod::Specification::DSL.attributes
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
           valid_keys = attributes_keys + platform_keys
