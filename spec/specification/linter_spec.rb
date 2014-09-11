@@ -216,6 +216,12 @@ module Pod
         message_should_include('license', 'file')
       end
 
+      it 'allows license files without a file extension' do
+        @spec.stubs(:license).returns(:type => 'MIT', :file => 'LICENSE')
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
       #------------------#
 
       it 'checks for the example source' do
