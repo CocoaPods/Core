@@ -2,19 +2,19 @@
 
 ## Master
 
-* Added methods `deprecated?` and `deprecation_description` to Presenter.
-  [Hugo Tunius][k0nserv]
+* Added methods `deprecated?` and `deprecation_description` to Presenter.  
+  [Hugo Tunius](https://twitter.com/k0nserv)
 
 * The specification `requires_arc` attribute now defaults to true.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
 
 * Now the specification linter warns if git sources use SSH URLs.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#118](https://github.com/CocoaPods/Core/issues/118)
 
 * Removed legacy deprecation warnings of the Specification DSL.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
 
 * Improved error messages for merge conflicts of the Podfile.  
   [Taylor Halliday](https://github.com/tayhalla)
@@ -39,11 +39,11 @@ This version only introduces changes in the CocoaPods gem.
 
 * Linter warnings and errors are now prefixed with \[`ATTRIBUTE_NAME`\].
   This `ATTRIBUTE_NAME` specifies which property caused the error/warning.  
-  [Joshua Kalpin][Kapin]
+  [Joshua Kalpin](https://github.com/Kapin)
   [#122](https://github.com/CocoaPods/Core/pull/122)
 
 * Add support for the specification of multiple `default_subspecs`.  
-  [Kyle Fuller][kylef]
+  [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
 
 ## 0.32.1
@@ -73,7 +73,7 @@ This version only introduces changes in the CocoaPods gem.
   [#85](https://github.com/CocoaPods/Core/pull/85)
 
 * Partial refactor of `Pod::Linter` class.  
-  [Joshua Kalpin][Kapin]
+  [Joshua Kalpin](https://github.com/Kapin)
   [#50](https://github.com/CocoaPods/Core/pull/50)
 
 * Added `deprecated` and `deprecated_in_favor_of` attributes to Specification
@@ -95,32 +95,32 @@ This version only introduces changes in the CocoaPods gem.
   [#98](https://github.com/CocoaPods/Core/issues/98)
 
 * The Linter will not check for comments anymore.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [#108](https://github.com/CocoaPods/Core/issues/108)
 
 * Removed legacy checks from the linter.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [#108](https://github.com/CocoaPods/Core/issues/108)
 
 ##### Bug Fixes
 
 * Fixed logic for default subspec attribute in nested subspecs.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#1021](https://github.com/CocoaPods/CocoaPods/issues/1021)
 
 * Added logic to handle subspecs and platform scopes to linter check of
   the `requries_arc` attribute.  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2005](https://github.com/CocoaPods/CocoaPods/issues/2005)
 
 * The linter no longer considers empty a Specification if it only specifies the
   `resource_bundle` attribute.  
-  [Joshua Kalpin][Kapin]  
+  [Joshua Kalpin](https://github.com/Kapin)
   [#63](https://github.com/CocoaPods/Core/issues/63)
   [#95](https://github.com/CocoaPods/Core/pull/95)
 
 * Fix sorting of versions coming from data providers
-  [Carson McDonald][carsonmcdonald]
+  [Carson McDonald](https://github.com/carsonmcdonald)
   [CocoaPods#1936](https://github.com/CocoaPods/CocoaPods/issues/1936)
 
 
@@ -131,7 +131,7 @@ This version only introduces changes in the CocoaPods gem.
 * The specification now strips the indentation of the `prefix_header` and
   `prepare_command` to aide their declaration as a here document (similarly to
   what it already does with the description).  
-  [Fabio Pelosin][irrationalfab]
+  [Fabio Pelosin](https://github.com/fabiopelosin)
   [#51](https://github.com/CocoaPods/Core/issues/51)
 
 ##### Bug Fixes
@@ -159,6 +159,3 @@ This version only introduces changes in the CocoaPods gem.
 
 Introduction of the Changelog.
 
-[irrationalfab]: https://github.com/irrationalfab
-[Kapin]: https://github.com/Kapin
-[k0nserv]: https://github.com/k0nserv
