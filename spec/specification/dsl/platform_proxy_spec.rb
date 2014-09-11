@@ -8,7 +8,7 @@ module Pod
     end
 
     it 'forwards multi-platform attributes to the specification' do
-      attrs = Specification::DSL.attributes.values.select { |a| a.multi_platform? }
+      attrs = Specification::DSL.attributes.values.select(&:multi_platform?)
       attrs.each do |attr|
         @spec.expects(:store_attribute).with(attr.name, 'a_value', :ios).once
         @proxy.send(attr.writer_name, 'a_value')
@@ -16,8 +16,8 @@ module Pod
     end
 
     it 'supports the singular form of attributes' do
-      attrs = Specification::DSL.attributes.values.select { |a| a.multi_platform? }
-      singular_attrs = attrs.select { |a| a.writer_singular_form }
+      attrs = Specification::DSL.attributes.values.select(&:multi_platform?)
+      singular_attrs = attrs.select(&:writer_singular_form)
       singular_attrs.each do |attr|
         @spec.expects(:store_attribute).with(attr.name, 'a_value', :ios).once
         @proxy.send(attr.writer_singular_form, 'a_value')

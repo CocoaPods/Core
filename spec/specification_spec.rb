@@ -379,7 +379,7 @@ module Pod
       end
 
       it 'supports the singular form of attribute writer methods' do
-        singular_attrs = Specification::DSL.attributes.values.select { |a| a.writer_singular_form }
+        singular_attrs = Specification::DSL.attributes.values.select(&:writer_singular_form)
         singular_attrs.each do |attr|
           @spec.send(attr.writer_name, 'a_value')
           @spec.attributes_hash[attr.name.to_s].should == 'a_value'

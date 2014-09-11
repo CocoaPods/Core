@@ -371,7 +371,7 @@ module Pod
 
       it 'allows to use the singular form the attributes which support it' do
         attributes = Specification::DSL.attributes.values
-        singularized = attributes.select { |attr| attr.singularize? }
+        singularized = attributes.select(&:singularize?)
         spec = Specification.new
         singularized.each do |attr|
           spec.should.respond_to(attr.writer_name)

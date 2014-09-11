@@ -396,7 +396,7 @@ module Pod
       # @return   [Array] the generated data.
       #
       def generate_dependencies_data(podfile)
-        podfile.dependencies.map { |d| d.to_s }.sort
+        podfile.dependencies.map(&:to_s).sort
       end
 
       # Generates the information of the external sources.
@@ -434,7 +434,7 @@ module Pod
       #
       def generate_checksums(specs)
         checksums = {}
-        specs.select { |spec| spec.defined_in_file }.each do |spec|
+        specs.select(&:defined_in_file).each do |spec|
           checksums[spec.root.name] = spec.checksum
         end
         checksums
