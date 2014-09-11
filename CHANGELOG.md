@@ -2,6 +2,18 @@
 
 ## Master
 
+* Add support to specify dependencies per build configuration.
+  This can be done using the following syntax in a Podfile:
+
+      pod 'Lookback', :configurations => ['Debug']
+
+  Currently configurations can only be specified per single Pod.
+  [Joachim Bengtsson](https://github.com/nevyn)
+  [Eloy Durán](https://github.com/alloy)
+  [Fabio Pelosin](https://github.com/fabiopelosin)
+  [#52](https://github.com/CocoaPods/Core/pull/52)
+  [#154](https://github.com/CocoaPods/Core/pull/154)
+
 * Added methods `deprecated?` and `deprecation_description` to
   `RootAttributesAccessors`.  
   [Hugo Tunius](https://github.com/k0nserv)
