@@ -39,6 +39,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2407](https://github.com/CocoaPods/CocoaPods/issues/2407)
 
+* The linter now checks a JSON specification for unknown keys.  
+  [Fabio Pelosin](https://github.com/fabiopelosin)
+  [#88](https://github.com/CocoaPods/Core/issues/88)
+
+
 ## 0.33.1
 
 This version only introduces changes in the CocoaPods gem.
