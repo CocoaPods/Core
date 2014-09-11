@@ -234,7 +234,7 @@ module Pod
       [:added, :changed, :removed, :unchanged].each { |k| result[k] = [] }
 
       installed_deps = dependencies.map do |dep|
-        dependencies_to_lock_pod_named(dep.name)
+        dependencies_to_lock_pod_named(dep.root_name)
       end.flatten
       all_dep_names  = (dependencies + podfile.dependencies).map(&:name).uniq
       all_dep_names.each do |name|
