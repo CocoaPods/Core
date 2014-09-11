@@ -3,7 +3,7 @@
 ## Master
 
 * Added methods `deprecated?` and `deprecation_description` to Presenter.  
-  [Hugo Tunius](https://twitter.com/k0nserv)
+  [Hugo Tunius](https://github.com/k0nserv)
 
 * The specification `requires_arc` attribute now defaults to true.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
