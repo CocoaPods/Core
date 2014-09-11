@@ -45,7 +45,7 @@ module Pod
       new('>= 0')
     end
 
-    # Parses the given object returning an tuple where the first entry is an
+    # Parses the given object returning a tuple where the first entry is an
     # operator and the second a version. If not operator is provided it
     # defaults to `=`.
     #

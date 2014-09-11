@@ -150,7 +150,7 @@ module Pod
       it 'raises if there is a request for a locking dependency for a not stored Pod' do
         should.raise StandardError do
           @lockfile.dependencies_to_lock_pod_named('Missing')
-        end.message.should.match /without an known dependency/
+        end.message.should.match /without a known dependency/
       end
 
       it 'returns the version of CocoaPods which generated the lockfile' do
@@ -194,7 +194,7 @@ module Pod
         }
       end
 
-      it 'detects an removed Pod' do
+      it 'detects a removed Pod' do
         podfile = Podfile.new do
           platform :ios
           pod 'BlocksKit'

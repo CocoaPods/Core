@@ -7,7 +7,7 @@ module Pod
   #
   class PlainInformative < StandardError; end
 
-  # Indicates an user error.
+  # Indicates n user error.
   #
   class Informative < PlainInformative; end
 

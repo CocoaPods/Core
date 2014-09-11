@@ -138,7 +138,7 @@ module Pod
     def dependencies_to_lock_pod_named(name)
       deps = dependencies.select { |d| d.root_name == name }
       if deps.empty?
-        raise StandardError, "Attempt to lock the `#{name}` Pod without an " \
+        raise StandardError, "Attempt to lock the `#{name}` Pod without a " \
           'known dependency.'
       end
 

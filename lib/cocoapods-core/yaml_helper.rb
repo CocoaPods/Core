@@ -17,14 +17,14 @@ module Pod
   class YAMLHelper
     class << self
       # Returns the YAML representation of the given object. If the given object
-      # is an Hash it accepts an optional hint for sorting the keys.
+      # is a Hash, it accepts an optional hint for sorting the keys.
       #
       # @param  [String, Symbol, Array, Hash] object
       #         the object to convert
       #
       # @param  [Array] hash_keys_hint
       #         an array to use as a hint for sorting the keys of the object to
-      #         convert if it is an hash.
+      #         convert if it is a hash.
       #
       # @return [String] the YAML representation of the given object.
       #

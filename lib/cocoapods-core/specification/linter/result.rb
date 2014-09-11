@@ -58,7 +58,7 @@ module Pod
           add_result(:error, message)
         end
 
-        # Adds an warning result with the given message.
+        # Adds a warning result with the given message.
         #
         # @param  [String] message
         #         The message of the result.

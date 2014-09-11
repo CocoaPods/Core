@@ -631,7 +631,7 @@ module Pod
       # @note   The podspec directive is intended include the dependencies of a
       #         spec in the project where it is developed. For this reason the
       #         spec, or any of it subspecs, cannot be included in the
-      #         dependencies. Otherwise it would generate an chicken-and-egg
+      #         dependencies. Otherwise it would generate a chicken-and-egg
       #         problem.
       #
       def podspec_dependencies
