@@ -133,7 +133,7 @@ module Pod
     #
     # @raise  If there is no version stored for the given name.
     #
-    # @return [Dependency] the generated dependency.
+    # @return [Array<Dependency>] the generated dependency.
     #
     def dependencies_to_lock_pod_named(name)
       result = []
