@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.34.0.rc1
 
 * Add support to specify dependencies per build configuration.
   This can be done using the following syntax in a Podfile:
