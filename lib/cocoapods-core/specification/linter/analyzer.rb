@@ -131,7 +131,7 @@ module Pod
               'attribute. The acceptable ones are: ' \
               "`#{attribute.keys.keys.map(&:to_s).sort.join(', ')}`"
           elsif major_keys.count == 1
-            acceptable = attribute.keys[major_keys.first]
+            acceptable = attribute.keys[major_keys.first] || []
             unknown = value.keys - major_keys - acceptable
             unless unknown.empty?
               warning "Incompatible `#{unknown.sort.join(', ')}` key(s) " \

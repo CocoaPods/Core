@@ -86,6 +86,14 @@ module Pod
           expected = 'Incompatible `git, http` keys'
           @subject.results.first.message.should.include?(expected)
         end
+
+        it 'fails a spec invalid secondary sub-keys when no sub-keys are supported' do
+          @spec.source = { :http => 'example.com', :unsupported => true }
+          @subject.analyze
+          @subject.results.count.should.be.equal(1)
+          expected = 'Incompatible `unsupported` key(s) with `http`'
+          @subject.results.first.message.should.include?(expected)
+        end
       end
 
       #----------------------------------------#

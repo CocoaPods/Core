@@ -1,5 +1,13 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes an issue linting specifications with invalid HTTP source.  
+  [Kyle Fuller](https://github.com/kylef)
+  [CocoaPods#2463](https://github.com/CocoaPods/CocoaPods/issues/2463)
+
 ## 0.34.0.rc1
 
 * Add support to specify dependencies per build configuration.
