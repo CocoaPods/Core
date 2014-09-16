@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Drop policy to not require a git commit for `0.0.1` versions.  
+  [Fabio Pelosin](https://github.com/fabiopelosin)
+  [CocoaPods#2335](https://github.com/CocoaPods/CocoaPods/issues/2335)
+
+
 ## 0.34.0.rc2
 
 ##### Bug Fixes
