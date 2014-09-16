@@ -292,13 +292,8 @@ module Pod
         @linter.lint
         message_should_include('Git', 'SSH')
       end
-      it 'checks the source of 0.0.1 specifications for commit or a tag' do
-        @spec.stubs(:version).returns(Version.new '0.0.1')
-        @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
-        message_should_include('sources', 'either', 'tag', 'commit')
-      end
 
-      it 'checks the source of a non 0.0.1 specifications for a tag' do
+      it 'checks git sources for a tag' do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
         message_should_include('sources', 'specify a tag.')

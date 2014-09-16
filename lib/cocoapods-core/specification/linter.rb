@@ -304,13 +304,8 @@ module Pod
           if tag && !tag.to_s.include?(version)
             warning '[source] The version should be included in the Git tag.'
           end
-          if version == '0.0.1'
-            if commit.nil? && tag.nil?
-              error '[source] Git sources should specify either a commit or' \
-              'a tag.'
-            end
-          else
-            warning '[source] Git sources should specify a tag.' if tag.nil?
+          if tag.nil?
+            warning '[source] Git sources should specify a tag.'
           end
         end
 
