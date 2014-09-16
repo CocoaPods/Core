@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.34.0.rc2
 
 ##### Bug Fixes
 
