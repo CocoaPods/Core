@@ -344,7 +344,7 @@ module Pod
         if git = s[:git]
           if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
             warning '[source] Git SSH URLs will NOT work for people behind' \
-              'firewalls configured to only allow HTTP, therefor HTTPS is' \
+              'firewalls configured to only allow HTTP, therefore HTTPS is' \
               'preferred.'
           end
         end
