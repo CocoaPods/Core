@@ -30,7 +30,7 @@ module Pod
       def url
         Dir.chdir(repo) do
           remote = `git ls-remote --get-url`
-          remote if $?.success?
+          remote if $CHILD_STATUS.success?
         end
       end
 
