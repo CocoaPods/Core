@@ -34,6 +34,12 @@ module Pod
         GitHub.normalized_repo_id(repo_id)
       end
 
+      # @return [String] The URL of the source.
+      #
+      def url
+        "https://github.com/#{name}.git"
+      end
+
       # @return [String] The user friendly type of the source.
       #
       def type

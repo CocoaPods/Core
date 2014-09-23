@@ -38,6 +38,12 @@ module Pod
       data_provider.name
     end
 
+    # @return [String] The URL of the source.
+    #
+    def url
+      data_provider.url
+    end
+
     # @return [String] The type of the source.
     #
     def type
