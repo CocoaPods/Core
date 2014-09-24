@@ -29,7 +29,7 @@ module Pod
       #
       def url
         Dir.chdir(repo) do
-          remote = `git ls-remote --get-url`
+          remote = `git ls-remote --get-url`.chomp
           remote if $CHILD_STATUS.success?
         end
       end
