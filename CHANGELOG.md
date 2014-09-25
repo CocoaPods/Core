@@ -12,6 +12,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#174](https://github.com/CocoaPods/Core/pull/174)
 
+* Adds a `url` attribute to `Source`.
+  Note that this attribute is currently only gathered from `git`.
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 0.34.0.rc2
 
