@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.34.0
 
 ##### Enhancements
 
@@ -8,12 +8,12 @@
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2335](https://github.com/CocoaPods/CocoaPods/issues/2335)
 
-* Removes the unused `Source::GitHubDataProvider` class.
+* Removes the unused `Source::GitHubDataProvider` class.  
   [Samuel Giddins](https://github.com/segiddins)
   [#174](https://github.com/CocoaPods/Core/pull/174)
 
 * Adds a `url` attribute to `Source`.
-  Note that this attribute is currently only gathered from `git`.
+  Note that this attribute is currently only gathered from `git`.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
