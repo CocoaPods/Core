@@ -8,6 +8,14 @@
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2335](https://github.com/CocoaPods/CocoaPods/issues/2335)
 
+* Removes the unused `Source::GitHubDataProvider` class.
+  [Samuel Giddins](https://github.com/segiddins)
+  [#174](https://github.com/CocoaPods/Core/pull/174)
+
+* Adds a `url` attribute to `Source`.
+  Note that this attribute is currently only gathered from `git`.
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 0.34.0.rc2
 
@@ -111,7 +119,7 @@ This version only introduces changes in the CocoaPods gem.
   [#69](https://github.com/CocoaPods/Core/issues/69)
   [#100](https://github.com/CocoaPods/Core/pull/100)
 
-* Added a check to the linter to ensure that the `social_media_url` has 
+* Added a check to the linter to ensure that the `social_media_url` has
   been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
   [#67](https://github.com/CocoaPods/Core/issues/67)
@@ -203,4 +211,3 @@ This version only introduces changes in the CocoaPods gem.
 ## 0.30.0
 
 Introduction of the Changelog.
-

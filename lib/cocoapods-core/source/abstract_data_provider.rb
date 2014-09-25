@@ -14,6 +14,12 @@ module Pod
         raise StandardError, 'Abstract method.'
       end
 
+      # @return [String] The URL of the source.
+      #
+      def url
+        raise StandardError, 'Abstract method.'
+      end
+
       # @return [String] The user friendly type of the source.
       #
       def type

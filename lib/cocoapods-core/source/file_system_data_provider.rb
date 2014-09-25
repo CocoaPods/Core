@@ -25,6 +25,15 @@ module Pod
         repo.basename.to_s
       end
 
+      # @return [String] The URL of the source.
+      #
+      def url
+        Dir.chdir(repo) do
+          remote = `git ls-remote --get-url`.chomp
+          remote if $?.success?
+        end
+      end
+
       # @return [String] The user friendly type of the source.
       #
       def type

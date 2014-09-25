@@ -3,7 +3,6 @@ require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
 require 'cocoapods-core/source/abstract_data_provider'
 require 'cocoapods-core/source/file_system_data_provider'
-require 'cocoapods-core/source/github_data_provider'
 
 module Pod
   # The Source class is responsible to manage a collection of podspecs.
@@ -36,6 +35,12 @@ module Pod
     #
     def name
       data_provider.name
+    end
+
+    # @return [String] The URL of the source.
+    #
+    def url
+      data_provider.url
     end
 
     # @return [String] The type of the source.
