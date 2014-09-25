@@ -11,9 +11,12 @@ module Pod
     #
     # A podfile can be very simple:
     #
+    #     source 'https://github.com/CocoaPods/Specs.git'
     #     pod 'AFNetworking', '~> 1.0'
     #
     # An example of a more complex podfile can be:
+    #
+    #     source 'https://github.com/CocoaPods/Specs.git'
     #
     #     platform :ios, '6.0'
     #     inhibit_all_warnings!
@@ -480,8 +483,7 @@ module Pod
       #
       # -----
       #
-      # By default, the GitHub Cocoapods/Specs repository is used. Use this
-      # method to specify sources. The order of the sources is
+      # Use this method to specify sources. The order of the sources is
       # relevant. CocoaPods will use the highest version of a Pod of the first
       # source which includes the Pod (regardless whether other sources have a
       # higher version).
@@ -489,7 +491,7 @@ module Pod
       # @param    [String] source
       #           The URL of a specs repo.
       #
-      # @example  Specifying to use first `my_private_repo` and then the
+      # @example  Specifying to first use the artsy repo and then the
       #           CocoaPods Master Repo
       #
       #           source 'https://github.com/artsy/Specs.git'
