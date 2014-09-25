@@ -492,7 +492,7 @@ module Pod
       # @example  Specifying to use first `my_private_repo` and then the
       #           CocoaPods Master Repo
       #
-      #           source 'https://banana.com/corp/my_private_repo.git'
+      #           source 'https://github.com/artsy/Specs.git'
       #           source 'https://github.com/CocoaPods/Specs.git'
       #
       # @return   [void]
