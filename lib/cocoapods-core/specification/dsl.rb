@@ -518,7 +518,7 @@ module Pod
       #
       #   spec.osx.deployment_target = "10.8"
       #
-      # @param    [String] args
+      # @param    [String] _args
       #           The deployment target of the platform.
       #
       def deployment_target=(*_args)
