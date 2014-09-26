@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* [Linter] Fix the license extension check.  
+  [Fabio Pelosin](https://github.com/fabiopelosin)
+  [CocoaPods#2525](https://github.com/CocoaPods/CocoaPods/issues/2525)
+
+
 ## 0.34.0
 
 ##### Enhancements

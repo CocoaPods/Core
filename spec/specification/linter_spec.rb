@@ -211,6 +211,12 @@ module Pod
         message_should_include('license', 'type')
       end
 
+      it 'checks whether the license file has an allowed extension' do
+        @spec.stubs(:license).returns(:type => 'MIT', :file => 'MIT.txt')
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
       it 'checks whether the license file has a disallowed extension' do
         @spec.stubs(:license).returns(:type => 'MIT', :file => 'MIT.pdf')
         message_should_include('license', 'file')

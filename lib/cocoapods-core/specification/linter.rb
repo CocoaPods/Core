@@ -283,7 +283,7 @@ module Pod
         if type && type =~ /\(example\)/
           error '[license] Sample license type.'
         end
-        if file && Pathname.new(file).extname !~ /^(txt|md|markdown|)$/i
+        if file && Pathname.new(file).extname !~ /^(\.(txt|md|markdown|))?$/i
           error '[license] Invalid file type'
         end
       end
