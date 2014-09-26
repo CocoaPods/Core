@@ -8,7 +8,7 @@ module Pod
   # available under the
   # [MIT license](https://github.com/rubygems/rubygems/blob/master/MIT.txt).
   #
-  class Dependency
+  class Dependency < VersionKit::Dependency
     # @return [String] The name of the Pod described by this dependency.
     #
     attr_accessor :name
@@ -75,7 +75,7 @@ module Pod
             "specify version requirements (#{name})."
         end
 
-      elsif requirements.last == :head
+      elsif :head == requirements.last
         @head = true
         requirements.pop
         unless requirements.empty?
@@ -84,30 +84,11 @@ module Pod
         end
       end
 
-      if requirements.length == 1 && requirements.first.is_a?(Requirement)
-        requirements = requirements.first
+      if requirements.empty?
+        requirements = [Requirement.default]
       end
-      @name = name
-      @requirement = Requirement.create(requirements)
-    end
 
-    # @return [Version] whether the dependency points to a specific version.
-    #
-    attr_accessor :specific_version
-
-    # @return [Requirement] the requirement of this dependency (a set of
-    #         one or more version restrictions).
-    #
-    # @todo   The specific version is stripped from head information because
-    #         because its string representation would not parse. It would
-    #         be better to add something like Version#display_string.
-    #
-    def requirement
-      if specific_version
-        Requirement.new(Version.new(specific_version.version))
-      else
-        @requirement
-      end
+      super(name, requirements)
     end
 
     # @return [Bool] whether the dependency points to a subspec.
@@ -179,8 +160,8 @@ module Pod
       return false unless head? == other.head?
       return false unless external_source == other.external_source
 
-      other.requirement.requirements.all? do | _operator, version |
-        requirement.satisfied_by? Version.new(version)
+      other.requirement_list.requirements.all? do | requirement |
+        requirement_list.satisfied_by? requirement.reference_version
       end
     end
 
@@ -189,20 +170,11 @@ module Pod
     #         external source.
     #
     def ==(other)
-      self.class == other.class &&
-        name == other.name &&
-        requirement == other.requirement &&
+      super &&
         head? == other.head? &&
         external_source == other.external_source
     end
     alias_method :eql?, :==
-
-    #  @return [Fixnum] The hash value based on the name and on the
-    #  requirements.
-    #
-    def hash
-      name.hash ^ requirement.hash
-    end
 
     # @return [Fixnum] How the dependency should be sorted respect to another
     #         one according to its name.
@@ -227,15 +199,16 @@ module Pod
         raise ArgumentError, "#{self} and #{other} have different names"
       end
       default   = Requirement.default
-      self_req  = requirement
-      other_req = other.requirement
+      self_req  = requirement_list.requirements
+      other_req = other.requirement_list.requirements
 
-      if other_req == default
-        dep = self.class.new(name, self_req)
-      elsif self_req == default
-        dep = self.class.new(name, other_req)
+      if other_req == [default]
+        dep = self.class.new(name, *self_req)
+      elsif self_req == [default]
+        dep = self.class.new(name, *other_req)
       else
-        dep = self.class.new(name, self_req.as_list.concat(other_req.as_list))
+        merged_reqs = (self_req + other_req).uniq
+        dep = self.class.new(name, *merged_reqs)
       end
 
       dep.head = head? || other.head?
@@ -260,8 +233,8 @@ module Pod
     #
     def match?(name, version)
       return false unless self.name == name
-      return true if requirement.none?
-      requirement.satisfied_by?(Version.new(version))
+      return true if requirement_list.requirements.empty?
+      requirement_list.satisfied_by?(Version.new(version))
     end
 
     #-------------------------------------------------------------------------#
@@ -293,8 +266,8 @@ module Pod
         version << external_source_description(external_source)
       elsif head?
         version << 'HEAD'
-      elsif requirement != Requirement.default
-        version << requirement.to_s
+      elsif requirement_list.requirements != [Requirement.default]
+        version << requirement_list.to_s
       end
       result = @name.dup
       result << " (#{version})" unless version.empty?
@@ -317,7 +290,7 @@ module Pod
     def self.from_string(string)
       match_data = string.match(/(\S*)( (.*))?/)
       name = match_data[1]
-      version = match_data[2]
+      version = match_data[3]
       version = version.gsub(/[()]/, '') if version
       case version
       when nil || /from `(.*)(`|')/
@@ -326,14 +299,14 @@ module Pod
         Dependency.new(name, :head)
       else
         version_requirements =  version.split(',') if version
-        Dependency.new(name, version_requirements)
+        Dependency.new(name, *version_requirements)
       end
     end
 
     # @return [String] a string representation suitable for debugging.
     #
     def inspect
-      "<#{self.class} name=#{name} requirements=#{requirement} " \
+      "<#{self.class} name=#{name} requirements=#{requirement_list} " \
         "external_source=#{external_source || 'nil'}>"
     end
 

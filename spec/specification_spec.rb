@@ -59,7 +59,7 @@ module Pod
       end
 
       it 'produces a string representation suitable for UI output.' do
-        @spec.to_s.should == 'Pod (1.0)'
+        @spec.to_s.should == 'Pod (1.0.0)'
       end
 
       it 'handles the case where no version is available in the string representation' do
@@ -82,11 +82,11 @@ module Pod
         it 'takes into account head information while returning the name and the version' do
           name, version = Specification.name_and_version_from_string('libPusher (HEAD based on 1.0)')
           name.should == 'libPusher'
-          version.should == Version.new('HEAD based on 1.0')
+          version.should == Version.new('HEAD based on 1.0.0')
         end
 
         it 'takes into account the full name of the subspec returning the name and the version' do
-          string = 'RestKit/JSON (1.0)'
+          string = 'RestKit/JSON (1.0.0)'
           name = Specification.name_and_version_from_string(string).first
           name.should == 'RestKit/JSON'
         end
@@ -95,7 +95,7 @@ module Pod
           string = 'RestKit/JSON'
           name, version = Specification.name_and_version_from_string(string)
           name.should == 'RestKit/JSON'
-          version.version.should.be.empty?
+          version.to_s.should.be.empty?
         end
 
         it 'raises if an invalid string representation is provided' do

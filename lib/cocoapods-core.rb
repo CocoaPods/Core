@@ -12,7 +12,7 @@ module Pod
   class Informative < PlainInformative; end
 
   require 'pathname'
-  require 'cocoapods-core/vendor'
+  require 'version_kit'
 
   autoload :Version,        'cocoapods-core/version'
   autoload :Requirement,    'cocoapods-core/requirement'

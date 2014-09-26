@@ -6,22 +6,23 @@ module Pod
 
       it 'can be initialized with a string' do
         subject = Requirement.new('<= 1.0')
-        subject.to_s.should == '<= 1.0'
+        subject.to_s.should == '<= 1.0.0'
       end
 
       it 'defaults to the equality operator on initialization' do
         subject = Requirement.new('1.0')
-        subject.to_s.should == '= 1.0'
+        subject.to_s.should == '= 1.0.0'
       end
 
-      it 'can be initialized with an array of versions' do
-        subject = Requirement.new([Version.new('1.0'), Version.new('2.0')])
-        subject.to_s.should == '= 1.0, = 2.0'
-      end
+      # This is what RequirementList is for, now
+      # it 'can be initialized with an array of versions' do
+      #   subject = Requirement.new([Version.new('1.0'), Version.new('2.0')])
+      #   subject.to_s.should == '= 1.0, = 2.0'
+      # end
 
       it 'can be initialized with a pre-release version' do
-        subject = Requirement.new(Version.new('1.0-beta'))
-        subject.to_s.should == '= 1.0-beta'
+        subject = Requirement.new(Version.new('1.0.0-beta'))
+        subject.to_s.should == '= 1.0.0-beta'
       end
 
       it 'raises if initialized with an invalid input' do
@@ -31,7 +32,7 @@ module Pod
       end
 
       it 'returns the default requirement' do
-        Requirement.default.to_s.should == '>= 0'
+        Requirement.default.to_s.should == '>= 0.0.0'
       end
 
     end
@@ -48,22 +49,23 @@ module Pod
 
       it 'can be created with a version' do
         subject = Requirement.create(Version.new('1.0'))
-        subject.to_s.should == '= 1.0'
+        subject.to_s.should == '= 1.0.0'
       end
 
-      it 'can be created with an array of versions' do
-        subject = Requirement.create([Version.new('1.0'), Version.new('2.0')])
-        subject.to_s.should == '= 1.0, = 2.0'
-      end
+      # This is what RequirementList is for, now
+      # it 'can be created with an array of versions' do
+      #   subject = Requirement.create([Version.new('1.0'), Version.new('2.0')])
+      #   subject.to_s.should == '= 1.0.0, = 2.0.0'
+      # end
 
       it 'can be created with a string' do
         subject = Requirement.create('1.0')
-        subject.to_s.should == '= 1.0'
+        subject.to_s.should == '= 1.0.0'
       end
 
       it 'can be created with a nil input' do
         subject = Requirement.create(nil)
-        subject.to_s.should == '>= 0'
+        subject.to_s.should == '>= 0.0.0'
       end
 
     end

@@ -28,7 +28,11 @@ module Pod
         #
         def version
           if root?
-            @version ||= Version.new(attributes_hash['version'])
+            @version ||= if !attributes_hash['version']
+                           ''
+                         else
+                           Version.new(attributes_hash['version'])
+                         end
           else
             @version ||= root.version
           end

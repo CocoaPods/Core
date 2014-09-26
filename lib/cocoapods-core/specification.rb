@@ -91,7 +91,7 @@ module Pod
     #         clients.
     #
     def to_s
-      if name && !version.version.empty?
+      if name && !version.to_s.empty?
         "#{name} (#{version})"
       elsif name
         name
@@ -128,7 +128,9 @@ module Pod
           'optionally the version of the Pod.'
       end
       name = match_data[1]
-      vers = Version.new(match_data[2])
+      vers = match_data[2]
+      vers = '0' if !vers || vers.empty?
+      vers = Version.new(vers)
       [name, vers]
     end
 
