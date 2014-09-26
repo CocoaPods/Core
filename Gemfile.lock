@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/CocoaPods/VersionKit
+  revision: a38dbb78efcb2a4632ad1cc828456e1f558ff448
+  specs:
+    version_kit (0.0.1)
+
 PATH
   remote: .
   specs:
@@ -6,6 +12,7 @@ PATH
       fuzzy_match (~> 2.0.4)
       json_pure (~> 1.8)
       nap (~> 0.8.0)
+      version_kit
 
 GEM
   remote: http://rubygems.org/
@@ -101,4 +108,5 @@ DEPENDENCIES
   rb-fsevent
   rubocop
   vcr
+  version_kit!
   webmock

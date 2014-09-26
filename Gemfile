@@ -2,6 +2,8 @@ source 'http://rubygems.org'
 
 gemspec
 
+gem 'version_kit', :git => 'https://github.com/CocoaPods/VersionKit'
+
 group :development do
   gem 'bacon'
   gem 'mocha'
