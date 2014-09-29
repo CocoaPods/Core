@@ -387,5 +387,32 @@ module Pod
         message_should_include('warnings', 'disabled', 'compiler_flags')
       end
     end
+
+    describe 'Subspec' do
+      before do
+        fixture_path = 'spec-repos/master/RestKit/0.20.1/RestKit.podspec'
+        @podspec_path = fixture(fixture_path)
+        @linter = Specification::Linter.new(@podspec_path)
+        @spec = @linter.spec
+      end
+
+      def message_should_include(*values)
+        @linter.lint
+        results = @linter.results
+
+        matched = results.select do |result|
+          values.all? do |value|
+            result.message.downcase.include?(value.downcase)
+          end
+        end
+
+        matched.size.should == 1
+      end
+
+      it 'fails a subspec whose name contains whitespace' do
+        @spec.subspecs.each { |ss| ss.stubs(:name).returns('bad name') }
+        message_should_include('name', 'whitespace')
+      end
+    end
   end
 end
