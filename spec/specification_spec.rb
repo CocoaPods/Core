@@ -98,6 +98,34 @@ module Pod
           version.version.should.be.empty?
         end
 
+        it 'handles names with a space without version' do
+          string = 'RestKit/Subspec JSON'
+          name, version = Specification.name_and_version_from_string(string)
+          name.should == 'RestKit/Subspec JSON'
+          version.version.should.be.empty?
+        end
+
+        it 'handles names with special characters without version' do
+          string = 'RestKit_-+JSON'
+          name, version = Specification.name_and_version_from_string(string)
+          name.should == 'RestKit_-+JSON'
+          version.version.should.be.empty?
+        end
+
+        it 'handles names with a space with version' do
+          string = 'RestKit/Subspec JSON (1.0)'
+          name, version = Specification.name_and_version_from_string(string)
+          name.should == 'RestKit/Subspec JSON'
+          version.version.should == '1.0'
+        end
+
+        it 'handles names with special characters with version' do
+          string = 'RestKit_-+JSON (1.0)'
+          name, version = Specification.name_and_version_from_string(string)
+          name.should == 'RestKit_-+JSON'
+          version.version.should == '1.0'
+        end
+
         it 'raises if an invalid string representation is provided' do
           should.raise Informative do
             Specification.name_and_version_from_string('missing_version ()')
