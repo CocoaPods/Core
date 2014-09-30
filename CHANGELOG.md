@@ -1,5 +1,13 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes the reading of subspecs with spaces from Lockfiles.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#176](https://github.com/CocoaPods/Core/issues/176)
+
 ## 0.34.1
 
 ##### Bug Fixes
