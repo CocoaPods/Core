@@ -8,7 +8,7 @@ module Pod
     # a Pod. This class stores the information of the dependencies that required
     # a Pod in the resolution process.
     #
-    # @note   The alphabetical order of the sets is used to select a
+    # @note   The order in which the sets are provided is used to select a
     #         specification if multiple are available for a given version.
     #
     # @note   The set class is not and should be not aware of the backing store
@@ -32,8 +32,7 @@ module Pod
       #
       def initialize(name, sources = [])
         @name    = name
-        sources  = sources.is_a?(Array) ? sources : [sources]
-        @sources = sources.sort_by(&:name)
+        @sources = sources.is_a?(Array) ? sources : [sources]
         @dependencies_by_requirer_name = {}
         @dependencies = []
       end
@@ -84,23 +83,24 @@ module Pod
       #         {#required_version}.
       #
       # @note   If multiple sources have a specification for the
-      #         {#required_version} The alphabetical order of their names is
-      #         used to disambiguate.
+      #         {#required_version}, the order in which they are provided
+      #         is used to disambiguate.
       #
       def specification
-        path = specification_path_for_version(required_version)
+        path = specification_paths_for_version(required_version).first
         Specification.from_file(path)
       end
 
-      # TODO
+      # @return [Array<String>] the paths to specifications for the given
+      #         version
       #
-      def specification_path_for_version(_version)
+      def specification_paths_for_version(_version)
         sources = []
         versions_by_source.each do |source, source_versions|
           sources << source if source_versions.include?(required_version)
         end
-        source = sources.sort_by(&:name).first
-        source.specification_path(name, required_version)
+        
+        sources.map { |source| source.specification_path(name, required_version)}
       end
 
       # @return [Version] the highest version that satisfies the stored
@@ -139,8 +139,12 @@ module Pod
 
       # @return [Pathname] The path of the highest version.
       #
+      # @note   If multiple sources have a specification for the
+      #         {#required_version}, the order in which they are provided
+      #         is used to disambiguate.
+      #
       def highest_version_spec_path
-        specification_path_for_version(highest_version)
+        specification_paths_for_version(highest_version).first
       end
 
       # @return [Hash{Source => Version}] all the available versions for the

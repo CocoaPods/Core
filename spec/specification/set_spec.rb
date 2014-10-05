@@ -109,12 +109,12 @@ module Pod
 
       before do
         # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
-        repos_dirs = [fixture('spec-repos/master'), fixture('spec-repos/test_repo')]
+        repos_dirs = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
         @set = Source::Aggregate.new(repos_dirs).search_by_name('JSONKit').first
       end
 
       it 'returns the sources where a podspec is available' do
-        @set.sources.map(&:name).should == %w(master test_repo)
+        @set.sources.map(&:name).should == %w(test_repo master)
       end
 
       it 'returns all the available versions sorted from biggest to lowest' do
@@ -147,13 +147,13 @@ module Pod
         spec.defined_in_file.should == fixture('spec-repos/test_repo/Specs/JSONKit/999.999.999/JSONKit.podspec')
       end
 
-      it 'prefers sources by alphabetical order' do
+      it 'prefers sources by the order in which they were provided' do
         dep = Dependency.new('JSONKit', '1.4')
         @set.required_by(dep, 'Spec')
         spec = @set.specification
         spec.name.should == 'JSONKit'
         spec.version.to_s.should == '1.4'
-        spec.defined_in_file.should ==  fixture('spec-repos/master/JSONKit/1.4/JSONKit.podspec')
+        spec.defined_in_file.should ==  fixture('spec-repos/test_repo/Specs/JSONKit/1.4/JSONKit.podspec')
       end
     end
   end
