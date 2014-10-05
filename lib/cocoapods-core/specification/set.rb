@@ -99,8 +99,7 @@ module Pod
         versions_by_source.each do |source, source_versions|
           sources << source if source_versions.include?(required_version)
         end
-        
-        sources.map { |source| source.specification_path(name, required_version)}
+        sources.map { |source| source.specification_path(name, required_version) }
       end
 
       # @return [Version] the highest version that satisfies the stored
