@@ -33,14 +33,14 @@ module Pod
 
         json_set = sets.select { |set| set.name == 'JSONKit' }
         json_set.count.should == 1
-        json_set.first.sources.map(&:name).should == %w(master test_repo)
+        json_set.first.sources.map(&:name).should == %w(test_repo master)
       end
 
       it 'searches the sets by dependency' do
         dep = Dependency.new('JSONKit')
         set = @subject.search(dep)
         set.name.should == 'JSONKit'
-        set.sources.map(&:name).should == %w(master test_repo)
+        set.sources.map(&:name).should == %w(test_repo master)
       end
 
       it 'searches the sets specifying a dependency on a subspec' do
@@ -72,7 +72,7 @@ module Pod
         sets.count.should == 1
         set = sets.first
         set.name.should == 'JSONKit'
-        set.sources.map(&:name).should == %w(master test_repo)
+        set.sources.map(&:name).should == %w(test_repo master)
       end
 
       it 'properly configures the sources of a set in search by name' do
