@@ -145,6 +145,16 @@ module Pod
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git'
       #
       #
+      # To use a different branch of the repo:
+      #
+      #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :branch => 'dev'
+      #
+      #
+      # To use a tag of the repo:
+      #
+      #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :tag => '0.7.0'
+      #
+      #
       # Or specify a commit:
       #
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :commit => '082f8319af'
