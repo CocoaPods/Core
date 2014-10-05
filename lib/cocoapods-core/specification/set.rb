@@ -95,10 +95,7 @@ module Pod
       #         version
       #
       def specification_paths_for_version(_version)
-        sources = []
-        versions_by_source.each do |source, source_versions|
-          sources << source if source_versions.include?(required_version)
-        end
+        sources = @sources.select { |source| versions_by_source[source].include?(required_version) }
         sources.map { |source| source.specification_path(name, required_version) }
       end
 
