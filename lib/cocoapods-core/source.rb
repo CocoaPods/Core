@@ -179,16 +179,20 @@ module Pod
     # @return [Set] a set for a given dependency. The set is identified by the
     #               name of the dependency and takes into account subspecs.
     #
+    # @note   This method is optimized for fast lookups by name, i.e. it does
+    #         *not* require iterating through {#pod_sets}
+    #
     # @todo   Rename to #load_set
     #
     def search(query)
-      if query.is_a?(Dependency)
-        name = query.root_name
-      else
-        name = query
+      unless specs_dir
+        raise Informative, "Unable to find a source named: `#{name}`"
       end
-      pod_sets.find do |set|
-        set.name == name
+      if query.is_a?(Dependency)
+        query = query.root_name
+      end
+      if (specs_dir + query).directory?
+        set(query)
       end
     end
 

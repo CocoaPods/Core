@@ -9,6 +9,12 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#183](https://github.com/CocoaPods/Core/issues/183)
 
+##### Enhancements
+
+* Optimize `Source#search` to avoid iterating through all available sets.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#182](https://github.com/CocoaPods/Core/issues/182)
+
 ##### Bug Fixes
 
 * Fixes the reading of subspecs with spaces from Lockfiles.  
