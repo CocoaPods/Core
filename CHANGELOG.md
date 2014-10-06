@@ -10,7 +10,7 @@
 
 * [Set] Sources are used in the order in which they are provided
   [Thomas Visser](https://github.com/Thomvis)
-  [#2556](https://github.com/CocoaPods/CocoaPods/issues/2556)
+  [CocoaPods#2556](https://github.com/CocoaPods/CocoaPods/issues/2556)
 
 ## 0.34.1
 

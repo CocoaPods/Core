@@ -32,7 +32,7 @@ module Pod
       #
       def initialize(name, sources = [])
         @name    = name
-        @sources = sources.is_a?(Array) ? sources : [sources]
+        @sources = Array(sources)
         @dependencies_by_requirer_name = {}
         @dependencies = []
       end
