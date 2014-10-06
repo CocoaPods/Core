@@ -1,8 +1,6 @@
 require 'cocoapods-core/source/acceptor'
 require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
-require 'cocoapods-core/source/abstract_data_provider'
-require 'cocoapods-core/source/file_system_data_provider'
 
 module Pod
   # The Source class is responsible to manage a collection of podspecs.
@@ -16,37 +14,35 @@ module Pod
   #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
-    # @return [AbstractDataProvider] the data provider for this source.
+    # @return [Pathname] The path where the source is stored.
     #
-    attr_accessor :data_provider
+    attr_reader :repo
 
     # @param  [Pathname, String] repo @see #repo.
     #
     def initialize(repo = nil)
-      # TODO: Temporary solution to aide the transition
-      if repo.is_a?(String) || repo.is_a?(Pathname)
-        @data_provider = FileSystemDataProvider.new(repo)
-      else
-        @data_provider = repo
-      end
+      @repo = Pathname.new(repo)
     end
 
     # @return [String] The name of the source.
     #
     def name
-      data_provider.name
+      repo.basename.to_s
     end
 
     # @return [String] The URL of the source.
     #
     def url
-      data_provider.url
+      Dir.chdir(repo) do
+        remote = `git ls-remote --get-url`.chomp
+        remote if $?.success?
+      end
     end
 
     # @return [String] The type of the source.
     #
     def type
-      data_provider.type
+      'file system'
     end
 
     alias_method :to_s, :name
@@ -77,12 +73,14 @@ module Pod
     #
     #
     def pods
-      pods = data_provider.pods
-      unless pods
-        raise Informative, "Unable to find the #{data_provider.type} source " \
-          "named: `#{data_provider.name}`"
+      unless specs_dir
+        raise Informative, "Unable to find a source named: `#{name}`"
       end
-      pods
+      specs_dir_as_string = specs_dir.to_s
+      Dir.entries(specs_dir).select do |entry|
+        valid_name = entry[0, 1] != '.'
+        valid_name && File.directory?(File.join(specs_dir_as_string, entry))
+      end.sort
     end
 
     # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -92,8 +90,20 @@ module Pod
     #         the name of the Pod.
     #
     def versions(name)
-      versions = data_provider.versions(name)
-      versions.map { |version| Version.new(version) } if versions
+      return nil unless specs_dir
+      raise ArgumentError, 'No name' unless name
+      pod_dir = specs_dir + name
+      return unless pod_dir.exist?
+      pod_dir.children.map do |v|
+        basename = v.basename.to_s
+        begin
+          Version.new(basename) if v.directory? && basename[0, 1] != '.'
+        rescue ArgumentError => e
+          raise Informative, 'An unexpected version directory ' \
+           "`#{basename}` was encountered for the " \
+           "`#{pod_dir}` Pod in the `#{name}` repository."
+        end
+      end.compact.sort.reverse
     end
 
     # @return [Specification] the specification for a given version of Pod.
@@ -115,6 +125,8 @@ module Pod
     # @return [Pathname] The path of the specification.
     #
     def specification_path(name, version)
+      raise ArgumentError, 'No name' unless name
+      raise ArgumentError, 'No version' unless version
       path = specs_dir + name + version.to_s
       specification_path = path + "#{name}.podspec.json"
       unless specification_path.exist?
@@ -124,7 +136,7 @@ module Pod
         raise StandardError, "Unable to find the specification #{name} " \
           "(#{version}) in the #{name} source."
       end
-      spec
+      specification_path
     end
 
     # @return [Array<Specification>] all the specifications contained by the
@@ -157,22 +169,6 @@ module Pod
     #
     def pod_sets
       pods.map { |pod_name| set(pod_name) }
-    end
-
-    # Returns the path of the specification with the given name and version.
-    #
-    # @param  [String] name
-    #         the name of the Pod.
-    #
-    # @param  [Version,String] version
-    #         the version for the specification.
-    #
-    # @return [Pathname] The path of the specification.
-    #
-    # @todo   Remove.
-    #
-    def specification_path(name, version)
-      data_provider.specification_path(name, version)
     end
 
     public
@@ -213,23 +209,19 @@ module Pod
     def search_by_name(query, full_text_search = false)
       regexp_query = /#{query}/i
       if full_text_search
-        if data_provider.is_a?(FileSystemDataProvider)
-          pod_sets.reject do |set|
-            texts = []
-            begin
-              s = set.specification
-              texts << s.name
-              texts += s.authors.keys
-              texts << s.summary
-              texts << s.description
-            rescue
-              CoreUI.warn "Skipping `#{set.name}` because the podspec " \
-                'contains errors.'
-            end
-            texts.grep(regexp_query).empty?
+        pod_sets.reject do |set|
+          texts = []
+          begin
+            s = set.specification
+            texts << s.name
+            texts += s.authors.keys
+            texts << s.summary
+            texts << s.description
+          rescue
+            CoreUI.warn "Skipping `#{set.name}` because the podspec " \
+              'contains errors.'
           end
-        else
-          []
+          texts.grep(regexp_query).empty?
         end
       else
         names = pods.grep(regexp_query)
@@ -300,6 +292,24 @@ module Pod
       Pod::CoreUI.warn "Skipping `#{name}` because the podspec " \
         'contains errors.'
       nil
+    end
+
+    # @return [Pathname] The directory where the specs are stored.
+    #
+    # @note   In previous versions of CocoaPods they used to be stored in
+    #         the root of the repo. This lead to issues, especially with
+    #         the GitHub interface and now the are stored in a dedicated
+    #         folder.
+    #
+    def specs_dir
+      @specs_dir ||= begin
+        specs_sub_dir = repo + 'Specs'
+        if specs_sub_dir.exist?
+          specs_sub_dir
+        elsif repo.exist?
+          repo
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#

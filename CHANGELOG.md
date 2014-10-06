@@ -2,6 +2,13 @@
 
 ## Master
 
+##### Breaking
+
+* Remove the notion of a `DataProvider` and move the handling of `Source` data
+  from the file system into the `Source` class itself.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#183](https://github.com/CocoaPods/Core/issues/183)
+
 ##### Bug Fixes
 
 * Fixes the reading of subspecs with spaces from Lockfiles.  

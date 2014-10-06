@@ -218,7 +218,7 @@ module Pod
         def compute_creation_date(set)
           date = get_value(set, :creation_date)
           unless date
-            Dir.chdir(set.sources.first.data_provider.repo) do
+            Dir.chdir(set.sources.first.repo) do
               git_log = `git log --first-parent --format=%ct "#{set.name}"`
               creation_date = git_log.split("\n").last.to_i
               date = Time.at(creation_date)
