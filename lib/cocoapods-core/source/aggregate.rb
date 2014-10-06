@@ -37,7 +37,6 @@ module Pod
         sources.each do |source|
           pods_by_source[source] = source.pods
         end
-        sources = pods_by_source.keys
         pods = pods_by_source.values.flatten.uniq
 
         pods.map do |pod|
@@ -110,8 +109,8 @@ module Pod
         root_spec_names = pods_by_source.values.flatten.uniq
         root_spec_names.each do |pod|
           sources = []
-          pods_by_source.each do |source, pods|
-            sources << source if pods.include?(pod)
+          @sources.each do |s|
+            sources << s if pods_by_source[s].include?(pod)
           end
           result << Specification::Set.new(pod, sources)
         end
