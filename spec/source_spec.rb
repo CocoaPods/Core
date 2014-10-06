@@ -5,8 +5,7 @@ module Pod
 
     before do
       @path = fixture('spec-repos/test_repo')
-      provider = Source::FileSystemDataProvider.new(@path)
-      @subject = Source.new(provider)
+      @subject = Source.new(@path)
     end
 
     #-------------------------------------------------------------------------#
@@ -37,12 +36,10 @@ module Pod
 
       it "raises if the repo doesn't exists" do
         @path = fixture('spec-repos/non_existing')
-        provider = Source::FileSystemDataProvider.new(@path)
-        @subject = Source.new(provider)
-        e = should.raise Informative do
+        @subject = Source.new(@path)
+        should.raise Informative do
           @subject.pods
-        end
-        e.message.should == 'Unable to find the file system source named: `non_existing`'
+        end.message.should.match /Unable to find a source named: `non_existing`/
       end
     end
 
@@ -196,6 +193,144 @@ module Pod
         yaml = @subject.to_yaml
         yaml.should.match /---/
         yaml.should.match /BananaLib:/
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    before do
+      path = fixture('spec-repos/test_repo')
+      @subject = Source.new(path)
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe 'In general' do
+      it 'returns its name' do
+        @subject.name.should == 'test_repo'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe '#pods' do
+      it 'returns the available Pods' do
+        @subject.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+      end
+
+      it 'raises if the repo does not exist' do
+        path = fixture('spec-repos/non_existing')
+        @subject = Source.new(path)
+        should.raise Informative do
+          @subject.pods
+        end.message.should.match /Unable to find a source named: `non_existing`/
+      end
+
+      it "doesn't include the `.` and the `..` dir entries" do
+        @subject.pods.should.not.include?('.')
+        @subject.pods.should.not.include?('..')
+      end
+
+      it 'only consider directories' do
+        File.stubs(:directory?).returns(false)
+        @subject.pods.should == []
+      end
+
+      it 'uses the `Specs` dir if it is present' do
+        @subject.send(:specs_dir).to_s.should.end_with('test_repo/Specs')
+      end
+
+      it 'uses the root of the repo as the specs dir if the `Specs` folder is not present' do
+        repo = fixture('spec-repos/master')
+        @subject = Source.new(repo)
+        @subject.send(:specs_dir).to_s.should.end_with('master')
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe '#versions' do
+      it 'returns the versions for the given Pod' do
+        @subject.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.13', '1.4']
+      end
+
+      it 'returns nil the Pod is unknown' do
+        @subject.versions('Unknown_Pod').should.be.nil
+      end
+
+      it 'raises if the name of the Pod is not provided' do
+        should.raise ArgumentError do
+          @subject.versions(nil)
+        end.message.should.match /No name/
+      end
+
+      it 'raises if a non-version-name directory is encountered' do
+        Pathname.any_instance.stubs(:children).returns([Pathname.new('/Hello')])
+        Pathname.any_instance.stubs(:directory?).returns(true)
+        e = lambda { @subject.versions('JSONKit') }.should.raise Informative
+        e.message.should.match /Hello/
+        e.message.should.not.match /Malformed version number string/
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe '#specification' do
+      it 'returns the specification for the given version of a Pod' do
+        spec = @subject.specification('JSONKit', '1.4')
+        spec.name.should == 'JSONKit'
+        spec.version.to_s.should == '1.4'
+      end
+
+      it 'returns nil if the Pod is unknown' do
+        should.raise StandardError do
+          @subject.specification('Unknown_Pod', '1.4')
+        end.message.should.match /Unable to find the specification Unknown_Pod/
+      end
+
+      it "raises if the version of the Pod doesn't exists" do
+        should.raise StandardError do
+          @subject.specification('JSONKit', '0.99.0')
+        end.message.should.match /Unable to find the specification JSONKit/
+      end
+
+      it 'raises if the name of the Pod is not provided' do
+        should.raise ArgumentError do
+          @subject.specification(nil, '1.4')
+        end.message.should.match /No name/
+      end
+
+      it 'raises if the name of the Pod is not provided' do
+        should.raise ArgumentError do
+          @subject.specification('JSONKit', nil)
+        end.message.should.match /No version/
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe '#specification_path' do
+      it 'returns the path of a specification' do
+        path = @subject.specification_path('JSONKit', '1.4')
+        path.to_s.should.end_with?('test_repo/Specs/JSONKit/1.4/JSONKit.podspec')
+      end
+
+      it 'prefers JSON podspecs if one exists' do
+        Pathname.any_instance.stubs(:exist?).returns(true)
+        path = @subject.specification_path('JSONSpec', '0.9')
+        path.to_s.should.end_with?('Specs/JSONSpec/0.9/JSONSpec.podspec.json')
+      end
+
+      it 'raises if the name of the Pod is not provided' do
+        should.raise ArgumentError do
+          @subject.specification_path(nil, '1.4')
+        end.message.should.match /No name/
+      end
+
+      it 'raises if the name of the Pod is not provided' do
+        should.raise ArgumentError do
+          @subject.specification_path('JSONKit', nil)
+        end.message.should.match /No version/
       end
     end
 
