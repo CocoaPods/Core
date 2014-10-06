@@ -20,7 +20,7 @@ module Pod
 
     # @param  [Pathname, String] repo @see #repo.
     #
-    def initialize(repo = nil)
+    def initialize(repo)
       @repo = Pathname.new(repo)
     end
 
