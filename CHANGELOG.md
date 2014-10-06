@@ -15,15 +15,16 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#182](https://github.com/CocoaPods/Core/issues/182)
 
+* Set Sources are used in the order in which they are provided.  
+  [Thomas Visser](https://github.com/Thomvis)
+  [CocoaPods#2556](https://github.com/CocoaPods/CocoaPods/issues/2556)
+
 ##### Bug Fixes
 
 * Fixes the reading of subspecs with spaces from Lockfiles.  
   [Samuel Giddins](https://github.com/segiddins)
   [#176](https://github.com/CocoaPods/Core/issues/176)
 
-* [Set] Sources are used in the order in which they are provided
-  [Thomas Visser](https://github.com/Thomvis)
-  [CocoaPods#2556](https://github.com/CocoaPods/CocoaPods/issues/2556)
 
 ## 0.34.1
 
