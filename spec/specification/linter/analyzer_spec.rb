@@ -114,7 +114,6 @@ module Pod
           consumer.any_instance.stubs(:resources).returns({})
           consumer.any_instance.stubs(:resource_bundles).returns([])
           consumer.any_instance.stubs(:preserve_paths).returns([])
-          consumer.any_instance.stubs(:subspecs).returns([])
           consumer.any_instance.stubs(:dependencies).returns([])
           consumer.any_instance.stubs(:vendored_libraries).returns([])
           consumer.any_instance.stubs(:vendored_frameworks).returns([])
