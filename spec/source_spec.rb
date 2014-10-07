@@ -25,17 +25,6 @@ module Pod
         s3 = Source.new(Pathname.new 'private')
         [s3, s1, s2].sort.should == [s1, s2, s3]
       end
-
-      it 'should return its git url' do
-        @subject.url.should == 'https://github.com/CocoaPods/Core'
-      end
-
-      it 'should return a local git url when there is no remote' do
-        full_path = SpecHelper::Fixture::ROOT + 'spec-repos/local_repo/.git'
-        path = fixture('spec-repos/local_repo')
-        source = Source.new(path)
-        source.url.should == "file://#{full_path}"
-      end
     end
 
     #-------------------------------------------------------------------------#
