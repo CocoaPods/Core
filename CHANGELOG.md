@@ -25,6 +25,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#176](https://github.com/CocoaPods/Core/issues/176)
 
+* Fixes an issue with local git spec repositories without git remotes.  
+  [Kyle Fuller](https://github.com/kylef)
+  [CocoaPods#2590](https://github.com/CocoaPods/CocoaPods/issues/2590)
+
 
 ## 0.34.1
 

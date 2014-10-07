@@ -35,7 +35,12 @@ module Pod
     def url
       Dir.chdir(repo) do
         remote = `git ls-remote --get-url`.chomp
-        remote if $?.success?
+
+        if $?.success?
+          remote
+        elsif (repo + '.git').exist?
+          "file://#{repo}/.git"
+        end
       end
     end
 
