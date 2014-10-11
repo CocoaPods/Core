@@ -540,6 +540,11 @@ module Pod
       end
       @defined_in_file = file
     end
+
+    alias_method :full_name, :name
+    def name
+      (full_name || '').split('@')[0]
+    end
   end
 
   #---------------------------------------------------------------------------#
