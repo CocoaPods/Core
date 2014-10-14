@@ -33,50 +33,6 @@ module Pod
       def initialize(name, sources = [])
         @name    = name
         @sources = Array(sources)
-        @dependencies_by_requirer_name = {}
-        @dependencies = []
-      end
-
-      # Stores a dependency on the Pod.
-      #
-      # @param  [Dependency] dependency
-      #         a dependency that requires the Pod.
-      #
-      # @param  [String] dependent_name
-      #         the name of the owner of the dependency.  It is used only to
-      #         display the Pod::Informative.
-      #
-      # @raise  If the versions requirement of the dependency are not
-      #         compatible with the previously stored dependencies.
-      #
-      # @todo   This should simply return a boolean. Is CocoaPods that should
-      #         raise.
-      #
-      # @return [void]
-      #
-      def required_by(dependency, dependent_name)
-        dependencies_by_requirer_name[dependent_name] ||= []
-        dependencies_by_requirer_name[dependent_name] << dependency
-        dependencies << dependency
-
-        if acceptable_versions.empty?
-          message = "Unable to satisfy the following requirements:\n\n"
-          dependencies_by_requirer_name.each do |name, dependencies|
-            dependencies.each do |dep|
-              message << "- `#{dep}` required by `#{name}`\n"
-            end
-          end
-          raise Informative, message
-        end
-      end
-
-      # @return [Dependency] A dependency that includes all the versions
-      #         requirements of the stored dependencies.
-      #
-      def dependency
-        dependencies.reduce(Dependency.new(name)) do |previous, dependency|
-          previous.merge(dependency.to_root_dependency)
-        end
       end
 
       # @return [Specification] the top level specification of the Pod for the
@@ -87,37 +43,15 @@ module Pod
       #         is used to disambiguate.
       #
       def specification
-        path = specification_paths_for_version(required_version).first
-        Specification.from_file(path)
+        Specification.from_file(highest_version_spec_path)
       end
 
       # @return [Array<String>] the paths to specifications for the given
       #         version
       #
-      def specification_paths_for_version(_version)
-        sources = @sources.select { |source| versions_by_source[source].include?(required_version) }
-        sources.map { |source| source.specification_path(name, required_version) }
-      end
-
-      # @return [Version] the highest version that satisfies the stored
-      #         dependencies.
-      #
-      # @todo   This should simply return nil. CocoaPods should raise instead.
-      #
-      def required_version
-        version = versions.find { |v| dependency.match?(name, v) }
-        unless version
-          raise Informative, "Required version (#{dependency}) not found " \
-            "for `#{name}`.\nAvailable versions: #{versions.join(', ')}"
-        end
-        version
-      end
-
-      # @return [Array<Version>] All the versions which are acceptable given
-      #         the requirements.
-      #
-      def acceptable_versions
-        versions.select { |v| dependency.match?(name, v) }
+      def specification_paths_for_version(version)
+        sources = @sources.select { |source| versions_by_source[source].include?(version) }
+        sources.map { |source| source.specification_path(name, version) }
       end
 
       # @return [Array<Version>] all the available versions for the Pod, sorted
@@ -161,8 +95,7 @@ module Pod
       end
 
       def to_s
-        "#<#{self.class.name} for `#{name}' with required version " \
-          "`#{required_version}' available at `#{sources.map(&:name) * ', '}'>"
+        "#<#{self.class.name} for `#{name}' available at `#{sources.map(&:name) * ', '}'>"
       end
       alias_method :inspect, :to_s
 
@@ -192,11 +125,6 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      attr_accessor :dependencies_by_requirer_name
-      attr_accessor :dependencies
-
-      #-----------------------------------------------------------------------#
-
       # The Set::External class handles Pods from external sources. Pods from
       # external sources don't use the {Source} and are initialized by a given
       # specification.
@@ -213,10 +141,6 @@ module Pod
 
         def ==(other)
           self.class == other.class && specification == other.specification
-        end
-
-        def specification_path
-          raise StandardError, 'specification_path'
         end
 
         def versions

@@ -165,7 +165,7 @@ module Pod
           has_data = set_data && set_data['version']
           if has_data
             stored_version = Version.new(set_data['version'])
-            if stored_version < set.required_version
+            if stored_version < set.highest_version
               search_data[set.name] = search_data_from_set(set)
             end
           else
