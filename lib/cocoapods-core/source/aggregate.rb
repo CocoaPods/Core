@@ -106,14 +106,16 @@ module Pod
           source_pods = s.search_by_name(query, full_text_search)
           pods_by_source[s] = source_pods.map(&:name)
         end
+
         root_spec_names = pods_by_source.values.flatten.uniq
         root_spec_names.each do |pod|
-          sources = []
-          @sources.each do |s|
-            sources << s if pods_by_source[s].include?(pod)
+          result_sources = sources.keep_if do |source|
+            pods_by_source[source].include?(pod)
           end
-          result << Specification::Set.new(pod, sources)
+
+          result << Specification::Set.new(pod, result_sources)
         end
+
         if result.empty?
           extra = ', author, summary, or description' if full_text_search
           raise Informative, 'Unable to find a pod with name' \
