@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes an issue linting options such as `type`, `sha1` for http sources in a
+  podspec.
+  [Kyle Fuller](https://github.com/kylef)
+  [CocoaPods#2692](https://github.com/CocoaPods/CocoaPods/issues/2692)
+
+
 ## 0.34.2
 
 ##### Breaking

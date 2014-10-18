@@ -235,7 +235,7 @@ module Pod
         :git => [:tag, :branch, :commit, :submodules],
         :svn => [:folder, :tag, :revision],
         :hg => [:revision],
-        :http => nil,
+        :http => [:type, :sha256, :sha1],
         :path => nil,
       }.freeze
 
