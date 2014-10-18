@@ -109,7 +109,7 @@ module Pod
 
         root_spec_names = pods_by_source.values.flatten.uniq
         root_spec_names.each do |pod|
-          result_sources = sources.keep_if do |source|
+          result_sources = sources.select do |source|
             pods_by_source[source].include?(pod)
           end
 
