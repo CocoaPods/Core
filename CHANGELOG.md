@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## 0.34.3
+## 0.34.4
 
 ##### Bug Fixes
 
