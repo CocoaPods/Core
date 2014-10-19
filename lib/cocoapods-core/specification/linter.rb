@@ -178,7 +178,7 @@ module Pod
                     file.'
           end
 
-          if spec.root.name =~ /\s/
+          if spec.name =~ /\s/
             error '[name] The name of a spec should not contain whitespace.'
           end
 
