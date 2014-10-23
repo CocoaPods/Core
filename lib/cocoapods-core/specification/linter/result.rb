@@ -1,51 +1,64 @@
 module Pod
   class Specification
     class Linter
-      class Result
-        # @return [Symbol] the type of result.
-        #
-        attr_reader :type
-
-        # @return [String] the message associated with result.
-        #
-        attr_reader :message
-
-        # @param [Symbol] type    @see type
-        # @param [String] message @see message
-        #
-        def initialize(type, message)
-          @type    = type
-          @message = message
-          @platforms = []
-        end
-
-        # @return [Array<Platform>] the platforms where this result was
-        #         generated.
-        #
-        attr_reader :platforms
-
-        # @return [String] a string representation suitable for UI output.
-        #
-        def to_s
-          r = "[#{type.to_s.upcase}] #{message}"
-          if platforms != Specification::PLATFORMS
-            platforms_names = platforms.uniq.map do |p|
-              Platform.string_name(p)
-            end
-            r << " [#{platforms_names * ' - '}]" unless platforms.empty?
-          end
-          r
-        end
-      end
-
-      module ResultHelpers
+      class Results
         public
 
-        # @return [Array<Result>] all of the generated results.
-        #
-        attr_reader :results
+        class Result
+          # @return [Symbol] the type of result.
+          #
+          attr_reader :type
 
-        private
+          # @return [String] the message associated with result.
+          #
+          attr_reader :message
+
+          # @param [Symbol] type    @see type
+          # @param [String] message @see message
+          #
+          def initialize(type, message)
+            @type    = type
+            @message = message
+            @platforms = []
+          end
+
+          # @return [Array<Platform>] the platforms where this result was
+          #         generated.
+          #
+          attr_reader :platforms
+
+          # @return [String] a string representation suitable for UI output.
+          #
+          def to_s
+            r = "[#{type.to_s.upcase}] #{message}"
+            if platforms != Specification::PLATFORMS
+              platforms_names = platforms.uniq.map do |p|
+                Platform.string_name(p)
+              end
+              r << " [#{platforms_names * ' - '}]" unless platforms.empty?
+            end
+            r
+          end
+        end
+
+        def initialize
+          @results = []
+          @consumer = nil
+        end
+
+        include Enumerable
+
+        def each
+          results.each { |r| yield r }
+        end
+
+        def empty?
+          results.empty?
+        end
+
+        # @return [Specification::Consumer] the current consumer.
+        #
+        attr_accessor :consumer
 
         # Adds an error result with the given message.
         #
@@ -54,7 +67,7 @@ module Pod
         #
         # @return [void]
         #
-        def error(message)
+        def add_error(message)
           add_result(:error, message)
         end
 
@@ -65,26 +78,15 @@ module Pod
         #
         # @return [void]
         #
-        def warning(message)
+        def add_warning(message)
           add_result(:warning, message)
         end
 
-        # Merges results passed in with the current results
+        private
+
+        # @return [Array<Result>] all of the generated results.
         #
-        # @param  [Array<Result>] results
-        #         The results to be merged.
-        #
-        # @return [void]
-        #
-        def add_results(results)
-          results.each do |result|
-            if result.type == :warning
-              warning(result.message)
-            else
-              error(result.message)
-            end
-          end
-        end
+        attr_reader :results
 
         # Adds a result of the given type with the given message. If there is a
         # current platform it is added to the result. If a result with the same
@@ -105,7 +107,7 @@ module Pod
             result = Result.new(type, message)
             results << result
           end
-          result.platforms << consumer.platform_name if consumer
+          result.platforms << @consumer.platform_name if @consumer
         end
       end
     end

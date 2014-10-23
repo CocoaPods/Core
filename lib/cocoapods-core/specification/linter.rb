@@ -9,8 +9,6 @@ module Pod
     # specification, but also to support the maintenance of sources.
     #
     class Linter
-      include ResultHelpers
-
       # @return [Specification] the specification to lint.
       #
       attr_reader :spec
@@ -19,6 +17,8 @@ module Pod
       #         defined.
       #
       attr_reader :file
+
+      attr_reader :results
 
       # @param  [Specification, Pathname, String] spec_or_path
       #         the Specification or the path of the `podspec` file to lint.
@@ -39,20 +39,19 @@ module Pod
       end
 
       # Lints the specification adding a {Result} for any failed check to the
-      # {#results} list.
+      # {#results} object.
       #
       # @return [Bool] whether the specification passed validation.
       #
       def lint
-        @results = []
+        @results = Results.new
         if spec
           check_required_root_attributes
           run_root_validation_hooks
           perform_all_specs_analysis
         else
-          error "[spec] The specification defined in `#{file}` could not be" \
-          ' loaded.' \
-            "\n\n#{@raise_message}"
+          results.add_error "[spec] The specification defined in `#{file}` "\
+            "could not be loaded.\n\n#{@raise_message}"
         end
         results.empty?
       end
@@ -92,9 +91,11 @@ module Pod
           next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
-              warning("[attributes] Missing required attribute `#{attr.name}`.")
+              results.add_warning('[attributes] Missing required attribute' \
+              "`#{attr.name}`.")
             else
-              error("[attributes] Missing required attribute `#{attr.name}`.")
+              results.add_error('[attributes] Missing required attribute' \
+               "`#{attr.name}`.")
             end
           end
         end
@@ -118,11 +119,12 @@ module Pod
         all_specs.each do |current_spec|
           current_spec.available_platforms.each do |platform|
             @consumer = Specification::Consumer.new(current_spec, platform)
+            results.consumer = @consumer
             run_all_specs_validation_hooks
-            analyzer = Analyzer.new(@consumer)
-            analyzer.analyze
-            add_results(analyzer.results)
+            analyzer = Analyzer.new(@consumer, results)
+            results = analyzer.analyze
             @consumer = nil
+            results.consumer = nil
           end
         end
       end
@@ -174,25 +176,28 @@ module Pod
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
-            error '[name] The name of the spec should match the name of the \
-                    file.'
+            results.add_error '[name] The name of the spec should match the ' \
+                           'name of the file.'
           end
 
           if spec.root.name =~ /\s/
-            error '[name] The name of a spec should not contain whitespace.'
+            results.add_error '[name] The name of a spec should not contain ' \
+                           'whitespace.'
           end
 
           if spec.root.name[0, 1] == '.'
-            error '[name] The name of a spec should not begin with a period.'
+            results.add_error '[name] The name of a spec should not begin' \
+            ' with a period.'
           end
         end
       end
 
       def _validate_version(v)
         if v.to_s.empty?
-          error '[version] A version is required.'
+          results.add_error '[version] A version is required.'
         elsif v <= Version::ZERO
-          error '[version] The version of the spec should be higher than 0.'
+          results.add_error '[version] The version of the spec should be' \
+          ' higher than 0.'
         end
       end
 
@@ -200,11 +205,11 @@ module Pod
       #
       def _validate_summary(s)
         if s.length > 140
-          warning '[summary] The summary should be a short version of' \
-          '`description` (max 140 characters).'
+          results.add_warning '[summary] The summary should be a short ' \
+            'version of `description` (max 140 characters).'
         end
         if s =~ /A short description of/
-          warning '[summary] The summary is not meaningful.'
+          results.add_warning '[summary] The summary is not meaningful.'
         end
       end
 
@@ -212,13 +217,15 @@ module Pod
       #
       def _validate_description(d)
         if d =~ /An optional longer description of/
-          warning '[description] The description is not meaningful.'
+          results.add_warning '[description] The description is not meaningful.'
         end
         if d == spec.summary
-          warning '[description] The description is equal to the summary.'
+          results.add_warning '[description] The description is equal to' \
+           ' the summary.'
         end
         if d.length < spec.summary.length
-          warning '[description] The description is shorter than the summary.'
+          results.add_warning '[description] The description is shorter ' \
+          'than the summary.'
         end
       end
 
@@ -226,7 +233,8 @@ module Pod
       #
       def _validate_homepage(h)
         if h =~ %r{http://EXAMPLE}
-          warning '[homepage] The homepage has not been updated from default'
+          results.add_warning '[homepage] The homepage has not been updated' \
+           ' from default'
         end
       end
 
@@ -234,7 +242,8 @@ module Pod
       #
       def _validate_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error '[frameworks] A framework should only be specified by its name'
+          results.add_error '[frameworks] A framework should only be' \
+          ' specified by its name'
         end
       end
 
@@ -242,8 +251,8 @@ module Pod
       #
       def _validate_weak_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          error '[weak_frameworks] A weak framework should only be specified' \
-          'by its name'
+          results.add_error '[weak_frameworks] A weak framework should only be' \
+          ' specified by its name'
         end
       end
 
@@ -253,17 +262,19 @@ module Pod
         libs.each do |lib|
           lib = lib.downcase
           if lib.end_with?('.a') || lib.end_with?('.dylib')
-            error '[libraries] Libraries should not include the extension ' \
+            results.add_error '[libraries] Libraries should not include the' \
+            ' extension ' \
             "(`#{lib}`)"
           end
 
           if lib.start_with?('lib')
-            error '[libraries] Libraries should omit the `lib` prefix' \
+            results.add_error '[libraries] Libraries should omit the `lib`' \
+            ' prefix ' \
             " (`#{lib}`)"
           end
 
           if lib.include?(',')
-            error '[libraries] Libraries should not include comas' \
+            results.add_error '[libraries] Libraries should not include comas ' \
             "(`#{lib}`)"
           end
         end
@@ -275,16 +286,16 @@ module Pod
         type = l[:type]
         file = l[:file]
         if type.nil?
-          warning '[license] Missing license type.'
+          results.add_warning '[license] Missing license type.'
         end
         if type && type.gsub(' ', '').gsub("\n", '').empty?
-          warning '[license] Invalid license type.'
+          results.add_warning '[license] Invalid license type.'
         end
         if type && type =~ /\(example\)/
-          error '[license] Sample license type.'
+          results.add_error '[license] Sample license type.'
         end
         if file && Pathname.new(file).extname !~ /^(\.(txt|md|markdown|))?$/i
-          error '[license] Invalid file type'
+          results.add_error '[license] Invalid file type'
         end
       end
 
@@ -296,16 +307,19 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r{http://EXAMPLE}
-            error '[source] The Git source still contains the example URL.'
+            results.add_error '[source] The Git source still contains the ' \
+            'example URL.'
           end
           if commit && commit.downcase =~ /head/
-            error '[source] The commit of a Git source cannot be `HEAD`.'
+            results.add_error '[source] The commit of a Git source cannot be' \
+            ' `HEAD`.'
           end
           if tag && !tag.to_s.include?(version)
-            warning '[source] The version should be included in the Git tag.'
+            results.add_warning '[source] The version should be included in' \
+             ' the Git tag.'
           end
           if tag.nil?
-            warning '[source] Git sources should specify a tag.'
+            results.add_warning '[source] Git sources should specify a tag.'
           end
         end
 
@@ -322,17 +336,17 @@ module Pod
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
           if git_uri.host == 'www.github.com'
-            warning '[github_sources] Github repositories should not use' \
-            '`www` in URL.'
+            results.add_warning '[github_sources] Github repositories should ' \
+             'not use `www` in their URL.'
           end
           if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
-              warning '[github_sources] Github repositories should end in' \
-              '`.git`.'
+              results.add_warning '[github_sources] Github repositories ' \
+              'should end in `.git`.'
             end
             unless git_uri.scheme == 'https'
-              warning '[github_sources] Github repositories should use' \
-              '`https` link.'
+              results.add_warning '[github_sources] Github repositories ' \
+                'should use an `https` link.'
             end
           end
         end
@@ -343,9 +357,9 @@ module Pod
       def check_git_ssh_source(s)
         if git = s[:git]
           if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
-            warning '[source] Git SSH URLs will NOT work for people behind' \
-              'firewalls configured to only allow HTTP, therefore HTTPS is' \
-              'preferred.'
+            results.add_warning '[source] Git SSH URLs will NOT work for ' \
+              'people behind firewalls configured to only allow HTTP, ' \
+              'therefore HTTPS is preferred.'
           end
         end
       end
@@ -354,8 +368,8 @@ module Pod
       #
       def _validate_social_media_url(s)
         if s =~ %r{https://twitter.com/EXAMPLE}
-          warning '[social_media_url] The social media URL has not been' \
-          'updated from default'
+          results.add_warning '[social_media_url] The social media URL has ' \
+            'not been updated from the default.'
         end
       end
 
@@ -369,7 +383,7 @@ module Pod
       #
       def _validate_compiler_flags(flags)
         if flags.join(' ').split(' ').any? { |flag| flag.start_with?('-Wno') }
-          warning '[compiler_flags] Warnings must not be disabled' \
+          results.add_warning '[compiler_flags] Warnings must not be disabled' \
           '(`-Wno compiler` flags).'
         end
       end

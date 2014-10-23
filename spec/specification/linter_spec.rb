@@ -41,8 +41,9 @@ module Pod
         File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)
         linter.lint
-        linter.results.count.should == 1
-        linter.results.first.message.should.match /spec.*could not be loaded/
+        results = linter.results
+        results.count.should == 1
+        results.first.message.should.match /spec.*could not be loaded/
       end
 
       before do
@@ -53,7 +54,7 @@ module Pod
 
       it 'accepts a valid podspec' do
         valid = @linter.lint
-        @linter.results.should == []
+        @linter.results.should.be.empty?
         valid.should.be.true
       end
 
@@ -62,7 +63,8 @@ module Pod
         @linter.spec.source_files = '/Absolute'
         @linter.lint
         @linter.results.count.should == 1
-        @linter.results.first.platforms.map(&:to_s).sort.should == %w(ios osx)
+        @linter.results.first.platforms.map(&:to_s).sort.should ==
+            %w(ios osx)
       end
 
       before do
@@ -271,14 +273,13 @@ module Pod
       it 'checks that Github repositories end in .git (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://github.com/repo', :tag => '1.0')
         message_should_include('Github', '.git')
-        @linter.results[0].type.should == :warning
+        @linter.results.first.type.should == :warning
       end
 
       it 'does not warn for Github repositories with OAuth authentication' do
         @spec.stubs(:source).returns(:git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0')
         @linter.lint
-        clean_results = @linter.results.reject { |r| r.message.include?('SSH') }
-        clean_results.should.be.empty
+        @linter.results.should.be.empty
       end
 
       it 'does not warn for local repositories with spaces' do
@@ -295,8 +296,18 @@ module Pod
 
       it 'warns for SSH repositories on Github' do
         @spec.stubs(:source).returns(:git => 'git@github.com:kylef/test.git', :tag => '1.0')
-        @linter.lint
         message_should_include('Git', 'SSH')
+      end
+
+      it 'performs checks for Gist Github repositories' do
+        @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
+        message_should_include('Github', 'https')
+      end
+
+      it 'checks the source of 0.0.1 specifications for a tag' do
+        @spec.stubs(:version).returns(Version.new '0.0.1')
+        @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
+        message_should_include('sources', 'specify a tag.')
       end
 
       it 'checks git sources for a tag' do
