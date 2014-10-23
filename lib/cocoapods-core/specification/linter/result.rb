@@ -46,17 +46,19 @@ module Pod
           @consumer = nil
         end
 
-        # @return [Array<Result>] all of the generated results.
-        #
-        attr_reader :results
+        include Enumerable
+
+        def each
+          results.each { |r| yield r }
+        end
+
+        def empty?
+          results.empty?
+        end
 
         # @return [Specification::Consumer] the current consumer.
         #
-        attr_reader :consumer
-
-        def consumer=(consumer)
-          @consumer = consumer
-        end
+        attr_accessor :consumer
 
         # Adds an error result with the given message.
         #
@@ -65,7 +67,7 @@ module Pod
         #
         # @return [void]
         #
-        def error(message)
+        def add_error(message)
           add_result(:error, message)
         end
 
@@ -76,12 +78,29 @@ module Pod
         #
         # @return [void]
         #
-        def warning(message)
+        def add_warning(message)
           add_result(:warning, message)
         end
 
         private
 
+        # @return [Array<Result>] all of the generated results.
+        #
+        attr_reader :results
+
+        # Adds a result of the given type with the given message. If there is a
+        # current platform it is added to the result. If a result with the same
+        # type and the same message is already available the current platform is
+        # added to the existing result.
+        #
+        # @param  [Symbol] type
+        #         The type of the result (`:error`, `:warning`).
+        #
+        # @param  [String] message
+        #         The message of the result.
+        #
+        # @return [void]
+        #
         def add_result(type, message)
           result = results.find { |r| r.type == type && r.message == message }
           unless result

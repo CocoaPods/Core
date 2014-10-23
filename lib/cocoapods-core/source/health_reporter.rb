@@ -86,7 +86,7 @@ module Pod
       def lint_spec(name, version, spec_path)
         linter = Specification::Linter.new(spec_path)
         linter.lint
-        linter.results.results.each do |result|
+        linter.results.each do |result|
           type = result.type == :error ? :error : :warning
           report.add_message(type, result.message, name, version)
         end

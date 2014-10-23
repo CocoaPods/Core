@@ -33,21 +33,21 @@ module Pod
     end
 
     it 'creates an error result' do
-      @results.error('This is an error')
-      @results.results.count.should == 1
-      @results.results.first.type.should == :error
+      @results.add_error('This is an error')
+      @results.count.should == 1
+      @results.first.type.should == :error
     end
 
     it 'creates a warning result' do
-      @results.warning('This is a warning')
-      @results.results.count.should == 1
-      @results.results.first.type.should == :warning
+      @results.add_warning('This is a warning')
+      @results.count.should == 1
+      @results.first.type.should == :warning
     end
 
     it 'prevents duplicate results' do
-      @results.warning('I have duplicate warnings')
-      @results.warning('I have duplicate warnings')
-      @results.results.count.should == 1
+      @results.add_warning('I have duplicate warnings')
+      @results.add_warning('I have duplicate warnings')
+      @results.count.should == 1
     end
 
     it 'specifies the platform on the result when there is a consumer' do
@@ -55,14 +55,14 @@ module Pod
       podspec_path = fixture(fixture_path)
       linter = Specification::Linter.new(podspec_path)
       @results.consumer = Specification::Consumer.new(linter.spec, :ios)
-      @results.warning('bad')
-      @results.results.first.platforms.first.should == :ios
+      @results.add_warning('bad')
+      @results.first.platforms.first.should == :ios
     end
 
     it 'specifies no platform when there is no consumer' do
       @results.consumer = nil
-      @results.warning('bad')
-      @results.results.first.platforms.should == []
+      @results.add_warning('bad')
+      @results.first.platforms.should == []
     end
   end
 end
