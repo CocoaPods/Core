@@ -95,7 +95,7 @@ module Pod
       end
 
       def to_s
-        "#<#{self.class.name} for `#{name}' available at `#{sources.map(&:name) * ', '}'>"
+        "#<#{self.class.name} for `#{name}' available at `#{sources.map(&:name).join(', ')}'>"
       end
       alias_method :inspect, :to_s
 
