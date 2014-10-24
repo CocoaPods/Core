@@ -2,6 +2,14 @@
 
 ## Master
 
+##### Enhancements
+
+* Remove `Specification::Set` attributes related to dependency resolution.
+  Removed because the new, enhanced resolver no longer uses them to keep track
+  of the source for requirements.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2637](https://github.com/CocoaPods/CocoaPods/pull/2637)
+
 ##### Bug Fixes
 
 * Fixes an issue when finding a `Source` based on the spec-repo's `git` URL

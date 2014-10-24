@@ -191,13 +191,17 @@ module Pod
     #           the relative name of the subspecs starting from the receiver
     #           including the name of the receiver.
     #
+    # @param    [Boolean] raise_if_missing
+    #           whether an exception should be raised if no specification named
+    #           `relative_name` is found.
+    #
     # @example  Retrieving a subspec
     #
     #           s.subspec_by_name('Pod/subspec').name #=> 'subspec'
     #
     # @return   [Specification] the subspec with the given name or self.
     #
-    def subspec_by_name(relative_name)
+    def subspec_by_name(relative_name, raise_if_missing = true)
       if relative_name.nil? || relative_name == base_name
         self
       else
@@ -205,8 +209,12 @@ module Pod
         subspec_name = remainder.split('/').shift
         subspec = subspecs.find { |s| s.base_name == subspec_name }
         unless subspec
-          raise Informative, 'Unable to find a specification named ' \
-            "`#{relative_name}` in `#{name} (#{version})`."
+          if raise_if_missing
+            raise Informative, 'Unable to find a specification named ' \
+              "`#{relative_name}` in `#{name} (#{version})`."
+          else
+            return nil
+          end
         end
         subspec.subspec_by_name(remainder)
       end
@@ -238,7 +246,7 @@ module Pod
       if platform
         specs = specs.select { |s| s.supported_on_platform?(platform) }
       end
-      specs.map { |s| Dependency.new(s.name) }
+      specs.map { |s| Dependency.new(s.name, version) }
     end
 
     # Returns the dependencies on other Pods or subspecs of other Pods.

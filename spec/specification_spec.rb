@@ -213,6 +213,10 @@ module Pod
         lambda { @spec.subspec_by_name('Pod/Nonexistent') }.should.raise Informative
       end
 
+      it "returns if it can't find a subspec with the given name and raise_if_missing is false" do
+        @spec.subspec_by_name('Pod/Nonexistent', false).should.be.nil?
+      end
+
       it 'returns the default subspecs' do
         spec = @spec.dup
         spec.default_subspecs = 'Subspec1', 'Subspec2'
@@ -227,23 +231,23 @@ module Pod
 
       it 'returns the dependencies on its subspecs' do
         @spec.subspec_dependencies.sort.should == [
-          Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX'),
-          Dependency.new('Pod/SubspeciOS')]
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspecOSX', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
       end
 
       it 'returns the dependencies on its subspecs for a given platform' do
         @spec.subspec_dependencies(:ios).should == [
-          Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspeciOS'),
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0'),
         ]
       end
 
       it 'returns a dependency on a default subspecs if it is specified' do
         @spec.default_subspecs = 'Subspec', 'SubspeciOS'
         @spec.subspec_dependencies.should == [
-          Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspeciOS'),
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0'),
         ]
       end
 
@@ -265,16 +269,16 @@ module Pod
         @spec.all_dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
-          Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspecOSX'),
-          Dependency.new('Pod/SubspeciOS')]
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspecOSX', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
       end
 
       it 'returns all the dependencies for a given platform' do
         @spec.all_dependencies(:ios).sort.should == [
           Dependency.new('AFNetworking'),
-          Dependency.new('Pod/Subspec'),
-          Dependency.new('Pod/SubspeciOS')]
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
       end
     end
 
