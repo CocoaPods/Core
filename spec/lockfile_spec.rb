@@ -55,8 +55,8 @@ module Pod
     def self.external_sources
       {
         'JSONKit' => {
-          :podspec => 'path/JSONKit.podspec'
-        }
+          :podspec => 'path/JSONKit.podspec',
+        },
       }
     end
   end
@@ -360,7 +360,7 @@ module Pod
           end,
         ]
         external_sources = {
-          'BananaLib' => { :git => 'www.example.com', :commit => 'dad4645' }
+          'BananaLib' => { :git => 'www.example.com', :commit => 'dad4645' },
         }
         lockfile = Lockfile.generate(podfile, specs, external_sources)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (HEAD)'
@@ -382,7 +382,7 @@ module Pod
           end,
         ]
         external_sources = {
-          'BananaLib' => { :git => 'www.example.com', :tag => '1.0' }
+          'BananaLib' => { :git => 'www.example.com', :tag => '1.0' },
         }
         lockfile = Lockfile.generate(podfile, specs, external_sources)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
