@@ -1,5 +1,18 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes an issue when finding a `Source` based on the spec-repo's `git` URL
+  when `git` is configured to rewrite URLs with the `url.<base>.insteadOf`
+  option.  
+  [Eloy Durán](https://github.com/alloy)
+  [CocoaPods#2724](https://github.com/CocoaPods/CocoaPods/issues/2724)
+  [CocoaPods#2696](https://github.com/CocoaPods/CocoaPods/issues/2696)
+  [CocoaPods#2625](https://github.com/CocoaPods/CocoaPods/issues/2625)
+
+
 ## 0.34.4
 
 ##### Bug Fixes

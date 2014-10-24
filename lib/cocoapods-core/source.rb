@@ -32,9 +32,14 @@ module Pod
 
     # @return [String] The URL of the source.
     #
+    # @note In the past we had used `git ls-remote --get-url`, but this could
+    #       lead to an issue when finding a source based on its URL when `git`
+    #       is configured to rewrite URLs with the `url.<base>.insteadOf`
+    #       option. See https://github.com/CocoaPods/CocoaPods/issues/2724.
+    #
     def url
       Dir.chdir(repo) do
-        remote = `git ls-remote --get-url`.chomp
+        remote = `git config --get remote.origin.url`.chomp
 
         if $?.success?
           remote
