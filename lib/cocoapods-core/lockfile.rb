@@ -150,6 +150,23 @@ module Pod
       end
     end
 
+    # Returns the specific checkout options for the external source of the pod
+    # with the given name.
+    #
+    # @example  Output
+    #           {:commit => "919903db28535c3f387c4bbaa6a3feae4428e993"
+    #            :git => "https://github.com/luisdelarosa/AFRaptureXMLRequestOperation.git"}
+    #
+    # @return   [Hash] a hash of the checkout options for the external source of
+    #           the pod with the given name.
+    #
+    # @param    [String] name
+    #           the name of the Pod.
+    #
+    def checkout_options_for_pod_named(name)
+      external_sources_data[name]
+    end
+
     # @return [Version] The version of CocoaPods which generated this lockfile.
     #
     def cocoapods_version
@@ -334,11 +351,11 @@ module Pod
       #
       # @return [Lockfile] a new lockfile.
       #
-      def generate(podfile, specs)
+      def generate(podfile, specs, external_sources)
         hash = {
           'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
-          'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
+          'EXTERNAL SOURCES' => external_sources,
           'SPEC CHECKSUMS'   => generate_checksums(specs),
           'COCOAPODS'        => CORE_VERSION,
         }
@@ -395,27 +412,6 @@ module Pod
       #
       def generate_dependencies_data(podfile)
         podfile.dependencies.map(&:to_s).sort
-      end
-
-      # Generates the information of the external sources.
-      #
-      # @example  Output
-      #           { "JSONKit"=>{:podspec=>"path/JSONKit.podspec"} }
-      #
-      # @return   [Hash] a hash where the keys are the names of the pods and
-      #           the values store the external source hashes of each
-      #           dependency.
-      #
-      # @todo     The downloader should generate an external source hash that
-      #           should be store for dependencies in head mode and for those
-      #           with external source.
-      #
-      def generate_external_sources_data(podfile)
-        deps = podfile.dependencies.select(&:external?)
-        deps = deps.sort { |d, other| d.name <=> other.name }
-        sources = {}
-        deps.each { |d| sources[d.root_name] = d.external_source }
-        sources
       end
 
       # Generates the relative to the checksum of the specifications.
