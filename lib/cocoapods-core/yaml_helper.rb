@@ -14,6 +14,8 @@ module Pod
   #       The missing features include:
   #       - Strings are never quoted even when ambiguous.
   #
+  # @todo Remove any code required solely for Ruby 1.8.x.
+  #
   class YAMLHelper
     class << self
       # Returns the YAML representation of the given object. If the given object

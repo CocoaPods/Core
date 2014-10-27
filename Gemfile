@@ -11,10 +11,8 @@ group :development do
   gem 'vcr'
   gem 'webmock'
 
-  if RUBY_VERSION >= '1.9.3'
-    gem 'codeclimate-test-reporter', :require => nil
-    gem 'rubocop'
-  end
+  gem 'codeclimate-test-reporter', :require => nil
+  gem 'rubocop'
 end
 
 group :debugging do
@@ -22,9 +20,4 @@ group :debugging do
   gem 'kicker'
   gem 'pry'
   gem 'rb-fsevent'
-end
-
-group :ruby_1_8_7 do
-  gem 'activesupport', '< 4'
-  gem 'mime-types', '< 2.0'
 end

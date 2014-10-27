@@ -90,17 +90,9 @@ module Pod
         #
         #           "Author 1, Author 2 and Author 3"
         #
-        # @note     In ruby 1.8.7 the authors are sorted by name because the
-        #           hash doesn't preserve the order in which they are defined
-        #           in the podspec.
-        #
         def authors
           return '' unless spec.authors
-          if RUBY_VERSION == '1.8.7'
-            spec.authors.keys.sort.to_sentence
-          else
-            spec.authors.keys.to_sentence
-          end
+          spec.authors.keys.to_sentence
         end
 
         # @return [String] the homepage of the pod.

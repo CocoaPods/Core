@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activesupport', '>= 3.2.15'
   s.add_runtime_dependency 'nap', "~> 0.8.0"
-  s.add_runtime_dependency "json_pure", "~> 1.8"
   s.add_runtime_dependency 'fuzzy_match', "~> 2.0.4"
 
   s.add_development_dependency 'bacon', '~> 1.1'
@@ -29,5 +28,6 @@ Gem::Specification.new do |s|
   ## Make sure you can build the gem on older versions of RubyGems too:
   s.rubygems_version = "1.6.2"
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_ruby_version = '>= 2.0.0'
   s.specification_version = 3 if s.respond_to? :specification_version
 end
