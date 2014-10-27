@@ -2,6 +2,12 @@
 
 ## Master
 
+###### Breaking
+
+* Support for Ruby < 2.0.0 has been dropped. CocoaPods now depends on
+  Ruby 2.0.0 or greater.  
+  [Eloy Durán](https://github.com/alloy)
+
 ##### Enhancements
 
 * Remove `Specification::Set` attributes related to dependency resolution.
