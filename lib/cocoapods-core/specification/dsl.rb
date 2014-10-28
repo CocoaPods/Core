@@ -1134,7 +1134,7 @@ module Pod
       #     pod 'ShareKit', '2.0'
       #
       # Installs ShareKit with all the sharers like `ShareKit/Evernote`,
-      # `ShareKit/Facebook`, etc, as they are defined a subspecs.
+      # `ShareKit/Facebook`, etc, as they are defined as subspecs.
       #
       #     pod 'ShareKit/Twitter',  '2.0'
       #     pod 'ShareKit/Pinboard', '2.0'
