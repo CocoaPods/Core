@@ -5,15 +5,11 @@ addons:
    repo_token: 186c49521e629c51591c86f057f49fe388ce87603e04b5486f0c92f26f2a455f
 rvm:
   # OS X 10.9.5-10.10.0 (2.0.0-p481)
-  - system
+  - 2.0.0-p481
   # OS X 10.9.3-10.9.4
   - 2.0.0-p451
   # OS X 10.9.0-10.9.2
   - 2.0.0-p247
 env:
   - LANG="en_US.UTF-8"
-before_install:
-  # There is a bug in travis. When using system ruby, bundler is not
-  # installed and causes the default install action to fail.
-  - sudo gem install bundler
 script: bundle exec rake spec
