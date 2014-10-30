@@ -2,7 +2,7 @@
 
 ## Master
 
-###### Breaking
+##### Breaking
 
 * Support for Ruby < 2.0.0 has been dropped. CocoaPods now depends on
   Ruby 2.0.0 or greater.  
