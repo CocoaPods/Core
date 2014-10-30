@@ -26,6 +26,12 @@ module Pod
     attr_accessor :head
     alias_method :head?, :head
 
+    # @return [Bool] whether the dependency came from an invocation of
+    #                {Specification#subspec_dependencies} or not.
+    #
+    attr_accessor :from_subspec_dependency
+    alias_method :from_subspec_dependency?, :from_subspec_dependency
+
     # @overload   initialize(name, requirements)
     #
     #   @param    [String] name
