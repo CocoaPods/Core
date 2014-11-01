@@ -232,10 +232,10 @@ module Pod
       # The keys accepted by the hash of the source attribute.
       #
       SOURCE_KEYS = {
-        :git => [:tag, :branch, :commit, :submodules],
-        :svn => [:folder, :tag, :revision],
-        :hg => [:revision],
-        :http => [:type, :sha256, :sha1],
+        :git  => [:tag, :branch, :commit, :submodules].freeze,
+        :svn  => [:folder, :tag, :revision].freeze,
+        :hg   => [:revision].freeze,
+        :http => [:flatten, :type, :sha256, :sha1].freeze,
         :path => nil,
       }.freeze
 

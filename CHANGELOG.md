@@ -26,6 +26,10 @@
   [CocoaPods#2696](https://github.com/CocoaPods/CocoaPods/issues/2696)
   [CocoaPods#2625](https://github.com/CocoaPods/CocoaPods/issues/2625)
 
+* Fixes an issue linting the `flatten` for http sources in a podspec.  
+  [Eloy Durán](https://github.com/alloy)
+  [Core#193](https://github.com/CocoaPods/Core/issues/193)
+
 
 ## 0.34.4
 
