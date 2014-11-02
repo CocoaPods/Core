@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.35.0.rc1
 
 ##### Breaking
 
