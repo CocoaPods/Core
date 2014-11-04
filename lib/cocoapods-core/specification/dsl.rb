@@ -602,7 +602,7 @@ module Pod
       #
       #   Whether the library requires ARC to be compiled. If true the
       #   `-fobjc-arc` flag will be added to the compiler flags.
-      #   The default value of this attribute is __transitioning__ is `true`.
+      #   The default value of this attribute is `true`.
       #
       #   @example
       #
