@@ -246,9 +246,7 @@ module Pod
       if platform
         specs = specs.select { |s| s.supported_on_platform?(platform) }
       end
-      specs.map do |s|
-        Dependency.new(s.name, version).tap { |d| d.from_subspec_dependency = self }
-      end
+      specs.map { |s| Dependency.new(s.name, version) }
     end
 
     # Returns the dependencies on other Pods or subspecs of other Pods.
