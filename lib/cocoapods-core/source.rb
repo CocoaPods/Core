@@ -144,7 +144,7 @@ module Pod
       end
       unless specification_path.exist?
         raise StandardError, "Unable to find the specification #{name} " \
-          "(#{version}) in the #{name} source."
+          "(#{version}) in the #{self.name} source."
       end
       specification_path
     end
