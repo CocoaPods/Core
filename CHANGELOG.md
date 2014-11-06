@@ -1,5 +1,9 @@
 # CocoaPods Core Changelog
 
+## 0.35.0.rc2
+
+This version only introduces changes in the CocoaPods gem.
+
 ## 0.35.0.rc1
 
 ##### Breaking
