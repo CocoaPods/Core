@@ -147,6 +147,19 @@ module Pod
           [specification.version]
         end
       end
+
+      #-----------------------------------------------------------------------#
+
+      # The Set::Head class handles Pods in head mode. Pods in head
+      # mode don't use the {Source} and are initialized by a given
+      # specification.
+      #
+      class Head < External
+        def initialize(spec)
+          super
+          specification.version.head = true
+        end
+      end
     end
   end
 end
