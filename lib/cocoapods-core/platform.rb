@@ -166,6 +166,16 @@ module Pod
       end
     end
 
+    # @return [Bool] whether the platform supports dynamic frameworks.
+    #
+    def supports_dynamic_frameworks?
+      if name == :ios
+        deployment_target && (deployment_target >= Version.new(8.0))
+      else
+        true
+      end
+    end
+
     # Converts the symbolic name of a platform to a string name suitable to be
     # presented to the user.
     #
