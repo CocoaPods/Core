@@ -1035,10 +1035,11 @@ module Pod
       #   A list of resources that should be copied into the target bundle.
       #
       #   We strongly **recommend** library developers to adopt [resource
-      #   bundles](http://docs.cocoapods.org/specification.html#resources) as
-      #   there can be name collisions using the resources attribute. Moreover
-      #   resources specified with this attribute are copied directly to the
-      #   client target and therefore they are not optimized by Xcode.
+      #   bundles](http://guides.cocoapods.org/syntax/podspec.html#resource_bundles)
+      #   as there can be name collisions using the resources attribute.
+      #   Moreover resources specified with this attribute are copied
+      #   directly to the client target and therefore they are not
+      #   optimized by Xcode.
       #
       #   @example
       #
