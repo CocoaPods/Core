@@ -164,7 +164,7 @@ module Pod
     #           the name of the Pod.
     #
     def checkout_options_for_pod_named(name)
-      external_sources_data[name]
+      checkout_options_data[name]
     end
 
     # @return [Version] The version of CocoaPods which generated this lockfile.
@@ -201,6 +201,13 @@ module Pod
     #
     def external_sources_data
       @external_sources_data ||= internal_data['EXTERNAL SOURCES'] || {}
+    end
+
+    # @return [Hash{String => Hash}] a hash where the name of the pods are the
+    #         keys and the values are a hash of specific checkout options.
+    #
+    def checkout_options_data
+      @checkout_options_data ||= internal_data['CHECKOUT OPTIONS'] || {}
     end
 
     # @return [Hash{String => Version}] a Hash containing the name of the root
@@ -325,6 +332,7 @@ module Pod
         'PODS',
         'DEPENDENCIES',
         'EXTERNAL SOURCES',
+        'CHECKOUT OPTIONS',
         'SPEC CHECKSUMS',
         'COCOAPODS',
       ]
@@ -351,11 +359,12 @@ module Pod
       #
       # @return [Lockfile] a new lockfile.
       #
-      def generate(podfile, specs, external_sources)
+      def generate(podfile, specs, checkout_options)
         hash = {
           'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
-          'EXTERNAL SOURCES' => external_sources,
+          'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
+          'CHECKOUT OPTIONS' => checkout_options,
           'SPEC CHECKSUMS'   => generate_checksums(specs),
           'COCOAPODS'        => CORE_VERSION,
         }
@@ -412,6 +421,27 @@ module Pod
       #
       def generate_dependencies_data(podfile)
         podfile.dependencies.map(&:to_s).sort
+      end
+
+      # Generates the information of the external sources.
+      #
+      # @example  Output
+      #           { "JSONKit"=>{:podspec=>"path/JSONKit.podspec"} }
+      #
+      # @return   [Hash] a hash where the keys are the names of the pods and
+      #           the values store the external source hashes of each
+      #           dependency.
+      #
+      # @todo     The downloader should generate an external source hash that
+      #           should be store for dependencies in head mode and for those
+      #           with external source.
+      #
+      def generate_external_sources_data(podfile)
+        deps = podfile.dependencies.select(&:external?)
+        deps = deps.sort { |d, other| d.name <=> other.name }
+        sources = {}
+        deps.each { |d| sources[d.root_name] = d.external_source }
+        sources
       end
 
       # Generates the relative to the checksum of the specifications.
