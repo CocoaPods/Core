@@ -212,7 +212,7 @@ module Pod
           set_arc_compatibility_flag: true
         EOF
         YAMLHelper.load_string(podfile.to_yaml).should ==
-        YAMLHelper.load_string(expected)
+          YAMLHelper.load_string(expected)
       end
 
       it 'includes inhibit warnings per pod' do
