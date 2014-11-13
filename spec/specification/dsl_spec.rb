@@ -199,6 +199,14 @@ module Pod
         @spec.attributes_hash['requires_arc'].should == false
       end
 
+      it 'allows to specify which files require ARC' do
+        @spec.requires_arc = ['arc/*.{h,m}']
+        @spec.attributes_hash['requires_arc'].should == ['arc/*.{h,m}']
+
+        @spec.requires_arc = 'arc/*.{h,m}'
+        @spec.attributes_hash['requires_arc'].should == 'arc/*.{h,m}'
+      end
+
       it 'allows to specify the frameworks' do
         @spec.framework = %w(QuartzCore CoreData)
         @spec.attributes_hash['frameworks'].should == %w(QuartzCore CoreData)

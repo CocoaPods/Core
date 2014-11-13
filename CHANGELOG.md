@@ -1,5 +1,16 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Allow the specification of file patterns which require ARC with
+  `requires_arc`.  
+  [Kyle Fuller](https://github.com/kylef)
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#532](https://github.com/CocoaPods/CocoaPods/issues/532)
+
+
 ## 0.35.0.rc2
 
 This version only introduces changes in the CocoaPods gem.

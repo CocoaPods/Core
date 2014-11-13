@@ -600,19 +600,33 @@ module Pod
 
       # @!method requires_arc=(flag)
       #
-      #   Whether the library requires ARC to be compiled. If true the
-      #   `-fobjc-arc` flag will be added to the compiler flags.
+      #   `requires_arc` allows you to specify which source_files use ARC.
+      #   This can either be the files which support ARC, or true to indicate
+      #   all of the source_files use ARC.
+      #
+      #   Files which do not use ARC will have the `-fno-objc-arc` compiler
+      #   flag.
+      #
       #   The default value of this attribute is `true`.
       #
       #   @example
       #
       #     spec.requires_arc = false
       #
-      #   @param [Bool] flag
-      #           whether the source files require ARC.
+      #   @example
+      #
+      #     spec.requires_arc = 'Classes/Arc'
+      #
+      #   @example
+      #
+      #     spec.requires_arc = ['Classes/*ARC.m', 'Classes/ARC.mm']
+      #
+      #   @param [Bool, String, Array<String>] flag
+      #          whether the source files require ARC.
       #
       attribute :requires_arc,
-                :types => [TrueClass, FalseClass],
+                :types => [TrueClass, FalseClass, String, Array],
+                :file_patterns => true,
                 :default_value => true,
                 :inherited => true
 
