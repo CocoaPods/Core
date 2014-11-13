@@ -10,8 +10,8 @@ module Pod
         linter = Specification::Linter.new(podspec_path)
         @spec = linter.spec
         results = Specification::Linter::Results.new
-        @subject = Specification::Linter::Analyzer.new(@spec.consumer(:ios),
-                                                       results)
+        @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios),
+                                                        results)
       end
 
       #----------------------------------------#
@@ -19,19 +19,19 @@ module Pod
       describe 'Unknown keys check' do
 
         it 'validates a spec with valid keys' do
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.should.be.empty?
         end
 
         it 'validates a spec with multi-platform attributes' do
           @spec.ios.requires_arc = true
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.should.be.empty?
         end
 
         it 'fails a spec with unknown keys' do
           @spec.attributes_hash['unknown_key'] = true
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Unrecognized `unknown_key` key'
           results.first.message.should.include?(expected)
@@ -39,7 +39,7 @@ module Pod
 
         it 'fails a spec with unknown multi-platform key' do
           @spec.attributes_hash['ios'] = { 'unknown_key' => true }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Unrecognized `unknown_key` key'
           results.first.message.should.include?(expected)
@@ -47,13 +47,13 @@ module Pod
 
         it 'validates a spec with valid sub-keys' do
           @spec.license = { :type => 'MIT' }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.should.be.empty?
         end
 
         it 'fails a spec with unknown sub-keys' do
           @spec.license = { :is_safe_for_work => true }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Unrecognized `is_safe_for_work` key'
           results.first.message.should.include?(expected)
@@ -61,13 +61,13 @@ module Pod
 
         it 'validates a spec with valid minor sub-keys' do
           @spec.source = { :git => 'example.com', :branch => 'master' }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.should.be.empty?
         end
 
         it 'fails a spec with a missing primary sub-keys' do
           @spec.source = { :branch => 'example.com', :commit => 'MyLib' }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Missing primary key for `source` attribute.'
           results.first.message.should.include?(expected)
@@ -75,7 +75,7 @@ module Pod
 
         it 'fails a spec with invalid secondary sub-keys' do
           @spec.source = { :git => 'example.com', :folder => 'MyLib' }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Incompatible `folder` key(s) with `git`'
           results.first.message.should.include?(expected)
@@ -83,7 +83,7 @@ module Pod
 
         it 'fails a spec with multiple primary keys' do
           @spec.source = { :git => 'example.com', :http => 'example.com' }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Incompatible `git, http` keys'
           results.first.message.should.include?(expected)
@@ -91,7 +91,7 @@ module Pod
 
         it 'fails a spec invalid secondary sub-keys when no sub-keys are supported' do
           @spec.source = { :http => 'example.com', :unsupported => true }
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'Incompatible `unsupported` key(s) with `http`'
           results.first.message.should.include?(expected)
@@ -103,7 +103,7 @@ module Pod
       describe 'File Patterns' do
         it 'checks if any file patterns is absolute' do
           @spec.source_files = '/Classes'
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           expected = 'patterns must be relative'
           results.first.message.should.include?(expected)
@@ -120,7 +120,7 @@ module Pod
           consumer.any_instance.stubs(:vendored_libraries).returns([])
           consumer.any_instance.stubs(:vendored_frameworks).returns([])
 
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.count.should.be.equal(1)
           results.first.message.should.include?('spec is empty')
           results.first.message.should.include?('File Patterns')
@@ -131,7 +131,7 @@ module Pod
 
       describe 'Requires ARC' do
         it 'supports the declaration of the attribute per platform' do
-          results = @subject.analyze
+          results = @analyzer.analyze
           results.should.be.empty?
         end
 
@@ -142,8 +142,8 @@ module Pod
           end
           consumer = @spec.consumer(:ios)
           results = Specification::Linter::Results.new
-          @subject = Specification::Linter::Analyzer.new(consumer, results)
-          results = @subject.analyze
+          @analyzer = Specification::Linter::Analyzer.new(consumer, results)
+          results = @analyzer.analyze
           results.should.be.empty?
         end
       end

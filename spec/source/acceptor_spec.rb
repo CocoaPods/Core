@@ -14,7 +14,7 @@ module Pod
       @spec = Specification.from_file(@spec_path)
       Specification.any_instance.stubs(:dependencies).returns([])
       @repo = fixture('spec-repos/test_repo')
-      @subject = Source::Acceptor.new(@repo)
+      @acceptor = Source::Acceptor.new(@repo)
     end
 
     #-------------------------------------------------------------------------#
@@ -22,22 +22,22 @@ module Pod
     describe 'In general' do
 
       it 'returns the source that should accept the podspecs' do
-        @subject.source.name.should == 'test_repo'
+        @acceptor.source.name.should == 'test_repo'
       end
 
       it 'accepts a valid specification' do
-        errors = @subject.analyze(@spec)
+        errors = @acceptor.analyze(@spec)
         errors.should == []
       end
 
       it 'accepts a given path with a valid specification' do
-        errors = @subject.analyze_path(@spec_path)
+        errors = @acceptor.analyze_path(@spec_path)
         errors.should == []
       end
 
       it 'handles gracefully malformed specifications' do
         File.any_instance.stubs(:read).returns('raise')
-        errors = @subject.analyze_path(@spec_path)
+        errors = @acceptor.analyze_path(@spec_path)
         errors.should == ['Unable to load the specification.']
       end
     end
@@ -48,25 +48,25 @@ module Pod
 
       it 'checks if the source of the specification did change' do
         @spec.source = { :git => 'http://EVIL-GORILLA-FORK/banana-lib.git', :tag => 'v1.0' }
-        errors = @subject.analyze(@spec).join("\n")
+        errors = @acceptor.analyze(@spec).join("\n")
         errors.should.match /The source of the spec doesn't match/
       end
 
       it "doesn't check if the source of the specification did change for HTTP sources" do
         @spec.source = { :http => 'http://banana-lib/lib.zip' }
-        errors = @subject.analyze(@spec).join("\n")
+        errors = @acceptor.analyze(@spec).join("\n")
         errors.should.not.match /The source of the spec doesn't match/
       end
 
       it "doesn't fail if the new source of the specification is a redirect" do
         @spec.source = { :git => 'http://NEW-URL/banana-lib.git', :tag => 'v1.0' }
-        errors = @subject.analyze(@spec).join("\n")
+        errors = @acceptor.analyze(@spec).join("\n")
         errors.should.not.match /The source of the spec doesn't match/
       end
 
       it 'rejects a Git based specification without tag if there is at least one tagged version' do
         @spec.source = { :git => 'http://banana-corp.local/banana-lib.git', :commit => 'SHA' }
-        errors = @subject.analyze(@spec).join("\n")
+        errors = @acceptor.analyze(@spec).join("\n")
         errors.should.match /There is already at least one versioned specification/
       end
 
@@ -77,14 +77,14 @@ module Pod
         previous_spec.source  = { :git => repo, :commit => 'SHA_1' }
         @spec.version = '0.0.1'
         @spec.source = { :git => repo, :commit => 'SHA_2' }
-        @subject.stubs(:related_specifications).returns(nil)
-        errors = @subject.analyze(@spec, previous_spec).join("\n")
+        @acceptor.stubs(:related_specifications).returns(nil)
+        errors = @acceptor.analyze(@spec, previous_spec).join("\n")
         errors.should.match /Attempt to rewrite the commit/
       end
 
       it 'checks that the dependencies of the specification are available' do
         Specification.any_instance.unstub(:dependencies)
-        errors = @subject.analyze(@spec).join("\n")
+        errors = @acceptor.analyze(@spec).join("\n")
         errors.should.match /Unable to find a specification for the.*monkey.*dependency/
       end
 
