@@ -341,9 +341,6 @@ module Pod
       end
 
       it 'generates an ordered YAML representation' do
-        puts @lockfile.to_yaml
-        puts '---'
-        puts Sample.yaml
         @lockfile.to_yaml.should == Sample.yaml
       end
 
