@@ -76,13 +76,17 @@ module Pod
           attributes = DSL.attributes.values.select(&:file_patterns?)
           attributes.each do |attrb|
             patterns = consumer.send(attrb.name)
+
             if patterns.is_a?(Hash)
               patterns = patterns.values.flatten(1)
             end
-            patterns.each do |pattern|
-              if pattern.start_with?('/')
-                results.add_error '[File Patterns] File patterns must be ' \
-                  "relative and cannot start with a slash (#{attrb.name})."
+
+            if patterns.respond_to?(:each)
+              patterns.each do |pattern|
+                if pattern.start_with?('/')
+                  results.add_error '[File Patterns] File patterns must be ' \
+                    "relative and cannot start with a slash (#{attrb.name})."
+                end
               end
             end
           end

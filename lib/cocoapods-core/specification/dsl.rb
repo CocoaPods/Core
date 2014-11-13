@@ -608,11 +608,20 @@ module Pod
       #
       #     spec.requires_arc = false
       #
-      #   @param [Bool] flag
-      #           whether the source files require ARC.
+      #   @example
+      #
+      #     spec.requires_arc = 'Classes/Arc'
+      #
+      #   @example
+      #
+      #     spec.requires_arc = ['Classes/*ARC.m', 'Classes/ARC.mm']
+      #
+      #   @param [Bool, String, Array<String>] flag
+      #          whether the source files require ARC.
       #
       attribute :requires_arc,
-                :types => [TrueClass, FalseClass],
+                :types => [TrueClass, FalseClass, String, Array],
+                :file_patterns => true,
                 :default_value => true,
                 :inherited => true
 
