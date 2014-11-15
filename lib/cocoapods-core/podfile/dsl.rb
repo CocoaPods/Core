@@ -525,6 +525,34 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
+      # Specifies the plugins that should be used during installation.
+      #
+      # -----
+      #
+      # Use this method to specify a plugin that should be used during
+      # installation, along with the options that should be passed to the plugin
+      # when it is invoked.
+      #
+      # @param    [String] name
+      #           The name of the plugin.
+      #
+      # @param    [Hash] options
+      #           The optional options that should be passed to the plugin when
+      #           its hooks are invoked.
+      #
+      # @example  Specifying to use the `slather` and `cocoapods-keys` plugins.
+      #
+      #           plugin 'cocoapods-keys', keyring: 'Eidolon'
+      #           plugin 'slather'
+      #
+      # @return   [void]
+      #
+      def plugin(name, options = {})
+        hash_plugins = get_hash_value('plugins') || {}
+        (hash_plugins[name] ||= {}).merge!(options.deep_stringify_keys)
+        set_hash_value('plugins', hash_plugins)
+      end
+
       # This hook allows you to make any changes to the Pods after they have
       # been downloaded but before they are installed.
       #

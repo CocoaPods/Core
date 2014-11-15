@@ -132,6 +132,20 @@ module Pod
         end
 
       end
+
+      describe 'plugin' do
+        it 'can have mutiple plugins' do
+          Podfile.new do
+            plugin 'slather'
+            plugin 'cocoapods-keys', :keyring => 'Eidolon'
+          end.plugins.should == {
+            'slather' => {},
+            'cocoapods-keys' => {
+              'keyring' => 'Eidolon',
+            },
+          }
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -256,6 +270,29 @@ module Pod
         end
         podfile.to_hash.should == {
           'sources' => %w(new_ASIHTTPRequest_source),
+          'target_definitions' => [
+            {
+              'name' => 'Pods',
+              'link_with_first_target' => true,
+              'dependencies' => %w(ASIHTTPRequest),
+            },
+          ],
+        }
+      end
+
+      it 'includes the specified plugins in the hash representation' do
+        podfile = Podfile.new do
+          plugin 'slather'
+          plugin 'cocoapods-keys', :keyring => 'Eidolon'
+          pod 'ASIHTTPRequest'
+        end
+        podfile.to_hash.should == {
+          'plugins' => {
+            'slather' => {},
+            'cocoapods-keys' => {
+              'keyring' => 'Eidolon',
+            },
+          },
           'target_definitions' => [
             {
               'name' => 'Pods',

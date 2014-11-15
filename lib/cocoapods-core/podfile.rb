@@ -101,6 +101,12 @@ module Pod
       get_hash_value('sources') || []
     end
 
+    # @return [Hash<String, Hash>] The plugins, keyed by name.
+    #
+    def plugins
+      get_hash_value('plugins') || {}
+    end
+
     # @return [String] the path of the workspace if specified by the user.
     #
     def workspace_path
@@ -182,6 +188,7 @@ module Pod
       sources
       generate_bridge_support
       set_arc_compatibility_flag
+      plugins
     ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
