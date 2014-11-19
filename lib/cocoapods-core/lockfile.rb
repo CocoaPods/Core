@@ -150,6 +150,23 @@ module Pod
       end
     end
 
+    # Returns the specific checkout options for the external source of the pod
+    # with the given name.
+    #
+    # @example  Output
+    #           {:commit => "919903db28535c3f387c4bbaa6a3feae4428e993"
+    #            :git => "https://github.com/luisdelarosa/AFRaptureXMLRequestOperation.git"}
+    #
+    # @return   [Hash] a hash of the checkout options for the external source of
+    #           the pod with the given name.
+    #
+    # @param    [String] name
+    #           the name of the Pod.
+    #
+    def checkout_options_for_pod_named(name)
+      checkout_options_data[name]
+    end
+
     # @return [Version] The version of CocoaPods which generated this lockfile.
     #
     def cocoapods_version
@@ -184,6 +201,13 @@ module Pod
     #
     def external_sources_data
       @external_sources_data ||= internal_data['EXTERNAL SOURCES'] || {}
+    end
+
+    # @return [Hash{String => Hash}] a hash where the name of the pods are the
+    #         keys and the values are a hash of specific checkout options.
+    #
+    def checkout_options_data
+      @checkout_options_data ||= internal_data['CHECKOUT OPTIONS'] || {}
     end
 
     # @return [Hash{String => Version}] a Hash containing the name of the root
@@ -308,6 +332,7 @@ module Pod
         'PODS',
         'DEPENDENCIES',
         'EXTERNAL SOURCES',
+        'CHECKOUT OPTIONS',
         'SPEC CHECKSUMS',
         'COCOAPODS',
       ]
@@ -334,11 +359,12 @@ module Pod
       #
       # @return [Lockfile] a new lockfile.
       #
-      def generate(podfile, specs)
+      def generate(podfile, specs, checkout_options)
         hash = {
           'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
+          'CHECKOUT OPTIONS' => checkout_options,
           'SPEC CHECKSUMS'   => generate_checksums(specs),
           'COCOAPODS'        => CORE_VERSION,
         }

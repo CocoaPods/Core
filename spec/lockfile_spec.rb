@@ -20,6 +20,10 @@ module Pod
           JSONKit:
             :podspec: path/JSONKit.podspec
 
+        CHECKOUT OPTIONS:
+          JSONKit:
+            :podspec: path/JSONKit.podspec
+
         SPEC CHECKSUMS:
           BananaLib: d46ca864666e216300a0653de197668b12e732a1
           JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
@@ -50,6 +54,14 @@ module Pod
         end,
       ]
       specs
+    end
+
+    def self.checkout_options
+      {
+        'JSONKit' => {
+          :podspec => 'path/JSONKit.podspec',
+        },
+      }
     end
   end
 
@@ -95,7 +107,7 @@ module Pod
       #--------------------------------------#
 
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
       end
 
       it 'returns whether it is equal to another' do
@@ -104,7 +116,7 @@ module Pod
           pod 'BananaLib', '~>1.0'
         end
         @lockfile.should == @lockfile
-        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs)
+        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs, Sample.checkout_options)
       end
 
       it 'returns the list of the names of the  installed pods' do
@@ -176,7 +188,8 @@ module Pod
             s.name = 'JSONKit'
             s.version = '1.4'
           end]
-        @lockfile = Lockfile.generate(@podfile, @specs)
+        @checkout_options = {}
+        @lockfile = Lockfile.generate(@podfile, @specs, @checkout_options)
       end
 
       it 'detects an added Pod' do
@@ -247,7 +260,7 @@ module Pod
           :unchanged => ['BlocksKit'],
           :added => [],
         }
-        @lockfile = Lockfile.generate(podfile, @specs)
+        @lockfile = Lockfile.generate(podfile, @specs, @checkout_options)
         podfile = Podfile.new do
           platform :ios
           pod 'BlocksKit'
@@ -283,7 +296,7 @@ module Pod
             s.version = '1.4'
             s.version.head = true
           end]
-        @lockfile = Lockfile.generate(podfile, @specs)
+        @lockfile = Lockfile.generate(podfile, @specs, @checkout_options)
         podfile = Podfile.new do
           platform :ios
           pod 'BlocksKit'
@@ -303,7 +316,7 @@ module Pod
 
     describe 'Serialization' do
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
       end
 
       it 'can be store itself at the given path' do
@@ -322,6 +335,7 @@ module Pod
             'JSONKit (1.4)', 'monkey (1.0.8)'],
           'DEPENDENCIES' => ['BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'],
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
+          'CHECKOUT OPTIONS' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
         }
       end
@@ -350,7 +364,10 @@ module Pod
             s.version = '1.0.8'
           end,
         ]
-        lockfile = Lockfile.generate(podfile, specs)
+        checkout_options = {
+          'BananaLib' => { :git => 'www.example.com', :commit => 'dad4645' },
+        }
+        lockfile = Lockfile.generate(podfile, specs, checkout_options)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (HEAD)'
       end
 
@@ -369,7 +386,10 @@ module Pod
             s.version = '1.0.8'
           end,
         ]
-        lockfile = Lockfile.generate(podfile, specs)
+        checkout_options = {
+          'BananaLib' => { :git => 'www.example.com', :tag => '1.0' },
+        }
+        lockfile = Lockfile.generate(podfile, specs, checkout_options)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
         lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
       end
@@ -380,7 +400,7 @@ module Pod
 
     describe 'Generation from a Podfile' do
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
       end
 
       it 'stores the information of the installed pods and of their dependencies' do
