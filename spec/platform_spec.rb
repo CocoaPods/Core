@@ -95,6 +95,21 @@ module Pod
         hash[Platform.new(:ios, '6.1')].should.be.eql ios61
       end
 
+      describe '#supports_dynamic_frameworks?' do
+        it 'supports dynamic frameworks on OSX' do
+          Platform.osx.should.supports_dynamic_frameworks
+          Platform.new(:osx, '10.7').should.supports_dynamic_frameworks
+          Platform.new(:osx, '10.10').should.supports_dynamic_frameworks
+        end
+
+        it 'supports dynamic frameworks on iOS since version 8.0' do
+          Platform.ios.should.not.supports_dynamic_frameworks
+          Platform.new(:ios, '7.0').should.not.supports_dynamic_frameworks
+          Platform.new(:ios, '8.0').should.supports_dynamic_frameworks
+          Platform.new(:ios, '8.1').should.supports_dynamic_frameworks
+        end
+      end
+
     end
 
     describe 'Supporting other platforms' do
