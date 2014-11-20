@@ -74,15 +74,15 @@ module Pod
         end
 
         it 'handles strings with no requirements' do
-          d =  Dependency.from_string('RestKit/Subspec JSON (= 1.0)')
-          d.name.should == 'RestKit/Subspec JSON'
-          d.requirement.should == Requirement.new('= 1.0')
-        end
-
-        it 'handles names with a space' do
           d =  Dependency.from_string('AFNetworking')
           d.name.should == 'AFNetworking'
           d.requirement.should.be.none?
+        end
+
+        it 'handles names with a space' do
+          d =  Dependency.from_string('RestKit/Subspec JSON (= 1.0)')
+          d.name.should == 'RestKit/Subspec JSON'
+          d.requirement.should == Requirement.new('= 1.0')
         end
 
         it 'handles names with a space and external source' do
