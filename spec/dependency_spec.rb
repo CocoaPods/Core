@@ -51,25 +51,51 @@ module Pod
         dependency.to_s.should == 'cocoapods (HEAD)'
       end
 
-      it 'creates a dependency from a string' do
-        d =  Dependency.from_string('BananaLib (1.0)')
-        d.name.should == 'BananaLib'
-        d.requirement.should =~ Version.new('1.0')
-        d.head.should.be.nil
-        d.external_source.should.be.nil
-      end
+      describe '#from_string' do
+        it 'creates a dependency from a string' do
+          d =  Dependency.from_string('BananaLib (1.0)')
+          d.name.should == 'BananaLib'
+          d.requirement.should =~ Version.new('1.0')
+          d.head.should.be.nil
+          d.external_source.should.be.nil
+        end
 
-      it 'creates a dependency from a string with multiple version requirements' do
-        d =  Dependency.from_string('FontAwesomeIconFactory (< 2.0, >= 1.0.1)')
-        d.name.should == 'FontAwesomeIconFactory'
-        d.requirement.should == Requirement.new('< 2.0', '>= 1.0.1')
-      end
+        it 'creates a dependency from a string with multiple version requirements' do
+          d =  Dependency.from_string('FontAwesomeIconFactory (< 2.0, >= 1.0.1)')
+          d.name.should == 'FontAwesomeIconFactory'
+          d.requirement.should == Requirement.new('< 2.0', '>= 1.0.1')
+        end
 
-      it "doesn't include external source when initialized from a string as incomplete and thus it should be provided by the client" do
-        d = Dependency.from_string("BananaLib (from `www.example.com', tag `1.0')")
-        d.name.should == 'BananaLib'
-        d.requirement.should.be.none?
-        d.external?.should.be.false
+        it "doesn't include external source when initialized from a string as incomplete and thus it should be provided by the client" do
+          d = Dependency.from_string("BananaLib (from `www.example.com', tag `1.0')")
+          d.name.should == 'BananaLib'
+          d.requirement.should.be.none?
+          d.external?.should.be.false
+        end
+
+        it 'handles strings with no requirements' do
+          d =  Dependency.from_string('AFNetworking')
+          d.name.should == 'AFNetworking'
+          d.requirement.should.be.none?
+        end
+
+        it 'handles names with a space' do
+          d =  Dependency.from_string('RestKit/Subspec JSON (= 1.0)')
+          d.name.should == 'RestKit/Subspec JSON'
+          d.requirement.should == Requirement.new('= 1.0')
+        end
+
+        it 'handles names with a space and external source' do
+          d =  Dependency.from_string("RestKit/Subspec JSON (from `www.example.com', tag `1.0')")
+          d.requirement.should.be.none?
+          d.external?.should.be.false
+        end
+
+        it 'handles names with a space and no requirements' do
+          d =  Dependency.from_string('RestKit/Subspec JSON')
+          d.name.should == 'RestKit/Subspec JSON'
+          d.requirement.should.be.none?
+        end
       end
 
       it 'includes the external sources in the string representation' do

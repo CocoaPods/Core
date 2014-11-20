@@ -324,12 +324,12 @@ module Pod
     # @return   [Dependency] the dependency described by the string.
     #
     def self.from_string(string)
-      match_data = string.match(/(\S*)( (.*))?/)
+      match_data = string.match(/((?:\s?[^\s(])+)( (?:.*))?/)
       name = match_data[1]
       version = match_data[2]
       version = version.gsub(/[()]/, '') if version
       case version
-      when nil || /from `(.*)(`|')/
+      when nil, /from `(.*)(`|')/
         Dependency.new(name)
       when /HEAD/
         Dependency.new(name, :head)
