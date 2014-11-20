@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes the reading of dependencies that have spaces in their subspecs' name
+  from Lockfiles.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2850](https://github.com/CocoaPods/CocoaPods/issues/2850)
+
+
 ## 0.35.0
 
 ##### Enhancements
