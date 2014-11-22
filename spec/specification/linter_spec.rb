@@ -44,6 +44,7 @@ module Pod
         results = linter.results
         results.count.should == 1
         results.first.message.should.match /spec.*could not be loaded/
+        results.first.attribute_name.should.include?('spec')
       end
 
       before do
@@ -98,13 +99,13 @@ module Pod
         @spec = @linter.spec
       end
 
-      def message_should_include(*values)
+      def result_should_include(*values)
         @linter.lint
         results = @linter.results
 
         matched = results.select do |result|
           values.all? do |value|
-            result.message.downcase.include?(value.downcase)
+            result.to_s.downcase.include?(value.downcase)
           end
         end
 
@@ -132,31 +133,31 @@ module Pod
 
       it 'checks the required attributes' do
         @spec.stubs(:name).returns(nil)
-        message_should_include('name', 'required')
+        result_should_include('name', 'required')
       end
 
       #------------------#
 
       it 'fails a specification whose name does not match the name of the `podspec` file' do
         @spec.stubs(:name).returns('another_name')
-        message_should_include('name', 'match')
+        result_should_include('name', 'match')
       end
 
       it 'fails a specification whose name contains whitespace' do
         @spec.stubs(:name).returns('bad name')
-        message_should_include('name', 'whitespace')
+        result_should_include('name', 'whitespace')
       end
 
       #------------------#
 
       it 'checks that the version has been specified' do
         @spec.stubs(:version).returns(Pod::Version.new(nil))
-        message_should_include('version', 'required')
+        result_should_include('version', 'required')
       end
 
       it 'checks the version is higher than 0' do
         @spec.stubs(:version).returns(Pod::Version.new('0'))
-        message_should_include('version', '0')
+        result_should_include('version', '0')
       end
 
       #------------------#
@@ -164,53 +165,53 @@ module Pod
       it 'checks the summary length' do
         @spec.stubs(:summary).returns('sample ' * 100 + '.')
         @spec.stubs(:description).returns(nil)
-        message_should_include('summary', 'short')
+        result_should_include('summary', 'short')
       end
 
       it 'checks the summary for the example value' do
         @spec.stubs(:summary).returns('A short description of.')
-        message_should_include('summary', 'meaningful')
+        result_should_include('summary', 'meaningful')
       end
 
       #------------------#
 
       it 'checks the description for the example value' do
         @spec.stubs(:description).returns('An optional longer description of.')
-        message_should_include('description', 'meaningful')
+        result_should_include('description', 'meaningful')
       end
 
       it 'checks if the description is equal to the summary' do
         @spec.stubs(:description).returns(@linter.spec.summary)
-        message_should_include('description', 'equal', 'summary')
+        result_should_include('description', 'equal', 'summary')
       end
 
       it 'checks if the description is shorter than the summary' do
         @spec.stubs(:description).returns('sample.')
-        message_should_include('description', 'shorter', 'summary')
+        result_should_include('description', 'shorter', 'summary')
       end
 
       #------------------#
 
       it 'checks if the homepage has been changed from default' do
         @spec.stubs(:homepage).returns('http://EXAMPLE/test')
-        message_should_include('homepage', 'default')
+        result_should_include('homepage', 'default')
       end
 
       #------------------#
 
       it 'checks whether the license type' do
         @spec.stubs(:license).returns(:file => 'License')
-        message_should_include('license', 'type')
+        result_should_include('license', 'type')
       end
 
       it 'checks the license type for the sample value' do
         @spec.stubs(:license).returns(:type => '(example)')
-        message_should_include('license', 'type')
+        result_should_include('license', 'type')
       end
 
       it 'checks whether the license type is empty' do
         @spec.stubs(:license).returns(:type => ' ')
-        message_should_include('license', 'type')
+        result_should_include('license', 'type')
       end
 
       it 'checks whether the license file has an allowed extension' do
@@ -221,7 +222,7 @@ module Pod
 
       it 'checks whether the license file has a disallowed extension' do
         @spec.stubs(:license).returns(:type => 'MIT', :file => 'MIT.pdf')
-        message_should_include('license', 'file')
+        result_should_include('license', 'file')
       end
 
       it 'allows license files without a file extension' do
@@ -234,45 +235,45 @@ module Pod
 
       it 'checks for the example source' do
         @spec.stubs(:source).returns(:git => 'http://EXAMPLE.git', :tag => '1.0')
-        message_should_include('source', 'example')
+        result_should_include('source', 'example')
       end
 
       it 'checks that the commit is not specified as `HEAD`' do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns(:git => 'http://repo.git', :commit => 'HEAD')
-        message_should_include('source', 'HEAD')
+        result_should_include('source', 'HEAD')
       end
 
       it 'checks that the version is included in the git tag when the version is a string' do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns(:git => 'http://repo.git', :tag => '1.0')
-        message_should_include('git', 'version', 'tag')
+        result_should_include('git', 'version', 'tag')
       end
 
       it 'checks that the version is included in the git tag  when the version is a Version' do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns(:git => 'http://repo.git', :tag => (Version.new '1.0'))
-        message_should_include('git', 'version', 'tag')
+        result_should_include('git', 'version', 'tag')
       end
 
       it 'checks that Github repositories use the `https` form (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'http://github.com/repo.git', :tag => '1.0')
-        message_should_include('Github', 'https')
+        result_should_include('Github', 'https')
       end
 
       it 'performs checks for Gist Github repositories' do
         @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
-        message_should_include('Github', 'https')
+        result_should_include('Github', 'https')
       end
 
       it 'checks that Github repositories do not use `www` (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://www.github.com/repo.git', :tag => '1.0')
-        message_should_include('Github', 'www')
+        result_should_include('Github', 'www')
       end
 
       it 'checks that Github repositories end in .git (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://github.com/repo', :tag => '1.0')
-        message_should_include('Github', '.git')
+        result_should_include('Github', '.git')
         @linter.results.first.type.should == :warning
       end
 
@@ -291,36 +292,36 @@ module Pod
       it 'warns for SSH repositories' do
         @spec.stubs(:source).returns(:git => 'git@bitbucket.org:kylef/test.git', :tag => '1.0')
         @linter.lint
-        message_should_include('Git', 'SSH')
+        result_should_include('Git', 'SSH')
       end
 
       it 'warns for SSH repositories on Github' do
         @spec.stubs(:source).returns(:git => 'git@github.com:kylef/test.git', :tag => '1.0')
-        message_should_include('Git', 'SSH')
+        result_should_include('Git', 'SSH')
       end
 
       it 'performs checks for Gist Github repositories' do
         @spec.stubs(:source).returns(:git => 'git://gist.github.com/2823399.git', :tag => '1.0')
-        message_should_include('Github', 'https')
+        result_should_include('Github', 'https')
       end
 
       it 'checks the source of 0.0.1 specifications for a tag' do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
-        message_should_include('sources', 'specify a tag.')
+        result_should_include('sources', 'specify a tag.')
       end
 
       it 'checks git sources for a tag' do
         @spec.stubs(:version).returns(Version.new '1.0.1')
         @spec.stubs(:source).returns(:git => 'www.banana-empire.git')
-        message_should_include('sources', 'specify a tag.')
+        result_should_include('sources', 'specify a tag.')
       end
 
       #------------------#
 
       it 'checks if the social_media_url has been changed from default' do
         @spec.stubs(:social_media_url).returns('https://twitter.com/EXAMPLE')
-        message_should_include('social media URL', 'default')
+        result_should_include('social media URL', 'default')
       end
 
       #------------------#
@@ -334,22 +335,22 @@ module Pod
 
       it 'checks that frameworks do not end with a .framework extension' do
         @spec.frameworks = %w(AddressBook.framework QuartzCore.framework)
-        message_should_include('framework', 'name')
+        result_should_include('framework', 'name')
       end
 
       it 'checks that frameworks do not include unwanted characters' do
         @spec.frameworks = ['AddressBook, QuartzCore']
-        message_should_include('framework', 'name')
+        result_should_include('framework', 'name')
       end
 
       it 'checks that weak frameworks do not end with a .framework extension' do
         @spec.weak_frameworks = %w(AddressBook.framework QuartzCore.framework)
-        message_should_include('weak framework', 'name')
+        result_should_include('weak framework', 'name')
       end
 
       it 'checks that weak frameworks do not include unwanted characters' do
         @spec.weak_frameworks = ['AddressBook, QuartzCore']
-        message_should_include('weak framework', 'name')
+        result_should_include('weak framework', 'name')
       end
 
       #------------------#
@@ -369,33 +370,33 @@ module Pod
 
       it 'checks that libraries do not end with a .a extension' do
         @spec.libraries = %w(z.a)
-        message_should_include('should not include the extension', 'z.a',
-                               'libraries')
+        result_should_include('should not include the extension', 'z.a',
+                              'libraries')
       end
 
       it 'checks that libraries do not end with a .dylib extension' do
         @spec.libraries = %w(ssl.dylib)
-        message_should_include('should not include the extension', 'ssl.dylib',
-                               'libraries')
+        result_should_include('should not include the extension', 'ssl.dylib',
+                              'libraries')
       end
 
       it 'checks that libraries do not begin with lib' do
         @spec.libraries = %w(libz)
-        message_should_include('should omit the `lib` prefix', 'libz',
-                               'libraries')
+        result_should_include('should omit the `lib` prefix', 'libz',
+                              'libraries')
       end
 
       it 'checks that libraries do not contain unwanted characters' do
         @spec.libraries = ['ssl, z']
-        message_should_include('should not include comas', 'ssl, z',
-                               'libraries')
+        result_should_include('should not include comas', 'ssl, z',
+                              'libraries')
       end
 
       #------------------#
 
       it 'checks if the compiler flags disable warnings' do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
-        message_should_include('warnings', 'disabled', 'compiler_flags')
+        result_should_include('warnings', 'disabled', 'compiler_flags')
       end
     end
   end
