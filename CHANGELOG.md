@@ -20,6 +20,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#532](https://github.com/CocoaPods/CocoaPods/issues/532)
 
+* Allow the specification of plugins and an optional hash of options
+  for the plugin in the Podfile.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 0.35.0.rc2
 
