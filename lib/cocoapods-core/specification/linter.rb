@@ -50,8 +50,8 @@ module Pod
           run_root_validation_hooks
           perform_all_specs_analysis
         else
-          results.add_error "[spec] The specification defined in `#{file}` "\
-            "could not be loaded.\n\n#{@raise_message}"
+          results.add_error('spec', "The specification defined in `#{file}` "\
+            "could not be loaded.\n\n#{@raise_message}")
         end
         results.empty?
       end
@@ -91,10 +91,10 @@ module Pod
           next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
-              results.add_warning('[attributes] Missing required attribute' \
+              results.add_warning('attributes', 'Missing required attribute' \
               "`#{attr.name}`.")
             else
-              results.add_error('[attributes] Missing required attribute' \
+              results.add_error('attributes', 'Missing required attribute' \
                "`#{attr.name}`.")
             end
           end
@@ -176,28 +176,28 @@ module Pod
           ]
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
-            results.add_error '[name] The name of the spec should match the ' \
-                           'name of the file.'
+            results.add_error('name', 'The name of the spec should match the ' \
+                           'name of the file.')
           end
 
           if spec.root.name =~ /\s/
-            results.add_error '[name] The name of a spec should not contain ' \
-                           'whitespace.'
+            results.add_error('name', 'The name of a spec should not contain ' \
+                           'whitespace.')
           end
 
           if spec.root.name[0, 1] == '.'
-            results.add_error '[name] The name of a spec should not begin' \
-            ' with a period.'
+            results.add_error('name', 'The name of a spec should not begin' \
+            ' with a period.')
           end
         end
       end
 
       def _validate_version(v)
         if v.to_s.empty?
-          results.add_error '[version] A version is required.'
+          results.add_error('version', 'A version is required.')
         elsif v <= Version::ZERO
-          results.add_error '[version] The version of the spec should be' \
-          ' higher than 0.'
+          results.add_error('version', 'The version of the spec should be' \
+          ' higher than 0.')
         end
       end
 
@@ -205,11 +205,11 @@ module Pod
       #
       def _validate_summary(s)
         if s.length > 140
-          results.add_warning '[summary] The summary should be a short ' \
-            'version of `description` (max 140 characters).'
+          results.add_warning('summary', 'The summary should be a short ' \
+            'version of `description` (max 140 characters).')
         end
         if s =~ /A short description of/
-          results.add_warning '[summary] The summary is not meaningful.'
+          results.add_warning('summary', 'The summary is not meaningful.')
         end
       end
 
@@ -217,15 +217,15 @@ module Pod
       #
       def _validate_description(d)
         if d =~ /An optional longer description of/
-          results.add_warning '[description] The description is not meaningful.'
+          results.add_warning('description', 'The description is not meaningful.')
         end
         if d == spec.summary
-          results.add_warning '[description] The description is equal to' \
-           ' the summary.'
+          results.add_warning('description', 'The description is equal to' \
+           ' the summary.')
         end
         if d.length < spec.summary.length
-          results.add_warning '[description] The description is shorter ' \
-          'than the summary.'
+          results.add_warning('description', 'The description is shorter ' \
+          'than the summary.')
         end
       end
 
@@ -233,8 +233,8 @@ module Pod
       #
       def _validate_homepage(h)
         if h =~ %r{http://EXAMPLE}
-          results.add_warning '[homepage] The homepage has not been updated' \
-           ' from default'
+          results.add_warning('homepage', 'The homepage has not been updated' \
+           ' from default')
         end
       end
 
@@ -242,8 +242,8 @@ module Pod
       #
       def _validate_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          results.add_error '[frameworks] A framework should only be' \
-          ' specified by its name'
+          results.add_error('frameworks', 'A framework should only be' \
+          ' specified by its name')
         end
       end
 
@@ -251,8 +251,8 @@ module Pod
       #
       def _validate_weak_frameworks(frameworks)
         if frameworks_invalid?(frameworks)
-          results.add_error '[weak_frameworks] A weak framework should only be' \
-          ' specified by its name'
+          results.add_error('weak_frameworks', 'A weak framework should only be' \
+          ' specified by its name')
         end
       end
 
@@ -262,20 +262,20 @@ module Pod
         libs.each do |lib|
           lib = lib.downcase
           if lib.end_with?('.a') || lib.end_with?('.dylib')
-            results.add_error '[libraries] Libraries should not include the' \
+            results.add_error('libraries', 'Libraries should not include the' \
             ' extension ' \
-            "(`#{lib}`)"
+            "(`#{lib}`)")
           end
 
           if lib.start_with?('lib')
-            results.add_error '[libraries] Libraries should omit the `lib`' \
+            results.add_error('libraries', 'Libraries should omit the `lib`' \
             ' prefix ' \
-            " (`#{lib}`)"
+            " (`#{lib}`)")
           end
 
           if lib.include?(',')
-            results.add_error '[libraries] Libraries should not include comas ' \
-            "(`#{lib}`)"
+            results.add_error('libraries', 'Libraries should not include comas ' \
+            "(`#{lib}`)")
           end
         end
       end
@@ -286,16 +286,16 @@ module Pod
         type = l[:type]
         file = l[:file]
         if type.nil?
-          results.add_warning '[license] Missing license type.'
+          results.add_warning('license', 'Missing license type.')
         end
         if type && type.gsub(' ', '').gsub("\n", '').empty?
-          results.add_warning '[license] Invalid license type.'
+          results.add_warning('license', 'Invalid license type.')
         end
         if type && type =~ /\(example\)/
-          results.add_error '[license] Sample license type.'
+          results.add_error('license', 'Sample license type.')
         end
         if file && Pathname.new(file).extname !~ /^(\.(txt|md|markdown|))?$/i
-          results.add_error '[license] Invalid file type'
+          results.add_error('license', 'Invalid file type')
         end
       end
 
@@ -307,19 +307,19 @@ module Pod
           version = spec.version.to_s
 
           if git =~ %r{http://EXAMPLE}
-            results.add_error '[source] The Git source still contains the ' \
-            'example URL.'
+            results.add_error('source', 'The Git source still contains the ' \
+            'example URL.')
           end
           if commit && commit.downcase =~ /head/
-            results.add_error '[source] The commit of a Git source cannot be' \
-            ' `HEAD`.'
+            results.add_error('source', 'The commit of a Git source cannot be' \
+            ' `HEAD`.')
           end
           if tag && !tag.to_s.include?(version)
-            results.add_warning '[source] The version should be included in' \
-             ' the Git tag.'
+            results.add_warning('source', 'The version should be included in' \
+             ' the Git tag.')
           end
           if tag.nil?
-            results.add_warning '[source] Git sources should specify a tag.'
+            results.add_warning('source', 'Git sources should specify a tag.')
           end
         end
 
@@ -336,17 +336,17 @@ module Pod
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
           if git_uri.host == 'www.github.com'
-            results.add_warning '[github_sources] Github repositories should ' \
-             'not use `www` in their URL.'
+            results.add_warning('github_sources', 'Github repositories should ' \
+             'not use `www` in their URL.')
           end
           if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
             unless git.end_with?('.git')
-              results.add_warning '[github_sources] Github repositories ' \
-              'should end in `.git`.'
+              results.add_warning('github_sources', 'Github repositories ' \
+              'should end in `.git`.')
             end
             unless git_uri.scheme == 'https'
-              results.add_warning '[github_sources] Github repositories ' \
-                'should use an `https` link.'
+              results.add_warning('github_sources', 'Github repositories ' \
+                'should use an `https` link.')
             end
           end
         end
@@ -357,9 +357,9 @@ module Pod
       def check_git_ssh_source(s)
         if git = s[:git]
           if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
-            results.add_warning '[source] Git SSH URLs will NOT work for ' \
+            results.add_warning('source', 'Git SSH URLs will NOT work for ' \
               'people behind firewalls configured to only allow HTTP, ' \
-              'therefore HTTPS is preferred.'
+              'therefore HTTPS is preferred.')
           end
         end
       end
@@ -368,8 +368,8 @@ module Pod
       #
       def _validate_social_media_url(s)
         if s =~ %r{https://twitter.com/EXAMPLE}
-          results.add_warning '[social_media_url] The social media URL has ' \
-            'not been updated from the default.'
+          results.add_warning('social_media_url', 'The social media URL has ' \
+            'not been updated from the default.')
         end
       end
 
@@ -383,8 +383,8 @@ module Pod
       #
       def _validate_compiler_flags(flags)
         if flags.join(' ').split(' ').any? { |flag| flag.start_with?('-Wno') }
-          results.add_warning '[compiler_flags] Warnings must not be disabled' \
-          '(`-Wno compiler` flags).'
+          results.add_warning('compiler_flags', 'Warnings must not be disabled' \
+          '(`-Wno compiler` flags).')
         end
       end
 

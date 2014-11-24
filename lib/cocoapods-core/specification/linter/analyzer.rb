@@ -53,7 +53,7 @@ module Pod
           unknown_keys = keys - valid_keys
 
           unknown_keys.each do |key|
-            results.add_warning "Unrecognized `#{key}` key"
+            results.add_warning('attributes', "Unrecognized `#{key}` key")
           end
 
           Pod::Specification::DSL.attributes.each do |_key, attribute|
@@ -84,8 +84,8 @@ module Pod
             if patterns.respond_to?(:each)
               patterns.each do |pattern|
                 if pattern.start_with?('/')
-                  results.add_error '[File Patterns] File patterns must be ' \
-                    "relative and cannot start with a slash (#{attrb.name})."
+                  results.add_error('File Patterns', 'File patterns must be ' \
+                    "relative and cannot start with a slash (#{attrb.name}).")
                 end
               end
             end
@@ -100,10 +100,10 @@ module Pod
           empty_patterns = methods.all? { |m| consumer.send(m).empty? }
           empty = empty_patterns && consumer.spec.subspecs.empty?
           if empty
-            results.add_error "[File Patterns] The #{consumer.spec} spec is " \
+            results.add_error('File Patterns', "The #{consumer.spec} spec is " \
               'empty (no source files, resources, resource_bundles, ' \
               'preserve paths, vendored_libraries, vendored_frameworks, ' \
-              'dependencies, nor subspecs).'
+              'dependencies, nor subspecs).')
           end
         end
 
@@ -129,29 +129,29 @@ module Pod
         def validate_attribute_array_keys(attribute, value)
           unknown_keys = value.keys.map(&:to_s) - attribute.keys.map(&:to_s)
           unknown_keys.each do |unknown_key|
-            results.add_warning "Unrecognized `#{unknown_key}` key for " \
-              "`#{attribute.name}` attribute."
+            results.add_warning('keys', "Unrecognized `#{unknown_key}` key for " \
+              "`#{attribute.name}` attribute.")
           end
         end
 
         def validate_attribute_hash_keys(attribute, value)
           major_keys = value.keys & attribute.keys.keys
           if major_keys.count.zero?
-            results.add_warning "Missing primary key for `#{attribute.name}` " \
+            results.add_warning('keys', "Missing primary key for `#{attribute.name}` " \
               'attribute. The acceptable ones are: ' \
-              "`#{attribute.keys.keys.map(&:to_s).sort.join(', ')}`."
+              "`#{attribute.keys.keys.map(&:to_s).sort.join(', ')}`.")
           elsif major_keys.count == 1
             acceptable = attribute.keys[major_keys.first] || []
             unknown = value.keys - major_keys - acceptable
             unless unknown.empty?
-              results.add_warning "Incompatible `#{unknown.sort.join(', ')}` " \
+              results.add_warning('keys', "Incompatible `#{unknown.sort.join(', ')}` " \
                 "key(s) with `#{major_keys.first}` primary key for " \
-                "`#{attribute.name}` attribute."
+                "`#{attribute.name}` attribute.")
             end
           else
             sorted_keys = major_keys.map(&:to_s).sort
-            results.add_warning "Incompatible `#{sorted_keys.join(', ')}` " \
-              "keys for `#{attribute.name}` attribute."
+            results.add_warning('keys', "Incompatible `#{sorted_keys.join(', ')}` " \
+              "keys for `#{attribute.name}` attribute.")
           end
         end
       end

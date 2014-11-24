@@ -9,6 +9,10 @@ module Pod
           #
           attr_reader :type
 
+          # @return[String] the name of the attribute associated with result.
+          #
+          attr_reader :attribute_name
+
           # @return [String] the message associated with result.
           #
           attr_reader :message
@@ -16,8 +20,9 @@ module Pod
           # @param [Symbol] type    @see type
           # @param [String] message @see message
           #
-          def initialize(type, message)
+          def initialize(type, attribute_name, message)
             @type    = type
+            @attribute_name = attribute_name
             @message = message
             @platforms = []
           end
@@ -30,7 +35,7 @@ module Pod
           # @return [String] a string representation suitable for UI output.
           #
           def to_s
-            r = "[#{type.to_s.upcase}] #{message}"
+            r = "[#{type.to_s.upcase}] [#{attribute_name}] #{message}"
             if platforms != Specification::PLATFORMS
               platforms_names = platforms.uniq.map do |p|
                 Platform.string_name(p)
@@ -67,8 +72,8 @@ module Pod
         #
         # @return [void]
         #
-        def add_error(message)
-          add_result(:error, message)
+        def add_error(attribute_name, message)
+          add_result(:error, attribute_name, message)
         end
 
         # Adds a warning result with the given message.
@@ -78,8 +83,8 @@ module Pod
         #
         # @return [void]
         #
-        def add_warning(message)
-          add_result(:warning, message)
+        def add_warning(attribute_name, message)
+          add_result(:warning, attribute_name, message)
         end
 
         private
@@ -101,10 +106,12 @@ module Pod
         #
         # @return [void]
         #
-        def add_result(type, message)
-          result = results.find { |r| r.type == type && r.message == message }
+        def add_result(type, attribute_name, message)
+          result = results.find do |r|
+            r.type == type && r.attribute_name == attribute_name && r.message == message
+          end
           unless result
-            result = Result.new(type, message)
+            result = Result.new(type, attribute_name, message)
             results << result
           end
           result.platforms << @consumer.platform_name if @consumer
