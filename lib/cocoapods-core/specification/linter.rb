@@ -342,11 +342,11 @@ module Pod
       def perform_github_uri_checks(git, git_uri)
         if git_uri.host.start_with?('www.')
           results.add_warning('github_sources', 'Github repositories should ' \
-           'not use `www` in their URL.')
+            'not use `www` in their URL.')
         end
         unless git.end_with?('.git')
           results.add_warning('github_sources', 'Github repositories ' \
-          'should end in `.git`.')
+            'should end in `.git`.')
         end
         unless git_uri.scheme == 'https'
           results.add_warning('github_sources', 'Github repositories ' \
