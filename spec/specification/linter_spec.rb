@@ -425,6 +425,11 @@ module Pod
         @spec.subspecs.each { |ss| ss.stubs(:name).returns('bad name') }
         message_should_include('name', 'whitespace')
       end
+
+      it 'fails a subspec whose name begins with a `.`' do
+        @spec.subspecs.each { |ss| ss.stubs(:name).returns('.badname') }
+        message_should_include('name', 'period')
+      end
     end
   end
 end
