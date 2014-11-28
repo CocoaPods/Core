@@ -18,6 +18,8 @@ module Pod
       #
       attr_reader :file
 
+      # @return [Results] the results of linting the podspec.
+      #
       attr_reader :results
 
       # @param  [Specification, Pathname, String] spec_or_path
@@ -46,6 +48,7 @@ module Pod
       def lint
         @results = Results.new
         if spec
+          @all_specs = [spec, *spec.recursive_subspecs]
           check_required_root_attributes
           run_root_validation_hooks
           perform_all_specs_analysis
@@ -80,6 +83,10 @@ module Pod
 
       # !@group Lint steps
 
+      # @return [List<Specification>] all the specs (including subspecs) to be linted.
+      #
+      attr_reader :all_specs
+
       # Checks that every root only attribute which is required has a value.
       #
       # @return [void]
@@ -107,7 +114,10 @@ module Pod
       #
       def run_root_validation_hooks
         attributes = DSL.attributes.values.select(&:root_only?)
-        run_validation_hooks(attributes, spec)
+        all_specs.each do |current_spec|
+          run_validation_hooks(attributes, current_spec)
+        end
+        validate_root_spec_name
       end
 
       # Run validations for multi-platform attributes activating .
@@ -115,7 +125,6 @@ module Pod
       # @return [void]
       #
       def perform_all_specs_analysis
-        all_specs = [spec, *spec.recursive_subspecs]
         all_specs.each do |current_spec|
           current_spec.available_platforms.each do |platform|
             @consumer = Specification::Consumer.new(current_spec, platform)
@@ -168,8 +177,19 @@ module Pod
 
       # Performs validations related to the `name` attribute.
       #
-      def _validate_name(_n)
-        if spec.name && file
+      def _validate_name(n)
+        if n =~ /\s/
+          results.add_error('name', 'The name of a spec should not contain ' \
+            'whitespace.')
+        end
+        if n[0, 1] == '.'
+          results.add_error('name', 'The name of a spec should not begin' \
+            ' with a period.')
+        end
+      end
+
+      def validate_root_spec_name
+        if spec.root.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
             spec.root.name + '.podspec.json',
@@ -177,17 +197,7 @@ module Pod
           names_match = acceptable_names.include?(file.basename.to_s)
           unless names_match
             results.add_error('name', 'The name of the spec should match the ' \
-                           'name of the file.')
-          end
-
-          if spec.root.name =~ /\s/
-            results.add_error('name', 'The name of a spec should not contain ' \
-                           'whitespace.')
-          end
-
-          if spec.root.name[0, 1] == '.'
-            results.add_error('name', 'The name of a spec should not begin' \
-            ' with a period.')
+              'name of the file.')
           end
         end
       end
