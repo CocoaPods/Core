@@ -335,19 +335,18 @@ module Pod
         if git = s[:git]
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
-          return unless git_uri.host.end_with?('github.com')
-          perform_github_uri_checks(git_uri)
-          unless git.end_with?('.git')
-            results.add_warning('github_sources', 'Github repositories ' \
-            'should end in `.git`.')
-          end
+          perform_github_uri_checks(git, git_uri) if git_uri.host.end_with?('github.com')
         end
       end
 
-      def perform_github_uri_checks(git_uri)
+      def perform_github_uri_checks(git, git_uri)
         if git_uri.host.start_with?('www.')
           results.add_warning('github_sources', 'Github repositories should ' \
            'not use `www` in their URL.')
+        end
+        unless git.end_with?('.git')
+          results.add_warning('github_sources', 'Github repositories ' \
+          'should end in `.git`.')
         end
         unless git_uri.scheme == 'https'
           results.add_warning('github_sources', 'Github repositories ' \
@@ -379,6 +378,8 @@ module Pod
       #-----------------------------------------------------------------------#
 
       # @!group All specs validation helpers
+
+      private
 
       # Performs validations related to the `compiler_flags` attribute.
       #
