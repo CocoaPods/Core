@@ -9,6 +9,16 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2850](https://github.com/CocoaPods/CocoaPods/issues/2850)
 
+* The linter will now properly lint all attributes within subspecs  
+  [Joshua Kalpin](https://github.com/Kapin)
+  [#201](https://github.com/CocoaPods/Core/pull/201)
+
+* The linter will now ensure that subspecs' names do not contain whitespace  
+  [Joshua Kalpin](https://github.com/Kapin)
+  [Samuel Giddins](https://github.com/segiddins)
+  [#177](https://github.com/CocoaPods/Core/issues/177)
+  [#178](https://github.com/CocoaPods/Core/pull/178)
+  [#201](https://github.com/CocoaPods/Core/pull/201)
 
 ## 0.35.0
 
