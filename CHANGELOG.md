@@ -9,6 +9,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2850](https://github.com/CocoaPods/CocoaPods/issues/2850)
 
+* The Linter will now give a warning if Github Gists begin with `www`  
+  [Joshua Kalpin](https://github.com/Kapin)
+  [Core#200](https://github.com/CocoaPods/Core/pull/200)
+
 
 ## 0.35.0
 

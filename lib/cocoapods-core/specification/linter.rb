@@ -335,20 +335,22 @@ module Pod
         if git = s[:git]
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
-          if git_uri.host == 'www.github.com'
-            results.add_warning('github_sources', 'Github repositories should ' \
-             'not use `www` in their URL.')
-          end
-          if git_uri.host == 'github.com' || git_uri.host == 'gist.github.com'
-            unless git.end_with?('.git')
-              results.add_warning('github_sources', 'Github repositories ' \
-              'should end in `.git`.')
-            end
-            unless git_uri.scheme == 'https'
-              results.add_warning('github_sources', 'Github repositories ' \
-                'should use an `https` link.')
-            end
-          end
+          perform_github_uri_checks(git, git_uri) if git_uri.host.end_with?('github.com')
+        end
+      end
+
+      def perform_github_uri_checks(git, git_uri)
+        if git_uri.host.start_with?('www.')
+          results.add_warning('github_sources', 'Github repositories should ' \
+            'not use `www` in their URL.')
+        end
+        unless git.end_with?('.git')
+          results.add_warning('github_sources', 'Github repositories ' \
+            'should end in `.git`.')
+        end
+        unless git_uri.scheme == 'https'
+          results.add_warning('github_sources', 'Github repositories ' \
+            'should use an `https` link.')
         end
       end
 
