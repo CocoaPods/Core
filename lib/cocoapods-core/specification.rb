@@ -509,6 +509,7 @@ module Pod
     end
 
     # Loads a specification with the given string.
+    # The specification is evaluated in the context of `path`.
     #
     # @param  [String] spec_contents
     #         A string describing a specification.
@@ -520,16 +521,19 @@ module Pod
     #
     def self.from_string(spec_contents, path, subspec_name = nil)
       path = Pathname.new(path)
-      case path.extname
-      when '.podspec'
-        spec = ::Pod._eval_podspec(spec_contents, path)
-        unless spec.is_a?(Specification)
-          raise Informative, "Invalid podspec file at path `#{path}`."
+      spec = nil
+      Dir.chdir(path.parent.directory? ? path.parent : Dir.pwd) do
+        case path.extname
+        when '.podspec'
+          spec = ::Pod._eval_podspec(spec_contents, path)
+          unless spec.is_a?(Specification)
+            raise Informative, "Invalid podspec file at path `#{path}`."
+          end
+        when '.json'
+          spec = Specification.from_json(spec_contents)
+        else
+          raise Informative, "Unsupported specification format `#{path.extname}`."
         end
-      when '.json'
-        spec = Specification.from_json(spec_contents)
-      else
-        raise Informative, "Unsupported specification format `#{path.extname}`."
       end
 
       spec.defined_in_file = path
