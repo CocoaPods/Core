@@ -14,10 +14,6 @@ module Pod
         @presenter.set.name.should == 'JSONKit'
       end
 
-      it 'initializes the default statistics provider is one is not given' do
-        @presenter.statistics_provider.class.should == Spec::Set::Statistics
-      end
-
       it 'returns the name' do
         @presenter.name.should == 'JSONKit'
       end
@@ -32,7 +28,7 @@ module Pod
       end
 
       it 'returns the versions by source' do
-        @presenter.verions_by_source.should == '1.5pre, 1.4 [master repo] - 999.999.999, 1.13, 1.4 [test_repo repo]'
+        @presenter.versions_by_source.should == '1.5pre, 1.4 [master repo] - 999.999.999, 1.13, 1.4 [test_repo repo]'
       end
 
       it 'returns the sources' do
@@ -109,48 +105,30 @@ module Pod
 
     describe 'Statistics' do
       before do
-        Spec::Set::Statistics.instance = nil
-        @stats = Spec::Set::Statistics.instance
         @source = Source.new(fixture('spec-repos/master'))
         set = Spec::Set.new('CocoaLumberjack', @source)
+        metrics = {
+          'github' => {
+            'contributors' => 30,
+            'created_at' => '2014-06-11 16:40:13 UTC',
+            'forks' => 1726,
+            'open_issues' => 242,
+            'open_pull_requests' => 30,
+            'stargazers' => 7188,
+            'subscribers' => 425,
+            'updated_at' => '2014-12-03 01:27:55 UTC',
+          },
+        }
+        Metrics.stubs(:pod).returns(metrics)
         @presenter = Spec::Set::Presenter.new(set)
       end
 
-      it 'returns the creation date' do
-        @presenter.creation_date.should == Time.parse('2011-10-06 17:37:56 +0200')
-      end
-
-      it 'returns the GitHub likes' do
-        @stats.expects(:github_watchers).with(@presenter.set).returns(731)
-        @presenter.github_watchers.should == 731
+      it 'returns the GitHub stars' do
+        @presenter.github_stargazers.should == 7188
       end
 
       it 'returns the GitHub forks' do
-        @stats.expects(:github_forks).with(@presenter.set).returns(109)
-        @presenter.github_forks.should == 109
-      end
-
-      it 'returns the GitHub last activity' do
-        @stats.expects(:github_pushed_at).with(@presenter.set).returns(Time.parse('2012-07-12T17:36:21Z'))
-        Time.stubs(:now).returns(Time.parse('2012-11-01 00:00:00 +0100'))
-        @presenter.github_last_activity.should == '4 months ago'
-      end
-    end
-
-    describe 'Private methods' do
-      before do
-        @presenter = Spec::Set::Presenter.new(nil)
-      end
-
-      it 'represents a past date with a relative description' do
-        time = (Time.now - 60 * 60 * 24).to_s
-        @presenter.send(:distance_from_now_in_words, time).should == 'less than a week ago'
-        time = (Time.now - 60 * 60 * 24 * 15).to_s
-        @presenter.send(:distance_from_now_in_words, time).should == '15 days ago'
-        time = (Time.now - 60 * 60 * 24 * 45).to_s
-        @presenter.send(:distance_from_now_in_words, time).should == '1 month ago'
-        time = (Time.now - 60 * 60 * 24 * 400).to_s
-        @presenter.send(:distance_from_now_in_words, time).should == 'more than a year ago'
+        @presenter.github_forks.should == 1726
       end
     end
   end

@@ -11,15 +11,10 @@ module Pod
         #
         attr_reader :set
 
-        # @return [Statistics] The statistics provider.
-        #
-        attr_reader :statistics_provider
-
         # @param  [Set] set @see #set.
         #
-        def initialize(set, statistics_provider = nil)
+        def initialize(set)
           @set = set
-          @statistics_provider = statistics_provider || Statistics.instance
         end
 
         #---------------------------------------------------------------------#
@@ -54,7 +49,7 @@ module Pod
         #
         # @note     This method orders the sources by name.
         #
-        def verions_by_source
+        def versions_by_source
           result = []
           versions_by_source = @set.versions_by_source
           @set.sources.sort.each do |source|
@@ -179,71 +174,29 @@ module Pod
 
         # @!group Statistics
 
-        # @return [Time] the creation date of the first known `podspec` of the
-        #         Pod.
-        #
-        def creation_date
-          statistics_provider.creation_date(@set)
-        end
-
         # @return [Integer] the GitHub likes of the repo of the Pod.
         #
-        def github_watchers
-          statistics_provider.github_watchers(@set)
+        def github_stargazers
+          github_metrics['stargazers']
         end
 
         # @return [Integer] the GitHub forks of the repo of the Pod.
         #
         def github_forks
-          statistics_provider.github_forks(@set)
-        end
-
-        # @return [String] the relative time of the last push of the repo the Pod.
-        #
-        def github_last_activity
-          distance_from_now_in_words(statistics_provider.github_pushed_at(@set))
+          github_metrics['forks']
         end
 
         #---------------------------------------------------------------------#
 
-        private
+        # @!group Private Helpers
 
-        # Computes a human readable string that represents a past date in
-        # relative terms.
-        #
-        # @param    [Time, String] from_time
-        #           the date that should be represented.
-        #
-        # @example  Possible outputs
-        #
-        #           "less than a week ago"
-        #           "15 days ago"
-        #           "3 month ago"
-        #           "more than a year ago"
-        #
-        # @return   [String] a string that represents a past date.
-        #
-        def distance_from_now_in_words(from_time)
-          return nil unless from_time
-          from_time = Time.parse(from_time) unless from_time.is_a?(Time)
-          to_time = Time.now
-          distance_in_days = (((to_time - from_time).abs) / 60 / 60 / 24).round
-
-          case distance_in_days
-          when 0..7
-            'less than a week ago'
-          when 8..29
-            "#{distance_in_days} days ago"
-          when 30..45
-            '1 month ago'
-          when 46..365
-            "#{(distance_in_days.to_f / 30).round} months ago"
-          else
-            'more than a year ago'
-          end
+        def metrics
+          @metrics ||= Metrics.pod(name) || {}
         end
 
-        #---------------------------------------------------------------------#
+        def github_metrics
+          metrics['github'] || {}
+        end
       end
     end
   end
