@@ -415,6 +415,16 @@ module Pod
         current_target_definition.inhibit_all_warnings = true
       end
 
+      # Use frameworks instead of static libraries for Pods.
+      #
+      # ------
+      #
+      # This attribute is inherited by child target definitions.
+      #
+      def use_frameworks!(flag = true)
+        current_target_definition.use_frameworks!(flag)
+      end
+
       #-----------------------------------------------------------------------#
 
       # @!group Workspace

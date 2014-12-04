@@ -316,6 +316,30 @@ module Pod
 
       #--------------------------------------#
 
+      # Sets whether the target definition should build a framework.
+      #
+      # @param  [Bool] flag
+      #         Whether a framework should be built.
+      #
+      # @return [void]
+      #
+      def use_frameworks!(flag = true)
+        set_hash_value('uses_frameworks', flag)
+      end
+
+      # @return [Bool] whether the target definition should build
+      #         a framework.
+      #
+      def uses_frameworks?
+        if internal_hash['uses_frameworks'].nil?
+          root? ? false : parent.uses_frameworks?
+        else
+          get_hash_value('uses_frameworks')
+        end
+      end
+
+      #--------------------------------------#
+
       # Whether a specific pod should be linked to the target when building for
       # a specific configuration. If a pod has not been explicitly whitelisted
       # for any configuration, it is implicitly whitelisted.
@@ -507,6 +531,7 @@ module Pod
         dependencies
         children
         configuration_pod_whitelist
+        uses_frameworks
       ).freeze
 
       # @return [Hash] The hash representation of the target definition.

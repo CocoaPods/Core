@@ -230,6 +230,25 @@ module Pod
 
       #--------------------------------------#
 
+      it 'returns if it should use frameworks' do
+        @root.use_frameworks!
+        @root.should.uses_frameworks?
+      end
+
+      it 'inherits the option to use frameworks' do
+        @root.use_frameworks!
+        @child.should.uses_frameworks?
+      end
+
+      it 'allows children to opt-out of using frameworks' do
+        @root.use_frameworks!
+        @child.use_frameworks!(false)
+        puts @child.to_hash
+        @child.should.not.uses_frameworks?
+      end
+
+      #--------------------------------------#
+
       it 'whitelists pods by default' do
         @root.store_pod('ObjectiveSugar')
         @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
