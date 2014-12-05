@@ -263,6 +263,21 @@ module Pod
         }
       end
 
+      it 'includes uses frameworks' do
+        podfile = Podfile.new do
+          pod 'ObjectiveSugar'
+          use_frameworks!
+        end
+        podfile.to_hash.should == {
+          'target_definitions' => [
+            'name' => 'Pods',
+            'link_with_first_target' => true,
+            'dependencies' => ['ObjectiveSugar'],
+            'uses_frameworks' => true,
+          ],
+        }
+      end
+
       it 'includes the specified sources in the hash representation' do
         podfile = Podfile.new do
           source 'new_ASIHTTPRequest_source'
@@ -394,6 +409,7 @@ module Pod
           target :test, :exclusive => true do
             link_with 'TestRunner'
             inhibit_all_warnings!
+            use_frameworks!
             pod 'JSONKit'
             target :subtarget do
               pod 'Reachability'
@@ -471,6 +487,12 @@ module Pod
         @podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('SSZipArchive').should.not.be.true
         @podfile.target_definitions[:test].inhibits_warnings_for_pod?('JSONKit').should.be.true
         @podfile.target_definitions[:subtarget].inhibits_warnings_for_pod?('Reachability').should.be.true
+      end
+
+      it 'uses frameworks for any target if use_frameworks! is called' do
+        @podfile.target_definitions['Pods'].uses_frameworks?.should.not.be.true
+        @podfile.target_definitions[:test].uses_frameworks?.should.be.true
+        @podfile.target_definitions[:subtarget].uses_frameworks?.should.be.true
       end
 
       it 'returns the Xcode project that contains the target to link with' do

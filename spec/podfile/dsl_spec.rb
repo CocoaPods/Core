@@ -156,6 +156,16 @@ module Pod
         podfile = Podfile.new { pod 'ObjectiveRecord'; inhibit_all_warnings! }
         podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
       end
+
+      it 'defaults to not use frameworks for a Target definition' do
+        podfile = Podfile.new { pod 'ObjectiveRecord' }
+        podfile.target_definitions['Pods'].uses_frameworks?.should.be.false
+      end
+
+      it 'allows to use frameworks for a Target definition' do
+        podfile = Podfile.new { pod 'ObjectiveRecord'; use_frameworks! }
+        podfile.target_definitions['Pods'].uses_frameworks?.should.be.true
+      end
     end
 
     #-------------------------------------------------------------------------#
