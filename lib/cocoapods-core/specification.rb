@@ -204,6 +204,9 @@ module Pod
     def subspec_by_name(relative_name, raise_if_missing = true)
       if relative_name.nil? || relative_name == base_name
         self
+      elsif relative_name.downcase == base_name.downcase
+        raise Informative, "Trying to access a `#{relative_name}` " \
+          "specification from `#{base_name}`, which has a different case."
       else
         remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
