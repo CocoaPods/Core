@@ -453,6 +453,15 @@ module Pod
         end.message.should.match /Unsupported specification format/
       end
 
+      it "is initialized in the context of the file's directory" do
+        contents = File.read fixture('BananaLib.podspec')
+        contents.sub!(/s\.name.*= '.+'/, 's.name = File.basename(Dir.pwd)')
+        File.any_instance.stubs(:read).returns(contents)
+        spec = Spec.from_file(fixture('BananaLib.podspec'))
+        spec.class.should == Spec
+        spec.name.should == 'fixtures'
+      end
+
       #--------------------------------------#
 
       before do

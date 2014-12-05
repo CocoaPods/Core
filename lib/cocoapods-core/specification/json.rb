@@ -8,6 +8,13 @@ module Pod
         to_hash.to_json(*a) << "\n"
       end
 
+      # @return [String] the pretty json representation of the specification.
+      #
+      def to_pretty_json(*a)
+        require 'json'
+        JSON.pretty_generate(to_hash, *a) << "\n"
+      end
+
       #-----------------------------------------------------------------------#
 
       # @return [Hash] the hash representation of the specification including

@@ -37,6 +37,25 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    describe 'pretty JSON support' do
+      it 'returns the json representation' do
+        spec = Specification.new(nil, 'BananaLib')
+        spec.version = '1.0'
+        expected = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+        }
+        JSON.parse(spec.to_pretty_json).should == expected
+      end
+
+      it 'terminates the json representation with a new line' do
+        spec = Specification.new(nil, 'BananaLib')
+        spec.to_pretty_json.should.end_with "\n"
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
     describe 'Hash conversion' do
       before do
         path = fixture('BananaLib.podspec')

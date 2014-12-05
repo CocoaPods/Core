@@ -2,6 +2,13 @@
 
 ## Master
 
+##### Enhancements
+
+* Evaluate a Specification in `.from_string` in the context of the directory
+  the specification is in.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2875](https://github.com/CocoaPods/CocoaPods/issues/2875)
+
 ##### Bug Fixes
 
 * Fixes the reading of dependencies that have spaces in their subspecs' name
