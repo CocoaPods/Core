@@ -4,7 +4,7 @@
 
 ##### Bug Fixes
 
-* Added use_frameworks! flag to DSL.
+* Added `use_frameworks!` flag to DSL.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#204](https://github.com/CocoaPods/Core/issues/204)
 
