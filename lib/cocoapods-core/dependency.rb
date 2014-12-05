@@ -52,7 +52,7 @@ module Pod
     #   @example  Initialization with an external source.
     #
     #             Dependency.new('libPusher', {:git     => 'example.com/repo.git'})
-    #             Dependency.new('libPusher', {:path   => 'path/to/folder'})
+    #             Dependency.new('libPusher', {:path    => 'path/to/folder'})
     #             Dependency.new('libPusher', {:podspec => 'example.com/libPusher.podspec'})
     #
     # @overload   initialize(name, is_head)
