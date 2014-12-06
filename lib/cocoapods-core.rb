@@ -23,6 +23,7 @@ module Pod
   autoload :GitHub,         'cocoapods-core/github'
   autoload :HTTP,           'cocoapods-core/http'
   autoload :Lockfile,       'cocoapods-core/lockfile'
+  autoload :Metrics,        'cocoapods-core/metrics'
   autoload :Platform,       'cocoapods-core/platform'
   autoload :Podfile,        'cocoapods-core/podfile'
   autoload :Source,         'cocoapods-core/source'

@@ -1,6 +1,5 @@
 require 'active_support/core_ext/array/conversions'
 require 'cocoapods-core/specification/set/presenter'
-require 'cocoapods-core/specification/set/statistics'
 
 module Pod
   class Specification
