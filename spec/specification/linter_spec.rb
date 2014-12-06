@@ -150,6 +150,13 @@ module Pod
 
       #------------------#
 
+      it 'fails a specification whose module name is not a valid C99 identifier' do
+        @spec.stubs(:module_name).returns('20Three lol')
+        result_should_include('module_name', 'C99 identifier')
+      end
+
+      #------------------#
+
       it 'checks that the version has been specified' do
         @spec.stubs(:version).returns(Pod::Version.new(nil))
         result_should_include('version', 'required')

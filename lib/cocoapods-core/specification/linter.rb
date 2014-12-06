@@ -201,6 +201,15 @@ module Pod
         end
       end
 
+      # Performs validations related to the `module_name` attribute.
+      def _validate_module_name(m)
+        c99_identifier = Specification.new.send(:c99ext_identifier, m)
+        if c99_identifier != m
+          results.add_error('module_name', 'The module name of a spec' \
+            ' should be a valid C99 identifier.')
+        end
+      end
+
       # Performs validations related to the `summary` attribute.
       #
       def _validate_summary(s)
