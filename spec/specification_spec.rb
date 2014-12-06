@@ -540,7 +540,7 @@ module Pod
       end
 
       it 'should mask invalid chars' do
-        @spec.send(:c99ext_identifier, 'iOS-App BânánàLïb').should == 'iOS_App_B_n_n_L_b'
+        @spec.send(:c99ext_identifier, 'iOS-App BânánàLïb').should == 'iOS_App_BananaLib'
       end
 
       it 'should flatten multiple underscores to a single one' do
