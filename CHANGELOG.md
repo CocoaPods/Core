@@ -9,11 +9,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2875](https://github.com/CocoaPods/CocoaPods/issues/2875)
 
-##### Bug Fixes
-
 * Added `use_frameworks!` flag to DSL.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#204](https://github.com/CocoaPods/Core/issues/204)
+
+##### Bug Fixes
 
 * Fixes the reading of dependencies that have spaces in their subspecs' name
   from Lockfiles.  
