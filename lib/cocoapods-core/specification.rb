@@ -166,7 +166,7 @@ module Pod
     #
     def c99ext_identifier(name)
       return nil if name.nil?
-      name.gsub(/^([0-9])/, '_\1').gsub(/[^a-zA-Z0-9_]/, '_')
+      name.gsub(/^([0-9])/, '_\1').gsub(/[^a-zA-Z0-9_]/, '_').gsub(/_+/, '_')
     end
 
     #-------------------------------------------------------------------------#
