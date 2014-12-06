@@ -142,6 +142,33 @@ module Pod
       full_name.split('/').first
     end
 
+    # Returns the module name of a specification
+    #
+    # @return [String] the module name
+    #
+    def module_name
+      attributes_hash['module_name'] ||
+        c99ext_identifier(attributes_hash['header_dir']) ||
+        c99ext_identifier(attributes_hash['name'])
+    end
+
+    private
+
+    # Transforms the given string into a valid +identifier+ after C99ext
+    # standard, so that it can be used in source code where escaping of
+    # ambiguous characters is not applicable.
+    #
+    # @param  [String] name
+    #         any name, which may contain leading numbers, spaces or invalid
+    #         characters.
+    #
+    # @return [String]
+    #
+    def c99ext_identifier(name)
+      return nil if name.nil?
+      name.gsub(/^([0-9])/, '_\1').gsub(/[^a-zA-Z0-9_]/, '_')
+    end
+
     #-------------------------------------------------------------------------#
 
     public

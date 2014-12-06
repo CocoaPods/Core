@@ -252,6 +252,11 @@ module Pod
         @spec.attributes_hash['header_mappings_dir'].should == 'src/include'
       end
 
+      it 'allows to specify a custom module name' do
+        @spec.module_name = 'Three20'
+        @spec.attributes_hash['module_name'].should == 'Three20'
+      end
+
     end
 
     #-----------------------------------------------------------------------------#
