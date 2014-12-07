@@ -150,6 +150,12 @@ module Pod
 
       #------------------#
 
+      it 'passes a specification whose module name is a valid C99 identifier' do
+        @spec.stubs(:module_name).returns('_')
+        @linter.lint
+        @linter.results.count.should == 0
+      end
+
       it 'fails a specification whose module name is not a valid C99 identifier' do
         @spec.stubs(:module_name).returns('20Three lol')
         result_should_include('module_name', 'C99 identifier')
