@@ -497,5 +497,59 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    describe 'module name' do
+      it 'uses the specification name as module name by default' do
+        spec = Specification.new(nil, 'Three20')
+        spec.module_name.should == 'Three20'
+      end
+
+      it 'converts the name to a C99 identifier if required' do
+        spec = Specification.new(nil, '500px')
+        spec.module_name.should == '_500px'
+      end
+
+      it 'uses the header_dir as module name if specified' do
+        spec = Specification.new(nil, 'Three20.swift')
+        spec.header_dir = 'Three20'
+        spec.module_name.should == 'Three20'
+      end
+
+      it 'converts the header_dir to a C99 identifier if required' do
+        spec = Specification.new(nil, 'Three20.swift')
+        spec.header_dir = 'Three-20'
+        spec.module_name.should == 'Three_20'
+      end
+
+      it 'uses the defined module name if specified' do
+        spec = Specification.new(nil, 'Three20.swift')
+        spec.header_dir = 'Three20Core'
+        spec.module_name = 'Three20'
+        spec.module_name.should == 'Three20'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe '#c99ext_identifier' do
+      before do
+        @spec = Specification.new
+      end
+
+      it 'should mask, but keep leading numbers' do
+        @spec.send(:c99ext_identifier, '123BananaLib').should == '_123BananaLib'
+      end
+
+      it 'should mask invalid chars' do
+        @spec.send(:c99ext_identifier, 'iOS-App BânánàLïb').should == 'iOS_App_BananaLib'
+      end
+
+      it 'should flatten multiple underscores to a single one' do
+        @spec.send(:c99ext_identifier, '$.swift').should == '_swift'
+      end
+
+    end
+
+    #-------------------------------------------------------------------------#
+
   end
 end

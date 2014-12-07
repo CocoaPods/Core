@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Added `module_name` attribute for use with frameworks.  
+  [Boris Bügling](https://github.com/neonichu)
+  [#205](https://github.com/CocoaPods/Core/issues/205)
+
 * Evaluate a Specification in `.from_string` in the context of the directory
   the specification is in.  
   [Samuel Giddins](https://github.com/segiddins)

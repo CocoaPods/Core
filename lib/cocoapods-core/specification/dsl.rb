@@ -780,6 +780,25 @@ module Pod
 
       #------------------#
 
+      # @!method module_name=(name)
+      #
+      #   The name to use for the framework / clang module which
+      #   will be generated for this specification instead of the
+      #   default (header_dir if set, otherwise the specification
+      #   name).
+      #
+      #   @example
+      #
+      #     spec.module_name = 'Three20'
+      #
+      #   @param  [String] name
+      #           the module name.
+      #
+      root_attribute :module_name,
+                     :inherited => true
+
+      #------------------#
+
       # @!method header_dir=(dir)
       #
       #   The directory where to store the headers files so they don't break
