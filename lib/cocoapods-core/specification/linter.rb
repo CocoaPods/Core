@@ -203,8 +203,7 @@ module Pod
 
       # Performs validations related to the `module_name` attribute.
       def _validate_module_name(m)
-        c99_identifier = Specification.new.send(:c99ext_identifier, m)
-        if c99_identifier != m
+        unless m.nil? || m =~ /^[a-z_][0-9a-z_]+$/i
           results.add_error('module_name', 'The module name of a spec' \
             ' should be a valid C99 identifier.')
         end
