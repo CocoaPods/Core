@@ -211,6 +211,13 @@ module Pod
 
       #------------------#
 
+      it 'allows to specify a module name' do
+        @spec.module_name = 'Three20Core'
+        @consumer.module_name.should == 'Three20Core'
+      end
+
+      #------------------#
+
       it 'allows to specify a directory to use for the headers' do
         @spec.header_dir = 'Three20Core'
         @consumer.header_dir.should == 'Three20Core'

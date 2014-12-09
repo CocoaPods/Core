@@ -96,6 +96,10 @@ module Pod
       #
       spec_attr_accessor :prefix_header_file
 
+      # @return [String] the module name.
+      #
+      spec_attr_accessor :module_name
+
       # @return [String] the headers directory.
       #
       spec_attr_accessor :header_dir
