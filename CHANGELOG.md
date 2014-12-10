@@ -28,6 +28,10 @@
   [Joshua Kalpin](https://github.com/Kapin)
   [Core#200](https://github.com/CocoaPods/Core/pull/200)
 
+* Fixes handling of missing sub-subspecs in the resolver.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2922](https://github.com/CocoaPods/CocoaPods/issues/2922)
+
 
 ## 0.35.0
 

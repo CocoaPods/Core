@@ -221,6 +221,10 @@ module Pod
         @spec.subspec_by_name('Pod/Nonexistent', false).should.be.nil?
       end
 
+      it "returns if it can't find a deeply nested subspec with the given name and raise_if_missing is false" do
+        @spec.subspec_by_name('Pod/Subspec/Subsubspec/Missing', false).should.be.nil?
+      end
+
       it 'returns the default subspecs' do
         spec = @spec.dup
         spec.default_subspecs = 'Subspec1', 'Subspec2'

@@ -247,7 +247,7 @@ module Pod
             return nil
           end
         end
-        subspec.subspec_by_name(remainder)
+        subspec.subspec_by_name(remainder, raise_if_missing)
       end
     end
 
