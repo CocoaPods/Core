@@ -294,6 +294,19 @@ module Pod
       self.defined_in_file = path
     end
 
+    # @return [Hash{String=>Array,Hash,String}] Convert Fixnum to String
+    #
+    def clean_node(node)
+      case node
+
+      when Fixnum then node = node.to_s
+      when Array then node.map! { |obj| clean_node(obj) }
+      when Hash then node.each_pair { |key, value| node[key] = clean_node(value) }
+      end
+
+      node
+    end
+
     # @return [Hash{String=>Array,Hash,String}] a hash representation of the
     #         Lockfile.
     #
@@ -315,7 +328,7 @@ module Pod
     def to_hash
       hash = {}
       internal_data.each do |key, value|
-        hash[key] = value unless value.empty?
+        hash[key] = clean_node(value) unless value.empty?
       end
       hash
     end
