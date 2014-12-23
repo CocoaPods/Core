@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* The Linter will now ensure against marking a spec as
+  `deprecated_in_favor_of` itself.  
+  [Keith Smiley](https://github.com/Keithbsmiley)
+  [#212](https://github.com/CocoaPods/Core/pull/212)
+
 * Added `module_name` attribute for use with frameworks.  
   [Boris Bügling](https://github.com/neonichu)
   [#205](https://github.com/CocoaPods/Core/issues/205)

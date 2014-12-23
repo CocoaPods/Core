@@ -410,6 +410,11 @@ module Pod
                               'libraries')
       end
 
+      it 'checks that a spec is not deprecated in favor of itself' do
+        @spec.deprecated_in_favor_of = @spec.name
+        result_should_include('a spec cannot be', 'deprecated_in_favor_of')
+      end
+
       #------------------#
 
       it 'checks if the compiler flags disable warnings' do
