@@ -335,6 +335,15 @@ module Pod
         check_git_ssh_source(s)
       end
 
+      # Performs validations related to the `deprecated_in_favor_of` attribute.
+      #
+      def _validate_deprecated_in_favor_of(d)
+        if d == Specification.root_name(d)
+          results.add_error('deprecated_in_favor_of', 'a spec cannot be ' \
+            'deprecated in favor of itself')
+        end
+      end
+
       # Performs validations related to github sources.
       #
       def perform_github_source_checks(s)
