@@ -148,11 +148,9 @@ module Pod
     #
     def module_name
       attributes_hash['module_name'] ||
-        c99ext_identifier(attributes_hash['header_dir']) ||
-        c99ext_identifier(attributes_hash['name'])
+        self.class.sanitize_c99ext_identifier(attributes_hash['header_dir']) ||
+        self.class.sanitize_c99ext_identifier(attributes_hash['name'])
     end
-
-    private
 
     # Transforms the given string into a valid +identifier+ after C99ext
     # standard, so that it can be used in source code where escaping of
@@ -164,15 +162,13 @@ module Pod
     #
     # @return [String]
     #
-    def c99ext_identifier(name)
+    def self.sanitize_c99ext_identifier(name)
       return nil if name.nil?
       I18n.transliterate(name).gsub(/^([0-9])/, '_\1').
         gsub(/[^a-zA-Z0-9_]/, '_').gsub(/_+/, '_')
     end
 
     #-------------------------------------------------------------------------#
-
-    public
 
     # @!group Hierarchy
 

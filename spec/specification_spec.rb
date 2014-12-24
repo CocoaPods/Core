@@ -535,20 +535,17 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#c99ext_identifier' do
-      before do
-        @spec = Specification.new
-      end
 
       it 'should mask, but keep leading numbers' do
-        @spec.send(:c99ext_identifier, '123BananaLib').should == '_123BananaLib'
+        Specification.sanitize_c99ext_identifier('123BananaLib').should == '_123BananaLib'
       end
 
       it 'should mask invalid chars' do
-        @spec.send(:c99ext_identifier, 'iOS-App BânánàLïb').should == 'iOS_App_BananaLib'
+        Specification.sanitize_c99ext_identifier('iOS-App BânánàLïb').should == 'iOS_App_BananaLib'
       end
 
       it 'should flatten multiple underscores to a single one' do
-        @spec.send(:c99ext_identifier, '$.swift').should == '_swift'
+        Specification.sanitize_c99ext_identifier('$.swift').should == '_swift'
       end
 
     end
