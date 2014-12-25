@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.36.0.beta.1
 
 ##### Enhancements
 
@@ -18,9 +18,12 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2875](https://github.com/CocoaPods/CocoaPods/issues/2875)
 
-* Added `use_frameworks!` flag to DSL.  
+* Added `use_frameworks!` flag to the Podfile DSL.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#204](https://github.com/CocoaPods/Core/issues/204)
+
+* Added `plugins` method to the Podfile DSL.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 

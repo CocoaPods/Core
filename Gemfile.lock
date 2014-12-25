@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cocoapods-core (0.35.0)
+    cocoapods-core (0.36.0.beta.1)
       activesupport (>= 3.2.15)
       fuzzy_match (~> 2.0.4)
       nap (~> 0.8.0)
@@ -9,11 +9,11 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    activesupport (4.1.8)
-      i18n (~> 0.6, >= 0.6.9)
+    activesupport (4.2.0)
+      i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.1)
+      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.6)
     ast (2.0.0)
@@ -29,7 +29,7 @@ GEM
     docile (1.1.5)
     ffi (1.9.6)
     fuzzy_match (2.0.4)
-    i18n (0.6.11)
+    i18n (0.7.0)
     json (1.7.7)
     kicker (3.0.0)
       listen (~> 1.3.0)
@@ -40,7 +40,7 @@ GEM
       rb-kqueue (>= 0.2)
     metaclass (0.0.4)
     method_source (0.8.2)
-    minitest (5.4.3)
+    minitest (5.5.0)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.2)
