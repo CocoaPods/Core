@@ -2,9 +2,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Podfile::DSL do
-
     describe 'Dependencies' do
-
       it 'adds dependencies' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
@@ -80,13 +78,11 @@ module Pod
         end
         podfile.target_definitions[:tests].name.should == :tests
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Target configuration' do
-
       it 'allows to specify a platform' do
         podfile = Podfile.new do
           platform :ios, '6.0'
@@ -171,7 +167,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Workspace' do
-
       it 'specifies the Xcode workspace to use' do
         Podfile.new do
           workspace 'MyWorkspace.xcworkspace'
@@ -187,13 +182,11 @@ module Pod
         Podfile.new {}.should.not.set_arc_compatibility_flag
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Hooks' do
-
       it 'stores a block that will be called before integrating the targets' do
         yielded = nil
         Podfile.new do
@@ -213,10 +206,8 @@ module Pod
         end.post_install!(:an_installer)
         yielded.should == :an_installer
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

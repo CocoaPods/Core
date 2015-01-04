@@ -3,7 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe Dependency do
     describe 'In general' do
-
       it 'can be initialized with no requirements' do
         dependency = Dependency.new('bananas')
         dependency.name.should == 'bananas'
@@ -283,19 +282,16 @@ module Pod
         dep = Dependency.new('bananas', '> 0.5')
         dep.match?('bananas', '1.0-rc1').should.be.true
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Private helpers' do
-
       before do
         @dep = Dependency.new('bananas', '1.9')
       end
 
       describe '#external_source_description' do
-
         it 'returns the description of git sources' do
           source = {
             :git => 'example.com/repo.git',
@@ -316,10 +312,8 @@ module Pod
           @dep.send(:external_source_description, :other => 'example.com').should.match /from.*example.com/
         end
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

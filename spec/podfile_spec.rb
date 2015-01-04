@@ -3,7 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe Podfile do
     describe 'In general' do
-
       it 'stores the path of the file it is loaded from' do
         podfile = Podfile.from_file(fixture('Podfile'))
         podfile.defined_in_file.should == fixture('Podfile')
@@ -88,13 +87,11 @@ module Pod
         result = Podfile.new { post_install { |_installer| } }.post_install!(:an_installer)
         result.should.be == true
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Attributes' do
-
       it 'returns the workspace' do
         Podfile.new do
           workspace 'MyWorkspace.xcworkspace'
@@ -130,7 +127,6 @@ module Pod
             source 'master'
           end.sources.size.should  == 3
         end
-
       end
 
       describe 'plugin' do
@@ -151,7 +147,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Representation' do
-
       it 'returns the hash representation' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest'
@@ -322,7 +317,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Class methods' do
-
       it 'can be initialized from a ruby DSL file' do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
         ruby_podfile.target_definitions.keys.should == ['Pods']
@@ -362,13 +356,11 @@ module Pod
         podfile = Podfile.from_hash(hash)
         podfile.to_hash.should == fixture_podfile.to_hash
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Private helpers' do
-
       it 'sets and retrieves a value in the internal hash' do
         podfile = Podfile.new
         podfile.send(:set_hash_value, 'generate_bridge_support', true)
@@ -380,7 +372,6 @@ module Pod
         lambda { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
         lambda { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
       end
-
     end
 
     #-------------------------------------------------------------------------#
@@ -508,6 +499,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

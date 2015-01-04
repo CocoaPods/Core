@@ -3,7 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe Requirement do
     describe 'In general' do
-
       it 'can be initialized with a string' do
         requirement = Requirement.new('<= 1.0')
         requirement.to_s.should == '<= 1.0'
@@ -33,13 +32,11 @@ module Pod
       it 'returns the default requirement' do
         Requirement.default.to_s.should == '>= 0'
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Create factory method' do
-
       it 'can be created with a requirement' do
         req = Requirement.new('<= 1.0')
         requirement = Requirement.create(req)
@@ -65,10 +62,8 @@ module Pod
         requirement = Requirement.create(nil)
         requirement.to_s.should == '>= 0'
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

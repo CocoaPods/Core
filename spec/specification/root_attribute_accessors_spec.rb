@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::RootAttributesAccessors do
-
     before do
       @spec = Spec.new do |s|
         s.name = 'Pod'

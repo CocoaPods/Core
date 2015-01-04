@@ -2,7 +2,6 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::DSL::AttributeSupport do
-
     class TestClass
       extend Pod::Specification::DSL::AttributeSupport
       root_attribute :test_root_attribute,  :types => [String]
@@ -52,6 +51,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

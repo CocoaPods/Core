@@ -2,7 +2,6 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe HTTP do
-
     describe 'In general' do
       it 'can resolve redirects' do
         WebMock::API.stub_request(:head, /redirect/).to_return(
@@ -58,7 +57,6 @@ module Pod
         response = HTTP.validate_url('http://SOME-URL/foo')
         response.success?.should.be.true
       end
-
     end
 
     #-------------------------------------------------------------------------#

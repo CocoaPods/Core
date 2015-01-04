@@ -3,7 +3,6 @@ require 'json'
 
 module Pod
   describe Specification::JSONSupport do
-
     describe 'JSON support' do
       it 'returns the json representation' do
         spec = Specification.new(nil, 'BananaLib')

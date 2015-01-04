@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Source::Aggregate do
-
     # BananaLib is available only in test_repo.
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
     #
@@ -14,7 +13,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'In general' do
-
       it 'returns the sources' do
         @aggregate.sources.map(&:name).sort.should == %w(master test_repo)
       end
@@ -60,13 +58,11 @@ module Pod
         set = @aggregate.representative_set('JSONKit')
         set.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.4']
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Search' do
-
       it 'searches the sets by name' do
         sets = @aggregate.search_by_name('JSONKit')
         sets.count.should == 1
@@ -96,13 +92,11 @@ module Pod
           @aggregate.search_by_name('Some-funky-name', true)
         end.message.should.match /Unable to find/
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Search Index' do
-
       before do
         test_source = Source.new(fixture('spec-repos/test_repo'))
         @aggregate.stubs(:sources).returns([test_source])
@@ -154,10 +148,8 @@ module Pod
         index = @aggregate.update_search_index(old_index)
         index['Deleted-Pod'].should.be.nil
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

@@ -2,7 +2,6 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Linter::Analyzer do
-
     describe 'File patterns & Build settings' do
       before do
         fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
@@ -17,7 +16,6 @@ module Pod
       #----------------------------------------#
 
       describe 'Unknown keys check' do
-
         it 'validates a spec with valid keys' do
           results = @analyzer.analyze
           results.should.be.empty?

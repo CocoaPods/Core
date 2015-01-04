@@ -2,9 +2,7 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Consumer do
-
     describe 'In general' do
-
       before do
         @spec = Spec.new do |s|
           s.name = 'Pod'
@@ -368,7 +366,6 @@ module Pod
         @spec.preserve_path = 'Frameworks/*.framework'
         @consumer.preserve_paths.should == ['Frameworks/*.framework']
       end
-
     end
 
     #-------------------------------------------------------------------------#
@@ -403,13 +400,11 @@ module Pod
         osx_consumer.dependencies.sort.should == [
           Dependency.new('AFNetworking'), Dependency.new('MagicalRecord')]
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Private helpers' do
-
       before do
         @spec = Spec.new do |s|
           s.name = 'Pod'
@@ -429,7 +424,6 @@ module Pod
       #--------------------------------------#
 
       describe '#value_for_attribute' do
-
         it 'takes into account inheritance' do
           @subspec_consumer.frameworks.should == %w(spec_framework subspec_framework)
         end
@@ -447,13 +441,11 @@ module Pod
         it 'initializes the value to the empty container if no value could be resolved' do
           @consumer.libraries.should == []
         end
-
       end
 
       #--------------------------------------#
 
       describe '#value_with_inheritance' do
-
         it 'handles root specs' do
           attr = Specification::DSL.attributes[:source_files]
           value = @consumer.send(:value_with_inheritance, @spec, attr)
@@ -477,7 +469,6 @@ module Pod
       #--------------------------------------#
 
       describe '#raw_value_for_attribute' do
-
         it 'returns the raw value as stored in the specification' do
           attr = Specification::DSL.attributes[:source_files]
           osx_consumer = Specification::Consumer.new(@spec, :osx)
@@ -495,7 +486,6 @@ module Pod
       #--------------------------------------#
 
       describe '#merge_values' do
-
         it 'returns the current value if the value to merge is nil' do
           attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
           result = @consumer.send(:merge_values, attr, 'value', nil)
@@ -557,7 +547,6 @@ module Pod
       end
 
       #--------------------------------------#
-
     end
   end
 end

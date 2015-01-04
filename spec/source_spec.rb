@@ -2,7 +2,6 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe Source do
-
     before do
       @path = fixture('spec-repos/test_repo')
       @source = Source.new(@path)
@@ -335,6 +334,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

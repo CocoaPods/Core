@@ -393,7 +393,6 @@ module Pod
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
         lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
       end
-
     end
 
     #-------------------------------------------------------------------------#
@@ -442,7 +441,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Private helpers' do
-
       describe '#generate_pods_data' do
         it 'groups multiple dependencies for the same pod' do
           specs = [
@@ -463,7 +461,6 @@ module Pod
           }]
         end
       end
-
     end
   end
 end

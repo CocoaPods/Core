@@ -2,7 +2,6 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe Specification do
-
     describe 'In general' do
       before do
         @spec = Spec.new do |s|
@@ -382,7 +381,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'DSL Attribute writers' do
-
       before do
         @spec =  Spec.new
       end
@@ -430,7 +428,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Initialization from a file' do
-
       it 'can be initialized from a file' do
         spec = Spec.from_file(fixture('BananaLib.podspec'))
         spec.class.should == Spec
@@ -550,10 +547,8 @@ module Pod
       it 'should flatten multiple underscores to a single one' do
         @spec.send(:c99ext_identifier, '$.swift').should == '_swift'
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

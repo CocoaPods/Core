@@ -2,7 +2,6 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 module Pod
   describe Attribute = Specification::DSL::Attribute do
-
     describe 'In general' do
       it 'returns the name' do
         attr = Attribute.new('name', {})
@@ -81,13 +80,11 @@ module Pod
         attr = Attribute.new('name',  :root_only => true)
         attr.should.not.be.inherited
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Accessors support' do
-
       it 'returns the default value' do
         attr1 = Attribute.new(:frameworks, :multi_platform => false)
         attr1.default.should.be.nil?
@@ -120,7 +117,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Writer method support' do
-
       it 'validates a value to check whether it is compatible with the accepted types' do
         attr = Attribute.new(:frameworks,  :types => [String], :container => Array)
         lambda { attr.validate_type('a string') }.should.not.raise

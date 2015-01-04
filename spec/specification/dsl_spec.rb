@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::DSL do
-
     describe 'Root specification attributes' do
       before do
         @spec = Spec.new do |s|
@@ -130,7 +129,6 @@ module Pod
       #------------------#
 
       describe 'dependency' do
-
         it 'allows to specify a dependencies' do
           @spec.dependencies = { 'SVStatusHUD' => ['~>1.0', '< 1.4'] }
           @spec.attributes_hash['dependencies'].should == { 'SVStatusHUD' => ['~>1.0', '< 1.4'] }
@@ -189,7 +187,6 @@ module Pod
             @spec.dependency('SVProgressHUD', :head)
           end.message.should.match /Unsupported version requirements/
         end
-
       end
 
       #------------------#
@@ -256,7 +253,6 @@ module Pod
         @spec.module_name = 'Three20'
         @spec.attributes_hash['module_name'].should == 'Three20'
       end
-
     end
 
     #-----------------------------------------------------------------------------#
@@ -312,7 +308,6 @@ module Pod
         @spec.preserve_paths = ['Frameworks/*.framework']
         @spec.attributes_hash['preserve_paths'].should == ['Frameworks/*.framework']
       end
-
     end
 
     #-----------------------------------------------------------------------------#
@@ -339,7 +334,6 @@ module Pod
         @spec.default_subspecs = 'Preferred-Subspec1', 'Preferred-Subspec2'
         @spec.attributes_hash['default_subspecs'].should == %w(Preferred-Subspec1 Preferred-Subspec2)
       end
-
     end
 
     #-----------------------------------------------------------------------------#
@@ -369,19 +363,16 @@ module Pod
     #-----------------------------------------------------------------------------#
 
     describe 'Attributes default values' do
-
       it 'does requires arc by default' do
         attr = Specification::DSL.attributes[:requires_arc]
         attr.default(:ios).should == true
         attr.default(:osx).should == true
       end
-
     end
 
     #-----------------------------------------------------------------------------#
 
     describe 'Attributes singular form' do
-
       it 'allows to use the singular form the attributes which support it' do
         attributes = Specification::DSL.attributes.values
         singularized = attributes.select(&:singularize?)
@@ -398,6 +389,5 @@ module Pod
     end
 
     #-----------------------------------------------------------------------------#
-
   end
 end

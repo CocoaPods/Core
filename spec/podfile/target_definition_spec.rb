@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Podfile::TargetDefinition do
-
     before do
       @podfile = Podfile.new
       @root = Podfile::TargetDefinition.new('MyApp', @podfile)
@@ -13,7 +12,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'In general' do
-
       it 'returns its name' do
         @root.name.should == 'MyApp'
       end
@@ -101,7 +99,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Attributes accessors' do
-
       it 'is not exclusive by default by the default if the platform of the parent match' do
         @child.should.not.be.exclusive
       end
@@ -349,13 +346,11 @@ module Pod
         e = lambda { @root.store_podspec(:invent => 'BlocksKit') }.should.raise Podfile::StandardError
         e.message.should.match /Unrecognized options/
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Hash representation' do
-
       it 'returns the hash representation' do
         @child.store_pod('BlocksKit')
         @child.set_platform(:ios)
@@ -392,13 +387,11 @@ module Pod
         converted = Podfile::TargetDefinition.from_hash(@root.to_hash, @podfile)
         converted.to_hash.should == @root.to_hash
       end
-
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Private helpers' do
-
       before do
         @root.podfile.defined_in_file = SpecHelper::Fixture.fixture('Podfile')
       end
@@ -425,7 +418,6 @@ module Pod
       #--------------------------------------#
 
       describe '#pod_dependencies' do
-
         it 'handles dependencies which only indicate the name of the Pod' do
           @root.store_pod('BlocksKit')
           @root.send(:pod_dependencies).should == [
@@ -453,13 +445,11 @@ module Pod
             Dependency.new('BlocksKit', :git => 'GIT-URL', :commit => '1234'),
           ]
         end
-
       end
 
       #--------------------------------------#
 
       describe '#podspec_dependencies' do
-
         it 'returns the dependencies of podspecs' do
           path = SpecHelper::Fixture.fixture('BananaLib.podspec').to_s
           @root.store_podspec(:path => path)
@@ -479,13 +469,11 @@ module Pod
             Dependency.new('monkey', '< 1.0.9', '~> 1.0.1'),
           ]
         end
-
       end
 
       #--------------------------------------#
 
       describe '#podspec_path_from_options' do
-
         it 'resolves a podspec given the absolute path' do
           options = { :path => SpecHelper::Fixture.fixture('BananaLib') }
           file = @root.send(:podspec_path_from_options, options)
@@ -522,12 +510,9 @@ module Pod
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
-
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

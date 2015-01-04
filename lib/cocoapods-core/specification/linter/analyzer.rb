@@ -122,7 +122,6 @@ module Pod
             validate_attribute_array_keys(attribute, value)
           elsif attribute.keys.is_a?(Hash)
             validate_attribute_hash_keys(attribute, value)
-          else
           end
         end
 

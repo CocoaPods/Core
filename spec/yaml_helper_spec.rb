@@ -2,7 +2,6 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe 'In general' do
-
     before do
       @good_podfile_lock      = File.open(
         File.expand_path('../fixtures/Podfile.lock', __FILE__))
@@ -12,7 +11,6 @@ module Pod
 
       @conflict_podfile_lock  = File.open(
         File.expand_path('../fixtures/PodfileWithMergeConflicts.lock', __FILE__))
-
     end
 
     after do
@@ -22,7 +20,6 @@ module Pod
     end
 
     describe YAMLHelper do
-
       it 'converts a string' do
         value = 'Value'
         result = YAMLHelper.convert(value)
@@ -131,7 +128,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Private Helpers' do
-
       describe '#sorted_array_with_hint' do
         it 'sorts an array according to its string representation' do
           values = %w(JSONKit BananaLib)
@@ -161,7 +157,6 @@ module Pod
       end
 
       describe '#sorting_string' do
-
         it 'returns the empty string if a nil value is passed' do
           value = nil
           result = YAMLHelper.send(:sorting_string, value)

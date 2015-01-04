@@ -3,7 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe Platform do
     describe 'In general' do
-
       it 'returns a new Platform instance' do
         Platform.ios.should == Platform.new(:ios)
         Platform.osx.should == Platform.new(:osx)
@@ -109,7 +108,6 @@ module Pod
           Platform.new(:ios, '8.1').should.supports_dynamic_frameworks
         end
       end
-
     end
 
     describe 'Supporting other platforms' do

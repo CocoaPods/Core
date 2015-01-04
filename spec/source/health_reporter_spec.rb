@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Source::HealthReporter do
-
     before do
       WebMock::API.stub_request(:head, /banana-corp.local/).to_return(:status => 200)
       WebMock::API.stub_request(:head, /github.com/).to_return(:status => 200)
@@ -13,7 +12,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'In general' do
-
       it 'can store an option callback which is called before analyzing each specification' do
         names = []
         @reporter.pre_check do |name, _version|
@@ -54,6 +52,5 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

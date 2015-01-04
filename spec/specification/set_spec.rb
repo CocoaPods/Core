@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Set do
-
     describe 'In general' do
       before do
         @source = Source.new(fixture('spec-repos/master'))
@@ -59,7 +58,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Concerning multiple sources' do
-
       before do
         # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
         repos_dirs = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
@@ -87,7 +85,6 @@ module Pod
   #---------------------------------------------------------------------------#
 
   describe Specification::Set::External do
-
     before do
       @spec = Spec.from_file(fixture('BananaLib.podspec'))
       @set = Spec::Set::External.new(@spec)

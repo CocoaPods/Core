@@ -2,7 +2,6 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Source::Acceptor do
-
     before do
       WebMock::API.stub_request(:head, /http:\/\/banana-corp.local\/banana-lib.git/).to_return(
         :status => 301, :headers => { 'Location' => 'http://NEW-URL/banana-lib.git' })
@@ -20,7 +19,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'In general' do
-
       it 'returns the source that should accept the podspecs' do
         @acceptor.source.name.should == 'test_repo'
       end
@@ -45,7 +43,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Analysis' do
-
       it 'checks if the source of the specification did change' do
         @spec.source = { :git => 'http://EVIL-GORILLA-FORK/banana-lib.git', :tag => 'v1.0' }
         errors = @acceptor.analyze(@spec).join("\n")
@@ -87,7 +84,6 @@ module Pod
         errors = @acceptor.analyze(@spec).join("\n")
         errors.should.match /Unable to find a specification for the.*monkey.*dependency/
       end
-
     end
   end
 end

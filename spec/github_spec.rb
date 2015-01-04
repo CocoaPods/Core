@@ -2,7 +2,6 @@ require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe GitHub do
-
     describe 'In general' do
       it 'returns the information of a user' do
         VCR.use_cassette('GitHub', :record => :new_episodes) do
@@ -90,7 +89,6 @@ module Pod
       end
 
       #-----------------------------------------------------------------------#
-
     end
   end
 end

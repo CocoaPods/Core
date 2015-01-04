@@ -86,7 +86,6 @@ module Pod
       it 'returns the warnings results of the lint' do
         @linter.warnings.map(&:type).should == [:warning]
       end
-
     end
 
     #--------------------------------------#
@@ -115,11 +114,9 @@ module Pod
       #------------------#
 
       xit 'checks for unrecognized keys' do
-
       end
 
       xit 'checks the type of the values of the attributes' do
-
       end
 
       xit 'checks for unknown keys in the license' do

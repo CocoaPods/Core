@@ -3,7 +3,6 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe Version do
     describe 'In general' do
-
       it 'returns whether it is a `head` version' do
         version = Version.new('1.2.3')
         version.should.not.be.head
@@ -66,7 +65,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Semantic Versioning' do
-
       it 'reports a version as semantic' do
         Version.new('1.9.0').should.be.semantic
         Version.new('1.10.0').should.be.semantic
@@ -111,10 +109,8 @@ module Pod
         Version.new('1.0.1-alpha').patch.should == 1
         Version.new('1').patch.should == 0
       end
-
     end
 
     #-------------------------------------------------------------------------#
-
   end
 end

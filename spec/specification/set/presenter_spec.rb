@@ -2,7 +2,6 @@ require File.expand_path('../../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Set::Presenter do
-
     describe 'Set Information' do
       before do
         set = Source::Aggregate.new([fixture('spec-repos/master'), fixture('spec-repos/test_repo')]).search_by_name('JSONKit').first

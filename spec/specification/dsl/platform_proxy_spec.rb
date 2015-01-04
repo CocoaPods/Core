@@ -56,6 +56,5 @@ module Pod
       @proxy.deployment_target = '6.0'
       @spec.attributes_hash['platforms']['ios'].should == '6.0'
     end
-
   end
 end
