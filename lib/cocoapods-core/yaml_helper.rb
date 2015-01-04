@@ -93,6 +93,7 @@ module Pod
       def process_according_to_class(value, hash_keys_hint = nil)
         case value
         when String     then value
+        when Fixnum     then value.to_s
         when Symbol     then ":#{value}"
         when TrueClass  then 'true'
         when FalseClass then 'false'
