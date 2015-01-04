@@ -178,7 +178,7 @@ module Pod
         err = 'ERROR: Parsing unable to continue due '
         err += "to merge conflicts present in:\n"
         err += "the file located at #{path}\n" if path
-        err += "#{yaml}"
+        err + "#{yaml}"
       end
 
       # Error message describing a general error took happened
@@ -196,7 +196,7 @@ module Pod
         err = 'ERROR: Parsing unable to continue due '
         err += "to parsing error:\n"
         err += "contained in the file located at #{path}\n" if path
-        err += "#{yaml}"
+        err + "#{yaml}"
       end
 
       #-----------------------------------------------------------------------#

@@ -108,7 +108,7 @@ module Pod
         basename = v.basename.to_s
         begin
           Version.new(basename) if v.directory? && basename[0, 1] != '.'
-        rescue ArgumentError => e
+        rescue ArgumentError
           raise Informative, 'An unexpected version directory ' \
            "`#{basename}` was encountered for the " \
            "`#{pod_dir}` Pod in the `#{name}` repository."

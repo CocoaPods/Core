@@ -291,7 +291,7 @@ module Pod
 
         hook_name = prepare_hook_name(attr)
         if self.respond_to?(hook_name, true)
-          value = send(hook_name, value)
+          send(hook_name, value)
         else
           value
         end
