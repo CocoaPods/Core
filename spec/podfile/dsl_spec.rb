@@ -5,7 +5,8 @@ module Pod
     describe 'Dependencies' do
       it 'adds dependencies' do
         podfile = Podfile.new do
-          pod 'ASIHTTPRequest'; pod 'SSZipArchive', '>= 0.1'
+          pod 'ASIHTTPRequest'
+          pod 'SSZipArchive', '>= 0.1'
         end
         podfile.dependencies.size.should == 2
         podfile.dependencies.find { |d| d.root_name == 'ASIHTTPRequest' }.should == Dependency.new('ASIHTTPRequest')
@@ -149,7 +150,10 @@ module Pod
       end
 
       it 'allows to inhibit all the warnings of a Target definition' do
-        podfile = Podfile.new { pod 'ObjectiveRecord'; inhibit_all_warnings! }
+        podfile = Podfile.new do
+          pod 'ObjectiveRecord'
+          inhibit_all_warnings!
+        end
         podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
       end
 
@@ -159,7 +163,10 @@ module Pod
       end
 
       it 'allows to use frameworks for a Target definition' do
-        podfile = Podfile.new { pod 'ObjectiveRecord'; use_frameworks! }
+        podfile = Podfile.new do
+          pod 'ObjectiveRecord'
+          use_frameworks!
+        end
         podfile.target_definitions['Pods'].uses_frameworks?.should.be.true
       end
     end

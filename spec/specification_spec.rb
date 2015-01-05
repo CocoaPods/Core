@@ -31,26 +31,48 @@ module Pod
       end
 
       it 'is not equal to another specification if the name is different' do
-        @spec.should.not == Spec.new { |s| s.name = 'Seed'; s.version = '1.0' }
+        @spec.should.not == Spec.new do |s|
+          s.name = 'Seed'
+          s.version = '1.0'
+        end
       end
 
       it 'is not equal to another specification if the version if different' do
-        @spec.should.not == Spec.new { |s| s.name = 'Pod'; s.version = '2.0' }
+        @spec.should.not == Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '2.0'
+        end
       end
 
       it 'is equal to another if the name and the version match regardless of the attributes' do
-        @spec.should == Spec.new { |s| s.name = 'Pod'; s.version = '1.0'; s.source_files = 'Classes' }
+        @spec.should == Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.source_files = 'Classes'
+        end
       end
 
       it 'provides support for Array#uniq' do
-        spec_1 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
-        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        spec_1 = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+        end
+        spec_2 = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+        end
         [spec_1, spec_2].uniq.count.should == 1
       end
 
       it 'provides support for being used as a the key of a Hash' do
-        spec_1 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
-        spec_2 = Spec.new { |s| s.name = 'Pod'; s.version = '1.0' }
+        spec_1 = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+        end
+        spec_2 = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+        end
         hash = {}
         hash[spec_1] = 'VALUE_1'
         hash[spec_2] = 'VALUE_2'
