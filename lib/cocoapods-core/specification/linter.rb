@@ -192,6 +192,19 @@ module Pod
         end
       end
 
+      def _validate_authors(a)
+        if a.is_a? Hash
+          if a == { 'YOUR NAME HERE' => 'YOUR EMAIL HERE' }
+            results.add_error('authors', 'The authors have not been updated ' \
+              'from default')
+          end
+        end
+
+        if a.empty?
+          results.add_error('authors', 'The authors are unspecified.')
+        end
+      end
+
       def _validate_version(v)
         if v.to_s.empty?
           results.add_error('version', 'A version is required.')

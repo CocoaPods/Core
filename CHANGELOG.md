@@ -25,6 +25,11 @@
 * Added `plugins` method to the Podfile DSL.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* Lint specifications authors, ensuring that they are neither empty nor the
+  default.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#214](https://github.com/CocoaPods/Core/issues/214)
+
 ##### Bug Fixes
 
 * Fixes the reading of dependencies that have spaces in their subspecs' name

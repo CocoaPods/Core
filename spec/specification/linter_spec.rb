@@ -147,6 +147,23 @@ module Pod
 
       #------------------#
 
+      it 'fails a specification whose authors are the default' do
+        @spec.stubs(:authors).returns('YOUR NAME HERE' => 'YOUR EMAIL HERE')
+        result_should_include('author', 'default')
+      end
+
+      it 'fails a specification whose authors are an empty hash' do
+        @spec.stubs(:authors).returns({})
+        result_should_include('author', 'unspecified')
+      end
+
+      it 'fails a specification whose authors are an empty array' do
+        @spec.stubs(:authors).returns([])
+        result_should_include('author', 'unspecified')
+      end
+
+      #------------------#
+
       it 'passes a specification whose module name is a valid C99 identifier' do
         @spec.stubs(:module_name).returns('_')
         @linter.lint
