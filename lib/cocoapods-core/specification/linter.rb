@@ -91,10 +91,10 @@ module Pod
           next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
-              results.add_warning('attributes', 'Missing required attribute' \
+              results.add_warning('attributes', 'Missing required attribute ' \
               "`#{attr.name}`.")
             else
-              results.add_error('attributes', 'Missing required attribute' \
+              results.add_error('attributes', 'Missing required attribute ' \
                "`#{attr.name}`.")
             end
           end
