@@ -83,7 +83,7 @@ module Pod
 
             if patterns.respond_to?(:each)
               patterns.each do |pattern|
-                if pattern.start_with?('/')
+                if pattern.is_a?(String) && pattern.start_with?('/')
                   results.add_error('File Patterns', 'File patterns must be ' \
                     "relative and cannot start with a slash (#{attrb.name}).")
                 end
