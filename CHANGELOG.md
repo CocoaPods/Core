@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* The linter will allow non-file-pattern values for `requires_arc`.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2923](https://github.com/CocoaPods/CocoaPods/issues/2923)
+
+
 ## 0.36.0.beta.1
 
 ##### Enhancements

@@ -130,6 +130,12 @@ module Pod
           results.first.message.should.include?('spec is empty')
           results.first.attribute_name.should.include?('File Patterns')
         end
+
+        it 'allows a non-string value for requires_arc' do
+          @spec.requires_arc = true
+          results = @analyzer.analyze
+          results.should.be.empty
+        end
       end
 
       #----------------------------------------#
