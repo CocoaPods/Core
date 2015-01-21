@@ -676,7 +676,7 @@ module Pod
 
       # @!method libraries=(*libraries)
       #
-      #   A list of libraries that the user’s target (application) needs to
+      #   A list of system libraries that the user’s target (application) needs to
       #   link against.
       #
       #   @example
