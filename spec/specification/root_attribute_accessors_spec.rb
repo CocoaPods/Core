@@ -112,7 +112,7 @@ module Pod
         A quick brown fox.
       DESC
       @spec.summary = summary
-      @spec.summary.should == "A quick brown fox."
+      @spec.summary.should == 'A quick brown fox.'
     end
 
     it 'returns the description stripping indentation' do
