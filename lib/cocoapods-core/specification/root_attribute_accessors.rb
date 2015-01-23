@@ -110,7 +110,8 @@ module Pod
         # @return [String] A short description of the Pod.
         #
         def summary
-          attributes_hash['summary']
+          summary = attributes_hash['summary']
+          summary.strip_heredoc.chomp if summary
         end
 
         # @return [String] A longer description of the Pod.

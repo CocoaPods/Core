@@ -107,7 +107,15 @@ module Pod
       @spec.summary.should == 'A library that describes the meaning of life.'
     end
 
-    it 'returns the descriptions stripping indentation' do
+    it 'returns the summary stripping indentation' do
+      summary = <<-DESC
+        A quick brown fox.
+      DESC
+      @spec.summary = summary
+      @spec.summary.should == "A quick brown fox."
+    end
+
+    it 'returns the description stripping indentation' do
       desc = <<-DESC
         Line1
         Line2
