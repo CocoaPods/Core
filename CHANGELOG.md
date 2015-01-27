@@ -1,5 +1,9 @@
 # CocoaPods Core Changelog
 
+## 0.36.0.beta.2
+
+This version only introduces changes in the CocoaPods gem.
+
 ## 0.36.0.beta.1
 
 ##### Enhancements
