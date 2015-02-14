@@ -40,7 +40,7 @@ module Pod
           @default_value  = options.delete(:default_value)  { nil       }
           @ios_default    = options.delete(:ios_default)    { nil       }
           @osx_default    = options.delete(:osx_default)    { nil       }
-          @types          = options.delete(:types)          { [String] }
+          @types          = options.delete(:types)          { [String]  }
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{self}"
