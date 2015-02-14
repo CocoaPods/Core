@@ -166,6 +166,13 @@ module Pod
           deprecated || !deprecated_in_favor_of.nil?
         end
 
+        # @return [String, Nil] The custom module map file of the Pod,
+        #         if specified.
+        #
+        def module_map
+          attributes_hash['module_map']
+        end
+
         #---------------------------------------------------------------------#
 
         private
