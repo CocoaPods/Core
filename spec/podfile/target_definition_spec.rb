@@ -492,6 +492,12 @@ module Pod
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
 
+        it "doesn't add an extension for json podspecs" do
+          options = { :path => 'BananaLib.podspec.json' }
+          file = @root.send(:podspec_path_from_options, options)
+          file.should == SpecHelper::Fixture.fixture('BananaLib.podspec.json')
+        end
+
         it 'it expands the tilde in the provided path' do
           home_dir = File.expand_path('~')
           options = { :path => '~/BananaLib.podspec' }
@@ -503,6 +509,12 @@ module Pod
           options = { :name => 'BananaLib' }
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
+        end
+
+        it "doesn't add an extension for json podspecs" do
+          options = { :name => 'BananaLib.podspec.json' }
+          file = @root.send(:podspec_path_from_options, options)
+          file.should == SpecHelper::Fixture.fixture('BananaLib.podspec.json')
         end
 
         it 'auto-detects the podspec' do

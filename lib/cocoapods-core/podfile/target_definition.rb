@@ -680,7 +680,7 @@ module Pod
       #
       def podspec_path_from_options(options)
         if path = options[:path]
-          if File.extname(path) == '.podspec'
+          if File.basename(path).include?('.podspec')
             path_with_ext = path
           else
             path_with_ext = "#{path}.podspec"
@@ -688,10 +688,10 @@ module Pod
           path_without_tilde = path_with_ext.gsub('~', ENV['HOME'])
           podfile.defined_in_file.dirname + path_without_tilde
         elsif name = options[:name]
-          name = File.extname(name) == '.podspec' ? name : "#{name}.podspec"
+          name = File.basename(name).include?('.podspec') ? name : "#{name}.podspec"
           podfile.defined_in_file.dirname + name
         elsif options[:autodetect]
-          glob_pattern = podfile.defined_in_file.dirname + '*.podspec'
+          glob_pattern = podfile.defined_in_file.dirname + '*.podspec{,.json}'
           Pathname.glob(glob_pattern).first
         end
       end

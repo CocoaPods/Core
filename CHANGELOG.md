@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Allow the `podspec` Podfile DSL flag to work with JSON podspecs.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#201](https://github.com/CocoaPods/Core/issues/201)
+  [CocoaPods#2952](https://github.com/CocoaPods/CocoaPods/issues/2952)
+
+
 ## 0.36.0.beta.2
 
 This version only introduces changes in the CocoaPods gem.
