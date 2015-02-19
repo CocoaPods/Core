@@ -15,6 +15,19 @@ module Pod
 
       #----------------------------------------#
 
+      describe 'Bad types' do
+        it 'fails a spec with an attribute of the wrong type' do
+          @spec.summary = ['Summary in an array']
+          results = @analyzer.analyze
+          results.count.should.be.equal(2)
+          expected = 'Unacceptable type `Array`'
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('attribute')
+        end
+      end
+
+      #----------------------------------------#
+
       describe 'Unknown keys check' do
         it 'validates a spec with valid keys' do
           results = @analyzer.analyze

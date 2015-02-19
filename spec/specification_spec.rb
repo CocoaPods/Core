@@ -433,8 +433,16 @@ module Pod
 
       it 'declares attribute writer methods' do
         Specification::DSL.attributes.values.each do |attr|
-          @spec.send(attr.writer_name, 'a_value')
-          @spec.attributes_hash[attr.name.to_s].should == 'a_value'
+          value = case attr.supported_types.first
+                  when Array then %w(a_value)
+                  when FalseClass then false
+                  when Hash then { :key => 'value' }
+                  when String then 'a_value'
+                  when TrueClass then true
+                  end
+
+          @spec.send(attr.writer_name, value)
+          @spec.attributes_hash[attr.name.to_s].should == value
         end
       end
 

@@ -53,16 +53,13 @@ module Pod
           unknown_keys = keys - valid_keys
 
           unknown_keys.each do |key|
-            results.add_warning('attributes', "Unrecognized `#{key}` key")
+            results.add_warning('attributes', "Unrecognized `#{key}` key.")
           end
 
           Pod::Specification::DSL.attributes.each do |_key, attribute|
-            if attribute.keys && attribute.name != :platforms
-              if attribute.root_only?
-                value = consumer.spec.send(attribute.name)
-              else
-                value = consumer.send(attribute.name)
-              end
+            validate_attribute_type(attribute, consumer.spec.attributes_hash[attribute.name.to_s])
+            if attribute.name != :platforms
+              value = value_for_attribute(attribute)
               validate_attribute_value(attribute, value) if value
             end
           end
@@ -83,7 +80,7 @@ module Pod
 
             if patterns.respond_to?(:each)
               patterns.each do |pattern|
-                if pattern.start_with?('/')
+                if pattern.respond_to?(:start_with?) && pattern.start_with?('/')
                   results.add_error('File Patterns', 'File patterns must be ' \
                     "relative and cannot start with a slash (#{attrb.name}).")
                 end
@@ -109,6 +106,17 @@ module Pod
 
         private
 
+        def value_for_attribute(attribute)
+          if attribute.root_only?
+            consumer.spec.send(attribute.name)
+          else
+            consumer.send(attribute.name) if consumer.respond_to?(attribute.name)
+          end
+        rescue => e
+          results.add_error('attributes', "Unable to validate `#{attribute.name}` (#{e}).")
+          nil
+        end
+
         # Validates the given value for the given attribute.
         #
         # @param  [Spec::DSL::Attribute] attribute
@@ -122,6 +130,15 @@ module Pod
             validate_attribute_array_keys(attribute, value)
           elsif attribute.keys.is_a?(Hash)
             validate_attribute_hash_keys(attribute, value)
+          end
+        end
+
+        def validate_attribute_type(attribute, value)
+          return unless value
+          types = attribute.supported_types
+          if types.none? { |klass| value.class == klass }
+            results.add_error('attributes', 'Unacceptable type ' \
+              "`#{value.class}` for `#{attribute.name}`. Allowed values: `#{types.inspect}`.")
           end
         end
 
