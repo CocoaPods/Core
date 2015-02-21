@@ -2,6 +2,15 @@
 
 ## Master
 
+##### Enhancements
+
+* The linter now validates that every specification attribute is of the correct
+  type.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#220](https://github.com/CocoaPods/Core/issues/220)
+  [CocoaPods#2923](https://github.com/CocoaPods/CocoaPods/issues/2923)
+  [CocoaPods#3134](https://github.com/CocoaPods/CocoaPods/issues/3134)
+
 ##### Bug Fixes
 
 * Allow the `podspec` Podfile DSL flag to work with JSON podspecs.  
