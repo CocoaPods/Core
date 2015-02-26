@@ -429,6 +429,13 @@ module Pod
         result_should_include('a spec cannot be', 'deprecated_in_favor_of')
       end
 
+      it 'does not warn when a spec is deprecated in favor of a different spec' do
+        @spec.deprecated_in_favor_of = @spec.name + '_other'
+        @linter.lint
+        results = @linter.results
+        results.should.be.empty
+      end
+
       #------------------#
 
       it 'checks if the compiler flags disable warnings' do

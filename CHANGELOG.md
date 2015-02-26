@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* The linter will no longer erroneously warn that a specification has been
+  deprecated in favor of itself.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#3197](https://github.com/CocoaPods/CocoaPods/issues/3197)
+
+
 ## 0.36.0.rc.1
 
 ##### Enhancements
