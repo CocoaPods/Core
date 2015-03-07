@@ -365,6 +365,7 @@ module Pod
         if git = s[:git]
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
+          return unless git_uri.host
           perform_github_uri_checks(git, git_uri) if git_uri.host.end_with?('github.com')
         end
       end
@@ -387,8 +388,15 @@ module Pod
       # Performs validations related to SSH sources
       #
       def check_git_ssh_source(s)
+        require 'uri'
+
         if git = s[:git]
-          if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
+          if git =~ /^#{URI.regexp}$/
+            git_uri = URI.parse(git)
+            return if %w[http https git].include?(git_uri.scheme) && git_uri.host
+          end
+          
+          if git =~ /(\w+\@)?(\w|\.)+\:(\/\w+)*/
             results.add_warning('source', 'Git SSH URLs will NOT work for ' \
               'people behind firewalls configured to only allow HTTP, ' \
               'therefore HTTPS is preferred.')

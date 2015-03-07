@@ -327,6 +327,12 @@ module Pod
         result_should_include('Git', 'SSH')
       end
 
+      it 'warns for SSH repositories (without user@)' do
+        @spec.stubs(:source).returns(:git => 'gitbucket:/group/repo.git', :tag => '1.0')
+        @linter.lint
+        result_should_include('Git', 'SSH')
+      end
+
       it 'warns for SSH repositories on Github' do
         @spec.stubs(:source).returns(:git => 'git@github.com:kylef/test.git', :tag => '1.0')
         result_should_include('Git', 'SSH')
