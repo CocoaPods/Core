@@ -365,8 +365,7 @@ module Pod
         if git = s[:git]
           return unless git =~ /^#{URI.regexp}$/
           git_uri = URI.parse(git)
-          return unless git_uri.host
-          perform_github_uri_checks(git, git_uri) if git_uri.host.end_with?('github.com')
+          perform_github_uri_checks(git, git_uri) if git_uri.host && git_uri.host.end_with?('github.com')
         end
       end
 
