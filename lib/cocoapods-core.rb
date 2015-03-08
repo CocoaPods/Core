@@ -13,6 +13,7 @@ module Pod
 
   require 'pathname'
   require 'cocoapods-core/vendor'
+  require 'cocoapods-core/thread_safe'
 
   autoload :Version,        'cocoapods-core/version'
   autoload :Requirement,    'cocoapods-core/requirement'
@@ -29,7 +30,9 @@ module Pod
   autoload :Source,         'cocoapods-core/source'
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
-  autoload :YAMLHelper,  'cocoapods-core/yaml_helper'
+  autoload :YAMLHelper,     'cocoapods-core/yaml_helper'
+
+  extend ThreadSafe
 
   # TODO: Fix
   #

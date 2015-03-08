@@ -550,7 +550,7 @@ module Pod
     def self.from_string(spec_contents, path, subspec_name = nil)
       path = Pathname.new(path)
       spec = nil
-      Dir.chdir(path.parent.directory? ? path.parent : Dir.pwd) do
+      Pod.chdir(path.parent.directory? ? path.parent : Pod.pwd) do
         case path.extname
         when '.podspec'
           spec = ::Pod._eval_podspec(spec_contents, path)

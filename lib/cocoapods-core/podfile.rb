@@ -251,7 +251,9 @@ module Pod
       podfile = Podfile.new(path) do
         begin
           # rubocop:disable Eval
-          eval(string, nil, path.to_s)
+          Pod.chdir(path.parent) do
+            eval(string, nil, path.to_s)
+          end
           # rubocop:enable Eval
         rescue => e
           message = "Invalid `#{path.basename}` file: #{e.message}"

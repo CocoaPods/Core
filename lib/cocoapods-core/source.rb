@@ -38,7 +38,7 @@ module Pod
     #       option. See https://github.com/CocoaPods/CocoaPods/issues/2724.
     #
     def url
-      Dir.chdir(repo) do
+      Pod.chdir(repo) do
         remote = `git config --get remote.origin.url`.chomp
 
         if $?.success?
