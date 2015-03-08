@@ -26,7 +26,7 @@ module Pod
       @response_queue = Queue.new
       @func = func
       @threads = size.times.map { |i| Thread.start { process_queue(i) } }
-      trap("INT") { abort_threads }
+      trap('INT') { abort_threads }
     end
 
     # Enqueue a request to be executed in the worker pool
@@ -47,7 +47,7 @@ module Pod
       stop_threads
     end
 
-  private
+    private
 
     def process_queue(i)
       loop do
@@ -59,7 +59,7 @@ module Pod
 
     def apply_func(obj, i)
       @func.call(obj, i)
-    rescue Exception => e
+    rescue Object => e
       WrappedException.new(e)
     end
 
@@ -67,11 +67,11 @@ module Pod
     # so as worker threads after retrieving it, shut themselves down
     def stop_threads
       @threads.each { @request_queue.enq POISON }
-      @threads.each { |thread| thread.join }
+      @threads.each(&:join)
     end
 
     def abort_threads
-      @threads.each {|i| i.exit }
+      @threads.each(&:exit)
       exit 1
     end
   end
