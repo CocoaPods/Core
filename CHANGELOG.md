@@ -1,5 +1,16 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Ensure that strings that are serialized to YAML are escaped and quoted, if
+  needed.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#213](https://github.com/CocoaPods/Core/issues/213)
+  [CocoaPods/CocoaPods#2837](https://github.com/CocoaPods/CocoaPods/issues/2837)
+
+
 ## 0.36.0
 
 ##### Bug Fixes
