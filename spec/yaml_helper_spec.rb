@@ -26,6 +26,13 @@ module Pod
         result.should == "Value\n"
       end
 
+      it 'coverts a string that looks like a float' do
+        value = '1.2'
+        result = YAMLHelper.convert(value)
+        result.should == "'1.2'\n"
+        YAMLHelper.load_string(result).should == value
+      end
+
       it 'converts a symbol' do
         value = :value
         result = YAMLHelper.convert(value)

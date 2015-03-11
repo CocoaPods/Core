@@ -92,7 +92,7 @@ module Pod
       #
       def process_according_to_class(value, hash_keys_hint = nil)
         case value
-        when String     then value
+        when String     then YAML.dump(value).sub(/^---/, '').sub(/[.]{3}\s*$/, '').strip
         when Symbol     then ":#{value}"
         when TrueClass  then 'true'
         when FalseClass then 'false'
