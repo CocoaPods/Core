@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Pod
   # Converts objects to their YAML representation.
   #
