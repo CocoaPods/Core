@@ -15,7 +15,7 @@ module Pod
 
       it 'can be initialized with a requirement on a pre-release version' do
         dependency = Dependency.new('bananas', '> 1.0-pre')
-        dependency.requirement.should == '> 1.0-pre'
+        dependency.requirement.to_s.should == '> 1.0-pre'
       end
 
       it 'can be initialized with an external source' do

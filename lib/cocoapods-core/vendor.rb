@@ -9,7 +9,7 @@ module Pod
     #
     # E.g. https://github.com/CocoaPods/CocoaPods/issues/398
     #
-    # The following classes are copied from RubyGems `v1.8.24`. The changes
+    # The following classes are copied from RubyGems `v2.4.6`. The changes
     # performed to the source files are the following:
     #
     # - Namespaced in `Pod::Vendor`

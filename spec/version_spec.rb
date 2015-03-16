@@ -15,6 +15,11 @@ module Pod
         version.should.not.be.head
       end
 
+      it 'initializes from a frozen string' do
+        version = Version.new('1.2.3'.freeze)
+        version.should.not.be.head
+      end
+
       it 'initializes from a string containing head information' do
         version = Version.new('HEAD based on 1.2.3')
         version.should.be.head
