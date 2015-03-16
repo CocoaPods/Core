@@ -15,7 +15,7 @@ module Pod
         if [301, 302, 303, 307, 308].include? response.status_code
           location = response.headers['location'].first
 
-          if location =~ /:\/\//
+          if location =~ %r{://}
             url = location
           else
             url = URI.join(url, location).to_s

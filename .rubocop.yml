@@ -12,3 +12,8 @@ AllCops:
 FileName:
   Exclude:
     - lib/cocoapods-core.rb
+
+Style/TrivialAccessors:
+  Exclude:
+    - lib/cocoapods-core/*/dsl.rb
+    - lib/cocoapods-core/*/dsl/*

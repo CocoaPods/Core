@@ -39,7 +39,7 @@ module Pod
           Podfile.from_file(podfile_file)
         rescue DSLError => e
           raised = true
-          e.message.should.match /from .*\/tmp\/Podfile:3/
+          e.message.should.match %r{from .*/tmp/Podfile:3}
           e.message.should.match /requires a name/
           e.message.should.match /# Comment/
         end

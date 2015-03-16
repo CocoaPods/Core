@@ -20,6 +20,8 @@ module Pod
       # @!group Configuration
       #-----------------------------------------------------------------------#
 
+      # rubocop:disable Style/TrivialAccessors
+
       # Allows to specify an optional callback which is called before
       # analysing every spec. Suitable for UI.
       #
@@ -32,6 +34,8 @@ module Pod
       def pre_check(&block)
         @pre_check_callback = block
       end
+
+      # rubocop:enable Style/TrivialAccessors
 
       public
 
