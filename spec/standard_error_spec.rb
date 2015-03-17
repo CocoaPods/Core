@@ -9,11 +9,23 @@ module Pod
         "#{@dsl_path}:127:in `block (2 levels) in _eval_podspec'",
         "lib/cocoapods-core/specification.rb:41:in `initialize'",
       ]
-      description = 'Invalid podspec.'
+      description = 'Invalid podspec'
       @err = DSLError.new(description, @dsl_path, backtrace)
 
       lines = ['first line', 'error line', 'last line']
       File.stubs(:readlines).returns(lines)
+    end
+
+    it 'returns a properly formed message' do
+      @err.message.should == <<-MSG.strip_heredoc
+
+        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+
+         #  from /Users/segiddins/Development/OpenSource/Rainforest/Core/spec/fixtures/spec-repos/master/Three20/1.0.11/Three20.podspec:2
+         #  -------------------------------------------
+         #  first line >  error line #  last line
+         #  -------------------------------------------
+      MSG
     end
 
     it 'includes the given description in the message' do
