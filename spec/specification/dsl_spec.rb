@@ -85,6 +85,20 @@ module Pod
         @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
         @spec.attributes_hash['deprecated_in_favor_of'].should == 'NewMoreAwesomePod'
       end
+
+      it 'allows to specify the Pod as private' do
+        @spec.private_spec = true
+        @spec.attributes_hash['private_spec'].should == true
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
+
+    describe 'Root specification attributes default values' do
+      it 'does not specify the Pod as private by default' do
+        attr = Specification::DSL.attributes[:private_spec]
+        attr.default.should == false
+      end
     end
 
     #-----------------------------------------------------------------------------#

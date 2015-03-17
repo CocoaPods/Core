@@ -427,6 +427,26 @@ module Pod
       #
       root_attribute :deprecated_in_favor_of
 
+      #------------------#
+
+      # @!method private_spec=(flag)
+      #
+      #   `private_spec` allows you to specify that a pod is private
+      #   consumption only and is not allowed to be published to trunk.
+      #
+      #   The default value of this attribute is `false`.
+      #
+      #   @example
+      #
+      #     spec.private_spec = true
+      #
+      #   @param [Bool] flag
+      #          Whether the specification is private.
+      #
+      root_attribute :private_spec,
+                     :types => [TrueClass, FalseClass],
+                     :default_value => false
+
       #-----------------------------------------------------------------------#
 
       # @!group Platform

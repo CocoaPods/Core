@@ -166,6 +166,18 @@ module Pod
           deprecated || !deprecated_in_favor_of.nil?
         end
 
+        # @return [Bool] Whether the pod is private and cannot be pushed to trunk.
+        #
+        def private_spec
+          attributes_hash['private_spec']
+        end
+
+        # @return [Bool] Whether the pod is private and cannot be pushed to trunk.
+        #
+        def private_spec?
+          private_spec
+        end
+
         #---------------------------------------------------------------------#
 
         private
