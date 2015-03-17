@@ -12,7 +12,7 @@ module Pod
       description = 'Invalid podspec'
       @err = DSLError.new(description, @dsl_path, backtrace)
 
-      lines = ['first line', 'error line', 'last line']
+      lines = ["first line\n", "error line\n", "last line\n"]
       File.stubs(:readlines).returns(lines)
     end
 
@@ -21,10 +21,33 @@ module Pod
 
         [!] Invalid podspec. Updating CocoaPods might fix the issue.
 
-         #  from /Users/segiddins/Development/OpenSource/Rainforest/Core/spec/fixtures/spec-repos/master/Three20/1.0.11/Three20.podspec:2
+         #  from #{@dsl_path.expand_path}:2
          #  -------------------------------------------
-         #  first line >  error line #  last line
+         #  first line
+         >  error line
+         #  last line
          #  -------------------------------------------
+      MSG
+    end
+
+    it 'parses syntax error messages for well-formed messages' do
+      code = "puts 'hi'\nputs())\nputs 'bye'"
+      # rubocop:disable Eval
+      syntax_error = should.raise(SyntaxError) { eval(code, nil, @dsl_path.to_s) }
+      # rubocop:enable Eval
+      @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
+      @err.stubs(:backtrace).returns(syntax_error.backtrace)
+      File.stubs(:readlines).returns(code.split("\n").map { |l| "#{l}\n" })
+      @err.message.should == <<-MSG.strip_heredoc
+
+      [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input. Updating CocoaPods might fix the issue.
+
+       #  from #{@dsl_path.expand_path}:2
+       #  -------------------------------------------
+       #  puts 'hi'
+       >  puts())
+       #  puts 'bye'
+       #  -------------------------------------------
       MSG
     end
 

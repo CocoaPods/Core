@@ -50,7 +50,9 @@ module Pod
     # @return [String] the message of the exception.
     #
     def message
-      unless @message
+      @message ||= begin
+        trace_line, description = parse_line_number_from_description
+
         m = "\n[!] "
         m << description
         m << ". Updating CocoaPods might fix the issue.\n"
@@ -58,13 +60,14 @@ module Pod
 
         return m unless backtrace && dsl_path && File.exist?(dsl_path)
 
-        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) }
+        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
         return m unless trace_line
         line_numer = trace_line.split(':')[1].to_i - 1
         return m unless line_numer
+
         lines      = File.readlines(dsl_path.to_s)
         indent     = ' #  '
-        indicator  = indent.dup.gsub('#', '>')
+        indicator  = indent.gsub('#', '>')
         first_line = (line_numer.zero?)
         last_line  = (line_numer == (lines.count - 1))
 
@@ -76,10 +79,18 @@ module Pod
         m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
         m << "\n" unless m.end_with?("\n")
         m << "#{indent}-------------------------------------------\n"
-        m << ''
-        @message = m
       end
-      @message
+    end
+
+    private
+
+    def parse_line_number_from_description
+      description = self.description
+      if dsl_path && description =~ /(#{Regexp.quote File.expand_path(dsl_path)}:\d+)/
+        trace_line = Regexp.last_match[1]
+        description = description.sub(/#{Regexp.quote trace_line}:\s*/, '')
+      end
+      [trace_line, description]
     end
   end
 end
