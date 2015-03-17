@@ -13,7 +13,7 @@ module Pod
       @err = DSLError.new(description, @dsl_path, backtrace)
 
       lines = ["first line\n", "error line\n", "last line\n"]
-      File.stubs(:readlines).returns(lines)
+      File.stubs(:read).returns(lines.join(''))
     end
 
     it 'returns a properly formed message' do
@@ -37,17 +37,33 @@ module Pod
       # rubocop:enable Eval
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
       @err.stubs(:backtrace).returns(syntax_error.backtrace)
-      File.stubs(:readlines).returns(code.split("\n").map { |l| "#{l}\n" })
+      File.stubs(:read).returns(code)
       @err.message.should == <<-MSG.strip_heredoc
 
-      [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input. Updating CocoaPods might fix the issue.
+        [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input. Updating CocoaPods might fix the issue.
 
-       #  from #{@dsl_path.expand_path}:2
-       #  -------------------------------------------
-       #  puts 'hi'
-       >  puts())
-       #  puts 'bye'
-       #  -------------------------------------------
+         #  from #{@dsl_path.expand_path}:2
+         #  -------------------------------------------
+         #  puts 'hi'
+         >  puts())
+         #  puts 'bye'
+         #  -------------------------------------------
+      MSG
+    end
+
+    it 'uses the passed-in contents' do
+      @err.stubs(:contents).returns("puts 'hi'\nputs 'there'\nputs 'bye'")
+      File.expects(:exist?).never
+      @err.message.should == <<-MSG.strip_heredoc
+
+        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+
+         #  from #{@dsl_path}:2
+         #  -------------------------------------------
+         #  puts 'hi'
+         >  puts 'there'
+         #  puts 'bye'
+         #  -------------------------------------------
       MSG
     end
 

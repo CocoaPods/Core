@@ -255,7 +255,7 @@ module Pod
           # rubocop:enable Eval
         rescue => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
-          raise DSLError.new(message, path, e.backtrace)
+          raise DSLError.new(message, path, e.backtrace, string)
         end
       end
       podfile
