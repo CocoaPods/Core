@@ -163,5 +163,10 @@ module Pod
 
       @spec.deprecated?.should == false
     end
+
+    it 'returns whether the Pod is private' do
+      @spec.private_spec = true
+      @spec.private_spec?.should == true
+    end
   end
 end
