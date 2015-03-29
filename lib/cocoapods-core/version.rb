@@ -57,7 +57,11 @@ module Pod
         version = Regexp.last_match[2]
         @head = true
       end
-      super(version)
+
+      raise ArgumentError, "Malformed version number string #{version}" unless
+        self.class.correct?(version)
+
+      @version = version.to_s.strip
     end
 
     # An instance that represents version 0.
