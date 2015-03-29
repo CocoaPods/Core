@@ -9,11 +9,62 @@ module Pod
         "#{@dsl_path}:127:in `block (2 levels) in _eval_podspec'",
         "lib/cocoapods-core/specification.rb:41:in `initialize'",
       ]
-      description = 'Invalid podspec.'
+      description = 'Invalid podspec'
       @err = DSLError.new(description, @dsl_path, backtrace)
 
-      lines = ['first line', 'error line', 'last line']
-      File.stubs(:readlines).returns(lines)
+      lines = ["first line\n", "error line\n", "last line\n"]
+      File.stubs(:read).returns(lines.join(''))
+    end
+
+    it 'returns a properly formed message' do
+      @err.message.should == <<-MSG.strip_heredoc
+
+        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+
+         #  from #{@dsl_path.expand_path}:2
+         #  -------------------------------------------
+         #  first line
+         >  error line
+         #  last line
+         #  -------------------------------------------
+      MSG
+    end
+
+    it 'parses syntax error messages for well-formed messages' do
+      code = "puts 'hi'\nputs())\nputs 'bye'"
+      # rubocop:disable Eval
+      syntax_error = should.raise(SyntaxError) { eval(code, nil, @dsl_path.to_s) }
+      # rubocop:enable Eval
+      @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
+      @err.stubs(:backtrace).returns(syntax_error.backtrace)
+      File.stubs(:read).returns(code)
+      @err.message.should == <<-MSG.strip_heredoc
+
+        [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input. Updating CocoaPods might fix the issue.
+
+         #  from #{@dsl_path.expand_path}:2
+         #  -------------------------------------------
+         #  puts 'hi'
+         >  puts())
+         #  puts 'bye'
+         #  -------------------------------------------
+      MSG
+    end
+
+    it 'uses the passed-in contents' do
+      @err.stubs(:contents).returns("puts 'hi'\nputs 'there'\nputs 'bye'")
+      File.expects(:exist?).never
+      @err.message.should == <<-MSG.strip_heredoc
+
+        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+
+         #  from #{@dsl_path}:2
+         #  -------------------------------------------
+         #  puts 'hi'
+         >  puts 'there'
+         #  puts 'bye'
+         #  -------------------------------------------
+      MSG
     end
 
     it 'includes the given description in the message' do

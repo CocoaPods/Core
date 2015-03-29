@@ -25,10 +25,20 @@ module Pod
     # @param [Exception] backtrace @see backtrace
     # @param [String]    dsl_path  @see dsl_path
     #
-    def initialize(description, dsl_path, backtrace)
+    def initialize(description, dsl_path, backtrace, contents = nil)
       @description = description
       @dsl_path    = dsl_path
       @backtrace   = backtrace
+      @contents    = contents
+    end
+
+    # @return [String] the contents of the DSL that cause the exception to
+    #         be raised.
+    #
+    def contents
+      @contents ||= begin
+        dsl_path && File.exist?(dsl_path) && File.read(dsl_path)
+      end
     end
 
     # The message of the exception reports the content of podspec for the
@@ -50,21 +60,24 @@ module Pod
     # @return [String] the message of the exception.
     #
     def message
-      unless @message
+      @message ||= begin
+        trace_line, description = parse_line_number_from_description
+
         m = "\n[!] "
         m << description
         m << ". Updating CocoaPods might fix the issue.\n"
         m = m.red if m.respond_to?(:red)
 
-        return m unless backtrace && dsl_path && File.exist?(dsl_path)
+        return m unless backtrace && dsl_path && contents
 
-        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) }
+        trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
         return m unless trace_line
         line_numer = trace_line.split(':')[1].to_i - 1
         return m unless line_numer
-        lines      = File.readlines(dsl_path.to_s)
+
+        lines      = contents.lines
         indent     = ' #  '
-        indicator  = indent.dup.gsub('#', '>')
+        indicator  = indent.gsub('#', '>')
         first_line = (line_numer.zero?)
         last_line  = (line_numer == (lines.count - 1))
 
@@ -76,10 +89,18 @@ module Pod
         m << "#{indent}#{    lines[line_numer + 1] }" unless last_line
         m << "\n" unless m.end_with?("\n")
         m << "#{indent}-------------------------------------------\n"
-        m << ''
-        @message = m
       end
-      @message
+    end
+
+    private
+
+    def parse_line_number_from_description
+      description = self.description
+      if dsl_path && description =~ /((#{Regexp.quote File.expand_path(dsl_path)}|#{Regexp.quote dsl_path.to_s}):\d+)/
+        trace_line = Regexp.last_match[1]
+        description = description.sub(/#{Regexp.quote trace_line}:\s*/, '')
+      end
+      [trace_line, description]
     end
   end
 end
