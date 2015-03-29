@@ -2,6 +2,12 @@
 
 ## Master
 
+##### Enhancements
+
+* DSL errors now show more context when errors such as `SyntaxError` are
+  encountered.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 ##### Bug Fixes
 
 * Allow a `Dependency` to be initialized with no non-nil external source
