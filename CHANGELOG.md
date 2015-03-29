@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Allow a `Dependency` to be initialized with no non-nil external source
+  key-value pairs and not be considered external.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#3320](https://github.com/CocoaPods/CocoaPods/issues/3320)
+
+
 ## 0.36.1
 
 ##### Bug Fixes

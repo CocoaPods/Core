@@ -23,6 +23,12 @@ module Pod
         dep.should.be.external
       end
 
+      it 'can be initialized with an empty external source and not be ' \
+         'considered external' do
+        dep = Dependency.new('cocoapods', :git => nil)
+        dep.should.not.be.external
+      end
+
       it "knows if it's local" do
         dep = Dependency.new('cocoapods', :path => '/tmp/cocoapods')
         dep.should.be.local

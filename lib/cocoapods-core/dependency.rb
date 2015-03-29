@@ -69,7 +69,8 @@ module Pod
     #
     def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
-        @external_source = requirements.pop
+        external_source = requirements.pop.select { |_, v| !v.nil? }
+        @external_source = external_source unless external_source.empty?
         unless requirements.empty?
           raise Informative, 'A dependency with an external source may not ' \
             "specify version requirements (#{name})."
