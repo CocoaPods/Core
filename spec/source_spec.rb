@@ -109,6 +109,10 @@ module Pod
         @source.search(dep).name.should == 'BananaLib'
       end
 
+      it 'matches case' do
+        @source.search('bAnAnAlIb').should.be.nil?
+      end
+
       describe '#search_by_name' do
         it 'properly configures the sources of a set in search by name' do
           source = Source.new(fixture('spec-repos/test_repo'))

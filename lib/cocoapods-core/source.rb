@@ -201,7 +201,8 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      if (specs_dir + query).directory?
+      spec_dir = specs_dir + query
+      if Pathname.glob(spec_dir) == [spec_dir]
         set(query)
       end
     end
