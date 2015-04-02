@@ -712,7 +712,7 @@ module Pod
         return requirements unless options.is_a?(Hash)
 
         should_inhibit = options.delete(:inhibit_warnings)
-        inhibit_warnings_for_pod(name) if should_inhibit
+        inhibit_warnings_for_pod(Specification.root_name name) if should_inhibit
 
         requirements.pop if options.empty?
       end

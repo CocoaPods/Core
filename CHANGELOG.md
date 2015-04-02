@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Inhibit warnings for pods that only have the `inhibit_warnings` option enabled
+  on a subspec.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2777](https://github.com/CocoaPods/CocoaPods/issues/2777)
+
+
 ## 0.36.3
 
 This version only introduces changes in the CocoaPods gem.

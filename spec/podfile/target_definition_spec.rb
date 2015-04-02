@@ -201,6 +201,9 @@ module Pod
       it 'inhibits warnings per pod if passed to store_pod' do
         @root.store_pod('Objective-Record', :head, :inhibit_warnings => true)
         @root.should.inhibits_warnings_for_pod?('Objective-Record')
+
+        @root.store_pod('RestKit/Networking', :head, :inhibit_warnings => true)
+        @root.should.inhibits_warnings_for_pod?('RestKit')
       end
 
       it 'must delete the hash if it was empty. otherwise breaks Dependency' do
