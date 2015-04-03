@@ -28,11 +28,15 @@ module Pod
     # @param  [String] name
     #         the name of the specification.
     #
-    def initialize(parent = nil, name = nil)
+    # @param [Bool] test_specification
+    #        Whether the specification is a test specification
+    #
+    def initialize(parent = nil, name = nil, test_specification = false)
       @attributes_hash = {}
       @subspecs = []
       @consumers = {}
       @parent = parent
+      @test_specification = test_specification
       attributes_hash['name'] = name
 
       yield self if block_given?
@@ -200,6 +204,11 @@ module Pod
 
     # @!group Dependencies & Subspecs
 
+    # @return [Bool] if the specification is a test specification
+    def test_specification?
+      @test_specification
+    end
+
     # @return [Array<Specifications>] the recursive list of all the subspecs of
     #         a specification.
     #
@@ -238,7 +247,7 @@ module Pod
       else
         remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
-        subspec = subspecs.find { |s| s.base_name == subspec_name }
+        subspec = subspecs.find { |s| s.base_name == subspec_name && !s.test_specification? }
         unless subspec
           if raise_if_missing
             raise Informative, 'Unable to find a specification named ' \
@@ -268,7 +277,7 @@ module Pod
     #
     def subspec_dependencies(platform = nil)
       if default_subspecs.empty?
-        specs = subspecs.compact
+        specs = subspecs.compact.reject(&:test_specification?)
       else
         specs = default_subspecs.map do |subspec_name|
           root.subspec_by_name("#{name}/#{subspec_name}")

@@ -226,6 +226,17 @@ module Pod
         @spec.subspec_by_name('Pod/Subspec/Subsubspec').should == @subsubspec
       end
 
+      it "doesn't return the test subspec given the Tests name" do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking'
+          s.osx.dependency 'MagicalRecord'
+          s.test_spec {}
+        end
+        @spec.subspec_by_name('Pod/Tests', false).should. nil?
+      end
+
       it 'returns a subspec given the relative name' do
         @subspec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
       end
@@ -278,6 +289,15 @@ module Pod
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspeciOS', '1.0'),
         ]
+      end
+
+      it 'excludes the test subspec from the subspec dependencies' do
+        @spec.test_spec {}
+
+        @spec.subspec_dependencies.sort.should == [
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspecOSX', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
       end
 
       it 'returns all the dependencies' do
