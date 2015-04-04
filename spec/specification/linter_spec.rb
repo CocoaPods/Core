@@ -113,14 +113,19 @@ module Pod
 
       #------------------#
 
-      xit 'checks for unrecognized keys' do
+      it 'checks for unrecognized keys' do
+        @spec.attributes_hash[:foo] = 'bar'
+        result_should_include('foo', 'unrecognized')
       end
 
-      xit 'checks the type of the values of the attributes' do
+      it 'checks the type of the values of the attributes' do
+        @spec.homepage = %w(Pod)
+        result_should_include('homepage', 'unacceptable type')
       end
 
-      xit 'checks for unknown keys in the license' do
-        lambda { @spec.license = { :name => 'MIT' } }.should.raise StandardError
+      it 'checks for unknown keys in the license' do
+        @spec.license = { :name => 'MIT' }
+        result_should_include('license', 'unrecognized `name` key')
       end
 
       xit 'checks the source for unknown keys' do
