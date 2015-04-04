@@ -47,6 +47,7 @@ module Pod
         @results = Results.new
         if spec
           check_required_root_attributes
+          validate_name
           run_root_validation_hooks
           perform_all_specs_analysis
         else
@@ -164,11 +165,9 @@ module Pod
 
       private
 
-      # @!group Root spec validation helpers
-
       # Performs validations related to the `name` attribute.
       #
-      def _validate_name(_n)
+      def validate_name
         if spec.name && file
           acceptable_names = [
             spec.root.name + '.podspec',
@@ -191,6 +190,8 @@ module Pod
           end
         end
       end
+
+      # @!group Root spec validation helpers
 
       def _validate_authors(a)
         if a.is_a? Hash

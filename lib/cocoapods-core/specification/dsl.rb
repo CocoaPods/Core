@@ -76,8 +76,10 @@ module Pod
       #   @param  [String] name
       #           the name of the pod.
       #
-      root_attribute :name,
-                     :required => true
+      attribute :name,
+                :required => true,
+                :inherited => false,
+                :multi_platform => false
 
       #------------------#
 
