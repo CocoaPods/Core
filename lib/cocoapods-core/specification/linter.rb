@@ -46,7 +46,7 @@ module Pod
       def lint
         @results = Results.new
         if spec
-          check_required_root_attributes
+          check_required_attributes
           validate_name
           run_root_validation_hooks
           perform_all_specs_analysis
@@ -81,15 +81,14 @@ module Pod
 
       # !@group Lint steps
 
-      # Checks that every root only attribute which is required has a value.
+      # Checks that every required attribute has a value.
       #
       # @return [void]
       #
-      def check_required_root_attributes
-        attributes = DSL.attributes.values.select(&:root_only?)
+      def check_required_attributes
+        attributes = DSL.attributes.values.select(&:required?)
         attributes.each do |attr|
           value = spec.send(attr.name)
-          next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
               results.add_warning('attributes', 'Missing required attribute ' \
@@ -147,7 +146,7 @@ module Pod
       #
       # @note   Hooks are called only if there is a value for the attribute as
       #         required attributes are already checked by the
-      #         {#check_required_root_attributes} step.
+      #         {#check_required_attributes} step.
       #
       # @return [void]
       #
