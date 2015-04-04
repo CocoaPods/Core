@@ -113,45 +113,5 @@ module Pod
         attr.writer_singular_form.should == 'framework='
       end
     end
-
-    #-------------------------------------------------------------------------#
-
-    describe 'Writer method support' do
-      it 'validates a value to check whether it is compatible with the accepted types' do
-        attr = Attribute.new(:frameworks,  :types => [String], :container => Array)
-        lambda { attr.validate_type('a string') }.should.not.raise
-        lambda { attr.validate_type(['with container']) }.should.not.raise
-        lambda { attr.validate_type(:non_accepted) }.should.raise StandardError
-      end
-
-      it 'validates root only values before writing' do
-        attr = Attribute.new(:summary, :root_only => true)
-        spec = Spec.new do |s|
-          s.subspec 'sub' do |_sp|
-          end
-        end
-        subspec = spec.subspecs.first
-
-        lambda { attr.validate_for_writing(spec, 'a string') }.should.not.raise
-        lambda { attr.validate_for_writing(subspec, 'a string') }.should.raise StandardError
-      end
-
-      it 'validates the allowed keys for hashes before writing' do
-        attr = Attribute.new(:source, :keys => [:git])
-        spec = Spec.new
-        lambda { attr.validate_for_writing(spec,  :git => 'repo') }.should.not.raise
-        lambda { attr.validate_for_writing(spec,  :snail_mail => 'repo') }.should.raise StandardError
-      end
-
-      it 'returns the allowed keys' do
-        attr = Attribute.new(:source, :keys => [:git, :svn])
-        attr.allowed_keys.should == [:git, :svn]
-      end
-
-      it 'returns the allowed keys flattening keys specified in a hash' do
-        attr = Attribute.new(:source, :keys => { :git => [:tag, :commit], :http => nil })
-        attr.allowed_keys.map(&:to_s).sort.should == %w(commit git http tag)
-      end
-    end
   end
 end
