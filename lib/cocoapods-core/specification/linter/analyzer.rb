@@ -122,7 +122,7 @@ module Pod
         # @param  [Spec::DSL::Attribute] attribute
         #         The attribute.
         #
-        # @param  [Spec::DSL::Attribute] value
+        # @param  [mixed] value
         #         The value of the attribute.
         #
         def validate_attribute_value(attribute, value)
