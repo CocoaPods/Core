@@ -794,8 +794,7 @@ module Pod
       #   @param  [String] name
       #           the module name.
       #
-      root_attribute :module_name,
-                     :inherited => true
+      root_attribute :module_name
 
       #------------------#
 
