@@ -28,6 +28,23 @@ module Pod
 
       #----------------------------------------#
 
+      describe 'Root attributes' do
+        it 'fails a subspec with a root attribute' do
+          subspec = @spec.subspec 'subspec' do |sp|
+            sp.homepage = 'http://example.org'
+          end
+          results = Specification::Linter::Results.new
+          @analyzer = Specification::Linter::Analyzer.new(subspec.consumer(:ios), results)
+          results = @analyzer.analyze
+          results.count.should.be.equal(1)
+          expected = 'Can\'t set `homepage` attribute for subspecs (in `BananaLib/subspec`).'
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('attribute')
+        end
+      end
+
+      #----------------------------------------#
+
       describe 'Unknown keys check' do
         it 'validates a spec with valid keys' do
           results = @analyzer.analyze

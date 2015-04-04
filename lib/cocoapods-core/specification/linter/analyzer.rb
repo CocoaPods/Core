@@ -57,7 +57,9 @@ module Pod
           end
 
           Pod::Specification::DSL.attributes.each do |_key, attribute|
-            validate_attribute_type(attribute, consumer.spec.attributes_hash[attribute.name.to_s])
+            declared_value = consumer.spec.attributes_hash[attribute.name.to_s]
+            validate_attribute_occurrence(attribute, declared_value)
+            validate_attribute_type(attribute, declared_value)
             if attribute.name != :platforms
               value = value_for_attribute(attribute)
               validate_attribute_value(attribute, value) if value
@@ -106,6 +108,14 @@ module Pod
 
         private
 
+        # Returns the own or inherited (if applicable) value of the
+        # given attribute.
+        #
+        # @param  [Spec::DSL::Attribute] attribute
+        #         The attribute.
+        #
+        # @return [mixed]
+        #
         def value_for_attribute(attribute)
           if attribute.root_only?
             consumer.spec.send(attribute.name)
@@ -115,6 +125,21 @@ module Pod
         rescue => e
           results.add_error('attributes', "Unable to validate `#{attribute.name}` (#{e}).")
           nil
+        end
+
+        # Validates the occurrence of the given attribute.
+        #
+        # @param  [Spec::DSL::Attribute] attribute
+        #         The attribute.
+
+        # @param  [mixed] value
+        #         The value of the attribute.
+        #
+        def validate_attribute_occurrence(attribute, value)
+          if attribute.root_only? && !value.nil? && !consumer.spec.root?
+            results.add_error('attributes', "Can't set `#{attribute.name}` attribute for " \
+              "subspecs (in `#{consumer.spec.name}`).")
+          end
         end
 
         # Validates the given value for the given attribute.
