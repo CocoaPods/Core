@@ -193,6 +193,18 @@ module Pod
 
       #--------------------------------------#
 
+      it "doesn't add extra subspec dependencies by default" do
+        @root.store_pod('RestKit')
+        @root.dependencies.map(&:name).should == %w(RestKit)
+      end
+
+      it 'allows depending on extra subspecs' do
+        @root.store_pod('RestKit', :subspecs => %w(Networking))
+        @root.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Networking)
+      end
+
+      #--------------------------------------#
+
       it "doesn't inhibit warnings per pod by default" do
         @root.store_pod('ObjectiveSugar')
         @root.should.not.inhibits_warnings_for_pod?('ObjectiveSugar')

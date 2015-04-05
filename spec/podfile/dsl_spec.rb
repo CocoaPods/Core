@@ -44,6 +44,33 @@ module Pod
         target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
       end
 
+      it 'allows specifying multiple additional subspecs' do
+        podfile = Podfile.new do
+          pod 'RestKit', '~> 0.24.0', :subspecs => %w(CoreData Networking), :configurations => %w(Release)
+        end
+
+        target = podfile.target_definitions['Pods']
+        expected_dependencies = [
+          Dependency.new('RestKit', '~> 0.24.0'),
+          Dependency.new('RestKit/CoreData', '~> 0.24.0'),
+          Dependency.new('RestKit/Networking', '~> 0.24.0'),
+        ]
+        target.dependencies.sort_by(&:name).should == expected_dependencies
+        target.pod_whitelisted_for_configuration?('RestKit', 'Release').should.be.true
+
+        podfile = Podfile.new do
+          pod 'RestKit/Subspec', :subspecs => %w(CoreData Networking/Subspec), :git => 'https://github.com/RestKit/RestKit.git'
+        end
+
+        target = podfile.target_definitions['Pods']
+        expected_dependencies = [
+          Dependency.new('RestKit/Subspec', :git => 'https://github.com/RestKit/RestKit.git'),
+          Dependency.new('RestKit/Subspec/CoreData', :git => 'https://github.com/RestKit/RestKit.git'),
+          Dependency.new('RestKit/Subspec/Networking/Subspec', :git => 'https://github.com/RestKit/RestKit.git'),
+        ]
+        target.dependencies.sort_by(&:name).should == expected_dependencies
+      end
+
       it 'raises if no name is specified for a Pod' do
         lambda do
           Podfile.new do

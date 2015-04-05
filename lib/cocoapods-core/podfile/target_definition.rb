@@ -468,6 +468,7 @@ module Pod
       # @return [void]
       #
       def store_pod(name, *requirements)
+        parse_subspecs(name, requirements) # This parse method must be called first
         parse_inhibit_warnings(name, requirements)
         parse_configuration_whitelist(name, requirements)
 
@@ -740,6 +741,28 @@ module Pod
             whitelist_pod_for_configuration(name, configuration)
           end
         end
+        requirements.pop if options.empty?
+      end
+
+      # Removes :subspecs form the requirements list, and stores the pods
+      # with the given subspecs as dependencies.
+      #
+      # @param  [String] name
+      #
+      # @param  [Array] requirements
+      #         If :subspecs is the only key in the hash, the hash
+      #         should be destroyed because it confuses Gem::Dependency.
+      #
+      # @return [void]
+      #
+      def parse_subspecs(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
+
+        subspecs = options.delete(:subspecs)
+        subspecs.each do |ss|
+          store_pod("#{name}/#{ss}", *requirements.dup)
+        end if subspecs
         requirements.pop if options.empty?
       end
 
