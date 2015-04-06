@@ -44,14 +44,13 @@ module Pod
         target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
       end
 
-      it 'allows specifying multiple additional subspecs' do
+      it 'allows specifying multiple subspecs' do
         podfile = Podfile.new do
           pod 'RestKit', '~> 0.24.0', :subspecs => %w(CoreData Networking), :configurations => %w(Release)
         end
 
         target = podfile.target_definitions['Pods']
         expected_dependencies = [
-          Dependency.new('RestKit', '~> 0.24.0'),
           Dependency.new('RestKit/CoreData', '~> 0.24.0'),
           Dependency.new('RestKit/Networking', '~> 0.24.0'),
         ]
@@ -64,7 +63,6 @@ module Pod
 
         target = podfile.target_definitions['Pods']
         expected_dependencies = [
-          Dependency.new('RestKit/Subspec', :git => 'https://github.com/RestKit/RestKit.git'),
           Dependency.new('RestKit/Subspec/CoreData', :git => 'https://github.com/RestKit/RestKit.git'),
           Dependency.new('RestKit/Subspec/Networking/Subspec', :git => 'https://github.com/RestKit/RestKit.git'),
         ]

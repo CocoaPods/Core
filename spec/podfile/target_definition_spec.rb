@@ -198,9 +198,9 @@ module Pod
         @root.dependencies.map(&:name).should == %w(RestKit)
       end
 
-      it 'allows depending on extra subspecs' do
+      it 'allows depending on subspecs' do
         @root.store_pod('RestKit', :subspecs => %w(Networking))
-        @root.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Networking)
+        @root.dependencies.map(&:name).sort.should == %w(RestKit/Networking)
       end
 
       #--------------------------------------#
