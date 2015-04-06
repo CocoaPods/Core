@@ -127,7 +127,7 @@ module Pod
           nil
         end
 
-        # Validates the occurrence of the given attribute.
+        # Validates that root attributes don't occur in subspecs.
         #
         # @param  [Spec::DSL::Attribute] attribute
         #         The attribute.
