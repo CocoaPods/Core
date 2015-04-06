@@ -468,7 +468,7 @@ module Pod
       # @return [void]
       #
       def store_pod(name, *requirements)
-        parse_subspecs(name, requirements) # This parse method must be called first
+        return if parse_subspecs(name, requirements) # This parse method must be called first
         parse_inhibit_warnings(name, requirements)
         parse_configuration_whitelist(name, requirements)
 
@@ -753,17 +753,18 @@ module Pod
       #         If :subspecs is the only key in the hash, the hash
       #         should be destroyed because it confuses Gem::Dependency.
       #
-      # @return [void]
+      # @return [Boolean] Whether new subspecs were added
       #
       def parse_subspecs(name, requirements)
         options = requirements.last
-        return requirements unless options.is_a?(Hash)
+        return false unless options.is_a?(Hash)
 
         subspecs = options.delete(:subspecs)
         subspecs.each do |ss|
           store_pod("#{name}/#{ss}", *requirements.dup)
         end if subspecs
         requirements.pop if options.empty?
+        !subspecs.nil?
       end
 
       #-----------------------------------------------------------------------#
