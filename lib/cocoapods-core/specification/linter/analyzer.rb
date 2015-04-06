@@ -132,7 +132,7 @@ module Pod
         # @param  [Spec::DSL::Attribute] attribute
         #         The attribute.
 
-        # @param  [mixed] value
+        # @param  [Object] value
         #         The value of the attribute.
         #
         def validate_attribute_occurrence(attribute, value)
@@ -147,7 +147,7 @@ module Pod
         # @param  [Spec::DSL::Attribute] attribute
         #         The attribute.
         #
-        # @param  [mixed] value
+        # @param  [Object] value
         #         The value of the attribute.
         #
         def validate_attribute_value(attribute, value)
