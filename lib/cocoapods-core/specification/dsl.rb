@@ -290,7 +290,7 @@ module Pod
       #   tag line of the Pod and there is no need to specify that a Pod is a
       #   library (they always are).
       #
-      #   The summary is expected to be properly capitalized and containing the
+      #   The summary is expected to be properly capitalised and containing the
       #   correct punctuation.
       #
       #   @example
@@ -351,7 +351,7 @@ module Pod
 
       # @!method documentation_url=(documentation_url)
       #
-      #   An optional URL for the documentation of the Pod which will be honored by
+      #   An optional URL for the documentation of the Pod which will be honoured by
       #   CocoaPods web properties. Leaving it blank will default to a CocoaDocs
       #   generated URL for your library.
       #
@@ -501,7 +501,7 @@ module Pod
       #
       #   **Note:** this means that these libraries *have* to specify the
       #             deployment target in their specifications in order to have
-      #             CocoaPods set the flag to `1` and ensure proper behavior.
+      #             CocoaPods set the flag to `1` and ensure proper behaviour.
       #
       # * New libraries that *do* require ARC, but have a deployment target of
       #   < iOS 6.0 or OS X < 10.8:
@@ -1035,7 +1035,7 @@ module Pod
       #   attribute.
       #
       #   The names of the bundles should at least include the name of the Pod
-      #   to minimize the chance of name collisions.
+      #   to minimise the chance of name collisions.
       #
       #   To provide different resources per platform namespaced bundles *must*
       #   be used.
@@ -1072,7 +1072,7 @@ module Pod
       #   as there can be name collisions using the resources attribute.
       #   Moreover resources specified with this attribute are copied
       #   directly to the client target and therefore they are not
-      #   optimized by Xcode.
+      #   optimised by Xcode.
       #
       #   @example
       #

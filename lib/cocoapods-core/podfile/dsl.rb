@@ -9,12 +9,12 @@ module Pod
     # implicit target, named `default`, which links to the first target of the
     # user project.
     #
-    # A podfile can be very simple:
+    # A Podfile can be very simple:
     #
     #     source 'https://github.com/CocoaPods/Specs.git'
     #     pod 'AFNetworking', '~> 1.0'
     #
-    # An example of a more complex podfile can be:
+    # An example of a more complex Podfile can be:
     #
     #     source 'https://github.com/CocoaPods/Specs.git'
     #
@@ -117,7 +117,7 @@ module Pod
       #
       # ### Using the files from a local path.
       #
-      #  If you wold like to use develop a Pod in tandem with its client
+      #  If you would like to use develop a Pod in tandem with its client
       #  project you can use the `path` option.
       #
       #     pod 'AFNetworking', :path => '~/Documents/AFNetworking'
@@ -127,30 +127,30 @@ module Pod
       #  Pods project. This means that your edits will persist to CocoaPods
       #  installations.
       #
-      #  The referenced folder can be a checkout of your your favorite SCM or
-      #  even a git submodule of the current repo.
+      #  The referenced folder can be a checkout of your your favourite SCM or
+      #  even a git submodule of the current repository.
       #
       #  Note that the `podspec` of the Pod file is expected to be in the
       #  folder.
       #
       #
-      # ### From a podspec in the root of a library repo.
+      # ### From a podspec in the root of a library repository.
       #
       # Sometimes you may want to use the bleeding edge version of a Pod. Or a
       # specific revision. If this is the case, you can specify that with your
       # pod declaration.
       #
-      # To use the `master` branch of the repo:
+      # To use the `master` branch of the repository:
       #
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git'
       #
       #
-      # To use a different branch of the repo:
+      # To use a different branch of the repository:
       #
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :branch => 'dev'
       #
       #
-      # To use a tag of the repo:
+      # To use a tag of the repository:
       #
       #     pod 'AFNetworking', :git => 'https://github.com/gowalla/AFNetworking.git', :tag => '0.7.0'
       #
@@ -162,15 +162,16 @@ module Pod
       # It is important to note, though, that this means that the version will
       # have to satisfy any other dependencies on the Pod by other Pods.
       #
-      # The `podspec` file is expected to be in the root of the repo, if this
-      # library does not have a `podspec` file in its repo yet, you will have
-      # to use one of the approaches outlined in the sections below.
+      # The `podspec` file is expected to be in the root of the repository,
+      # if this library does not have a `podspec` file in its repository
+      # yet, you will have to use one of the approaches outlined in the
+      # sections below.
       #
       #
-      # ### From a podspec outside a spec repo, for a library without podspec.
+      # ### From a podspec outside a spec repository, for a library without podspec.
       #
       # If a podspec is available from another source outside of the library’s
-      # repo. Consider, for instance, a podspec available via HTTP:
+      # repository. Consider, for instance, a podspec available via HTTP:
       #
       #     pod 'JSONKit', :podspec => 'https://example.com/JSONKit.podspec'
       #
@@ -212,7 +213,7 @@ module Pod
       #
       # @param    [Hash {Symbol=>String}] options
       #           the path where to load the {Specification}. If not provided
-      #           the first podspec in the directory of the podfile is used.
+      #           the first podspec in the directory of the Podfile is used.
       #
       # @option   options [String] :path
       #           the path of the podspec file
@@ -335,7 +336,7 @@ module Pod
       # directory as the Podfile then that project will be used.
       #
       # It is possible also to specify whether the build settings of your
-      # custom build configurations should be modeled after the release or
+      # custom build configurations should be modelled after the release or
       # the debug presets. To do so you need to specify a hash where the name
       # of each build configuration is associated to either `:release` or
       # `:debug`.
@@ -493,7 +494,7 @@ module Pod
 
       # @!group Sources
       #
-      #   The Podfile retrieves specs from a given list of sources (repos).
+      #   The Podfile retrieves specs from a given list of sources (repositories).
       #
       #   Sources are __global__ and they are not stored per target definition.
 
@@ -509,10 +510,10 @@ module Pod
       # higher version).
       #
       # @param    [String] source
-      #           The URL of a specs repo.
+      #           The URL of a specs repository.
       #
-      # @example  Specifying to first use the artsy repo and then the
-      #           CocoaPods Master Repo
+      # @example  Specifying to first use the Artsy repository and then the
+      #           CocoaPods Master Repository
       #
       #           source 'https://github.com/artsy/Specs.git'
       #           source 'https://github.com/CocoaPods/Specs.git'
@@ -552,7 +553,7 @@ module Pod
       #
       # @example  Specifying to use the `slather` and `cocoapods-keys` plugins.
       #
-      #           plugin 'cocoapods-keys', keyring: 'Eidolon'
+      #           plugin 'cocoapods-keys', :keyring => 'Eidolon'
       #           plugin 'slather'
       #
       # @return   [void]
@@ -589,7 +590,7 @@ module Pod
       # [`Pod::Hooks::InstallerRepresentation`](http://rubydoc.info/gems/cocoapods/Pod/Hooks/InstallerRepresentation/)
       # as its only argument.
       #
-      # @example  Customizing the `OTHER_LDFLAGS` of all targets
+      # @example  Customising the `OTHER_LDFLAGS` of all targets
       #
       #   post_install do |installer_representation|
       #     installer_representation.project.targets.each do |target|
