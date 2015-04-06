@@ -9,8 +9,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#221](https://github.com/CocoaPods/Core/issues/221)
 
-
 ##### Bug Fixes
+
+* The linter fails now if root attributes occur on subspec level.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [#233](https://github.com/CocoaPods/Core/pull/233)
 
 * Inhibit warnings for pods that only have the `inhibit_warnings` option enabled
   on a subspec.  
