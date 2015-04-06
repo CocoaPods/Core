@@ -150,6 +150,11 @@ module Pod
         result_should_include('name', 'whitespace')
       end
 
+      it 'fails a specification whose name contains a slash' do
+        @spec.stubs(:name).returns('BananaKit/BananaFruit')
+        result_should_include('name', 'slash')
+      end
+
       #------------------#
 
       it 'fails a specification whose authors are the default' do

@@ -178,6 +178,11 @@ module Pod
                            'name of the file.')
           end
 
+          if spec.name =~ /\//
+            results.add_error('name', 'The name of a spec should not contain ' \
+                           'a slash.')
+          end
+
           if spec.root.name =~ /\s/
             results.add_error('name', 'The name of a spec should not contain ' \
                            'whitespace.')
