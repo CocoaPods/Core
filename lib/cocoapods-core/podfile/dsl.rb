@@ -112,6 +112,21 @@ module Pod
       #
       # ------
       #
+      # ### Subspecs
+      #
+      # When installing a Pod via it's name, it will install all of the
+      # default subspecs defined in the podspec.
+      #
+      # You may install a specific subspec using the following:
+      #
+      #     pod 'QueryKit/Attribute'
+      #
+      # You may specify a collection of subspecs to be installed as follows:
+      #
+      #     pod 'QueryKit', :subspecs => ['Attribute', 'QuerySet']
+      #
+      # ------
+      #
       # Dependencies can be obtained also from external sources.
       #
       #
