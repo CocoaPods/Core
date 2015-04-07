@@ -2,6 +2,14 @@
 
 ## Master
 
+##### Enhancements
+
+* Allow specifying multiple subspec pod dependencies inline in the Podfile,
+  via `pod 'Pod', :subspecs => ['Subspec1', 'Subspec2']`.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#221](https://github.com/CocoaPods/Core/issues/221)
+
+
 ##### Bug Fixes
 
 * Inhibit warnings for pods that only have the `inhibit_warnings` option enabled
