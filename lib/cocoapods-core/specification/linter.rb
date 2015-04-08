@@ -48,7 +48,6 @@ module Pod
         if spec
           validate_root_name
           check_required_attributes
-          validate_name
           run_root_validation_hooks
           perform_all_specs_analysis
         else
@@ -185,22 +184,20 @@ module Pod
 
       # Performs validations related to the `name` attribute.
       #
-      def validate_name
-        if spec.name && file
-          if spec.name =~ /\//
-            results.add_error('name', 'The name of a spec should not contain ' \
-                           'a slash.')
-          end
+      def _validate_name(name)
+        if name =~ /\//
+          results.add_error('name', 'The name of a spec should not contain ' \
+                         'a slash.')
+        end
 
-          if spec.root.name =~ /\s/
-            results.add_error('name', 'The name of a spec should not contain ' \
-                           'whitespace.')
-          end
+        if name =~ /\s/
+          results.add_error('name', 'The name of a spec should not contain ' \
+                         'whitespace.')
+        end
 
-          if spec.root.name[0, 1] == '.'
-            results.add_error('name', 'The name of a spec should not begin' \
-            ' with a period.')
-          end
+        if name[0, 1] == '.'
+          results.add_error('name', 'The name of a spec should not begin' \
+          ' with a period.')
         end
       end
 

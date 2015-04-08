@@ -88,12 +88,9 @@ module Pod
       end
     end
 
-    #--------------------------------------#
-
-    describe 'Root spec' do
+    shared 'Linter' do
       before do
-        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
-        @podspec_path = fixture(fixture_path)
+        @podspec_path = fixture(@fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
         @spec = @linter.spec
       end
@@ -110,6 +107,16 @@ module Pod
 
         matched.size.should == 1
       end
+    end
+
+    #--------------------------------------#
+
+    describe 'Root spec' do
+      before do
+        @fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
+      end
+
+      behaves_like 'Linter'
 
       #------------------#
 
@@ -146,12 +153,12 @@ module Pod
       end
 
       it 'fails a specification whose name contains whitespace' do
-        @spec.stubs(:name).returns('bad name')
+        @spec.name = 'bad name'
         result_should_include('name', 'whitespace')
       end
 
       it 'fails a specification whose name contains a slash' do
-        @spec.stubs(:name).returns('BananaKit/BananaFruit')
+        @spec.name = 'BananaKit/BananaFruit'
         result_should_include('name', 'slash')
       end
 
@@ -451,6 +458,31 @@ module Pod
       it 'checks if the compiler flags disable warnings' do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
         result_should_include('warnings', 'disabled', 'compiler_flags')
+      end
+    end
+
+    #--------------------------------------#
+
+    describe 'Subspec' do
+      before do
+        @fixture_path = 'spec-repos/master/RestKit/0.20.1/RestKit.podspec'
+      end
+
+      behaves_like 'Linter'
+
+      it 'fails a subspec whose name contains whitespace' do
+        @spec.subspecs.each { |ss| ss.name = 'bad name' }
+        result_should_include('name', 'whitespace')
+      end
+
+      it 'fails a subspec whose name begins with a `.`' do
+        @spec.subspecs.each { |ss| ss.name = '.badname' }
+        result_should_include('name', 'period')
+      end
+
+      it 'fails a specification whose name contains a slash' do
+        @spec.name = 'BananaKit/BananaFruit'
+        result_should_include('name', 'slash')
       end
     end
   end
