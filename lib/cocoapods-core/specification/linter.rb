@@ -46,6 +46,7 @@ module Pod
       def lint
         @results = Results.new
         if spec
+          validate_root_name
           check_required_attributes
           validate_name
           run_root_validation_hooks
@@ -80,6 +81,24 @@ module Pod
       private
 
       # !@group Lint steps
+
+      # Checks that the spec's root name matches the filename.
+      #
+      # @return [void]
+      #
+      def validate_root_name
+        if spec.root.name && file
+          acceptable_names = [
+            spec.root.name + '.podspec',
+            spec.root.name + '.podspec.json',
+          ]
+          names_match = acceptable_names.include?(file.basename.to_s)
+          unless names_match
+            results.add_error('name', 'The name of the spec should match the ' \
+                              'name of the file.')
+          end
+        end
+      end
 
       # Checks that every required attribute has a value.
       #
@@ -168,16 +187,6 @@ module Pod
       #
       def validate_name
         if spec.name && file
-          acceptable_names = [
-            spec.root.name + '.podspec',
-            spec.root.name + '.podspec.json',
-          ]
-          names_match = acceptable_names.include?(file.basename.to_s)
-          unless names_match
-            results.add_error('name', 'The name of the spec should match the ' \
-                           'name of the file.')
-          end
-
           if spec.name =~ /\//
             results.add_error('name', 'The name of a spec should not contain ' \
                            'a slash.')
