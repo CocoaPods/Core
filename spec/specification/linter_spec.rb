@@ -93,19 +93,42 @@ module Pod
         @podspec_path = fixture(@fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
         @spec = @linter.spec
+        @results = nil
+      end
+
+      def results
+        @linter.lint
+        @results ||= @linter.results.map { |x| x }
+      end
+
+      def result_ignore(*values)
+        results.reject! do |result|
+          values.all? do |value|
+            result.to_s.downcase.include?(value.downcase)
+          end
+        end
       end
 
       def result_should_include(*values)
-        @linter.lint
-        results = @linter.results
-
         matched = results.select do |result|
           values.all? do |value|
             result.to_s.downcase.include?(value.downcase)
           end
         end
 
-        matched.size.should == 1
+        matched.should.satisfy("Expected #{values.inspect} " \
+                "but none of those results matched:\n" \
+                "#{results.map(&:to_s)}") do |m|
+          m.count > 0
+        end
+
+        matched.should.satisfy("Expected #{values.inspect} " \
+                "found matches:\n"  \
+                "#{matched.map(&:to_s)}\n" \
+                "but unexpected results appeared:\n" \
+                "#{(results - matched).map(&:to_s)}") do |m|
+          m.count == results.count
+        end
       end
     end
 
@@ -132,6 +155,7 @@ module Pod
 
       it 'checks for unknown keys in the license' do
         @spec.license = { :name => 'MIT' }
+        result_ignore('license', 'missing', 'type')
         result_should_include('license', 'unrecognized `name` key')
       end
 
@@ -154,11 +178,13 @@ module Pod
 
       it 'fails a specification whose name contains whitespace' do
         @spec.name = 'bad name'
+        result_ignore('name', 'match')
         result_should_include('name', 'whitespace')
       end
 
       it 'fails a specification whose name contains a slash' do
         @spec.name = 'BananaKit/BananaFruit'
+        result_ignore('name', 'match')
         result_should_include('name', 'slash')
       end
 
@@ -285,6 +311,7 @@ module Pod
       it 'checks that the commit is not specified as `HEAD`' do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns(:git => 'http://repo.git', :commit => 'HEAD')
+        result_ignore('Git sources should specify a tag.')
         result_should_include('source', 'HEAD')
       end
 
