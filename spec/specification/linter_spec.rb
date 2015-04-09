@@ -497,18 +497,22 @@ module Pod
 
       behaves_like 'Linter'
 
+      before do
+        @subspec = @spec.subspecs.first
+      end
+
       it 'fails a subspec whose name contains whitespace' do
-        @spec.subspecs.each { |ss| ss.name = 'bad name' }
+        @subspec.name = 'bad name'
         result_should_include('name', 'whitespace')
       end
 
       it 'fails a subspec whose name begins with a `.`' do
-        @spec.subspecs.each { |ss| ss.name = '.badname' }
+        @subspec.name = '.badname'
         result_should_include('name', 'period')
       end
 
       it 'fails a specification whose name contains a slash' do
-        @spec.subspecs.each { |ss| ss.name = 'BananaKit/BananaFruit' }
+        @subspec.name = 'BananaKit/BananaFruit'
         result_should_include('name', 'slash')
       end
     end
