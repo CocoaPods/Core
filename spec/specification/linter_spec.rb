@@ -171,12 +171,12 @@ module Pod
 
       it 'fails a specification whose authors are an empty hash' do
         @spec.stubs(:authors).returns({})
-        result_should_include('author', 'unspecified')
+        result_should_include('author', 'required')
       end
 
       it 'fails a specification whose authors are an empty array' do
         @spec.stubs(:authors).returns([])
-        result_should_include('author', 'unspecified')
+        result_should_include('author', 'required')
       end
 
       #------------------#
