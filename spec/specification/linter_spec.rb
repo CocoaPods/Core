@@ -93,19 +93,42 @@ module Pod
         @podspec_path = fixture(@fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
         @spec = @linter.spec
+        @results = nil
+      end
+
+      def results
+        @linter.lint
+        @results ||= @linter.results.map { |x| x }
+      end
+
+      def result_ignore(*values)
+        results.reject! do |result|
+          values.all? do |value|
+            result.to_s.downcase.include?(value.downcase)
+          end
+        end
       end
 
       def result_should_include(*values)
-        @linter.lint
-        results = @linter.results
-
         matched = results.select do |result|
           values.all? do |value|
             result.to_s.downcase.include?(value.downcase)
           end
         end
 
-        matched.size.should == 1
+        matched.should.satisfy("Expected #{values.inspect} " \
+                "but none of those results matched:\n" \
+                "#{results.map(&:to_s)}") do |m|
+          m.count > 0
+        end
+
+        matched.should.satisfy("Expected #{values.inspect} " \
+                "found matches:\n"  \
+                "#{matched.map(&:to_s)}\n" \
+                "but unexpected results appeared:\n" \
+                "#{(results - matched).map(&:to_s)}") do |m|
+          m.count == results.count
+        end
       end
     end
 
@@ -132,6 +155,7 @@ module Pod
 
       it 'checks for unknown keys in the license' do
         @spec.license = { :name => 'MIT' }
+        result_ignore('license', 'missing', 'type')
         result_should_include('license', 'unrecognized `name` key')
       end
 
@@ -154,11 +178,13 @@ module Pod
 
       it 'fails a specification whose name contains whitespace' do
         @spec.name = 'bad name'
+        result_ignore('name', 'match')
         result_should_include('name', 'whitespace')
       end
 
       it 'fails a specification whose name contains a slash' do
         @spec.name = 'BananaKit/BananaFruit'
+        result_ignore('name', 'match')
         result_should_include('name', 'slash')
       end
 
@@ -171,12 +197,12 @@ module Pod
 
       it 'fails a specification whose authors are an empty hash' do
         @spec.stubs(:authors).returns({})
-        result_should_include('author', 'unspecified')
+        result_should_include('author', 'required')
       end
 
       it 'fails a specification whose authors are an empty array' do
         @spec.stubs(:authors).returns([])
-        result_should_include('author', 'unspecified')
+        result_should_include('author', 'required')
       end
 
       #------------------#
@@ -190,6 +216,14 @@ module Pod
       it 'fails a specification whose module name is not a valid C99 identifier' do
         @spec.stubs(:module_name).returns('20Three lol')
         result_should_include('module_name', 'C99 identifier')
+      end
+
+      #------------------#
+
+      it 'passes a specification with a module map' do
+        @spec.module_map = 'module.modulemap'
+        @linter.lint
+        @linter.results.count.should == 0
       end
 
       #------------------#
@@ -285,6 +319,7 @@ module Pod
       it 'checks that the commit is not specified as `HEAD`' do
         @spec.stubs(:version).returns(Version.new '0.0.1')
         @spec.stubs(:source).returns(:git => 'http://repo.git', :commit => 'HEAD')
+        result_ignore('Git sources should specify a tag.')
         result_should_include('source', 'HEAD')
       end
 
@@ -470,19 +505,30 @@ module Pod
 
       behaves_like 'Linter'
 
+      before do
+        @subspec = @spec.subspecs.first
+      end
+
       it 'fails a subspec whose name contains whitespace' do
-        @spec.subspecs.each { |ss| ss.name = 'bad name' }
+        @subspec.name = 'bad name'
         result_should_include('name', 'whitespace')
       end
 
       it 'fails a subspec whose name begins with a `.`' do
-        @spec.subspecs.each { |ss| ss.name = '.badname' }
+        @subspec.name = '.badname'
         result_should_include('name', 'period')
       end
 
       it 'fails a specification whose name contains a slash' do
-        @spec.name = 'BananaKit/BananaFruit'
+        @subspec.name = 'BananaKit/BananaFruit'
         result_should_include('name', 'slash')
+      end
+
+      #------------------#
+
+      it 'fails a specification with a subspec with a module map' do
+        @subspec.module_map = 'subspec.modulemap'
+        result_should_include('module_map', 'can\'t set', 'for subspecs')
       end
     end
   end

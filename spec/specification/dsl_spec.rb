@@ -253,6 +253,11 @@ module Pod
         @spec.module_name = 'Three20'
         @spec.attributes_hash['module_name'].should == 'Three20'
       end
+
+      it 'allows to specify a custom module map file' do
+        @spec.module_map = 'module.modulemap'
+        @spec.attributes_hash['module_map'].should == 'module.modulemap'
+      end
     end
 
     #-----------------------------------------------------------------------------#

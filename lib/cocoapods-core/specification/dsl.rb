@@ -1140,6 +1140,28 @@ module Pod
                 :file_patterns => true,
                 :singularize   => true
 
+      #------------------#
+
+      # @!method module_map=(module_map)
+      #
+      #   The module map file that should be used when this pod is integrated as
+      #   a framework.
+      #
+      #   ---
+      #
+      #   By default, CocoaPods creates a module map file based upon the public
+      #   headers in a specification.
+      #
+      #   @example
+      #
+      #     spec.module_map = "source/module.modulemap"
+      #
+      #   @param  [String] module_map
+      #           the path to the module map file that should be used.
+      #
+      attribute :module_map,
+                :root_only     => true
+
       #-----------------------------------------------------------------------#
 
       # @!group Subspecs

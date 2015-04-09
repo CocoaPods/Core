@@ -9,6 +9,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#221](https://github.com/CocoaPods/Core/issues/221)
 
+* Allow specifying a custom module map file.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [#218](https://github.com/CocoaPods/Coore/issues/218)
+
 ##### Bug Fixes
 
 * The linter will now ensure that subspecs' names do not contain whitespace.  

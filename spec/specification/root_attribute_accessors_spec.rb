@@ -163,5 +163,10 @@ module Pod
 
       @spec.deprecated?.should == false
     end
+
+    it 'returns the custom module map file, if specified' do
+      @spec.module_map = 'module.modulemap'
+      @spec.module_map.should == 'module.modulemap'
+    end
   end
 end

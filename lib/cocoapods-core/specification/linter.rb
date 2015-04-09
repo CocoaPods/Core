@@ -210,10 +210,6 @@ module Pod
               'from default')
           end
         end
-
-        if a.empty?
-          results.add_error('authors', 'The authors are unspecified.')
-        end
       end
 
       def _validate_version(v)
