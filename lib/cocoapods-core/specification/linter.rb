@@ -46,7 +46,8 @@ module Pod
       def lint
         @results = Results.new
         if spec
-          check_required_root_attributes
+          validate_root_name
+          check_required_attributes
           run_root_validation_hooks
           perform_all_specs_analysis
         else
@@ -80,15 +81,32 @@ module Pod
 
       # !@group Lint steps
 
-      # Checks that every root only attribute which is required has a value.
+      # Checks that the spec's root name matches the filename.
       #
       # @return [void]
       #
-      def check_required_root_attributes
-        attributes = DSL.attributes.values.select(&:root_only?)
+      def validate_root_name
+        if spec.root.name && file
+          acceptable_names = [
+            spec.root.name + '.podspec',
+            spec.root.name + '.podspec.json',
+          ]
+          names_match = acceptable_names.include?(file.basename.to_s)
+          unless names_match
+            results.add_error('name', 'The name of the spec should match the ' \
+                              'name of the file.')
+          end
+        end
+      end
+
+      # Checks that every required attribute has a value.
+      #
+      # @return [void]
+      #
+      def check_required_attributes
+        attributes = DSL.attributes.values.select(&:required?)
         attributes.each do |attr|
           value = spec.send(attr.name)
-          next unless attr.required?
           unless value && (!value.respond_to?(:empty?) || !value.empty?)
             if attr.name == :license
               results.add_warning('attributes', 'Missing required attribute ' \
@@ -146,7 +164,7 @@ module Pod
       #
       # @note   Hooks are called only if there is a value for the attribute as
       #         required attributes are already checked by the
-      #         {#check_required_root_attributes} step.
+      #         {#check_required_attributes} step.
       #
       # @return [void]
       #
@@ -164,33 +182,26 @@ module Pod
 
       private
 
-      # @!group Root spec validation helpers
-
       # Performs validations related to the `name` attribute.
       #
-      def _validate_name(_n)
-        if spec.name && file
-          acceptable_names = [
-            spec.root.name + '.podspec',
-            spec.root.name + '.podspec.json',
-          ]
-          names_match = acceptable_names.include?(file.basename.to_s)
-          unless names_match
-            results.add_error('name', 'The name of the spec should match the ' \
-                           'name of the file.')
-          end
+      def _validate_name(name)
+        if name =~ /\//
+          results.add_error('name', 'The name of a spec should not contain ' \
+                         'a slash.')
+        end
 
-          if spec.root.name =~ /\s/
-            results.add_error('name', 'The name of a spec should not contain ' \
-                           'whitespace.')
-          end
+        if name =~ /\s/
+          results.add_error('name', 'The name of a spec should not contain ' \
+                         'whitespace.')
+        end
 
-          if spec.root.name[0, 1] == '.'
-            results.add_error('name', 'The name of a spec should not begin' \
-            ' with a period.')
-          end
+        if name[0, 1] == '.'
+          results.add_error('name', 'The name of a spec should not begin' \
+          ' with a period.')
         end
       end
+
+      # @!group Root spec validation helpers
 
       def _validate_authors(a)
         if a.is_a? Hash

@@ -185,65 +185,7 @@ module Pod
         def writer_singular_form
           "#{name.to_s.singularize}=" if singularize?
         end
-
-        #---------------------------------------------------------------------#
-
-        # @!group Values validation
-
-        # Validates the value for an attribute. This validation should be
-        # performed before the value is prepared or wrapped.
-        #
-        # @note   The this is called before preparing the value.
-        #
-        # @raise  If the type is not in the allowed list.
-        #
-        # @return [void]
-        #
-        def validate_type(value)
-          return if value.nil?
-          unless supported_types.any? { |klass| value.class == klass }
-            raise StandardError, "Non acceptable type `#{value.class}` for "\
-              "#{self}. Allowed values: `#{types.inspect}`"
-          end
-        end
-
-        # Validates a value before storing.
-        #
-        # @raise If a root only attribute is set in a subspec.
-        #
-        # @raise If a unknown key is added to a hash.
-        #
-        # @return [void]
-        #
-        def validate_for_writing(spec, value)
-          if root_only? && !spec.root?
-            raise StandardError, "Can't set `#{name}` attribute for " \
-              "subspecs (in `#{spec.name}`)."
-          end
-
-          if keys
-            value.keys.each do |key|
-              unless allowed_keys.include?(key)
-                raise StandardError, "Unknown key `#{key}` for "\
-                  "#{self}. Allowed keys: `#{allowed_keys.inspect}`"
-              end
-            end
-          end
-
-          # @return [Array] the flattened list of the allowed keys for the
-          # hash of a given specification.
-          #
-          def allowed_keys
-            if keys.is_a?(Hash)
-              keys.keys.concat(keys.values.flatten.compact)
-            else
-              keys
-            end
-          end
-        end
       end
-
-      #-----------------------------------------------------------------------#
     end
   end
 end

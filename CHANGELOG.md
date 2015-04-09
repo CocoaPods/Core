@@ -9,8 +9,20 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#221](https://github.com/CocoaPods/Core/issues/221)
 
-
 ##### Bug Fixes
+
+* The linter will now ensure that subspecs' names do not contain whitespace.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [Joshua Kalpin](https://github.com/Kapin)
+  [Samuel Giddins](https://github.com/segiddins)
+  [#177](https://github.com/CocoaPods/Core/issues/177)
+  [#178](https://github.com/CocoaPods/Core/pull/178)
+  [#202](https://github.com/CocoaPods/Core/pull/202)
+  [#233](https://github.com/CocoaPods/Core/pull/233)
+
+* The linter fails now if root attributes occur on subspec level.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [#233](https://github.com/CocoaPods/Core/pull/233)
 
 * Inhibit warnings for pods that only have the `inhibit_warnings` option enabled
   on a subspec.  

@@ -57,6 +57,10 @@ module Pod
 
       # @!group Regular attributes
 
+      # @return [String] The name of the specification.
+      #
+      spec_attr_accessor :name
+
       # @return [Bool] Whether the source files of the specification require to
       #         be compiled with ARC.
       #
