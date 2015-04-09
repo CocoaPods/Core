@@ -481,7 +481,7 @@ module Pod
       end
 
       it 'fails a specification whose name contains a slash' do
-        @spec.name = 'BananaKit/BananaFruit'
+        @spec.subspecs.each { |ss| ss.name = 'BananaKit/BananaFruit' }
         result_should_include('name', 'slash')
       end
     end
