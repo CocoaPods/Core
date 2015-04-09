@@ -220,6 +220,14 @@ module Pod
 
       #------------------#
 
+      it 'passes a specification with a module map' do
+        @spec.module_map = 'module.modulemap'
+        @linter.lint
+        @linter.results.count.should == 0
+      end
+
+      #------------------#
+
       it 'checks that the version has been specified' do
         @spec.stubs(:version).returns(Pod::Version.new(nil))
         result_should_include('version', 'required')
@@ -514,6 +522,13 @@ module Pod
       it 'fails a specification whose name contains a slash' do
         @subspec.name = 'BananaKit/BananaFruit'
         result_should_include('name', 'slash')
+      end
+
+      #------------------#
+
+      it 'fails a specification with a subspec with a module map' do
+        @subspec.module_map = 'subspec.modulemap'
+        result_should_include('module_map', 'can\'t set', 'for subspecs')
       end
     end
   end
