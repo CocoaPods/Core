@@ -35,6 +35,11 @@
   [CocoaPods#2777](https://github.com/CocoaPods/CocoaPods/issues/2777)
 
 
+## 0.36.4
+
+This version only introduces changes in the CocoaPods gem.
+
+
 ## 0.36.3
 
 This version only introduces changes in the CocoaPods gem.
