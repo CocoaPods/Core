@@ -326,6 +326,13 @@ module Pod
         loaded.should == @lockfile
       end
 
+      it "won't write to disk if the equivalent lockfile is already there" do
+        path = SpecHelper.temporary_directory + 'Podfile.lock'
+        @lockfile.write_to_disk(path)
+        path.expects(:open).never
+        @lockfile.write_to_disk(path)
+      end
+
       it 'generates a hash representation' do
         hash = @lockfile.to_hash
         hash.delete('COCOAPODS')

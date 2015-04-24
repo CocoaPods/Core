@@ -289,8 +289,15 @@ module Pod
     #
     def write_to_disk(path)
       path.dirname.mkpath unless path.dirname.exist?
-      File.open(path, 'w') { |f| f.write(to_yaml) }
       self.defined_in_file = path
+      # rubocop:disable Lint/RescueException
+      begin
+        existing = YAMLHelper.load_file(path)
+        return if existing == to_hash
+      rescue Exception
+        path.open('w') { |f| f.write(to_yaml) }
+      end
+      # rubocop:enable Lint/RescueException
     end
 
     # @return [Hash{String=>Array,Hash,String}] a hash representation of the
