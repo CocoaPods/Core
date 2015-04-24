@@ -292,11 +292,11 @@ module Pod
       self.defined_in_file = path
       # rubocop:disable Lint/RescueException
       begin
-        existing = YAMLHelper.load_file(path)
-        return if existing == to_hash
+        existing = Lockfile.from_file(path)
+        return if existing == self
       rescue Exception
-        path.open('w') { |f| f.write(to_yaml) }
       end
+      path.open('w') { |f| f.write(to_yaml) }
       # rubocop:enable Lint/RescueException
     end
 

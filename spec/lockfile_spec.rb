@@ -333,6 +333,17 @@ module Pod
         @lockfile.write_to_disk(path)
       end
 
+      it 'overwrites a different lockfile' do
+        path = SpecHelper.temporary_directory + 'Podfile.lock'
+        path.delete if path.exist?
+        @lockfile.write_to_disk(path)
+
+        @lockfile = Lockfile.new('COCOAPODS' => '0.0.0')
+        @lockfile.write_to_disk(path)
+
+        @lockfile.should == Lockfile.from_file(path)
+      end
+
       it 'generates a hash representation' do
         hash = @lockfile.to_hash
         hash.delete('COCOAPODS')
