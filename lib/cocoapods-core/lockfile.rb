@@ -291,12 +291,14 @@ module Pod
       path.dirname.mkpath unless path.dirname.exist?
       self.defined_in_file = path
       # rubocop:disable Lint/RescueException
+      # rubocop:disable Lint/HandleExceptions
       begin
         existing = Lockfile.from_file(path)
         return if existing == self
       rescue Exception
       end
       path.open('w') { |f| f.write(to_yaml) }
+      # rubocop:enable Lint/HandleExceptions
       # rubocop:enable Lint/RescueException
     end
 
