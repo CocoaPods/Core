@@ -201,7 +201,7 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      if (specs_dir + query).directory?
+      if specs_dir.children.select(&:directory?).map(&:basename).map(&:to_s).include?(query.to_s)
         set(query)
       end
     end
