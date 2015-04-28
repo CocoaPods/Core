@@ -6,7 +6,7 @@
 
 * Only re-write lockfiles if they are changed, in an attempt to avoid exposing
   Psych serialization changes across Ruby versions.  
-  [https://github.com/segiddins]
+  [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
