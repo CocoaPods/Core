@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cocoapods-core (0.37.0.beta.1)
+    cocoapods-core (0.37.0.rc.1)
       activesupport (>= 3.2.15)
       fuzzy_match (~> 2.0.4)
       nap (~> 0.8.0)
@@ -40,7 +40,7 @@ GEM
       rb-kqueue (>= 0.2)
     metaclass (0.0.4)
     method_source (0.8.2)
-    minitest (5.6.0)
+    minitest (5.6.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.2)
