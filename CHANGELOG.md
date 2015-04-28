@@ -1,5 +1,22 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Only re-write lockfiles if they are changed, in an attempt to avoid exposing
+  Psych serialization changes across Ruby versions.  
+  [https://github.com/segiddins]
+
+##### Bug Fixes
+
+* On case-insensitive HFS+ file systems, try to make queries for specs in
+  spec repos to be case-preserved.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2910](https://github.com/CocoaPods/CocoaPods/issues/2910)
+  [CocoaPods#3024](https://github.com/CocoaPods/CocoaPods/issues/3024)
+
+
 ## 0.37.0.beta.1
 
 ##### Enhancements
