@@ -328,9 +328,13 @@ module Pod
 
       it "won't write to disk if the equivalent lockfile is already there" do
         path = SpecHelper.temporary_directory + 'Podfile.lock'
+        old_yaml = %(---\nhi: "./hi"\n)
+        path.open('w') { |f| f.write old_yaml }
+        @lockfile.stubs(:to_hash).returns('hi' => './hi')
+        @lockfile.stubs(:to_yaml).returns("---\nhi: ./hi\n")
+        path.expects(:open).with('w').never
         @lockfile.write_to_disk(path)
-        path.expects(:open).never
-        @lockfile.write_to_disk(path)
+        path.read.should == old_yaml
       end
 
       it 'overwrites a different lockfile' do
