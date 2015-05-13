@@ -151,22 +151,22 @@ module Pod
       #------------------#
 
       it 'allows to specify xcconfig settings' do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @consumer.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+        @consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
       it 'inherits the xcconfig values from the parent' do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @subspec.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
-        @subspec_consumer.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
+        @spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+        @subspec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
+        @subspec_consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
       end
 
       it 'merges the xcconfig values so values for platforms can be specified' do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @spec.ios.xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
-        @consumer.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
+        @spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.ios.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-Wl -no_compact_unwind' }
+        @consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC -Wl -no_compact_unwind' }
         osx_consumer = Specification::Consumer.new(@spec, :osx)
-        osx_consumer.xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
+        osx_consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
       #------------------#

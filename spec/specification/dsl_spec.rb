@@ -224,9 +224,9 @@ module Pod
         @spec.attributes_hash['compiler_flags'].should == %w(-Wdeprecated-implementations -Wunused-value)
       end
 
-      it 'allows to specify xcconfig settings' do
-        @spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
-        @spec.attributes_hash['xcconfig'].should == { 'OTHER_LDFLAGS' => '-lObjC' }
+      it 'allows to specify pod target xcconfig settings' do
+        @spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.attributes_hash['pod_target_xcconfig'].should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
       it 'allows to specify the contents of the prefix header' do

@@ -717,18 +717,18 @@ module Pod
 
       #------------------#
 
-      # @!method xcconfig=(value)
+      # @!method pod_target_xcconfig=(value)
       #
-      #   Any flag to add to the final xcconfig file.
+      #   Any flag to add to the final __private__ pod target xcconfig file.
       #
       #   @example
       #
-      #     spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+      #     spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
       #
       #   @param  [Hash{String => String}] value
-      #           A representing an xcconfig.
+      #           Key-value pairs representing build settings.
       #
-      attribute :xcconfig,
+      attribute :pod_target_xcconfig,
                 :container => Hash,
                 :inherited => true
 

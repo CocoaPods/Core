@@ -501,7 +501,7 @@ module Pod
       end
 
       it 'returns the checksum of the file in which it is defined' do
-        @spec.checksum.should == '1b6fff3413356e7975ad0852ab380d59e3929ffa'
+        @spec.checksum.should == '2060b3e89229b8b30e6bf1a7730ddefdd7669730'
       end
 
       it 'returns a nil checksum if the specification is not defined in a file' do

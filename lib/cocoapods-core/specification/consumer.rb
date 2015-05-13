@@ -88,9 +88,9 @@ module Pod
       spec_attr_accessor :compiler_flags
 
       # @return [Hash{String => String}] the xcconfig flags for the current
-      #         specification.
+      #         specification for the pod target.
       #
-      spec_attr_accessor :xcconfig
+      spec_attr_accessor :pod_target_xcconfig
 
       # @return [String] The contents of the prefix header.
       #
