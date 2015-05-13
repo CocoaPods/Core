@@ -229,6 +229,11 @@ module Pod
         @spec.attributes_hash['pod_target_xcconfig'].should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
+      it 'allows to specify user target xcconfig settings' do
+        @spec.user_target_xcconfig = { 'OTHER_CPLUSPLUSFLAGS' => '-std=c++1y' }
+        @spec.attributes_hash['user_target_xcconfig'].should == { 'OTHER_CPLUSPLUSFLAGS' => '-std=c++1y' }
+      end
+
       it 'allows to specify the contents of the prefix header' do
         @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
         @spec.attributes_hash['prefix_header_contents'].should == '#import <UIKit/UIKit.h>'

@@ -92,6 +92,11 @@ module Pod
       #
       spec_attr_accessor :pod_target_xcconfig
 
+      # @return [Hash{String => String}] the xcconfig flags for the current
+      #         specification for the user target.
+      #
+      spec_attr_accessor :user_target_xcconfig
+
       # @return [String] The contents of the prefix header.
       #
       spec_attr_accessor :prefix_header_contents
