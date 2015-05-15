@@ -249,14 +249,16 @@ module Pod
         string.encode!('UTF-8')
       end
       podfile = Podfile.new(path) do
+        # rubocop:disable Lint/RescueException
         begin
           # rubocop:disable Eval
           eval(string, nil, path.to_s)
           # rubocop:enable Eval
-        rescue => e
+        rescue Exception => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
           raise DSLError.new(message, path, e.backtrace, string)
         end
+        # rubocop:enable Lint/RescueException
       end
       podfile
     end

@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* A more useful DSLError will be shown when there are syntax errors in a Ruby
+  Podfile or Podspec.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#2651](https://github.com/CocoaPods/CocoaPods/issues/2651)
+
+
 ## 0.37.1
 
 This version only introduces changes in the CocoaPods gem.
