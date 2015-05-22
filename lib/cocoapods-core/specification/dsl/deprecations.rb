@@ -12,9 +12,9 @@ module Pod
 
         def xcconfig=(value)
           self.pod_target_xcconfig = value
-          CoreUI.warn "[#{self}] `xcconfig` has been renamed to "\
-            '`pod_target_xcconfig`. See also the new introduced '\
-            '`user_target_xcconfig`.'
+          self.user_target_xcconfig = value
+          CoreUI.warn "[#{self}] `xcconfig` has been split to "\
+            '`pod_target_xcconfig` and `user_target_xcconfig`.'
         end
       end
     end
