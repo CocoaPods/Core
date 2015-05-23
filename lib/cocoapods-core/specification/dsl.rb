@@ -734,27 +734,27 @@ module Pod
 
       # @!method user_target_xcconfig=(value)
       #
-      #   Any flag to add to the final aggregate target xcconfig file, which
-      #   propagates to non-overridden build settings to the integrated user
-      #   targets.
+      #   Specifies flags to add to the final aggregate target xcconfig file,
+      #   which propagates to non-overridden and inheriting build settings to
+      #   the integrated user targets.
       #
       #   ---
       #
       #   This attribute is __not recommended__ as Pods should not pollute the
       #   build settings of the user project and this can cause conflicts.
       #
-      #   Multiple definitions for build settings, which take multiple values,
+      #   Multiple definitions for build settings that take multiple values
       #   will be merged. The user is warned on conflicting definitions for
-      #   custom build settings and build settings, which take only one value.
+      #   custom build settings and build settings that take only one value.
       #
       #   Typically clang compiler flags or precompiler macro definitions go
-      #   in here, if they are required when importing the pod in the user
-      #   target. Note that, this influences only the compiler view of the
+      #   in here if they are required when importing the pod in the user
+      #   target. Note that, this influences not only the compiler view of the
       #   public interface of your pod, but also all other integrated pods
       #   alongside to yours. You should always prefer [`pod_target_xcconfig`](
       #   http://guides.cocoapods.org/syntax/podspec.html#pod_target_xcconfig),
       #   which can contain the same settings, but only influence the
-      #   toolchain, when compiling your pod target.
+      #   toolchain when compiling your pod target.
       #
       #   @example
       #
