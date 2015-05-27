@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.37.2
 
 ##### Enhancements
 
