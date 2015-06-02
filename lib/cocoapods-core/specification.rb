@@ -47,6 +47,10 @@ module Pod
     #
     attr_accessor :subspecs
 
+    # @return [Specification] The test specification for this specification.
+    # @return [Nil] If there is no defined test specification.
+    attr_accessor :test_specification
+
     # Checks if a specification is equal to the given one according its name
     # and to its version.
     #

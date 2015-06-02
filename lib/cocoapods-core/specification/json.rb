@@ -25,6 +25,8 @@ module Pod
         unless subspecs.empty?
           hash['subspecs'] = subspecs.map(&:to_hash)
         end
+        hash['test_spec'] = test_specification.to_hash if test_specification
+        hash.delete('name') unless hash['name']
         hash
       end
 
@@ -69,6 +71,12 @@ module Pod
           Specification.from_hash(s_hash, spec)
         end
       end
+
+      test_spec = attributes_hash.delete('test_specification')
+      if test_spec
+        spec.test_specification = Specification.from_hash(test_spec, spec)
+      end
+
       spec
     end
 

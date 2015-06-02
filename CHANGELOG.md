@@ -33,6 +33,12 @@ This version only introduces changes in the CocoaPods gem.
   Psych serialization changes across Ruby versions.  
   [Samuel Giddins](https://github.com/segiddins)
 
+##### Enhancements
+
+* Add support for test specifications in the podspec DSL.  
+  [Kyle Fuller](https://github.com/kylef)
+  [#142](https://github.com/CocoaPods/Core/pull/142)
+
 ##### Bug Fixes
 
 * On case-insensitive HFS+ file systems, try to make queries for specs in

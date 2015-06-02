@@ -1278,6 +1278,26 @@ module Pod
                 :singularize => true,
                 :multi_platform => false
 
+      # Represents a test specification for the library. Here you can place all
+      # your unit tests for your podspec along with the test dependencies.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'URITemplate'
+      #
+      #     spec.test_spec do |test_spec|
+      #       test_spec.source_files = 'URITemplateTests.swift'
+      #       test_spec.dependency 'Quick'
+      #     end
+      #   end
+      #
+      def test_spec(&block)
+        @test_specification = Specification.new(self, nil, &block)
+      end
+
       #-----------------------------------------------------------------------#
 
       # @!group Multi-Platform support
