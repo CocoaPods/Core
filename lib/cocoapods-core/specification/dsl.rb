@@ -81,10 +81,6 @@ module Pod
                 :inherited => false,
                 :multi_platform => false
 
-      #-----------------------------------------------------------------------#
-
-      root_attribute :cocoapods_version
-
       #------------------#
 
       # @!method version=(version)
@@ -101,6 +97,22 @@ module Pod
       #
       root_attribute :version,
                      :required => true
+
+      #-----------------------------------------------------------------------#
+
+      # @!method cocoapods_version=(cocoapods_version)
+      #
+      #   The version of CocoaPods that the sepcification supports.
+      #
+      # @example
+      #
+      #   spec.cocoapods_version = '>= 0.36'
+      #
+      # @param  [String] cocoapods_version
+      #         the CocoaPods version that the specification supports.
+      #         CocoaPods follows [semantic versioning](http://semver.org).
+      #
+      root_attribute :cocoapods_version
 
       #------------------#
 

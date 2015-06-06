@@ -34,6 +34,8 @@ module Pod
           end
         end
 
+        # @return [Requirement] The CocoaPods version required to use the specification.
+        #
         def cocoapods_version
           @cocoapods_version ||= Requirement.create(attributes_hash['cocoapods_version'])
         end
