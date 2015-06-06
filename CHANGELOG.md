@@ -1,5 +1,13 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Add support for specifying the CocoaPods version in the podspec.
+	[Daniel Tomlinson](https://github.com/DanielTomlinson)
+	[CocoaPods#something](https://github.com/CocoaPods/Core/issues/something)
+
 ## 0.37.2
 
 ##### Enhancements
