@@ -583,6 +583,18 @@ module Pod
       end
       @defined_in_file = file
     end
+
+    # @!group Validation
+
+    # Validates the cocoapods_version in the specification against the current version of Core.
+    # It will raise an Informative error if the version is not satisfied.
+    #
+    def validate_cocoapods_version
+      unless cocoapods_version.satisfied_by?(Version.create(CORE_VERSION))
+        raise Informative, "`#{name}` requires CocoaPods version `#{cocoapods_version}`, " \
+                           "which is not satisified by your current version, `#{CORE_VERSION}`."
+      end
+    end
   end
 
   #---------------------------------------------------------------------------#
