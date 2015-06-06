@@ -42,12 +42,6 @@ module Pod
         version.to_s.should == 'HEAD based on 1.2.3'
       end
 
-      it 'supports the previous way that a HEAD version was described' do
-        version = Version.new('HEAD from 1.2.3')
-        version.should.be.head
-        version.to_s.should == 'HEAD based on 1.2.3'
-      end
-
       it 'identifies release versions' do
         version = Version.new('1.0.0')
         version.should.not.be.prerelease

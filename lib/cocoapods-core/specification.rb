@@ -14,7 +14,6 @@ module Pod
   #
   class Specification
     include Pod::Specification::DSL
-    include Pod::Specification::DSL::Deprecations
     include Pod::Specification::RootAttributesAccessors
     include Pod::Specification::JSONSupport
 

@@ -1,7 +1,6 @@
 require 'cocoapods-core/specification/dsl/attribute_support'
 require 'cocoapods-core/specification/dsl/attribute'
 require 'cocoapods-core/specification/dsl/platform_proxy'
-require 'cocoapods-core/specification/dsl/deprecations'
 
 module Pod
   class Specification
