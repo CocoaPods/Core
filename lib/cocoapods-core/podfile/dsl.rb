@@ -311,7 +311,7 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      # Specifies the platform for which a static library should be build.
+      # Specifies the platform for which a static library should be built.
       #
       # CocoaPods provides a default deployment target if one is not specified.
       # The current default values are `4.3` for iOS and `10.6` for OS X.
