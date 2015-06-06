@@ -34,6 +34,10 @@ module Pod
           end
         end
 
+        def cocoapods_version
+          @cocoapods_version ||= Requirement.create(attributes_hash['cocoapods_version'])
+        end
+
         # @return [Hash] a hash containing the authors as the keys and their
         #         email address as the values.
         #

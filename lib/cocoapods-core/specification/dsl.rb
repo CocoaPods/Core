@@ -81,6 +81,10 @@ module Pod
                 :inherited => false,
                 :multi_platform => false
 
+      #-----------------------------------------------------------------------#
+
+      root_attribute :cocoapods_version
+
       #------------------#
 
       # @!method version=(version)

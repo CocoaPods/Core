@@ -19,6 +19,11 @@ module Pod
         @spec.attributes_hash['version'].should == '1.0'
       end
 
+      it 'allows specifying the cocoapods version' do
+        @spec.cocoapods_version = '>= 0.36'
+        @spec.attributes_hash['cocoapods_version'].should == '>= 0.36'
+      end
+
       it 'allows to specify the authors' do
         hash = { 'Darth Vader' => 'darthvader@darkside.com',
                  'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
