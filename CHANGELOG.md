@@ -5,8 +5,8 @@
 ##### Enhancements
 
 * Add support for specifying the CocoaPods version in the podspec.
-	[Daniel Tomlinson](https://github.com/DanielTomlinson)
-	[CocoaPods#something](https://github.com/CocoaPods/Core/issues/something)
+  [Daniel Tomlinson](https://github.com/DanielTomlinson)
+  [Core#240](https://github.com/CocoaPods/Core/issues/240)
 
 ## 0.37.2
 
