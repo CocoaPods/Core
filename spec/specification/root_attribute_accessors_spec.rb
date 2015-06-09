@@ -25,6 +25,11 @@ module Pod
       @spec.version.should == Version.new('1.0')
     end
 
+    it 'returns the cocoapods version requirement of the specification' do
+      @spec.cocoapods_version = '>= 0.36'
+      @spec.cocoapods_version.should == Requirement.new('>= 0.36')
+    end
+
     it 'memoizes the version to allow to set it to head' do
       @spec.version.should.equal? @spec.version
     end

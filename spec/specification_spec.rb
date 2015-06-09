@@ -93,6 +93,24 @@ module Pod
         spec_1.to_s.should == 'No-name'
       end
 
+      describe '#validate_cocoapods_version' do
+        it 'passes when none is specified' do
+          spec_1 = Specification.new
+          should.not.raise { spec_1.validate_cocoapods_version }
+        end
+
+        it 'passes when the requirement is satisfied' do
+          spec_1 = Specification.new { |s| s.cocoapods_version = '>= 0.1.0' }
+          should.not.raise { spec_1.validate_cocoapods_version }
+        end
+
+        it 'fails when the requirement is not satisfied' do
+          spec_1 = Specification.new { |s| s.cocoapods_version = '= 999999.0.0' }
+          should.raise(Informative) { spec_1.validate_cocoapods_version }.message.
+            should.match /CocoaPods version/
+        end
+      end
+
       describe '::name_and_version_from_string' do
         it 'returns the name and the version of a Specification from its #to_s output' do
           name, version = Specification.name_and_version_from_string('libPusher (1.0)')
