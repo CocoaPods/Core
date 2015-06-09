@@ -107,7 +107,7 @@ module Pod
         it 'fails when the requirement is not satisfied' do
           spec_1 = Specification.new { |s| s.cocoapods_version = '= 999999.0.0' }
           should.raise(Informative) { spec_1.validate_cocoapods_version }.message.
-            should.match //
+            should.match /CocoaPods version/
         end
       end
 
