@@ -583,12 +583,12 @@ module Pod
       # been downloaded but before they are installed.
       #
       # It receives the
-      # [`Pod::Hooks::InstallerRepresentation`](http://rubydoc.info/gems/cocoapods/Pod/Hooks/InstallerRepresentation/)
+      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
       # @example  Defining a pre install hook in a Podfile.
       #
-      #   pre_install do |installer_representation|
+      #   pre_install do |installer|
       #     # Do something fancy!
       #   end
       #
@@ -602,13 +602,13 @@ module Pod
       # to perform.
       #
       # It receives the
-      # [`Pod::Hooks::InstallerRepresentation`](http://rubydoc.info/gems/cocoapods/Pod/Hooks/InstallerRepresentation/)
+      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Customising the `OTHER_LDFLAGS` of all targets
+      # @example  Customising the build settings of all targets
       #
-      #   post_install do |installer_representation|
-      #     installer_representation.project.targets.each do |target|
+      #   post_install do |installer|
+      #     installer.pods_project.targets.each do |target|
       #       target.build_configurations.each do |config|
       #         config.build_settings['GCC_ENABLE_OBJC_GC'] = 'supported'
       #       end
