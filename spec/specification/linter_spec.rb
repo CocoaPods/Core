@@ -311,6 +311,12 @@ module Pod
 
       #------------------#
 
+      it 'allows a local git URL as source' do
+        @spec.stubs(:source).returns(:git => 'file:///tmp/d20131009-82757-1tztajd', :tag => '1.0')
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
       it 'checks for the example source' do
         @spec.stubs(:source).returns(:git => 'http://EXAMPLE.git', :tag => '1.0')
         result_should_include('source', 'example')
