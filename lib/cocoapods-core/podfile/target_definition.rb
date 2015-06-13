@@ -415,7 +415,7 @@ module Pod
           else
             name = name_or_hash.to_sym
           end
-          target ||= (name == :ios ? '4.3' : '10.6')
+          target ||= (name == :ios ? '4.3' : (name == :watchos ? '2.0' : '10.6'))
           Platform.new(name, target)
         else
           parent.platform unless root?
@@ -435,9 +435,9 @@ module Pod
       # @return [void]
       #
       def set_platform(name, target = nil)
-        unless [:ios, :osx].include?(name)
+        unless [:ios, :osx, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            'must be `:ios` or `:osx`.'
+            'must be `:ios`, `:osx`, `:watchos`.'
         end
 
         if target

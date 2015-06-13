@@ -67,6 +67,10 @@ module Pod
       new :osx
     end
 
+    def self.watchos
+      new :watchos
+    end
+
     # Checks if a platform is equivalent to another one or to a symbol
     # representation.
     #
@@ -188,6 +192,7 @@ module Pod
       case symbolic_name
       when :ios then 'iOS'
       when :osx then 'OS X'
+      when :watchos then 'watchOS'
       else symbolic_name.to_s end
     end
   end
