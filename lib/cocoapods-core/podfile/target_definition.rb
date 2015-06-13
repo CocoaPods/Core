@@ -407,6 +407,7 @@ module Pod
       #         provided.
       #
       def platform
+        platform_defaults = { :ios => '4.3', :osx => '10.6', :watchos => '2.0' }
         name_or_hash = get_hash_value('platform')
         if name_or_hash
           if name_or_hash.is_a?(Hash)
@@ -415,7 +416,7 @@ module Pod
           else
             name = name_or_hash.to_sym
           end
-          target ||= (name == :ios ? '4.3' : (name == :watchos ? '2.0' : '10.6'))
+          target ||= platform_defaults[name]
           Platform.new(name, target)
         else
           parent.platform unless root?
