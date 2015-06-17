@@ -169,6 +169,15 @@ module Pod
         osx_consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-lObjC' }
       end
 
+      it 'merges the legacy xcconfig attribute' do
+        @spec.attributes_hash['xcconfig'] = { 'OTHER_LDFLAGS' => '-Wl' }
+        @spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+        @spec.user_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+
+        @consumer.pod_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-Wl -lObjC' }
+        @consumer.user_target_xcconfig.should == { 'OTHER_LDFLAGS' => '-Wl -lObjC' }
+      end
+
       #------------------#
 
       it 'allows to specify the contents of the prefix header' do

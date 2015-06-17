@@ -90,12 +90,18 @@ module Pod
       # @return [Hash{String => String}] the xcconfig flags for the current
       #         specification for the pod target.
       #
-      spec_attr_accessor :pod_target_xcconfig
+      def pod_target_xcconfig
+        attr = Specification::DSL.attributes[:pod_target_xcconfig]
+        merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:pod_target_xcconfig))
+      end
 
       # @return [Hash{String => String}] the xcconfig flags for the current
       #         specification for the user target.
       #
-      spec_attr_accessor :user_target_xcconfig
+      def user_target_xcconfig
+        attr = Specification::DSL.attributes[:user_target_xcconfig]
+        merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:user_target_xcconfig))
+      end
 
       # @return [String] The contents of the prefix header.
       #

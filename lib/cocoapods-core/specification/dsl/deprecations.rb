@@ -10,6 +10,10 @@ module Pod
             'to `default_subspecs`.'
         end
 
+        DSL.attribute :xcconfig,
+                      :container => Hash,
+                      :inherited => true
+
         def xcconfig=(value)
           self.pod_target_xcconfig = value
           self.user_target_xcconfig = value
