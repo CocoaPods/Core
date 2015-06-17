@@ -17,7 +17,7 @@ module Pod
         def xcconfig=(value)
           self.pod_target_xcconfig = value
           self.user_target_xcconfig = value
-          CoreUI.warn "[#{self}] `xcconfig` has been split to "\
+          CoreUI.warn "[#{self}] `xcconfig` has been split into "\
             '`pod_target_xcconfig` and `user_target_xcconfig`.'
         end
       end
