@@ -248,6 +248,7 @@ module Pod
       if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')
       end
+      string.tr!('“”‘’‛', %(""'''))
       podfile = Podfile.new(path) do
         # rubocop:disable Lint/RescueException
         begin
