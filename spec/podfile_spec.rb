@@ -323,6 +323,15 @@ module Pod
         ruby_podfile.dependencies.map(&:name).should == %w(SSZipArchive ASIHTTPRequest Reachability ASIWebPageRequest)
       end
 
+      it 'can handle smartquotes in a ruby DSL file' do
+        dsl = <<-DSL
+          pod “AFNetworking”, ‘~> 2.0’
+        DSL
+        podfile = Podfile.from_ruby(fixture('Podfile'), dsl)
+        podfile.dependencies.should == [Dependency.new('AFNetworking', '~> 2.0')]
+        CoreUI.warnings.should.match /smart quotes/
+      end
+
       it 'handles the `podfile` extension' do
         path = fixture('CocoaPods.podfile')
         Pathname.any_instance.stubs(:exist?).returns(true)
