@@ -8,6 +8,10 @@
   [Daniel Tomlinson](https://github.com/DanielTomlinson)
   [Core#240](https://github.com/CocoaPods/Core/issues/240)
 
+* Attempt to detect (and warn) when a podfile has smart quotes.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+
 ## 0.37.2
 
 ##### Enhancements
