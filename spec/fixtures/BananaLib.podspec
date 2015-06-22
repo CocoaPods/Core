@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.resources        = "Resources/*.png"
 
   # Build settings
-  s.xcconfig           = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
+  s.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
   s.prefix_header_file = 'Classes/BananaLib.pch'
   s.requires_arc       = true
 

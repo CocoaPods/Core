@@ -2,6 +2,13 @@
 
 ## Master
 
+##### Breaking
+
+* Deprecate the `xcconfig` attribute in the Podspec DSL, which is replaced by
+  the new attributes `pod_target_xcconfig` and `user_target_xcconfig`.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [CocoaPods#3465](https://github.com/CocoaPods/CocoaPods/issues/3465)
+
 ##### Enhancements
 
 * Add support for specifying the CocoaPods version in the podspec.

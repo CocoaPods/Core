@@ -1,7 +1,6 @@
 require 'cocoapods-core/specification/dsl/attribute_support'
 require 'cocoapods-core/specification/dsl/attribute'
 require 'cocoapods-core/specification/dsl/platform_proxy'
-require 'cocoapods-core/specification/dsl/deprecations'
 
 module Pod
   class Specification
@@ -42,6 +41,9 @@ module Pod
     #
     module DSL
       extend Pod::Specification::DSL::AttributeSupport
+
+      # Deprecations must be required after include AttributeSupport
+      require 'cocoapods-core/specification/dsl/deprecations'
 
       #-----------------------------------------------------------------------#
 
@@ -733,18 +735,53 @@ module Pod
 
       #------------------#
 
-      # @!method xcconfig=(value)
+      # @!method pod_target_xcconfig=(value)
       #
-      #   Any flag to add to the final xcconfig file.
+      #   Any flag to add to the final __private__ pod target xcconfig file.
       #
       #   @example
       #
-      #     spec.xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
+      #     spec.pod_target_xcconfig = { 'OTHER_LDFLAGS' => '-lObjC' }
       #
       #   @param  [Hash{String => String}] value
-      #           A representing an xcconfig.
+      #           Key-value pairs representing build settings.
       #
-      attribute :xcconfig,
+      attribute :pod_target_xcconfig,
+                :container => Hash,
+                :inherited => true
+
+      # @!method user_target_xcconfig=(value)
+      #
+      #   Specifies flags to add to the final aggregate target xcconfig file,
+      #   which propagates to non-overridden and inheriting build settings to
+      #   the integrated user targets.
+      #
+      #   ---
+      #
+      #   This attribute is __not recommended__ as Pods should not pollute the
+      #   build settings of the user project and this can cause conflicts.
+      #
+      #   Multiple definitions for build settings that take multiple values
+      #   will be merged. The user is warned on conflicting definitions for
+      #   custom build settings and build settings that take only one value.
+      #
+      #   Typically clang compiler flags or precompiler macro definitions go
+      #   in here if they are required when importing the pod in the user
+      #   target. Note that, this influences not only the compiler view of the
+      #   public interface of your pod, but also all other integrated pods
+      #   alongside to yours. You should always prefer [`pod_target_xcconfig`](
+      #   http://guides.cocoapods.org/syntax/podspec.html#pod_target_xcconfig),
+      #   which can contain the same settings, but only influence the
+      #   toolchain when compiling your pod target.
+      #
+      #   @example
+      #
+      #     spec.user_target_xcconfig = { 'MY_SUBSPEC' => 'YES' }
+      #
+      #   @param  [Hash{String => String}] value
+      #           Key-value pairs representing build settings.
+      #
+      attribute :user_target_xcconfig,
                 :container => Hash,
                 :inherited => true
 
