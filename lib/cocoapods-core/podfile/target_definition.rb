@@ -401,13 +401,14 @@ module Pod
 
       #--------------------------------------#
 
+      PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.6', :watchos => '2.0' }.freeze
+
       # @return [Platform] the platform of the target definition.
       #
       # @note   If no deployment target has been specified a default value is
       #         provided.
       #
       def platform
-        platform_defaults = { :ios => '4.3', :osx => '10.6', :watchos => '2.0' }
         name_or_hash = get_hash_value('platform')
         if name_or_hash
           if name_or_hash.is_a?(Hash)
@@ -416,7 +417,7 @@ module Pod
           else
             name = name_or_hash.to_sym
           end
-          target ||= platform_defaults[name]
+          target ||= PLATFORM_DEFAULTS[name]
           Platform.new(name, target)
         else
           parent.platform unless root?
@@ -438,7 +439,7 @@ module Pod
       def set_platform(name, target = nil)
         unless [:ios, :osx, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            'must be `:ios`, `:osx`, `:watchos`.'
+            'must be `:ios`, `:osx`, or `:watchos`.'
         end
 
         if target
