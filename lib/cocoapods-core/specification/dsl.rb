@@ -461,7 +461,7 @@ module Pod
 
       # The names of the platforms supported by the specification class.
       #
-      PLATFORMS = [:osx, :ios].freeze
+      PLATFORMS = [:osx, :ios, :watchos].freeze
 
       # @todo This currently is not used in the Ruby DSL.
       #
@@ -1368,6 +1368,10 @@ module Pod
       #
       def osx
         PlatformProxy.new(self, :osx)
+      end
+
+      def watchos
+        PlatformProxy.new(self, :watchos)
       end
     end
   end

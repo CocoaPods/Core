@@ -18,6 +18,10 @@
 * Attempt to detect (and warn) when a podfile has smart quotes.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* Add `watchos` as a new platform.  
+  [Boris Bügling](https://github.com/neonichu)
+  [Core#249](https://github.com/CocoaPods/Core/pull/249)
+
 
 ## 0.37.2
 

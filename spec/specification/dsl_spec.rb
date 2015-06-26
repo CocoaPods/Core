@@ -120,6 +120,16 @@ module Pod
         e = lambda { @spec.deployment_target = '6.0' }.should.raise Informative
         e.message.should.match /declared only per platform/
       end
+
+      it 'allows to specify watchOS as supported platform' do
+        @spec.platform = :watchos
+        @spec.attributes_hash['platforms'].should == { 'watchos' => nil }
+      end
+
+      it 'allows to specify a deployment target for the watchOS platform' do
+        @spec.watchos.deployment_target = '2.0'
+        @spec.attributes_hash['platforms']['watchos'].should == '2.0'
+      end
     end
 
     #-----------------------------------------------------------------------------#
