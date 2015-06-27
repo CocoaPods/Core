@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.38.0.beta.1
 
 ##### Breaking
 
