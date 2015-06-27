@@ -105,3 +105,6 @@ DEPENDENCIES
   rubocop
   vcr
   webmock
+
+BUNDLED WITH
+   1.10.5
