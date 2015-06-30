@@ -1,3 +1,5 @@
+require 'active_support/core_ext/string/strip.rb'
+
 require 'cocoapods-core/specification/consumer'
 require 'cocoapods-core/specification/dsl'
 require 'cocoapods-core/specification/linter'
@@ -439,6 +441,7 @@ module Pod
     def store_attribute(name, value, platform_name = nil)
       name = name.to_s
       value = convert_keys_to_string(value) if value.is_a?(Hash)
+      value = value.strip_heredoc.strip if value.respond_to?(:strip_heredoc)
       if platform_name
         platform_name = platform_name.to_s
         attributes_hash[platform_name] ||= {}

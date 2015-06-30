@@ -449,6 +449,27 @@ module Pod
         }
       end
 
+      it 'strips heredoc leading space from strings' do
+        value = <<-EOS
+          foo
+            bar
+        EOS
+        @spec.store_attribute(:attribute,  value)
+        @spec.attributes_hash.should == {
+          'name' => nil,
+          'attribute' => "foo\n  bar",
+        }
+      end
+
+      it 'strips trailing space from strings' do
+        value = "foo\n"
+        @spec.store_attribute(:attribute,  value)
+        @spec.attributes_hash.should == {
+          'name' => nil,
+          'attribute' => 'foo',
+        }
+      end
+
       it 'declares attribute writer methods' do
         Specification::DSL.attributes.values.each do |attr|
           value = case attr.supported_types.first

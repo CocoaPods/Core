@@ -1,5 +1,3 @@
-require 'active_support/core_ext/string/strip.rb'
-
 module Pod
   class Specification
     # Allows to conveniently access a Specification programmatically.

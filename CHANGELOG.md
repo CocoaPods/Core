@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* All string values written via the Podspec Ruby DSL will automatically have
+  extraneous spaces stripped.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#239](https://github.com/CocoaPods/Core/issues/239)
+
+
 ## 0.38.0.beta.1
 
 ##### Breaking
