@@ -1,3 +1,5 @@
+require 'uri'
+
 module Pod
   # Handles HTTP requests
   #
