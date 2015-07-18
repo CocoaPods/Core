@@ -1,5 +1,9 @@
 language: ruby
 bundler_args: --without debugging documentation
+branches:
+  only:
+    - master
+    - /.+-stable$/
 addons:
  code_climate:
    repo_token: 186c49521e629c51591c86f057f49fe388ce87603e04b5486f0c92f26f2a455f
