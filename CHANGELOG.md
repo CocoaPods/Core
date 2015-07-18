@@ -1,5 +1,10 @@
 # CocoaPods Core Changelog
 
+## 0.38.0
+
+This version only introduces changes in the CocoaPods gem.
+
+
 ## 0.38.0.beta.2
 
 ##### Bug Fixes
