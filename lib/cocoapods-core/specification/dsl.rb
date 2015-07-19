@@ -1370,6 +1370,13 @@ module Pod
         PlatformProxy.new(self, :osx)
       end
 
+      # Provides support for specifying watchOS attributes.
+      #
+      # @example
+      #   spec.watchos.source_files = "Classes/watchos/**/*.{h,m}"
+      #
+      # @return [PlatformProxy] the proxy that will set the attributes.
+      #
       def watchos
         PlatformProxy.new(self, :watchos)
       end
