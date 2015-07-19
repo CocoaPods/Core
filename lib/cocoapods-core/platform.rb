@@ -67,6 +67,10 @@ module Pod
       new :osx
     end
 
+    # Convenience method to initialize a watchOS platform.
+    #
+    # @return [Platform] a watchOS platform.
+    #
     def self.watchos
       new :watchos
     end
