@@ -116,6 +116,7 @@ module Pod
         Version.new('1.0.1-alpha').patch.should == 1
         Version.new('1').patch.should == 0
         Version.new('1.alpha').patch.should == 0
+        Version.new('1.alpha.2').patch.should == 0
       end
     end
 

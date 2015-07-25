@@ -125,19 +125,25 @@ module Pod
     # @return [Fixnum] The semver major identifier.
     #
     def major
-      segments[0].to_i
+      numeric_segments[0].to_i
     end
 
     # @return [Fixnum] The semver minor identifier.
     #
     def minor
-      segments[1].to_i
+      numeric_segments[1].to_i
     end
 
     # @return [Fixnum] The semver patch identifier.
     #
     def patch
-      segments[2].to_i
+      numeric_segments[2].to_i
+    end
+
+    private
+
+    def numeric_segments
+      segments.take_while { |s| s.is_a?(Numeric) }
     end
 
     #-------------------------------------------------------------------------#
