@@ -125,19 +125,19 @@ module Pod
     # @return [Fixnum] The semver major identifier.
     #
     def major
-      segments[0]
+      segments[0].to_i
     end
 
     # @return [Fixnum] The semver minor identifier.
     #
     def minor
-      segments[1] || 0
+      segments[1].to_i
     end
 
     # @return [Fixnum] The semver patch identifier.
     #
     def patch
-      segments[2] || 0
+      segments[2].to_i
     end
 
     #-------------------------------------------------------------------------#

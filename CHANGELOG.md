@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* The `major`, `minor`, and `patch` properties of versions will now always
+  return a number.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+
 ## 0.38.1
 
 This version only introduces changes in the CocoaPods gem.

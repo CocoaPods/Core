@@ -101,18 +101,21 @@ module Pod
       it 'returns the major identifier' do
         Version.new('1.9.0').major.should == 1
         Version.new('1.0.0-alpha').major.should == 1
+        Version.new('1.alpha').major.should == 1
       end
 
       it 'returns the minor identifier' do
         Version.new('1.9.0').minor.should == 9
         Version.new('1.0.0-alpha').minor.should == 0
         Version.new('1').minor.should == 0
+        Version.new('1.alpha').minor.should == 0
       end
 
       it 'returns the patch identifier' do
         Version.new('1.9.0').patch.should == 0
         Version.new('1.0.1-alpha').patch.should == 1
         Version.new('1').patch.should == 0
+        Version.new('1.alpha').patch.should == 0
       end
     end
 
