@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.38.2
 
 ##### Bug Fixes
 
