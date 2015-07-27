@@ -94,16 +94,10 @@ module Pod
       #
       def process_according_to_class(value, hash_keys_hint = nil)
         case value
-        when String     then YAML.dump(value).sub(/^---/, '').sub(/[.]{3}\s*$/, '').strip
-        when Symbol     then ":#{value}"
-        when TrueClass  then 'true'
-        when FalseClass then 'false'
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
-        else
-          raise StandardError, 'Unsupported class for YAML conversion ' \
-            "#{value.class}"
-        end
+        else                 YAML.dump(value).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '').strip
+        end.strip
       end
 
       # Converts an array to YAML after sorting it.

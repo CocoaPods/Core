@@ -82,11 +82,23 @@ module Pod
         EOT
       end
 
-      it "raises if it can't handle the class of the given object" do
+      it "handles nil" do
+        value = { 'foo' => nil }
+        result = YAMLHelper.convert(value)
+        result.should == <<-EOT.strip_heredoc
+          foo:
+        EOT
+        YAMLHelper.load_string(result).should == value
+      end
+
+      it "handles objects of unknown classes" do
         value = Pathname.new('a-path')
-        should.raise StandardError do
-          YAMLHelper.convert(value)
-        end.message.should.match /Unsupported class/
+        result = YAMLHelper.convert(value)
+        result.should == <<-EOT.strip_heredoc
+          !ruby/object:Pathname
+          path: a-path
+        EOT
+        YAMLHelper.load_string(result).should == value
       end
     end
 
