@@ -138,6 +138,51 @@ module Pod
     #
     def patch
       numeric_segments[2].to_i
+  end
+
+  ##
+  # Compares this version with +other+ returning -1, 0, or 1 if the
+  # other version is larger, the same, or smaller than this
+  # one. Attempts to compare to something that's not a
+  # <tt>Pod::Version</tt> return +nil+.
+
+  def <=> other
+    return unless Pod::Version === other
+    return 0 if @version == other.version
+
+    if major != other.major
+      return major <=> other.major
+    end
+
+    if minor != other.minor
+      return minor <=> other.minor
+    end
+
+    if patch != other.patch
+      return patch <=> other.patch
+    end
+
+    lhsegments = segments.drop_while { |s| s.is_a?(Numeric) }
+    rhsegments = other.segments.drop_while { |s| s.is_a?(Numeric) }
+
+    lhsize = lhsegments.size
+    rhsize = rhsegments.size
+    limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
+
+    i = 0
+
+    while i <= limit
+      lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
+      i += 1
+
+      next      if lhs == rhs
+      return -1 if String  === lhs && Numeric === rhs
+      return  1 if Numeric === lhs && String  === rhs
+
+      return lhs <=> rhs
+    end
+
+      return version <=> other.version
     end
 
     private
