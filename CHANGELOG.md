@@ -1,5 +1,13 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancments
+
+* Gracefully handle missing root podspecs when auto-detecting.  
+  [Hugo Tunius](https://github.com/k0nserv)
+  [#3919](https://github.com/CocoaPods/CocoaPods/issues/3919#issuecomment-125676236)
+
 ## 0.38.2
 
 ##### Bug Fixes
