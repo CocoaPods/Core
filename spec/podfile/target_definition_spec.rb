@@ -537,6 +537,13 @@ module Pod
           file = @root.send(:podspec_path_from_options, options)
           file.should == SpecHelper::Fixture.fixture('BananaLib.podspec')
         end
+
+        it 'raise an Informative error if the podspec cannot be auto-detected' do
+          @root.podfile.defined_in_file = SpecHelper::Fixture.fixture('podfile_without_root_podspec/Podfile')
+          options = { :autodetect => true }
+          e = lambda { @root.send(:podspec_path_from_options, options) }.should.raise Pod::Informative
+          e.message.should.match /Could not locate a podspec in the/
+        end
       end
     end
 

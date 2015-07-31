@@ -695,7 +695,13 @@ module Pod
           podfile.defined_in_file.dirname + name
         elsif options[:autodetect]
           glob_pattern = podfile.defined_in_file.dirname + '*.podspec{,.json}'
-          Pathname.glob(glob_pattern).first
+          path = Pathname.glob(glob_pattern).first
+          unless path
+            raise Informative, 'Could not locate a podspec in the current directory. '\
+              'You can specify the path via the path option.'
+          end
+
+          path
         end
       end
 
