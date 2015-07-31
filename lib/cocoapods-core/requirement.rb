@@ -15,7 +15,7 @@ module Pod
     #
     PATTERN = /\A\s*(#{quoted_operators})?\s*(#{Version::VERSION_PATTERN})\s*\z/
 
-    DefaultRequirement = [">=", Version.new(0)]
+    DefaultRequirement = ['>=', Version.new(0)] # rubocop:disable Style/ConstantName
 
     #-------------------------------------------------------------------------#
 
