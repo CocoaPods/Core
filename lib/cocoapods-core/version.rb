@@ -150,8 +150,8 @@ module Pod
     #
     # @note   Attempts to compare something that's not a {Version} return nil
     #
-    def <=> other
-      return unless Pod::Version === other
+    def <=>(other)
+      return unless other.is_a?(Pod::Version)
       return 0 if @version == other.version
 
       if major != other.major
@@ -180,13 +180,13 @@ module Pod
         i += 1
 
         next      if lhs == rhs
-        return -1 if String  === lhs && Numeric === rhs
-        return  1 if Numeric === lhs && String  === rhs
+        return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+        return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
 
         return lhs <=> rhs
       end
 
-        return version <=> other.version
+      version <=> other.version
     end
 
     private

@@ -77,7 +77,7 @@ module Pod
     #
     # @note An empty set of `requirements` is the same as `">= 0"`
     #
-    def initialize *requirements
+    def initialize(*requirements)
       requirements = requirements.flatten
       requirements.compact!
       requirements.uniq!
