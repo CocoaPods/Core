@@ -138,51 +138,55 @@ module Pod
     #
     def patch
       numeric_segments[2].to_i
-  end
-
-  ##
-  # Compares this version with +other+ returning -1, 0, or 1 if the
-  # other version is larger, the same, or smaller than this
-  # one. Attempts to compare to something that's not a
-  # <tt>Pod::Version</tt> return +nil+.
-
-  def <=> other
-    return unless Pod::Version === other
-    return 0 if @version == other.version
-
-    if major != other.major
-      return major <=> other.major
     end
 
-    if minor != other.minor
-      return minor <=> other.minor
-    end
+    # Compares the versions for sorting.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
+    #         than, equal to, or greater than other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def <=> other
+      return unless Pod::Version === other
+      return 0 if @version == other.version
 
-    if patch != other.patch
-      return patch <=> other.patch
-    end
+      if major != other.major
+        return major <=> other.major
+      end
 
-    lhsegments = segments.drop_while { |s| s.is_a?(Numeric) }
-    rhsegments = other.segments.drop_while { |s| s.is_a?(Numeric) }
+      if minor != other.minor
+        return minor <=> other.minor
+      end
 
-    lhsize = lhsegments.size
-    rhsize = rhsegments.size
-    limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
+      if patch != other.patch
+        return patch <=> other.patch
+      end
 
-    i = 0
+      lhsegments = segments.drop_while { |s| s.is_a?(Numeric) }
+      rhsegments = other.segments.drop_while { |s| s.is_a?(Numeric) }
 
-    while i <= limit
-      lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
-      i += 1
+      lhsize = lhsegments.size
+      rhsize = rhsegments.size
+      limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
 
-      next      if lhs == rhs
-      return -1 if String  === lhs && Numeric === rhs
-      return  1 if Numeric === lhs && String  === rhs
+      i = 0
 
-      return lhs <=> rhs
-    end
+      while i <= limit
+        lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
+        i += 1
 
-      return version <=> other.version
+        next      if lhs == rhs
+        return -1 if String  === lhs && Numeric === rhs
+        return  1 if Numeric === lhs && String  === rhs
+
+        return lhs <=> rhs
+      end
+
+        return version <=> other.version
     end
 
     private
