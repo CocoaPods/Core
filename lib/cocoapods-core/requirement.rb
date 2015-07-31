@@ -89,6 +89,16 @@ module Pod
       end
     end
 
+    #
+    # @return [Bool] true if this gem has no requirements.
+    #
+    def none?
+      if @requirements.size == 1
+        @requirements[0] == DefaultRequirement
+      else
+        false
+      end
+    end
     #-------------------------------------------------------------------------#
   end
 end
