@@ -15,6 +15,8 @@ module Pod
     #
     PATTERN = /\A\s*(#{quoted_operators})?\s*(#{Version::VERSION_PATTERN})\s*\z/
 
+    DefaultRequirement = [">=", Version.new(0)]
+
     #-------------------------------------------------------------------------#
 
     # Factory method to create a new requirement.
@@ -64,6 +66,27 @@ module Pod
       operator = Regexp.last_match[1] || '='
       version = Version.new(Regexp.last_match[2])
       [operator, version]
+    end
+
+    # Constructs a requirement from `requirements`.
+    #
+    # @param [String, Version, Array<String>, Array<Version>] requirements
+    #        The set of requirements
+    #
+    # @note Duplicate requirements are ignored.
+    #
+    # @note An empty set of `requirements` is the same as `">= 0"`
+    #
+    def initialize *requirements
+      requirements = requirements.flatten
+      requirements.compact!
+      requirements.uniq!
+
+      if requirements.empty?
+        @requirements = [DefaultRequirement]
+      else
+        @requirements = requirements.map! { |r| self.class.parse r }
+      end
     end
 
     #-------------------------------------------------------------------------#
