@@ -82,7 +82,7 @@ module Pod
         EOT
       end
 
-      it "handles nil" do
+      it 'handles nil' do
         value = { 'foo' => nil }
         result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
@@ -91,7 +91,7 @@ module Pod
         YAMLHelper.load_string(result).should == value
       end
 
-      it "handles objects of unknown classes" do
+      it 'handles objects of unknown classes' do
         value = Pathname.new('a-path')
         result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
