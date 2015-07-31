@@ -140,6 +140,58 @@ module Pod
       numeric_segments[2].to_i
     end
 
+    # rubocop:disable Metrics/PerceivedComplexity
+
+    # Compares the versions for sorting.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
+    #         than, equal to, or greater than other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def <=>(other)
+      return unless other.is_a?(Pod::Version)
+      return 0 if @version == other.version
+
+      if major != other.major
+        return major <=> other.major
+      end
+
+      if minor != other.minor
+        return minor <=> other.minor
+      end
+
+      if patch != other.patch
+        return patch <=> other.patch
+      end
+
+      lhsegments = segments.drop_while { |s| s.is_a?(Numeric) }
+      rhsegments = other.segments.drop_while { |s| s.is_a?(Numeric) }
+
+      lhsize = lhsegments.size
+      rhsize = rhsegments.size
+      limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
+
+      i = 0
+
+      while i <= limit
+        lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
+        i += 1
+
+        next      if lhs == rhs
+        return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+        return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+
+        return lhs <=> rhs
+      end
+
+      version <=> other.version
+    end
+    # rubocop:enable Metrics/PerceivedComplexity
+
     private
 
     def numeric_segments
