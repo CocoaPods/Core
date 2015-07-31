@@ -140,6 +140,8 @@ module Pod
       numeric_segments[2].to_i
     end
 
+    # rubocop:disable Metrics/PerceivedComplexity
+
     # Compares the versions for sorting.
     #
     # @param  [Version] other
@@ -188,6 +190,7 @@ module Pod
 
       version <=> other.version
     end
+    # rubocop:enable Metrics/PerceivedComplexity
 
     private
 
