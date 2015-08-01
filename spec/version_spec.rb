@@ -118,6 +118,19 @@ module Pod
         Version.new('1.alpha').patch.should == 0
         Version.new('1.alpha.2').patch.should == 0
       end
+
+      it 'ignores missing numeric identifiers while comparing' do
+        Version.new('1.9.0-alpha').should.be < Version.new('1.9-beta')
+        Version.new('2.0.0-beta').should.be < Version.new('2.0-rc')
+        Version.new('2.0.0.0.0.0.1-beta').should.be > Version.new('2.0-rc')
+      end
+
+      it 'tie-breaks between semantically equal versions' do
+        Version.new('1').should.be < Version.new('1.0')
+        Version.new('1.0').should.be < Version.new('1.0.0')
+        Version.new('1.0-alpha').should.be < Version.new('1.0.0-alpha')
+        Version.new('1.1.1.1-alpha').should.be < Version.new('1.1.1.1.0-alpha')
+      end
     end
 
     #-------------------------------------------------------------------------#

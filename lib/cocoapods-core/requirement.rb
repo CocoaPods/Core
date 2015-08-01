@@ -15,6 +15,8 @@ module Pod
     #
     PATTERN = /\A\s*(#{quoted_operators})?\s*(#{Version::VERSION_PATTERN})\s*\z/
 
+    DefaultRequirement = ['>=', Version.new(0)] # rubocop:disable Style/ConstantName
+
     #-------------------------------------------------------------------------#
 
     # Factory method to create a new requirement.
@@ -66,6 +68,37 @@ module Pod
       [operator, version]
     end
 
+    # Constructs a requirement from `requirements`.
+    #
+    # @param [String, Version, Array<String>, Array<Version>] requirements
+    #        The set of requirements
+    #
+    # @note Duplicate requirements are ignored.
+    #
+    # @note An empty set of `requirements` is the same as `">= 0"`
+    #
+    def initialize(*requirements)
+      requirements = requirements.flatten
+      requirements.compact!
+      requirements.uniq!
+
+      if requirements.empty?
+        @requirements = [DefaultRequirement]
+      else
+        @requirements = requirements.map! { |r| self.class.parse r }
+      end
+    end
+
+    #
+    # @return [Bool] true if this pod has no requirements.
+    #
+    def none?
+      if @requirements.size == 1
+        @requirements[0] == DefaultRequirement
+      else
+        false
+      end
+    end
     #-------------------------------------------------------------------------#
   end
 end

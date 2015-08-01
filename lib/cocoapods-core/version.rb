@@ -140,10 +140,47 @@ module Pod
       numeric_segments[2].to_i
     end
 
-    private
+    # Compares the versions for sorting.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Fixnum] -1, 0, or +1 depending on whether the receiver is less
+    #         than, equal to, or greater than other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def <=>(other)
+      return unless other.is_a?(Pod::Version)
+      return 0 if @version == other.version
+
+      compare = proc do |segments, other_segments|
+        limit = [segments.size, other_segments.size].max
+
+        (0..limit).each do |i|
+          lhs, rhs = segments[i] || 0, other_segments[i] || 0
+
+          next if lhs == rhs
+          return lhs <=> rhs if lhs <=> rhs
+          return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+          return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+        end
+      end
+
+      compare[numeric_segments, other.numeric_segments]
+      compare[prerelease_segments, other.prerelease_segments]
+
+      version <=> other.version
+    end
+
+    protected
 
     def numeric_segments
-      segments.take_while { |s| s.is_a?(Numeric) }
+      segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
+    end
+
+    def prerelease_segments
+      segments.drop_while { |s| s.is_a?(Numeric) }
     end
 
     #-------------------------------------------------------------------------#
