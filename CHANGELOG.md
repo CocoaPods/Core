@@ -6,7 +6,14 @@
 
 * Gracefully handle missing root podspecs when auto-detecting.  
   [Hugo Tunius](https://github.com/k0nserv)
-  [#3919](https://github.com/CocoaPods/CocoaPods/issues/3919#issuecomment-125676236)
+  [#3919](https://github.com/CocoaPods/CocoaPods/issues/3919)
+
+* When comparing versions with unequal numbers of trailing zeros, the one with
+  fewer zeros will only compare less than the other when they are otherwise
+  equal.  
+  [Gabriele Petronella](https://github.com/gabro)
+  [cocoapods.org#185](https://github.com/CocoaPods/cocoapods.org/issues/185)
+
 
 ## 0.38.2
 
