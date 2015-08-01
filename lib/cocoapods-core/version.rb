@@ -140,8 +140,6 @@ module Pod
       numeric_segments[2].to_i
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
-
     # Compares the versions for sorting.
     #
     # @param  [Version] other
@@ -156,46 +154,33 @@ module Pod
       return unless other.is_a?(Pod::Version)
       return 0 if @version == other.version
 
-      if major != other.major
-        return major <=> other.major
+      compare = proc do |segments, other_segments|
+        limit = [segments.size, other_segments.size].max
+
+        (0..limit).each do |i|
+          lhs, rhs = segments[i] || 0, other_segments[i] || 0
+
+          next if lhs == rhs
+          return lhs <=> rhs if lhs <=> rhs
+          return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+          return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+        end
       end
 
-      if minor != other.minor
-        return minor <=> other.minor
-      end
-
-      if patch != other.patch
-        return patch <=> other.patch
-      end
-
-      lhsegments = segments.drop_while { |s| s.is_a?(Numeric) }
-      rhsegments = other.segments.drop_while { |s| s.is_a?(Numeric) }
-
-      lhsize = lhsegments.size
-      rhsize = rhsegments.size
-      limit  = (lhsize > rhsize ? lhsize : rhsize) - 1
-
-      i = 0
-
-      while i <= limit
-        lhs, rhs = lhsegments[i] || 0, rhsegments[i] || 0
-        i += 1
-
-        next      if lhs == rhs
-        return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
-        return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
-
-        return lhs <=> rhs
-      end
+      compare[numeric_segments, other.numeric_segments]
+      compare[prerelease_segments, other.prerelease_segments]
 
       version <=> other.version
     end
-    # rubocop:enable Metrics/PerceivedComplexity
 
-    private
+    protected
 
     def numeric_segments
-      segments.take_while { |s| s.is_a?(Numeric) }
+      segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
+    end
+
+    def prerelease_segments
+      segments.drop_while { |s| s.is_a?(Numeric) }
     end
 
     #-------------------------------------------------------------------------#
