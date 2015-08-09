@@ -94,16 +94,10 @@ module Pod
       #
       def process_according_to_class(value, hash_keys_hint = nil)
         case value
-        when String     then YAML.dump(value).sub(/^---/, '').sub(/[.]{3}\s*$/, '').strip
-        when Symbol     then ":#{value}"
-        when TrueClass  then 'true'
-        when FalseClass then 'false'
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
-        else
-          raise StandardError, 'Unsupported class for YAML conversion ' \
-            "#{value.class}"
-        end
+        else                 YAML.dump(value).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '').strip
+        end.strip
       end
 
       # Converts an array to YAML after sorting it.
@@ -114,9 +108,8 @@ module Pod
       # @return [String] the YAML representation of the given object.
       #
       def process_array(array)
-        result = []
-        sorted_array(array).each do |array_value|
-          result << process_according_to_class(array_value)
+        result = sorted_array(array).map do |array_value|
+          process_according_to_class(array_value)
         end
         "- #{result * "\n- "}"
       end
@@ -138,17 +131,16 @@ module Pod
       #
       def process_hash(hash, hash_keys_hint = nil, line_separator = "\n")
         keys = sorted_array_with_hint(hash.keys, hash_keys_hint)
-        key_lines = []
-        keys.each do |key|
+        key_lines = keys.map do |key|
           key_value = hash[key]
           processed = process_according_to_class(key_value)
           processed_key = process_according_to_class(key)
           case key_value
           when Array, Hash
             key_partial_yaml = processed.lines.map { |line| "  #{line}" } * ''
-            key_lines << "#{processed_key}:\n#{key_partial_yaml}"
+            "#{processed_key}:\n#{key_partial_yaml}"
           else
-            key_lines << "#{processed_key}: #{processed}"
+            "#{processed_key}: #{processed}"
           end
         end
         key_lines * line_separator

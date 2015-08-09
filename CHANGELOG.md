@@ -14,6 +14,10 @@
   [Gabriele Petronella](https://github.com/gabro)
   [cocoapods.org#185](https://github.com/CocoaPods/cocoapods.org/issues/185)
 
+* Support converting objects of arbitrary classes to YAML.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#3907](https://github.com/CocoaPods/CocoaPods/issues/3907)
+
 
 ## 0.38.2
 
