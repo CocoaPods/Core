@@ -338,6 +338,14 @@ module Pod
         end
       end
 
+      # @return [Bool] whether the target definition uses the `use_frameworks!`
+      #         directive explicitly.
+      #
+      def explicit_framework_usage_declared?
+        !internal_hash['uses_frameworks'].nil? ||
+          (!root? && parent.explicit_framework_usage_declared?)
+      end
+
       #--------------------------------------#
 
       # Whether a specific pod should be linked to the target when building for

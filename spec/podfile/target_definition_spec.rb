@@ -261,6 +261,31 @@ module Pod
 
       #--------------------------------------#
 
+      describe '#explicit_framework_usage_declared' do
+        it 'is false by default' do
+          @root.explicit_framework_usage_declared?.should == false
+          @child.explicit_framework_usage_declared?.should == false
+        end
+
+        it 'is true if a positive directive is present' do
+          @root.use_frameworks!
+          @root.explicit_framework_usage_declared?.should == true
+        end
+
+        it 'is true if a negative directive is present' do
+          @root.use_frameworks!(false)
+          @root.explicit_framework_usage_declared?.should == true
+        end
+
+        it 'is inherited from the parent' do
+          @root.use_frameworks!
+          @root.explicit_framework_usage_declared?.should == true
+          @child.explicit_framework_usage_declared?.should == true
+        end
+      end
+
+      #--------------------------------------#
+
       it 'whitelists pods by default' do
         @root.store_pod('ObjectiveSugar')
         @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
