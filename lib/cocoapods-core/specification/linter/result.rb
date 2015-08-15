@@ -17,13 +17,19 @@ module Pod
           #
           attr_reader :message
 
+          # @return [Boolean] whether the result only applies to public specs.
+          #
+          attr_reader :public_only
+          alias_method :public_only?, :public_only
+
           # @param [Symbol] type    @see type
           # @param [String] message @see message
           #
-          def initialize(type, attribute_name, message)
+          def initialize(type, attribute_name, message, public_only = false)
             @type    = type
             @attribute_name = attribute_name
             @message = message
+            @public_only = public_only
             @platforms = []
           end
 
@@ -72,8 +78,8 @@ module Pod
         #
         # @return [void]
         #
-        def add_error(attribute_name, message)
-          add_result(:error, attribute_name, message)
+        def add_error(attribute_name, message, public_only = false)
+          add_result(:error, attribute_name, message, public_only)
         end
 
         # Adds a warning result with the given message.
@@ -83,8 +89,8 @@ module Pod
         #
         # @return [void]
         #
-        def add_warning(attribute_name, message)
-          add_result(:warning, attribute_name, message)
+        def add_warning(attribute_name, message, public_only = false)
+          add_result(:warning, attribute_name, message, public_only)
         end
 
         private
@@ -106,12 +112,12 @@ module Pod
         #
         # @return [void]
         #
-        def add_result(type, attribute_name, message)
+        def add_result(type, attribute_name, message, public_only)
           result = results.find do |r|
-            r.type == type && r.attribute_name == attribute_name && r.message == message
+            r.type == type && r.attribute_name == attribute_name && r.message == message && r.public_only? == public_only
           end
           unless result
-            result = Result.new(type, attribute_name, message)
+            result = Result.new(type, attribute_name, message, public_only)
             results << result
           end
           result.platforms << @consumer.platform_name if @consumer

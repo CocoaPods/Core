@@ -347,7 +347,7 @@ module Pod
              ' the Git tag.')
           end
           if tag.nil?
-            results.add_warning('source', 'Git sources should specify a tag.')
+            results.add_warning('source', 'Git sources should specify a tag.', true)
           end
         end
 
@@ -389,7 +389,7 @@ module Pod
         end
         unless git_uri.scheme == 'https'
           results.add_warning('github_sources', 'Github repositories ' \
-            'should use an `https` link.')
+            'should use an `https` link.', true)
         end
       end
 
@@ -400,7 +400,7 @@ module Pod
           if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
             results.add_warning('source', 'Git SSH URLs will NOT work for ' \
               'people behind firewalls configured to only allow HTTP, ' \
-              'therefore HTTPS is preferred.')
+              'therefore HTTPS is preferred.', true)
           end
         end
       end

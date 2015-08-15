@@ -18,6 +18,12 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3907](https://github.com/CocoaPods/CocoaPods/issues/3907)
 
+* Add a 'public_only' flag to linter results for warnings that are only
+  appropriate for public specification.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#190](https://github.com/CocoaPods/Core/issues/190)
+  [CocoaPods#2682](https://github.com/CocoaPods/CocoaPods/issues/2682)
+
 
 ## 0.38.2
 
