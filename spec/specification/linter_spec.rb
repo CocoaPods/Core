@@ -253,9 +253,9 @@ module Pod
 
       #------------------#
 
-      it 'checks the description for the example value' do
-        @spec.stubs(:description).returns('An optional longer description of.')
-        result_should_include('description', 'meaningful')
+      it 'checks if the description is not an empty string' do
+        @spec.stubs(:description).returns('')
+        result_should_include('description', 'empty')
       end
 
       it 'checks if the description is equal to the summary' do

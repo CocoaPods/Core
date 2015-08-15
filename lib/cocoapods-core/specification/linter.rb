@@ -244,14 +244,14 @@ module Pod
       # Performs validations related to the `description` attribute.
       #
       def _validate_description(d)
-        if d =~ /An optional longer description of/
-          results.add_warning('description', 'The description is not meaningful.')
-        end
         if d == spec.summary
           results.add_warning('description', 'The description is equal to' \
            ' the summary.')
         end
-        if d.length < spec.summary.length
+
+        if d.strip.empty?
+          results.add_error('description', 'The description is empty.')
+        elsif d.length < spec.summary.length
           results.add_warning('description', 'The description is shorter ' \
           'than the summary.')
         end
