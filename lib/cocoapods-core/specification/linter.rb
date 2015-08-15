@@ -249,9 +249,8 @@ module Pod
            ' the summary.')
         end
 
-        if d.strip.length == 0
+        if d.strip.empty?
           results.add_error('description', 'The description is empty.')
-
         elsif d.length < spec.summary.length
           results.add_warning('description', 'The description is shorter ' \
           'than the summary.')
