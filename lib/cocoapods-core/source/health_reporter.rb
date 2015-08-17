@@ -91,8 +91,8 @@ module Pod
         linter = Specification::Linter.new(spec_path)
         linter.lint
         linter.results.each do |result|
-          type = result.type == :error ? :error : :warning
-          report.add_message(type, result.message, name, version)
+          next if result.public_only?
+          report.add_message(result.type, result.message, name, version)
         end
         linter.spec
       end
@@ -183,15 +183,10 @@ module Pod
         # @return [void]
         #
         def add_message(type, message, spec_name, spec_version = nil)
-          if type == :error
-            pods_by_error[message] ||= {}
-            pods_by_error[message][spec_name] ||= []
-            pods_by_error[message][spec_name] << spec_version
-          else
-            pods_by_warning[message] ||= {}
-            pods_by_warning[message][spec_name] ||= []
-            pods_by_warning[message][spec_name] << spec_version
-          end
+          pods = send(:"pods_by_#{type}")
+          pods[message] ||= {}
+          pods[message][spec_name] ||= []
+          pods[message][spec_name] << spec_version
         end
       end
 
