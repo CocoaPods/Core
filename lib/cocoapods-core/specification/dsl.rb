@@ -292,6 +292,38 @@ module Pod
       #
       #   @param  [Hash{Symbol=>String}] source
       #           The location from where the library should be retrieved.
+      #   @option source [String] :tag The git tag
+      #   @option source [String] :branch The git branch
+      #
+      #   @overload source=(git)
+      #     @param  [Hash{Symbol=>String}] git
+      #     @option git [String] :git URI where library git repo can be cloned.
+      #     @option git [String] :tag git tag
+      #     @option git [true or false] :submodules checkout submodules
+      #     @option git [String] :branch git branch
+      #     @option git [String] :commit git commit
+      #
+      #   @overload source=(svn)
+      #     @param  [Hash{Symbol=>String}] svn
+      #     @option svn [String] :svn URI where library svn repo can be checked out.
+      #     @option svn [String] :tag tag
+      #     @option svn [String] :folder folder
+      #     @option svn [String] :revision revision
+      #
+      #   @overload source=(hg)
+      #     @param  [Hash{Symbol=>String}] hg
+      #     @option hg [String] :hg URI where library hg repo can be cloned.
+      #     @option hg [String] :revision revision
+      #
+      #   @overload source=(http)
+      #     @param  [Hash{Symbol=>String}] http
+      #     @option http [String] :http URL where library should be retrieved.
+      #     @option http [String] :type File type
+      #     @option http [String] :sha1 SHA1 hash
+      #
+      #   @overload source=(path)
+      #     @param  [Hash{Symbol=>String}] path
+      #     @option path [String] :path local file path to library
       #
       root_attribute :source,
                      :container => Hash,
