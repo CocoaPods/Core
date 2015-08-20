@@ -290,10 +290,6 @@ module Pod
       #     spec.source = { :http => 'http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip',
       #                     :sha1 => '7e21857fe11a511f472cfd7cfa2d979bd7ab7d96' }
       #
-      #   @param  [Hash{Symbol=>String}] source
-      #           The location from where the library should be retrieved.
-      #   @option source [String] :tag The git tag
-      #   @option source [String] :branch The git branch
       #
       #   @overload source=(git)
       #     @param  [Hash{Symbol=>String}] git
