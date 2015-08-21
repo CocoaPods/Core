@@ -25,7 +25,7 @@
   [CocoaPods#2682](https://github.com/CocoaPods/CocoaPods/issues/2682)
 
 
-## 0.38.2
+## 0.38.2 (2015-07-25)
 
 ##### Bug Fixes
 
@@ -34,17 +34,17 @@
   [Samuel Giddins](https://github.com/segiddins)
 
 
-## 0.38.1
+## 0.38.1 (2015-07-23)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.38.0
+## 0.38.0 (2015-07-18)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.38.0.beta.2
+## 0.38.0.beta.2 (2015-07-05)
 
 ##### Bug Fixes
 
@@ -54,7 +54,7 @@ This version only introduces changes in the CocoaPods gem.
   [#239](https://github.com/CocoaPods/Core/issues/239)
 
 
-## 0.38.0.beta.1
+## 0.38.0.beta.1 (2015-06-26)
 
 ##### Breaking
 
@@ -77,7 +77,7 @@ This version only introduces changes in the CocoaPods gem.
   [Core#249](https://github.com/CocoaPods/Core/pull/249)
 
 
-## 0.37.2
+## 0.37.2 (2015-05-27)
 
 ##### Enhancements
 
@@ -87,22 +87,22 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2651](https://github.com/CocoaPods/CocoaPods/issues/2651)
 
 
-## 0.37.1
+## 0.37.1 (2015-05-06)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.37.0
+## 0.37.0 (2015-05-03)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.37.0.rc.2
+## 0.37.0.rc.2 (2015-04-30)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.37.0.rc.1
+## 0.37.0.rc.1 (2015-04-27)
 
 ##### Enhancements
 
@@ -119,7 +119,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#3024](https://github.com/CocoaPods/CocoaPods/issues/3024)
 
 
-## 0.37.0.beta.1
+## 0.37.0.beta.1 (2015-04-18)
 
 ##### Enhancements
 
@@ -154,17 +154,17 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2777](https://github.com/CocoaPods/CocoaPods/issues/2777)
 
 
-## 0.36.4
+## 0.36.4 (2015-04-16)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.36.3
+## 0.36.3 (2015-03-31)
 
 This version only introduces changes in the CocoaPods gem.
 
 
-## 0.36.2
+## 0.36.2 (2015-03-31)
 
 ##### Enhancements
 
@@ -180,7 +180,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#3320](https://github.com/CocoaPods/CocoaPods/issues/3320)
 
 
-## 0.36.1
+## 0.36.1 (2015-03-27)
 
 ##### Bug Fixes
 
@@ -191,7 +191,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods/CocoaPods#2837](https://github.com/CocoaPods/CocoaPods/issues/2837)
 
 
-## 0.36.0
+## 0.36.0 (2015-03-11)
 
 ##### Bug Fixes
 
@@ -201,7 +201,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#3197](https://github.com/CocoaPods/CocoaPods/issues/3197)
 
 
-## 0.36.0.rc.1
+## 0.36.0.rc.1 (2015-02-24)
 
 ##### Enhancements
 
@@ -220,11 +220,11 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2952](https://github.com/CocoaPods/CocoaPods/issues/2952)
 
 
-## 0.36.0.beta.2
+## 0.36.0.beta.2 (2015-01-27)
 
 This version only introduces changes in the CocoaPods gem.
 
-## 0.36.0.beta.1
+## 0.36.0.beta.1 (2014-12-25)
 
 ##### Enhancements
 
@@ -270,7 +270,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2922](https://github.com/CocoaPods/CocoaPods/issues/2922)
 
 
-## 0.35.0
+## 0.35.0 (2014-11-19)
 
 ##### Enhancements
 
@@ -285,11 +285,11 @@ This version only introduces changes in the CocoaPods gem.
   [Samuel Giddins](https://github.com/segiddins)
 
 
-## 0.35.0.rc2
+## 0.35.0.rc2 (2014-11-06)
 
 This version only introduces changes in the CocoaPods gem.
 
-## 0.35.0.rc1
+## 0.35.0.rc1 (2014-11-02)
 
 ##### Breaking
 
@@ -320,7 +320,7 @@ This version only introduces changes in the CocoaPods gem.
   [Core#193](https://github.com/CocoaPods/Core/issues/193)
 
 
-## 0.34.4
+## 0.34.4 (2014-10-18)
 
 ##### Bug Fixes
 
@@ -330,7 +330,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2692](https://github.com/CocoaPods/CocoaPods/issues/2692)
 
 
-## 0.34.2
+## 0.34.2 (2014-10-08)
 
 ##### Breaking
 
@@ -360,7 +360,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2590](https://github.com/CocoaPods/CocoaPods/issues/2590)
 
 
-## 0.34.1
+## 0.34.1 (2014-09-26)
 
 ##### Bug Fixes
 
@@ -369,7 +369,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#2525](https://github.com/CocoaPods/CocoaPods/issues/2525)
 
 
-## 0.34.0
+## 0.34.0 (2014-09-26)
 
 ##### Enhancements
 
@@ -386,7 +386,7 @@ This version only introduces changes in the CocoaPods gem.
   [Samuel Giddins](https://github.com/segiddins)
 
 
-## 0.34.0.rc2
+## 0.34.0.rc2 (2014-09-16)
 
 ##### Bug Fixes
 
@@ -394,7 +394,7 @@ This version only introduces changes in the CocoaPods gem.
   [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2463](https://github.com/CocoaPods/CocoaPods/issues/2463)
 
-## 0.34.0.rc1
+## 0.34.0.rc1 (2014-09-13)
 
 * Add support to specify dependencies per build configuration.
   This can be done using the following syntax in a Podfile:
@@ -442,11 +442,11 @@ This version only introduces changes in the CocoaPods gem.
   [#139](https://github.com/CocoaPods/Core/issues/139)
 
 
-## 0.33.1
+## 0.33.1 (2014-05-20)
 
 This version only introduces changes in the CocoaPods gem.
 
-## 0.33.0
+## 0.33.0 (2014-05-20)
 
 ##### Enhancements
 
@@ -468,8 +468,8 @@ This version only introduces changes in the CocoaPods gem.
   [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
 
-## 0.32.1
-## 0.32.0
+## 0.32.1 (2014-04-15)
+## 0.32.0 (2014-04-15)
 
 ##### Enhancements
 
@@ -546,7 +546,7 @@ This version only introduces changes in the CocoaPods gem.
   [CocoaPods#1936](https://github.com/CocoaPods/CocoaPods/issues/1936)
 
 
-## 0.31.1
+## 0.31.1 (2014-04-01)
 
 ##### Enhancements
 
@@ -562,7 +562,7 @@ This version only introduces changes in the CocoaPods gem.
   [Boris Bügling](https://github.com/neonichu)
   [#82](https://github.com/CocoaPods/Core/issues/82)
 
-## 0.31.0
+## 0.31.0 (2014-03-31)
 
 ##### Enhancements
 
@@ -577,6 +577,6 @@ This version only introduces changes in the CocoaPods gem.
 * Fix crash related to the usage of `s.version` in the git tag.  
   [Joel Parsons](https://github.com/joelparsons)
 
-## 0.30.0
+## 0.30.0 (2014-03-28)
 
 Introduction of the Changelog.
