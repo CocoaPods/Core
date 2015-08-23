@@ -292,34 +292,34 @@ module Pod
       #
       #
       #   @overload source=(git)
-      #     @param  [Hash{Symbol=>String}] git
-      #     @option git [String] :git URI where library git repo can be cloned.
-      #     @option git [String] :tag git tag
-      #     @option git [Boolean] :submodules checkout submodules
-      #     @option git [String] :branch git branch
-      #     @option git [String] :commit git commit
+      #     @param  [Hash] git
+      #     @option git [String] :git git source URI
+      #     @option git [String] :tag version tag
+      #     @option git [Boolean] :submodules Whether to checkout submodules
+      #     @option git [String] :branch branch name
+      #     @option git [String] :commit commit hash
       #
       #   @overload source=(svn)
-      #     @param  [Hash{Symbol=>String}] svn
-      #     @option svn [String] :svn URI where library svn repo can be checked out.
-      #     @option svn [String] :tag tag
+      #     @param  [Hash] svn
+      #     @option svn [String] :svn svn source URI
+      #     @option svn [String] :tag version tag
       #     @option svn [String] :folder folder
       #     @option svn [String] :revision revision
       #
       #   @overload source=(hg)
-      #     @param  [Hash{Symbol=>String}] hg
-      #     @option hg [String] :hg URI where library hg repo can be cloned.
+      #     @param  [Hash] hg
+      #     @option hg [String] :hg mercurial source URI
       #     @option hg [String] :revision revision
       #
       #   @overload source=(http)
-      #     @param  [Hash{Symbol=>String}] http
-      #     @option http [String] :http URL where library should be retrieved.
-      #     @option http [String] :type File type
-      #     @option http [String] :sha1 SHA1 hash
+      #     @param  [Hash] http
+      #     @option http [String] :http compressed source URL
+      #     @option http [String] :type file type. Supports zip, tgz, bz2, txz and tar
+      #     @option http [String] :sha1 SHA hash. Supports SHA1 and SHA256
       #
       #   @overload source=(path)
-      #     @param  [Hash{Symbol=>String}] path
-      #     @option path [String] :path local file path to library
+      #     @param  [Hash] path
+      #     @option path [String] :path local source path
       #
       root_attribute :source,
                      :container => Hash,
