@@ -221,10 +221,17 @@ module Pod
       #                      LICENSE
       #                    }
       #
-      #   @param  [String, Hash{Symbol=>String}] license
-      #           The type of the license and the text of the grant that
-      #           allows to use the library (or the relative path to the file
-      #           that contains it).
+      #   @param  [String] license
+      #           The type of the license
+      #
+      #   @overload source=(git)
+      #     @param  [String, Hash{Symbol=>String}] license
+      #             The type of the license and the text of the grant that
+      #             allows to use the library (or the relative path to the file
+      #             that contains it).
+      #     @option license [String] :type license type
+      #     @option license [String] :file file containing full license text. Supports `txt`, `md`, and `markdown`
+      #     @option license [String] :text full license text
       #
       root_attribute :license,
                      :container => Hash,
