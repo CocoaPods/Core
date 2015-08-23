@@ -295,7 +295,7 @@ module Pod
       #     @param  [Hash{Symbol=>String}] git
       #     @option git [String] :git URI where library git repo can be cloned.
       #     @option git [String] :tag git tag
-      #     @option git [true or false] :submodules checkout submodules
+      #     @option git [Boolean] :submodules checkout submodules
       #     @option git [String] :branch git branch
       #     @option git [String] :commit git commit
       #
