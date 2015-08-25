@@ -224,13 +224,10 @@ module Pod
       #   @param  [String] license
       #           The type of the license
       #
-      #   @overload source=(git)
+      #   @overload license=(license)
       #     @param  [String, Hash{Symbol=>String}] license
-      #             The type of the license and the text of the grant that
-      #             allows to use the library (or the relative path to the file
-      #             that contains it).
       #     @option license [String] :type license type
-      #     @option license [String] :file file containing full license text. Supports `txt`, `md`, and `markdown`
+      #     @option license [String] :file file containing full license text. Supports txt, md, and markdown
       #     @option license [String] :text full license text
       #
       root_attribute :license,
@@ -302,7 +299,7 @@ module Pod
       #     @param  [Hash] git
       #     @option git [String] :git git source URI
       #     @option git [String] :tag version tag
-      #     @option git [Boolean] :submodules Whether to checkout submodules
+      #     @option git [Bool] :submodules Whether to checkout submodules
       #     @option git [String] :branch branch name
       #     @option git [String] :commit commit hash
       #
