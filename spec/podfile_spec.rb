@@ -231,9 +231,9 @@ module Pod
           generate_bridge_support!
           set_arc_compatibility_flag!
         end
-        podfile.checksum.should == 'd24dea0d7dfc403572d8eec287acdd647dec0379'
+        podfile.checksum.should == '8b740c943426db0dfd74b04e6595960693019256'
 
-        Podfile.new.checksum.should == 'cc33878a9fd69dcb28a294259d77dfa4fc6cc5de'
+        Podfile.new.checksum.should == 'ad5441f336ec787ec0e808d8be2549ad86bcf9b2'
       end
 
       it 'includes inhibit warnings per pod' do

@@ -55,6 +55,12 @@ module Pod
         result.should == "- Value_1\n- Value_2\n"
       end
 
+      it 'converts an array that contains an array' do
+        value = [%w(Value_1 Value_2), %w(Value_3 Value_4)]
+        result = YAMLHelper.convert(value)
+        result.should == "- - Value_1\n  - Value_2\n- - Value_3\n  - Value_4\n"
+      end
+
       it 'converts an hash' do
         value = { 'Key' => 'Value' }
         result = YAMLHelper.convert(value)

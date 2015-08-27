@@ -183,12 +183,12 @@ module Pod
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
     HASH_KEYS = %w(
-      target_definitions
       workspace
       sources
-      generate_bridge_support
-      set_arc_compatibility_flag
       plugins
+      set_arc_compatibility_flag
+      generate_bridge_support
+      target_definitions
     ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -203,8 +203,8 @@ module Pod
     # @return [String] The YAML representation of the Podfile.
     #
     def to_yaml
-      require 'yaml'
-      to_hash.to_yaml
+      require 'cocoapods-core/yaml_helper'
+      YAMLHelper.convert_hash(to_hash, HASH_KEYS)
     end
 
     # @return [String] A checksum of the contents of the Podfile.
