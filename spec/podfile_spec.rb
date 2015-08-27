@@ -224,6 +224,18 @@ module Pod
           YAMLHelper.load_string(expected)
       end
 
+      it 'returns the checksum' do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest'
+          pod 'JSONKit', '> 1.0', :inhibit_warnings => true
+          generate_bridge_support!
+          set_arc_compatibility_flag!
+        end
+        podfile.checksum.should == 'd24dea0d7dfc403572d8eec287acdd647dec0379'
+
+        Podfile.new.checksum.should == 'cc33878a9fd69dcb28a294259d77dfa4fc6cc5de'
+      end
+
       it 'includes inhibit warnings per pod' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest', :inhibit_warnings => true

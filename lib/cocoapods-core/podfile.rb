@@ -203,7 +203,15 @@ module Pod
     # @return [String] The YAML representation of the Podfile.
     #
     def to_yaml
+      require 'yaml'
       to_hash.to_yaml
+    end
+
+    # @return [String] A checksum of the contents of the Podfile.
+    #
+    def checksum
+      require 'digest/sha1'
+      Digest::SHA1.hexdigest to_yaml
     end
 
     # @!group Class methods

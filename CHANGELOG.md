@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Podfiles now have a `checksum` property that reflects the internal state of
+  the Podfile.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+
 ## 0.39.0.beta.5 (2015-10-01)
 
 ##### Breaking
