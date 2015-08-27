@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Ensure all gem files are readable.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#4085](https://github.com/CocoaPods/CocoaPods/issues/4085)
+
+
 ## 0.39.0.beta.1 (2015-08-26)
 
 ##### Enhancments
