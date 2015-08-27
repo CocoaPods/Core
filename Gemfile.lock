@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cocoapods-core (0.39.0.beta.1)
+    cocoapods-core (0.39.0.beta.2)
       activesupport (>= 3.2.15)
       fuzzy_match (~> 2.0.4)
       nap (~> 0.8.0)

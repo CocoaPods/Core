@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.39.0.beta.2 (2015-08-27)
 
 ##### Bug Fixes
 
