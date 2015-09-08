@@ -60,7 +60,7 @@ module Pod
       it "doesn't inherit dependencies if it is exclusive" do
         @root.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
-        @child.exclusive = true
+        @child.inheritance = :none
         @child.dependencies.map(&:name).should == %w(OCMockito)
       end
 
@@ -91,7 +91,7 @@ module Pod
       end
 
       it "doesn't include the name of the parent in the label if it is exclusive" do
-        @child.exclusive = true
+        @child.inheritance = :none
         @child.label.should == 'Pods-MyAppTests'
       end
     end
@@ -111,47 +111,8 @@ module Pod
 
       it 'allows to set whether it is exclusive' do
         @child.should.not.be.exclusive
-        @child.exclusive = true
+        @child.inheritance = :none
         @child.should.be.exclusive
-      end
-
-      #--------------------------------------#
-
-      it "doesn't specify any target to link with by default" do
-        @root.link_with.should.be.nil
-      end
-
-      it 'allows to set the names of the client targets that it should link with' do
-        @root.link_with = ['appTarget1, appTarget2']
-        @root.link_with.should.be == ['appTarget1, appTarget2']
-      end
-
-      it 'wraps the targets specified by the user in an array' do
-        @root.link_with = 'appTarget1'
-        @root.link_with.should.be == ['appTarget1']
-      end
-
-      it 'allows targets to be passed in the argument list instead of as an array' do
-        @root.link_with = 'appTarget1', 'appTarget2'
-        @root.link_with.should.be == %w(appTarget1 appTarget2)
-      end
-
-      it 'returns nil if the link_with array is empty' do
-        @root.link_with = []
-        @root.link_with.should.be.nil
-      end
-
-      #--------------------------------------#
-
-      it 'allows to specify whether it should link with the first target of project' do
-        @root.link_with_first_target = true
-        @root.should.link_with_first_target
-      end
-
-      it "returns that it shouldn't link with the first target if any target has been specified" do
-        @root.link_with = 'appTarget1'
-        @root.link_with_first_target = true
-        @root.should.not.link_with_first_target
       end
 
       #--------------------------------------#

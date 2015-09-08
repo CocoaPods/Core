@@ -4,7 +4,7 @@ sources:
   - 'myrepo2'
 target_definitions:
   - name: Pods
-    link_with_first_target: true
+    abstract: true
     platform: ios
 
     dependencies:
@@ -15,4 +15,3 @@ target_definitions:
     - Reachability
     - ASIWebPageRequest:
       - < 1.8.2
-

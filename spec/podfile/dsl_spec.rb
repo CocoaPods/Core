@@ -122,7 +122,8 @@ module Pod
 
       it 'allows to specify whether the target is exclusive' do
         podfile = Podfile.new do
-          target 'Pods', :exclusive => true do
+          target 'Pods' do
+            inherit!(:none)
           end
         end
         podfile.target_definitions['Pods'].should.be.exclusive
@@ -157,21 +158,6 @@ module Pod
         podfile.target_definitions['Pods'].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug
         }
-      end
-
-      it 'allows to specify the user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with 'app_target' }
-        podfile.target_definitions['Pods'].link_with.should == ['app_target']
-      end
-
-      it 'allows to specify multiple user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with 'app_target', 'test_target' }
-        podfile.target_definitions['Pods'].link_with.should == %w(app_target test_target)
-      end
-
-      it 'allows to specify an array of user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with ['app_target'] }
-        podfile.target_definitions['Pods'].link_with.should == ['app_target']
       end
 
       it 'allows to inhibit all the warnings of a Target definition' do

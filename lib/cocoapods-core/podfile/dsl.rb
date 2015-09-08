@@ -277,26 +277,49 @@ module Pod
       #
       #           target :ZipApp do
       #             pod 'SSZipArchive'
-      #             target :test, :exclusive => true do
+      #             target :test do
       #               pod 'JSONKit'
       #             end
       #           end
       #
       # @return   [void]
       #
-      def target(name, options = {})
-        if options && !options.keys.all? { |key| [:exclusive].include?(key) }
+      def target(name, options = nil)
+        if options
           raise Informative, "Unsupported options `#{options}` for " \
             "target `#{name}`"
         end
 
         parent = current_target_definition
         definition = TargetDefinition.new(name, parent)
-        definition.exclusive = true if options[:exclusive]
         self.current_target_definition = definition
-        yield
+        inherit!(:complete)
+        yield if block_given?
       ensure
         self.current_target_definition = parent
+      end
+
+      def abstract_target(name)
+        target(name) do
+          abstract!
+          yield
+        end
+      end
+
+      def abstract!(abstract = true)
+        current_target_definition.abstract = abstract
+      end
+
+      def inherit!(inheritance)
+        current_target_definition.inheritance = inheritance
+      end
+
+      def install!(installation_method, options = {})
+        unless current_target_definition.root?
+          raise Informative, 'The installation method can only be set at the root level of the Podfile.'
+        end
+
+        current_target_definition.installation_method = { :name => installation_method, :options => options }
       end
 
       #-----------------------------------------------------------------------#
