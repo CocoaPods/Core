@@ -13,6 +13,34 @@ module Pod
       #
       attr_reader :parent
 
+      def abstract=(abstract)
+        set_hash_value('abstract', abstract)
+      end
+
+      def abstract?
+        get_hash_value('abstract', false)
+      end
+
+      def inheritance=(inheritance)
+        inheritance = inheritance.to_s
+        unless %w(none search_paths complete).include?(inheritance)
+          raise Informative, "Unrecognized inheritance option `#{inheritance}` specified for target `#{name}`."
+        end
+        set_hash_value('inheritance', inheritance)
+      end
+
+      def inheritance
+        get_hash_value('inheritance', 'complete')
+      end
+
+      def installation_method=(installation_method)
+        set_hash_value('installation_method', installation_method)
+      end
+
+      def installation_method
+        get_hash_value('installation_method', :name => 'cocoapods', :options => {})
+      end
+
       # @param  [String, Symbol]
       #         name @see name
       #
@@ -73,10 +101,19 @@ module Pod
       #         definition including the inherited ones.
       #
       def dependencies
-        if exclusive? || parent.nil?
+        if exclusive?
           non_inherited_dependencies
         else
           non_inherited_dependencies + parent.dependencies
+        end
+      end
+
+      def targets_to_inherit_search_paths
+        return [] unless inheritance == 'search_paths'
+        if root? || !matches_platform?(parent)
+          raise StandardError, "Non-sensical to have search_paths inheritance for #{name} when there is no parent."
+        else
+          parent.targets_to_inherit_search_paths << parent
         end
       end
 
@@ -155,32 +192,23 @@ module Pod
       def exclusive?
         if root?
           true
-        elsif get_hash_value('exclusive')
-          true
         else
-          platform && parent && parent.platform != platform
+          !matches_platform?(parent) || (inheritance != 'complete')
         end
       end
 
-      # Sets whether the target definition is exclusive.
-      #
-      # @param  [Bool] flag
-      #         Whether the definition is exclusive.
-      #
-      # @return [void]
-      #
-      def exclusive=(flag)
-        set_hash_value('exclusive', flag)
+      def matches_platform?(target_definition)
+        platform && target_definition && target_definition.platform == platform
       end
 
       #--------------------------------------#
+
+      # FIXME: delete
 
       # @return [Array<String>] The list of the names of the Xcode targets with
       #         which this target definition should be linked with.
       #
       def link_with
-        value = get_hash_value('link_with')
-        value unless value.nil? || value.empty?
       end
 
       # Sets the client targets that should be integrated by this definition.
@@ -190,11 +218,12 @@ module Pod
       #
       # @return [void]
       #
-      def link_with=(targets)
-        set_hash_value('link_with', Array(targets).map(&:to_s))
+      def link_with=(_targets)
       end
 
       #--------------------------------------#
+
+      # FIXME: delete
 
       # Returns whether the target definition should link with the first target
       # of the project.
@@ -204,7 +233,7 @@ module Pod
       # @return [Bool] whether is exclusive.
       #
       def link_with_first_target?
-        get_hash_value('link_with_first_target') unless link_with
+        false
       end
 
       # Sets whether the target definition should link with the first target of
@@ -217,8 +246,7 @@ module Pod
       #
       # @return [void]
       #
-      def link_with_first_target=(flag)
-        set_hash_value('link_with_first_target', flag)
+      def link_with_first_target=(_flag)
       end
 
       #--------------------------------------#
@@ -229,7 +257,7 @@ module Pod
       def user_project_path
         path = get_hash_value('user_project_path')
         if path
-          File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
+          Pathname(path).sub_ext('.xcodeproj').to_path
         else
           parent.user_project_path unless root?
         end
@@ -536,6 +564,8 @@ module Pod
         children
         configuration_pod_whitelist
         uses_frameworks
+        inheritance
+        abstract
       ).freeze
 
       # @return [Hash] The hash representation of the target definition.
@@ -626,7 +656,12 @@ module Pod
       #         warnings, and :for_pods key for inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
-        get_hash_value('inhibit_warnings', {})
+        inhibit_hash = get_hash_value('inhibit_warnings', {})
+        if exclusive?
+          inhibit_hash
+        else
+          parent.send(:inhibit_warnings_hash).merge(inhibit_hash) { |l, r| (l + r).uniq }
+        end
       end
 
       # Returns the configuration_pod_whitelist hash
@@ -636,7 +671,12 @@ module Pod
       #         as value.
       #
       def configuration_pod_whitelist
-        get_hash_value('configuration_pod_whitelist', {})
+        whitelist_hash = get_hash_value('configuration_pod_whitelist', {})
+        if exclusive?
+          whitelist_hash
+        else
+          parent.send(:configuration_pod_whitelist).merge(whitelist_hash) { |l, r| (l + r).uniq }
+        end
       end
 
       # @return [Array<Dependency>] The dependencies specified by the user for
@@ -745,10 +785,8 @@ module Pod
 
         configurations = options.delete(:configurations)
         configurations ||= options.delete(:configuration)
-        if configurations
-          Array(configurations).each do |configuration|
-            whitelist_pod_for_configuration(name, configuration)
-          end
+        Array(configurations).each do |configuration|
+          whitelist_pod_for_configuration(name, configuration)
         end
         requirements.pop if options.empty?
       end
