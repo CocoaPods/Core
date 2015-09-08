@@ -87,6 +87,14 @@ module Pod
         pod_dependencies.concat(podspec_dependencies)
       end
 
+      def dependencies_to_skip_installing
+        if exclusive? || parent.nil?
+          podspec_dependencies
+        else
+          podspec_dependencies + parent.dependencies_to_skip_installing
+        end
+      end
+
       # @return [Bool] Whether the target definition has at least one
       #         dependency, excluding inherited ones.
       #
@@ -664,13 +672,12 @@ module Pod
       #
       def podspec_dependencies
         podspecs = get_hash_value('podspecs') || []
-        podspecs.map do |options|
+        podspecs.flat_map do |options|
           file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
           all_specs = [spec, *spec.recursive_subspecs]
-          all_deps = all_specs.map { |s| s.dependencies(platform) }.flatten
-          all_deps.reject { |dep| dep.root_name == spec.root.name }
-        end.flatten.uniq
+          all_specs.select { |s| s.available_on_platform?(platform) }
+        end.uniq
       end
 
       # The path of the podspec with the given options.
