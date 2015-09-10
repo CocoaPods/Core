@@ -322,7 +322,7 @@ module Pod
       #
       # @param    [Symbol] name
       #           the name of platform, can be either `:osx` for OS X, `:ios`
-      #           for iOS, `:tvos` for tvOS or `:watchos` for watchOS.
+      #           for iOS, `:tvos` for tvOS, or `:watchos` for watchOS.
       #
       # @param    [String, Version] target
       #           The optional deployment.  If not provided a default value
