@@ -130,6 +130,16 @@ module Pod
         @spec.watchos.deployment_target = '2.0'
         @spec.attributes_hash['platforms']['watchos'].should == '2.0'
       end
+
+      it 'allows to specify tvOS as supported platform' do
+        @spec.platform = :tvos
+        @spec.attributes_hash['platforms'].should == { 'tvos' => nil }
+      end
+
+      it 'allows to specify a deployment target for the tvOS platform' do
+        @spec.tvos.deployment_target = '9.0'
+        @spec.attributes_hash['platforms']['tvos'].should == '9.0'
+      end
     end
 
     #-----------------------------------------------------------------------------#

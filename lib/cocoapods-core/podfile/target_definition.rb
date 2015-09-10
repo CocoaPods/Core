@@ -401,7 +401,7 @@ module Pod
 
       #--------------------------------------#
 
-      PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.6', :watchos => '2.0' }.freeze
+      PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.6', :tvos => '9.0', :watchos => '2.0' }.freeze
 
       # @return [Platform] the platform of the target definition.
       #
@@ -437,9 +437,9 @@ module Pod
       # @return [void]
       #
       def set_platform(name, target = nil)
-        unless [:ios, :osx, :watchos].include?(name)
+        unless [:ios, :osx, :tvos, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            'must be `:ios`, `:osx`, or `:watchos`.'
+            'must be `:ios`, `:osx`, `:tvos` or `:watchos`.'
         end
 
         if target
