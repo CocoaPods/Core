@@ -1,5 +1,13 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fixes crash when using plugins where activesupport 4 was not installed.  
+  [Delisa Mason](https://github.com/kattrali)
+  [#266](https://github.com/CocoaPods/Core/pull/266)
+
 ## 0.39.0.beta.4 (2015-09-02)
 
 This version only introduces changes in the CocoaPods gem.
