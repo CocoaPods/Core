@@ -93,6 +93,22 @@ module Pod
       end.sort
     end
 
+    # Returns pod names for given array of specification paths.
+    #
+    # @param  [Array<String>] spec_paths
+    #         Array of file path names for specifications. Path strings should be relative to the source path.
+    #
+    # @return [Array<String>] the list of the name of Pods corresponding to specification paths.
+    #
+    def pods_for_specification_paths(spec_paths)
+      spec_paths.map do |path|
+        absolute_path = repo + path
+        relative_path = absolute_path.relative_path_from(specs_dir)
+        # The first file name returned by 'each_filename' is the pod name
+        relative_path.each_filename.first
+      end
+    end
+
     # @return [Array<Version>] all the available versions for the Pod, sorted
     #         from highest to lowest.
     #

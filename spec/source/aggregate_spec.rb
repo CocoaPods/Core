@@ -98,55 +98,25 @@ module Pod
 
     describe 'Search Index' do
       before do
-        test_source = Source.new(fixture('spec-repos/test_repo'))
-        @aggregate.stubs(:sources).returns([test_source])
+        @test_source = Source.new(fixture('spec-repos/test_repo'))
+        @aggregate.stubs(:sources).returns([@test_source])
       end
 
       it 'generates the search index from scratch' do
-        index = @aggregate.generate_search_index
-        index.keys.sort.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
-        index['BananaLib']['version'].should == '1.0'
-        index['BananaLib']['summary'].should == 'Chunky bananas!'
-        index['BananaLib']['description'].should == 'Full of chunky bananas.'
-        index['BananaLib']['authors'].should == 'Banana Corp, Monkey Boy'
-      end
-
-      it 'updates a given index' do
-        old_index = { 'Faulty_spec' => {}, 'JSONKit' => {}, 'JSONSpec' => {} }
-        index = @aggregate.update_search_index(old_index)
-        index.keys.sort.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
-        index['BananaLib']['version'].should == '1.0'
-      end
-
-      it 'updates a set in the index if a lower version was stored' do
-        old_index = { 'BananaLib' => { 'version' => '0.8' } }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['version'].should == '1.0'
-      end
-
-      it 'updates a set in the search index if no information was stored' do
-        old_index = { 'BananaLib' => {} }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['version'].should == '1.0'
-      end
-
-      it "doesn't updates a set in the index if there already information for an equal or higher version" do
-        old_index = { 'BananaLib' => { 'version' => '1.0', 'summary' => 'custom' } }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['summary'].should == 'custom'
-      end
-
-      it 'loads only the specifications which need to be updated' do
-        Specification.expects(:from_file).at_least_once
-        index = @aggregate.generate_search_index
-        Specification.expects(:from_file).never
-        @aggregate.update_search_index(index)
-      end
-
-      it 'deletes from the index the data of the sets which are not present in the aggregate' do
-        old_index = { 'Deleted-Pod' => { 'version' => '1.0', 'summary' => 'custom' } }
-        index = @aggregate.update_search_index(old_index)
-        index['Deleted-Pod'].should.be.nil
+        index = @aggregate.generate_search_index_for_source(@test_source)
+        index['BananaLib'].should == ['BananaLib']
+        index['JSONKit'].should == ['JSONKit']
+        index['JSONSpec'].should == ['JSONSpec']
+        index['Faulty_spec'].should.be.nil
+        index['Chunky'].should == ['BananaLib']
+        index['bananas!'].should == ['BananaLib']
+        index['Full'].should == ['BananaLib']
+        index['of'].should == ['BananaLib']
+        index['chunky'].should == ['BananaLib']
+        index['bananas.'].should == ['BananaLib']
+        index['Corp'].should == ['BananaLib']
+        index['Monkey'].should == ['BananaLib']
+        index['Boy'].should == ['BananaLib']
       end
     end
 

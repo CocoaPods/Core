@@ -129,57 +129,35 @@ module Pod
       # @!group Search Index
       #-----------------------------------------------------------------------#
 
-      # Generates from scratch the search data for all the sources of the
-      # aggregate. This operation can take a considerable amount of time
+      # Generates from scratch the search data for given source.
+      # This operation can take a considerable amount of time
       # (seconds) as it needs to evaluate the most representative podspec
       # for each Pod.
       #
-      # @return [Hash{String=>Hash}] The search data of every set grouped by
-      #         name.
+      # @param  [Source] source
+      #         The source from which a search index will be generated.
       #
-      def generate_search_index
-        result = {}
-        all_sets.each do |set|
-          result[set.name] = search_data_from_set(set)
-        end
-        result
+      # @return [Hash{String=>Hash}] The search data for the source.
+      #
+      def generate_search_index_for_source(source)
+        generate_search_index_for_sets(source.pod_sets)
       end
 
-      # Updates inline the given search data with the information stored in all
-      # the sources. The update skips the Pods for which the version of the
-      # search data is the same of the highest version known to the aggregate.
-      # This can lead to updates in podspecs being skipped until a new version
-      # is released.
+      # Generates from scratch the search data for changed specifications in given source.
       #
-      # @note   This procedure is considerably faster as it only needs to
-      #         load the most representative spec of the new or updated Pods.
+      # @param  [Source] source
+      #         The source from which a search index will be generated.
+      # @param  [Array<String>] spec_paths
+      #         Array of file path names for corresponding changed specifications.
       #
-      # @return [Hash{String=>Hash}] The search data of every set grouped by
-      #         name.
+      # @return [Hash{String=>Hash}] The search data for changed specifications.
       #
-      def update_search_index(search_data)
-        enumerated_names = []
-        all_sets.each do |set|
-          enumerated_names << set.name
-          set_data = search_data[set.name]
-          has_data = set_data && set_data['version']
-          if has_data
-            stored_version = Version.new(set_data['version'])
-            if stored_version < set.highest_version
-              search_data[set.name] = search_data_from_set(set)
-            end
-          else
-            search_data[set.name] = search_data_from_set(set)
-          end
+      def generate_search_index_for_changes_in_source(source, spec_paths)
+        pods = source.pods_for_specification_paths(spec_paths)
+        sets = pods.map do |pod|
+          Specification::Set.new(pod, source)
         end
-
-        stored_names = search_data.keys
-        delted_names = stored_names - enumerated_names
-        delted_names.each do |name|
-          search_data.delete(name)
-        end
-
-        search_data
+        generate_search_index_for_sets(sets)
       end
 
       private
@@ -187,8 +165,19 @@ module Pod
       # @!group Private helpers
       #-----------------------------------------------------------------------#
 
-      # Returns the search related information from the most representative
-      # specification of the set following keys:
+      # Generates search data for given array of sets.
+      def generate_search_index_for_sets(sets)
+        result = {}
+        sets.each do |set|
+          word_list_from_set(set).each do |w|
+            (result[w] ||= []).push(set.name)
+          end
+        end
+        result
+      end
+
+      # Returns the vocabulary extracted from the most representative
+      # specification of the set. Vocabulary contains words from following information:
       #
       #   - version
       #   - summary
@@ -198,26 +187,34 @@ module Pod
       # @param  [Set] set
       #         The set for which the information is needed.
       #
-      # @note   If the specification can't load an empty hash is returned and
+      # @note   If the specification can't load an empty array is returned and
       #         a warning is printed.
       #
       # @note   For compatibility with non Ruby clients a strings are used
       #         instead of symbols for the keys.
       #
-      # @return [Hash{String=>String}] A hash with the search information.
+      # @return [Array<String>] An array of words contained by the set's search related information.
       #
-      def search_data_from_set(set)
-        result = {}
+      def word_list_from_set(set)
         spec = set.specification
-        result['version'] = spec.version.to_s
-        result['summary'] = spec.summary
-        result['description'] = spec.description
-        result['authors'] = spec.authors.keys.sort * ', '
-        result
+        string = set.name.dup
+        if spec.summary
+          string << ' ' << spec.summary
+        end
+        if spec.description
+          string << ' ' << spec.description
+        end
+        if spec.authors
+          spec.authors.each_pair do |k, v|
+            string << ' ' << k if k
+            string << ' ' << v if v
+          end
+        end
+        string.gsub(/\s+/m, ' ').strip.split(' ').uniq
       rescue
         CoreUI.warn "Skipping `#{set.name}` because the podspec contains " \
           'errors.'
-        result
+        []
       end
 
       #-----------------------------------------------------------------------#
