@@ -8,6 +8,13 @@
   [Delisa Mason](https://github.com/kattrali)
   [#266](https://github.com/CocoaPods/Core/pull/266)
 
+##### Enhancements
+
+* Add `tvos` as a new platform.  
+  [Boris Bügling](https://github.com/neonichu)
+  [Core#263](https://github.com/CocoaPods/Core/pull/263)
+
+
 ## 0.39.0.beta.4 (2015-09-02)
 
 This version only introduces changes in the CocoaPods gem.
@@ -32,7 +39,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ## 0.39.0.beta.1 (2015-08-26)
 
-##### Enhancments
+##### Enhancements
 
 * Gracefully handle missing root podspecs when auto-detecting.  
   [Hugo Tunius](https://github.com/k0nserv)
