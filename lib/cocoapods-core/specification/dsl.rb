@@ -493,7 +493,7 @@ module Pod
 
       # The names of the platforms supported by the specification class.
       #
-      PLATFORMS = [:osx, :ios, :watchos].freeze
+      PLATFORMS = [:osx, :ios, :tvos, :watchos].freeze
 
       # @todo This currently is not used in the Ruby DSL.
       #
@@ -1400,6 +1400,17 @@ module Pod
       #
       def osx
         PlatformProxy.new(self, :osx)
+      end
+
+      # Provides support for specifying tvOS attributes.
+      #
+      # @example
+      #   spec.tvos.source_files = "Classes/tvos/**/*.{h,m}"
+      #
+      # @return [PlatformProxy] the proxy that will set the attributes.
+      #
+      def tvos
+        PlatformProxy.new(self, :tvos)
       end
 
       # Provides support for specifying watchOS attributes.
