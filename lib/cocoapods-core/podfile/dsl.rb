@@ -11,7 +11,6 @@ module Pod
     #
     # A Podfile can be very simple:
     #
-    #     source 'https://github.com/CocoaPods/Specs.git'
     #     pod 'AFNetworking', '~> 1.0'
     #
     # An example of a more complex Podfile can be:
@@ -524,6 +523,9 @@ module Pod
       # relevant. CocoaPods will use the highest version of a Pod of the first
       # source which includes the Pod (regardless whether other sources have a
       # higher version).
+      #
+      # The official CocoaPods source is implicit.
+      # Once you specify another source, then it will need to be included.
       #
       # @param    [String] source
       #           The URL of a specs repository.
