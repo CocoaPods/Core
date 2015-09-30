@@ -10,8 +10,8 @@ of the dependencies is not needed. Therefore, it is suitable for web services.
 
 Provides support for working with the following models:
 
-- `Pod::Specification` - [podspec files](http://cocoapods.github.com/specification.html).
-- `Pod::Podfile` - [podfile specifications](http://cocoapods.github.com/podfile.html).
+- `Pod::Specification` - [Podspec Syntax Reference](https://guides.cocoapods.org/syntax/podspec.html).
+- `Pod::Podfile` - [Podfile Syntax Reference](https://guides.cocoapods.org/syntax/podfile.html).
 - `Pod::Source` - collections of podspec files like the [CocoaPods Spec repo](https://github.com/CocoaPods/Specs).
 
 The gem also provides support for ancillary features like

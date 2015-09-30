@@ -84,7 +84,7 @@ module Pod
       end
 
       it 'returns the platform' do
-        @presenter.platform.should == 'iOS - OS X - watchOS'
+        @presenter.platform.should == 'iOS - OS X - tvOS - watchOS'
       end
 
       it 'returns the license' do

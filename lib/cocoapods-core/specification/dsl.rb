@@ -221,10 +221,14 @@ module Pod
       #                      LICENSE
       #                    }
       #
-      #   @param  [String, Hash{Symbol=>String}] license
-      #           The type of the license and the text of the grant that
-      #           allows to use the library (or the relative path to the file
-      #           that contains it).
+      #   @param  [String] license
+      #           The type of the license
+      #
+      #   @overload license=(license)
+      #     @param  [String, Hash{Symbol=>String}] license
+      #     @option license [String] :type license type
+      #     @option license [String] :file file containing full license text. Supports txt, md, and markdown
+      #     @option license [String] :text full license text
       #
       root_attribute :license,
                      :container => Hash,
@@ -290,8 +294,36 @@ module Pod
       #     spec.source = { :http => 'http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip',
       #                     :sha1 => '7e21857fe11a511f472cfd7cfa2d979bd7ab7d96' }
       #
-      #   @param  [Hash{Symbol=>String}] source
-      #           The location from where the library should be retrieved.
+      #
+      #   @overload source=(git)
+      #     @param  [Hash] git
+      #     @option git [String] :git git source URI
+      #     @option git [String] :tag version tag
+      #     @option git [Bool] :submodules Whether to checkout submodules
+      #     @option git [String] :branch branch name
+      #     @option git [String] :commit commit hash
+      #
+      #   @overload source=(svn)
+      #     @param  [Hash] svn
+      #     @option svn [String] :svn svn source URI
+      #     @option svn [String] :tag version tag
+      #     @option svn [String] :folder folder
+      #     @option svn [String] :revision revision
+      #
+      #   @overload source=(hg)
+      #     @param  [Hash] hg
+      #     @option hg [String] :hg mercurial source URI
+      #     @option hg [String] :revision revision
+      #
+      #   @overload source=(http)
+      #     @param  [Hash] http
+      #     @option http [String] :http compressed source URL
+      #     @option http [String] :type file type. Supports zip, tgz, bz2, txz and tar
+      #     @option http [String] :sha1 SHA hash. Supports SHA1 and SHA256
+      #
+      #   @overload source=(path)
+      #     @param  [Hash] path
+      #     @option path [String] :path local source path
       #
       root_attribute :source,
                      :container => Hash,
@@ -461,7 +493,7 @@ module Pod
 
       # The names of the platforms supported by the specification class.
       #
-      PLATFORMS = [:osx, :ios, :watchos].freeze
+      PLATFORMS = [:osx, :ios, :tvos, :watchos].freeze
 
       # @todo This currently is not used in the Ruby DSL.
       #
@@ -1368,6 +1400,17 @@ module Pod
       #
       def osx
         PlatformProxy.new(self, :osx)
+      end
+
+      # Provides support for specifying tvOS attributes.
+      #
+      # @example
+      #   spec.tvos.source_files = "Classes/tvos/**/*.{h,m}"
+      #
+      # @return [PlatformProxy] the proxy that will set the attributes.
+      #
+      def tvos
+        PlatformProxy.new(self, :tvos)
       end
 
       # Provides support for specifying watchOS attributes.

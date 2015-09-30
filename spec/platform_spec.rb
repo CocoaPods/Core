@@ -6,6 +6,7 @@ module Pod
       it 'returns a new Platform instance' do
         Platform.ios.should == Platform.new(:ios)
         Platform.osx.should == Platform.new(:osx)
+        Platform.tvos.should == Platform.new(:tvos)
         Platform.watchos.should == Platform.new(:watchos)
       end
 
@@ -45,9 +46,11 @@ module Pod
         @platform.to_s.should == 'iOS'
         Platform.new(:osx).to_s.should == 'OS X'
         Platform.new(:watchos).to_s.should == 'watchOS'
+        Platform.new(:tvos).to_s.should == 'tvOS'
         Platform.new(:ios, '5.0.0').to_s.should == 'iOS 5.0.0'
         Platform.new(:osx, '10.7').to_s.should  == 'OS X 10.7'
         Platform.new(:watchos, '2.0').to_s.should == 'watchOS 2.0'
+        Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end
 
       it "uses it's name as it's symbold version" do
@@ -84,6 +87,7 @@ module Pod
         Platform.new(:ios, '4.0').requires_legacy_ios_archs?.should.be.true
         Platform.new(:ios, '5.0').requires_legacy_ios_archs?.should.be.false
         Platform.new(:watchos, '2.0').requires_legacy_ios_archs?.should.be.false
+        Platform.new(:tvos, '9.0').requires_legacy_ios_archs?.should.be.false
       end
 
       it 'is usable as hash keys' do
@@ -115,6 +119,11 @@ module Pod
         it 'supports dynamic frameworks on watchOS' do
           Platform.watchos.should.supports_dynamic_frameworks
           Platform.new(:watchos, '2.0').should.supports_dynamic_frameworks
+        end
+
+        it 'supports dynamic frameworks on tvOS' do
+          Platform.tvos.should.supports_dynamic_frameworks
+          Platform.new(:tvos, '9.0').should.supports_dynamic_frameworks
         end
       end
     end

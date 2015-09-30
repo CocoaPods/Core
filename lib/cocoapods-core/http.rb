@@ -44,7 +44,7 @@ module Pod
       begin
         url = get_actual_url(url)
         resp = perform_head_request(url)
-      rescue SocketError, URI::InvalidURIError, REST::Error
+      rescue SocketError, URI::InvalidURIError, REST::Error, REST::DisconnectedError
         resp = nil
       end
 
