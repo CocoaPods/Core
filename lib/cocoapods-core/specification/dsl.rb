@@ -1026,7 +1026,7 @@ module Pod
       #
       #   These are the headers that will be exposed to the user’s project and
       #   from which documentation will be generated. If no public headers are
-      #   specified then **all** the headers are considered public.
+      #   specified then **all** the headers in source_files are considered public.
       #
       #   @example
       #
