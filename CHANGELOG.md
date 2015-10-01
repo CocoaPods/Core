@@ -2,6 +2,11 @@
 
 ## Master
 
+##### Breaking
+
+* Activesupport 4 is now required, breaking compatibility with applications
+  locked to `3.x.y`.  
+
 ##### Bug Fixes
 
 * Fixes crash when using plugins where activesupport 4 was not installed.  
