@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 0.39.0.beta.5 (2015-10-01)
 
 ##### Breaking
 
