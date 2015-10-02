@@ -207,11 +207,18 @@ module Pod
       YAMLHelper.convert_hash(to_hash, HASH_KEYS)
     end
 
-    # @return [String] A checksum of the contents of the Podfile.
+    # @return [String] The SHA1 digest of the file in which the Podfile
+    #         is defined.
+    #
+    # @return [Nil] If the podfile is not defined in a file.
     #
     def checksum
-      require 'digest/sha1'
-      Digest::SHA1.hexdigest to_yaml
+      unless defined_in_file.nil?
+        require 'digest'
+        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+        checksum
+      end
     end
 
     # @!group Class methods
