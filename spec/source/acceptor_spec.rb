@@ -9,7 +9,7 @@ module Pod
         :status => 200)
       WebMock::API.stub_request(:head, %r{http://new-url/banana-lib.git}).to_return(
         :status => 200)
-      @spec_path =  fixture('BananaLib.podspec')
+      @spec_path = fixture('BananaLib.podspec')
       @spec = Specification.from_file(@spec_path)
       Specification.any_instance.stubs(:dependencies).returns([])
       @repo = fixture('spec-repos/test_repo')

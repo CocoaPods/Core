@@ -422,7 +422,7 @@ module Pod
 
     describe 'DSL Attribute writers' do
       before do
-        @spec =  Spec.new
+        @spec = Spec.new
       end
 
       it 'stores the value of an attribute' do
@@ -442,7 +442,7 @@ module Pod
       end
 
       it 'converts the keys of the hashes to a string' do
-        @spec.store_attribute(:attribute,  :key => 'value')
+        @spec.store_attribute(:attribute, :key => 'value')
         @spec.attributes_hash.should == {
           'name' => nil,
           'attribute' => { 'key' => 'value' },
@@ -454,7 +454,7 @@ module Pod
           foo
             bar
         EOS
-        @spec.store_attribute(:attribute,  value)
+        @spec.store_attribute(:attribute, value)
         @spec.attributes_hash.should == {
           'name' => nil,
           'attribute' => "foo\n  bar",
@@ -463,7 +463,7 @@ module Pod
 
       it 'strips trailing space from strings' do
         value = "foo\n"
-        @spec.store_attribute(:attribute,  value)
+        @spec.store_attribute(:attribute, value)
         @spec.attributes_hash.should == {
           'name' => nil,
           'attribute' => 'foo',

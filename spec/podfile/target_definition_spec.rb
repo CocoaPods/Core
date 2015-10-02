@@ -29,7 +29,7 @@ module Pod
       end
 
       it 'returns the recursive children' do
-        @grand_child   = Podfile::TargetDefinition.new('MyAppTests', @child)
+        @grand_child = Podfile::TargetDefinition.new('MyAppTests', @child)
         @root.recursive_children.should == [@child, @grand_child]
         @child.recursive_children.should == [@grand_child]
         @grand_child.recursive_children.should == []
@@ -53,7 +53,7 @@ module Pod
       it 'returns dependencies' do
         @root.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
-        @root.dependencies.map(&:name).should  == %w(BlocksKit)
+        @root.dependencies.map(&:name).should == %w(BlocksKit)
         @child.dependencies.map(&:name).should == %w(OCMockito BlocksKit)
       end
 

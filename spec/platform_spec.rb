@@ -48,7 +48,7 @@ module Pod
         Platform.new(:watchos).to_s.should == 'watchOS'
         Platform.new(:tvos).to_s.should == 'tvOS'
         Platform.new(:ios, '5.0.0').to_s.should == 'iOS 5.0.0'
-        Platform.new(:osx, '10.7').to_s.should  == 'OS X 10.7'
+        Platform.new(:osx, '10.7').to_s.should == 'OS X 10.7'
         Platform.new(:watchos, '2.0').to_s.should == 'watchOS 2.0'
         Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end

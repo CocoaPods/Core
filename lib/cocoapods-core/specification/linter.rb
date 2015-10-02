@@ -185,7 +185,7 @@ module Pod
       # Performs validations related to the `name` attribute.
       #
       def _validate_name(name)
-        if name =~ /\//
+        if name =~ %r{/}
           results.add_error('name', 'The name of a spec should not contain ' \
                          'a slash.')
         end
@@ -316,7 +316,7 @@ module Pod
         if type.nil?
           results.add_warning('license', 'Missing license type.')
         end
-        if type && type.gsub(' ', '').gsub("\n", '').empty?
+        if type && type.delete(' ').delete("\n").empty?
           results.add_warning('license', 'Invalid license type.')
         end
         if type && type =~ /\(example\)/
@@ -397,7 +397,7 @@ module Pod
       #
       def check_git_ssh_source(s)
         if git = s[:git]
-          if git =~ /\w+\@(\w|\.)+\:(\/\w+)*/
+          if git =~ %r{\w+\@(\w|\.)+\:(/\w+)*}
             results.add_warning('source', 'Git SSH URLs will NOT work for ' \
               'people behind firewalls configured to only allow HTTP, ' \
               'therefore HTTPS is preferred.', true)

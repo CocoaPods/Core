@@ -119,13 +119,13 @@ module Pod
           Podfile.new do
             source 'new_repo_1'
             source 'new_repo_2'
-          end.sources.size.should  == 2
+          end.sources.size.should == 2
 
           Podfile.new do
             source 'new_repo_1'
             source 'new_repo_2'
             source 'master'
-          end.sources.size.should  == 3
+          end.sources.size.should == 3
         end
       end
 

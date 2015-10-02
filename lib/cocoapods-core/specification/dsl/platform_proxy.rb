@@ -18,7 +18,8 @@ module Pod
         # @param  [Symbol] platform @see platform
         #
         def initialize(spec, platform)
-          @spec, @platform = spec, platform
+          @spec = spec
+          @platform = platform
         end
 
         # Defines a setter method for each attribute of the specification

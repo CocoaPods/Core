@@ -20,8 +20,6 @@ module Pod
       # @!group Configuration
       #-----------------------------------------------------------------------#
 
-      # rubocop:disable Style/TrivialAccessors
-
       # Allows to specify an optional callback which is called before
       # analysing every spec. Suitable for UI.
       #
@@ -34,8 +32,6 @@ module Pod
       def pre_check(&block)
         @pre_check_callback = block
       end
-
-      # rubocop:enable Style/TrivialAccessors
 
       public
 
@@ -113,7 +109,7 @@ module Pod
       #
       def check_spec_path(name, version, spec)
         unless spec.name == name && spec.version.to_s == version.to_s
-          message = "Incorrect path #{ spec.defined_in_file }"
+          message = "Incorrect path #{spec.defined_in_file}"
           report.add_message(:error, message, name, spec.version)
         end
       end

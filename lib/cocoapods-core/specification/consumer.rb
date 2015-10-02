@@ -298,7 +298,7 @@ module Pod
       #         prepare hook was defined.
       #
       def prepare_value(attr, value)
-        if attr.container ==  Array
+        if attr.container == Array
           value = [*value].compact
         end
 

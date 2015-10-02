@@ -10,7 +10,7 @@ module Pod
         end
         podfile.dependencies.size.should == 2
         podfile.dependencies.find { |d| d.root_name == 'ASIHTTPRequest' }.should == Dependency.new('ASIHTTPRequest')
-        podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should   == Dependency.new('SSZipArchive', '>= 0.1')
+        podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should == Dependency.new('SSZipArchive', '>= 0.1')
       end
 
       it 'white-list dependencies on all build configuration by default' do

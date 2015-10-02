@@ -158,7 +158,8 @@ module Pod
         limit = [segments.size, other_segments.size].max
 
         (0..limit).each do |i|
-          lhs, rhs = segments[i] || 0, other_segments[i] || 0
+          lhs = segments[i] || 0
+          rhs = other_segments[i] || 0
 
           next if lhs == rhs
           return lhs <=> rhs if lhs <=> rhs

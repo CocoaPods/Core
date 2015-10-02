@@ -206,7 +206,8 @@ module Pod
       when :osx then 'OS X'
       when :watchos then 'watchOS'
       when :tvos then 'tvOS'
-      else symbolic_name.to_s end
+      else symbolic_name.to_s
+      end
     end
   end
 end

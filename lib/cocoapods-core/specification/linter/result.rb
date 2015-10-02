@@ -26,7 +26,7 @@ module Pod
           # @param [String] message @see message
           #
           def initialize(type, attribute_name, message, public_only = false)
-            @type    = type
+            @type = type
             @attribute_name = attribute_name
             @message = message
             @public_only = public_only

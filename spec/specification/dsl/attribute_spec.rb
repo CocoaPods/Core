@@ -68,7 +68,7 @@ module Pod
       end
 
       it "doesn't specifies a default value by default (no multi platform)" do
-        @attr = Attribute.new('name',  :multi_platform => false)
+        @attr = Attribute.new('name', :multi_platform => false)
         @attr.default_value.should.be.nil
       end
 
@@ -77,7 +77,7 @@ module Pod
       end
 
       it 'is not inherited if it is root only' do
-        attr = Attribute.new('name',  :root_only => true)
+        attr = Attribute.new('name', :root_only => true)
         attr.should.not.be.inherited
       end
     end
@@ -104,7 +104,7 @@ module Pod
       end
 
       it 'returns the name of the writer method' do
-        attr = Attribute.new(:frameworks,  :singularize => true)
+        attr = Attribute.new(:frameworks, :singularize => true)
         attr.writer_name.should == 'frameworks='
       end
 

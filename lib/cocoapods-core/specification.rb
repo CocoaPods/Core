@@ -530,7 +530,7 @@ module Pod
         raise Informative, "No podspec exists at path `#{path}`."
       end
 
-      string = File.open(path, 'r:utf-8') { |f| f.read }
+      string = File.open(path, 'r:utf-8', &:read)
       # Work around for Rubinius incomplete encoding in 1.9 mode
       if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')

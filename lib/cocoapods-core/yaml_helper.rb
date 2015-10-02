@@ -55,12 +55,12 @@ module Pod
       #
       def load_string(yaml_string, file_path = nil)
         YAML.load(yaml_string)
-        rescue
-          if yaml_has_merge_error?(yaml_string)
-            raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
-          else
-            raise Informative, yaml_parsing_error_msg(yaml_string, file_path)
-          end
+      rescue
+        if yaml_has_merge_error?(yaml_string)
+          raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
+        else
+          raise Informative, yaml_parsing_error_msg(yaml_string, file_path)
+        end
       end
 
       # Loads a YAML file and leans on the #load_string imp

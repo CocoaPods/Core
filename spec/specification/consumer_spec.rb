@@ -108,12 +108,12 @@ module Pod
 
       it 'allows to specify the libraries' do
         @spec.libraries = 'z', 'xml2'
-        @consumer.libraries.should  == %w(z xml2)
+        @consumer.libraries.should == %w(z xml2)
       end
 
       it 'allows to specify a single library' do
         @spec.library = 'z'
-        @consumer.libraries.should  == %w(z)
+        @consumer.libraries.should == %w(z)
       end
 
       it 'inherits the libraries from the parent' do
@@ -464,14 +464,14 @@ module Pod
         it 'takes into account the value of the parent if needed' do
           attr = Specification::DSL.attributes[:frameworks]
           value = @consumer.send(:value_with_inheritance, @subspec, attr)
-          value.should ==  %w(spec_framework subspec_framework)
+          value.should == %w(spec_framework subspec_framework)
         end
 
         it "doesn't inherits value of the parent if the attribute is not inherited" do
           attr = Specification::DSL.attributes[:source_files]
           attr.stubs(:inherited?).returns(false)
           value = @consumer.send(:value_with_inheritance, @subspec, attr)
-          value.should ==  ['subspec_files']
+          value.should == ['subspec_files']
         end
       end
 
@@ -488,7 +488,7 @@ module Pod
         it 'takes into account the multi-platform values' do
           attr = Specification::DSL.attributes[:source_files]
           value = @consumer.send(:raw_value_for_attribute, @spec, attr)
-          value.should ==  %w(spec_files ios_files)
+          value.should == %w(spec_files ios_files)
         end
       end
 
@@ -496,34 +496,34 @@ module Pod
 
       describe '#merge_values' do
         it 'returns the current value if the value to merge is nil' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
+          attr = Specification::DSL::Attribute.new(:test, :container => Hash)
           result = @consumer.send(:merge_values, attr, 'value', nil)
           result.should == 'value'
         end
 
         it 'returns the value to merge if the current value is nil' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
+          attr = Specification::DSL::Attribute.new(:test, :container => Hash)
           result = @consumer.send(:merge_values, attr, nil, 'value')
           result.should == 'value'
         end
 
         it 'handles boolean values' do
-          attr = Specification::DSL::Attribute.new(:test,  :types => [TrueClass, FalseClass])
-          @consumer.send(:merge_values, attr, false, nil).should   == false
+          attr = Specification::DSL::Attribute.new(:test, :types => [TrueClass, FalseClass])
+          @consumer.send(:merge_values, attr, false, nil).should == false
           @consumer.send(:merge_values, attr, false, false).should == false
-          @consumer.send(:merge_values, attr, false, true).should  == true
-          @consumer.send(:merge_values, attr, true, false).should  == false
+          @consumer.send(:merge_values, attr, false, true).should == true
+          @consumer.send(:merge_values, attr, true, false).should == false
         end
 
         it 'concatenates the values of attributes contained in an array' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Array)
+          attr = Specification::DSL::Attribute.new(:test, :container => Array)
           result = @consumer.send(:merge_values, attr, 'CoreGraphics', 'CoreData')
           result.should == %w(CoreGraphics CoreData)
         end
 
         it 'handles hashes while merging values' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
-          result = @consumer.send(:merge_values, attr, { :value1 => '1' },  :value2 => '2')
+          attr = Specification::DSL::Attribute.new(:test, :container => Hash)
+          result = @consumer.send(:merge_values, attr, { :value1 => '1' }, :value2 => '2')
           result.should == {
             :value1 => '1',
             :value2 => '2',
@@ -531,7 +531,7 @@ module Pod
         end
 
         it 'merges the values of the keys of hashes contained in an array' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
+          attr = Specification::DSL::Attribute.new(:test, :container => Hash)
           value = { :resources => %w(A B) }
           value_to_mege = { :resources => 'C' }
           result = @consumer.send(:merge_values, attr, value, value_to_mege)
@@ -539,7 +539,7 @@ module Pod
         end
 
         it 'merges the values of the keys of hashes contained in a string' do
-          attr = Specification::DSL::Attribute.new(:test,  :container => Hash)
+          attr = Specification::DSL::Attribute.new(:test, :container => Hash)
           value = { 'OTHER_LDFLAGS' => '-lObjC' }
           value_to_mege = { 'OTHER_LDFLAGS' => '-framework SystemConfiguration' }
           result = @consumer.send(:merge_values, attr, value, value_to_mege)

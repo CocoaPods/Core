@@ -3,7 +3,7 @@ require File.expand_path('../../../spec_helper', __FILE__)
 module Pod
   describe Specification::DSL::Deprecations do
     before do
-      @spec =  Spec.new
+      @spec = Spec.new
     end
 
     it 'warns about the renamed `preferred_dependency`' do

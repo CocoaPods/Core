@@ -335,7 +335,7 @@ module Pod
       when /HEAD/
         Dependency.new(name, :head)
       else
-        version_requirements =  version.split(',') if version
+        version_requirements = version.split(',') if version
         Dependency.new(name, version_requirements)
       end
     end
