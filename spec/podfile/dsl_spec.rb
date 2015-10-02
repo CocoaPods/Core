@@ -129,12 +129,12 @@ module Pod
         podfile.target_definitions['Pods'].should.be.exclusive
       end
 
-      it 'is not exclusive by default' do
+      it 'is exclusive by default' do
         podfile = Podfile.new do
           target 'Pods' do
           end
         end
-        podfile.target_definitions['Pods'].should.not.be.exclusive
+        podfile.target_definitions['Pods'].should.be.exclusive
       end
 
       it 'raises if unrecognized keys are passed during the initialization of a target' do

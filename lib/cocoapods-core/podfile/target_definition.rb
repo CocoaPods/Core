@@ -193,7 +193,7 @@ module Pod
         if root?
           true
         else
-          matches_platform?(parent) || (get_hash_value('inheritance', 'complete') != 'complete')
+          !matches_platform?(parent) || (get_hash_value('inheritance', 'complete') != 'complete')
         end
       end
 
