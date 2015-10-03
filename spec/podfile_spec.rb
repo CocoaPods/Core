@@ -224,6 +224,18 @@ module Pod
           YAMLHelper.load_string(expected)
       end
 
+      describe '#checksum' do
+        it 'returns the checksum of the file in which it is defined' do
+          podfile = Podfile.from_file(fixture('Podfile'))
+          podfile.checksum.should == 'c140d332c2d286f26b6439dc3570be477d1897b8'
+        end
+
+        it 'returns a nil checksum if the podfile is not defined in a file' do
+          podfile = Podfile.new
+          podfile.checksum.should.be.nil
+        end
+      end
+
       it 'includes inhibit warnings per pod' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest', :inhibit_warnings => true

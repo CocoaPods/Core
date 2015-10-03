@@ -183,12 +183,12 @@ module Pod
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
     HASH_KEYS = %w(
-      target_definitions
       workspace
       sources
-      generate_bridge_support
-      set_arc_compatibility_flag
       plugins
+      set_arc_compatibility_flag
+      generate_bridge_support
+      target_definitions
     ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -203,7 +203,22 @@ module Pod
     # @return [String] The YAML representation of the Podfile.
     #
     def to_yaml
-      to_hash.to_yaml
+      require 'cocoapods-core/yaml_helper'
+      YAMLHelper.convert_hash(to_hash, HASH_KEYS)
+    end
+
+    # @return [String] The SHA1 digest of the file in which the Podfile
+    #         is defined.
+    #
+    # @return [Nil] If the podfile is not defined in a file.
+    #
+    def checksum
+      unless defined_in_file.nil?
+        require 'digest'
+        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+        checksum
+      end
     end
 
     # @!group Class methods

@@ -109,9 +109,21 @@ module Pod
       #
       def process_array(array)
         result = sorted_array(array).map do |array_value|
-          process_according_to_class(array_value)
+          processed = process_according_to_class(array_value)
+          case array_value
+          when Array, Hash
+            if array_value.size > 1
+              processed = processed.gsub(/^.*/).to_a
+              head = processed.shift
+              processed.map { |s| "  #{s}" }.prepend(head).join("\n")
+            else
+              processed
+            end
+          else
+            processed
+          end
         end
-        "- #{result * "\n- "}"
+        "- #{result.join("\n- ").strip}"
       end
 
       # Converts a hash to YAML after sorting its keys. Optionally accepts a
@@ -136,7 +148,7 @@ module Pod
           processed = process_according_to_class(key_value)
           processed_key = process_according_to_class(key)
           case key_value
-          when Array, Hash
+          when Hash, Array
             key_partial_yaml = processed.lines.map { |line| "  #{line}" } * ''
             "#{processed_key}:\n#{key_partial_yaml}"
           else

@@ -495,8 +495,8 @@ module Pod
     # @return [Nil] If the specification is not defined in a file.
     #
     def checksum
-      require 'digest'
       unless defined_in_file.nil?
+        require 'digest'
         checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
         checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
         checksum
