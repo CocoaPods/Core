@@ -8,6 +8,9 @@
   the Podfile.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* The Lockfile now contains the Podfile's checksum.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 0.39.0.beta.5 (2015-10-01)
 
