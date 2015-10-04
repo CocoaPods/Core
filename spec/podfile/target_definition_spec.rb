@@ -255,7 +255,6 @@ module Pod
       it 'allows children to opt-out of using frameworks' do
         @root.use_frameworks!
         @child.use_frameworks!(false)
-        puts @child.to_hash
         @child.should.not.uses_frameworks?
       end
 
