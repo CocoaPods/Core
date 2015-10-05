@@ -263,21 +263,27 @@ module Pod
       it 'whitelists pods by default' do
         @root.store_pod('ObjectiveSugar')
         @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @child.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
       end
 
       it 'does not enable pods for un-whitelisted configurations if it is whitelisted for another' do
         @root.store_pod('ObjectiveSugar')
         @root.whitelist_pod_for_configuration('ObjectiveSugar', 'Release')
         @root.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @child.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
       end
 
       it 'enables pods for configurations they are whitelisted for' do
         @root.store_pod('ObjectiveSugar', :configuration => 'Release')
         @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
         @root.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @child.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @child.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
         @root.store_pod('AFNetworking', :configurations => ['Debug'])
         @root.should.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
         @root.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
+        @child.should.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
+        @child.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
       end
 
       it 'coerces configuration names to strings' do
@@ -297,8 +303,10 @@ module Pod
         @root.whitelist_pod_for_configuration('ObjectiveSugar', 'Release')
         @root.whitelist_pod_for_configuration('AFNetworking', 'Release')
         @root.all_whitelisted_configurations.should == ['Release']
+        @child.all_whitelisted_configurations.should == ['Release']
         @root.whitelist_pod_for_configuration('Objective-Record', 'Debug')
         @root.all_whitelisted_configurations.sort.should == %w(Debug Release)
+        @child.all_whitelisted_configurations.sort.should == %w(Debug Release)
       end
 
       #--------------------------------------#
