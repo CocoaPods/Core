@@ -204,7 +204,7 @@ module Pod
     #
     def to_yaml
       require 'cocoapods-core/yaml_helper'
-      YAMLHelper.convert_hash(to_hash, HASH_KEYS)
+      "---\n" << YAMLHelper.convert_hash(to_hash, HASH_KEYS)
     end
 
     # @return [String] The SHA1 digest of the file in which the Podfile
