@@ -85,7 +85,15 @@ module Pod
       # @see    Source#search
       #
       def search(dependency)
-        found_sources = sources.select { |s| s.search(dependency) }
+        ss = sources
+        unless dependency.source.nil?
+          ss = ss.select { |s| s.name == dependency.source }
+          if ss.blank?
+            raise Informative, 'Unable to find a source with name ' \
+            "`#{dependency.source}' for the `#{dependency.name}'"
+          end
+        end
+        found_sources = ss.select { |s| s.search(dependency) }
         unless found_sources.empty?
           Specification::Set.new(dependency.root_name, found_sources)
         end
