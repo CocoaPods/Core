@@ -1,5 +1,10 @@
 # CocoaPods Core Changelog
 
+## 0.39.0 (2015-10-09)
+
+This version only introduces changes in the CocoaPods gem.
+
+
 ## 0.39.0.rc.1 (2015-10-05)
 
 ##### Enhancements
