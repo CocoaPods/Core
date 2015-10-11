@@ -275,6 +275,24 @@ module Pod
       end
     end
 
+    # @!group Updating the source
+    #-------------------------------------------------------------------------#
+
+    # Updates the local clone of the source repo.
+    # @return  [Array] output and changed_spec_paths
+    #         First value of the array is `git pull` output. Second value is an array of changed spec paths.
+    #
+    def update
+      output = nil
+      changed_spec_paths = nil
+      Dir.chdir(repo) do
+        prev_commit_hash = (`git rev-parse HEAD`).strip
+        output = `git pull --ff-only`
+        changed_spec_paths = (`git diff --name-only #{prev_commit_hash}..HEAD`).strip.split("\n")
+      end
+      [output, changed_spec_paths]
+    end
+
     public
 
     # @!group Representations
