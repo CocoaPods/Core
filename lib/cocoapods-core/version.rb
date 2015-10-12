@@ -151,6 +151,68 @@ module Pod
     # @note   Attempts to compare something that's not a {Version} return nil
     #
     def <=>(other)
+      comparison = compare_segments(other)
+      comparison == 0 ? version <=> other.version : comparison
+    end
+
+    # @private
+    #
+    # Compares the versions for equality.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Boolean] whether the receiver is equal to other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def ==(other)
+      compare_segments(other) == 0
+    end
+
+    # @private
+    #
+    # Compares the versions for equality.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Boolean] whether the receiver is greater than or equal to other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def >=(other)
+      comparison = compare_segments(other)
+      comparison >= 0
+    end
+
+    # @private
+    #
+    # Compares the versions for equality.
+    #
+    # @param  [Version] other
+    #         The other version to compare.
+    #
+    # @return [Boolean] whether the receiver is less than or equal to other.
+    #
+    # @note   Attempts to compare something that's not a {Version} return nil
+    #
+    def <=(other)
+      comparison = compare_segments(other)
+      comparison <= 0
+    end
+
+    protected
+
+    def numeric_segments
+      segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
+    end
+
+    def prerelease_segments
+      segments.drop_while { |s| s.is_a?(Numeric) }
+    end
+
+    def compare_segments(other)
       return unless other.is_a?(Pod::Version)
       return 0 if @version == other.version
 
@@ -170,18 +232,7 @@ module Pod
 
       compare[numeric_segments, other.numeric_segments]
       compare[prerelease_segments, other.prerelease_segments]
-
-      version <=> other.version
-    end
-
-    protected
-
-    def numeric_segments
-      segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
-    end
-
-    def prerelease_segments
-      segments.drop_while { |s| s.is_a?(Numeric) }
+      0
     end
 
     #-------------------------------------------------------------------------#
