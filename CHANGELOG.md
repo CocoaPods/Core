@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Allow non-exact version matches to be equal while maintaining a sort order.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#4365](https://github.com/CocoaPods/CocoaPods/issues/4365)
+
+
 ## 0.39.0 (2015-10-09)
 
 This version only introduces changes in the CocoaPods gem.
