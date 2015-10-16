@@ -269,19 +269,34 @@ module Pod
 
       it 'matches a specification with the correct name' do
         dep = Dependency.new('bananas', '1.0')
-        dep.match?('bananas', '1.0').should.be.true
-        dep.match?('orange', '1.0').should.be.false
+        dep.should.match?('bananas', '1.0')
+        dep.should.match?('bananas', '1')
+        dep.should.match?('bananas', '1.0.0')
+        dep.should.not.match?('orange', '1.0')
       end
 
       it 'matches any version if no requirements are provided' do
         dep = Dependency.new('bananas')
-        dep.match?('bananas', '1.0').should.be.true
+        dep.should.match?('bananas', '1.0')
       end
 
       it 'matches a specification with the correct version if requirements are provided' do
         dep = Dependency.new('bananas', '> 0.5')
-        dep.match?('bananas', '1.0').should.be.true
-        dep.match?('bananas', '0.1').should.be.false
+        dep.should.match?('bananas', '1.0')
+        dep.should.match?('bananas', '1.0.0')
+        dep.should.not.match?('bananas', '0.1')
+      end
+
+      it 'matches a specification regardless of version specificity' do
+        dep = Dependency.new('bananas', '~> 1.0.0')
+        dep.should.match?('bananas', '1.0')
+        dep.should.match?('bananas', '1')
+        dep.should.match?('bananas', '1.0.0.0')
+
+        dep = Dependency.new('bananas', '~> 1.0.0-a')
+        dep.should.match?('bananas', '1.0.0.0-a')
+        dep.should.match?('bananas', '1.0.0-a')
+        dep.should.match?('bananas', '1.0-a')
       end
 
       it 'matching supports the comparison with pre-release version' do
