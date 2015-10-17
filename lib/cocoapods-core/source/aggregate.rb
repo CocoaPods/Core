@@ -53,7 +53,7 @@ module Pod
       #         The name of the Pod.
       #
       # @return [Set] The most representative set for the Pod with the given
-      #         name.
+      #         name. Returns nil if no representative source found containing a pod with given name.
       #
       def representative_set(name)
         representative_source = nil
@@ -68,7 +68,7 @@ module Pod
             end
           end
         end
-        Specification::Set.new(name, representative_source)
+        representative_source ? Specification::Set.new(name, representative_source) : nil
       end
 
       public
