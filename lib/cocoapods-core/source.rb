@@ -287,7 +287,8 @@ module Pod
       changed_spec_paths = nil
       Dir.chdir(repo) do
         prev_commit_hash = (`git rev-parse HEAD`).strip
-        output = `git pull --ff-only`
+        output = `git pull --ff-only 2>&1`
+        raise Informative, output unless $?.success?
         changed_spec_paths = (`git diff --name-only #{prev_commit_hash}..HEAD`).strip.split("\n")
       end
       [output, changed_spec_paths]
