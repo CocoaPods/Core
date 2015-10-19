@@ -29,6 +29,18 @@ module Pod
         dep.should.not.be.external
       end
 
+      it 'can be initialized with a spec source' do
+        dep = Dependency.new('cocoapods', :source => 'master1')
+        dep.should.not.be.external
+      end
+
+      it 'can be initialized with a spec source and multiple requirements' do
+        dependency = Dependency.new('bananas', '> 1.0', '< 2.0', :source => 'master1')
+        dependency.requirement.to_s.should == '< 2.0, > 1.0'
+        dependency.should.not.be.external
+        dependency.source.should == 'master1'
+      end
+
       it "knows if it's local" do
         dep = Dependency.new('cocoapods', :path => '/tmp/cocoapods')
         dep.should.be.local
