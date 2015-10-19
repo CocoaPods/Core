@@ -197,20 +197,20 @@ module Pod
       #
       def word_list_from_set(set)
         spec = set.specification
-        string = set.name.dup
+        word_list = [set.name.dup]
         if spec.summary
-          string << ' ' << spec.summary
+          word_list += spec.summary.split
         end
         if spec.description
-          string << ' ' << spec.description
+          word_list += spec.description.split
         end
         if spec.authors
           spec.authors.each_pair do |k, v|
-            string << ' ' << k if k
-            string << ' ' << v if v
+            word_list += k.split if k
+            word_list += v.split if v
           end
         end
-        string.gsub(/\s+/m, ' ').strip.split(' ').uniq
+        word_list.uniq
       rescue
         CoreUI.warn "Skipping `#{set.name}` because the podspec contains " \
           'errors.'

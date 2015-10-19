@@ -279,19 +279,27 @@ module Pod
     #-------------------------------------------------------------------------#
 
     # Updates the local clone of the source repo.
-    # @return  [Array] output and changed_spec_paths
-    #         First value of the array is `git pull` output. Second value is an array of changed spec paths.
     #
-    def update
-      output = nil
-      changed_spec_paths = nil
+    # @param  [Bool] show_output
+    #
+    # @return  [Array<String>] changed_spec_paths
+    #          Returns the list of changed spec paths.
+    #
+    def update(show_output = false)
+      changed_spec_paths = []
       Dir.chdir(repo) do
         prev_commit_hash = (`git rev-parse HEAD`).strip
         output = `git pull --ff-only 2>&1`
-        raise Informative, output unless $?.success?
+        CoreUI.puts output if show_output
+        unless $?.success?
+          CoreUI.warn 'CocoaPods was not able to update the ' \
+                  "`#{name}` repo. If this is an unexpected issue " \
+                  'and persists you can inspect it running ' \
+                  '`pod repo update --verbose`'
+        end
         changed_spec_paths = (`git diff --name-only #{prev_commit_hash}..HEAD`).strip.split("\n")
       end
-      [output, changed_spec_paths]
+      changed_spec_paths
     end
 
     public
