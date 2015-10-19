@@ -28,16 +28,20 @@ module Pod
           BananaLib: d46ca864666e216300a0653de197668b12e732a1
           JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
+        PODFILE CHECKSUM: podfile_checksum
+
         COCOAPODS: #{CORE_VERSION}
       LOCKFILE
     end
 
     def self.podfile
-      Podfile.new do
+      podfile = Podfile.new do
         platform :ios
         pod 'BananaLib', '~>1.0'
         pod 'JSONKit', :podspec => 'path/JSONKit.podspec'
       end
+      podfile.stubs(:checksum).returns('podfile_checksum')
+      podfile
     end
 
     def self.specs
@@ -350,7 +354,6 @@ module Pod
 
       it 'generates a hash representation' do
         hash = @lockfile.to_hash
-        hash.delete('COCOAPODS')
         hash.should == {
           'PODS' => [
             { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
@@ -359,7 +362,16 @@ module Pod
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'CHECKOUT OPTIONS' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
+          'PODFILE CHECKSUM' => 'podfile_checksum',
+          'COCOAPODS' => CORE_VERSION,
         }
+      end
+
+      it 'handles when the podfile has no checksum' do
+        podfile = Sample.podfile
+        podfile.stubs(:checksum).returns(nil)
+        @lockfile = Lockfile.generate(podfile, Sample.specs, Sample.checkout_options)
+        @lockfile.to_hash.should.not.key?('PODFILE CHECKSUM')
       end
 
       it 'generates an ordered YAML representation' do
