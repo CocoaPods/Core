@@ -288,8 +288,8 @@ module Pod
     def update(show_output = false)
       changed_spec_paths = []
       Dir.chdir(repo) do
-        prev_commit_hash = (`git rev-parse HEAD`).strip
-        output = `git pull --ff-only 2>&1`
+        prev_commit_hash = git_commit_hash
+        output = update_git_repo
         CoreUI.puts output if show_output
         unless $?.success?
           CoreUI.warn 'CocoaPods was not able to update the ' \
@@ -297,7 +297,7 @@ module Pod
                   'and persists you can inspect it running ' \
                   '`pod repo update --verbose`'
         end
-        changed_spec_paths = (`git diff --name-only #{prev_commit_hash}..HEAD`).strip.split("\n")
+        changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
       end
       changed_spec_paths
     end
@@ -367,6 +367,18 @@ module Pod
           repo
         end
       end
+    end
+
+    def git_commit_hash
+      (`git rev-parse HEAD` || '').strip
+    end
+
+    def update_git_repo
+      `git pull --ff-only 2>&1`
+    end
+
+    def diff_until_commit_hash(commit_hash)
+      (`git diff --name-only #{commit_hash}..HEAD` || '').strip.split("\n")
     end
 
     #-------------------------------------------------------------------------#

@@ -99,24 +99,22 @@ module Pod
     describe 'Search Index' do
       before do
         @test_source = Source.new(fixture('spec-repos/test_repo'))
-        @aggregate.stubs(:sources).returns([@test_source])
       end
 
-      it 'generates the search index from scratch' do
+      it 'generates the search index for source' do
         index = @aggregate.generate_search_index_for_source(@test_source)
-        index['BananaLib'].should == ['BananaLib']
-        index['JSONKit'].should == ['JSONKit']
-        index['JSONSpec'].should == ['JSONSpec']
+        text = 'BananaLib Chunky bananas! Full of chunky bananas. Banana Corp Monkey Boy monkey@banana-corp.local'
+        text.split.each do |word|
+          index[word].should == ['BananaLib']
+        end
         index['Faulty_spec'].should.be.nil
-        index['Chunky'].should == ['BananaLib']
-        index['bananas!'].should == ['BananaLib']
-        index['Full'].should == ['BananaLib']
-        index['of'].should == ['BananaLib']
-        index['chunky'].should == ['BananaLib']
-        index['bananas.'].should == ['BananaLib']
-        index['Corp'].should == ['BananaLib']
-        index['Monkey'].should == ['BananaLib']
-        index['Boy'].should == ['BananaLib']
+      end
+
+      it 'generates the search index for changes in source' do
+        changed_paths = ['Specs/JSONKit/1.4/JSONKit.podspec']
+        index = @aggregate.generate_search_index_for_changes_in_source(@test_source, changed_paths)
+        index['JSONKit'].should == ['JSONKit']
+        index['BananaLib'].should.be.nil
       end
     end
 
