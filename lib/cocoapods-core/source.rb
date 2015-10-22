@@ -285,18 +285,11 @@ module Pod
     # @return  [Array<String>] changed_spec_paths
     #          Returns the list of changed spec paths.
     #
-    def update(show_output = false)
+    def update(show_output)
       changed_spec_paths = []
       Dir.chdir(repo) do
         prev_commit_hash = git_commit_hash
-        output = update_git_repo
-        CoreUI.puts output if show_output
-        unless $?.success?
-          CoreUI.warn 'CocoaPods was not able to update the ' \
-                  "`#{name}` repo. If this is an unexpected issue " \
-                  'and persists you can inspect it running ' \
-                  '`pod repo update --verbose`'
-        end
+        update_git_repo(show_output)
         changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
       end
       changed_spec_paths
@@ -373,8 +366,9 @@ module Pod
       (`git rev-parse HEAD` || '').strip
     end
 
-    def update_git_repo
-      `git pull --ff-only 2>&1`
+    def update_git_repo(show_output = false)
+      output = `git pull --ff-only 2>&1`
+      CoreUI.puts output if show_output
     end
 
     def diff_until_commit_hash(commit_hash)
