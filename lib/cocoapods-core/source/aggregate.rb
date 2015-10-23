@@ -170,7 +170,7 @@ module Pod
         result = {}
         sets.each do |set|
           word_list_from_set(set).each do |w|
-            (result[w] ||= []).push(set.name)
+            (result[w] ||= []).push(set.name.to_sym)
           end
         end
         result
