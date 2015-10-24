@@ -368,7 +368,7 @@ module Pod
             end
           end
         end
-        !found
+        !found && (exclusive? || parent.pod_whitelisted_for_configuration?(pod_name, configuration_name))
       end
 
       # Whitelists a pod for a specific configuration. If a pod is whitelisted
@@ -396,7 +396,8 @@ module Pod
       #         pods have been whitelisted.
       #
       def all_whitelisted_configurations
-        configuration_pod_whitelist.keys.uniq
+        parent_configurations = exclusive? ? [] : parent.all_whitelisted_configurations
+        (configuration_pod_whitelist.keys + parent_configurations).uniq
       end
 
       #--------------------------------------#
