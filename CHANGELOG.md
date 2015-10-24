@@ -8,6 +8,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4365](https://github.com/CocoaPods/CocoaPods/issues/4365)
 
+* Target definitions now inherit configuration whitelist settings.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#3605](https://github.com/CocoaPods/CocoaPods/issues/3605)
+
 
 ## 0.39.0 (2015-10-09)
 
