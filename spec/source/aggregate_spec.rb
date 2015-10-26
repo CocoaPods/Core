@@ -116,6 +116,18 @@ module Pod
         index['JSONKit'].should == [:JSONKit]
         index['BananaLib'].should.be.nil
       end
+
+      it 'generates correct vocabulary form given set' do
+        set = Specification::Set.new('PodName', [])
+        spec = Specification.new
+        spec.stubs(:summary).returns("\n\n    Summary of\t\tpod name\n\n")
+        spec.stubs(:description).returns("\n\n    \t\t       \n\n")
+        spec.stubs(:authors).returns("\nauthor1\n" => nil, "\t\tauthor2" => '***woww---@mymail.com')
+        set.stubs(:specification).returns(spec)
+
+        vocabulary = %w(PodName Summary of pod name author1 author2 ***woww---@mymail.com)
+        @aggregate.send(:word_list_from_set, set).should == vocabulary
+      end
     end
 
     #-------------------------------------------------------------------------#
