@@ -93,6 +93,22 @@ module Pod
       end.sort
     end
 
+    # Returns pod names for given array of specification paths.
+    #
+    # @param  [Array<String>] spec_paths
+    #         Array of file path names for specifications. Path strings should be relative to the source path.
+    #
+    # @return [Array<String>] the list of the name of Pods corresponding to specification paths.
+    #
+    def pods_for_specification_paths(spec_paths)
+      spec_paths.map do |path|
+        absolute_path = repo + path
+        relative_path = absolute_path.relative_path_from(specs_dir)
+        # The first file name returned by 'each_filename' is the pod name
+        relative_path.each_filename.first
+      end
+    end
+
     # @return [Array<Version>] all the available versions for the Pod, sorted
     #         from highest to lowest.
     #
@@ -259,6 +275,26 @@ module Pod
       end
     end
 
+    # @!group Updating the source
+    #-------------------------------------------------------------------------#
+
+    # Updates the local clone of the source repo.
+    #
+    # @param  [Bool] show_output
+    #
+    # @return  [Array<String>] changed_spec_paths
+    #          Returns the list of changed spec paths.
+    #
+    def update(show_output)
+      changed_spec_paths = []
+      Dir.chdir(repo) do
+        prev_commit_hash = git_commit_hash
+        update_git_repo(show_output)
+        changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
+      end
+      changed_spec_paths
+    end
+
     public
 
     # @!group Representations
@@ -324,6 +360,19 @@ module Pod
           repo
         end
       end
+    end
+
+    def git_commit_hash
+      (`git rev-parse HEAD` || '').strip
+    end
+
+    def update_git_repo(show_output = false)
+      output = `git pull --ff-only 2>&1`
+      CoreUI.puts output if show_output
+    end
+
+    def diff_until_commit_hash(commit_hash)
+      (`git diff --name-only #{commit_hash}..HEAD` || '').strip.split("\n")
     end
 
     #-------------------------------------------------------------------------#

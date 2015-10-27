@@ -98,55 +98,35 @@ module Pod
 
     describe 'Search Index' do
       before do
-        test_source = Source.new(fixture('spec-repos/test_repo'))
-        @aggregate.stubs(:sources).returns([test_source])
+        @test_source = Source.new(fixture('spec-repos/test_repo'))
       end
 
-      it 'generates the search index from scratch' do
-        index = @aggregate.generate_search_index
-        index.keys.sort.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
-        index['BananaLib']['version'].should == '1.0'
-        index['BananaLib']['summary'].should == 'Chunky bananas!'
-        index['BananaLib']['description'].should == 'Full of chunky bananas.'
-        index['BananaLib']['authors'].should == 'Banana Corp, Monkey Boy'
+      it 'generates the search index for source' do
+        index = @aggregate.generate_search_index_for_source(@test_source)
+        text = 'BananaLib Chunky bananas! Full of chunky bananas. Banana Corp Monkey Boy monkey@banana-corp.local'
+        text.split.each do |word|
+          index[word].should == [:BananaLib]
+        end
+        index['Faulty_spec'].should.be.nil
       end
 
-      it 'updates a given index' do
-        old_index = { 'Faulty_spec' => {}, 'JSONKit' => {}, 'JSONSpec' => {} }
-        index = @aggregate.update_search_index(old_index)
-        index.keys.sort.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
-        index['BananaLib']['version'].should == '1.0'
+      it 'generates the search index for changes in source' do
+        changed_paths = ['Specs/JSONKit/1.4/JSONKit.podspec']
+        index = @aggregate.generate_search_index_for_changes_in_source(@test_source, changed_paths)
+        index['JSONKit'].should == [:JSONKit]
+        index['BananaLib'].should.be.nil
       end
 
-      it 'updates a set in the index if a lower version was stored' do
-        old_index = { 'BananaLib' => { 'version' => '0.8' } }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['version'].should == '1.0'
-      end
+      it 'generates correct vocabulary form given set' do
+        set = Specification::Set.new('PodName', [])
+        spec = Specification.new
+        spec.stubs(:summary).returns("\n\n    Summary of\t\tpod name\n\n")
+        spec.stubs(:description).returns("\n\n    \t\t       \n\n")
+        spec.stubs(:authors).returns("\nauthor1\n" => nil, "\t\tauthor2" => '***woww---@mymail.com')
+        set.stubs(:specification).returns(spec)
 
-      it 'updates a set in the search index if no information was stored' do
-        old_index = { 'BananaLib' => {} }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['version'].should == '1.0'
-      end
-
-      it "doesn't updates a set in the index if there already information for an equal or higher version" do
-        old_index = { 'BananaLib' => { 'version' => '1.0', 'summary' => 'custom' } }
-        index = @aggregate.update_search_index(old_index)
-        index['BananaLib']['summary'].should == 'custom'
-      end
-
-      it 'loads only the specifications which need to be updated' do
-        Specification.expects(:from_file).at_least_once
-        index = @aggregate.generate_search_index
-        Specification.expects(:from_file).never
-        @aggregate.update_search_index(index)
-      end
-
-      it 'deletes from the index the data of the sets which are not present in the aggregate' do
-        old_index = { 'Deleted-Pod' => { 'version' => '1.0', 'summary' => 'custom' } }
-        index = @aggregate.update_search_index(old_index)
-        index['Deleted-Pod'].should.be.nil
+        vocabulary = %w(PodName Summary of pod name author1 author2 ***woww---@mymail.com)
+        @aggregate.send(:word_list_from_set, set).should == vocabulary
       end
     end
 

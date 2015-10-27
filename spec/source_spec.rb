@@ -40,6 +40,13 @@ module Pod
           @source.pods
         end.message.should.match /Unable to find a source named: `non_existing`/
       end
+
+      it 'returns corresponding pods for given specification paths' do
+        paths = %w(Specs/BananaLib/1.0/BananaLib.podspec)
+        @source.pods_for_specification_paths(paths).should == %w(BananaLib)
+        paths = %w(Specs/monkey/1.0.2/monkey.podspec Specs/JSONKit/1.4/JSONKit.podspec)
+        @source.pods_for_specification_paths(paths).should == %w(monkey JSONKit)
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -186,6 +193,25 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
+
+    describe '#update' do
+      it 'uses the only fast forward git option' do
+        @source.expects(:`).with { |cmd| cmd.should.include('--ff-only') }
+        @source.send :update_git_repo
+      end
+
+      it 'uses git diff with name only option' do
+        @source.expects(:`).with { |cmd| cmd.should.include('--name-only') }.returns('')
+        @source.send :diff_until_commit_hash, 'DUMMY_HASH'
+      end
+
+      it 'finds diff of commits before/after repo update' do
+        @source.expects(:`).with { |cmd| cmd.should.include('DUMMY_HASH..HEAD') }.returns('')
+        @source.send :diff_until_commit_hash, 'DUMMY_HASH'
+      end
+    end
+
+    # #-------------------------------------------------------------------------#
 
     describe 'Representations' do
       it 'returns the hash representation' do

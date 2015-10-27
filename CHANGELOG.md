@@ -2,6 +2,12 @@
 
 ## Master
 
+##### Enhancements
+
+* Improve `pod search` performance while using _`--full`_ flag  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+  [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
+
 ##### Bug Fixes
 
 * Allow non-exact version matches to be equal while maintaining a sort order.  
