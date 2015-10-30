@@ -8,6 +8,10 @@ module Pod
         Platform.osx.should == Platform.new(:osx)
         Platform.tvos.should == Platform.new(:tvos)
         Platform.watchos.should == Platform.new(:watchos)
+        Platform.all.should.include? Platform.new(:ios)
+        Platform.all.should.include? Platform.new(:osx)
+        Platform.all.should.include? Platform.new(:tvos)
+        Platform.all.should.include? Platform.new(:watchos)
       end
 
       it 'can be initialized from another platform' do

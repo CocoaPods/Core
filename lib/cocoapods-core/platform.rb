@@ -83,6 +83,14 @@ module Pod
       new :watchos
     end
 
+    # Convenience method to get all available platforms.
+    #
+    # @return [Array<Platform>] list of platforms.
+    #
+    def self.all
+      [ios, osx, watchos, tvos]
+    end
+
     # Checks if a platform is equivalent to another one or to a symbol
     # representation.
     #
