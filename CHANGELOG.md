@@ -4,11 +4,11 @@
 
 ##### Enhancements
 
-* Add ability to get all platforms  
+* Add ability to get all platforms.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#11](https://github.com/CocoaPods/cocoapods-search/issues/11)
   
-* Improve `pod search` performance while using _`--full`_ flag  
+* Improve `pod search` performance while using _`--full`_ flag.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
 
