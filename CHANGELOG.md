@@ -4,9 +4,12 @@
 
 ##### Enhancements
 
-* Improve `pod search` performance while using _`--full`_ flag  
+* Improve `pod search` performance while using _`--full`_ flag.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
+
+* The Lockfile now contains the Podfile's checksum.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
@@ -30,9 +33,6 @@ This version only introduces changes in the CocoaPods gem.
 
 * Podfiles now have a `checksum` property that reflects the internal state of
   the Podfile.  
-  [Samuel Giddins](https://github.com/segiddins)
-
-* The Lockfile now contains the Podfile's checksum.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
