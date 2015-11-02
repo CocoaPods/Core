@@ -348,7 +348,7 @@ module Pod
     #
     # @note   In previous versions of CocoaPods they used to be stored in
     #         the root of the repo. This lead to issues, especially with
-    #         the GitHub interface and now the are stored in a dedicated
+    #         the GitHub interface and now they are stored in a dedicated
     #         folder.
     #
     def specs_dir

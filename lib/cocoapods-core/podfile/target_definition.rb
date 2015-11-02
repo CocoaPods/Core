@@ -497,7 +497,7 @@ module Pod
       # @note   The storage of this information is optimized for YAML
       #         readability.
       #
-      # @todo   This needs urgently a rename.
+      # @todo   This urgently needs a rename.
       #
       # @return [void]
       #
@@ -657,8 +657,8 @@ module Pod
 
       # @return [Array<Dependency>] The dependencies inherited by the podspecs.
       #
-      # @note   The podspec directive is intended include the dependencies of a
-      #         spec in the project where it is developed. For this reason the
+      # @note   The podspec directive is intended to include the dependencies of
+      #         a spec in the project where it is developed. For this reason the
       #         spec, or any of it subspecs, cannot be included in the
       #         dependencies. Otherwise it would generate a chicken-and-egg
       #         problem.
@@ -753,7 +753,7 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :subspecs form the requirements list, and stores the pods
+      # Removes :subspecs from the requirements list, and stores the pods
       # with the given subspecs as dependencies.
       #
       # @param  [String] name

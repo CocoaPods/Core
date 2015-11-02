@@ -326,7 +326,7 @@ module Pod
 
     # @!group DSL helpers
 
-    # @return [Bool] whether the specification should use a directory as it
+    # @return [Bool] whether the specification should use a directory as its
     #         source.
     #
     def local?
