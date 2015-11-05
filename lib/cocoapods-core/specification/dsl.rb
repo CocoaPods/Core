@@ -106,13 +106,13 @@ module Pod
       #
       #   The version of CocoaPods that the sepcification supports.
       #
-      # @example
+      #   @example
       #
-      #   spec.cocoapods_version = '>= 0.36'
+      #     spec.cocoapods_version = '>= 0.36'
       #
-      # @param  [String] cocoapods_version
-      #         the CocoaPods version that the specification supports.
-      #         CocoaPods follows [semantic versioning](http://semver.org).
+      #   @param  [String] cocoapods_version
+      #           the CocoaPods version that the specification supports.
+      #           CocoaPods follows [semantic versioning](http://semver.org).
       #
       root_attribute :cocoapods_version
 
