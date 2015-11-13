@@ -18,6 +18,18 @@ module Pod
         dependency.requirement.to_s.should == '> 1.0-pre'
       end
 
+      it 'can be initialized with multiple requirements and a podspec source' do
+        dependency = Dependency.new('bananas', '> 1.0', '< 2.0', :source => 'https://github.com/CocoaPods/CocoaPods.git')
+        dependency.requirement.to_s.should == '< 2.0, > 1.0'
+        dependency.podspec_repo.should == 'https://github.com/CocoaPods/CocoaPods.git'
+      end
+
+      it 'can be initialized with a requirement on a pre-release version and a podspec source' do
+        dependency = Dependency.new('bananas', '> 1.0-pre', :source => 'https://github.com/CocoaPods/CocoaPods.git')
+        dependency.requirement.to_s.should == '> 1.0-pre'
+        dependency.podspec_repo.should == 'https://github.com/CocoaPods/CocoaPods.git'
+      end
+
       it 'can be initialized with an external source' do
         dep = Dependency.new('cocoapods', :git => 'git://github.com/cocoapods/cocoapods')
         dep.should.be.external

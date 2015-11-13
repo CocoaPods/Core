@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add support for specifying :source with a pod dependency.  
+  [Eric Firestone](https://github.com/efirestone)
+  [#278](https://github.com/CocoaPods/Core/pull/278)
+
 * Add ability to get all platforms.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#11](https://github.com/CocoaPods/cocoapods-search/issues/11)

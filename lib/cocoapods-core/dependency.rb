@@ -19,6 +19,11 @@ module Pod
     #
     attr_accessor :external_source
 
+    # @return [String] The source URL of the podspec repo to use to resolve
+    #         this dependency. If not set then the standard source list
+    #         should be used to resolve the dependency.
+    attr_accessor :podspec_repo
+
     # @return [Bool] whether the dependency should use the podspec with the
     #         highest know version but force the downloader to checkout the
     #         `head` of the source repository.
@@ -55,6 +60,22 @@ module Pod
     #             Dependency.new('libPusher', {:path    => 'path/to/folder'})
     #             Dependency.new('libPusher', {:podspec => 'example.com/libPusher.podspec'})
     #
+    # @overload   initialize(name, requirements, podspec_repo)
+    #
+    #   @param    [String] name
+    #             the name of the Pod.
+    #
+    #   @param    [Array, Version, String, Requirement] requirements
+    #             an array specifying the version requirements of the
+    #             dependency.
+    #
+    #   @param    [Hash] podspec_repo
+    #             The URL of the specific podspec repo to resolve this dependency from.
+    #
+    #   @example  Initialization with a specific podspec repo
+    #
+    #             Dependency.new('Artsy+UILabels', '~> 1.0', :source => 'https://github.com/Artsy/Specs.git')
+    #
     # @overload   initialize(name, is_head)
     #
     #   @param    [String] name
@@ -69,11 +90,22 @@ module Pod
     #
     def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
-        external_source = requirements.pop.select { |_, v| !v.nil? }
-        @external_source = external_source unless external_source.empty?
-        unless requirements.empty?
-          raise Informative, 'A dependency with an external source may not ' \
-            "specify version requirements (#{name})."
+        additional_params = requirements.pop.select { |_, v| !v.nil? }
+        additional_params = nil if additional_params.empty?
+
+        if additional_params && @podspec_repo = additional_params[:source]
+          # This dependency specifies the exact source podspec repo to use.
+          additional_params.delete(:source)
+          unless additional_params.empty?
+            raise Informative, 'A dependency with a specified podspec repo may ' \
+              "not include other source parameters (#{name})."
+          end
+        else
+          @external_source = additional_params
+          unless requirements.empty?
+            raise Informative, 'A dependency with an external source may not ' \
+              "specify version requirements (#{name})."
+          end
         end
 
       elsif requirements.last == :head
@@ -217,11 +249,11 @@ module Pod
     # @param  [Dependency] other
     #         the other dependency to merge with.
     #
-    # @note   If one of the decencies specifies an external source or is head,
+    # @note   If one of the dependencies specifies an external source or is head,
     #         the resulting dependency preserves this attributes.
     #
-    # @return [Dependency] a dependency (not necessary a new instance) that
-    #         includes also the version requirements of the given one.
+    # @return [Dependency] a dependency (not necessarily a new instance) that
+    #         also includes the version requirements of the given one.
     #
     def merge(other)
       unless name == other.name
@@ -344,7 +376,7 @@ module Pod
     #
     def inspect
       "<#{self.class} name=#{name} requirements=#{requirement} " \
-        "external_source=#{external_source || 'nil'}>"
+        "source=#{podspec_repo || 'nil'} external_source=#{external_source || 'nil'}>"
     end
 
     #--------------------------------------#
