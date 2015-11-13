@@ -41,6 +41,13 @@ module Pod
         set.sources.map(&:name).should == %w(test_repo master)
       end
 
+      it 'searches the sets by dependency with spec source' do
+        dep = Dependency.new('JSONKit', :source => 'test_repo')
+        set = @aggregate.search(dep)
+        set.name.should == 'JSONKit'
+        set.sources.map(&:name).should == %w(test_repo)
+      end
+
       it 'searches the sets specifying a dependency on a subspec' do
         dep = Dependency.new('RestKit/Network')
         set = @aggregate.search(dep)

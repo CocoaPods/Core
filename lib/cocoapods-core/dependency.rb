@@ -19,6 +19,11 @@ module Pod
     #
     attr_accessor :external_source
 
+    # @return [String] a string describing the source where the pod should
+    #         be fetched.
+    #
+    attr_accessor :source
+
     # @return [Bool] whether the dependency should use the podspec with the
     #         highest know version but force the downloader to checkout the
     #         `head` of the source repository.
@@ -40,6 +45,7 @@ module Pod
     #             Dependency.new('AFNetworking')
     #             Dependency.new('AFNetworking', '~> 1.0')
     #             Dependency.new('AFNetworking', '>= 0.5', '< 0.7')
+    #             Dependency.new('AFNetworking', '>= 0.5', '< 0.7', {:source => 'example_repo'})
     #
     # @overload   initialize(name, external_source)
     #
@@ -69,13 +75,16 @@ module Pod
     #
     def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
-        external_source = requirements.pop.select { |_, v| !v.nil? }
-        @external_source = external_source unless external_source.empty?
-        unless requirements.empty?
-          raise Informative, 'A dependency with an external source may not ' \
-            "specify version requirements (#{name})."
+        if requirements.last.keys.include?(:source)
+          @source = requirements.pop[:source]
+        else
+          external_source = requirements.pop.select { |_, v| !v.nil? }
+          @external_source = external_source unless external_source.empty?
+          unless requirements.empty?
+            raise Informative, 'A dependency with an external source may not ' \
+              "specify version requirements (#{name})."
+          end
         end
-
       elsif requirements.last == :head
         @head = true
         requirements.pop
