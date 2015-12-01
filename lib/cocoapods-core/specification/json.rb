@@ -22,6 +22,9 @@ module Pod
       #
       def to_hash
         hash = attributes_hash.dup
+        platforms = platform_hash
+        platforms = Hash[DSL::PLATFORMS.map { |p| [p.to_s, nil] }] if platforms.empty?
+        hash['platforms'] = platforms
         unless subspecs.empty?
           hash['subspecs'] = subspecs.map(&:to_hash)
         end
