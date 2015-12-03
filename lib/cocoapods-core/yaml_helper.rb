@@ -96,7 +96,7 @@ module Pod
         case value
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
-        else                 YAML.dump(value).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '').strip
+        else                 YAML.dump(value, :line_width => -1).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '')
         end.strip
       end
 
