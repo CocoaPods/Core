@@ -11,7 +11,7 @@
 * Add ability to get all platforms.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#11](https://github.com/CocoaPods/cocoapods-search/issues/11)
-  
+
 * Improve `pod search` performance while using _`--full`_ flag.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
@@ -28,6 +28,9 @@
 * Target definitions now inherit configuration whitelist settings.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3605](https://github.com/CocoaPods/CocoaPods/issues/3605)
+
+* Ensure that YAML serialization doesn't incorrectly break long strings.  
+  [Christopher Vollick](https://github.com/psycotica0)
 
 
 ## 0.39.0 (2015-10-09)
