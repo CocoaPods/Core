@@ -11,13 +11,18 @@
 * Add ability to get all platforms.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#11](https://github.com/CocoaPods/cocoapods-search/issues/11)
-  
+
 * Improve `pod search` performance while using _`--full`_ flag.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
 
 * The Lockfile now contains the Podfile's checksum.  
   [Samuel Giddins](https://github.com/segiddins)
+
+* The serialized version of podspecs now includes the default platforms a pod
+  supports for improved forwards compatibility.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#267](https://github.com/CocoaPods/Core/issues/267)
 
 ##### Bug Fixes
 

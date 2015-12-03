@@ -10,6 +10,12 @@ module Pod
         expected = {
           'name' => 'BananaLib',
           'version' => '1.0',
+          'platforms' => {
+            'osx' => nil,
+            'ios' => nil,
+            'tvos' => nil,
+            'watchos' => nil,
+          },
         }
         JSON.parse(spec.to_json).should == expected
       end
@@ -43,6 +49,12 @@ module Pod
         expected = {
           'name' => 'BananaLib',
           'version' => '1.0',
+          'platforms' => {
+            'osx' => nil,
+            'ios' => nil,
+            'tvos' => nil,
+            'watchos' => nil,
+          },
         }
         JSON.parse(spec.to_pretty_json).should == expected
       end
@@ -72,6 +84,12 @@ module Pod
         hash['subspecs'].should == [{
           'name' => 'GreenBanana',
           'source_files' => 'GreenBanana',
+          'platforms' => {
+            'osx' => nil,
+            'ios' => nil,
+            'tvos' => nil,
+            'watchos' => nil,
+          },
         }]
       end
 
