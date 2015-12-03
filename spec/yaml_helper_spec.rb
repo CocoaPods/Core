@@ -26,6 +26,12 @@ module Pod
         result.should == "Value\n"
       end
 
+      it 'converts a long string without adding line breaks' do
+        value = 'a b' * 2000
+        result = YAMLHelper.convert(value)
+        result.should == "#{value}\n"
+      end
+
       it 'coverts a string that looks like a float' do
         value = '1.2'
         result = YAMLHelper.convert(value)
