@@ -26,6 +26,9 @@ module Pod
         unless %w(none search_paths complete).include?(inheritance)
           raise Informative, "Unrecognized inheritance option `#{inheritance}` specified for target `#{name}`."
         end
+        if root?
+          raise Informative, 'Cannot set inheritance for the root target definition.'
+        end
         set_hash_value('inheritance', inheritance)
       end
 
@@ -396,7 +399,7 @@ module Pod
             end
           end
         end
-        !found && (exclusive? || parent.pod_whitelisted_for_configuration?(pod_name, configuration_name))
+        !found && (root? || (inheritance != 'none' && parent.pod_whitelisted_for_configuration?(pod_name, configuration_name)))
       end
 
       # Whitelists a pod for a specific configuration. If a pod is whitelisted
@@ -424,7 +427,7 @@ module Pod
       #         pods have been whitelisted.
       #
       def all_whitelisted_configurations
-        parent_configurations = exclusive? ? [] : parent.all_whitelisted_configurations
+        parent_configurations = (root? || inheritance == 'none') ? [] : parent.all_whitelisted_configurations
         (configuration_pod_whitelist.keys + parent_configurations).uniq
       end
 

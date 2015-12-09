@@ -232,31 +232,29 @@ module Pod
       #--------------------------------------#
 
       it 'whitelists pods by default' do
-        @root.store_pod('ObjectiveSugar')
-        @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @parent.store_pod('ObjectiveSugar')
+        @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
         @child.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
       end
 
       it 'does not enable pods for un-whitelisted configurations if it is whitelisted for another' do
-        @root.store_pod('ObjectiveSugar')
-        @root.whitelist_pod_for_configuration('ObjectiveSugar', 'Release')
-        @root.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @parent.store_pod('ObjectiveSugar')
+        @parent.whitelist_pod_for_configuration('ObjectiveSugar', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
         @child.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
       end
 
       it 'enables pods for configurations they are whitelisted for' do
-        @root.store_pod('ObjectiveSugar', :configuration => 'Release')
-        @root.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
-        @root.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @parent.store_pod('ObjectiveSugar', :configuration => 'Release')
+        @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
         @child.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
         @child.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
-        @root.store_pod('AFNetworking', :configurations => ['Debug'])
-        @root.should.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
-        @root.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
+        @parent.store_pod('AFNetworking', :configurations => ['Debug'])
+        @parent.should.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
+        @parent.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
         @child.should.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
         @child.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
-        @parent.store_pod('ObjectiveSugar')
-        @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
       end
 
       it 'coerces configuration names to strings' do
