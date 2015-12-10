@@ -84,12 +84,35 @@ module Pod
         hash['subspecs'].should == [{
           'name' => 'GreenBanana',
           'source_files' => 'GreenBanana',
+        }]
+      end
+
+      it 'handles subspecs with different platforms' do
+        subspec = @spec.subspec_by_name('BananaLib/GreenBanana')
+        subspec.platforms = {
+          'ios' => '9.0',
+          'tvos' => '9.0',
+        }
+        hash = @spec.to_hash
+        hash['subspecs'].should == [{
+          'name' => 'GreenBanana',
+          'source_files' => 'GreenBanana',
           'platforms' => {
-            'osx' => nil,
-            'ios' => nil,
-            'tvos' => nil,
-            'watchos' => nil,
+            'ios' => '9.0',
+            'tvos' => '9.0',
           },
+        }]
+      end
+
+      it 'handles subspecs when the parent spec specifies platforms and the ' \
+        'subspec inherits' do
+        @spec.platforms = {
+          'tvos' => '9.0',
+        }
+        hash = @spec.to_hash
+        hash['subspecs'].should == [{
+          'name' => 'GreenBanana',
+          'source_files' => 'GreenBanana',
         }]
       end
 
