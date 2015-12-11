@@ -134,6 +134,10 @@ module Pod
       get_hash_value('set_arc_compatibility_flag')
     end
 
+    def installation_method
+      get_hash_value('installation_method', 'name' => 'cocoapods', 'options' => {})
+    end
+
     #-------------------------------------------------------------------------#
 
     public
@@ -189,6 +193,7 @@ module Pod
       set_arc_compatibility_flag
       generate_bridge_support
       target_definitions
+      installation_method
     ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -368,11 +373,11 @@ module Pod
     #
     # @return [Object] The value for the key.
     #
-    def get_hash_value(key)
+    def get_hash_value(key, default = nil)
       unless HASH_KEYS.include?(key)
         raise StandardError, "Unsupported hash key `#{key}`"
       end
-      internal_hash[key]
+      internal_hash.fetch(key, default)
     end
 
     # @return [TargetDefinition] The current target definition to which the DSL
