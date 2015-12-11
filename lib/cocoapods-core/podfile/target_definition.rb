@@ -50,17 +50,11 @@ module Pod
       # @param  [TargetDefinition] parent
       #         @see parent
       #
-      # @option options [Bool] :exclusive
-      #         @see exclusive?
-      #
       def initialize(name, parent, internal_hash = nil)
         @internal_hash = internal_hash || {}
         @parent = parent
         @children = []
-
-        unless internal_hash
-          self.name = name
-        end
+        self.name ||= name
         if parent.is_a?(TargetDefinition)
           parent.children << self
         end
