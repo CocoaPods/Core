@@ -36,14 +36,6 @@ module Pod
         get_hash_value('inheritance', 'complete')
       end
 
-      def installation_method=(installation_method)
-        set_hash_value('installation_method', installation_method)
-      end
-
-      def installation_method
-        get_hash_value('installation_method', :name => 'cocoapods', :options => {})
-      end
-
       # @param  [String, Symbol]
       #         name @see name
       #

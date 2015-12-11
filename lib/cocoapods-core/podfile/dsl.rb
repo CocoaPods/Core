@@ -319,7 +319,7 @@ module Pod
           raise Informative, 'The installation method can only be set at the root level of the Podfile.'
         end
 
-        current_target_definition.installation_method = { :name => installation_method, :options => options }
+        set_hash_value('installation_method', 'name' => installation_method, 'options' => options)
       end
 
       #-----------------------------------------------------------------------#
