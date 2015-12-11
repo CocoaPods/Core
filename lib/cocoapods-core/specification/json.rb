@@ -31,15 +31,6 @@ module Pod
         end
         hash
       end
-
-      # @return [Bool] Whether the specification can be converted to a hash
-      #         without loss of information.
-      #
-      # TODO: remove
-      #
-      def safe_to_hash?
-        true
-      end
     end
 
     # Configures a new specification from the given JSON representation.
