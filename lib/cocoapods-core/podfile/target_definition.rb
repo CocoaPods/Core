@@ -206,54 +206,6 @@ module Pod
 
       #--------------------------------------#
 
-      # FIXME: delete
-
-      # @return [Array<String>] The list of the names of the Xcode targets with
-      #         which this target definition should be linked with.
-      #
-      def link_with
-      end
-
-      # Sets the client targets that should be integrated by this definition.
-      #
-      # @param  [Array<String>] targets
-      #         The list of the targets names.
-      #
-      # @return [void]
-      #
-      def link_with=(_targets)
-      end
-
-      #--------------------------------------#
-
-      # FIXME: delete
-
-      # Returns whether the target definition should link with the first target
-      # of the project.
-      #
-      # @note   This option is ignored if {link_with} is set.
-      #
-      # @return [Bool] whether is exclusive.
-      #
-      def link_with_first_target?
-        false
-      end
-
-      # Sets whether the target definition should link with the first target of
-      # the project.
-      #
-      # @note   This option is ignored if {link_with} is set.
-      #
-      # @param  [Bool] flag
-      #         Whether the definition should link with the first target.
-      #
-      # @return [void]
-      #
-      def link_with_first_target=(_flag)
-      end
-
-      #--------------------------------------#
-
       # @return [String] the path of the project this target definition should
       #         link with.
       #

@@ -302,7 +302,7 @@ module Pod
       def abstract_target(name)
         target(name) do
           abstract!
-          yield
+          yield if block_given?
         end
       end
 
@@ -413,30 +413,14 @@ module Pod
         current_target_definition.build_configurations = build_configurations
       end
 
-      # Specifies the target(s) in the user’s project that this Pods library
-      # should be linked in.
+      # @visibility Private
       #
-      # -----
+      # TODO: This method can be deleted once people have migrated to this 1.0
+      # DSL.
       #
-      # If no explicit target is specified, then the Pods target will be linked
-      # with the first target in your project. So if you only have one target
-      # you do not need to specify the target to link with.
-      #
-      # @param    [String, Array<String>] targets
-      #           the target or the targets to link with.
-      #
-      # @example  Link with a user project target
-      #
-      #           link_with 'MyApp'
-      #
-      # @example  Link with multiple user project targets
-      #
-      #           link_with 'MyApp', 'MyOtherApp'
-      #
-      # @return   [void]
-      #
-      def link_with(*targets)
-        current_target_definition.link_with = targets.flatten
+      def link_with(*)
+        raise Informative, 'The specification of `link_with` in the Podfile ' \
+          'is now unsupported, please use target blocks instead.'
       end
 
       # Inhibits **all** the warnings from the CocoaPods libraries.

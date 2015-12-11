@@ -471,11 +471,6 @@ module Pod
         target.dependencies.should == [Dependency.new('Reachability'), Dependency.new('JSONKit')]
       end
 
-      it 'leaves the name of the target, to link with, to be automatically resolved' do
-        target = @podfile.target_definitions['Pods']
-        target.link_with.should.nil?
-      end
-
       it 'returns the platform of the target' do
         @podfile.target_definitions['Pods'].platform.should == :ios
         @podfile.target_definitions[:test].platform.should == :ios
