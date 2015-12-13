@@ -483,7 +483,7 @@ module Pod
 
       # @!group Platform
       #
-      #   A specification should indicate the platforms and the correspondent
+      #   A specification should indicate the platform and the correspondent
       #   deployment targets on which the library is supported.
       #
       #   If not defined in a subspec the attributes of this group inherit the
@@ -504,7 +504,8 @@ module Pod
                 :inherited => true
 
       # The platform on which this Pod is supported. Leaving this blank
-      # means the Pod is supported on all platforms.
+      # means the Pod is supported on all platforms. When supporting multiple
+      # platforms you should use deployment_target below instead.
       #
       # @example
       #
