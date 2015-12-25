@@ -156,7 +156,6 @@ module Pod
             'children' => [
               {
                 'name' => 'App',
-                'inheritance' => 'complete',
               },
             ],
           ],
@@ -182,6 +181,9 @@ module Pod
           pod 'ASIHTTPRequest'
           target 'sub-target' do
             pod 'JSONKit'
+            target 'test_target' do
+              inherit!(:search_paths)
+            end
           end
         end
         podfile.to_hash.should == {
@@ -194,7 +196,12 @@ module Pod
                 {
                   'name' => 'sub-target',
                   'dependencies' => ['JSONKit'],
-                  'inheritance' => 'complete',
+                  'children' => [
+                    {
+                      'name' => 'test_target',
+                      'inheritance' => 'search_paths',
+                    },
+                  ],
                 },
               ],
             },

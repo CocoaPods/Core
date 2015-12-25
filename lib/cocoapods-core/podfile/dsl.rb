@@ -293,7 +293,6 @@ module Pod
         parent = current_target_definition
         definition = TargetDefinition.new(name, parent)
         self.current_target_definition = definition
-        inherit!(:complete)
         yield if block_given?
       ensure
         self.current_target_definition = parent
