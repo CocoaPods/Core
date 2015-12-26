@@ -70,6 +70,19 @@ module Pod
         @child.dependencies.map(&:name).should == %w(OCMockito)
       end
 
+      it 'returns the targets to inherit search paths from' do
+        @child.inheritance = :search_paths
+        @child.targets_to_inherit_search_paths.should == [@parent]
+
+        grandchild = Podfile::TargetDefinition.new('Grandchild', @child)
+        grandchild.inheritance = :search_paths
+        grandchild.targets_to_inherit_search_paths.should == [@parent, @child]
+        @child.inheritance = :complete
+        grandchild.targets_to_inherit_search_paths.should == [@child]
+        @child.inheritance = :none
+        grandchild.targets_to_inherit_search_paths.should == [@child]
+      end
+
       it 'returns the non inherited dependencies' do
         @parent.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
@@ -106,6 +119,42 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Attributes accessors' do
+      it 'is not abstract by default' do
+        @child.should.not.be.abstract
+      end
+
+      it 'allows to set whether it is abstract' do
+        @child.abstract = true
+        @child.should.be.abstract
+      end
+
+      #--------------------------------------#
+
+      it 'has complete inheritance by default' do
+        Podfile::TargetDefinition.new('App', nil).inheritance.should == 'complete'
+      end
+
+      it 'allows setting the inheritance' do
+        @child.inheritance = :complete
+        @child.inheritance.should == 'complete'
+        @child.inheritance = :none
+        @child.inheritance.should == 'none'
+        @child.inheritance = :search_paths
+        @child.inheritance.should == 'search_paths'
+      end
+
+      it 'raises when setting an unknown inheritance mode' do
+        exception = should.raise(Informative) { @child.inheritance = :unknown }
+        exception.message.should == 'Unrecognized inheritance option `unknown` specified for target `MyAppTests`.'
+      end
+
+      it 'raises when setting an inheritance mode on a root target definition' do
+        exception = should.raise(Informative) { @root.inheritance = :none }
+        exception.message.should == 'Cannot set inheritance for the root target definition.'
+      end
+
+      #--------------------------------------#
+
       it 'is exclusive by default by the default if the platform of the parent match' do
         @child.should.be.exclusive
       end

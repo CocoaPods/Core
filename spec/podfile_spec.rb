@@ -109,6 +109,16 @@ module Pod
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
 
+      it 'returns the installation method' do
+        name, options = Podfile.new {}.installation_method
+        name.should == 'cocoapods'
+        options.should == {}
+
+        name, options = Podfile.new { install! 'install-method', :option1 => 'value1', 'option2' => false }.installation_method
+        name.should == 'install-method'
+        options.should == { :option1 => 'value1', 'option2' => false }
+      end
+
       describe 'source' do
         it 'can have multiple sources' do
           Podfile.new do
@@ -167,12 +177,20 @@ module Pod
           workspace('MyApp.xcworkspace')
           generate_bridge_support!
           set_arc_compatibility_flag!
+          install! 'install-method', :option1 => 'value1', 'option2' => false
         end
         podfile.to_hash.should == {
           'target_definitions' => [{ 'name' => 'Pods', 'abstract' => true }],
           'workspace' => 'MyApp.xcworkspace',
           'generate_bridge_support' => true,
           'set_arc_compatibility_flag' => true,
+          'installation_method' => {
+            'name' => 'install-method',
+            'options' => {
+              :option1 => 'value1',
+              'option2' => false,
+            },
+          },
         }
       end
 
@@ -215,9 +233,15 @@ module Pod
           pod 'JSONKit', '> 1.0', :inhibit_warnings => true
           generate_bridge_support!
           set_arc_compatibility_flag!
+          install! 'install-method', :option1 => 'value1', 'option2' => false
         end
         expected = <<-EOF.strip_heredoc
           ---
+          installation_method:
+            name: install-method
+            options:
+              :option1: value1
+              option2: false
           target_definitions:
           - name: Pods
             abstract: true
@@ -397,6 +421,15 @@ module Pod
         podfile = Podfile.new
         podfile.send(:set_hash_value, 'generate_bridge_support', true)
         podfile.send(:get_hash_value, 'generate_bridge_support').should.be.true
+      end
+
+      it 'allows specifying a default value when fetching from the hash' do
+        podfile = Podfile.new
+
+        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should == 'default'
+
+        podfile.send(:set_hash_value, 'generate_bridge_support', true)
+        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should.be.true
       end
 
       it 'raises if there is an attempt to access or set an unknown key in the internal hash' do
