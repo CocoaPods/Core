@@ -248,24 +248,13 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a new static library target and scopes dependencies defined
+      # Defines a aggregate CocoaPods target and scopes dependencies defined
       # from the given block. The target will by default include the
-      # dependencies defined outside of the block, unless the `:exclusive =>
-      # true` option is
-      # given.
-      #
-      # ---
-      #
-      # The Podfile creates a global target named `:default` which produces the
-      # `libPods.a` file. This target is linked with the first target of user
-      # project if not value is specified for the `link_with` attribute.
+      # dependencies defined outside of the block, unless instructed not to
+      # `inherit!` them.
       #
       # @param    [Symbol, String] name
-      #           the name of the target definition.
-      #
-      # @option   options [Bool] :exclusive
-      #           whether the target should inherit the dependencies of its
-      #           parent. by default targets are inclusive.
+      #           the name of the target.
       #
       # @example  Defining a target
       #
@@ -273,11 +262,11 @@ module Pod
       #             pod 'SSZipArchive'
       #           end
       #
-      # @example  Defining an exclusive target
+      # @example  Defining a test target
       #
       #           target :ZipApp do
       #             pod 'SSZipArchive'
-      #             target :test do
+      #             target :ZipAppTests do
       #               pod 'JSONKit'
       #             end
       #           end
@@ -287,7 +276,7 @@ module Pod
       def target(name, options = nil)
         if options
           raise Informative, "Unsupported options `#{options}` for " \
-            "target `#{name}`"
+            "target `#{name}`."
         end
 
         parent = current_target_definition
@@ -298,6 +287,22 @@ module Pod
         self.current_target_definition = parent
       end
 
+      # Defines a new abstract target that can be used for convenient
+      # target inheritance.
+      #
+      # @param    [Symbol, String] name
+      #           the name of the target.
+      #
+      # @example  Defining an abstract target
+      #
+      #           abstract_target 'Networking' do
+      #             pod 'SSZipArchive'
+      #             target 'Networking App 1'
+      #             target 'Networking App 2'
+      #           end
+      #
+      # @return   [void]
+      #
       def abstract_target(name)
         target(name) do
           abstract!
@@ -305,14 +310,50 @@ module Pod
         end
       end
 
+      # Denotes that the current target is abstract, and thus will not directly
+      # link against an Xcode target.
+      #
+      # @return [void]
+      #
       def abstract!(abstract = true)
         current_target_definition.abstract = abstract
       end
 
+      # Sets the inheritance mode for the current target.
+      #
+      # @param   [:complete, :none, :search_paths] the inheritance mode to set.
+      #
+      # @example Inheriting only search paths
+      #
+      #          target 'App' do
+      #            target 'AppTests' do
+      #              inherit! :search_paths
+      #            end
+      #          end
+      #
+      # @return  [void]
+      #
       def inherit!(inheritance)
         current_target_definition.inheritance = inheritance
       end
 
+      # Specifies the installation method to be used when CocoaPods installs
+      # this Podfile.
+      #
+      # @param   [String] installation_method
+      #          the name of the installation strategy.
+      #
+      # @param   [Hash] options
+      #          the installation options.
+      #
+      # @example Specifying custom CocoaPods installation options
+      #
+      #          install! 'cocoapods',
+      #                   :deterministic_uuids => false,
+      #                   :integrate_targets => false
+      #
+      # @return  [void]
+      #
       def install!(installation_method, options = {})
         unless current_target_definition.root?
           raise Informative, 'The installation method can only be set at the root level of the Podfile.'
@@ -412,7 +453,11 @@ module Pod
         current_target_definition.build_configurations = build_configurations
       end
 
-      # @visibility Private
+      # @!visibility private
+      #
+      # @deprecated linking a single target with multiple Xcode targets is no
+      #             longer supported. Use an {#abstract_target} and target
+      #             inheritance instead.
       #
       # TODO: This method can be deleted once people have migrated to this 1.0
       # DSL.
