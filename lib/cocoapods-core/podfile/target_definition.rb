@@ -13,29 +13,6 @@ module Pod
       #
       attr_reader :parent
 
-      def abstract=(abstract)
-        set_hash_value('abstract', abstract)
-      end
-
-      def abstract?
-        get_hash_value('abstract', false)
-      end
-
-      def inheritance=(inheritance)
-        inheritance = inheritance.to_s
-        unless %w(none search_paths complete).include?(inheritance)
-          raise Informative, "Unrecognized inheritance option `#{inheritance}` specified for target `#{name}`."
-        end
-        if root?
-          raise Informative, 'Cannot set inheritance for the root target definition.'
-        end
-        set_hash_value('inheritance', inheritance)
-      end
-
-      def inheritance
-        get_hash_value('inheritance', 'complete')
-      end
-
       # @param  [String, Symbol]
       #         name @see name
       #
@@ -97,6 +74,9 @@ module Pod
         end
       end
 
+      # @return [Array<TargetDefinition>] the targets from which this target
+      #         definition should inherit only search paths.
+      #
       def targets_to_inherit_search_paths
         return [] unless inheritance == 'search_paths'
         if root? || !matches_platform?(parent)
@@ -168,6 +148,54 @@ module Pod
 
       #--------------------------------------#
 
+      # @return [Boolean] whether this target definition is abstract.
+      #
+      def abstract?
+        get_hash_value('abstract', false)
+      end
+
+      # Sets whether this target definition is abstract.
+      #
+      # @param  [Boolean] abstract
+      #         whether this target definition is abstract.
+      #
+      # @return [void]
+      #
+      def abstract=(abstract)
+        set_hash_value('abstract', abstract)
+      end
+
+      #--------------------------------------#
+
+      # @return [String] the inheritance mode for this target definition.
+      #
+      def inheritance
+        get_hash_value('inheritance', 'complete')
+      end
+
+      # Sets the inheritance mode for this target definition.
+      #
+      # @param  [#to_s] inheritance
+      #         the inheritance mode for this target definition.
+      #
+      # @raise  [Informative] if this target definition is a root target
+      #         definition or if the `inheritance` value is unknown.
+      #
+      # @return [void]
+      #
+      def inheritance=(inheritance)
+        inheritance = inheritance.to_s
+        unless %w(none search_paths complete).include?(inheritance)
+          raise Informative, "Unrecognized inheritance option `#{inheritance}` specified for target `#{name}`."
+        end
+        if root?
+          raise Informative, 'Cannot set inheritance for the root target definition.'
+        end
+        set_hash_value('inheritance', inheritance)
+      end
+
+      #--------------------------------------#
+
       # Returns whether the target definition should inherit the dependencies
       # of the parent.
       #
@@ -186,6 +214,13 @@ module Pod
         end
       end
 
+      # @param  [TargetDefinition, Nil] target_definition
+      #         the target definition to check for platform compatibility.
+      #
+      # @return [Boolean]
+      #         whether this target definition matches the platform of
+      #         `target_definition`.
+      #
       def matches_platform?(target_definition)
         platform && target_definition && target_definition.platform == platform
       end
@@ -560,7 +595,7 @@ module Pod
       # @param  [Object] value
       #         The value to store.
       #
-      # @raise  If the key is not recognized.
+      # @raise  [StandardError] If the key is not recognized.
       #
       # @return [void]
       #
@@ -580,7 +615,7 @@ module Pod
       # @param  [Object] base_value
       #         The value to set if they key is nil. Useful for collections.
       #
-      # @raise  If the key is not recognized.
+      # @raise  [StandardError] If the key is not recognized.
       #
       # @return [Object] The value for the key.
       #

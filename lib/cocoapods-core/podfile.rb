@@ -74,6 +74,8 @@ module Pod
       Hash[target_definition_list.map { |td| [td.name, td] }]
     end
 
+    # @return [Array<TargetDefinition>] all target definitions in the podfile.
+    #
     def target_definition_list
       root_target_definitions.map { |td| [td, td.recursive_children] }.flatten
     end
@@ -134,6 +136,9 @@ module Pod
       get_hash_value('set_arc_compatibility_flag')
     end
 
+    # @return [(String,Hash)] the installation strategy and installation options
+    #         to be used during installation.
+    #
     def installation_method
       get_hash_value('installation_method', 'name' => 'cocoapods', 'options' => {}).
         values_at('name', 'options')
@@ -188,13 +193,13 @@ module Pod
     # @return [Array] The keys used by the hash representation of the Podfile.
     #
     HASH_KEYS = %w(
+      installation_method
       workspace
       sources
       plugins
       set_arc_compatibility_flag
       generate_bridge_support
       target_definitions
-      installation_method
     ).freeze
 
     # @return [Hash] The hash representation of the Podfile.
@@ -354,7 +359,7 @@ module Pod
     # @param  [Object] value
     #         The value to store.
     #
-    # @raise  If the key is not recognized.
+    # @raise  [StandardError] If the key is not recognized.
     #
     # @return [void]
     #
@@ -370,7 +375,11 @@ module Pod
     # @param  [String] key
     #         The key for which the value is needed.
     #
-    # @raise  If the key is not recognized.
+    # @param  default
+    #         The default value to return if the internal hash has no entry for
+    #         the given `key`.
+    #
+    # @raise  [StandardError] If the key is not recognized.
     #
     # @return [Object] The value for the key.
     #
