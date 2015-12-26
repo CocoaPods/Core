@@ -135,7 +135,8 @@ module Pod
     end
 
     def installation_method
-      get_hash_value('installation_method', 'name' => 'cocoapods', 'options' => {})
+      get_hash_value('installation_method', 'name' => 'cocoapods', 'options' => {}).
+        values_at('name', 'options')
     end
 
     #-------------------------------------------------------------------------#
