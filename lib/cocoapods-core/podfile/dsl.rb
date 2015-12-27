@@ -5,9 +5,7 @@ module Pod
     # CocoaPods/cocoapods.github.com.
 
     # The Podfile is a specification that describes the dependencies of the
-    # targets of one or more Xcode projects. The Podfile always creates an
-    # implicit target, named `default`, which links to the first target of the
-    # user project.
+    # targets of one or more Xcode projects.
     #
     # A Podfile can be very simple:
     #
@@ -15,16 +13,15 @@ module Pod
     #
     # An example of a more complex Podfile can be:
     #
-    #     source 'https://github.com/CocoaPods/Specs.git'
-    #
-    #     platform :ios, '6.0'
+    #     platform :ios, '9.0'
     #     inhibit_all_warnings!
     #
     #     xcodeproj 'MyProject'
+    #     target "MyApp" do
+    #       pod 'ObjectiveSugar', '~> 0.5'
+    #     end
     #
-    #     pod 'ObjectiveSugar', '~> 0.5'
-    #
-    #     target :test do
+    #     target "MyAppTests" do
     #       pod 'OCMock', '~> 2.0.1'
     #     end
     #
@@ -40,7 +37,7 @@ module Pod
       #
       #   * `pod` is the way to declare a specific dependency.
       #   * `podspec` provides an easy API for the creation of podspecs.
-      #   * `target` allows you to scope your dependencies to specific
+      #   * `target` is how you scope your dependencies to specific
       #   targets in your Xcode projects.
 
       #-----------------------------------------------------------------------#
@@ -203,9 +200,9 @@ module Pod
         current_target_definition.store_pod(name, *requirements)
       end
 
-      # Use the dependencies of a Pod defined in the given podspec file. If no
-      # arguments are passed the first podspec in the root of the Podfile is
-      # used. It is intended to be used by the project of a library. Note:
+      # Use just the dependencies of a Pod defined in the given podspec file.
+      # If no arguments are passed the first podspec in the root of the Podfile
+      # is used. It is intended to be used by the project of a library. Note:
       # this does not include the sources derived from the podspec just the
       # CocoaPods infrastructure.
       #
@@ -241,25 +238,27 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a aggregate CocoaPods target and scopes dependencies defined
-      # from the given block. The target will by default include the
-      # dependencies defined outside of the block, unless instructed not to
-      # `inherit!` them.
+      # Defines a CocoaPods target and scopes dependencies defined
+      # within the given block. A target should correspond to an Xcode target.
+      # By default the target includes the dependencies defined outside of
+      # the block, unless instructed not to `inherit!` them.
       #
       # @param    [Symbol, String] name
       #           the name of the target.
       #
       # @example  Defining a target
       #
-      #           target :ZipApp do
+      #           target "ZipApp" do
       #             pod 'SSZipArchive'
       #           end
       #
-      # @example  Defining a test target
+      # @example  Defining a test target which can access SSZipArchive via it's
+      #           parent target
       #
-      #           target :ZipApp do
+      #           target "ZipApp" do
       #             pod 'SSZipArchive'
-      #             target :ZipAppTests do
+      #
+      #             target "ZipAppTests" do
       #               pod 'JSONKit'
       #             end
       #           end
@@ -281,7 +280,7 @@ module Pod
       end
 
       # Defines a new abstract target that can be used for convenient
-      # target inheritance.
+      # target dependency inheritance.
       #
       # @param    [Symbol, String] name
       #           the name of the target.
@@ -289,7 +288,8 @@ module Pod
       # @example  Defining an abstract target
       #
       #           abstract_target 'Networking' do
-      #             pod 'SSZipArchive'
+      #             pod 'AlamoFire'
+      #
       #             target 'Networking App 1'
       #             target 'Networking App 2'
       #           end
@@ -426,10 +426,7 @@ module Pod
       # @example  Specifying the user project
       #
       #           # Look for target to link with in an Xcode project called
-      #           # `MyProject.xcodeproj`.
-      #           xcodeproj 'MyProject'
-      #
-      #           target :test do
+      #           target "MyProjectTests" do
       #             # This Pods library links with a target in another project.
       #             xcodeproj 'TestProject'
       #           end
