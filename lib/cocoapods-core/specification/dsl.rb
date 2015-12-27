@@ -104,7 +104,7 @@ module Pod
 
       # @!method cocoapods_version=(cocoapods_version)
       #
-      #   The version of CocoaPods that the sepcification supports.
+      #   The version of CocoaPods that the specification supports.
       #
       #   @example
       #
@@ -1157,7 +1157,7 @@ module Pod
       #   We strongly **recommend** library developers to adopt [resource
       #   bundles](http://guides.cocoapods.org/syntax/podspec.html#resource_bundles)
       #   as there can be name collisions using the resources attribute.
-      #   Moreover resources specified with this attribute are copied
+      #   Moreover, resources specified with this attribute are copied
       #   directly to the client target and therefore they are not
       #   optimised by Xcode.
       #
