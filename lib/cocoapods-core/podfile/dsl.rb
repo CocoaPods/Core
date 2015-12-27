@@ -16,14 +16,15 @@ module Pod
     #     platform :ios, '9.0'
     #     inhibit_all_warnings!
     #
-    #     xcodeproj 'MyProject'
     #     target "MyApp" do
     #       pod 'ObjectiveSugar', '~> 0.5'
+    #
+    #       target "MyAppTests" do
+    #         inherit! :search_paths
+    #         pod 'OCMock', '~> 2.0.1'
+    #       end
     #     end
     #
-    #     target "MyAppTests" do
-    #       pod 'OCMock', '~> 2.0.1'
-    #     end
     #
     #     post_install do |installer|
     #       installer.pods_project.targets.each do |target|
@@ -225,7 +226,7 @@ module Pod
       # @option   options [String] :name
       #           the name of the podspec
       #
-      # @note     This method uses the dependencies declared by the for the
+      # @note     This method uses the dependencies declared for the
       #           platform of the target definition.
       #
       #
@@ -252,14 +253,37 @@ module Pod
       #             pod 'SSZipArchive'
       #           end
       #
-      # @example  Defining a test target which can access SSZipArchive via it's
-      #           parent target
+      # @example  Defining a test target which can access SSZipArchive via Pods
+      #           for it's parent target.
       #
       #           target "ZipApp" do
       #             pod 'SSZipArchive'
       #
       #             target "ZipAppTests" do
-      #               pod 'JSONKit'
+      #               inherit! :search_paths
+      #               pod 'Nimble'
+      #             end
+      #           end
+      #
+      # @example  Defining a target applies Pods to multiple targets via its
+      #           parent target
+      #
+      #           target "ShowsApp" do
+      #             pod 'ShowsKit'
+      #
+      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             target "ShowsTV" do
+      #               pod "ShowTVAuth"
+      #             end
+      #
+      #             # Has it's own copy of Specta + Expecta
+      #             # and has access to ShowsKit via the app
+      #             # that the test target is bundled into
+      #
+      #             target "ShowsTests" do
+      #               inherit! :search_paths
+      #               pod 'Specta'
+      #               pod 'Expecta'
       #             end
       #           end
       #
@@ -294,6 +318,33 @@ module Pod
       #             target 'Networking App 2'
       #           end
       #
+      # @example  Defining an abstract_target wrapping Pods to multiple targets
+      #
+      #           # There are no targets called "Shows" in any Xcode projects
+      #           abstract_target "Shows" do
+      #             pod 'ShowsKit'
+      #
+      #             # Has it's own copy of ShowsKit + ShowWebAuth
+      #             target "ShowsiOS" do
+      #               pod "ShowWebAuth"
+      #             end
+
+      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             target "ShowsTV" do
+      #               pod "ShowTVAuth"
+      #             end
+      #
+      #             # Has it's own copy of Specta + Expecta
+      #             # and has access to ShowsKit via the app
+      #             # that the test target is bundled into
+      #
+      #             target "ShowsTests" do
+      #               inherit! :search_paths
+      #               pod 'Specta'
+      #               pod 'Expecta'
+      #             end
+      #           end
+
       # @return   [void]
       #
       def abstract_target(name)
@@ -401,10 +452,9 @@ module Pod
       #
       # -----
       #
-      # If no explicit project is specified, it will use the Xcode project of
-      # the parent target. If none of the target definitions specify an
-      # explicit project and there is only **one** project in the same
-      # directory as the Podfile then that project will be used.
+      # If none of the target definitions specify an explicit project
+      # and there is only **one** project in the same directory as the Podfile
+      # then that project will be used.
       #
       # It is possible also to specify whether the build settings of your
       # custom build configurations should be modelled after the release or
@@ -425,16 +475,21 @@ module Pod
       #
       # @example  Specifying the user project
       #
-      #           # Look for target to link with in an Xcode project called
-      #           target "MyProjectTests" do
-      #             # This Pods library links with a target in another project.
-      #             xcodeproj 'TestProject'
+      #           # This Target can be found in a Xcode project called `FastGPS`
+      #           target "MyGPSApp" do
+      #             xcodeproj 'FastGPS'
+      #             ...
+      #           end
+      #
+      #           # Same Podfile, multiple Xcodeprojects
+      #           target "MyNotesApp" do
+      #             xcodeproj 'FastNotes'
+      #             ...
       #           end
       #
       # @example  Using custom build configurations
       #
       #           xcodeproj 'TestProject', 'Mac App Store' => :release, 'Test' => :debug
-      #
       #
       # @return   [void]
       #
@@ -630,7 +685,7 @@ module Pod
       # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Defining a pre install hook in a Podfile.
+      # @example  Defining a pre-install hook in a Podfile.
       #
       #   pre_install do |installer|
       #     # Do something fancy!
