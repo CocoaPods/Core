@@ -222,7 +222,7 @@ module Pod
       #         `target_definition`.
       #
       def matches_platform?(target_definition)
-        platform && target_definition && target_definition.platform == platform
+        target_definition && target_definition.platform == platform
       end
 
       #--------------------------------------#
