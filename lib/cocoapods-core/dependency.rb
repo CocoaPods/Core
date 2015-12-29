@@ -77,7 +77,7 @@ module Pod
     #   @param    [Symbol] is_head
     #             a symbol that can be `:head` or nil.
     #
-    #   @todo     Remove once everyone has migrated past CocoaPods 1.0.
+    #   @todo     Remove `:head` code once everyone has migrated past CocoaPods 1.0.
     #
     #   @example  Initialization with the head option
     #
@@ -105,7 +105,8 @@ module Pod
 
       elsif requirements.last == :head
         raise Informative, '`:head` dependencies have been removed. Please use ' \
-          "normal external source dependencies instead of `:head` for `#{name}`."
+          "normal external source dependencies (`:git => 'GIT_REPO_URL'`) " \
+          "instead of `:head` for `#{name}`."
       end
 
       if requirements.length == 1 && requirements.first.is_a?(Requirement)
