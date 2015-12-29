@@ -395,19 +395,6 @@ module Pod
     #
     attr_accessor :current_target_definition
 
-    public
-
-    # @!group Deprecations
-    #-------------------------------------------------------------------------#
-
-    # @deprecated Deprecated in favour of the more succinct {#pod}. Remove for
-    #             CocoaPods 1.0.
-    #
-    def dependency(name = nil, *requirements, &block)
-      CoreUI.warn "[DEPRECATED] `dependency' is deprecated (use `pod')"
-      pod(name, *requirements, &block)
-    end
-
     #-------------------------------------------------------------------------#
   end
 end

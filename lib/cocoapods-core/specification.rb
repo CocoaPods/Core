@@ -325,7 +325,6 @@ module Pod
     #
     def local?
       return true if source[:path]
-      return true if source[:local]
       false
     end
 

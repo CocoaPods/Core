@@ -441,17 +441,6 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe 'Deprecations' do
-      it 'Warns about the deprecated dependency DSL directive' do
-        podfile = Podfile.new
-        podfile.expects(:pod).with('My-Pod')
-        podfile.dependency 'My-Pod'
-        CoreUI.warnings.should.match /DEPRECATED/
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
     describe 'Nested target definitions' do
       before do
         @podfile = Podfile.new do

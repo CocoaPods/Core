@@ -191,16 +191,9 @@ module Pod
       # @note       This method allow a nil name and the raises to be more
       #             informative.
       #
-      # @note       Support for inline podspecs has been deprecated.
-      #
       # @return     [void]
       #
-      def pod(name = nil, *requirements, &block)
-        if block
-          raise StandardError, 'Inline specifications are deprecated. ' \
-            'Please store the specification in a `podspec` file.'
-        end
-
+      def pod(name = nil, *requirements)
         unless name
           raise StandardError, 'A dependency requires a name.'
         end
@@ -488,7 +481,7 @@ module Pod
       #             ...
       #           end
       #
-      #           # Same Podfile, multiple Xcodeprojects
+      #           # Same Podfile, multiple Xcode projects
       #           target "MyNotesApp" do
       #             xcodeproj 'FastNotes'
       #             ...

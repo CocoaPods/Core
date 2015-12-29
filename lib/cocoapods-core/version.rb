@@ -46,15 +46,12 @@ module Pod
     # @param  [String,Version] version
     #         A string representing a version, or another version.
     #
-    # @todo   The `from` part of the regular expression should be remove in
-    #         CocoaPods 1.0.0.
-    #
     def initialize(version)
       if version.is_a?(Version) && version.head?
         version = version.version
         @head = true
-      elsif version.is_a?(String) && version =~ /HEAD (based on|from) (.*)/
-        version = Regexp.last_match[2]
+      elsif version.is_a?(String) && version =~ /HEAD based on (.*)/
+        version = Regexp.last_match[1]
         @head = true
       end
 
