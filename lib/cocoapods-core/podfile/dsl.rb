@@ -328,7 +328,7 @@ module Pod
       #             target "ShowsiOS" do
       #               pod "ShowWebAuth"
       #             end
-
+      #
       #             # Has it's own copy of ShowsKit + ShowTVAuth
       #             target "ShowsTV" do
       #               pod "ShowTVAuth"
@@ -344,7 +344,7 @@ module Pod
       #               pod 'Expecta'
       #             end
       #           end
-
+      #
       # @return   [void]
       #
       def abstract_target(name)
