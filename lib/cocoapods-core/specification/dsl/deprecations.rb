@@ -4,12 +4,6 @@ module Pod
       # Provides warning and errors for the deprecated attributes of the DSL.
       #
       module Deprecations
-        def preferred_dependency=(name)
-          self.default_subspecs = [name]
-          CoreUI.warn "[#{self}] `preferred_dependency` has been renamed "\
-            'to `default_subspecs`.'
-        end
-
         DSL.attribute :xcconfig,
                       :container => Hash,
                       :inherited => true
