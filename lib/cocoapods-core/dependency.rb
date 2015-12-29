@@ -24,13 +24,6 @@ module Pod
     #         should be used to resolve the dependency.
     attr_accessor :podspec_repo
 
-    # @return [Bool] whether the dependency should use the podspec with the
-    #         highest know version but force the downloader to checkout the
-    #         `head` of the source repository.
-    #
-    attr_accessor :head
-    alias_method :head?, :head
-
     # @overload   initialize(name, requirements)
     #
     #   @param    [String] name
@@ -84,6 +77,8 @@ module Pod
     #   @param    [Symbol] is_head
     #             a symbol that can be `:head` or nil.
     #
+    #   @todo     Remove once everyone has migrated past CocoaPods 1.0.
+    #
     #   @example  Initialization with the head option
     #
     #             Dependency.new('RestKit', :head)
@@ -109,12 +104,8 @@ module Pod
         end
 
       elsif requirements.last == :head
-        @head = true
-        requirements.pop
-        unless requirements.empty?
-          raise Informative, 'A `:head` dependency may not specify version ' \
-            "requirements (#{name})."
-        end
+        raise Informative, '`:head` dependencies have been removed. Please use ' \
+          "normal external source dependencies instead of `:head` for `#{name}`."
       end
 
       if requirements.length == 1 && requirements.first.is_a?(Requirement)
@@ -209,7 +200,6 @@ module Pod
     #
     def compatible?(other)
       return false unless name == other.name
-      return false unless head? == other.head?
       return false unless external_source == other.external_source
 
       other.requirement.requirements.all? do |_operator, version|
@@ -225,7 +215,6 @@ module Pod
       self.class == other.class &&
         name == other.name &&
         requirement == other.requirement &&
-        head? == other.head? &&
         external_source == other.external_source
     end
     alias_method :eql?, :==
@@ -271,7 +260,6 @@ module Pod
         dep = self.class.new(name, self_req.as_list.concat(other_req.as_list))
       end
 
-      dep.head = head? || other.head?
       if external_source || other.external_source
         self_external_source  = external_source || {}
         other_external_source = other.external_source || {}
@@ -322,7 +310,6 @@ module Pod
     #           "libPusher (= 1.0)"
     #           "libPusher (~> 1.0.1)"
     #           "libPusher (> 1.0, < 2.0)"
-    #           "libPusher (HEAD)"
     #           "libPusher (from `www.example.com')"
     #           "libPusher (defined in Podfile)"
     #           "RestKit/JSON"
@@ -333,8 +320,6 @@ module Pod
       version = ''
       if external?
         version << external_source_description(external_source)
-      elsif head?
-        version << 'HEAD'
       elsif requirement != Requirement.default
         version << requirement.to_s
       end
@@ -364,8 +349,6 @@ module Pod
       case version
       when nil, /from `(.*)(`|')/
         Dependency.new(name)
-      when /HEAD/
-        Dependency.new(name, :head)
       else
         version_requirements = version.split(',') if version
         Dependency.new(name, version_requirements)

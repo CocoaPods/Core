@@ -277,43 +277,6 @@ module Pod
           :added => [],
         }
       end
-
-      it 'detects Pods whose head state changed' do
-        podfile = Podfile.new do
-          platform :ios
-          pod 'BlocksKit'
-          pod 'JSONKit', :head
-        end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed => ['JSONKit'],
-          :removed => [],
-          :unchanged => ['BlocksKit'],
-          :added => [],
-        }
-        @specs = [
-          Specification.new do |s|
-            s.name = 'BlocksKit'
-            s.version = '1.0.0'
-          end,
-          Specification.new do |s|
-            s.name = 'JSONKit'
-            s.version = '1.4'
-            s.version.head = true
-          end]
-        @lockfile = Lockfile.generate(podfile, @specs, @checkout_options)
-        podfile = Podfile.new do
-          platform :ios
-          pod 'BlocksKit'
-          pod 'JSONKit'
-        end
-
-        @lockfile.detect_changes_with_podfile(podfile).should == {
-          :changed => ['JSONKit'],
-          :removed => [],
-          :unchanged => ['BlocksKit'],
-          :added => [],
-        }
-      end
     end
 
     #-------------------------------------------------------------------------#
@@ -381,28 +344,6 @@ module Pod
       it 'generates a valid YAML representation' do
         YAMLHelper.load_string(@lockfile.to_yaml).should ==
           YAMLHelper.load_string(Sample.yaml)
-      end
-
-      it "serializes correctly `:head' dependencies" do
-        podfile = Podfile.new do
-          platform :ios
-          pod 'BananaLib', :head
-        end
-        specs = [
-          Specification.new do |s|
-            s.name = 'BananaLib'
-            s.version = '1.0'
-          end,
-          Specification.new do |s|
-            s.name = 'monkey'
-            s.version = '1.0.8'
-          end,
-        ]
-        checkout_options = {
-          'BananaLib' => { :git => 'www.example.com', :commit => 'dad4645' },
-        }
-        lockfile = Lockfile.generate(podfile, specs, checkout_options)
-        lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (HEAD)'
       end
 
       it 'serializes correctly external dependencies' do

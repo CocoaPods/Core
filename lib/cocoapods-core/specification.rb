@@ -109,7 +109,6 @@ module Pod
     # @example  Input examples
     #
     #           "libPusher (1.0)"
-    #           "libPusher (HEAD based on 1.0)"
     #           "RestKit/JSON (1.0)"
     #
     # @return   [Array<String, Version>] the name and the version of a
