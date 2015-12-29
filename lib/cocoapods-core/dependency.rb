@@ -159,7 +159,7 @@ module Pod
     #
     def local?
       if external_source
-        external_source[:path] || external_source[:local]
+        external_source[:path]
       end
     end
 
@@ -409,8 +409,6 @@ module Pod
         desc = "`#{source[:podspec]}`"
       elsif source.key?(:path)
         desc = "`#{source[:path]}`"
-      elsif source.key?(:local)
-        desc = "`#{source[:local]}`"
       else
         desc = "`#{source}`"
       end
