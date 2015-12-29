@@ -47,12 +47,9 @@ module Pod
     #         A string representing a version, or another version.
     #
     def initialize(version)
-      if version.is_a?(Version) && version.head?
-        version = version.version
-        @head = true
-      elsif version.is_a?(String) && version =~ /HEAD based on (.*)/
+      if version.is_a?(String) && version =~ /HEAD based on (.*)/
         version = Regexp.last_match[1]
-        @head = true
+        CoreUI.warn "Ignoring HEAD specifier in #{version}"
       end
 
       raise ArgumentError, "Malformed version number string #{version}" unless
@@ -64,19 +61,6 @@ module Pod
     # An instance that represents version 0.
     #
     ZERO = new('0')
-
-    # @return [String] a string representation that indicates if the version is
-    #         head.
-    #
-    # @note   The raw version string is still accessible with the {#version}
-    #         method.
-    #
-    # @todo   Adding the head information to the string representation creates
-    #         issues (see Dependency#requirement).
-    #
-    def to_s
-      head? ? "HEAD based on #{super}" : super
-    end
 
     # @return [String] a string representation suitable for debugging.
     #

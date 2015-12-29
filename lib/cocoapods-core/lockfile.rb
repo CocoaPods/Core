@@ -239,7 +239,7 @@ module Pod
     # - added: Pods that weren't present in the Podfile.
     # - changed: Pods that were present in the Podfile but changed:
     #   - Pods whose version is not compatible anymore with Podfile,
-    #   - Pods that changed their head or external options.
+    #   - Pods that changed their external options.
     # - removed: Pods that were removed form the Podfile.
     # - unchanged: Pods that are still compatible with Podfile.
     #
@@ -442,10 +442,6 @@ module Pod
       # @return   [Hash] a hash where the keys are the names of the pods and
       #           the values store the external source hashes of each
       #           dependency.
-      #
-      # @todo     The downloader should generate an external source hash that
-      #           should be store for dependencies in head mode and for those
-      #           with external source.
       #
       def generate_external_sources_data(podfile)
         deps = podfile.dependencies.select(&:external?)
