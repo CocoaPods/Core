@@ -329,6 +329,19 @@ module Pod
       hash
     end
 
+    # @return [Array<String>] The order in which the hash keys should appear in
+    #         a serialized Lockfile.
+    #
+    HASH_KEY_ORDER = [
+      'PODS',
+      'DEPENDENCIES',
+      'EXTERNAL SOURCES',
+      'CHECKOUT OPTIONS',
+      'SPEC CHECKSUMS',
+      'PODFILE CHECKSUM',
+      'COCOAPODS',
+    ].map(&:freeze).freeze
+
     # @return [String] the YAML representation of the Lockfile, used for
     #         serialization.
     #
@@ -337,16 +350,7 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      keys_hint = [
-        'PODS',
-        'DEPENDENCIES',
-        'EXTERNAL SOURCES',
-        'CHECKOUT OPTIONS',
-        'SPEC CHECKSUMS',
-        'PODFILE CHECKSUM',
-        'COCOAPODS',
-      ]
-      YAMLHelper.convert_hash(to_hash, keys_hint, "\n\n")
+      YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
     end
 
     #-------------------------------------------------------------------------#
