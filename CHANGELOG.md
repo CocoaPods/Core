@@ -2,6 +2,31 @@
 
 ## Master
 
+##### Breaking
+
+* The `link_with` Podfile DSL method has been removed in favor of target
+  inheritance.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* The `:exclusive => true` Podfile DSL target option has been removed in favor
+  of the `inherit! :search_paths` directive.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* The specification of `:head` dependencies has been removed.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* The deprecated `:local` dependency option has been removed in favor of the
+  equivalent `:path` option.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* The deprecated `dependency` method in the Podfile DSL has been removed in
+  favor of the equivalent `pod` method.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* The deprecated `preferred_dependency` method in the Specification DSL has been
+  removed in favor of the equivalent `default_subspecs` method.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 ##### Enhancements
 
 * Add support for specifying :source with a pod dependency.  
@@ -23,6 +48,15 @@
   supports for improved forwards compatibility.  
   [Samuel Giddins](https://github.com/segiddins)
   [#267](https://github.com/CocoaPods/Core/issues/267)
+
+* The Podfile now allows specifying installation options via the `install!`
+  directive.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#151](https://github.com/CocoaPods/Core/issues/151)
+
+* The Podfile now allows marking targets as `abstract` and specifying the pod
+  inheritance mode via the `inherit!` directive.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
