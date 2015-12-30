@@ -41,11 +41,6 @@ module Pod
         @spec.attributes_hash['social_media_url'].should == 'https://twitter.com/cocoapods'
       end
 
-      it 'allows to specify the docset url' do
-        @spec.docset_url = 'http://example.org/KFData/1.0.0/xcode-docset.atom'
-        @spec.attributes_hash['docset_url'].should == 'http://example.org/KFData/1.0.0/xcode-docset.atom'
-      end
-
       it 'allows to specify the license' do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
         @spec.attributes_hash['license'].should == { 'type' => 'MIT', 'file' => 'MIT-LICENSE' }

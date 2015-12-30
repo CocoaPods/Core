@@ -77,12 +77,6 @@ module Pod
           attributes_hash['social_media_url']
         end
 
-        # @return [String] The docset URL.
-        #
-        def docset_url
-          attributes_hash['docset_url']
-        end
-
         # @return [Hash] A hash containing the license information of the Pod.
         #
         # @note   The indentation is stripped from the license text.
