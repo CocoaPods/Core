@@ -27,6 +27,10 @@
   removed in favor of the equivalent `default_subspecs` method.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* The `docset_url` Specification attribute has been removed.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#284](https://github.com/CocoaPods/Core/issues/284)
+
 ##### Enhancements
 
 * Add support for specifying :source with a pod dependency.  
