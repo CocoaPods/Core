@@ -347,11 +347,6 @@ module Pod
         @spec.local?.should.be.true
       end
 
-      it '[0.18 backwards compatibility] reports if it is locally sourced' do
-        @spec.source = { 'local' => '/tmp/local/path' }
-        @spec.local?.should.be.true
-      end
-
       it 'returns whether it is supported on a given platform' do
         @spec.platform = :ios, '4.0'
         @spec.supported_on_platform?(:ios).should.be.true

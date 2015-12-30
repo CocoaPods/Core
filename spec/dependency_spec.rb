@@ -51,21 +51,10 @@ module Pod
         dep.should.not.be.local
       end
 
-      it 'keeps the backward compatibility with :local' do
-        dep = Dependency.new('cocoapods', :local => '/tmp/cocoapods')
-        dep.should.be.local
-      end
-
       it 'raises if initialized with an external source and requirements are provided' do
         should.raise Informative do
           Dependency.new('cocoapods', '1.0', :git => 'git://github.com/cocoapods/cocoapods')
         end
-      end
-
-      it 'can be initialized in head mode' do
-        dependency = Dependency.new('cocoapods', :head)
-        dependency.should.be.head
-        dependency.to_s.should == 'cocoapods (HEAD)'
       end
 
       describe '#from_string' do
@@ -73,7 +62,6 @@ module Pod
           d = Dependency.from_string('BananaLib (1.0)')
           d.name.should == 'BananaLib'
           d.requirement.should =~ Version.new('1.0')
-          d.head.should.be.nil
           d.external_source.should.be.nil
         end
 
@@ -122,22 +110,8 @@ module Pod
 
       it 'raises if version requirements are specified for an external source' do
         should.raise Pod::Informative do
-          Dependency.new('cocoapods', '1.2.3', :head)
+          Dependency.new('cocoapods', '1.2.3', :git => 'example.com')
         end
-      end
-
-      it 'only supports the `:head` option on the last version of a pod' do
-        should.raise Pod::Informative do
-          Dependency.new('cocoapods', '1.2.3', :head)
-        end
-      end
-
-      it 'preserves head information when initialized form a string' do
-        d = Dependency.from_string('BananaLib (HEAD)')
-        d.name.should == 'BananaLib'
-        d.requirement.should.be.none?
-        d.head.should.be.true
-        d.external_source.should.be.nil
       end
 
       it 'raises if an invalid initialization flag is given' do
@@ -152,10 +126,11 @@ module Pod
         dependency.requirement.as_list.should == ['= 1.23']
       end
 
-      it 'can handle specific version with head information' do
+      it 'warns with head information' do
         dependency = Dependency.new('cocoapods', '> 1.0')
         dependency.specific_version = Version.new('HEAD based on 1.23')
         dependency.requirement.as_list.should == ['= 1.23']
+        CoreUI.warnings.should == 'Ignoring obsolete HEAD specifier in `HEAD based on 1.23`'
       end
 
       #--------------------------------------#
@@ -163,11 +138,6 @@ module Pod
       it 'preserves the external source on duplication' do
         dep = Dependency.new('bananas', :podspec => 'bananas')
         dep.dup.external_source.should == { :podspec => 'bananas' }
-      end
-
-      it 'preserves the head information on duplication' do
-        dep = Dependency.new('bananas', :head)
-        dep.dup.head.should.be.true
       end
 
       #--------------------------------------#
@@ -200,12 +170,6 @@ module Pod
         dep1.compatible?(dep2).should.be.false
       end
 
-      it 'is not compatible with another if the head informations differ' do
-        dep1 = Dependency.new('bananas', :head)
-        dep2 = Dependency.new('bananas', '1.9')
-        dep1.compatible?(dep2).should.be.false
-      end
-
       it 'is not compatible with another if the external sources differ' do
         dep1 = Dependency.new('bananas', :podspec => 'bananas')
         dep2 = Dependency.new('bananas', '1.9')
@@ -220,14 +184,6 @@ module Pod
         dep1.should.not == dep2
         dep3 = Dependency.new('bananas', :git => 'GIT-URL')
         dep1.should == dep3
-      end
-
-      it 'takes into account the `head` option to check for equality' do
-        dep1 = Dependency.new('bananas', :head)
-        dep2 = Dependency.new('bananas', :head)
-        dep3 = Dependency.new('bananas')
-        dep1.should == dep2
-        dep1.should.not == dep3
       end
 
       it 'supports Array#uniq' do
@@ -251,14 +207,6 @@ module Pod
         dep1 = Dependency.new('bananas', '>= 1.8')
         dep2 = Dependency.new('bananas', '1.9')
         dep1.merge(dep2).should == Dependency.new('bananas', '>= 1.8', '1.9')
-      end
-
-      it 'it preserves head state while merging with another dependency' do
-        dep1 = Dependency.new('bananas', '1.9')
-        dep2 = Dependency.new('bananas', :head)
-        result = dep1.merge(dep2)
-        result.should.be.head
-        result.requirement.as_list.should == ['= 1.9']
       end
 
       it 'it preserves the external source while merging with another dependency' do
@@ -341,7 +289,6 @@ module Pod
           @dep.send(:external_source_description, :svn => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :podspec => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :path => 'example.com').should == 'from `example.com`'
-          @dep.send(:external_source_description, :local => 'example.com').should == 'from `example.com`'
           @dep.send(:external_source_description, :other => 'example.com').should.match /from.*example.com/
         end
       end

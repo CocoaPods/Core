@@ -38,24 +38,15 @@ module Pod
     VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z\-]+)*'
     ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})*\s*\z/
 
-    # @return [Bool] whether the version represents the `head` of repository.
-    #
-    attr_accessor :head
-    alias_method :head?, :head
-
     # @param  [String,Version] version
     #         A string representing a version, or another version.
     #
-    # @todo   The `from` part of the regular expression should be remove in
-    #         CocoaPods 1.0.0.
+    # @todo   Remove the `HEAD` code once everyone has migrated past 1.0.
     #
     def initialize(version)
-      if version.is_a?(Version) && version.head?
-        version = version.version
-        @head = true
-      elsif version.is_a?(String) && version =~ /HEAD (based on|from) (.*)/
-        version = Regexp.last_match[2]
-        @head = true
+      if version.is_a?(String) && version =~ /HEAD based on (.*)/
+        CoreUI.warn "Ignoring obsolete HEAD specifier in `#{version}`"
+        version = Regexp.last_match[1]
       end
 
       raise ArgumentError, "Malformed version number string #{version}" unless
@@ -67,19 +58,6 @@ module Pod
     # An instance that represents version 0.
     #
     ZERO = new('0')
-
-    # @return [String] a string representation that indicates if the version is
-    #         head.
-    #
-    # @note   The raw version string is still accessible with the {#version}
-    #         method.
-    #
-    # @todo   Adding the head information to the string representation creates
-    #         issues (see Dependency#requirement).
-    #
-    def to_s
-      head? ? "HEAD based on #{super}" : super
-    end
 
     # @return [String] a string representation suitable for debugging.
     #

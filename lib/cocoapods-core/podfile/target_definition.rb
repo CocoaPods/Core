@@ -19,17 +19,11 @@ module Pod
       # @param  [TargetDefinition] parent
       #         @see parent
       #
-      # @option options [Bool] :exclusive
-      #         @see exclusive?
-      #
       def initialize(name, parent, internal_hash = nil)
         @internal_hash = internal_hash || {}
         @parent = parent
         @children = []
-
-        unless internal_hash
-          self.name = name
-        end
+        self.name ||= name
         if parent.is_a?(TargetDefinition)
           parent.children << self
         end
@@ -73,10 +67,22 @@ module Pod
       #         definition including the inherited ones.
       #
       def dependencies
-        if exclusive? || parent.nil?
+        if exclusive?
           non_inherited_dependencies
         else
           non_inherited_dependencies + parent.dependencies
+        end
+      end
+
+      # @return [Array<TargetDefinition>] the targets from which this target
+      #         definition should inherit only search paths.
+      #
+      def targets_to_inherit_search_paths
+        return [] unless inheritance == 'search_paths'
+        if root? || !matches_platform?(parent)
+          raise StandardError, "Non-sensical to have search_paths inheritance for #{name} when there is no parent."
+        else
+          parent.targets_to_inherit_search_paths << parent
         end
       end
 
@@ -142,6 +148,54 @@ module Pod
 
       #--------------------------------------#
 
+      # @return [Boolean] whether this target definition is abstract.
+      #
+      def abstract?
+        get_hash_value('abstract', false)
+      end
+
+      # Sets whether this target definition is abstract.
+      #
+      # @param  [Boolean] abstract
+      #         whether this target definition is abstract.
+      #
+      # @return [void]
+      #
+      def abstract=(abstract)
+        set_hash_value('abstract', abstract)
+      end
+
+      #--------------------------------------#
+
+      # @return [String] the inheritance mode for this target definition.
+      #
+      def inheritance
+        get_hash_value('inheritance', 'complete')
+      end
+
+      # Sets the inheritance mode for this target definition.
+      #
+      # @param  [#to_s] inheritance
+      #         the inheritance mode for this target definition.
+      #
+      # @raise  [Informative] if this target definition is a root target
+      #         definition or if the `inheritance` value is unknown.
+      #
+      # @return [void]
+      #
+      def inheritance=(inheritance)
+        inheritance = inheritance.to_s
+        unless %w(none search_paths complete).include?(inheritance)
+          raise Informative, "Unrecognized inheritance option `#{inheritance}` specified for target `#{name}`."
+        end
+        if root?
+          raise Informative, 'Cannot set inheritance for the root target definition.'
+        end
+        set_hash_value('inheritance', inheritance)
+      end
+
+      #--------------------------------------#
+
       # Returns whether the target definition should inherit the dependencies
       # of the parent.
       #
@@ -155,70 +209,20 @@ module Pod
       def exclusive?
         if root?
           true
-        elsif get_hash_value('exclusive')
-          true
         else
-          platform && parent && parent.platform != platform
+          !matches_platform?(parent) || (inheritance != 'complete')
         end
       end
 
-      # Sets whether the target definition is exclusive.
+      # @param  [TargetDefinition, Nil] target_definition
+      #         the target definition to check for platform compatibility.
       #
-      # @param  [Bool] flag
-      #         Whether the definition is exclusive.
+      # @return [Boolean]
+      #         whether this target definition matches the platform of
+      #         `target_definition`.
       #
-      # @return [void]
-      #
-      def exclusive=(flag)
-        set_hash_value('exclusive', flag)
-      end
-
-      #--------------------------------------#
-
-      # @return [Array<String>] The list of the names of the Xcode targets with
-      #         which this target definition should be linked with.
-      #
-      def link_with
-        value = get_hash_value('link_with')
-        value unless value.nil? || value.empty?
-      end
-
-      # Sets the client targets that should be integrated by this definition.
-      #
-      # @param  [Array<String>] targets
-      #         The list of the targets names.
-      #
-      # @return [void]
-      #
-      def link_with=(targets)
-        set_hash_value('link_with', Array(targets).map(&:to_s))
-      end
-
-      #--------------------------------------#
-
-      # Returns whether the target definition should link with the first target
-      # of the project.
-      #
-      # @note   This option is ignored if {link_with} is set.
-      #
-      # @return [Bool] whether is exclusive.
-      #
-      def link_with_first_target?
-        get_hash_value('link_with_first_target') unless link_with
-      end
-
-      # Sets whether the target definition should link with the first target of
-      # the project.
-      #
-      # @note   This option is ignored if {link_with} is set.
-      #
-      # @param  [Bool] flag
-      #         Whether the definition should link with the first target.
-      #
-      # @return [void]
-      #
-      def link_with_first_target=(flag)
-        set_hash_value('link_with_first_target', flag)
+      def matches_platform?(target_definition)
+        target_definition && target_definition.platform == platform
       end
 
       #--------------------------------------#
@@ -229,7 +233,7 @@ module Pod
       def user_project_path
         path = get_hash_value('user_project_path')
         if path
-          File.extname(path) == '.xcodeproj' ? path : "#{path}.xcodeproj"
+          Pathname(path).sub_ext('.xcodeproj').to_path
         else
           parent.user_project_path unless root?
         end
@@ -368,7 +372,7 @@ module Pod
             end
           end
         end
-        !found && (exclusive? || parent.pod_whitelisted_for_configuration?(pod_name, configuration_name))
+        !found && (root? || (inheritance != 'none' && parent.pod_whitelisted_for_configuration?(pod_name, configuration_name)))
       end
 
       # Whitelists a pod for a specific configuration. If a pod is whitelisted
@@ -396,7 +400,7 @@ module Pod
       #         pods have been whitelisted.
       #
       def all_whitelisted_configurations
-        parent_configurations = exclusive? ? [] : parent.all_whitelisted_configurations
+        parent_configurations = (root? || inheritance == 'none') ? [] : parent.all_whitelisted_configurations
         (configuration_pod_whitelist.keys + parent_configurations).uniq
       end
 
@@ -536,6 +540,8 @@ module Pod
         children
         configuration_pod_whitelist
         uses_frameworks
+        inheritance
+        abstract
       ).freeze
 
       # @return [Hash] The hash representation of the target definition.
@@ -589,7 +595,7 @@ module Pod
       # @param  [Object] value
       #         The value to store.
       #
-      # @raise  If the key is not recognized.
+      # @raise  [StandardError] If the key is not recognized.
       #
       # @return [void]
       #
@@ -609,7 +615,7 @@ module Pod
       # @param  [Object] base_value
       #         The value to set if they key is nil. Useful for collections.
       #
-      # @raise  If the key is not recognized.
+      # @raise  [StandardError] If the key is not recognized.
       #
       # @return [Object] The value for the key.
       #
@@ -626,7 +632,12 @@ module Pod
       #         warnings, and :for_pods key for inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
-        get_hash_value('inhibit_warnings', {})
+        inhibit_hash = get_hash_value('inhibit_warnings', {})
+        if exclusive?
+          inhibit_hash
+        else
+          parent.send(:inhibit_warnings_hash).merge(inhibit_hash) { |l, r| (l + r).uniq }
+        end
       end
 
       # Returns the configuration_pod_whitelist hash
@@ -636,7 +647,12 @@ module Pod
       #         as value.
       #
       def configuration_pod_whitelist
-        get_hash_value('configuration_pod_whitelist', {})
+        whitelist_hash = get_hash_value('configuration_pod_whitelist', {})
+        if exclusive?
+          whitelist_hash
+        else
+          parent.send(:configuration_pod_whitelist).merge(whitelist_hash) { |l, r| (l + r).uniq }
+        end
       end
 
       # @return [Array<Dependency>] The dependencies specified by the user for
@@ -745,10 +761,8 @@ module Pod
 
         configurations = options.delete(:configurations)
         configurations ||= options.delete(:configuration)
-        if configurations
-          Array(configurations).each do |configuration|
-            whitelist_pod_for_configuration(name, configuration)
-          end
+        Array(configurations).each do |configuration|
+          whitelist_pod_for_configuration(name, configuration)
         end
         requirements.pop if options.empty?
       end

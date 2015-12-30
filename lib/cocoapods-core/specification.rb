@@ -62,18 +62,12 @@ module Pod
     # @return [Bool] Whether the specifications are equal.
     #
     def ==(other)
-      # TODO
-      # self.class === other &&
-      #   attributes_hash == other.attributes_hash &&
-      #   subspecs == other.subspecs &&
-      to_s == other.to_s
+      other.is_a?(self.class) &&
+        name == other.name &&
+        version == other.version
     end
 
-    # @see ==
-    #
-    def eql?(other)
-      self == other
-    end
+    alias_method :eql?, :==
 
     # Return the hash value for this specification according to its attributes
     # hash.
@@ -86,7 +80,7 @@ module Pod
     # @return [Fixnum] The hash value.
     #
     def hash
-      to_s.hash
+      (name.hash * 53) ^ version.hash
     end
 
     # @return [String] A string suitable for representing the specification in
@@ -115,7 +109,6 @@ module Pod
     # @example  Input examples
     #
     #           "libPusher (1.0)"
-    #           "libPusher (HEAD based on 1.0)"
     #           "RestKit/JSON (1.0)"
     #
     # @return   [Array<String, Version>] the name and the version of a
@@ -331,7 +324,6 @@ module Pod
     #
     def local?
       return true if source[:path]
-      return true if source[:local]
       false
     end
 

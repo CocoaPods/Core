@@ -23,11 +23,6 @@ module Pod
         podfile.root_target_definitions.first.name.should == 'Pods'
       end
 
-      it 'specifies that the default target definition should link with the first target of the project' do
-        podfile = Podfile.new {}
-        podfile.root_target_definitions.first.should.link_with_first_target
-      end
-
       extend SpecHelper::TemporaryDirectory
 
       it 'includes the line of the podfile that generated an exception' do
@@ -114,6 +109,16 @@ module Pod
         Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
       end
 
+      it 'returns the installation method' do
+        name, options = Podfile.new {}.installation_method
+        name.should == 'cocoapods'
+        options.should == {}
+
+        name, options = Podfile.new { install! 'install-method', :option1 => 'value1', 'option2' => false }.installation_method
+        name.should == 'install-method'
+        options.should == { :option1 => 'value1', 'option2' => false }
+      end
+
       describe 'source' do
         it 'can have multiple sources' do
           Podfile.new do
@@ -150,12 +155,19 @@ module Pod
       it 'returns the hash representation' do
         podfile = Podfile.new do
           pod 'ASIHTTPRequest'
+          target 'App' do
+          end
         end
         podfile.to_hash.should == {
           'target_definitions' => [
             'name' => 'Pods',
-            'link_with_first_target' => true,
+            'abstract' => true,
             'dependencies' => ['ASIHTTPRequest'],
+            'children' => [
+              {
+                'name' => 'App',
+              },
+            ],
           ],
         }
       end
@@ -165,12 +177,20 @@ module Pod
           workspace('MyApp.xcworkspace')
           generate_bridge_support!
           set_arc_compatibility_flag!
+          install! 'install-method', :option1 => 'value1', 'option2' => false
         end
         podfile.to_hash.should == {
-          'target_definitions' => [{ 'name' => 'Pods', 'link_with_first_target' => true }],
+          'target_definitions' => [{ 'name' => 'Pods', 'abstract' => true }],
           'workspace' => 'MyApp.xcworkspace',
           'generate_bridge_support' => true,
           'set_arc_compatibility_flag' => true,
+          'installation_method' => {
+            'name' => 'install-method',
+            'options' => {
+              :option1 => 'value1',
+              'option2' => false,
+            },
+          },
         }
       end
 
@@ -179,18 +199,27 @@ module Pod
           pod 'ASIHTTPRequest'
           target 'sub-target' do
             pod 'JSONKit'
+            target 'test_target' do
+              inherit!(:search_paths)
+            end
           end
         end
         podfile.to_hash.should == {
           'target_definitions' => [
             {
               'name' => 'Pods',
-              'link_with_first_target' => true,
+              'abstract' => true,
               'dependencies' => ['ASIHTTPRequest'],
               'children' => [
                 {
                   'name' => 'sub-target',
                   'dependencies' => ['JSONKit'],
+                  'children' => [
+                    {
+                      'name' => 'test_target',
+                      'inheritance' => 'search_paths',
+                    },
+                  ],
                 },
               ],
             },
@@ -204,12 +233,18 @@ module Pod
           pod 'JSONKit', '> 1.0', :inhibit_warnings => true
           generate_bridge_support!
           set_arc_compatibility_flag!
+          install! 'install-method', :option1 => 'value1', 'option2' => false
         end
         expected = <<-EOF.strip_heredoc
           ---
+          installation_method:
+            name: install-method
+            options:
+              :option1: value1
+              option2: false
           target_definitions:
           - name: Pods
-            link_with_first_target: true
+            abstract: true
             dependencies:
             - ASIHTTPRequest
             - JSONKit:
@@ -244,7 +279,7 @@ module Pod
         podfile.to_hash.should == {
           'target_definitions' => [
             'name' => 'Pods',
-            'link_with_first_target' => true,
+            'abstract' => true,
             'inhibit_warnings' => {
               'for_pods' => ['ASIHTTPRequest'],
             },
@@ -261,7 +296,7 @@ module Pod
         podfile.to_hash.should == {
           'target_definitions' => [
             'name' => 'Pods',
-            'link_with_first_target' => true,
+            'abstract' => true,
             'dependencies' => ['ObjectiveSugar'],
             'inhibit_warnings' => {
               'all' => true,
@@ -278,7 +313,7 @@ module Pod
         podfile.to_hash.should == {
           'target_definitions' => [
             'name' => 'Pods',
-            'link_with_first_target' => true,
+            'abstract' => true,
             'dependencies' => ['ObjectiveSugar'],
             'uses_frameworks' => true,
           ],
@@ -295,7 +330,7 @@ module Pod
           'target_definitions' => [
             {
               'name' => 'Pods',
-              'link_with_first_target' => true,
+              'abstract' => true,
               'dependencies' => %w(ASIHTTPRequest),
             },
           ],
@@ -318,7 +353,7 @@ module Pod
           'target_definitions' => [
             {
               'name' => 'Pods',
-              'link_with_first_target' => true,
+              'abstract' => true,
               'dependencies' => %w(ASIHTTPRequest),
             },
           ],
@@ -388,21 +423,19 @@ module Pod
         podfile.send(:get_hash_value, 'generate_bridge_support').should.be.true
       end
 
+      it 'allows specifying a default value when fetching from the hash' do
+        podfile = Podfile.new
+
+        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should == 'default'
+
+        podfile.send(:set_hash_value, 'generate_bridge_support', true)
+        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should.be.true
+      end
+
       it 'raises if there is an attempt to access or set an unknown key in the internal hash' do
         podfile = Podfile.new
         lambda { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
         lambda { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
-      end
-    end
-
-    #-------------------------------------------------------------------------#
-
-    describe 'Deprecations' do
-      it 'Warns about the deprecated dependency DSL directive' do
-        podfile = Podfile.new
-        podfile.expects(:pod).with('My-Pod')
-        podfile.dependency 'My-Pod'
-        CoreUI.warnings.should.match /DEPRECATED/
       end
     end
 
@@ -418,8 +451,8 @@ module Pod
             pod 'SSZipArchive'
           end
 
-          target :test, :exclusive => true do
-            link_with 'TestRunner'
+          target :test do
+            inherit! :search_paths
             inhibit_all_warnings!
             use_frameworks!
             pod 'JSONKit'
@@ -431,7 +464,6 @@ module Pod
           target :osx_target do
             platform :osx
             xcodeproj 'OSX Project.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
-            link_with 'OSXTarget'
             pod 'ASIHTTPRequest'
             target :nested_osx_target do
             end
@@ -466,16 +498,6 @@ module Pod
         target = @podfile.target_definitions[:subtarget]
         target.label.should == 'Pods-test-subtarget'
         target.dependencies.should == [Dependency.new('Reachability'), Dependency.new('JSONKit')]
-      end
-
-      it 'leaves the name of the target, to link with, to be automatically resolved' do
-        target = @podfile.target_definitions['Pods']
-        target.link_with.should.nil?
-      end
-
-      it 'returns the names of the explicit targets to link with' do
-        target = @podfile.target_definitions[:test]
-        target.link_with.should == ['TestRunner']
       end
 
       it 'returns the platform of the target' do

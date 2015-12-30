@@ -96,7 +96,7 @@ module Pod
         podfile.dependencies.map(&:name).should == %w(monkey)
       end
 
-      it 'allows to specify a child target definition' do
+      it 'allows specifying a child target definition' do
         podfile = Podfile.new do
           target :tests do
             pod 'OCMock'
@@ -109,7 +109,7 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe 'Target configuration' do
-      it 'allows to specify a platform' do
+      it 'allows specifying a platform' do
         podfile = Podfile.new do
           platform :ios, '6.0'
           target :osx_target do
@@ -120,9 +120,10 @@ module Pod
         podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, '10.8')
       end
 
-      it 'allows to specify whether the target is exclusive' do
+      it 'allows specifying whether the target is exclusive' do
         podfile = Podfile.new do
-          target 'Pods', :exclusive => true do
+          target 'Pods' do
+            inherit!(:none)
           end
         end
         podfile.target_definitions['Pods'].should.be.exclusive
@@ -136,6 +137,55 @@ module Pod
         podfile.target_definitions['Pods'].should.not.be.exclusive
       end
 
+      it 'allows specifying whether the target is abstract' do
+        podfile = Podfile.new do
+          target 'App' do
+            abstract!
+          end
+        end
+        podfile.target_definitions['App'].should.be.abstract
+      end
+
+      it 'is not abstract by default' do
+        podfile = Podfile.new do
+          target 'App' do
+          end
+        end
+        podfile.target_definitions['App'].should.not.be.abstract
+      end
+
+      it 'allows specifying an abstract target' do
+        podfile = Podfile.new do
+          abstract_target 'App' do
+          end
+        end
+        podfile.target_definitions['App'].should.be.abstract
+      end
+
+      describe 'inheritance' do
+        it 'allows specifying the inheritance mode for a target' do
+          modes = %w(search_paths complete none)
+          modes.each do |mode|
+            podfile = Podfile.new do
+              target 'App' do
+                inherit! mode
+              end
+            end
+            podfile.target_definitions['App'].inheritance.should == mode
+          end
+        end
+
+        it 'raises when specifying an unknown mode' do
+          should.raise(Informative) do
+            Podfile.new do
+              target 'App' do
+                inherit! 'foo'
+              end
+            end
+          end.message.should == 'Unrecognized inheritance option `foo` specified for target `App`.'
+        end
+      end
+
       it 'raises if unrecognized keys are passed during the initialization of a target' do
         should.raise Informative do
           Podfile.new do
@@ -145,33 +195,18 @@ module Pod
         end
       end
 
-      it 'allows to specify the user Xcode project for a Target definition' do
+      it 'allows specifying the user Xcode project for a Target definition' do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
         podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
       end
 
-      it 'allows to specify the build configurations of a user project' do
+      it 'allows specifying the build configurations of a user project' do
         podfile = Podfile.new do
           xcodeproj 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
         podfile.target_definitions['Pods'].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug
         }
-      end
-
-      it 'allows to specify the user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with 'app_target' }
-        podfile.target_definitions['Pods'].link_with.should == ['app_target']
-      end
-
-      it 'allows to specify multiple user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with 'app_target', 'test_target' }
-        podfile.target_definitions['Pods'].link_with.should == %w(app_target test_target)
-      end
-
-      it 'allows to specify an array of user targets a Target definition should link with' do
-        podfile = Podfile.new { link_with ['app_target'] }
-        podfile.target_definitions['Pods'].link_with.should == ['app_target']
       end
 
       it 'allows to inhibit all the warnings of a Target definition' do
@@ -237,6 +272,34 @@ module Pod
           end
         end.post_install!(:an_installer)
         yielded.should == :an_installer
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe 'Installation Method' do
+      it 'allows specifying a custom installation method' do
+        podfile = Podfile.new do
+          install! 'method'
+        end
+        podfile.installation_method.should == ['method', {}]
+      end
+
+      it 'allows specifying a custom installation method with options' do
+        podfile = Podfile.new do
+          install! 'method', 'option' => 'value'
+        end
+        podfile.installation_method.should == ['method', { 'option' => 'value' }]
+      end
+
+      it 'raises when specifying an installation method outside of root' do
+        should.raise(Informative) do
+          Podfile.new do
+            target 'App' do
+              install! 'method'
+            end
+          end
+        end.message.should == 'The installation method can only be set at the root level of the Podfile.'
       end
     end
 

@@ -130,10 +130,6 @@ module Pod
         result = Specification.from_hash(@spec.to_hash)
         result.should == @spec
       end
-
-      it 'returns whether it safe to convert a specification to hash' do
-        @spec.safe_to_hash?.should.be.true
-      end
     end
   end
 end

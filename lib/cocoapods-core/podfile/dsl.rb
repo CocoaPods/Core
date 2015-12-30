@@ -5,9 +5,7 @@ module Pod
     # CocoaPods/cocoapods.github.com.
 
     # The Podfile is a specification that describes the dependencies of the
-    # targets of one or more Xcode projects. The Podfile always creates an
-    # implicit target, named `default`, which links to the first target of the
-    # user project.
+    # targets of one or more Xcode projects.
     #
     # A Podfile can be very simple:
     #
@@ -15,18 +13,18 @@ module Pod
     #
     # An example of a more complex Podfile can be:
     #
-    #     source 'https://github.com/CocoaPods/Specs.git'
-    #
-    #     platform :ios, '6.0'
+    #     platform :ios, '9.0'
     #     inhibit_all_warnings!
     #
-    #     xcodeproj 'MyProject'
+    #     target "MyApp" do
+    #       pod 'ObjectiveSugar', '~> 0.5'
     #
-    #     pod 'ObjectiveSugar', '~> 0.5'
-    #
-    #     target :test do
-    #       pod 'OCMock', '~> 2.0.1'
+    #       target "MyAppTests" do
+    #         inherit! :search_paths
+    #         pod 'OCMock', '~> 2.0.1'
+    #       end
     #     end
+    #
     #
     #     post_install do |installer|
     #       installer.pods_project.targets.each do |target|
@@ -40,7 +38,7 @@ module Pod
       #
       #   * `pod` is the way to declare a specific dependency.
       #   * `podspec` provides an easy API for the creation of podspecs.
-      #   * `target` allows you to scope your dependencies to specific
+      #   * `target` is how you scope your dependencies to specific
       #   targets in your Xcode projects.
 
       #-----------------------------------------------------------------------#
@@ -81,13 +79,6 @@ module Pod
       #
       # * [Semantic Versioning](http://semver.org)
       # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
-      #
-      # Finally, instead of a version, you can specify the `:head` flag. This
-      # will use the spec of the newest available version in your spec repo(s),
-      # but force the download of the ‘bleeding edge’ version (HEAD). Use this
-      # with caution, as the spec _might_ not be compatible anymore.
-      #
-      #     pod 'Objection', :head
       #
       # ------
       #
@@ -193,16 +184,9 @@ module Pod
       # @note       This method allow a nil name and the raises to be more
       #             informative.
       #
-      # @note       Support for inline podspecs has been deprecated.
-      #
       # @return     [void]
       #
-      def pod(name = nil, *requirements, &block)
-        if block
-          raise StandardError, 'Inline specifications are deprecated. ' \
-            'Please store the specification in a `podspec` file.'
-        end
-
+      def pod(name = nil, *requirements)
         unless name
           raise StandardError, 'A dependency requires a name.'
         end
@@ -210,9 +194,9 @@ module Pod
         current_target_definition.store_pod(name, *requirements)
       end
 
-      # Use the dependencies of a Pod defined in the given podspec file. If no
-      # arguments are passed the first podspec in the root of the Podfile is
-      # used. It is intended to be used by the project of a library. Note:
+      # Use just the dependencies of a Pod defined in the given podspec file.
+      # If no arguments are passed the first podspec in the root of the Podfile
+      # is used. It is intended to be used by the project of a library. Note:
       # this does not include the sources derived from the podspec just the
       # CocoaPods infrastructure.
       #
@@ -235,7 +219,7 @@ module Pod
       # @option   options [String] :name
       #           the name of the podspec
       #
-      # @note     This method uses the dependencies declared by the for the
+      # @note     This method uses the dependencies declared for the
       #           platform of the target definition.
       #
       #
@@ -248,55 +232,171 @@ module Pod
         current_target_definition.store_podspec(options)
       end
 
-      # Defines a new static library target and scopes dependencies defined
-      # from the given block. The target will by default include the
-      # dependencies defined outside of the block, unless the `:exclusive =>
-      # true` option is
-      # given.
-      #
-      # ---
-      #
-      # The Podfile creates a global target named `:default` which produces the
-      # `libPods.a` file. This target is linked with the first target of user
-      # project if not value is specified for the `link_with` attribute.
+      # Defines a CocoaPods target and scopes dependencies defined
+      # within the given block. A target should correspond to an Xcode target.
+      # By default the target includes the dependencies defined outside of
+      # the block, unless instructed not to `inherit!` them.
       #
       # @param    [Symbol, String] name
-      #           the name of the target definition.
-      #
-      # @option   options [Bool] :exclusive
-      #           whether the target should inherit the dependencies of its
-      #           parent. by default targets are inclusive.
+      #           the name of the target.
       #
       # @example  Defining a target
       #
-      #           target :ZipApp do
+      #           target "ZipApp" do
       #             pod 'SSZipArchive'
       #           end
       #
-      # @example  Defining an exclusive target
+      # @example  Defining a test target which can access SSZipArchive via Pods
+      #           for it's parent target.
       #
-      #           target :ZipApp do
+      #           target "ZipApp" do
       #             pod 'SSZipArchive'
-      #             target :test, :exclusive => true do
-      #               pod 'JSONKit'
+      #
+      #             target "ZipAppTests" do
+      #               inherit! :search_paths
+      #               pod 'Nimble'
+      #             end
+      #           end
+      #
+      # @example  Defining a target applies Pods to multiple targets via its
+      #           parent target
+      #
+      #           target "ShowsApp" do
+      #             pod 'ShowsKit'
+      #
+      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             target "ShowsTV" do
+      #               pod "ShowTVAuth"
+      #             end
+      #
+      #             # Has it's own copy of Specta + Expecta
+      #             # and has access to ShowsKit via the app
+      #             # that the test target is bundled into
+      #
+      #             target "ShowsTests" do
+      #               inherit! :search_paths
+      #               pod 'Specta'
+      #               pod 'Expecta'
       #             end
       #           end
       #
       # @return   [void]
       #
-      def target(name, options = {})
-        if options && !options.keys.all? { |key| [:exclusive].include?(key) }
+      def target(name, options = nil)
+        if options
           raise Informative, "Unsupported options `#{options}` for " \
-            "target `#{name}`"
+            "target `#{name}`."
         end
 
         parent = current_target_definition
         definition = TargetDefinition.new(name, parent)
-        definition.exclusive = true if options[:exclusive]
         self.current_target_definition = definition
-        yield
+        yield if block_given?
       ensure
         self.current_target_definition = parent
+      end
+
+      # Defines a new abstract target that can be used for convenient
+      # target dependency inheritance.
+      #
+      # @param    [Symbol, String] name
+      #           the name of the target.
+      #
+      # @example  Defining an abstract target
+      #
+      #           abstract_target 'Networking' do
+      #             pod 'AlamoFire'
+      #
+      #             target 'Networking App 1'
+      #             target 'Networking App 2'
+      #           end
+      #
+      # @example  Defining an abstract_target wrapping Pods to multiple targets
+      #
+      #           # There are no targets called "Shows" in any Xcode projects
+      #           abstract_target "Shows" do
+      #             pod 'ShowsKit'
+      #
+      #             # Has it's own copy of ShowsKit + ShowWebAuth
+      #             target "ShowsiOS" do
+      #               pod "ShowWebAuth"
+      #             end
+      #
+      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             target "ShowsTV" do
+      #               pod "ShowTVAuth"
+      #             end
+      #
+      #             # Has it's own copy of Specta + Expecta
+      #             # and has access to ShowsKit via the app
+      #             # that the test target is bundled into
+      #
+      #             target "ShowsTests" do
+      #               inherit! :search_paths
+      #               pod 'Specta'
+      #               pod 'Expecta'
+      #             end
+      #           end
+      #
+      # @return   [void]
+      #
+      def abstract_target(name)
+        target(name) do
+          abstract!
+          yield if block_given?
+        end
+      end
+
+      # Denotes that the current target is abstract, and thus will not directly
+      # link against an Xcode target.
+      #
+      # @return [void]
+      #
+      def abstract!(abstract = true)
+        current_target_definition.abstract = abstract
+      end
+
+      # Sets the inheritance mode for the current target.
+      #
+      # @param   [:complete, :none, :search_paths] the inheritance mode to set.
+      #
+      # @example Inheriting only search paths
+      #
+      #          target 'App' do
+      #            target 'AppTests' do
+      #              inherit! :search_paths
+      #            end
+      #          end
+      #
+      # @return  [void]
+      #
+      def inherit!(inheritance)
+        current_target_definition.inheritance = inheritance
+      end
+
+      # Specifies the installation method to be used when CocoaPods installs
+      # this Podfile.
+      #
+      # @param   [String] installation_method
+      #          the name of the installation strategy.
+      #
+      # @param   [Hash] options
+      #          the installation options.
+      #
+      # @example Specifying custom CocoaPods installation options
+      #
+      #          install! 'cocoapods',
+      #                   :deterministic_uuids => false,
+      #                   :integrate_targets => false
+      #
+      # @return  [void]
+      #
+      def install!(installation_method, options = {})
+        unless current_target_definition.root?
+          raise Informative, 'The installation method can only be set at the root level of the Podfile.'
+        end
+
+        set_hash_value('installation_method', 'name' => installation_method, 'options' => options)
       end
 
       #-----------------------------------------------------------------------#
@@ -345,10 +445,9 @@ module Pod
       #
       # -----
       #
-      # If no explicit project is specified, it will use the Xcode project of
-      # the parent target. If none of the target definitions specify an
-      # explicit project and there is only **one** project in the same
-      # directory as the Podfile then that project will be used.
+      # If none of the target definitions specify an explicit project
+      # and there is only **one** project in the same directory as the Podfile
+      # then that project will be used.
       #
       # It is possible also to specify whether the build settings of your
       # custom build configurations should be modelled after the release or
@@ -369,19 +468,21 @@ module Pod
       #
       # @example  Specifying the user project
       #
-      #           # Look for target to link with in an Xcode project called
-      #           # `MyProject.xcodeproj`.
-      #           xcodeproj 'MyProject'
+      #           # This Target can be found in a Xcode project called `FastGPS`
+      #           target "MyGPSApp" do
+      #             xcodeproj 'FastGPS'
+      #             ...
+      #           end
       #
-      #           target :test do
-      #             # This Pods library links with a target in another project.
-      #             xcodeproj 'TestProject'
+      #           # Same Podfile, multiple Xcodeprojects
+      #           target "MyNotesApp" do
+      #             xcodeproj 'FastNotes'
+      #             ...
       #           end
       #
       # @example  Using custom build configurations
       #
       #           xcodeproj 'TestProject', 'Mac App Store' => :release, 'Test' => :debug
-      #
       #
       # @return   [void]
       #
@@ -390,30 +491,18 @@ module Pod
         current_target_definition.build_configurations = build_configurations
       end
 
-      # Specifies the target(s) in the user’s project that this Pods library
-      # should be linked in.
+      # @!visibility private
       #
-      # -----
+      # @deprecated linking a single target with multiple Xcode targets is no
+      #             longer supported. Use an {#abstract_target} and target
+      #             inheritance instead.
       #
-      # If no explicit target is specified, then the Pods target will be linked
-      # with the first target in your project. So if you only have one target
-      # you do not need to specify the target to link with.
+      # TODO: This method can be deleted once people have migrated to this 1.0
+      # DSL.
       #
-      # @param    [String, Array<String>] targets
-      #           the target or the targets to link with.
-      #
-      # @example  Link with a user project target
-      #
-      #           link_with 'MyApp'
-      #
-      # @example  Link with multiple user project targets
-      #
-      #           link_with 'MyApp', 'MyOtherApp'
-      #
-      # @return   [void]
-      #
-      def link_with(*targets)
-        current_target_definition.link_with = targets.flatten
+      def link_with(*)
+        raise Informative, 'The specification of `link_with` in the Podfile ' \
+          'is now unsupported, please use target blocks instead.'
       end
 
       # Inhibits **all** the warnings from the CocoaPods libraries.
@@ -589,7 +678,7 @@ module Pod
       # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Defining a pre install hook in a Podfile.
+      # @example  Defining a pre-install hook in a Podfile.
       #
       #   pre_install do |installer|
       #     # Do something fancy!
