@@ -314,8 +314,11 @@ module Pod
       # @return [void]
       #
       def inhibit_warnings_for_pod(pod_name)
-        inhibit_warnings_hash['for_pods'] ||= []
-        inhibit_warnings_hash['for_pods'] << pod_name
+        if inhibit_warnings_hash['for_pods']
+          inhibit_warnings_hash['for_pods'] << pod_name
+        else
+          inhibit_warnings_hash['for_pods'] = [pod_name]
+        end
       end
 
       #--------------------------------------#
