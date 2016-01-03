@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Bug Fixes
+
+* Fix specifying `configuration(s)` for a pod inside a target block.   
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#4707](https://github.com/CocoaPods/CocoaPods/issues/4707)
+
+
 ## 1.0.0.beta.1 (2015-12-30)
 
 ##### Breaking
