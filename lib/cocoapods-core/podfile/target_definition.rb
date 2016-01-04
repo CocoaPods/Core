@@ -284,13 +284,12 @@ module Pod
       #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
-        if inhibit_warnings_hash['all']
+        if raw_inhibit_warnings_hash['all']
           true
         elsif !root? && parent.inhibits_warnings_for_pod?(pod_name)
           true
         else
-          inhibit_warnings_hash['for_pods'] ||= []
-          inhibit_warnings_hash['for_pods'].include? pod_name
+          Array(inhibit_warnings_hash['for_pods']).include? pod_name
         end
       end
 
@@ -303,7 +302,7 @@ module Pod
       # @return [void]
       #
       def inhibit_all_warnings=(flag)
-        inhibit_warnings_hash['all'] = flag
+        raw_inhibit_warnings_hash['all'] = flag
       end
 
       # Inhibits warnings for a specific pod during compilation.
@@ -314,8 +313,8 @@ module Pod
       # @return [void]
       #
       def inhibit_warnings_for_pod(pod_name)
-        inhibit_warnings_hash['for_pods'] ||= []
-        inhibit_warnings_hash['for_pods'] << pod_name
+        raw_inhibit_warnings_hash['for_pods'] ||= []
+        raw_inhibit_warnings_hash['for_pods'] << pod_name
       end
 
       #--------------------------------------#
@@ -392,8 +391,8 @@ module Pod
       #
       def whitelist_pod_for_configuration(pod_name, configuration_name)
         configuration_name = configuration_name.to_s
-        configuration_pod_whitelist[configuration_name] ||= []
-        configuration_pod_whitelist[configuration_name] << pod_name
+        list = raw_configuration_pod_whitelist[configuration_name] ||= []
+        list << pod_name
       end
 
       # @return [Array<String>] unique list of all configurations for which
@@ -626,19 +625,29 @@ module Pod
         internal_hash[key] ||= base_value
       end
 
+      def raw_inhibit_warnings_hash
+        get_hash_value('inhibit_warnings', {})
+      end
+      private :raw_inhibit_warnings_hash
+
       # Returns the inhibit_warnings hash pre-populated with default values.
       #
       # @return [Hash<String, Array>] Hash with :all key for inhibiting all
       #         warnings, and :for_pods key for inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
-        inhibit_hash = get_hash_value('inhibit_warnings', {})
+        inhibit_hash = raw_inhibit_warnings_hash
         if exclusive?
           inhibit_hash
         else
           parent.send(:inhibit_warnings_hash).merge(inhibit_hash) { |l, r| (l + r).uniq }
         end
       end
+
+      def raw_configuration_pod_whitelist
+        get_hash_value('configuration_pod_whitelist', {})
+      end
+      private :raw_configuration_pod_whitelist
 
       # Returns the configuration_pod_whitelist hash
       #
@@ -647,7 +656,7 @@ module Pod
       #         as value.
       #
       def configuration_pod_whitelist
-        whitelist_hash = get_hash_value('configuration_pod_whitelist', {})
+        whitelist_hash = raw_configuration_pod_whitelist
         if exclusive?
           whitelist_hash
         else

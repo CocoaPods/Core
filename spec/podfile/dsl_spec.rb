@@ -13,35 +13,94 @@ module Pod
         podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should == Dependency.new('SSZipArchive', '>= 0.1')
       end
 
-      it 'white-list dependencies on all build configuration by default' do
-        podfile = Podfile.new do
-          pod 'PonyDebugger'
+      describe 'whitelisting pods per configuration' do
+        it 'white-list dependencies on all build configuration by default' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger'
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.true
         end
 
-        target = podfile.target_definitions['Pods']
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.true
+        it 'allows to white-list a dependency on multiple build configuration' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger', :configurations => ['Release', 'App Store']
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'App Store').should.be.true
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+        end
+
+        it 'allows to white-list a dependency on a build configuration' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger', :configuration => 'Release'
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+        end
+
+        it 'allows to white-list a dependency on a build configuration in a target block' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :configuration => 'Release'
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
+          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+        end
       end
 
-      it 'allows to white-list a dependency on multiple build configuration' do
-        podfile = Podfile.new do
-          pod 'PonyDebugger', :configurations => ['Release', 'App Store']
+      describe 'inhibiting warnings' do
+        it 'does not inhibit warnings on dependencies by default' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger'
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
         end
 
-        target = podfile.target_definitions['Pods']
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'App Store').should.be.true
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
-      end
+        it 'allows inhibiting warnings on a single dependency' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger', :inhibit_warnings => true
+          end
 
-      it 'allows to white-list a dependency on a build configuration' do
-        podfile = Podfile.new do
-          pod 'PonyDebugger', :configuration => 'Release'
+          target = podfile.target_definitions['Pods']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
         end
 
-        target = podfile.target_definitions['Pods']
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-        target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+        it 'allows inhibiting warnings on a single dependency in a target block' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => true
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows inhibiting warnings on a single dependency in a target block with inheritance' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => true
+              target 'Inherited' do
+                pod 'PonyDebugger', :inhibit_warnings => false
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
       end
 
       it 'allows specifying multiple subspecs' do
