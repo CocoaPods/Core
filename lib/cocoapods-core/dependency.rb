@@ -340,6 +340,8 @@ module Pod
     #           part by clients that need to create a dependency equal to the
     #           original one.
     #
+    # @todo     Remove the `HEAD` code once everyone has migrated past 1.0.
+    #
     # @return   [Dependency] the dependency described by the string.
     #
     def self.from_string(string)
@@ -348,6 +350,9 @@ module Pod
       version = match_data[2]
       version = version.gsub(/[()]/, '') if version
       case version
+      when ' HEAD'
+        CoreUI.warn "Ignoring obsolete `HEAD` specifier in `#{string}`"
+        Dependency.new(name)
       when nil, /from `(.*)(`|')/
         Dependency.new(name)
       else
