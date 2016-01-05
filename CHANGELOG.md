@@ -2,6 +2,13 @@
 
 ## Master
 
+##### Enhancements
+
+* Dependencies created from a string that use the `HEAD` specifier are properly
+  parsed, ignoring the obsolete specifier.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
+
 ##### Bug Fixes
 
 * Fix specifying `configuration(s)` for a pod inside a target block.   
