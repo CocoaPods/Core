@@ -284,7 +284,9 @@ module Pod
       #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
-        if raw_inhibit_warnings_hash['all']
+        if Array(inhibit_warnings_hash['not_for_pods']).include?(pod_name)
+          false
+        elsif raw_inhibit_warnings_hash['all']
           true
         elsif !root? && parent.inhibits_warnings_for_pod?(pod_name)
           true
@@ -307,14 +309,21 @@ module Pod
 
       # Inhibits warnings for a specific pod during compilation.
       #
-      # @param  [String] pod name
-      #         Whether the warnings should be suppressed.
+      # @param  [String] pod_name
+      #         Name of the pod for which the warnings will be inhibited or not.
+      #
+      # @param  [Bool] should_inhibit
+      #         Whether the warnings should be inhibited or not for given pod.
       #
       # @return [void]
       #
-      def inhibit_warnings_for_pod(pod_name)
-        raw_inhibit_warnings_hash['for_pods'] ||= []
-        raw_inhibit_warnings_hash['for_pods'] << pod_name
+      def set_inhibit_warnings_for_pod(pod_name, should_inhibit)
+        hash_key = 'for_pods' if should_inhibit == true
+        hash_key = 'not_for_pods' if should_inhibit == false
+        if hash_key
+          raw_inhibit_warnings_hash[hash_key] ||= []
+          raw_inhibit_warnings_hash[hash_key] << pod_name
+        end
       end
 
       #--------------------------------------#
@@ -633,7 +642,8 @@ module Pod
       # Returns the inhibit_warnings hash pre-populated with default values.
       #
       # @return [Hash<String, Array>] Hash with :all key for inhibiting all
-      #         warnings, and :for_pods key for inhibiting warnings per Pod.
+      #         warnings, :for_pods key for inhibiting warnings per Pod,
+      #         and :not_for_pods key for not inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
         inhibit_hash = raw_inhibit_warnings_hash
@@ -747,7 +757,8 @@ module Pod
         return requirements unless options.is_a?(Hash)
 
         should_inhibit = options.delete(:inhibit_warnings)
-        inhibit_warnings_for_pod(Specification.root_name name) if should_inhibit
+        pod_name = Specification.root_name(name)
+        set_inhibit_warnings_for_pod(pod_name, should_inhibit)
 
         requirements.pop if options.empty?
       end
