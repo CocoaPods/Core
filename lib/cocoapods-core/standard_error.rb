@@ -65,7 +65,8 @@ module Pod
 
         m = "\n[!] "
         m << "#{description}."
-        m << exception.is_a?(ArgumentError) ? "\n" : " Updating CocoaPods might fix the issue.\n"
+        m << ' Updating CocoaPods might fix the issue.' unless exception.is_a?(ArgumentError)
+        m << "\n"
         m = m.red if m.respond_to?(:red)
 
         backtrace = exception.backtrace
