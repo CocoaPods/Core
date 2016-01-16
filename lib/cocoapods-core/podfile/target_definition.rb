@@ -650,16 +650,20 @@ module Pod
         if exclusive?
           inhibit_hash
         else
-          parent_hash = parent.send(:inhibit_warnings_hash)
+          parent_hash = parent.send(:inhibit_warnings_hash).dup
           if parent_hash['not_for_pods']
-            parent_hash['not_for_pods'] -= inhibit_hash['for_pods']
+            # Remove pods that are set to not inhibit inside parent if they are set to inhibit inside current target.
+            parent_hash['not_for_pods'] -= Array(inhibit_hash['for_pods'])
           end
           if parent_hash['for_pods']
-            parent_hash['for_pods'] -= inhibit_hash['not_for_pods']
+            # Remove pods that are set to inhibit inside parent if they are set to not inhibit inside current target.
+            parent_hash['for_pods'] -= Array(inhibit_hash['for_pods'])
           end
-          parent_hash.merge(inhibit_hash) { |_, l, r|
-            (l + r).uniq
-          }
+          if inhibit_hash['all']
+            # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
+            parent_hash['not_for_pods'] = nil
+          end
+          parent_hash.merge(inhibit_hash) { |_, l, r| (l + r).uniq }
         end
       end
 

@@ -157,6 +157,44 @@ module Pod
           target = podfile.target_definitions['Inherited']
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
         end
+
+        it 'allows not inhibiting a single dependency in parent and inhibiting all dependencies in child' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+              target 'Inherited' do
+                inhibit_all_warnings!
+                pod 'PonyDebugger'
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['Inherited']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not inhibiting a single dependency in grandparent and inhibiting all dependencies in grandchild' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+              target 'Inherited' do
+                target 'InheritedLevelTwo' do
+                  inhibit_all_warnings!
+                  pod 'PonyDebugger'
+                end
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['InheritedLevelTwo']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
       end
 
       it 'allows specifying multiple subspecs' do
