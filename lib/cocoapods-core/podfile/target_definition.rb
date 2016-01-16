@@ -286,7 +286,7 @@ module Pod
       def inhibits_warnings_for_pod?(pod_name)
         if Array(inhibit_warnings_hash['not_for_pods']).include?(pod_name)
           false
-        elsif raw_inhibit_warnings_hash['all']
+        elsif inhibit_warnings_hash['all']
           true
         elsif !root? && parent.inhibits_warnings_for_pod?(pod_name)
           true
@@ -650,7 +650,16 @@ module Pod
         if exclusive?
           inhibit_hash
         else
-          parent.send(:inhibit_warnings_hash).merge(inhibit_hash) { |l, r| (l + r).uniq }
+          parent_hash = parent.send(:inhibit_warnings_hash)
+          if parent_hash['not_for_pods']
+            parent_hash['not_for_pods'] -= inhibit_hash['for_pods']
+          end
+          if parent_hash['for_pods']
+            parent_hash['for_pods'] -= inhibit_hash['not_for_pods']
+          end
+          parent_hash.merge(inhibit_hash) { |_, l, r|
+            (l + r).uniq
+          }
         end
       end
 
