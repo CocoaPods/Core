@@ -350,7 +350,7 @@ module Pod
       version = match_data[2]
       version = version.gsub(/[()]/, '') if version
       case version
-      when ' HEAD'
+      when / HEAD( \(based on #{Pod::Version::VERSION_PATTERN}\))?/
         CoreUI.warn "Ignoring obsolete `HEAD` specifier in `#{string}`"
         Dependency.new(name)
       when nil, /from `(.*)(`|')/
