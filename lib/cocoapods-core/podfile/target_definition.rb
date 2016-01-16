@@ -318,12 +318,18 @@ module Pod
       # @return [void]
       #
       def set_inhibit_warnings_for_pod(pod_name, should_inhibit)
-        hash_key = 'for_pods' if should_inhibit == true
-        hash_key = 'not_for_pods' if should_inhibit == false
-        if hash_key
-          raw_inhibit_warnings_hash[hash_key] ||= []
-          raw_inhibit_warnings_hash[hash_key] << pod_name
-        end
+        hash_key = case should_inhibit
+                   when true
+                     'for_pods'
+                   when false
+                     'not_for_pods'
+                   when nil
+                     return
+                   else
+                     raise ArgumentError, "Got `#{should_inhibit.inspect}`, should be a boolean"
+                   end
+        raw_inhibit_warnings_hash[hash_key] ||= []
+        raw_inhibit_warnings_hash[hash_key] << pod_name
       end
 
       #--------------------------------------#

@@ -68,6 +68,16 @@ module Pod
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
         end
 
+        it 'raises if :inhibit_warnings value is not a boolean' do
+          should.raise ArgumentError do
+            podfile = Podfile.new do
+              pod 'PonyDebugger', :inhibit_warnings => 'true'
+            end
+            target = podfile.target_definitions['Pods']
+            target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          end.message.should.match /should be a boolean/
+        end
+
         it 'allows inhibiting warnings on a single dependency' do
           podfile = Podfile.new do
             pod 'PonyDebugger', :inhibit_warnings => true
