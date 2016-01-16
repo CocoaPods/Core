@@ -288,6 +288,23 @@ module Pod
         }
       end
 
+      it 'excludes inhibit warnings per pod' do
+        podfile = Podfile.new do
+          pod 'ASIHTTPRequest', :inhibit_warnings => false
+          pod 'ObjectiveSugar'
+        end
+        podfile.to_hash.should == {
+          'target_definitions' => [
+            'name' => 'Pods',
+            'abstract' => true,
+            'inhibit_warnings' => {
+              'not_for_pods' => ['ASIHTTPRequest'],
+            },
+            'dependencies' => %w(ASIHTTPRequest ObjectiveSugar),
+          ],
+        }
+      end
+
       it 'includes inhibit all warnings' do
         podfile = Podfile.new do
           pod 'ObjectiveSugar'
