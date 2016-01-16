@@ -11,6 +11,10 @@
 
 ##### Bug Fixes
 
+* Fix parsing of dependencies created from a string that includes `HEAD` specifier and version information.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+  [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
+
 * Fix specifying `configuration(s)` for a pod inside a target block.   
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4707](https://github.com/CocoaPods/CocoaPods/issues/4707)
