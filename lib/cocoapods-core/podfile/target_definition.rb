@@ -284,7 +284,9 @@ module Pod
       #         return true for any asked pod.
       #
       def inhibits_warnings_for_pod?(pod_name)
-        if raw_inhibit_warnings_hash['all']
+        if Array(inhibit_warnings_hash['not_for_pods']).include?(pod_name)
+          false
+        elsif inhibit_warnings_hash['all']
           true
         elsif !root? && parent.inhibits_warnings_for_pod?(pod_name)
           true
@@ -307,14 +309,27 @@ module Pod
 
       # Inhibits warnings for a specific pod during compilation.
       #
-      # @param  [String] pod name
-      #         Whether the warnings should be suppressed.
+      # @param  [String] pod_name
+      #         Name of the pod for which the warnings will be inhibited or not.
+      #
+      # @param  [Bool] should_inhibit
+      #         Whether the warnings should be inhibited or not for given pod.
       #
       # @return [void]
       #
-      def inhibit_warnings_for_pod(pod_name)
-        raw_inhibit_warnings_hash['for_pods'] ||= []
-        raw_inhibit_warnings_hash['for_pods'] << pod_name
+      def set_inhibit_warnings_for_pod(pod_name, should_inhibit)
+        hash_key = case should_inhibit
+                   when true
+                     'for_pods'
+                   when false
+                     'not_for_pods'
+                   when nil
+                     return
+                   else
+                     raise ArgumentError, "Got `#{should_inhibit.inspect}`, should be a boolean"
+                   end
+        raw_inhibit_warnings_hash[hash_key] ||= []
+        raw_inhibit_warnings_hash[hash_key] << pod_name
       end
 
       #--------------------------------------#
@@ -633,14 +648,28 @@ module Pod
       # Returns the inhibit_warnings hash pre-populated with default values.
       #
       # @return [Hash<String, Array>] Hash with :all key for inhibiting all
-      #         warnings, and :for_pods key for inhibiting warnings per Pod.
+      #         warnings, :for_pods key for inhibiting warnings per Pod,
+      #         and :not_for_pods key for not inhibiting warnings per Pod.
       #
       def inhibit_warnings_hash
         inhibit_hash = raw_inhibit_warnings_hash
         if exclusive?
           inhibit_hash
         else
-          parent.send(:inhibit_warnings_hash).merge(inhibit_hash) { |l, r| (l + r).uniq }
+          parent_hash = parent.send(:inhibit_warnings_hash).dup
+          if parent_hash['not_for_pods']
+            # Remove pods that are set to not inhibit inside parent if they are set to inhibit inside current target.
+            parent_hash['not_for_pods'] -= Array(inhibit_hash['for_pods'])
+          end
+          if parent_hash['for_pods']
+            # Remove pods that are set to inhibit inside parent if they are set to not inhibit inside current target.
+            parent_hash['for_pods'] -= Array(inhibit_hash['for_pods'])
+          end
+          if inhibit_hash['all']
+            # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
+            parent_hash['not_for_pods'] = nil
+          end
+          parent_hash.merge(inhibit_hash) { |_, l, r| (l + r).uniq }
         end
       end
 
@@ -747,7 +776,8 @@ module Pod
         return requirements unless options.is_a?(Hash)
 
         should_inhibit = options.delete(:inhibit_warnings)
-        inhibit_warnings_for_pod(Specification.root_name name) if should_inhibit
+        pod_name = Specification.root_name(name)
+        set_inhibit_warnings_for_pod(pod_name, should_inhibit)
 
         requirements.pop if options.empty?
       end

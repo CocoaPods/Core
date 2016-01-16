@@ -68,6 +68,16 @@ module Pod
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
         end
 
+        it 'raises if :inhibit_warnings value is not a boolean' do
+          should.raise ArgumentError do
+            podfile = Podfile.new do
+              pod 'PonyDebugger', :inhibit_warnings => 'true'
+            end
+            target = podfile.target_definitions['Pods']
+            target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          end.message.should.match /should be a boolean/
+        end
+
         it 'allows inhibiting warnings on a single dependency' do
           podfile = Podfile.new do
             pod 'PonyDebugger', :inhibit_warnings => true
@@ -75,6 +85,16 @@ module Pod
 
           target = podfile.target_definitions['Pods']
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not inhibiting warnings on a single dependency' do
+          podfile = Podfile.new do
+            inhibit_all_warnings!
+            pod 'PonyDebugger', :inhibit_warnings => false
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
         end
 
         it 'allows inhibiting warnings on a single dependency in a target block' do
@@ -88,6 +108,18 @@ module Pod
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
         end
 
+        it 'allows not inhibiting warnings on a single dependency in a target block' do
+          podfile = Podfile.new do
+            inhibit_all_warnings!
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+        end
+
         it 'allows inhibiting warnings on a single dependency in a target block with inheritance' do
           podfile = Podfile.new do
             target 'App' do
@@ -99,6 +131,78 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows inhibiting in parent and not inhibiting in child on a single dependency' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => true
+              target 'Inherited' do
+                pod 'PonyDebugger', :inhibit_warnings => false
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+
+          target = podfile.target_definitions['Inherited']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+        end
+
+        it 'allows not inhibiting in parent and inhibiting in child on a single dependency' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+              target 'Inherited' do
+                pod 'PonyDebugger', :inhibit_warnings => true
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['Inherited']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not inhibiting a single dependency in parent and inhibiting all dependencies in child' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+              target 'Inherited' do
+                inhibit_all_warnings!
+                pod 'PonyDebugger'
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['Inherited']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not inhibiting a single dependency in grandparent and inhibiting all dependencies in grandchild' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :inhibit_warnings => false
+              target 'Inherited' do
+                target 'InheritedLevelTwo' do
+                  inhibit_all_warnings!
+                  pod 'PonyDebugger'
+                end
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['InheritedLevelTwo']
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
         end
       end

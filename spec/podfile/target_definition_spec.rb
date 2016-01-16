@@ -238,6 +238,12 @@ module Pod
         @parent.should.inhibits_warnings_for_pod?('RestKit')
       end
 
+      it 'does not inhibit warnings per pod if the option is false' do
+        @parent.inhibit_all_warnings = true
+        @parent.store_pod('ASIHTTPRequest', :inhibit_warnings => false)
+        @parent.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
+      end
+
       it 'must delete the hash if it was empty. otherwise breaks Dependency' do
         reqs = [{ :inhibit_warnings => true }]
         @parent.send(:parse_inhibit_warnings, 'Objective-Record', reqs)
@@ -260,6 +266,18 @@ module Pod
         @child.should.inhibits_warnings_for_pod?('Objective-Record')
       end
 
+      it 'inherits the false option to inhibit warnings per pod' do
+        @parent.inhibit_all_warnings = true
+        @child.store_pod('ASIHTTPRequest', :inhibit_warnings => false)
+        @child.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
+      end
+
+      it 'overriding inhibition per pod in child should not affect parent' do
+        @parent.store_pod('ASIHTTPRequest', :inhibit_warnings => true)
+        @child.store_pod('ASIHTTPRequest', :inhibit_warnings => false)
+        @child.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
+        @parent.should.inhibits_warnings_for_pod?('ASIHTTPRequest')
+      end
       #--------------------------------------#
 
       it 'returns if it should use frameworks' do

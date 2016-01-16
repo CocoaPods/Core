@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add ability to disable inhibiting warnings per pod.  
+  Now `:inhibit_warnings => false` option can be used in podfile to disable inhibition for specific pods.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+
 * Dependencies created from a string that use the `HEAD` specifier are properly
   parsed, ignoring the obsolete specifier.  
   [Samuel Giddins](https://github.com/segiddins)
