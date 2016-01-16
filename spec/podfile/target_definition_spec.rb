@@ -272,6 +272,12 @@ module Pod
         @child.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
       end
 
+      it 'overriding inhibition per pod in child should not affect parent' do
+        @parent.store_pod('ASIHTTPRequest', :inhibit_warnings => true)
+        @child.store_pod('ASIHTTPRequest', :inhibit_warnings => false)
+        @child.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
+        @parent.should.inhibits_warnings_for_pod?('ASIHTTPRequest')
+      end
       #--------------------------------------#
 
       it 'returns if it should use frameworks' do
