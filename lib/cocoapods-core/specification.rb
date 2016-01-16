@@ -618,6 +618,6 @@ module Pod
   rescue Exception => e
     # rubocop:enable Lint/RescueException
     message = "Invalid `#{path.basename}` file: #{e.message}"
-    raise DSLError.new(message, path, e.backtrace, string)
+    raise DSLError.new(message, path, e, string)
   end
 end

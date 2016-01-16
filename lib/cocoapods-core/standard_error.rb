@@ -17,18 +17,18 @@ module Pod
     #
     attr_reader :dsl_path
 
-    # @return [Exception] the backtrace of the exception raised by the
+    # @return [Exception] the exception raised by the
     #         evaluation of the dsl file.
     #
-    attr_reader :backtrace
+    attr_reader :exception
 
-    # @param [Exception] backtrace @see backtrace
+    # @param [Exception] exception @see exception
     # @param [String]    dsl_path  @see dsl_path
     #
-    def initialize(description, dsl_path, backtrace, contents = nil)
+    def initialize(description, dsl_path, exception, contents = nil)
       @description = description
       @dsl_path    = dsl_path
-      @backtrace   = backtrace
+      @exception   = exception
       @contents    = contents
     end
 
@@ -64,10 +64,11 @@ module Pod
         trace_line, description = parse_line_number_from_description
 
         m = "\n[!] "
-        m << description
-        m << ". Updating CocoaPods might fix the issue.\n"
+        m << "#{description}."
+        m << exception.is_a?(ArgumentError) ? "\n" : " Updating CocoaPods might fix the issue.\n"
         m = m.red if m.respond_to?(:red)
 
+        backtrace = exception.backtrace
         return m unless backtrace && dsl_path && contents
 
         trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
