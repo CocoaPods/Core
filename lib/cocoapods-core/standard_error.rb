@@ -20,16 +20,16 @@ module Pod
     # @return [Exception] the exception raised by the
     #         evaluation of the dsl file.
     #
-    attr_reader :exception
+    attr_reader :underlying_exception
 
-    # @param [Exception] exception @see exception
+    # @param [Exception] underlying_exception @see underlying_exception
     # @param [String]    dsl_path  @see dsl_path
     #
-    def initialize(description, dsl_path, exception, contents = nil)
-      @description = description
-      @dsl_path    = dsl_path
-      @exception   = exception
-      @contents    = contents
+    def initialize(description, dsl_path, underlying_exception, contents = nil)
+      @description          = description
+      @dsl_path             = dsl_path
+      @underlying_exception = underlying_exception
+      @contents             = contents
     end
 
     # @return [String] the contents of the DSL that cause the exception to
@@ -65,11 +65,11 @@ module Pod
 
         m = "\n[!] "
         m << "#{description}."
-        m << ' Updating CocoaPods might fix the issue.' unless exception.is_a?(ArgumentError)
+        m << ' Updating CocoaPods might fix the issue.' unless underlying_exception.is_a?(ArgumentError)
         m << "\n"
         m = m.red if m.respond_to?(:red)
 
-        backtrace = exception.backtrace
+        backtrace = underlying_exception.backtrace
         return m unless backtrace && dsl_path && contents
 
         trace_line = backtrace.find { |l| l.include?(dsl_path.to_s) } || trace_line
