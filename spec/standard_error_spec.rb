@@ -9,8 +9,9 @@ module Pod
         "#{@dsl_path}:127:in `block (2 levels) in _eval_podspec'",
         "lib/cocoapods-core/specification.rb:41:in `initialize'",
       ]
+      exception = stub(:backtrace => backtrace)
       description = 'Invalid podspec'
-      @err = DSLError.new(description, @dsl_path, backtrace)
+      @err = DSLError.new(description, @dsl_path, exception)
 
       lines = ["first line\n", "error line\n", "last line\n"]
       File.stubs(:read).returns(lines.join(''))
@@ -36,7 +37,7 @@ module Pod
       syntax_error = should.raise(SyntaxError) { eval(code, nil, @dsl_path.to_s) }
       # rubocop:enable Eval
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
-      @err.stubs(:backtrace).returns(syntax_error.backtrace)
+      @err.stubs(:underlying_exception).returns(syntax_error)
       File.stubs(:read).returns(code)
       @err.message.should == <<-MSG.strip_heredoc
 
@@ -80,19 +81,19 @@ module Pod
     end
 
     it 'is robust against a nil backtrace' do
-      @err.stubs(:backtrace => nil)
+      @err.underlying_exception.stubs(:backtrace => nil)
       lambda { @err.message }.should.not.raise
     end
 
     it 'is robust against a backtrace non including the path of the dsl file' do
-      @err.stubs(:backtrace).returns [
+      @err.underlying_exception.stubs(:backtrace).returns [
         "lib/cocoapods-core/specification.rb:41:in `initialize'",
       ]
       lambda { @err.message }.should.not.raise
     end
 
     it "is robust against a backtrace that doesn't include the line number of the dsl file that originated the error" do
-      @err.stubs(:backtrace).returns [@dsl_path.to_s]
+      @err.underlying_exception.stubs(:backtrace).returns [@dsl_path.to_s]
       lambda { @err.message }.should.not.raise
     end
 
@@ -107,14 +108,14 @@ module Pod
     end
 
     it 'can handle the first line of the dsl file' do
-      @err.stubs(:backtrace).returns ["#{@dsl_path}:1"]
+      @err.underlying_exception.stubs(:backtrace).returns ["#{@dsl_path}:1"]
       lambda { @err.message }.should.not.raise
       @err.message.should.include?('first line')
       @err.message.should.not.include?('last line')
     end
 
     it 'can handle the last line of the dsl file' do
-      @err.stubs(:backtrace).returns ["#{@dsl_path}:3"]
+      @err.underlying_exception.stubs(:backtrace).returns ["#{@dsl_path}:3"]
       lambda { @err.message }.should.not.raise
       @err.message.should.not.include?('first line')
       @err.message.should.include?('last line')

@@ -4,6 +4,9 @@
 
 ##### Enhancements
 
+* Do not show update suggestion on Podfile DSL exceptions caused by argument errors.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+
 * Add ability to disable inhibiting warnings per pod.  
   Now `:inhibit_warnings => false` option can be used in podfile to disable inhibition for specific pods.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
