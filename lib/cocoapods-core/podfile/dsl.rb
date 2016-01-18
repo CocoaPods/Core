@@ -516,6 +516,11 @@ module Pod
       #
       #     pod 'SSZipArchive', :inhibit_warnings => true
       #
+      # Additionally, when you use `inhibit_all_warnings!` attribute,
+      # you can exclude a particular Pod from being inhibited using the following:
+      #
+      #     pod 'SSZipArchive', :inhibit_warnings => false
+      #
       def inhibit_all_warnings!
         current_target_definition.inhibit_all_warnings = true
       end
