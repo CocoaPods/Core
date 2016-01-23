@@ -246,8 +246,7 @@ module Pod
       #             pod 'SSZipArchive'
       #           end
       #
-      # @example  Defining a test target which can access SSZipArchive via Pods
-      #           for it's parent target.
+      # @example  Defining a test target accessing SSZipArchive pod from its parent
       #
       #           target "ZipApp" do
       #             pod 'SSZipArchive'
@@ -258,8 +257,7 @@ module Pod
       #             end
       #           end
       #
-      # @example  Defining a target applies Pods to multiple targets via its
-      #           parent target
+      # @example  Defining a target applies Pods to multiple targets via its parent target
       #
       #           target "ShowsApp" do
       #             pod 'ShowsKit'
