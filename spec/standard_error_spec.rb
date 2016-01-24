@@ -20,7 +20,7 @@ module Pod
     it 'returns a properly formed message' do
       @err.message.should == <<-MSG.strip_heredoc
 
-        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+        [!] Invalid podspec.
 
          #  from #{@dsl_path.expand_path}:2
          #  -------------------------------------------
@@ -41,7 +41,7 @@ module Pod
       File.stubs(:read).returns(code)
       @err.message.should == <<-MSG.strip_heredoc
 
-        [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input. Updating CocoaPods might fix the issue.
+        [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input.
 
          #  from #{@dsl_path.expand_path}:2
          #  -------------------------------------------
@@ -57,7 +57,7 @@ module Pod
       File.expects(:exist?).never
       @err.message.should == <<-MSG.strip_heredoc
 
-        [!] Invalid podspec. Updating CocoaPods might fix the issue.
+        [!] Invalid podspec.
 
          #  from #{@dsl_path}:2
          #  -------------------------------------------

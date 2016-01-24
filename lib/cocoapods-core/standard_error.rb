@@ -63,10 +63,7 @@ module Pod
       @message ||= begin
         trace_line, description = parse_line_number_from_description
 
-        m = "\n[!] "
-        m << "#{description}."
-        m << ' Updating CocoaPods might fix the issue.' unless underlying_exception.is_a?(ArgumentError)
-        m << "\n"
+        m = "\n[!] #{description}.\n"
         m = m.red if m.respond_to?(:red)
 
         backtrace = underlying_exception.backtrace
