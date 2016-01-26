@@ -359,13 +359,13 @@ module Pod
       end
 
       it 'allows specifying the user Xcode project for a Target definition' do
-        podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
+        podfile = Podfile.new { project 'App.xcodeproj' }
         podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
       end
 
       it 'allows specifying the build configurations of a user project' do
         podfile = Podfile.new do
-          xcodeproj 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
+          project 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
         podfile.target_definitions['Pods'].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug

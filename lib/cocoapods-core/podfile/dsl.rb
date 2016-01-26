@@ -468,25 +468,37 @@ module Pod
       #
       #           # This Target can be found in a Xcode project called `FastGPS`
       #           target "MyGPSApp" do
-      #             xcodeproj 'FastGPS'
+      #             project 'FastGPS'
       #             ...
       #           end
       #
       #           # Same Podfile, multiple Xcodeprojects
       #           target "MyNotesApp" do
-      #             xcodeproj 'FastNotes'
+      #             project 'FastNotes'
       #             ...
       #           end
       #
       # @example  Using custom build configurations
       #
-      #           xcodeproj 'TestProject', 'Mac App Store' => :release, 'Test' => :debug
+      #           project 'TestProject', 'Mac App Store' => :release, 'Test' => :debug
       #
       # @return   [void]
       #
-      def xcodeproj(path, build_configurations = {})
+      def project(path, build_configurations = {})
         current_target_definition.user_project_path = path
         current_target_definition.build_configurations = build_configurations
+      end
+
+      # @!visibility private
+      #
+      # @deprecated #{xcodeproj} was renamed to #{project}.
+      #
+      # TODO: This method can be deleted once people have migrated to this 1.0
+      # DSL.
+      #
+      def xcodeproj(*args)
+        CoreUI.warn 'xcodeproj was renamed to `project`. Please use that from now on.'
+        project(*args)
       end
 
       # @!visibility private

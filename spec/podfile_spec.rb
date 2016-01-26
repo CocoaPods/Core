@@ -462,7 +462,7 @@ module Pod
       before do
         @podfile = Podfile.new do
           platform :ios
-          xcodeproj 'iOS Project', 'iOS App Store' => :release, 'Test' => :debug
+          project 'iOS Project', 'iOS App Store' => :release, 'Test' => :debug
 
           target :debug do
             pod 'SSZipArchive'
@@ -480,7 +480,7 @@ module Pod
 
           target :osx_target do
             platform :osx
-            xcodeproj 'OSX Project.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
+            project 'OSX Project.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
             pod 'ASIHTTPRequest'
             target :nested_osx_target do
             end
