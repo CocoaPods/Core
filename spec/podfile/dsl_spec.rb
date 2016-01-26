@@ -476,6 +476,13 @@ module Pod
           end
         end.message.should == 'The specification of `link_with` in the Podfile is now unsupported, please use target blocks instead.'
       end
+
+      it 'warns when using the #xcodeproj method' do
+        podfile = Podfile.new { xcodeproj 'App.xcodeproj', 'Test' => :debug }
+        podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
+        podfile.target_definitions['Pods'].build_configurations.should == { 'Test' => :debug }
+        CoreUI.warnings.should == 'xcodeproj was renamed to `project`. Please use that from now on.'
+      end
     end
 
     #-------------------------------------------------------------------------#
