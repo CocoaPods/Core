@@ -467,5 +467,17 @@ module Pod
     end
 
     #-------------------------------------------------------------------------#
+
+    describe 'Deprecations' do
+      it 'raises when using the #link_with method' do
+        should.raise(Informative) do
+          Podfile.new do
+            link_with 'App'
+          end
+        end.message.should == 'The specification of `link_with` in the Podfile is now unsupported, please use target blocks instead.'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
   end
 end
