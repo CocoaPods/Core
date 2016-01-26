@@ -1,5 +1,14 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Breaking
+
+* The `xcodeproj` Podfile DSL method has been renamed to `project`.
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [Core#298](https://github.com/CocoaPods/Core/issues/298)
+
+
 ## 1.0.0.beta.2 (2016-01-05)
 
 ##### Enhancements
