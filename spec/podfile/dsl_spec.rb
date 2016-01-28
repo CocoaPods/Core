@@ -359,13 +359,13 @@ module Pod
       end
 
       it 'allows specifying the user Xcode project for a Target definition' do
-        podfile = Podfile.new { xcodeproj 'App.xcodeproj' }
+        podfile = Podfile.new { project 'App.xcodeproj' }
         podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
       end
 
       it 'allows specifying the build configurations of a user project' do
         podfile = Podfile.new do
-          xcodeproj 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
+          project 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
         podfile.target_definitions['Pods'].build_configurations.should == {
           'Mac App Store' => :release, 'Test' => :debug
@@ -463,6 +463,25 @@ module Pod
             end
           end
         end.message.should == 'The installation method can only be set at the root level of the Podfile.'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
+    describe 'Deprecations' do
+      it 'raises when using the #link_with method' do
+        should.raise(Informative) do
+          Podfile.new do
+            link_with 'App'
+          end
+        end.message.should == 'The specification of `link_with` in the Podfile is now unsupported, please use target blocks instead.'
+      end
+
+      it 'warns when using the #xcodeproj method' do
+        podfile = Podfile.new { xcodeproj 'App.xcodeproj', 'Test' => :debug }
+        podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
+        podfile.target_definitions['Pods'].build_configurations.should == { 'Test' => :debug }
+        CoreUI.warnings.should == 'xcodeproj was renamed to `project`. Please use that from now on.'
       end
     end
 
