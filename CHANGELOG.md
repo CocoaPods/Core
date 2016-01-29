@@ -8,6 +8,14 @@
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#298](https://github.com/CocoaPods/Core/issues/298)
 
+##### Bug Fixes
+
+* Fix accessing `use_frameworks?` without accidentally clearing the value when
+  it was explicitly set to `false`, so that it would be evaluated as `true` on
+  the next access.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [Core#301](https://github.com/CocoaPods/Core/pull/301)
+
 
 ## 1.0.0.beta.2 (2016-01-05)
 

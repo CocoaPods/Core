@@ -294,6 +294,8 @@ module Pod
         @parent.use_frameworks!
         @child.use_frameworks!(false)
         @child.should.not.uses_frameworks?
+        # make sure that the value is not accidentally overwritten on access
+        @child.should.not.uses_frameworks?
       end
 
       #--------------------------------------#
