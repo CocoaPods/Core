@@ -40,6 +40,13 @@ module Pod
         Platform.watchos.string_name.should == 'watchOS'
       end
 
+      it "exposes a safe variant of it's name as string" do
+        Platform.ios.safe_string_name.should == 'iOS'
+        Platform.osx.safe_string_name.should == 'OSX'
+        Platform.tvos.safe_string_name.should == 'tvOS'
+        Platform.watchos.safe_string_name.should == 'watchOS'
+      end
+
       it 'can be compared for equality with another platform with the same symbolic name' do
         @platform.should == Platform.new(:ios)
       end
