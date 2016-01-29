@@ -637,7 +637,8 @@ module Pod
         unless HASH_KEYS.include?(key)
           raise StandardError, "Unsupported hash key `#{key}`"
         end
-        internal_hash[key] ||= base_value
+        internal_hash[key] = base_value if internal_hash[key].nil?
+        internal_hash[key]
       end
 
       def raw_inhibit_warnings_hash
