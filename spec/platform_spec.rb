@@ -33,6 +33,13 @@ module Pod
         @platform.name.should == :ios
       end
 
+      it "exposes it's name as string" do
+        Platform.ios.string_name.should == 'iOS'
+        Platform.osx.string_name.should == 'OS X'
+        Platform.tvos.string_name.should == 'tvOS'
+        Platform.watchos.string_name.should == 'watchOS'
+      end
+
       it 'can be compared for equality with another platform with the same symbolic name' do
         @platform.should == Platform.new(:ios)
       end
