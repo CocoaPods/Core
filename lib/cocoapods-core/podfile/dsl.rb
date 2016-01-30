@@ -9,6 +9,7 @@ module Pod
     #
     # A Podfile can be very simple:
     #
+    #     target 'MyApp'
     #     pod 'AFNetworking', '~> 1.0'
     #
     # An example of a more complex Podfile can be:
