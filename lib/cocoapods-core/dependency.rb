@@ -344,11 +344,13 @@ module Pod
     #
     # @return   [Dependency] the dependency described by the string.
     #
-    def self.from_string(string)
+    def self.from_string(string, ignore_requirements = false)
       match_data = string.match(/((?:\s?[^\s(])+)( (?:.*))?/)
       name = match_data[1]
       version = match_data[2]
       version = version.gsub(/[()]/, '') if version
+
+      return Dependency.new(name) if ignore_requirements == true
       case version
       when / HEAD( \(based on #{Pod::Version::VERSION_PATTERN}\))?/
         CoreUI.warn "Ignoring obsolete `HEAD` specifier in `#{string}`"
@@ -356,7 +358,7 @@ module Pod
       when nil, /from `(.*)(`|')/
         Dependency.new(name)
       else
-        version_requirements = version.split(',') if version
+        version_requirements = version.split(',')
         Dependency.new(name, version_requirements)
       end
     end
