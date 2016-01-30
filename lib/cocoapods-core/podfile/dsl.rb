@@ -357,7 +357,8 @@ module Pod
 
       # Sets the inheritance mode for the current target.
       #
-      # @param   [:complete, :none, :search_paths] the inheritance mode to set.
+      # @param   [:complete, :none, :search_paths] inheritance
+      #          the inheritance mode to set.
       #
       # @example Inheriting only search paths
       #
@@ -401,7 +402,7 @@ module Pod
       #-----------------------------------------------------------------------#
 
       # @!group Target configuration
-      #   These settings are used to control the  CocoaPods generated project.
+      #   These settings are used to control the CocoaPods generated project.
       #
       #   This starts out simply with stating what `platform` you are working
       #   on. `xcodeproj` allows you to state specifically which project to
