@@ -34,6 +34,39 @@ module Pod
     #     end
     #
     module DSL
+      # @!group Root Options
+      #   Configuration that applies to the Podfile as a whole.
+      #
+      #   * `install!` declares the installation method and options to be used
+      #     during installation.
+
+      # Specifies the installation method to be used when CocoaPods installs
+      # this Podfile.
+      #
+      # @param   [String] installation_method
+      #          the name of the installation strategy.
+      #
+      # @param   [Hash] options
+      #          the installation options.
+      #
+      # @example Specifying custom CocoaPods installation options
+      #
+      #          install! 'cocoapods',
+      #                   :deterministic_uuids => false,
+      #                   :integrate_targets => false
+      #
+      # @return  [void]
+      #
+      def install!(installation_method, options = {})
+        unless current_target_definition.root?
+          raise Informative, 'The installation method can only be set at the root level of the Podfile.'
+        end
+
+        set_hash_value('installation_method', 'name' => installation_method, 'options' => options)
+      end
+
+      #-----------------------------------------------------------------------#
+
       # @!group Dependencies
       #   The Podfile specifies the dependencies of each user target.
       #
@@ -372,31 +405,6 @@ module Pod
       #
       def inherit!(inheritance)
         current_target_definition.inheritance = inheritance
-      end
-
-      # Specifies the installation method to be used when CocoaPods installs
-      # this Podfile.
-      #
-      # @param   [String] installation_method
-      #          the name of the installation strategy.
-      #
-      # @param   [Hash] options
-      #          the installation options.
-      #
-      # @example Specifying custom CocoaPods installation options
-      #
-      #          install! 'cocoapods',
-      #                   :deterministic_uuids => false,
-      #                   :integrate_targets => false
-      #
-      # @return  [void]
-      #
-      def install!(installation_method, options = {})
-        unless current_target_definition.root?
-          raise Informative, 'The installation method can only be set at the root level of the Podfile.'
-        end
-
-        set_hash_value('installation_method', 'name' => installation_method, 'options' => options)
       end
 
       #-----------------------------------------------------------------------#
