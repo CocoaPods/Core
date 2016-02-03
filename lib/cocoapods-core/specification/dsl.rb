@@ -1349,7 +1349,8 @@ module Pod
       attribute :default_subspecs,
                 :container => Array,
                 :singularize => true,
-                :multi_platform => false
+                :multi_platform => false,
+                :root_only => true
 
       #-----------------------------------------------------------------------#
 
