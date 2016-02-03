@@ -246,7 +246,7 @@ module Pod
       end
     end
 
-    # @return [Array] the name of the default subspecs if provided.
+    # @return [Array<String>] the name of the default subspecs if provided.
     #
     def default_subspecs
       # TODO: remove singular form and update the JSON specs.
