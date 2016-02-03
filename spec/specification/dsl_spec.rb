@@ -111,7 +111,7 @@ module Pod
         @spec.attributes_hash['platforms']['ios'].should == '6.0'
       end
 
-      it "doesnt' allows to specify the deployment target without a platform" do
+      it "doesn't allows to specify the deployment target without a platform" do
         e = lambda { @spec.deployment_target = '6.0' }.should.raise Informative
         e.message.should.match /declared only per platform/
       end
