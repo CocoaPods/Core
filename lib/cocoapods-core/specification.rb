@@ -259,6 +259,9 @@ module Pod
     #         {#default_subspecs} or each of its children subspecs that are
     #         compatible with its platform.
     #
+    # @param  [Platform] platform
+    #         return only dependencies supported on the given platform.
+    #
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies(platform = nil)
