@@ -17,7 +17,7 @@ module Pod
     #     platform :ios, '9.0'
     #     inhibit_all_warnings!
     #
-    #     target "MyApp" do
+    #     target 'MyApp' do
     #       pod 'ObjectiveSugar', '~> 0.5'
     #
     #       target "MyAppTests" do
@@ -26,9 +26,8 @@ module Pod
     #       end
     #     end
     #
-    #
     #     post_install do |installer|
-    #       installer.pods_project.targets.each do |target|
+    #       installer.pods_project.pod_targets.each do |target|
     #         puts "#{target.name}"
     #       end
     #     end
@@ -276,16 +275,16 @@ module Pod
       #
       # @example  Defining a target
       #
-      #           target "ZipApp" do
+      #           target 'ZipApp' do
       #             pod 'SSZipArchive'
       #           end
       #
       # @example  Defining a test target accessing SSZipArchive pod from its parent
       #
-      #           target "ZipApp" do
+      #           target 'ZipApp' do
       #             pod 'SSZipArchive'
       #
-      #             target "ZipAppTests" do
+      #             target 'ZipAppTests' do
       #               inherit! :search_paths
       #               pod 'Nimble'
       #             end
@@ -293,19 +292,19 @@ module Pod
       #
       # @example  Defining a target applies Pods to multiple targets via its parent target
       #
-      #           target "ShowsApp" do
+      #           target 'ShowsApp' do
       #             pod 'ShowsKit'
       #
       #             # Has it's own copy of ShowsKit + ShowTVAuth
-      #             target "ShowsTV" do
-      #               pod "ShowTVAuth"
+      #             target 'ShowsTV' do
+      #               pod 'ShowTVAuth'
       #             end
       #
       #             # Has it's own copy of Specta + Expecta
       #             # and has access to ShowsKit via the app
       #             # that the test target is bundled into
       #
-      #             target "ShowsTests" do
+      #             target 'ShowsTests' do
       #               inherit! :search_paths
       #               pod 'Specta'
       #               pod 'Expecta'
@@ -346,24 +345,24 @@ module Pod
       # @example  Defining an abstract_target wrapping Pods to multiple targets
       #
       #           # There are no targets called "Shows" in any Xcode projects
-      #           abstract_target "Shows" do
+      #           abstract_target 'Shows' do
       #             pod 'ShowsKit'
       #
       #             # Has it's own copy of ShowsKit + ShowWebAuth
-      #             target "ShowsiOS" do
-      #               pod "ShowWebAuth"
+      #             target 'ShowsiOS' do
+      #               pod 'ShowWebAuth'
       #             end
       #
       #             # Has it's own copy of ShowsKit + ShowTVAuth
-      #             target "ShowsTV" do
-      #               pod "ShowTVAuth"
+      #             target 'ShowsTV' do
+      #               pod 'ShowTVAuth'
       #             end
       #
       #             # Has it's own copy of Specta + Expecta
       #             # and has access to ShowsKit via the app
       #             # that the test target is bundled into
       #
-      #             target "ShowsTests" do
+      #             target 'ShowsTests' do
       #               inherit! :search_paths
       #               pod 'Specta'
       #               pod 'Expecta'
@@ -437,7 +436,7 @@ module Pod
       #
       # @example  Specifying the platform
       #
-      #           platform :ios, "4.0"
+      #           platform :ios, '4.0'
       #           platform :ios
       #
       # @return   [void]
@@ -477,13 +476,13 @@ module Pod
       # @example  Specifying the user project
       #
       #           # This Target can be found in a Xcode project called `FastGPS`
-      #           target "MyGPSApp" do
+      #           target 'MyGPSApp' do
       #             project 'FastGPS'
       #             ...
       #           end
       #
       #           # Same Podfile, multiple Xcodeprojects
-      #           target "MyNotesApp" do
+      #           target 'MyNotesApp' do
       #             project 'FastNotes'
       #             ...
       #           end

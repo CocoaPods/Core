@@ -266,15 +266,15 @@ module Pod
       #
       #   @example Using Subversion with a tag.
       #
-      #     spec.source = { :svn => "http://svn.code.sf.net/p/polyclipping/code", :tag => '4.8.8' }
+      #     spec.source = { :svn => 'http://svn.code.sf.net/p/polyclipping/code', :tag => '4.8.8' }
       #
       #   @example Using Mercurial with the same revision as the spec's semantic version string.
       #
-      #     spec.source = { :hg => "https://bitbucket.org/dcutting/hyperbek", :revision => "#{s.version}" }
+      #     spec.source = { :hg => 'https://bitbucket.org/dcutting/hyperbek', :revision => "#{s.version}" }
       #
       #   @example Using HTTP to download a compressed file of the code. It supports zip, tgz, bz2, txz and tar.
       #
-      #     spec.source = { :http => "http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip" }
+      #     spec.source = { :http => 'http://dev.wechatapp.com/download/sdk/WeChat_SDK_iOS_en.zip' }
       #
       #   @example Using HTTP to download a file using a hash to verify the download. It supports sha1 and sha256.
       #
@@ -372,12 +372,12 @@ module Pod
       #
       #   @example
       #
-      #     spec.screenshot  = "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png"
+      #     spec.screenshot  = 'http://dl.dropbox.com/u/378729/MBProgressHUD/1.png'
       #
       #   @example
       #
-      #     spec.screenshots = [ "http://dl.dropbox.com/u/378729/MBProgressHUD/1.png",
-      #                          "http://dl.dropbox.com/u/378729/MBProgressHUD/2.png" ]
+      #     spec.screenshots = [ 'http://dl.dropbox.com/u/378729/MBProgressHUD/1.png',
+      #                          'http://dl.dropbox.com/u/378729/MBProgressHUD/2.png' ]
       #
       #   @param  [String] screenshots
       #           An URL for the screenshot of the Pod.
@@ -496,7 +496,7 @@ module Pod
       #
       # @example
       #
-      #   spec.platform = :osx, "10.8"
+      #   spec.platform = :osx, '10.8'
       #
       # @example
       #
@@ -557,11 +557,11 @@ module Pod
       #
       # @example
       #
-      #   spec.ios.deployment_target = "6.0"
+      #   spec.ios.deployment_target = '6.0'
       #
       # @example
       #
-      #   spec.osx.deployment_target = "10.8"
+      #   spec.osx.deployment_target = '10.8'
       #
       # @param    [String] _args
       #           The deployment target of the platform.
@@ -991,11 +991,11 @@ module Pod
       #
       #   @example
       #
-      #     spec.source_files = "Classes/**/*.{h,m}"
+      #     spec.source_files = 'Classes/**/*.{h,m}'
       #
       #   @example
       #
-      #     spec.source_files = "Classes/**/*.{h,m}", "More_Classes/**/*.{h,m}"
+      #     spec.source_files = 'Classes/**/*.{h,m}', 'More_Classes/**/*.{h,m}'
       #
       #   @param  [String, Array<String>] source_files
       #           the source files of the Pod.
@@ -1018,7 +1018,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.public_header_files = "Headers/Public/*.h"
+      #     spec.public_header_files = 'Headers/Public/*.h'
       #
       #   @param  [String, Array<String>] public_header_files
       #           the public headers of the Pod.
@@ -1042,7 +1042,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.private_header_files = "Headers/Private/*.h"
+      #     spec.private_header_files = 'Headers/Private/*.h'
       #
       #   @param  [String, Array<String>] private_header_files
       #           the private headers of the Pod.
@@ -1150,11 +1150,11 @@ module Pod
       #
       #   @example
       #
-      #     spec.resource = "Resources/HockeySDK.bundle"
+      #     spec.resource = 'Resources/HockeySDK.bundle'
       #
       #   @example
       #
-      #     spec.resources = ["Images/*.png", "Sounds/*"]
+      #     spec.resources = ['Images/*.png', 'Sounds/*']
       #
       #   @param  [String, Array<String>] resources
       #           The resources shipped with the Pod.
@@ -1173,11 +1173,11 @@ module Pod
       #
       #   @example
       #
-      #     spec.ios.exclude_files = "Classes/osx"
+      #     spec.ios.exclude_files = 'Classes/osx'
       #
       #   @example
       #
-      #     spec.exclude_files = "Classes/**/unused.{h,m}"
+      #     spec.exclude_files = 'Classes/**/unused.{h,m}'
       #
       #   @param  [String, Array<String>] exclude_files
       #           the file patterns that the Pod should ignore.
@@ -1199,11 +1199,11 @@ module Pod
       #
       #   @example
       #
-      #     spec.preserve_path = "IMPORTANT.txt"
+      #     spec.preserve_path = 'IMPORTANT.txt'
       #
       #   @example
       #
-      #     spec.preserve_paths = "Frameworks/*.framework"
+      #     spec.preserve_paths = 'Frameworks/*.framework'
       #
       #   @param  [String, Array<String>] preserve_paths
       #           the paths that should be not cleaned.
@@ -1227,7 +1227,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.module_map = "source/module.modulemap"
+      #     spec.module_map = 'source/module.modulemap'
       #
       #   @param  [String] module_map
       #           the path to the module map file that should be used.
@@ -1277,12 +1277,12 @@ module Pod
       #
       # @example Subspecs with different source files.
       #
-      #   subspec "Twitter" do |sp|
-      #     sp.source_files = "Classes/Twitter"
+      #   subspec 'Twitter' do |sp|
+      #     sp.source_files = 'Classes/Twitter'
       #   end
       #
-      #   subspec "Pinboard" do |sp|
-      #     sp.source_files = "Classes/Pinboard"
+      #   subspec 'Pinboard' do |sp|
+      #     sp.source_files = 'Classes/Pinboard'
       #   end
       #
       # @example Subspecs referencing dependencies to other subspecs.
@@ -1363,15 +1363,15 @@ module Pod
       #   For example one might want to store resources which are specific to
       #   only iOS projects.
       #
-      #       spec.resources = "Resources/**/*.png"
-      #       spec.ios.resources = "Resources_ios/**/*.png"
+      #       spec.resources = 'Resources/**/*.png'
+      #       spec.ios.resources = 'Resources_ios/**/*.png'
 
       #-----------------------------------------------------------------------#
 
       # Provides support for specifying iOS attributes.
       #
       # @example
-      #   spec.ios.source_files = "Classes/ios/**/*.{h,m}"
+      #   spec.ios.source_files = 'Classes/ios/**/*.{h,m}'
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
@@ -1382,7 +1382,7 @@ module Pod
       # Provides support for specifying OS X attributes.
       #
       # @example
-      #   spec.osx.source_files = "Classes/osx/**/*.{h,m}"
+      #   spec.osx.source_files = 'Classes/osx/**/*.{h,m}'
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
@@ -1393,7 +1393,7 @@ module Pod
       # Provides support for specifying tvOS attributes.
       #
       # @example
-      #   spec.tvos.source_files = "Classes/tvos/**/*.{h,m}"
+      #   spec.tvos.source_files = 'Classes/tvos/**/*.{h,m}'
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
@@ -1404,7 +1404,7 @@ module Pod
       # Provides support for specifying watchOS attributes.
       #
       # @example
-      #   spec.watchos.source_files = "Classes/watchos/**/*.{h,m}"
+      #   spec.watchos.source_files = 'Classes/watchos/**/*.{h,m}'
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
