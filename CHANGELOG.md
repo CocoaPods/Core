@@ -4,9 +4,16 @@
 
 ##### Breaking
 
-* The `xcodeproj` Podfile DSL method has been renamed to `project`.
+* The `xcodeproj` Podfile DSL method has been renamed to `project`.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#298](https://github.com/CocoaPods/Core/issues/298)
+
+##### Enhancements
+
+* Add the ability to disable inhibiting warnings per pod.  
+  Now `:inhibit_warnings => false` option can be used in podfile to disable
+  inhibition for specific pods.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
 
 ##### Bug Fixes
 
@@ -16,17 +23,15 @@
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#301](https://github.com/CocoaPods/Core/pull/301)
 
+* Fix parsing of dependencies created from a string that includes the `HEAD`
+  specifier and version information.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+  [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
+
 
 ## 1.0.0.beta.2 (2016-01-05)
 
 ##### Enhancements
-
-* Do not show update suggestion on Podfile DSL exceptions caused by argument errors.  
-  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
-
-* Add ability to disable inhibiting warnings per pod.  
-  Now `:inhibit_warnings => false` option can be used in podfile to disable inhibition for specific pods.  
-  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
 
 * Dependencies created from a string that use the `HEAD` specifier are properly
   parsed, ignoring the obsolete specifier.  
@@ -34,10 +39,6 @@
   [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
 
 ##### Bug Fixes
-
-* Fix parsing of dependencies created from a string that includes `HEAD` specifier and version information.  
-  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
-  [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
 
 * Fix specifying `configuration(s)` for a pod inside a target block.   
   [Samuel Giddins](https://github.com/segiddins)
