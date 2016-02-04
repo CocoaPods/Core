@@ -4,7 +4,10 @@
 
 ##### Enhancements
 
-* None.  
+* The linter rejects `default_subspecs` defined in subspecs of podspecs.
+  They were never taken into account for subspecs.  
+  [Marius Rackwitz](https://github.com/mrackwitz)
+  [Core#305](https://github.com/CocoaPods/Core/pull/305)
 
 ##### Bug Fixes
 
