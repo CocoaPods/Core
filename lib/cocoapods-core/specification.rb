@@ -246,7 +246,7 @@ module Pod
       end
     end
 
-    # @return [Array] the name of the default subspecs if provided.
+    # @return [Array<String>] the name of the default subspecs if provided.
     #
     def default_subspecs
       # TODO: remove singular form and update the JSON specs.
@@ -258,6 +258,9 @@ module Pod
     # @note   A specification has a dependency on either the
     #         {#default_subspecs} or each of its children subspecs that are
     #         compatible with its platform.
+    #
+    # @param  [Platform] platform
+    #         return only dependencies supported on the given platform.
     #
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
