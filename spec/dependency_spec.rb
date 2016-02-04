@@ -41,12 +41,12 @@ module Pod
         dep.should.not.be.external
       end
 
-      it "knows if it's local" do
+      it 'knows if it is local' do
         dep = Dependency.new('cocoapods', :path => '/tmp/cocoapods')
         dep.should.be.local
       end
 
-      it "says it's not local if nothing was passed in" do
+      it "says it isn't local if nothing was passed in" do
         dep = Dependency.new('cocoapods')
         dep.should.not.be.local
       end
@@ -149,7 +149,7 @@ module Pod
         dep.root_name.should == 'RestKit'
       end
 
-      it "returns a copy of the dependency but for the top level spec, if it's a subspec" do
+      it 'returns a copy of the dependency but for the top level spec, if it is a subspec' do
         dep = Dependency.new('RestKit', '>= 1.2.3')
         dep.to_root_dependency.should == Dependency.new('RestKit', '>= 1.2.3')
         dep = Dependency.new('RestKit/Networking', '>= 1.2.3')

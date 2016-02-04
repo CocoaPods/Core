@@ -24,7 +24,7 @@ module Pod
         @platform = Platform.ios
       end
 
-      it "exposes it's symbolic name" do
+      it 'exposes its symbolic name' do
         @platform.name.should == :ios
       end
 
@@ -33,14 +33,14 @@ module Pod
         @platform.name.should == :ios
       end
 
-      it "exposes it's name as string" do
+      it 'exposes its name as string' do
         Platform.ios.string_name.should == 'iOS'
         Platform.osx.string_name.should == 'OS X'
         Platform.tvos.string_name.should == 'tvOS'
         Platform.watchos.string_name.should == 'watchOS'
       end
 
-      it "exposes a safe variant of it's name as string" do
+      it 'exposes a safe variant of its name as string' do
         Platform.ios.safe_string_name.should == 'iOS'
         Platform.osx.safe_string_name.should == 'OSX'
         Platform.tvos.safe_string_name.should == 'tvOS'
@@ -71,7 +71,7 @@ module Pod
         Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end
 
-      it "uses it's name as it's symbold version" do
+      it 'uses its name as its symbold version' do
         @platform.to_sym.should == :ios
       end
 
