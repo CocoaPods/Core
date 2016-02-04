@@ -35,8 +35,7 @@ module Pod
         dep.should.be.external
       end
 
-      it 'can be initialized with an empty external source and not be ' \
-         'considered external' do
+      it 'can be initialized with an empty external source and not be considered external' do
         dep = Dependency.new('cocoapods', :git => nil)
         dep.should.not.be.external
       end

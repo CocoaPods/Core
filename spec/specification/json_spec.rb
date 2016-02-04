@@ -104,8 +104,7 @@ module Pod
         }]
       end
 
-      it 'handles subspecs when the parent spec specifies platforms and the ' \
-        'subspec inherits' do
+      it 'handles subspecs when the parent spec specifies platforms and the subspec inherits' do
         @spec.platforms = {
           'tvos' => '9.0',
         }
