@@ -200,6 +200,19 @@ module Pod
       end
     end
 
+    # @return [String] The string that describes the #symbolic_name.
+    #
+    def string_name
+      self.class.string_name(symbolic_name)
+    end
+
+    # @return [String] The string that describes the #symbolic_name,
+    #         which doesn't contain spaces and is so safe to use in
+    #         paths which might not be quoted or escaped consequently.
+    def safe_string_name
+      string_name.tr(' ', '')
+    end
+
     # Converts the symbolic name of a platform to a string name suitable to be
     # presented to the user.
     #
