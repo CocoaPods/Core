@@ -278,7 +278,8 @@ module Pod
       specs.map { |s| Dependency.new(s.name, version) }
     end
 
-    # Returns the dependencies on other Pods or subspecs of other Pods.
+    # Returns the dependencies on Pods, which can be completely different
+    # Pods, their subspecs, or own subspecs.
     #
     # @param  [Platform] platform
     #         return only dependencies supported on the given platform.
