@@ -429,7 +429,7 @@ module Pod
     # @param  [Symbol] platform.
     #         If provided the attribute is stored only for the given platform.
     #
-    # @note   If the provides value is Hash the keys are converted to a string.
+    # @note   If the provided value is a Hash, the keys are converted to a string.
     #
     # @return void
     #
