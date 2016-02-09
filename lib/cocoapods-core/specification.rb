@@ -280,9 +280,8 @@ module Pod
 
     # Returns the dependencies on other Pods or subspecs of other Pods.
     #
-    # @param  [Bool] all_platforms
-    #         whether the dependencies should be returned for all platforms
-    #         instead of the active one.
+    # @param  [Platform] platform
+    #         return only dependencies supported on the given platform.
     #
     # @note   External dependencies are inherited by subspecs
     #
