@@ -502,8 +502,8 @@ module Pod
       #
       # @deprecated #{xcodeproj} was renamed to #{project}.
       #
-      # TODO: This method can be deleted once people have migrated to this 1.0
-      # DSL.
+      # `xcodeproj` is deprecated in [1.0](http://blog.cocoapods.org/CocoaPods-1.0/) and has been renamed to `project`.
+      # For pre-1.0 versions use `xcodeproj`.
       #
       def xcodeproj(*args)
         CoreUI.warn 'xcodeproj was renamed to `project`. Please use that from now on.'
