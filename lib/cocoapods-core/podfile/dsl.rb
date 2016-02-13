@@ -516,8 +516,8 @@ module Pod
       #             longer supported. Use an {#abstract_target} and target
       #             inheritance instead.
       #
-      # TODO: This method can be deleted once people have migrated to this 1.0
-      # DSL.
+      # `link_with` is deprecated in [1.0](http://blog.cocoapods.org/CocoaPods-1.0/) in
+      # favour of `abstract_target` and target inheritance instead.
       #
       def link_with(*)
         raise Informative, 'The specification of `link_with` in the Podfile ' \
