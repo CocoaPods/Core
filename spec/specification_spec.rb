@@ -244,6 +244,12 @@ module Pod
         @spec.subspec_by_name('Pod/Subspec/Subsubspec').should == @subsubspec
       end
 
+      it 'returns a subspec given the subspec name' do
+        @spec.subspec_by_name_components([]).should == @spec
+        @spec.subspec_by_name_components(%w(Subspec)).should == @subspec
+        @spec.subspec_by_name_components(%w(Subspec Subsubspec)).should == @subsubspec
+      end
+
       it 'returns a subspec given the relative name' do
         @subspec.subspec_by_name('Subspec/Subsubspec').should == @subsubspec
       end
