@@ -181,6 +181,12 @@ module Pod
         end
       end
 
+      # @return [Array<String>] the name of dependencies on other Pods.
+      #
+      def dependency_names
+        value_for_attribute(:dependencies).keys
+      end
+
       # Raw values need to be prepared as soon as they are read so they can be
       # safely merged to support multi platform attributes and inheritance
       #-----------------------------------------------------------------------#
