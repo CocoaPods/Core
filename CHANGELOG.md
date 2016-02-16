@@ -11,7 +11,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Specification platform proxies (e.g. `spec.ios` or `spec.osx`) will raise more
+  informative errors when trying to set non-multiplatform attributes.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.0.0.beta.3 (2016-02-03)
