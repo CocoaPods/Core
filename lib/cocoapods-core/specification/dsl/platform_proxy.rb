@@ -12,7 +12,7 @@ module Pod
         # @return [Symbol] the platform described by this proxy. Can be either
         #         `:ios` or `:osx`.
         #
-        attr_accessor :platform
+        attr_reader :platform
 
         # @param  [Specification] spec @see spec
         # @param  [Symbol] platform @see platform
@@ -29,18 +29,16 @@ module Pod
         # @return [void]
         #
         def method_missing(meth, *args, &block)
-          attribute = Specification::DSL.attributes.values.find do |attr|
-            if attr.writer_name.to_sym == meth
-              true
-            elsif attr.writer_singular_form
-              attr.writer_singular_form.to_sym == meth
-            end
-          end
-          if attribute && attribute.multi_platform?
-            spec.store_attribute(attribute.name, args.first, platform)
-          else
-            super
-          end
+          return super unless attribute = attribute_for_method(meth)
+          raise NoMethodError, "#{attribute} cannot be set per-platform" unless attribute.multi_platform?
+          spec.store_attribute(attribute.name, args.first, platform)
+        end
+
+        # @!visibility private
+        #
+        def respond_to_missing?(method, include_all)
+          attribute = attribute_for_method(method)
+          (attribute && attribute.multi_platform?) || super
         end
 
         # Allows to add dependency for the platform.
@@ -64,6 +62,19 @@ module Pod
           platform_name = platform.to_s
           spec.attributes_hash['platforms'] ||= {}
           spec.attributes_hash['platforms'][platform_name] = value
+        end
+
+        private
+
+        def attribute_for_method(method)
+          method = method.to_sym
+          Specification::DSL.attributes.values.find do |attribute|
+            if attribute.writer_name.to_sym == method
+              true
+            elsif attribute.writer_singular_form
+              attribute.writer_singular_form.to_sym == method
+            end
+          end
         end
       end
     end
