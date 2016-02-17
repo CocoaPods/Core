@@ -27,8 +27,13 @@ module Pod
     it 'does not respond to non multiplatform attributes' do
       attrs = Specification::DSL.attributes.values.select { |a| !a.multi_platform? }
       attrs.each do |attr|
-        lambda { @proxy.send(attr.writer_name, 'a_value') }.should.raise NoMethodError
+        e = lambda { @proxy.send(attr.writer_name, 'a_value') }.should.raise NoMethodError
+        e.message.should.include "`#{attr.name}` cannot be set per-platform"
       end
+    end
+
+    it 'does not respond to platform=' do
+      lambda { @proxy.platform = :ios, '9.0' }.should.raise NoMethodError
     end
 
     it 'allows to specify a dependency' do
