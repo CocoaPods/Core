@@ -78,11 +78,13 @@ module Pod
       #         definition should inherit only search paths.
       #
       def targets_to_inherit_search_paths
-        return [] unless inheritance == 'search_paths'
-        if root? || !matches_platform?(parent)
-          raise StandardError, "Non-sensical to have search_paths inheritance for #{name} when there is no parent."
-        else
+        can_inherit = !root? && matches_platform?(parent)
+        if inheritance == 'search_paths' # && can_inherit
           parent.targets_to_inherit_search_paths << parent
+        elsif can_inherit
+          parent.targets_to_inherit_search_paths
+        else
+          []
         end
       end
 

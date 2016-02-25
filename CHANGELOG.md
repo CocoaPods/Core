@@ -8,7 +8,10 @@
 
 ##### Bug Fixes
 
-* None.  
+* Allow search paths target inheritance when the parent is the target definition
+  with `inherit! :search_paths`.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#4943](https://github.com/CocoaPods/CocoaPods/issues/4943)
 
 
 ## 1.0.0.beta.4 (2016-02-24)
