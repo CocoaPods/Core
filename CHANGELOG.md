@@ -13,6 +13,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#4943](https://github.com/CocoaPods/CocoaPods/issues/4943)
 
+* Ensure `Podfile.lock`s won't be generated with extraneous `>-` tokens in
+  their YAML.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#4740](https://github.com/CocoaPods/CocoaPods/issues/4740)
+
 
 ## 1.0.0.beta.4 (2016-02-24)
 
