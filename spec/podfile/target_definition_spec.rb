@@ -75,6 +75,7 @@ module Pod
         @child.targets_to_inherit_search_paths.should == [@parent]
 
         grandchild = Podfile::TargetDefinition.new('Grandchild', @child)
+        grandchild.targets_to_inherit_search_paths.should == [@parent]
         grandchild.inheritance = :search_paths
         grandchild.targets_to_inherit_search_paths.should == [@parent, @child]
         @child.inheritance = :complete
