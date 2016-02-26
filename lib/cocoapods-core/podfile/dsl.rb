@@ -1,8 +1,8 @@
 module Pod
   class Podfile
-    # The of the methods defined in this file and the order of the methods is
+    # The methods defined in this file and the order of the methods is
     # relevant for the documentation generated on
-    # CocoaPods/cocoapods.github.com.
+    # https://github.com/CocoaPods/guides.cocoapods.org.
 
     # The Podfile is a specification that describes the dependencies of the
     # targets of one or more Xcode projects.
