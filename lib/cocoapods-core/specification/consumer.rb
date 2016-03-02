@@ -113,6 +113,10 @@ module Pod
       #
       spec_attr_accessor :module_name
 
+      # @return [String] the path of the module map file.
+      #
+      spec_attr_accessor :module_map
+
       # @return [String] the headers directory.
       #
       spec_attr_accessor :header_dir
