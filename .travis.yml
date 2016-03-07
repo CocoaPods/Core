@@ -8,6 +8,8 @@ addons:
  code_climate:
    repo_token: 186c49521e629c51591c86f057f49fe388ce87603e04b5486f0c92f26f2a455f
 rvm:
+  # Latest stable Ruby
+  - 2.3.0
   # OS X 10.9.5-10.10.0 (2.0.0-p481)
   - 2.0.0-p481
   # OS X 10.9.3-10.9.4
