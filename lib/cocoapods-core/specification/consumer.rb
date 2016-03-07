@@ -1,3 +1,5 @@
+require 'cocoapods-core/specification/root_attribute_accessors'
+
 module Pod
   class Specification
     # Allows to conveniently access a Specification programmatically.
@@ -48,6 +50,12 @@ module Pod
       def self.spec_attr_accessor(name)
         define_method(name) do
           value_for_attribute(name)
+        end
+      end
+
+      DSL::RootAttributesAccessors.instance_methods.each do |root_accessor|
+        define_method(root_accessor) do
+          spec.root.send(root_accessor)
         end
       end
 
@@ -112,6 +120,10 @@ module Pod
       # @return [String] the module name.
       #
       spec_attr_accessor :module_name
+
+      # @return [String] the path of the module map file.
+      #
+      spec_attr_accessor :module_map
 
       # @return [String] the headers directory.
       #
