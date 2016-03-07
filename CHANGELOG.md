@@ -4,7 +4,8 @@
 
 ##### Enhancements
 
-* None.  
+* Allow a specification's root attributes to be accessible from a `consumer`.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
@@ -17,6 +18,10 @@
   their YAML.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4740](https://github.com/CocoaPods/CocoaPods/issues/4740)
+
+* Make a spec's custom `module_map` accessible from a `consumer` in a
+  multi-platform compatible manner.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.0.0.beta.4 (2016-02-24)
