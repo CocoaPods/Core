@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.0.0.beta.5 (2016-03-08)
 
 ##### Enhancements
 
