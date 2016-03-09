@@ -1,0 +1,74 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.github.com/repos/cocoapods/specs/commits/master
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - CocoaPods
+      Accept:
+      - application/vnd.github.chitauri-preview+sha
+      If-None-Match:
+      - '""e8e31ca9304385f57ceeb030a29ddd0398660173""'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Wed, 09 Mar 2016 18:09:21 GMT
+      Content-Type:
+      - application/vnd.github.chitauri-preview+sha; charset=utf-8
+      Content-Length:
+      - '40'
+      Status:
+      - 200 OK
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '52'
+      X-Ratelimit-Reset:
+      - '1457549026'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Etag:
+      - '"c0e9a61c418e6970a778e09ff337a037fdb50f9e"'
+      Last-Modified:
+      - Wed, 09 Mar 2016 17:55:53 GMT
+      X-Github-Media-Type:
+      - github.v3; param=chitauri-preview; format=sha
+      Access-Control-Expose-Headers:
+      - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+        X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Served-By:
+      - 01d096e6cfe28f8aea352e988c332cd3
+      X-Github-Request-Id:
+      - 50C04692:CD24:372A2C7:56E066D0
+    body:
+      encoding: UTF-8
+      string: c0e9a61c418e6970a778e09ff337a037fdb50f9e
+    http_version: 
+  recorded_at: Wed, 09 Mar 2016 18:09:21 GMT
+recorded_with: VCR 2.9.3

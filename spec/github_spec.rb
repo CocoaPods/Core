@@ -44,6 +44,16 @@ module Pod
           contents.find { |t| t['name'] == 'README.md' }.should.not.be.nil
         end
       end
+
+      it 'returns the modified state of a repo' do
+        VCR.use_cassette('GitHub', :record => :new_episodes) do
+          old_commit_updated = GitHub.modified_since_commit('https://github.com/CocoaPods/CocoaPods', '6a0ba68e4f0c0229b46f311687cfc81209efd5b9')
+          old_commit_updated.should.be.true
+
+          latest_commit_updated = GitHub.modified_since_commit('https://github.com/CocoaPods/CocoaPods', '436c0e2f71bd2c129ef607a40d57068e6f31ceb7')
+          latest_commit_updated.should.be.false
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#

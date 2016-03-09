@@ -27,6 +27,7 @@ module Pod
   autoload :Platform,       'cocoapods-core/platform'
   autoload :Podfile,        'cocoapods-core/podfile'
   autoload :Source,         'cocoapods-core/source'
+  autoload :MasterSource,   'cocoapods-core/master_source'
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
   autoload :YAMLHelper,     'cocoapods-core/yaml_helper'
