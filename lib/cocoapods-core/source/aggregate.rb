@@ -3,20 +3,14 @@ module Pod
     # The Aggregate manages a directory of sources repositories.
     #
     class Aggregate
-      # @return [Array<Pathname>] The ordered list of source directories.
+      # @return [Array<Source>] The ordered list of sources.
       #
-      attr_reader :directories
+      attr_reader :sources
 
-      # @param  [Array<Pathname>] repos_dirs @see directories
+      # @param  [Array<Source>] repos_dirs @see Sources
       #
-      def initialize(repos_dirs)
-        @directories = Array(repos_dirs)
-      end
-
-      # @return [Array<Source>] The ordered list of the sources.
-      #
-      def sources
-        @sources ||= directories.map { |repo| Source.new(repo) }
+      def initialize(sources)
+        @sources = sources
       end
 
       # @return [Array<String>] the names of all the pods available.
