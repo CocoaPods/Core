@@ -6,7 +6,7 @@ module Pod
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
     #
     before do
-      repos = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
+      repos = [Source.new(fixture('spec-repos/test_repo')), MasterSource.new(fixture('spec-repos/master'))]
       @aggregate = Source::Aggregate.new(repos)
     end
 
@@ -80,14 +80,14 @@ module Pod
       end
 
       it 'performs a full text search' do
-        @aggregate.stubs(:directories).returns([fixture('spec-repos/test_repo')])
+        @aggregate.stubs(:sources).returns([Source.new(fixture('spec-repos/test_repo'))])
         sets = @aggregate.search_by_name('Banana Corp', true)
         sets.count.should == 1
         sets.first.name.should == 'BananaLib'
       end
 
       it 'raises an informative if unable to find a Pod with the given name' do
-        @aggregate.stubs(:directories).returns([fixture('spec-repos/test_repo')])
+        @aggregate.stubs(:sources).returns([Source.new(fixture('spec-repos/test_repo'))])
         should.raise Informative do
           @aggregate.search_by_name('Some-funky-name', true)
         end.message.should.match /Unable to find/
