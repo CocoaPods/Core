@@ -11,7 +11,7 @@ module Pod
     #          Returns the list of changed spec paths.
     #
     def update(show_output)
-      if requires_update
+      if requires_update?
         super
       else
         []
@@ -25,14 +25,20 @@ module Pod
     #
     # @return [Bool] Whether the given source should be updated.
     #
-    def requires_update
-      current_commit_hash = '""'
+    def requires_update?
+      url = 'https://github.com/CocoaPods/Specs'
+      GitHub.modified_since_commit(url, current_commit_hash)
+    end
+
+    private
+
+    def current_commit_hash
+      hash = ''
       Dir.chdir(repo) do
-        current_commit_hash = "\"#{(`git rev-parse HEAD`).strip}\""
+        hash = (`git rev-parse HEAD`).strip
       end
 
-      url = 'https://github.com/cocoapods/specs'
-      GitHub.modified_since_commit(url, current_commit_hash)
+      hash
     end
   end
 end

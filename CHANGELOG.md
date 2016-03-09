@@ -1,5 +1,15 @@
 # CocoaPods Core Changelog
 
+## 0.39-stable
+
+##### Bug Fixes
+
+* Add `MasterSource` and refactor `Source::Aggregate` to be setup with
+  `Array<Source>`.  
+  [Daniel Tomlinson](https://github.com/DanielTomlinson)
+  [CocoaPods#5005](https://github.com/CocoaPods/CocoaPods/issues/5005)
+
+
 ## 0.39.0 (2015-10-09)
 
 This version only introduces changes in the CocoaPods gem.
