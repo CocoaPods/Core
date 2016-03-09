@@ -82,11 +82,11 @@ module Pod
       requirements.compact!
       requirements.uniq!
 
-      if requirements.empty?
-        @requirements = [DefaultRequirement]
-      else
-        @requirements = requirements.map! { |r| self.class.parse r }
-      end
+      @requirements = if requirements.empty?
+                        [DefaultRequirement]
+                      else
+                        requirements.map! { |r| self.class.parse r }
+                      end
     end
 
     #

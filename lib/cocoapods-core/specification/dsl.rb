@@ -513,11 +513,11 @@ module Pod
       #
       def platform=(args)
         name, deployment_target = args
-        if name
-          attributes_hash['platforms'] = { name.to_s => deployment_target }
-        else
-          attributes_hash['platforms'] = {}
-        end
+        attributes_hash['platforms'] = if name
+                                         { name.to_s => deployment_target }
+                                       else
+                                         {}
+                                       end
       end
 
       #------------------#

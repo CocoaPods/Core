@@ -265,13 +265,13 @@ module Pod
     # @return [Array<Dependency>] the dependencies on subspecs.
     #
     def subspec_dependencies(platform = nil)
-      if default_subspecs.empty?
-        specs = subspecs.compact
-      else
-        specs = default_subspecs.map do |subspec_name|
-          root.subspec_by_name("#{name}/#{subspec_name}")
-        end
-      end
+      specs = if default_subspecs.empty?
+                subspecs.compact
+              else
+                default_subspecs.map do |subspec_name|
+                  root.subspec_by_name("#{name}/#{subspec_name}")
+                end
+              end
       if platform
         specs = specs.select { |s| s.supported_on_platform?(platform) }
       end
