@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.github.com/repos/cocoapods/specs/commits/master
+    uri: https://api.github.com/repos/CocoaPods/Specs/commits/master
     body:
       encoding: US-ASCII
       string: ''
@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - application/vnd.github.chitauri-preview+sha
       If-None-Match:
-      - '""e8e31ca9304385f57ceeb030a29ddd0398660173""'
+      - '"e8e31ca9304385f57ceeb030a29ddd0398660173"'
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
   response:
@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - GitHub.com
       Date:
-      - Wed, 09 Mar 2016 18:05:22 GMT
+      - Wed, 09 Mar 2016 21:44:04 GMT
       Content-Type:
       - application/vnd.github.chitauri-preview+sha; charset=utf-8
       Content-Length:
@@ -33,18 +33,18 @@ http_interactions:
       X-Ratelimit-Limit:
       - '60'
       X-Ratelimit-Remaining:
-      - '54'
+      - '59'
       X-Ratelimit-Reset:
-      - '1457549026'
+      - '1457563444'
       Cache-Control:
       - public, max-age=60, s-maxage=60
       Vary:
       - Accept
       - Accept-Encoding
       Etag:
-      - '"c0e9a61c418e6970a778e09ff337a037fdb50f9e"'
+      - '"570c31dea8def019ec563be2326e053cc937e084"'
       Last-Modified:
-      - Wed, 09 Mar 2016 17:55:53 GMT
+      - Wed, 09 Mar 2016 21:34:06 GMT
       X-Github-Media-Type:
       - github.v3; param=chitauri-preview; format=sha
       Access-Control-Expose-Headers:
@@ -63,10 +63,12 @@ http_interactions:
       X-Xss-Protection:
       - 1; mode=block
       X-Served-By:
-      - 474556b853193c38f1b14328ce2d1b7d
+      - e724c57ebb9961c772a91e2dd7421c8d
       X-Github-Request-Id:
-      - 50C04692:10E9F:804357A:56E065E2
+      - 50C04692:CD23:3542B94:56E09924
     body:
+      encoding: UTF-8
+      string: 570c31dea8def019ec563be2326e053cc937e084
     http_version: 
-  recorded_at: Wed, 09 Mar 2016 18:05:22 GMT
+  recorded_at: Wed, 09 Mar 2016 21:44:04 GMT
 recorded_with: VCR 2.9.3
