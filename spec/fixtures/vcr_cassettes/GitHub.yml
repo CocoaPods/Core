@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -53,7 +53,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5406:C3DA37D:529BFC4F
     body:
@@ -73,7 +73,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -114,7 +114,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5406:C3DA474:529BFC4F
     body:
@@ -135,7 +135,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -176,7 +176,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5406:C3DA576:529BFC50
     body:
@@ -196,7 +196,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -237,7 +237,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5405:C061C43:529BFC51
     body:
@@ -257,7 +257,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -298,7 +298,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5406:C3DA7A1:529BFC51
     body:
@@ -318,7 +318,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 404
@@ -350,7 +350,7 @@ http_interactions:
       - ETag, Link, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-OAuth-Scopes,
         X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4F00B20F:5406:C3DA8C7:529BFC52
     body:
@@ -370,7 +370,7 @@ http_interactions:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - '*/*'
+      - "*/*"
   response:
     status:
       code: 200
@@ -415,7 +415,7 @@ http_interactions:
       - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
         X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
       Access-Control-Allow-Origin:
-      - '*'
+      - "*"
       X-Github-Request-Id:
       - 4E359872:6646:DD2F:534406D0
       Strict-Transport-Security:
@@ -429,4 +429,140 @@ http_interactions:
       string: '{"id":17830008,"name":"contentful.objc","full_name":"contentful/contentful.objc","owner":{"login":"contentful","id":472182,"avatar_url":"https://avatars.githubusercontent.com/u/472182?","gravatar_id":"e56de7e4f179bef19f5faa9771f5e085","url":"https://api.github.com/users/contentful","html_url":"https://github.com/contentful","followers_url":"https://api.github.com/users/contentful/followers","following_url":"https://api.github.com/users/contentful/following{/other_user}","gists_url":"https://api.github.com/users/contentful/gists{/gist_id}","starred_url":"https://api.github.com/users/contentful/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/contentful/subscriptions","organizations_url":"https://api.github.com/users/contentful/orgs","repos_url":"https://api.github.com/users/contentful/repos","events_url":"https://api.github.com/users/contentful/events{/privacy}","received_events_url":"https://api.github.com/users/contentful/received_events","type":"Organization","site_admin":false},"private":false,"html_url":"https://github.com/contentful/contentful.objc","description":"","fork":false,"url":"https://api.github.com/repos/contentful/contentful.objc","forks_url":"https://api.github.com/repos/contentful/contentful.objc/forks","keys_url":"https://api.github.com/repos/contentful/contentful.objc/keys{/key_id}","collaborators_url":"https://api.github.com/repos/contentful/contentful.objc/collaborators{/collaborator}","teams_url":"https://api.github.com/repos/contentful/contentful.objc/teams","hooks_url":"https://api.github.com/repos/contentful/contentful.objc/hooks","issue_events_url":"https://api.github.com/repos/contentful/contentful.objc/issues/events{/number}","events_url":"https://api.github.com/repos/contentful/contentful.objc/events","assignees_url":"https://api.github.com/repos/contentful/contentful.objc/assignees{/user}","branches_url":"https://api.github.com/repos/contentful/contentful.objc/branches{/branch}","tags_url":"https://api.github.com/repos/contentful/contentful.objc/tags","blobs_url":"https://api.github.com/repos/contentful/contentful.objc/git/blobs{/sha}","git_tags_url":"https://api.github.com/repos/contentful/contentful.objc/git/tags{/sha}","git_refs_url":"https://api.github.com/repos/contentful/contentful.objc/git/refs{/sha}","trees_url":"https://api.github.com/repos/contentful/contentful.objc/git/trees{/sha}","statuses_url":"https://api.github.com/repos/contentful/contentful.objc/statuses/{sha}","languages_url":"https://api.github.com/repos/contentful/contentful.objc/languages","stargazers_url":"https://api.github.com/repos/contentful/contentful.objc/stargazers","contributors_url":"https://api.github.com/repos/contentful/contentful.objc/contributors","subscribers_url":"https://api.github.com/repos/contentful/contentful.objc/subscribers","subscription_url":"https://api.github.com/repos/contentful/contentful.objc/subscription","commits_url":"https://api.github.com/repos/contentful/contentful.objc/commits{/sha}","git_commits_url":"https://api.github.com/repos/contentful/contentful.objc/git/commits{/sha}","comments_url":"https://api.github.com/repos/contentful/contentful.objc/comments{/number}","issue_comment_url":"https://api.github.com/repos/contentful/contentful.objc/issues/comments/{number}","contents_url":"https://api.github.com/repos/contentful/contentful.objc/contents/{+path}","compare_url":"https://api.github.com/repos/contentful/contentful.objc/compare/{base}...{head}","merges_url":"https://api.github.com/repos/contentful/contentful.objc/merges","archive_url":"https://api.github.com/repos/contentful/contentful.objc/{archive_format}{/ref}","downloads_url":"https://api.github.com/repos/contentful/contentful.objc/downloads","issues_url":"https://api.github.com/repos/contentful/contentful.objc/issues{/number}","pulls_url":"https://api.github.com/repos/contentful/contentful.objc/pulls{/number}","milestones_url":"https://api.github.com/repos/contentful/contentful.objc/milestones{/number}","notifications_url":"https://api.github.com/repos/contentful/contentful.objc/notifications{?since,all,participating}","labels_url":"https://api.github.com/repos/contentful/contentful.objc/labels{/name}","releases_url":"https://api.github.com/repos/contentful/contentful.objc/releases{/id}","created_at":"2014-03-17T14:05:15Z","updated_at":"2014-04-08T11:04:26Z","pushed_at":"2014-04-08T11:04:25Z","git_url":"git://github.com/contentful/contentful.objc.git","ssh_url":"git@github.com:contentful/contentful.objc.git","clone_url":"https://github.com/contentful/contentful.objc.git","svn_url":"https://github.com/contentful/contentful.objc","homepage":null,"size":12976,"stargazers_count":3,"watchers_count":3,"language":"Objective-C","has_issues":true,"has_downloads":true,"has_wiki":true,"forks_count":0,"mirror_url":null,"open_issues_count":0,"forks":0,"open_issues":0,"watchers":3,"default_branch":"master","master_branch":"master","organization":{"login":"contentful","id":472182,"avatar_url":"https://avatars.githubusercontent.com/u/472182?","gravatar_id":"e56de7e4f179bef19f5faa9771f5e085","url":"https://api.github.com/users/contentful","html_url":"https://github.com/contentful","followers_url":"https://api.github.com/users/contentful/followers","following_url":"https://api.github.com/users/contentful/following{/other_user}","gists_url":"https://api.github.com/users/contentful/gists{/gist_id}","starred_url":"https://api.github.com/users/contentful/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/contentful/subscriptions","organizations_url":"https://api.github.com/users/contentful/orgs","repos_url":"https://api.github.com/users/contentful/repos","events_url":"https://api.github.com/users/contentful/events{/privacy}","received_events_url":"https://api.github.com/users/contentful/received_events","type":"Organization","site_admin":false},"network_count":0,"subscribers_count":6}'
     http_version: 
   recorded_at: Tue, 08 Apr 2014 14:25:15 GMT
-recorded_with: VCR 2.9.0
+- request:
+    method: get
+    uri: https://api.github.com/repos/CocoaPods/CocoaPods/commits/master
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - CocoaPods
+      Accept:
+      - application/vnd.github.chitauri-preview+sha
+      If-None-Match:
+      - '"6a0ba68e4f0c0229b46f311687cfc81209efd5b9"'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Wed, 09 Mar 2016 17:51:36 GMT
+      Content-Type:
+      - application/vnd.github.chitauri-preview+sha; charset=utf-8
+      Content-Length:
+      - '40'
+      Status:
+      - 200 OK
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '55'
+      X-Ratelimit-Reset:
+      - '1457549026'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Etag:
+      - '"436c0e2f71bd2c129ef607a40d57068e6f31ceb7"'
+      Last-Modified:
+      - Tue, 08 Mar 2016 05:37:50 GMT
+      X-Github-Media-Type:
+      - github.v3; param=chitauri-preview; format=sha
+      Access-Control-Expose-Headers:
+      - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+        X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Served-By:
+      - 7b641bda7ec2ca7cd9df72d2578baf75
+      X-Github-Request-Id:
+      - 50C04692:CD1C:562C67:56E062A7
+    body:
+      encoding: UTF-8
+      string: 436c0e2f71bd2c129ef607a40d57068e6f31ceb7
+    http_version: 
+  recorded_at: Wed, 09 Mar 2016 17:51:36 GMT
+- request:
+    method: get
+    uri: https://api.github.com/repos/CocoaPods/CocoaPods/commits/master
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - CocoaPods
+      Accept:
+      - application/vnd.github.chitauri-preview+sha
+      If-None-Match:
+      - '"436c0e2f71bd2c129ef607a40d57068e6f31ceb7"'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 304
+      message: Not Modified
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Wed, 09 Mar 2016 17:51:36 GMT
+      Status:
+      - 304 Not Modified
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '55'
+      X-Ratelimit-Reset:
+      - '1457549026'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Etag:
+      - '"436c0e2f71bd2c129ef607a40d57068e6f31ceb7"'
+      Last-Modified:
+      - Tue, 08 Mar 2016 05:37:50 GMT
+      Access-Control-Expose-Headers:
+      - ETag, Link, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+        X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Content-Security-Policy:
+      - default-src 'none'
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Served-By:
+      - 7f48e2f7761567e923121f17538d7a6d
+      X-Github-Request-Id:
+      - 50C04692:CD22:2812CC2:56E062A8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Wed, 09 Mar 2016 17:51:36 GMT
+recorded_with: VCR 2.9.3

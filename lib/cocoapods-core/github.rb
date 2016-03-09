@@ -76,6 +76,32 @@ module Pod
       end
     end
 
+    # Returns whether the repository has been updated since a given commit.
+    # If the request fails, the response will be true as the API is still in
+    # beta and likely to change.
+    #
+    # @param [String] url @see #repo
+    #
+    # @param [String] commit
+    #        The current HEAD commit.
+    #
+    # @return [Bool] Whether the repository has been updated since the commit.
+    #
+    def self.modified_since_commit(url, commit)
+      return true unless repo_id = normalized_repo_id(url)
+      require 'rest'
+      request_url = "https://api.github.com/repos/#{repo_id}/commits/master"
+      headers = {
+        'User-Agent' => 'CocoaPods',
+        'Accept' => 'application/vnd.github.chitauri-preview+sha',
+        'If-None-Match' => "\"#{commit}\"",
+      }
+      response = REST.get(request_url, headers)
+      code = response.status_code
+
+      code != 304
+    end
+
     private
 
     # @!group Private helpers
