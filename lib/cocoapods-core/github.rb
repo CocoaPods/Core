@@ -94,7 +94,7 @@ module Pod
       headers = {
         'User-Agent' => 'CocoaPods',
         'Accept' => 'application/vnd.github.chitauri-preview+sha',
-        'If-None-Match' => "\"#{commit}\"",
+        'If-None-Match' => %("#{commit}"),
       }
       response = REST.get(request_url, headers)
       code = response.status_code
