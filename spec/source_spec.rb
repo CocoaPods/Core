@@ -187,6 +187,29 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    describe '#update' do
+      before do
+        @source.stubs(:ensure_in_repo!)
+      end
+
+      it 'uses the only fast forward git option' do
+        @source.expects(:`).with { |cmd| cmd.should.include('--ff-only') }
+        @source.send :update_git_repo
+      end
+
+      it 'uses git diff with name only option' do
+        @source.expects(:`).with { |cmd| cmd.should.include('--name-only') }.returns('')
+        @source.send :diff_until_commit_hash, 'DUMMY_HASH'
+      end
+
+      it 'finds diff of commits before/after repo update' do
+        @source.expects(:`).with { |cmd| cmd.should.include('DUMMY_HASH..HEAD') }.returns('')
+        @source.send :diff_until_commit_hash, 'DUMMY_HASH'
+      end
+    end
+
+    # #-------------------------------------------------------------------------#
+
     describe 'Representations' do
       it 'returns the hash representation' do
         @source.to_hash['BananaLib']['1.0']['name'].should == 'BananaLib'

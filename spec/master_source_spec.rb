@@ -10,6 +10,10 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#update' do
+      before do
+        @source.stubs(:ensure_in_repo!)
+      end
+
       it 'does not git fetch if the GitHub API returns not-modified' do
         VCR.use_cassette('MasterSource_nofetch', :record => :new_episodes) do
           @source.expects(:update_git_repo).never
