@@ -4,7 +4,10 @@
 
 ##### Enhancements
 
-* None.  
+* Add `MasterSource` and refactor `Source::Aggregate` to be setup with
+  `Array<Source>`.  
+  [Daniel Tomlinson](https://github.com/DanielTomlinson)
+  [CocoaPods#5005](https://github.com/CocoaPods/CocoaPods/issues/5005)
 
 ##### Bug Fixes
 

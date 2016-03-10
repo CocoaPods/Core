@@ -60,8 +60,8 @@ module Pod
     describe 'Concerning multiple sources' do
       before do
         # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
-        repos_dirs = [fixture('spec-repos/test_repo'), fixture('spec-repos/master')]
-        @set = Source::Aggregate.new(repos_dirs).search_by_name('JSONKit').first
+        repos = [Source.new(fixture('spec-repos/test_repo')), Source.new(fixture('spec-repos/master'))]
+        @set = Source::Aggregate.new(repos).search_by_name('JSONKit').first
       end
 
       it 'returns the sources where a podspec is available' do

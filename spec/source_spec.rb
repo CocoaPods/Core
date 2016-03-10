@@ -195,6 +195,10 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#update' do
+      before do
+        @source.stubs(:ensure_in_repo!)
+      end
+
       it 'uses the only fast forward git option' do
         @source.expects(:`).with { |cmd| cmd.should.include('--ff-only') }
         @source.send :update_git_repo

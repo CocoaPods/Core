@@ -21,7 +21,7 @@ module Pod
     # @param  [Pathname, String] repo @see #repo.
     #
     def initialize(repo)
-      @repo = Pathname.new(repo)
+      @repo = Pathname(repo).expand_path
     end
 
     # @return [String] The name of the source.
@@ -39,9 +39,9 @@ module Pod
     #
     def url
       Dir.chdir(repo) do
-        remote = `git config --get remote.origin.url`.chomp
+        remote = git(%w(config --get remote.origin.url))
 
-        if $?.success?
+        if !remote.empty?
           remote
         elsif (repo + '.git').exist?
           "file://#{repo}/.git"
@@ -325,6 +325,11 @@ module Pod
     # @group Private Helpers
     #-------------------------------------------------------------------------#
 
+    def ensure_in_repo!
+      return if Pathname.pwd == repo
+      raise 'Must be in the root of the repo'
+    end
+
     # Loads the specification for the given Pod gracefully.
     #
     # @param  [String] name
@@ -363,16 +368,25 @@ module Pod
     end
 
     def git_commit_hash
-      (`git rev-parse HEAD` || '').strip
+      ensure_in_repo!
+      git(%w(rev-parse HEAD))
     end
 
     def update_git_repo(show_output = false)
-      output = `git pull --ff-only 2>&1`
+      ensure_in_repo!
+      output = git(%w(pull --ff-only), :include_error => true)
       CoreUI.puts output if show_output
     end
 
     def diff_until_commit_hash(commit_hash)
-      (`git diff --name-only #{commit_hash}..HEAD` || '').strip.split("\n")
+      ensure_in_repo!
+      git(%W(diff --name-only #{commit_hash}..HEAD)).split("\n")
+    end
+
+    def git(args, include_error: false)
+      command = 'git ' << args.join(' ')
+      command << ' 2>&1' if include_error
+      (`#{command}` || '').strip
     end
 
     #-------------------------------------------------------------------------#
