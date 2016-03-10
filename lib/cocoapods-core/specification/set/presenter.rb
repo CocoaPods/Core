@@ -122,11 +122,11 @@ module Pod
         def deprecation_description
           if spec.deprecated?
             description = '[DEPRECATED'
-            if spec.deprecated_in_favor_of.nil?
-              description += ']'
-            else
-              description += " in favor of #{spec.deprecated_in_favor_of}]"
-            end
+            description += if spec.deprecated_in_favor_of.nil?
+                             ']'
+                           else
+                             " in favor of #{spec.deprecated_in_favor_of}]"
+                           end
 
             description
           end

@@ -253,13 +253,13 @@ module Pod
       self_req  = requirement
       other_req = other.requirement
 
-      if other_req == default
-        dep = self.class.new(name, self_req)
-      elsif self_req == default
-        dep = self.class.new(name, other_req)
-      else
-        dep = self.class.new(name, self_req.as_list.concat(other_req.as_list))
-      end
+      dep = if other_req == default
+              self.class.new(name, self_req)
+            elsif self_req == default
+              self.class.new(name, other_req)
+            else
+              self.class.new(name, self_req.as_list.concat(other_req.as_list))
+            end
 
       if external_source || other.external_source
         self_external_source  = external_source || {}
