@@ -18,6 +18,8 @@ module Pod
       end
     end
 
+    private
+
     # Returns whether a source requires updating.
     #
     # @param [Source] source
@@ -26,19 +28,8 @@ module Pod
     # @return [Bool] Whether the given source should be updated.
     #
     def requires_update?
-      url = 'https://github.com/CocoaPods/Specs'
-      GitHub.modified_since_commit(url, current_commit_hash)
-    end
-
-    private
-
-    def current_commit_hash
-      hash = ''
-      Dir.chdir(repo) do
-        hash = (`git rev-parse HEAD`).strip
-      end
-
-      hash
+      commit_hash = Dir.chdir(repo) { git_commit_hash }
+      GitHub.modified_since_commit('CocoaPods/Specs', commit_hash)
     end
   end
 end
