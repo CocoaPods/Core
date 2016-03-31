@@ -62,6 +62,10 @@ module Pod
     end
 
     def self.puts(message)
+      @output << message << "\n"
+    end
+
+    def self.print(message)
       @output << message
     end
 

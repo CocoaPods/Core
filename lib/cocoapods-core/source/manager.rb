@@ -238,6 +238,39 @@ module Pod
         end
       end
 
+      # Returns the search data stored in the file system.
+      # If existing data in the file system is not valid, returns nil.
+      #
+      def stored_search_index
+        @updated_search_index ||= begin
+          if search_index_path.exist?
+            require 'json'
+            index = JSON.parse(search_index_path.read)
+            index if index.is_a?(Hash) # TODO: should we also check if hash has correct hierarchy?
+          end
+        end
+      end
+
+      # Stores given search data in the file system.
+      # @param [Hash] index
+      #        Index to be saved in file system
+      #
+      def save_search_index(index)
+        require 'json'
+        @updated_search_index = index
+        search_index_path.open('w') do |io|
+          io.write(@updated_search_index.to_json)
+        end
+      end
+
+      # Allows to clear the search index.
+      #
+      attr_writer :updated_search_index
+
+      # @return [Pathname] The path where the search index should be stored.
+      #
+      attr_accessor :search_index_path
+
       private
 
       # @return [Source] The Source at a given path.

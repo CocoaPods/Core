@@ -300,7 +300,10 @@ module Pod
         update_git_repo(show_output)
         refresh_metadata
         if version = metadata.last_compatible_version(Version.new(CORE_VERSION))
-          git(['checkout', "v#{version}"])
+          tag = "v#{version}"
+          CoreUI.warn "Using the `#{tag}` tag of the `#{name}` source because " \
+            "it is the last version compatible with CocoaPods #{CORE_VERSION}."
+          git(['checkout', tag])
         end
         changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
       end

@@ -229,6 +229,21 @@ module Pod
       end
     end
 
+    #-------------------------------------------------------------------------#
+
+    describe '#verify_compatibility!' do
+      it 'raises while asked to version information of a source if it is not compatible' do
+        @source.stubs(:metadata).returns(Source::Metadata.new('min' => '999.0'))
+        e = lambda { @source.verify_compatibility! }.should.raise Informative
+        e.message.should.match /Update CocoaPods/
+        e.message.should.match /(currently using #{CORE_VERSION})/
+        @source.stubs(:metadata).returns(Source::Metadata.new('max' => '0.0.1'))
+        e = lambda { @source.verify_compatibility! }.should.raise Informative
+        e.message.should.match /Update CocoaPods/
+        e.message.should.match /(currently using #{CORE_VERSION})/
+      end
+    end
+
     # #-------------------------------------------------------------------------#
 
     describe 'Representations' do
