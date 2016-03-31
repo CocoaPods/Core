@@ -1,6 +1,7 @@
 require 'cocoapods-core/source/acceptor'
 require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
+require 'cocoapods-core/source/manager'
 require 'cocoapods-core/source/metadata'
 
 module Pod
@@ -173,13 +174,13 @@ module Pod
     #         source.
     #
     def all_specs
-      glob = specs_dir.join('*/' * metadata.prefix_lengths.size, '*', '*.podspec{.json,}')
+      glob = specs_dir.join('*/' * metadata.prefix_lengths.size, '*', '*', '*.podspec{.json,}')
       specs = Pathname.glob(glob).map do |path|
         begin
           Specification.from_file(path)
         rescue
           CoreUI.warn "Skipping `#{path.relative_path_from(repo)}` because the " \
-                      "podspec contains errors."
+                      'podspec contains errors.'
           next
         end
       end
@@ -304,6 +305,25 @@ module Pod
         changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
       end
       changed_spec_paths
+    end
+
+    def git?
+      Dir.chdir(repo) do
+        !git(%w(rev-parse HEAD)).empty?
+      end
+    end
+
+    def verify_compatibility!
+      return if metadata.compatible?(CORE_VERSION)
+
+      version_msg = if metadata.minimum_cocoapods_version == metadata.maximum_cocoapods_version
+                      metadata.minimum_cocoapods_version
+                    else
+                      "#{metadata.minimum_cocoapods_version} - #{metadata.maximum_cocoapods_version}"
+                    end
+      raise Informative, "The `#{name}` repo requires " \
+        "CocoaPods #{version_msg} (currently using #{CORE_VERSION})\n" \
+        'Update CocoaPods, or checkout the appropriate tag in the repo.'
     end
 
     public
