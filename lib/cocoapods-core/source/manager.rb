@@ -13,7 +13,8 @@ module Pod
       # @return [Array<Pathname>] The source repo directories.
       #
       def source_repos
-        repos_dir.exist? ? repos_dir.children.select(&:directory?) : []
+        return [] unless repos_dir.exist?
+        repos_dir.children.select(&:directory?).sort_by { |d| d.basename.to_s.downcase }
       end
 
       # @return [Source::Aggregate] The aggregate of all the sources with the
