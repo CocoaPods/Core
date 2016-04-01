@@ -340,6 +340,7 @@ module Pod
       #
       def source_with_url(url)
         url = url.downcase.gsub(/.git$/, '')
+        url = 'https://github.com/cocoapods/specs' if url =~ %r{github.com[:/]+cocoapods/specs}
         all.find do |source|
           source.url && source.url.downcase.gsub(/.git$/, '') == url
         end

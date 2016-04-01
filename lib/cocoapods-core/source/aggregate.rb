@@ -10,6 +10,7 @@ module Pod
       # @param  [Array<Source>] repos_dirs @see Sources
       #
       def initialize(sources)
+        raise "Cannot initialize an aggregate with a nil source: (#{sources})" if sources.include?(nil)
         @sources = sources
       end
 
