@@ -326,8 +326,9 @@ module Pod
     #-------------------------------------------------------------------------#
 
     def ensure_in_repo!
-      return if Pathname.pwd == repo
-      raise 'Must be in the root of the repo'
+      return if Pathname.pwd.realpath == repo.realpath
+      raise StandardError, "Must be in the root of the repo (#{repo}), " \
+        "instead in #{Pathname.pwd}."
     end
 
     # Loads the specification for the given Pod gracefully.
