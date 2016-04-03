@@ -25,6 +25,16 @@ module Pod
         new(hash)
       end
 
+      def to_hash
+        hash = {}
+        hash['min'] = @minimum_cocoapods_version.to_s if @minimum_cocoapods_version
+        hash['max'] = @maximum_cocoapods_version.to_s if @maximum_cocoapods_version
+        hash['last'] = @latest_cocoapods_version.to_s if @latest_cocoapods_version
+        hash['prefix_lengths'] = @prefix_lengths unless @prefix_lengths.empty?
+        hash['last_compatible_versions'] = @last_compatible_versions.map(&:to_s) unless @last_compatible_versions.empty?
+        hash
+      end
+
       def path_fragment(pod_name, version = nil)
         prefixes = if prefix_lengths.empty?
                      []

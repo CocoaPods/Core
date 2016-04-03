@@ -54,5 +54,24 @@ module Pod
         @metadata.compatible?('1.0.0').should.be.false
       end
     end
+
+    describe '#to_hash' do
+      it 'returns a hash representation of the metadata' do
+        @metadata.to_hash.should == {
+          'min' => '0.33.1',
+          'max' => '1.9.9',
+          'last' => '1.0.0.beta.6',
+          'prefix_lengths' => [1, 1, 1],
+          'last_compatible_versions' => ['0.11.0', '0.20.5', '0.22.0'],
+        }
+      end
+
+      it 'excludes missing properties' do
+        @metadata = Source::Metadata.new('min' => '999.0')
+        @metadata.to_hash.should == {
+          'min' => '999.0',
+        }
+      end
+    end
   end
 end
