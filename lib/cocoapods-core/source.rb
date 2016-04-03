@@ -16,10 +16,8 @@ module Pod
   #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
-    # @return [Pathname] The path where the source is stored.
+    # @return [Pod::Source::Metadata] The metadata for this source.
     #
-    attr_reader :repo
-
     attr_reader :metadata
 
     # @param  [Pathname, String] repo @see #repo.
@@ -79,9 +77,49 @@ module Pod
       "#<#{self.class} name:#{name} type:#{type}>"
     end
 
+    # @!group Paths
+    #-------------------------------------------------------------------------#
+
+    # @return [Pathname] The path where the source is stored.
+    #
+    attr_reader :repo
+
+    # @return [Pathname] The directory where the specs are stored.
+    #
+    # @note   In previous versions of CocoaPods they used to be stored in
+    #         the root of the repo. This lead to issues, especially with
+    #         the GitHub interface and now they are stored in a dedicated
+    #         folder.
+    #
+    def specs_dir
+      @specs_dir ||= begin
+        specs_sub_dir = repo + 'Specs'
+        if specs_sub_dir.exist?
+          specs_sub_dir
+        elsif repo.exist?
+          repo
+        end
+      end
+    end
+
+    # @param  [String] name The name of the pod.
+    #
+    # @return [Pathname] The path at which the specs for the given pod are
+    #         stored.
+    #
+    def pod_path(name)
+      specs_dir.join(*metadata.path_fragment(name))
+    end
+
+    # @return [Pathname] The path at which source metadata is stored.
+    #
+    def metadata_path
+      repo + 'CocoaPods-version.yml'
+    end
+
     public
 
-    # @!group Queering the source
+    # @!group Querying the source
     #-------------------------------------------------------------------------#
 
     # @return [Array<String>] the list of the name of all the Pods.
@@ -123,7 +161,7 @@ module Pod
     def versions(name)
       return nil unless specs_dir
       raise ArgumentError, 'No name' unless name
-      pod_dir = specs_dir + pod_path(name)
+      pod_dir = pod_path(name)
       return unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
@@ -158,7 +196,7 @@ module Pod
     def specification_path(name, version)
       raise ArgumentError, 'No name' unless name
       raise ArgumentError, 'No version' unless version
-      path = specs_dir + pod_path(name) + version.to_s
+      path = pod_path(name) + version.to_s
       specification_path = path + "#{name}.podspec.json"
       unless specification_path.exist?
         specification_path = path + "#{name}.podspec"
@@ -224,8 +262,7 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      glob = specs_dir + pod_path(query)
-      if Pathname.glob(glob).map { |path| path.basename.to_s } == [query]
+      if Pathname.glob(pod_path(query)).map { |path| path.basename.to_s } == [query]
         set(query)
       end
     end
@@ -384,30 +421,8 @@ module Pod
       nil
     end
 
-    # @return [Pathname] The directory where the specs are stored.
-    #
-    # @note   In previous versions of CocoaPods they used to be stored in
-    #         the root of the repo. This lead to issues, especially with
-    #         the GitHub interface and now they are stored in a dedicated
-    #         folder.
-    #
-    def specs_dir
-      @specs_dir ||= begin
-        specs_sub_dir = repo + 'Specs'
-        if specs_sub_dir.exist?
-          specs_sub_dir
-        elsif repo.exist?
-          repo
-        end
-      end
-    end
-
-    def pod_path(name)
-      metadata.path_fragment(name)
-    end
-
     def refresh_metadata
-      @metadata = Metadata.from_file(repo + 'CocoaPods-version.yml')
+      @metadata = Metadata.from_file(metadata_path)
     end
 
     def git_commit_hash
