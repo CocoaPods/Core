@@ -123,15 +123,16 @@ module Pod
       # your Podfile to use future versions of CocoaPods. Anyway a clear and
       # simple upgrade path will be provided.
       #
-      # By default dependencies are installed on all the build configurations
+      # By default dependencies are installed in all the build configurations
       # of the target. For debug purposes or for other reasons, they can be
-      # enabled only on a given list of build configuration names.
+      # only enabled on a list of build configurations.
       #
-      #     pod 'PonyDebugger', :configurations => ['Release', 'App Store']
+      #     pod 'PonyDebugger', :configurations => ['Debug', 'Beta']
       #
-      # Alternatively you can white-list only a single build configuration.
+      # Alternatively, you specify to have it included on a single build
+      # configuration.
       #
-      #     pod 'PonyDebugger', :configuration => ['Release']
+      #     pod 'PonyDebugger', :configuration => 'Debug'
       #
       # ------
       #
