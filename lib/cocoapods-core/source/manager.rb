@@ -72,7 +72,7 @@ module Pod
       # @return [Pathname] The path of the master repo.
       #
       def master_repo_dir
-        repos_dir + 'master'
+        source_dir('master')
       end
 
       # @return [Bool] Checks if the master repo is usable.
