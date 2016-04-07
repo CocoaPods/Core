@@ -6,6 +6,10 @@ module Pod
       STDOUT.puts message
     end
 
+    def self.print(message)
+      STDOUT.print(message)
+    end
+
     def self.warn(message)
       STDERR.puts message
     end

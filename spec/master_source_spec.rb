@@ -29,7 +29,8 @@ module Pod
       end
 
       it 'uses the only fast forward git option' do
-        @source.expects(:`).with { |cmd| cmd.should.include('--ff-only') }
+        @source.expects(:`).with('git checkout master')
+        @source.expects(:`).with('git pull --ff-only 2>&1')
         @source.send :update_git_repo
       end
 

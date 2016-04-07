@@ -1,6 +1,8 @@
 require 'cocoapods-core/source/acceptor'
 require 'cocoapods-core/source/aggregate'
 require 'cocoapods-core/source/health_reporter'
+require 'cocoapods-core/source/manager'
+require 'cocoapods-core/source/metadata'
 
 module Pod
   # The Source class is responsible to manage a collection of podspecs.
@@ -14,14 +16,15 @@ module Pod
   #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
-    # @return [Pathname] The path where the source is stored.
+    # @return [Pod::Source::Metadata] The metadata for this source.
     #
-    attr_reader :repo
+    attr_reader :metadata
 
     # @param  [Pathname, String] repo @see #repo.
     #
     def initialize(repo)
       @repo = Pathname(repo).expand_path
+      refresh_metadata
     end
 
     # @return [String] The name of the source.
@@ -74,9 +77,49 @@ module Pod
       "#<#{self.class} name:#{name} type:#{type}>"
     end
 
+    # @!group Paths
+    #-------------------------------------------------------------------------#
+
+    # @return [Pathname] The path where the source is stored.
+    #
+    attr_reader :repo
+
+    # @return [Pathname] The directory where the specs are stored.
+    #
+    # @note   In previous versions of CocoaPods they used to be stored in
+    #         the root of the repo. This lead to issues, especially with
+    #         the GitHub interface and now they are stored in a dedicated
+    #         folder.
+    #
+    def specs_dir
+      @specs_dir ||= begin
+        specs_sub_dir = repo + 'Specs'
+        if specs_sub_dir.exist?
+          specs_sub_dir
+        elsif repo.exist?
+          repo
+        end
+      end
+    end
+
+    # @param  [String] name The name of the pod.
+    #
+    # @return [Pathname] The path at which the specs for the given pod are
+    #         stored.
+    #
+    def pod_path(name)
+      specs_dir.join(*metadata.path_fragment(name))
+    end
+
+    # @return [Pathname] The path at which source metadata is stored.
+    #
+    def metadata_path
+      repo + 'CocoaPods-version.yml'
+    end
+
     public
 
-    # @!group Queering the source
+    # @!group Querying the source
     #-------------------------------------------------------------------------#
 
     # @return [Array<String>] the list of the name of all the Pods.
@@ -86,10 +129,10 @@ module Pod
       unless specs_dir
         raise Informative, "Unable to find a source named: `#{name}`"
       end
-      specs_dir_as_string = specs_dir.to_s
-      Dir.entries(specs_dir).select do |entry|
-        valid_name = entry[0, 1] != '.'
-        valid_name && File.directory?(File.join(specs_dir_as_string, entry))
+      glob = specs_dir.join('*/' * metadata.prefix_lengths.size, '*')
+      Pathname.glob(glob).reduce([]) do |pods, entry|
+        pods << entry.basename.to_s if entry.directory?
+        pods
       end.sort
     end
 
@@ -118,7 +161,7 @@ module Pod
     def versions(name)
       return nil unless specs_dir
       raise ArgumentError, 'No name' unless name
-      pod_dir = specs_dir + name
+      pod_dir = pod_path(name)
       return unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
@@ -153,7 +196,7 @@ module Pod
     def specification_path(name, version)
       raise ArgumentError, 'No name' unless name
       raise ArgumentError, 'No version' unless version
-      path = specs_dir + name + version.to_s
+      path = pod_path(name) + version.to_s
       specification_path = path + "#{name}.podspec.json"
       unless specification_path.exist?
         specification_path = path + "#{name}.podspec"
@@ -169,15 +212,17 @@ module Pod
     #         source.
     #
     def all_specs
-      specs = pods.map do |name|
+      glob = specs_dir.join('*/' * metadata.prefix_lengths.size, '*', '*', '*.podspec{.json,}')
+      specs = Pathname.glob(glob).map do |path|
         begin
-          versions(name).map { |version| specification(name, version) }
+          Specification.from_file(path)
         rescue
-          CoreUI.warn "Skipping `#{name}` because the podspec contains errors."
+          CoreUI.warn "Skipping `#{path.relative_path_from(repo)}` because the " \
+                      'podspec contains errors.'
           next
         end
       end
-      specs.flatten.compact
+      specs.compact
     end
 
     # Returns the set for the Pod with the given name.
@@ -217,7 +262,7 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      if specs_dir.children.select(&:directory?).map(&:basename).map(&:to_s).include?(query.to_s)
+      if Pathname.glob(pod_path(query)).map { |path| path.basename.to_s } == [query]
         set(query)
       end
     end
@@ -290,9 +335,35 @@ module Pod
       Dir.chdir(repo) do
         prev_commit_hash = git_commit_hash
         update_git_repo(show_output)
+        refresh_metadata
+        if version = metadata.last_compatible_version(Version.new(CORE_VERSION))
+          tag = "v#{version}"
+          CoreUI.warn "Using the `#{tag}` tag of the `#{name}` source because " \
+            "it is the last version compatible with CocoaPods #{CORE_VERSION}."
+          git(['checkout', tag])
+        end
         changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
       end
       changed_spec_paths
+    end
+
+    def git?
+      Dir.chdir(repo) do
+        !git(%w(rev-parse HEAD)).empty?
+      end
+    end
+
+    def verify_compatibility!
+      return if metadata.compatible?(CORE_VERSION)
+
+      version_msg = if metadata.minimum_cocoapods_version == metadata.maximum_cocoapods_version
+                      metadata.minimum_cocoapods_version
+                    else
+                      "#{metadata.minimum_cocoapods_version} - #{metadata.maximum_cocoapods_version}"
+                    end
+      raise Informative, "The `#{name}` repo requires " \
+        "CocoaPods #{version_msg} (currently using #{CORE_VERSION})\n" \
+        'Update CocoaPods, or checkout the appropriate tag in the repo.'
     end
 
     public
@@ -350,22 +421,8 @@ module Pod
       nil
     end
 
-    # @return [Pathname] The directory where the specs are stored.
-    #
-    # @note   In previous versions of CocoaPods they used to be stored in
-    #         the root of the repo. This lead to issues, especially with
-    #         the GitHub interface and now they are stored in a dedicated
-    #         folder.
-    #
-    def specs_dir
-      @specs_dir ||= begin
-        specs_sub_dir = repo + 'Specs'
-        if specs_sub_dir.exist?
-          specs_sub_dir
-        elsif repo.exist?
-          repo
-        end
-      end
+    def refresh_metadata
+      @metadata = Metadata.from_file(metadata_path)
     end
 
     def git_commit_hash
@@ -375,8 +432,14 @@ module Pod
 
     def update_git_repo(show_output = false)
       ensure_in_repo!
+      git(['checkout', git_tracking_branch])
       output = git(%w(pull --ff-only), :include_error => true)
       CoreUI.puts output if show_output
+    end
+
+    def git_tracking_branch
+      path = repo.join('.git', 'cocoapods_branch')
+      path.file? ? path.read.strip : 'master'
     end
 
     def diff_until_commit_hash(commit_hash)

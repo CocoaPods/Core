@@ -6,10 +6,11 @@ module SpecHelper
   end
 
   module TemporaryDirectory
+    module_function
+
     def temporary_directory
       ROOT + 'tmp'
     end
-    module_function :temporary_directory
 
     def setup_temporary_directory
       temporary_directory.mkpath
@@ -21,8 +22,8 @@ module SpecHelper
 
     def self.extended(base)
       base.before do
-        teardown_temporary_directory
-        setup_temporary_directory
+        TemporaryDirectory.teardown_temporary_directory
+        TemporaryDirectory.setup_temporary_directory
       end
     end
   end
