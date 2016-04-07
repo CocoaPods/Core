@@ -1,4 +1,6 @@
 autoload :Digest, 'digest/md5'
+require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash/indifferent_access'
 
 module Pod
   class Source
@@ -10,6 +12,7 @@ module Pod
       attr_reader :last_compatible_versions
 
       def initialize(hash = {})
+        hash = hash.with_indifferent_access
         @minimum_cocoapods_version = hash['min']
         @minimum_cocoapods_version &&= Pod::Version.new(@minimum_cocoapods_version)
         @maximum_cocoapods_version = hash['max']
@@ -26,7 +29,7 @@ module Pod
       end
 
       def to_hash
-        hash = {}
+        hash = ActiveSupport::HashWithIndifferentAccess.new
         hash['min'] = @minimum_cocoapods_version.to_s if @minimum_cocoapods_version
         hash['max'] = @maximum_cocoapods_version.to_s if @maximum_cocoapods_version
         hash['last'] = @latest_cocoapods_version.to_s if @latest_cocoapods_version
