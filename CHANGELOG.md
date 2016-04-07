@@ -4,11 +4,24 @@
 
 ##### Enhancements
 
-* None.  
+* Add support for sharded `Specs` directories in a source.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5002](https://github.com/CocoaPods/CocoaPods/issues/5002)
+
+* Migrate the `Pod::SourcesManager` singleton to be the `Pod::Source::Manager`
+  class.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+* Add support for specifying a list of tags in a source for breaking backwards
+  compatibility with old CocoaPods versions.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5002](https://github.com/CocoaPods/CocoaPods/issues/5002)
 
 ##### Bug Fixes
 
-* None.  
+* Allow the master specs repo to be cloned using a `git://` URL.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5062](https://github.com/CocoaPods/CocoaPods/issues/5062)
 
 
 ## 1.0.0.beta.6 (2016-03-15)
