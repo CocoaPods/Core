@@ -138,7 +138,7 @@ module Pod
       #
       # ### Subspecs
       #
-      # When installing a Pod via it's name, it will install all of the
+      # When installing a Pod via its name, it will install all of the
       # default subspecs defined in the podspec.
       #
       # You may install a specific subspec using the following:
@@ -296,12 +296,12 @@ module Pod
       #           target 'ShowsApp' do
       #             pod 'ShowsKit'
       #
-      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             # Has its own copy of ShowsKit + ShowTVAuth
       #             target 'ShowsTV' do
       #               pod 'ShowTVAuth'
       #             end
       #
-      #             # Has it's own copy of Specta + Expecta
+      #             # Has its own copy of Specta + Expecta
       #             # and has access to ShowsKit via the app
       #             # that the test target is bundled into
       #
@@ -345,23 +345,24 @@ module Pod
       #
       # @example  Defining an abstract_target wrapping Pods to multiple targets
       #
-      #           # There are no targets called "Shows" in any Xcode projects
+      #           # Note: There are no targets called "Shows" in any of this workspace's Xcode projects
       #           abstract_target 'Shows' do
       #             pod 'ShowsKit'
       #
-      #             # Has it's own copy of ShowsKit + ShowWebAuth
+      #             # The target ShowsiOS has its own copy of ShowsKit (inherited) + ShowWebAuth (added here)
       #             target 'ShowsiOS' do
       #               pod 'ShowWebAuth'
       #             end
       #
-      #             # Has it's own copy of ShowsKit + ShowTVAuth
+      #             # The target ShowsTV has its own copy of ShowsKit (inherited) + ShowTVAuth (added here)
       #             target 'ShowsTV' do
       #               pod 'ShowTVAuth'
       #             end
       #
-      #             # Has it's own copy of Specta + Expecta
-      #             # and has access to ShowsKit via the app
-      #             # that the test target is bundled into
+      #             # Our tests target has its own copy of
+      #             # our testing frameworks, and has access
+      #             # to ShowsKit as well because it is
+      #             # a child of the abstract target 'Shows'
       #
       #             target 'ShowsTests' do
       #               inherit! :search_paths
