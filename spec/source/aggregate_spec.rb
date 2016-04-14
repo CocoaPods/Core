@@ -105,7 +105,7 @@ module Pod
         index = @aggregate.generate_search_index_for_source(@test_source)
         text = 'BananaLib Chunky bananas! Full of chunky bananas. Banana Corp Monkey Boy monkey@banana-corp.local'
         text.split.each do |word|
-          index[word].should == [:BananaLib]
+          index[word].should == %w(BananaLib)
         end
         index['Faulty_spec'].should.be.nil
       end
@@ -113,7 +113,7 @@ module Pod
       it 'generates the search index for changes in source' do
         changed_paths = ['Specs/JSONKit/1.4/JSONKit.podspec']
         index = @aggregate.generate_search_index_for_changes_in_source(@test_source, changed_paths)
-        index['JSONKit'].should == [:JSONKit]
+        index['JSONKit'].should == %w(JSONKit)
         index['BananaLib'].should.be.nil
       end
 
