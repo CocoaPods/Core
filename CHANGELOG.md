@@ -23,6 +23,11 @@
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5062](https://github.com/CocoaPods/CocoaPods/issues/5062)
 
+* Appending to an existing search index will now make new pods visible via
+  search.  
+  [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
+  [CocoaPods#5031](https://github.com/CocoaPods/CocoaPods/issues/5031)
+
 
 ## 1.0.0.beta.6 (2016-03-15)
 
