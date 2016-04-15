@@ -262,8 +262,10 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      if Pathname.glob(pod_path(query)).map { |path| path.basename.to_s } == [query]
-        set(query)
+      found = Pathname.glob(pod_path(query)).map { |path| path.basename.to_s }
+      if [query] == found
+        set = set(query)
+        set if set.specification.name == query
       end
     end
 
