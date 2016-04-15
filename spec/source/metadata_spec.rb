@@ -60,7 +60,7 @@ module Pod
         @metadata.to_hash.should == {
           'min' => '0.33.1',
           'max' => '1.9.9',
-          'last' => '1.0.0.beta.6',
+          'last' => CORE_VERSION,
           'prefix_lengths' => [1, 1, 1],
           'last_compatible_versions' => ['0.11.0', '0.20.5', '0.22.0'],
         }
