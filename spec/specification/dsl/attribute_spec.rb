@@ -76,9 +76,9 @@ module Pod
         @attr.types.should == [String]
       end
 
-      it 'is not inherited if it is root only' do
+      it 'is inherited by default if it is root only' do
         attr = Attribute.new('name', :root_only => true)
-        attr.should.not.be.inherited
+        attr.should.be.inherited
       end
     end
 

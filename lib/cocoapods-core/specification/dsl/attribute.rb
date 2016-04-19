@@ -29,18 +29,18 @@ module Pod
         def initialize(name, options)
           @name = name
 
-          @multi_platform = options.delete(:multi_platform) { true      }
-          @inherited      = options.delete(:inherited)      { false     }
-          @root_only      = options.delete(:root_only)      { false     }
-          @required       = options.delete(:required)       { false     }
-          @singularize    = options.delete(:singularize)    { false     }
-          @file_patterns  = options.delete(:file_patterns)  { false     }
-          @container      = options.delete(:container)      { nil       }
-          @keys           = options.delete(:keys)           { nil       }
-          @default_value  = options.delete(:default_value)  { nil       }
-          @ios_default    = options.delete(:ios_default)    { nil       }
-          @osx_default    = options.delete(:osx_default)    { nil       }
-          @types          = options.delete(:types)          { [String]  }
+          @multi_platform = options.delete(:multi_platform) { true       }
+          @root_only      = options.delete(:root_only)      { false      }
+          @inherited      = options.delete(:inherited)      { @root_only }
+          @required       = options.delete(:required)       { false      }
+          @singularize    = options.delete(:singularize)    { false      }
+          @file_patterns  = options.delete(:file_patterns)  { false      }
+          @container      = options.delete(:container)      { nil        }
+          @keys           = options.delete(:keys)           { nil        }
+          @default_value  = options.delete(:default_value)  { nil        }
+          @ios_default    = options.delete(:ios_default)    { nil        }
+          @osx_default    = options.delete(:osx_default)    { nil        }
+          @types          = options.delete(:types)          { [String]   }
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{self}"
@@ -149,7 +149,7 @@ module Pod
         # @note   Attributes stored in wrappers are always inherited.
         #
         def inherited?
-          !root_only? && @inherited
+          @inherited
         end
 
         #---------------------------------------------------------------------#
