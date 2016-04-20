@@ -96,10 +96,14 @@ module Pod
         'Accept' => 'application/vnd.github.chitauri-preview+sha',
         'If-None-Match' => %("#{commit}"),
       }
-      response = REST.get(request_url, headers)
-      code = response.status_code
 
-      code != 304
+      begin
+        response = REST.get(request_url, headers)
+        code = response.status_code
+        code != 304
+      rescue
+        raise Informative, "Failed to connect to GitHub to update the #{repo_id} specs repo - Please check if you are offline, or that GitHub is down"
+      end
     end
 
     private
