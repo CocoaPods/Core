@@ -43,6 +43,12 @@ module Pod
         @source.expects(:`).with { |cmd| cmd.should.include('DUMMY_HASH..HEAD') }.returns('')
         @source.send :diff_until_commit_hash, 'DUMMY_HASH'
       end
+
+      it 'raises if there is a network failure when checking for updates' do
+        WebMock::API.stub_request(:get, '/repos/CocoaPods/Specs/commits/master').to_timeout
+        @source.expects(:update_git_repo).never
+        should.raise(Informative) { @source.send :update, true }
+      end
     end
 
     #-------------------------------------------------------------------------#
