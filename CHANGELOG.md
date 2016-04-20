@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Root attributes are inherited by default.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5177](https://github.com/CocoaPods/CocoaPods/issues/5177)
 
 
 ## 1.0.0.beta.8 (2016-04-15)
