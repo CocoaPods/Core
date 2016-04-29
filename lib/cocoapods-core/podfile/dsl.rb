@@ -117,12 +117,6 @@ module Pod
       #
       # ### Build configurations
       #
-      # *IMPORTANT*: the following syntax is tentative and might change without
-      # notice in future. This feature is released in this state due to
-      # the strong demand for it. You can use it but you might need to change
-      # your Podfile to use future versions of CocoaPods. Anyway a clear and
-      # simple upgrade path will be provided.
-      #
       # By default dependencies are installed in all the build configurations
       # of the target. For debug purposes or for other reasons, they can be
       # only enabled on a list of build configurations.
