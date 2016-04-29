@@ -128,6 +128,10 @@ module Pod
       #
       #     pod 'PonyDebugger', :configuration => 'Debug'
       #
+      # Note that transitive dependencies are included in all configurations,
+      # you have to manually specify build configurations for them as well in
+      # case this is not desired.
+      #
       # ------
       #
       # ### Subspecs
