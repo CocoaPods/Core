@@ -4,7 +4,7 @@
 
 ##### Enhancements
 
-* Improve error message on MasterSource networking errors.
+* Improve error message on MasterSource networking errors.  
   [Daniel Tomlinson](https://github.com/DanielTomlinson)
   [CocoaPods#5175](https://github.com/CocoaPods/CocoaPods/issues/5175)
 
