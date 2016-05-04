@@ -153,7 +153,7 @@ module Pod
       # @return [Boolean] whether this target definition is abstract.
       #
       def abstract?
-        get_hash_value('abstract', false)
+        get_hash_value('abstract', root?)
       end
 
       # Sets whether this target definition is abstract.
@@ -224,7 +224,9 @@ module Pod
       #         `target_definition`.
       #
       def matches_platform?(target_definition)
-        target_definition && target_definition.platform == platform
+        return false unless target_definition
+        return true if target_definition.platform == platform
+        !target_definition.platform && target_definition.abstract?
       end
 
       #--------------------------------------#
@@ -672,7 +674,9 @@ module Pod
             # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
             parent_hash['not_for_pods'] = nil
           end
-          parent_hash.merge(inhibit_hash) { |_, l, r| (l + r).uniq }
+          parent_hash.merge(inhibit_hash) do |_, l, r|
+            Array(l).concat(r).uniq
+          end
         end
       end
 
