@@ -56,11 +56,12 @@ module Pod
       end
 
       it 'returns dependencies' do
+        @root.store_pod('AFNetworking')
         @parent.store_pod('BlocksKit')
         @child.store_pod('OCMockito')
         @child.inheritance = :complete
-        @parent.dependencies.map(&:name).should == %w(BlocksKit)
-        @child.dependencies.map(&:name).should == %w(OCMockito BlocksKit)
+        @parent.dependencies.map(&:name).should == %w(BlocksKit AFNetworking)
+        @child.dependencies.map(&:name).should == %w(OCMockito BlocksKit AFNetworking)
       end
 
       it "doesn't inherit dependencies if it is exclusive" do
