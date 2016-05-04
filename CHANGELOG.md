@@ -8,7 +8,10 @@
 
 ##### Bug Fixes
 
-* None.  
+* Allow inheriting from a parent target definition that is abstract without a
+  platform set.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5242](https://github.com/CocoaPods/CocoaPods/issues/5242)
 
 
 ## 1.0.0.rc.1 (2016-04-30)
