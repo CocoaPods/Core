@@ -39,8 +39,15 @@ module Pod
       #   * `install!` declares the installation method and options to be used
       #     during installation.
 
-      # Specifies the installation method to be used when CocoaPods installs
-      # this Podfile.
+      # Specifies the installation method and options to be used when
+      # CocoaPods installs this Podfile.
+      #
+      # The first parameter indicates the installation method to use;
+      # next parameters indicate installation options.
+      #
+      # For now the only accepted installation method is `'cocoapods'`, so
+      # you'll always use this value for the first parameter; but more
+      # installation methods might be available in future versions.
       #
       # @param   [String] installation_method
       #          the name of the installation strategy.
