@@ -8,7 +8,7 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fixed path checking for case-insensitive filesystems.
 
 
 ## 1.0.0 (2016-05-10)
