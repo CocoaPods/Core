@@ -8,7 +8,7 @@
 
 ##### Bug Fixes
 
-* Fixed path checking for case-insensitive filesystems.
+* Fixed path checking for case-insensitive filesystems.  
   [Coder-256](https://github.com/Coder-256)
   [CocoaPods#5039](https://github.com/CocoaPods/CocoaPods/issues/5039)
 
