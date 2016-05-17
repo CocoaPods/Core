@@ -513,7 +513,7 @@ module Pod
       # For pre-1.0 versions use `xcodeproj`.
       #
       def xcodeproj(*args)
-        CoreUI.warn 'xcodeproj was renamed to `project`. Please use that from now on.'
+        CoreUI.warn '`xcodeproj` was renamed to `project`. Please update your Podfile accordingly.'
         project(*args)
       end
 

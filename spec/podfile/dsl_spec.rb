@@ -481,7 +481,7 @@ module Pod
         podfile = Podfile.new { xcodeproj 'App.xcodeproj', 'Test' => :debug }
         podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
         podfile.target_definitions['Pods'].build_configurations.should == { 'Test' => :debug }
-        CoreUI.warnings.should == 'xcodeproj was renamed to `project`. Please use that from now on.'
+        CoreUI.warnings.should == '`xcodeproj` was renamed to `project`. Please update your Podfile accordingly.'
       end
     end
 

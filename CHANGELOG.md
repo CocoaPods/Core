@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Improved warning message for the renaming of `xcodeproj` to `project` in the `Podfile` DSL.  
+  [Olivier Halligon](https://github.com/AliSoftware)
+  [#327](https://github.com/CocoaPods/Core/pull/327)
 
 ##### Bug Fixes
 
