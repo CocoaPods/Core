@@ -7,6 +7,9 @@
 * Improved warning message for the renaming of `xcodeproj` to `project` in the `Podfile` DSL.  
   [Olivier Halligon](https://github.com/AliSoftware)
   [#327](https://github.com/CocoaPods/Core/pull/327)
+* Improved documentation of the `deployment_target` attribute in the `Podspec` DSL.  
+  [Olivier Halligon](https://github.com/AliSoftware)
+  [#329](https://github.com/CocoaPods/Core/pull/329)
 
 ##### Bug Fixes
 
