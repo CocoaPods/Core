@@ -399,7 +399,7 @@ module Pod
     #-------------------------------------------------------------------------#
 
     def ensure_in_repo!
-      return if Pathname.pwd.realpath == repo.realpath
+      return if File.identical?(Pathname.pwd.realpath.to_s, repo.realpath.to_s)
       raise StandardError, "Must be in the root of the repo (#{repo}), " \
         "instead in #{Pathname.pwd}."
     end
