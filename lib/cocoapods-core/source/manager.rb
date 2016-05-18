@@ -135,7 +135,7 @@ module Pod
         end
         if sets.empty?
           extra = ', author, summary, or description' if full_text_search
-          raise Informative, "Unable to find a pod with name#{extra}" \
+          raise Informative, "Unable to find a pod with name#{extra} " \
             "matching `#{query}`"
         end
         sorted_sets(sets, query_word_regexps)
