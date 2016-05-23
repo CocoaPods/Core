@@ -504,6 +504,7 @@ module Pod
         end
 
         get_hash_value('dependencies', []) << pod
+        nil
       end
 
       #--------------------------------------#
