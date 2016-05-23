@@ -451,7 +451,7 @@ module Pod
       def platform(name, target = nil)
         # Support for deprecated options parameter
         target = target[:deployment_target] if target.is_a?(Hash)
-        current_target_definition.set_platform(name, target)
+        current_target_definition.set_platform!(name, target)
       end
 
       # Specifies the Xcode project that contains the target that the Pods

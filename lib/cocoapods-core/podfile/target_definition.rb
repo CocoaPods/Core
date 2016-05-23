@@ -473,6 +473,19 @@ module Pod
         set_hash_value('platform', value)
       end
 
+      # Sets the platform of the target definition.
+      #
+      # @see    #set_platform
+      #
+      # @raise  When the target definition already has a platform set.
+      #
+      # @return [void]
+      #
+      def set_platform!(name, target = nil)
+        raise StandardError, "The target `#{label}` already has a platform set." if get_hash_value('platform')
+        set_platform(name, target)
+      end
+
       #--------------------------------------#
 
       # Stores the dependency for a Pod with the given name.
