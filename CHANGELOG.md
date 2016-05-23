@@ -12,6 +12,10 @@
   [Coder-256](https://github.com/Coder-256)
   [CocoaPods#5039](https://github.com/CocoaPods/CocoaPods/issues/5039)
 
+* Fail more gracefully when a Podfile includes `pod pod 'Dependency'`.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#5379](https://github.com/CocoaPods/CocoaPods/issues/5379)
+
 
 ## 1.0.0 (2016-05-10)
 
