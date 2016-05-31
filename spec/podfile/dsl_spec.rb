@@ -283,6 +283,15 @@ module Pod
         podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, '10.8')
       end
 
+      it 'does not allow specifying a platform twice' do
+        should.raise(Podfile::StandardError) do
+          Podfile.new do
+            platform :ios, '6.0'
+            platform :ios, '9.0'
+          end
+        end.message.should == 'The target `Pods` already has a platform set.'
+      end
+
       it 'allows specifying whether the target is exclusive' do
         podfile = Podfile.new do
           target 'Pods' do

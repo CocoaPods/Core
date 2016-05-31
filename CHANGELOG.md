@@ -16,6 +16,11 @@
   [Boris Bügling](https://github.com/neonichu)
   [#330](https://github.com/CocoaPods/Core/pull/330)
 
+* Specifying a `platform` twice for the same target in a Podfile raises a
+  helpful error.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [#328](https://github.com/CocoaPods/Core/issues/328)
+
 ##### Bug Fixes
 
 * Fixed path checking for case-insensitive filesystems.  
