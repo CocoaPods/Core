@@ -23,6 +23,17 @@
 
 ##### Bug Fixes
 
+* None.  
+
+
+## 1.0.1 (2016-06-01)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
 * Fixed path checking for case-insensitive filesystems.  
   [Coder-256](https://github.com/Coder-256)
   [CocoaPods#5039](https://github.com/CocoaPods/CocoaPods/issues/5039)
