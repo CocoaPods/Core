@@ -409,6 +409,13 @@ module Pod
         @spec.attributes_hash['preserve_paths'].should.be.nil
         @spec.attributes_hash['ios'].should.be.nil
       end
+
+      it 'allows to specify OS X attributes as macOS' do
+        @spec.macos.preserve_paths = ['APath']
+        @spec.attributes_hash['osx']['preserve_paths'].should == ['APath']
+        @spec.attributes_hash['preserve_paths'].should.be.nil
+        @spec.attributes_hash['ios'].should.be.nil
+      end
     end
 
     #-----------------------------------------------------------------------------#
