@@ -445,6 +445,20 @@ module Pod
         end.post_install!(:an_installer)
         yielded.should == :an_installer
       end
+
+      it 'raises when post_install is called multiple times' do
+        should.raise(Informative) do
+          Podfile.new do
+            target 'App' do
+              post_install do |installer|
+              end
+
+              post_install do |installer|
+              end
+            end
+          end
+        end.message.should == 'Specifying multiple `post_install` hooks is unsupported.'
+      end
     end
 
     #-------------------------------------------------------------------------#

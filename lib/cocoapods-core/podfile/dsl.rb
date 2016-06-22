@@ -741,6 +741,7 @@ module Pod
       # @return   [void]
       #
       def post_install(&block)
+        raise Informative, 'Specifying multiple `post_install` hooks is unsupported.' if @post_install_callback
         @post_install_callback = block
       end
     end

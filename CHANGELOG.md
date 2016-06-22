@@ -21,6 +21,10 @@
   [Samuel Giddins](https://github.com/segiddins)
   [#328](https://github.com/CocoaPods/Core/issues/328)
 
+* Specifying multiple `post_install` hooks in a Podfile raises an error.  
+  [Daniel Tomlinson](https://github.com/dantoml)
+  [#334](https://github.com/CocoaPods/Core/pull/334)
+
 ##### Bug Fixes
 
 * None.  
