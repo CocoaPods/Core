@@ -118,7 +118,6 @@ module Pod
       # For more information, regarding versioning policy, see:
       #
       # * [Semantic Versioning](http://semver.org)
-      # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
       #
       # ------
       #
