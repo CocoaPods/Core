@@ -5,11 +5,10 @@ module Pod
   # The Podfile is a specification that describes the dependencies of the
   # targets of an Xcode project.
   #
-  # It supports its own DSL and generally is stored in files named
-  # `CocoaPods.podfile` or `Podfile`.
+  # It supports its own DSL and is stored in a file named `Podfile`.
   #
-  # The Podfile creates a hierarchy of target definitions that that store the
-  # information of necessary to generate the CocoaPods libraries.
+  # The Podfile creates a hierarchy of target definitions that store the
+  # information necessary to generate the CocoaPods libraries.
   #
   class Podfile
     # @!group DSL support
@@ -22,8 +21,8 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    # @return [Pathname] the path where the podfile was loaded from. It is nil
-    #         if the podfile was generated programmatically.
+    # @return [Pathname] the path used to load the Podfile. It is nil
+    #         if the Podfile was generated programmatically.
     #
     attr_accessor :defined_in_file
 
@@ -31,7 +30,7 @@ module Pod
     #           the path of the podfile.
     #
     # @param    [Proc] block
-    #           an optional block that configures the podfile through the DSL.
+    #           an optional block that configures the Podfile through the DSL.
     #
     # @example  Creating a Podfile.
     #
@@ -65,26 +64,26 @@ module Pod
 
     public
 
-    # @!group Working with a podfile
+    # @!group Working with a Podfile
 
     # @return [Hash{Symbol,String => TargetDefinition}] the target definitions
-    #         of the podfile stored by their name.
+    #         of the Podfile stored by their name.
     #
     def target_definitions
       Hash[target_definition_list.map { |td| [td.name, td] }]
     end
 
-    # @return [Array<TargetDefinition>] all target definitions in the podfile.
+    # @return [Array<TargetDefinition>] all target definitions in the Podfile.
     #
     def target_definition_list
       root_target_definitions.map { |td| [td, td.recursive_children] }.flatten
     end
 
-    # @return [Array<TargetDefinition>] The root target definition.
+    # @return [Array<TargetDefinition>] The root target definitions.
     #
     attr_accessor :root_target_definitions
 
-    # @return [Array<Dependency>] the dependencies of the all the target
+    # @return [Array<Dependency>] the dependencies of all of the target
     #         definitions.
     #
     def dependencies
@@ -97,7 +96,7 @@ module Pod
 
     # @!group Attributes
 
-    # @return [Array<String>] The name of the sources.
+    # @return [Array<String>] The names of the sources.
     #
     def sources
       get_hash_value('sources') || []
@@ -235,12 +234,12 @@ module Pod
     # @!group Class methods
     #-------------------------------------------------------------------------#
 
-    # Initializes a podfile from the file with the given path.
+    # Initializes a Podfile from the file with the given path.
     #
     # @param  [Pathname] path
-    #         the path from where the podfile should be loaded.
+    #         the path from where the Podfile should be loaded.
     #
-    # @return [Podfile] the generated podfile.
+    # @return [Podfile] the generated Podfile.
     #
     def self.from_file(path)
       path = Pathname.new(path)
@@ -264,7 +263,7 @@ module Pod
     #         The path from which the Podfile is loaded.
     #
     # @param  [String] contents
-    #         The ruby string which will configure the podfile with the DSL.
+    #         The ruby string which will configure the Podfile with the DSL.
     #
     # @return [Podfile] the new Podfile
     #
