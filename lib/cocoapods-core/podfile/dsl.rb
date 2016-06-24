@@ -102,6 +102,7 @@ module Pod
       # Besides no version, or a specific one, it is also possible to use
       # operators:
       #
+      # * `= 0.1`    Version 0.1.
       # * `> 0.1`    Any version higher than 0.1.
       # * `>= 0.1`   Version 0.1 and any higher version.
       # * `< 0.1`    Any version lower than 0.1.
