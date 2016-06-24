@@ -130,13 +130,13 @@ module Pod
       #
       #     pod 'PonyDebugger', :configurations => ['Debug', 'Beta']
       #
-      # Alternatively, you specify to have it included on a single build
+      # Alternatively, you can specify to have it included on a single build
       # configuration.
       #
       #     pod 'PonyDebugger', :configuration => 'Debug'
       #
-      # Note that transitive dependencies are included in all configurations,
-      # you have to manually specify build configurations for them as well in
+      # Note that transitive dependencies are included in all configurations
+      # and you have to manually specify build configurations for them as well in
       # case this is not desired.
       #
       # ------
