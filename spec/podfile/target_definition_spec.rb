@@ -376,6 +376,17 @@ module Pod
 
       #--------------------------------------#
 
+      it 'returns nil for swift_version by default' do
+        @parent.swift_version.should.nil?
+      end
+
+      it 'allows you to set the swift_version' do
+        @parent.swift_version = '2.3'
+        @parent.swift_version.should == '2.3'
+      end
+
+      #--------------------------------------#
+
       it 'stores a dependency on a pod as a sting if no requirements are provided' do
         @parent.store_pod('BlocksKit')
         @parent.send(:get_hash_value, 'dependencies').should == [
