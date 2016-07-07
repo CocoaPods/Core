@@ -120,6 +120,7 @@ module Pod
       #
       # * [Semantic Versioning](http://semver.org)
       # * [RubyGems Versioning Policies](http://guides.rubygems.org/patterns/#semantic-versioning)
+      #
       # ------
       #
       # ### Build configurations
