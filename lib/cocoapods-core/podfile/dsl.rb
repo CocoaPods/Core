@@ -397,8 +397,17 @@ module Pod
 
       # Sets the inheritance mode for the current target.
       #
-      # @param   [:complete, :none, :search_paths] inheritance
+      # @param   [Symbol] inheritance
       #          the inheritance mode to set.
+      #
+      #          **Available Modes:**
+      #          + `:complete` The target inherits all
+      #          behaviour from the parent.
+      #          + `:none` The target inherits none of
+      #          the behaviour from the parent.
+      #          + `:search_paths` The target inherits
+      #          the search paths of the parent only.
+      #
       #
       # @example Inheriting only search paths
       #
