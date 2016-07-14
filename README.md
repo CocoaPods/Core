@@ -5,7 +5,7 @@
 [![Code Climate](https://img.shields.io/codeclimate/github/CocoaPods/Core.svg?style=flat)](https://codeclimate.com/github/CocoaPods/Core)
 
 The CocoaPods-Core gem provides support to work with the models of CocoaPods.
-It is intended to be used in place of the CocoaPods when the installation
+It is intended to be used in place of the CocoaPods gem when the installation
 of the dependencies is not needed. Therefore, it is suitable for web services.
 
 Provides support for working with the following models:
