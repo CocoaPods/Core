@@ -27,7 +27,7 @@ module Pod
     #     end
     #
     #     post_install do |installer|
-    #       installer.pods_project.pod_targets.each do |target|
+    #       installer.pods_project.targets.each do |target|
     #         puts "#{target.name}"
     #       end
     #     end
@@ -102,6 +102,7 @@ module Pod
       # Besides no version, or a specific one, it is also possible to use
       # operators:
       #
+      # * `= 0.1`    Version 0.1.
       # * `> 0.1`    Any version higher than 0.1.
       # * `>= 0.1`   Version 0.1 and any higher version.
       # * `< 0.1`    Any version lower than 0.1.
@@ -118,7 +119,7 @@ module Pod
       # For more information, regarding versioning policy, see:
       #
       # * [Semantic Versioning](http://semver.org)
-      # * [RubyGems Versioning Policies](http://docs.rubygems.org/read/chapter/7)
+      # * [RubyGems Versioning Policies](http://guides.rubygems.org/patterns/#semantic-versioning)
       #
       # ------
       #
@@ -130,13 +131,13 @@ module Pod
       #
       #     pod 'PonyDebugger', :configurations => ['Debug', 'Beta']
       #
-      # Alternatively, you specify to have it included on a single build
+      # Alternatively, you can specify to have it included on a single build
       # configuration.
       #
       #     pod 'PonyDebugger', :configuration => 'Debug'
       #
-      # Note that transitive dependencies are included in all configurations,
-      # you have to manually specify build configurations for them as well in
+      # Note that transitive dependencies are included in all configurations
+      # and you have to manually specify build configurations for them as well in
       # case this is not desired.
       #
       # ------
@@ -396,8 +397,17 @@ module Pod
 
       # Sets the inheritance mode for the current target.
       #
-      # @param   [:complete, :none, :search_paths] inheritance
+      # @param   [Symbol] inheritance
       #          the inheritance mode to set.
+      #
+      #          **Available Modes:**
+      #          + `:complete` The target inherits all
+      #          behaviour from the parent.
+      #          + `:none` The target inherits none of
+      #          the behaviour from the parent.
+      #          + `:search_paths` The target inherits
+      #          the search paths of the parent only.
+      #
       #
       # @example Inheriting only search paths
       #
@@ -741,6 +751,7 @@ module Pod
       # @return   [void]
       #
       def post_install(&block)
+        raise Informative, 'Specifying multiple `post_install` hooks is unsupported.' if @post_install_callback
         @post_install_callback = block
       end
     end

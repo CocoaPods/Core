@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0.beta.1 (2016-07-11)
+
+##### Enhancements
+
 * Improved warning message for the renaming of `xcodeproj` to `project` in the `Podfile` DSL.  
   [Olivier Halligon](https://github.com/AliSoftware)
   [#327](https://github.com/CocoaPods/Core/pull/327)
@@ -24,6 +35,10 @@
 * Improve the performance of resolve dependency.
   [yanzhiwei147](https://github.com/yanzhiwei147)
   [#5510](https://github.com/CocoaPods/CocoaPods/pull/5510)
+
+* Specifying multiple `post_install` hooks in a Podfile raises an error.  
+  [Daniel Tomlinson](https://github.com/dantoml)
+  [#334](https://github.com/CocoaPods/Core/pull/334)
 
 ##### Bug Fixes
 

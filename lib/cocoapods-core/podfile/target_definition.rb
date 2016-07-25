@@ -362,6 +362,26 @@ module Pod
 
       #--------------------------------------#
 
+      # Sets the Swift version that the target definition should use.
+      #
+      # @param  [Bool] version
+      #         The Swift version that the target definition should use.
+      #
+      # @return [void]
+      #
+      def swift_version=(version)
+        set_hash_value('swift_version', version)
+      end
+
+      # @return [String] the Swift version that the target definition should
+      #         use.
+      #
+      def swift_version
+        get_hash_value('swift_version')
+      end
+
+      #--------------------------------------#
+
       # Whether a specific pod should be linked to the target when building for
       # a specific configuration. If a pod has not been explicitly whitelisted
       # for any configuration, it is implicitly whitelisted.
@@ -574,6 +594,7 @@ module Pod
         uses_frameworks
         inheritance
         abstract
+        swift_version
       ).freeze
 
       # @return [Hash] The hash representation of the target definition.
