@@ -36,6 +36,7 @@ module Pod
       @consumers = {}
       @parent = parent
       attributes_hash['name'] = name
+      @hash_value = 0
 
       yield self if block_given?
     end
@@ -80,7 +81,10 @@ module Pod
     # @return [Fixnum] The hash value.
     #
     def hash
-      (name.hash * 53) ^ version.hash
+      if @hash_value == 0
+        @hash_value = (name.hash * 53) ^ version.hash
+      end
+      @hash_value
     end
 
     # @return [String] A string suitable for representing the specification in

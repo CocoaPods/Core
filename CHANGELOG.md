@@ -31,6 +31,10 @@
   helpful error.  
   [Samuel Giddins](https://github.com/segiddins)
   [#328](https://github.com/CocoaPods/Core/issues/328)
+    
+* Improve the performance of resolve dependency.
+  [yanzhiwei147](https://github.com/yanzhiwei147)
+  [#5510](https://github.com/CocoaPods/CocoaPods/pull/5510)
 
 * Specifying multiple `post_install` hooks in a Podfile raises an error.  
   [Daniel Tomlinson](https://github.com/dantoml)
