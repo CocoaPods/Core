@@ -95,6 +95,13 @@ module Pod
         Version.new('1.alpha.2').patch.should == 0
       end
 
+      it 'correctly makes basic version comparisons' do
+        Version.new('1.0.0').should.be < Version.new('2.0.0')
+        Version.new('1.0.0').should.be < Version.new('1.0.1')
+        Version.new('1.0.0').should.be < Version.new('1.1.0')
+        Version.new('1.1.0').should.be < Version.new('1.1.1')
+      end
+
       it 'ignores missing numeric identifiers while comparing' do
         Version.new('1.9.0-alpha').should.be < Version.new('1.9-beta')
         Version.new('2.0.0-beta').should.be < Version.new('2.0-rc')
@@ -106,6 +113,20 @@ module Pod
         Version.new('1.0').should.be < Version.new('1.0.0')
         Version.new('1.0-alpha').should.be < Version.new('1.0.0-alpha')
         Version.new('1.1.1.1-alpha').should.be < Version.new('1.1.1.1.0-alpha')
+      end
+
+      it 'Follows semver when comparing between pre-release versions' do
+        # Example from section 11 on semver.org
+        Version.new('1.0.0-alpha').should.be < Version.new('1.0.0-alpha.1')
+        Version.new('1.0.0-alpha.1').should.be < Version.new('1.0.0-alpha.beta')
+        Version.new('1.0.0-alpha.beta').should.be < Version.new('1.0.0-beta')
+        Version.new('1.0.0-beta').should.be < Version.new('1.0.0-beta.2')
+        Version.new('1.0.0-beta.2').should.be < Version.new('1.0.0-beta.11')
+        Version.new('1.0.0-beta.11').should.be < Version.new('1.0.0-rc.1')
+        Version.new('1.0.0-rc.1').should.be < Version.new('1.0.0')
+
+        # Example from CocoaPods/CocoaPods#5718
+        Version.new('1.0-beta.8').should.be < Version.new('1.0-beta.8a')
       end
     end
 

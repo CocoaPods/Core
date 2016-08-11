@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Improved comparison between Semver pre-release versions.  
+  [Ben Asher](https://github.com/benasher44)
+  [#350](https://github.com/CocoaPods/Core/pull/350)
 
 ##### Bug Fixes
 

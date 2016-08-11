@@ -194,22 +194,33 @@ module Pod
       return unless other.is_a?(Pod::Version)
       return 0 if @version == other.version
 
-      compare = proc do |segments, other_segments|
+      compare = proc do |segments, other_segments, is_pre_release|
         limit = [segments.size, other_segments.size].max
 
         (0..limit).each do |i|
-          lhs = segments[i] || 0
-          rhs = other_segments[i] || 0
+          lhs = segments[i]
+          rhs = other_segments[i]
 
           next if lhs == rhs
+          # If it's pre-release and the first segment, then
+          # this is a special case because a segment missing
+          # means that one is not a pre-release version
+          if is_pre_release && i == 0
+            return 1 if lhs.nil?
+            return -1 if rhs.nil?
+          else
+            return -1 if lhs.nil?
+            return  1 if rhs.nil?
+          end
+
           return lhs <=> rhs if lhs <=> rhs
-          return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
-          return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+          return 1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+          return -1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
         end
       end
 
-      compare[numeric_segments, other.numeric_segments]
-      compare[prerelease_segments, other.prerelease_segments]
+      compare[numeric_segments, other.numeric_segments, false]
+      compare[prerelease_segments, other.prerelease_segments, true]
       0
     end
 
