@@ -364,7 +364,7 @@ module Pod
 
       # Sets the Swift version that the target definition should use.
       #
-      # @param  [Bool] version
+      # @param  [String] version
       #         The Swift version that the target definition should use.
       #
       # @return [void]
