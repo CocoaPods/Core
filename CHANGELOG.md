@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0.beta.2 (2016-08-18)
+
+##### Enhancements
+
 * Improved comparison between Semver pre-release versions.  
   [Ben Asher](https://github.com/benasher44)
   [#350](https://github.com/CocoaPods/Core/pull/350)
