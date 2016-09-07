@@ -28,7 +28,7 @@ module Pod
     # @return [Bool] Whether the given source should be updated.
     #
     def requires_update?
-      commit_hash = Dir.chdir(repo) { git_commit_hash }
+      commit_hash = git_commit_hash
       GitHub.modified_since_commit('CocoaPods/Specs', commit_hash)
     end
   end
