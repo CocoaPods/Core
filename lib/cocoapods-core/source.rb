@@ -41,14 +41,11 @@ module Pod
     #       option. See https://github.com/CocoaPods/CocoaPods/issues/2724.
     #
     def url
-      Dir.chdir(repo) do
-        remote = git(%w(config --get remote.origin.url))
-
-        if !remote.empty?
-          remote
-        elsif (repo + '.git').exist?
-          "file://#{repo}/.git"
-        end
+      remote = repo_git(%w(config --get remote.origin.url))
+      if !remote.empty?
+        remote
+      elsif (repo + '.git').exist?
+        "file://#{repo}/.git"
       end
     end
 
@@ -333,26 +330,20 @@ module Pod
     #          Returns the list of changed spec paths.
     #
     def update(show_output)
-      changed_spec_paths = []
-      Dir.chdir(repo) do
-        prev_commit_hash = git_commit_hash
-        update_git_repo(show_output)
-        refresh_metadata
-        if version = metadata.last_compatible_version(Version.new(CORE_VERSION))
-          tag = "v#{version}"
-          CoreUI.warn "Using the `#{tag}` tag of the `#{name}` source because " \
-            "it is the last version compatible with CocoaPods #{CORE_VERSION}."
-          git(['checkout', tag])
-        end
-        changed_spec_paths = diff_until_commit_hash(prev_commit_hash)
+      prev_commit_hash = git_commit_hash
+      update_git_repo(show_output)
+      refresh_metadata
+      if version = metadata.last_compatible_version(Version.new(CORE_VERSION))
+        tag = "v#{version}"
+        CoreUI.warn "Using the `#{tag}` tag of the `#{name}` source because " \
+          "it is the last version compatible with CocoaPods #{CORE_VERSION}."
+        repo_git(['checkout', tag])
       end
-      changed_spec_paths
+      diff_until_commit_hash(prev_commit_hash)
     end
 
     def git?
-      Dir.chdir(repo) do
-        !git(%w(rev-parse HEAD)).empty?
-      end
+      !repo_git(%w(rev-parse HEAD)).empty?
     end
 
     def verify_compatibility!
@@ -398,12 +389,6 @@ module Pod
     # @group Private Helpers
     #-------------------------------------------------------------------------#
 
-    def ensure_in_repo!
-      return if File.identical?(Pathname.pwd.realpath.to_s, repo.realpath.to_s)
-      raise StandardError, "Must be in the root of the repo (#{repo}), " \
-        "instead in #{Pathname.pwd}."
-    end
-
     # Loads the specification for the given Pod gracefully.
     #
     # @param  [String] name
@@ -428,14 +413,12 @@ module Pod
     end
 
     def git_commit_hash
-      ensure_in_repo!
-      git(%w(rev-parse HEAD))
+      repo_git(%w(rev-parse HEAD))
     end
 
     def update_git_repo(show_output = false)
-      ensure_in_repo!
-      git(['checkout', git_tracking_branch])
-      output = git(%w(pull --ff-only), :include_error => true)
+      repo_git(['checkout', git_tracking_branch])
+      output = repo_git(%w(pull --ff-only), :include_error => true)
       CoreUI.puts output if show_output
     end
 
@@ -445,12 +428,11 @@ module Pod
     end
 
     def diff_until_commit_hash(commit_hash)
-      ensure_in_repo!
-      git(%W(diff --name-only #{commit_hash}..HEAD)).split("\n")
+      repo_git(%W(diff --name-only #{commit_hash}..HEAD)).split("\n")
     end
 
-    def git(args, include_error: false)
-      command = 'git ' << args.join(' ')
+    def repo_git(args, include_error: false)
+      command = "git -C \"#{repo}\" " << args.join(' ')
       command << ' 2>&1' if include_error
       (`#{command}` || '').strip
     end
