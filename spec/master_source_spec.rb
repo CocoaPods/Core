@@ -10,10 +10,6 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#update' do
-      before do
-        @source.stubs(:ensure_in_repo!)
-      end
-
       it 'does not git fetch if the GitHub API returns not-modified' do
         VCR.use_cassette('MasterSource_nofetch', :record => :new_episodes) do
           @source.expects(:update_git_repo).never
@@ -29,8 +25,8 @@ module Pod
       end
 
       it 'uses the only fast forward git option' do
-        @source.expects(:`).with('git checkout master')
-        @source.expects(:`).with('git pull --ff-only 2>&1')
+        @source.expects(:`).with("git -C #{@path} checkout master")
+        @source.expects(:`).with("git -C #{@path} pull --ff-only 2>&1")
         @source.send :update_git_repo
       end
 
