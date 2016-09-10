@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Use `git -C` rather than `Dir.chdir`.  
+  [Ben Asher](https://github.com/benasher44)
+  [#352](https://github.com/CocoaPods/Core/pull/352)
 
 
 ## 1.1.0.beta.2 (2016-08-30)
