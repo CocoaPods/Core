@@ -5,8 +5,8 @@ require 'cocoapods-core/specification/dsl/platform_proxy'
 module Pod
   class Specification
     #- NOTE ------------------------------------------------------------------#
-    # The of the methods defined in this file and the order of the methods is
-    # relevant for the documentation generated on the
+    # The order of the methods defined in this file and the order of the
+    # methods is relevant for the documentation generated on the
     # CocoaPods/cocoapods.github.com repository.
     #-------------------------------------------------------------------------#
 
