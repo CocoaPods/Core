@@ -62,7 +62,7 @@ module Pod
     #       spec.ios.framework  = 'UIKit'
     #       spec.osx.framework  = 'AppKit'
     #
-    #       spec.dependency     'SomeOtherPod'
+    #       spec.dependency 'SomeOtherPod'
     #     end
     #
     module DSL
