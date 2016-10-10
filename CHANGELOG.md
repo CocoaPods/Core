@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.1.0.rc.3 (2016-10-10)
 
 ##### Enhancements
 
