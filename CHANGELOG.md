@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Improve dependency resolution performance by caching specification hashes.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#5180](https://github.com/CocoaPods/CocoaPods/issues/5180)
 
 ##### Bug Fixes
 
