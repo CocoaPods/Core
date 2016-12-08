@@ -193,6 +193,9 @@ module Pod
         if root?
           raise Informative, 'Cannot set inheritance for the root target definition.'
         end
+        if abstract?
+          raise Informative, 'Cannot set inheritance for abstract target definition.'
+        end
         set_hash_value('inheritance', inheritance)
       end
 
