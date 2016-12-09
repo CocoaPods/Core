@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Raise an error if `inherit!` is used on an abstract target.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#5342](https://github.com/CocoaPods/CocoaPods/issues/5342)
 
 
 ## 1.2.0.beta.1 (2016-10-28)
