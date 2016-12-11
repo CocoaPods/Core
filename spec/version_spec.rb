@@ -66,6 +66,13 @@ module Pod
         Version.new('1.0.0-x.7.z.92').should.be.semantic
       end
 
+      it 'reports a version with metadata as semantic' do
+        # Examples from http://semver.org/#spec-item-10
+        Version.new('1.0.0+5').should.be.semantic
+        Version.new('1.0.0+5114f85').should.be.semantic
+        Version.new('1.0.0-alpha+exp.sha.5114f85').should.be.semantic
+      end
+
       it 'reports version with more than 3 segments not separated by a dash as non semantic' do
         Version.new('1.0.2.3').should.not.be.semantic
       end
@@ -102,6 +109,13 @@ module Pod
         Version.new('1.1.0').should.be < Version.new('1.1.1')
       end
 
+      it 'correctly ignores metadata in comparisons' do
+        Version.new('1.0.0+fff').should == Version.new('1.0.0')
+        Version.new('1.0.0+fff').should == Version.new('1.0.0+000')
+        Version.new('1.0.0-beta.1+fff').should == Version.new('1.0.0-beta.1+000')
+        Version.new('1.1.0+fff').should.be < Version.new('1.1.1+fff')
+      end
+
       it 'ignores missing numeric identifiers while comparing' do
         Version.new('1.9.0-alpha').should.be < Version.new('1.9-beta')
         Version.new('2.0.0-beta').should.be < Version.new('2.0-rc')
@@ -124,6 +138,8 @@ module Pod
         Version.new('1.0.0-beta.2').should.be < Version.new('1.0.0-beta.11')
         Version.new('1.0.0-beta.11').should.be < Version.new('1.0.0-rc.1')
         Version.new('1.0.0-rc.1').should.be < Version.new('1.0.0')
+
+        Version.new('1.0.0-beta+fff').should == Version.new('1.0.0-beta+000')
 
         # Example from CocoaPods/CocoaPods#5718
         Version.new('1.0-beta.8').should.be < Version.new('1.0-beta.8a')
