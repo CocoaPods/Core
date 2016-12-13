@@ -8,6 +8,10 @@
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#5180](https://github.com/CocoaPods/CocoaPods/issues/5180)
 
+* Add support for version metadata as specified by http://semver.org/#spec-item-10.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#6224](https://github.com/CocoaPods/CocoaPods/issues/6224)
+
 ##### Bug Fixes
 
 * Raise an error if `inherit!` is used on an abstract target.  
