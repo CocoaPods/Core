@@ -615,7 +615,7 @@ module Pod
     #
     def version=(version)
       @hash_value = nil
-      attributes_hash['version'] = version
+      store_attribute(:version, version)
       @version = nil
     end
 
