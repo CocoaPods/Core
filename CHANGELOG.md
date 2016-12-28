@@ -1,5 +1,17 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix handling of version numbers in specifications.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#363](https://github.com/CocoaPods/Core/pull/363)
+
 ## 1.2.0.beta.2 (2016-12-17)
 
 ##### Enhancements
