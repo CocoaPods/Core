@@ -249,7 +249,14 @@ module Pod
 
       case path.extname
       when '', '.podfile'
-        Podfile.from_ruby(path)
+        podfile_from_ruby = Podfile.from_ruby(path)
+        aFile = File.new(Dir.pwd+"/"+"podfile_from_ruby"+".json", "w")
+        if aFile
+         aFile.syswrite(podfile_from_ruby.to_hash.to_json)
+        else
+          puts "Unable to open file!"
+        end
+        podfile_from_ruby
       when '.yaml'
         Podfile.from_yaml(path)
       else
