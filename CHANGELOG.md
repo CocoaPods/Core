@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Prevent crashing When a `Specification` has a `description` but no `summary`.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#6360](https://github.com/CocoaPods/CocoaPods/issues/6360)
 
 
 ## 1.2.0.beta.3 (2016-12-28)
