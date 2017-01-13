@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.2.0.rc.1 (2017-01-13)
 
 ##### Enhancements
 
