@@ -98,6 +98,9 @@ module Pod
       if dsl_path && description =~ /((#{Regexp.quote File.expand_path(dsl_path)}|#{Regexp.quote dsl_path.to_s}):\d+)/
         trace_line = Regexp.last_match[1]
         description = description.sub(/#{Regexp.quote trace_line}:\s*/, '')
+        if description =~ /^\s*\^\z/
+          description = description.lines[0..-3].join.chomp
+        end
       end
       [trace_line, description]
     end

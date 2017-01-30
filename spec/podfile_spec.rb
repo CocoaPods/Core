@@ -217,6 +217,7 @@ module Pod
                   'children' => [
                     {
                       'name' => 'test_target',
+                      'abstract' => false,
                       'inheritance' => 'search_paths',
                     },
                   ],
