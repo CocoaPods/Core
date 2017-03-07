@@ -52,14 +52,20 @@ module Pod
       #
       def representative_set(name)
         representative_source = nil
-        highest_version = nil
+        pods_by_source = {}
         sources.each do |source|
           source_versions = source.versions(name)
           if source_versions
             source_version = source_versions.first
-            if highest_version.nil? || (highest_version < source_version)
-              highest_version = source_version
-              representative_source = source
+            highest_version = nil
+            key = source.name + '_' + name
+            if pods_by_source[key].nil?
+              if highest_version.nil? || (highest_version < source_version)
+                highest_version = source_version
+                representative_source ||= []
+                representative_source << source
+              end
+              pods_by_source[key] = source
             end
           end
         end

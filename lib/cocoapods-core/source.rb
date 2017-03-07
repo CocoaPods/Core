@@ -159,7 +159,7 @@ module Pod
       return nil unless specs_dir
       raise ArgumentError, 'No name' unless name
       pod_dir = pod_path(name)
-      return unless pod_dir.exist?
+      return nil unless pod_dir.exist?
       pod_dir.children.map do |v|
         basename = v.basename.to_s
         begin
