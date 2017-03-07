@@ -11,6 +11,142 @@
 * None.  
 
 
+## 1.2.0 (2017-01-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.2.0.rc.1 (2017-01-13)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Prevent crashing When a `Specification` has a `description` but no `summary`.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#6360](https://github.com/CocoaPods/CocoaPods/issues/6360)
+
+
+## 1.2.0.beta.3 (2016-12-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix handling of version numbers in specifications.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#363](https://github.com/CocoaPods/Core/pull/363)
+
+## 1.2.0.beta.2 (2016-12-17)
+
+##### Enhancements
+
+* Improve dependency resolution performance by caching specification hashes.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#5180](https://github.com/CocoaPods/CocoaPods/issues/5180)
+
+* Add support for version metadata as specified by http://semver.org/#spec-item-10.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#6224](https://github.com/CocoaPods/CocoaPods/issues/6224)
+
+##### Bug Fixes
+
+* Raise an error if `inherit!` is used on an abstract target.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#5342](https://github.com/CocoaPods/CocoaPods/issues/5342)
+
+
+## 1.2.0.beta.1 (2016-10-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.1 (2016-10-20)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0 (2016-10-19)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0.rc.3 (2016-10-10)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0.rc.2 (2016-09-13)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.1.0.rc.1 (2016-09-10)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Use `git -C` rather than `Dir.chdir`.  
+  [Ben Asher](https://github.com/benasher44)
+  [#352](https://github.com/CocoaPods/Core/pull/352)
+
+
+## 1.1.0.beta.2 (2016-08-30)
+
+##### Enhancements
+
+* Improved comparison between Semver pre-release versions.  
+  [Ben Asher](https://github.com/benasher44)
+  [#350](https://github.com/CocoaPods/Core/pull/350)
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.1.0.beta.1 (2016-07-11)
 
 ##### Enhancements

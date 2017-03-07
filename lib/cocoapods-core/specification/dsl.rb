@@ -5,8 +5,8 @@ require 'cocoapods-core/specification/dsl/platform_proxy'
 module Pod
   class Specification
     #- NOTE ------------------------------------------------------------------#
-    # The of the methods defined in this file and the order of the methods is
-    # relevant for the documentation generated on the
+    # The order of the methods defined in this file and the order of the
+    # methods is relevant for the documentation generated on the
     # CocoaPods/cocoapods.github.com repository.
     #-------------------------------------------------------------------------#
 
@@ -37,6 +37,32 @@ module Pod
     #       spec.source       = { :git => 'https://github.com/tonymillion/Reachability.git', :tag => 'v3.1.0' }
     #       spec.source_files = 'Reachability.{h,m}'
     #       spec.framework    = 'SystemConfiguration'
+    #     end
+    #
+    # Or it can be quite detailed:
+    #
+    #     Pod::Spec.new do |spec|
+    #       spec.name         = 'Reachability'
+    #       spec.version      = '3.1.0'
+    #       spec.license      = { :type => 'BSD' }
+    #       spec.homepage     = 'https://github.com/tonymillion/Reachability'
+    #       spec.authors      = { 'Tony Million' => 'tonymillion@gmail.com' }
+    #       spec.summary      = 'ARC and GCD Compatible Reachability Class for iOS and OS X.'
+    #       spec.source       = { :git => 'https://github.com/tonymillion/Reachability.git', :tag => 'v3.1.0' }
+    #       spec.module_name  = 'Rich'
+    #
+    #       spec.ios.deployment_target  = '9.0'
+    #       spec.osx.deployment_target  = '10.10'
+    #
+    #       spec.source_files       = 'Reachability/common/*.swift'
+    #       spec.ios.source_files   = 'Reachability/ios/*.swift', 'Reachability/extensions/*.swift'
+    #       spec.osx.source_files   = 'Reachability/osx/*.swift'
+    #
+    #       spec.framework      = 'SystemConfiguration'
+    #       spec.ios.framework  = 'UIKit'
+    #       spec.osx.framework  = 'AppKit'
+    #
+    #       spec.dependency 'SomeOtherPod'
     #     end
     #
     module DSL

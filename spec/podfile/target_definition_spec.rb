@@ -8,6 +8,8 @@ module Pod
       @parent = Podfile::TargetDefinition.new('MyApp', @root)
       @child = Podfile::TargetDefinition.new('MyAppTests', @parent)
       @child.inheritance = :search_paths
+      @abstract = Podfile::TargetDefinition.new('MyAbstractTarget', @root)
+      @abstract.abstract = true
       @parent.set_platform(:ios, '6.0')
     end
 
@@ -153,6 +155,11 @@ module Pod
       it 'raises when setting an inheritance mode on a root target definition' do
         exception = should.raise(Informative) { @root.inheritance = :none }
         exception.message.should == 'Cannot set inheritance for the root target definition.'
+      end
+
+      it 'raises when setting an inheritance mode on a abstract target definition' do
+        exception = should.raise(Informative) { @abstract.inheritance = :none }
+        exception.message.should == 'Cannot set inheritance for abstract target definition.'
       end
 
       #--------------------------------------#
@@ -431,6 +438,7 @@ module Pod
         @child.set_platform(:ios)
         @child.to_hash.should == {
           'name' => 'MyAppTests',
+          'abstract' => false,
           'inheritance' => 'search_paths',
           'dependencies' => ['BlocksKit'],
           'platform' => 'ios',
@@ -448,6 +456,7 @@ module Pod
           'children' => [
             {
               'name' => 'MyAppTests',
+              'abstract' => false,
               'inheritance' => 'search_paths',
               'dependencies' => ['RestKit'],
             },

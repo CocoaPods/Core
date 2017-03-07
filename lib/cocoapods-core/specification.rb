@@ -25,6 +25,10 @@ module Pod
     #
     attr_reader :parent
 
+    # @return [Integer] the cached hash value for this spec.
+    #
+    attr_reader :hash_value
+
     # @param  [Specification] parent @see parent
     #
     # @param  [String] name
@@ -35,8 +39,8 @@ module Pod
       @subspecs = []
       @consumers = {}
       @parent = parent
+      @hash_value = nil
       attributes_hash['name'] = name
-      @hash_value = 0
 
       yield self if block_given?
     end
@@ -81,7 +85,7 @@ module Pod
     # @return [Fixnum] The hash value.
     #
     def hash
-      if @hash_value == 0
+      if @hash_value.nil?
         @hash_value = (name.hash * 53) ^ version.hash
       end
       @hash_value
@@ -584,6 +588,35 @@ module Pod
         raise StandardError, 'Defined in file can be set only for root specs.'
       end
       @defined_in_file = file
+    end
+
+    # Sets the name of the `podspec`.
+    #
+    # @param  [String] name
+    #         the `podspec` name.
+    #
+    # @return [void]
+    #
+    # @visibility private
+    #
+    def name=(name)
+      @hash_value = nil
+      attributes_hash['name'] = name
+    end
+
+    # Sets the version of the `podspec`.
+    #
+    # @param  [String] version
+    #         the `podspec` version.
+    #
+    # @return [void]
+    #
+    # @visibility private
+    #
+    def version=(version)
+      @hash_value = nil
+      store_attribute(:version, version)
+      @version = nil
     end
 
     # @!group Validation

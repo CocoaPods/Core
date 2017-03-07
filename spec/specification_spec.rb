@@ -79,6 +79,35 @@ module Pod
         hash[spec_1].should == 'VALUE_2'
       end
 
+      it 'strips newlines from versions' do
+        spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = "1.2.0\n"
+        end
+
+        spec.to_hash['version'].should == '1.2.0'
+      end
+
+      it 'resets hash value when name changes' do
+        @spec.hash_value.should.be.nil?
+        original_hash = @spec.hash
+        @spec.hash_value.should.not.be.nil?
+        @spec.name = 'NewPodName'
+        @spec.hash_value.should.be.nil?
+        new_hash = @spec.hash
+        original_hash.should != new_hash
+      end
+
+      it 'resets hash value when version changes' do
+        @spec.hash_value.should.be.nil?
+        original_hash = @spec.hash
+        @spec.hash_value.should.not.be.nil?
+        @spec.version = '1.1'
+        @spec.hash_value.should.be.nil?
+        new_hash = @spec.hash
+        original_hash.should != new_hash
+      end
+
       it 'produces a string representation suitable for UI output.' do
         @spec.to_s.should == 'Pod (1.0)'
       end

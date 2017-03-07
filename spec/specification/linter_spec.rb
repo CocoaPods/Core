@@ -268,6 +268,12 @@ module Pod
         result_should_include('description', 'shorter', 'summary')
       end
 
+      it 'does not crash when there is a description but no summary' do
+        @spec.stubs(:description).returns('sample.')
+        @spec.stubs(:summary).returns(nil)
+        lambda { @linter.lint }.should.not.raise
+      end
+
       #------------------#
 
       it 'checks if the homepage has been changed from default' do

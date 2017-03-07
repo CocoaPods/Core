@@ -193,6 +193,9 @@ module Pod
         if root?
           raise Informative, 'Cannot set inheritance for the root target definition.'
         end
+        if abstract?
+          raise Informative, 'Cannot set inheritance for abstract target definition.'
+        end
         set_hash_value('inheritance', inheritance)
       end
 
@@ -364,7 +367,7 @@ module Pod
 
       # Sets the Swift version that the target definition should use.
       #
-      # @param  [Bool] version
+      # @param  [String] version
       #         The Swift version that the target definition should use.
       #
       # @return [void]

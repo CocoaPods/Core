@@ -277,7 +277,7 @@ module Pod
 
       if contents.tr!('“”‘’‛', %(""'''))
         # Changes have been made
-        CoreUI.warn "Your #{path.basename} has had smart quotes sanitised. " \
+        CoreUI.warn "Smart quotes were detected and ignored in your #{path.basename}. " \
                     'To avoid issues in the future, you should not use ' \
                     'TextEdit for editing it. If you are not using TextEdit, ' \
                     'you should turn off smart quotes in your editor of choice.'

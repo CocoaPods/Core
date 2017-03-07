@@ -30,12 +30,14 @@ module Pod
   # 4. 0.9
   #
   class Version < Pod::Vendor::Gem::Version
-    # Override the constants defined by the superclass to add Semantic
-    # Versioning prerelease support (with a dash). E.g.: 1.0.0-alpha1
+    # Override the constants defined by the superclass to add:
+    # - Semantic Versioning prerelease support (with a dash). E.g.: 1.0.0-alpha1
+    # - Semantic Versioning metadata support (with a +) E.g: 1.0.0+96ef7ed
     #
     # For more info, see: http://semver.org
     #
-    VERSION_PATTERN = '[0-9]+(\.[0-9a-zA-Z\-]+)*'
+    METADATA_PATTERN = '(\+[0-9a-zA-Z\-\.]+)'
+    VERSION_PATTERN = "[0-9]+(\\.[0-9a-zA-Z\\-]+)*#{METADATA_PATTERN}?"
     ANCHORED_VERSION_PATTERN = /\A\s*(#{VERSION_PATTERN})*\s*\z/
 
     # @param  [String,Version] version
@@ -86,7 +88,7 @@ module Pod
 
     # @!group Semantic Versioning
 
-    SEMVER_PATTERN = '[0-9]+(\.[0-9]+(\.[0-9]+(-[0-9A-Za-z\-\.]+)?)?)?'
+    SEMVER_PATTERN = "[0-9]+(\\.[0-9]+(\\.[0-9]+(-[0-9A-Za-z\\-\\.]+)?#{METADATA_PATTERN}?)?)?"
     ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMVER_PATTERN})*\s*\z/
 
     # @return [Bool] Whether the version conforms to the Semantic Versioning
@@ -182,6 +184,19 @@ module Pod
 
     protected
 
+    # This overrides the Gem::Version implementation of `_segments` to drop the
+    # metadata from comparisons as per http://semver.org/#spec-item-10
+    #
+    def _segments
+      # segments is lazy so it can pick up version values that come from
+      # old marshaled versions, which don't go through marshal_load.
+      # since this version object is cached in @@all, its @segments should be frozen
+
+      @segments ||= @version.sub(/#{METADATA_PATTERN}$/, '').scan(/[0-9]+|[a-z]+/i).map do |s|
+        /^\d+$/ =~ s ? s.to_i : s
+      end.freeze
+    end
+
     def numeric_segments
       segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
     end
@@ -194,22 +209,33 @@ module Pod
       return unless other.is_a?(Pod::Version)
       return 0 if @version == other.version
 
-      compare = proc do |segments, other_segments|
+      compare = proc do |segments, other_segments, is_pre_release|
         limit = [segments.size, other_segments.size].max
 
         (0..limit).each do |i|
-          lhs = segments[i] || 0
-          rhs = other_segments[i] || 0
+          lhs = segments[i]
+          rhs = other_segments[i]
 
           next if lhs == rhs
+          # If it's pre-release and the first segment, then
+          # this is a special case because a segment missing
+          # means that one is not a pre-release version
+          if is_pre_release && i == 0
+            return 1 if lhs.nil?
+            return -1 if rhs.nil?
+          else
+            return -1 if lhs.nil?
+            return  1 if rhs.nil?
+          end
+
           return lhs <=> rhs if lhs <=> rhs
-          return -1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
-          return  1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+          return 1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
+          return -1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
         end
       end
 
-      compare[numeric_segments, other.numeric_segments]
-      compare[prerelease_segments, other.prerelease_segments]
+      compare[numeric_segments, other.numeric_segments, false]
+      compare[prerelease_segments, other.prerelease_segments, true]
       0
     end
 
