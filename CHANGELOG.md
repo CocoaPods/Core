@@ -8,10 +8,7 @@
 
 ##### Bug Fixes
 
-* Fix TypeError - no implicit conversion of nil into String.
-  [yanzhiwei147](https://github.com/yanzhiwei147)  
-  [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
-
+* None.  
 
 ## 1.2.1.beta.1 (2017-03-08)
 
@@ -21,7 +18,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix TypeError - no implicit conversion of nil into String.
+  [yanzhiwei147](https://github.com/yanzhiwei147)  
+  [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
 
 ## 1.2.0 (2017-01-28)
