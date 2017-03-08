@@ -13,6 +13,17 @@
   [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
 
+## 1.2.1.beta.1 (2017-03-08)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.2.0 (2017-01-28)
 
 ##### Enhancements
