@@ -1,5 +1,16 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.2.1.rc.1 (2017-04-05)
 
 ##### Enhancements
