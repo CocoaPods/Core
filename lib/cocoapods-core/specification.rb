@@ -128,7 +128,8 @@ module Pod
         raise Informative, 'Invalid string representation for a ' \
           "specification: `#{string_representation}`. " \
           'The string representation should include the name and ' \
-          'optionally the version of the Pod.'
+          'optionally the version of the Pod.' \
+          'The name cannot contain a whitespace.'
       end
       name = match_data[1]
       vers = Version.new(match_data[2])
