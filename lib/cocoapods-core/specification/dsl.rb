@@ -1012,8 +1012,10 @@ module Pod
       #   ---
       #
       #   These are the headers that will be exposed to the user’s project and
-      #   from which documentation will be generated. If no public headers are
-      #   specified then **all** the headers in source_files are considered public.
+      #   from which documentation will be generated. When the library is built,
+      #   these headers will appear in the build directory. If no public headers
+      #   are specified then **all** the headers in source_files are considered
+      #   public.
       #
       #   @example
       #
@@ -1037,7 +1039,13 @@ module Pod
       #   These patterns are matched against the public headers (or all the
       #   headers if no public headers have been specified) to exclude those
       #   headers which should not be exposed to the user project and which
-      #   should not be used to generate the documentation.
+      #   should not be used to generate the documentation. When the library
+      #   is built, these headers will appear in the build directory.
+      #
+      #   Header files that are not listed as neither public nor private will
+      #   be treated as private, but in addition will not appear in the build
+      #   directory at all.
+      #
       #
       #   @example
       #
