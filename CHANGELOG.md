@@ -4,7 +4,10 @@
 
 ##### Enhancements
 
-* None.  
+* Introduce `test_specification` DSL  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [Kyle Fuller](https://github.com/kylef)
+  [#369](https://github.com/CocoaPods/Core/pull/369)
 
 ##### Bug Fixes
 

@@ -128,7 +128,7 @@ module Pod
         run_validation_hooks(attributes, spec)
       end
 
-      # Run validations for multi-platform attributes activating .
+      # Run validations for multi-platform attributes activating.
       #
       # @return [void]
       #
@@ -362,6 +362,12 @@ module Pod
           results.add_error('deprecated_in_favor_of', 'a spec cannot be ' \
             'deprecated in favor of itself')
         end
+      end
+
+      def _validate_test_type(t)
+        supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES
+        results.add_error('test_type', "The test type `#{t}` is not supported. " \
+          "Supported test type values are #{supported_test_types}.") unless supported_test_types.include?(t)
       end
 
       # Performs validations related to github sources.
