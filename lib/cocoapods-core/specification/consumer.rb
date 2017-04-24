@@ -138,7 +138,7 @@ module Pod
 
       # @!group Test Support
 
-      # @return [Symbol] the test type supported by this Pod.
+      # @return [Symbol] the test type supported by this specification.
       #
       spec_attr_accessor :test_type
 
