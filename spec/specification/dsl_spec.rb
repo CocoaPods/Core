@@ -368,6 +368,27 @@ module Pod
 
     #-----------------------------------------------------------------------------#
 
+    describe 'Test specs' do
+      before do
+        @spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = :unit
+          end
+        end
+      end
+
+      it 'allows you to specify a test spec' do
+        test_spec = @spec.subspecs.first
+        test_spec.class.should == Specification
+        test_spec.name.should == 'Spec/Tests'
+        test_spec.test_specification?.should == true
+        test_spec.test_type.should == :unit
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
+
     describe 'Multi-Platform' do
       before do
         @spec = Spec.new do |s|

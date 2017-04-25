@@ -246,6 +246,13 @@ module Pod
         @spec.header_mappings_dir = 'src/include'
         @subspec_consumer.header_mappings_dir.should == 'src/include'
       end
+
+      #------------------#
+
+      it 'allows to specify the test type' do
+        @subspec.test_type = :unit
+        @subspec_consumer.test_type.should == :unit
+      end
     end
 
     #-------------------------------------------------------------------------#

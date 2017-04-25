@@ -217,23 +217,30 @@ module Pod
           s.name = 'Pod'
           s.subspec 'Subspec' do |_sp|
           end
+          s.test_spec do |_tsp|
+          end
         end
         @subspec = @spec.subspecs.first
+        @test_subspec = @spec.test_specs.first
       end
 
       it 'returns the root spec' do
         @spec.root.should == @spec
         @subspec.root.should == @spec
+        @test_subspec.root.should == @spec
       end
 
       it 'returns whether it is a root spec' do
         @spec.root?.should.be.true
         @subspec.root?.should.be.false
+        @test_subspec.root?.should.be.false
       end
 
       it 'returns whether it is a subspec' do
         @spec.subspec?.should.be.false
         @subspec.subspec?.should.be.true
+        @test_subspec.subspec?.should.be.true
+        @test_subspec.test_specification?.should.be.true
       end
     end
 
@@ -271,6 +278,17 @@ module Pod
       it 'returns a subspec given the absolute name' do
         @spec.subspec_by_name('Pod/Subspec').should == @subspec
         @spec.subspec_by_name('Pod/Subspec/Subsubspec').should == @subsubspec
+      end
+
+      it "doesn't return the test subspec given the Tests name" do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking'
+          s.osx.dependency 'MagicalRecord'
+          s.test_spec {}
+        end
+        @spec.subspec_by_name('Pod/Tests', false).should. nil?
       end
 
       it 'returns a subspec given the relative name' do
@@ -327,10 +345,27 @@ module Pod
         ]
       end
 
+      it 'excludes the test subspec from the subspec dependencies' do
+        @spec.test_spec {}
+        @spec.subspec_dependencies.sort.should == [
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspecOSX', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
+      end
+
       it 'returns all the dependencies' do
         @spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord')]
+      end
+
+      it 'returns the test spec dependencies' do
+        test_spec = @spec.test_spec { |s| s.dependency 'OCMock' }
+        test_spec.dependencies.sort.should == [
+          Dependency.new('AFNetworking'),
+          Dependency.new('MagicalRecord'),
+          Dependency.new('OCMock'),
+        ]
       end
 
       it 'returns the dependencies given the platform' do

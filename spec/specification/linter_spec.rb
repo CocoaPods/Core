@@ -253,6 +253,19 @@ module Pod
 
       #------------------#
 
+      it 'checks the test type' do
+        podspec = 'Pod::Spec.new do |s|; s.test_spec do |ts|; ts.test_type = :unknown; end end'
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
+        File.open(path, 'w') { |f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        results = linter.results
+        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
+        test_type_error.message.should.include?('The test type `unknown` is not supported.')
+      end
+
+      #------------------#
+
       it 'checks if the description is not an empty string' do
         @spec.stubs(:description).returns('')
         result_should_include('description', 'empty')

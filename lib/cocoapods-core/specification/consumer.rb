@@ -136,6 +136,14 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
+      # @!group Test Support
+
+      # @return [Symbol] the test type supported by this Pod.
+      #
+      spec_attr_accessor :test_type
+
+      #-----------------------------------------------------------------------#
+
       # @!group File patterns
 
       # @return [Array<String>] the source files of the Pod.

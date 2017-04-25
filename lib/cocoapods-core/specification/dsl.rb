@@ -1012,8 +1012,10 @@ module Pod
       #   ---
       #
       #   These are the headers that will be exposed to the user’s project and
-      #   from which documentation will be generated. If no public headers are
-      #   specified then **all** the headers in source_files are considered public.
+      #   from which documentation will be generated. When the library is built,
+      #   these headers will appear in the build directory. If no public headers
+      #   are specified then **all** the headers in source_files are considered
+      #   public.
       #
       #   @example
       #
@@ -1037,7 +1039,13 @@ module Pod
       #   These patterns are matched against the public headers (or all the
       #   headers if no public headers have been specified) to exclude those
       #   headers which should not be exposed to the user project and which
-      #   should not be used to generate the documentation.
+      #   should not be used to generate the documentation. When the library
+      #   is built, these headers will appear in the build directory.
+      #
+      #   Header files that are not listed as neither public nor private will
+      #   be treated as private, but in addition will not appear in the build
+      #   directory at all.
+      #
       #
       #   @example
       #
@@ -1312,6 +1320,47 @@ module Pod
       #
       def subspec(name, &block)
         subspec = Specification.new(self, name, &block)
+        @subspecs << subspec
+        subspec
+      end
+
+      # The list of the test types currently supported.
+      #
+      SUPPORTED_TEST_TYPES = [:unit].freeze
+
+      # The test type this specification supports. This only applies to test specifications.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   test_spec.test_type = :unit
+      #
+      # @param  [Symbol] type
+      #         The test type to use.
+      attribute :test_type,
+                :default_value => :unit,
+                :types => [Symbol],
+                :multi_platform => false
+
+      # Represents a test specification for the library. Here you can place all
+      # your tests for your podspec along with the test dependencies.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.test_spec do |test_spec|
+      #       test_spec.source_files = 'NSAttributedString+CCLFormatTests.m'
+      #       test_spec.dependency 'Expecta'
+      #     end
+      #   end
+      #
+      def test_spec(name = 'Tests', &block)
+        subspec = Specification.new(self, name, true, &block)
         @subspecs << subspec
         subspec
       end
