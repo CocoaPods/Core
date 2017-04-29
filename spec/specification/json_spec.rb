@@ -115,6 +115,18 @@ module Pod
         }]
       end
 
+      it 'writes test type for test subspec' do
+        @spec.test_spec {}
+        hash = @spec.to_hash
+        hash['subspecs'].should == [{
+          'name' => 'GreenBanana',
+          'source_files' => 'GreenBanana',
+        }, {
+          'name' => 'Tests',
+          'test_type' => :unit,
+        }]
+      end
+
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',
@@ -123,6 +135,18 @@ module Pod
         result = Specification.from_hash(hash)
         result.name.should == 'BananaLib'
         result.version.to_s.should == '1.0'
+      end
+
+      it 'can load test specification from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }, { 'name' => 'Tests', 'test_type' => :unit }],
+        }
+        result = Specification.from_hash(hash)
+        result.test_specs.count.should.equal 1
+        result.test_specs.first.test_specification?.should.be.true
+        result.test_specs.first.test_type.should.equal :unit
       end
 
       it 'can be safely converted back and forth to a hash' do

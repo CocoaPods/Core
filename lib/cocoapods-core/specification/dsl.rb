@@ -1339,7 +1339,6 @@ module Pod
       # @param  [Symbol] type
       #         The test type to use.
       attribute :test_type,
-                :default_value => :unit,
                 :types => [Symbol],
                 :multi_platform => false
 

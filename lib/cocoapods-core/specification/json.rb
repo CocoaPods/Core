@@ -59,6 +59,7 @@ module Pod
       attributes_hash = hash.dup
       subspecs = attributes_hash.delete('subspecs')
       spec.attributes_hash = attributes_hash
+      spec.test_specification = !attributes_hash['test_type'].nil?
       if subspecs
         spec.subspecs = subspecs.map do |s_hash|
           Specification.from_hash(s_hash, spec)
