@@ -17,7 +17,7 @@ module Pod
         end
       end
 
-      it 'fetches if the GitHub API returns not-modified' do
+      it 'fetches if the GitHub API returns modified' do
         VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
           @source.expects(:update_git_repo)
           @source.send :update, true

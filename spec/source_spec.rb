@@ -195,6 +195,36 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#update' do
+      describe 'for a GitHub source' do
+        before do
+          # The master source repo uses GitHub, so we recycle that here. Note
+          # that we initialize it as just a `Source`, though.
+          @path = fixture('spec-repos/master')
+          @source = Source.new(@path)
+        end
+
+        it 'does not git fetch if the GitHub API returns not-modified' do
+          VCR.use_cassette('MasterSource_nofetch', :record => :new_episodes) do
+            @source.expects(:update_git_repo).never
+            @source.send :update, true
+          end
+        end
+
+        it 'fetches if the GitHub API returns modified' do
+          VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
+            @source.expects(:update_git_repo)
+            @source.send :update, true
+          end
+        end
+      end
+
+      describe 'for a non-GitHub source' do
+        it 'always calls update_git_repo' do
+          @source.expects(:update_git_repo)
+          @source.send :update, true
+        end
+      end
+
       it 'uses the only fast forward git option' do
         @source.expects(:`).with("git -C \"#{@path}\" checkout master")
         @source.expects(:`).with("git -C \"#{@path}\" pull --ff-only 2>&1")
