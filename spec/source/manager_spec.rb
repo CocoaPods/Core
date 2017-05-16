@@ -221,7 +221,7 @@ module Pod
 
     describe 'Updating Sources' do
       before do
-        MasterSource.any_instance.stubs(:requires_update?).returns(true)
+        Source.any_instance.stubs(:unchanged_github_repo?).returns(false)
       end
 
       it 'updates search index for changed paths if source is updated' do
