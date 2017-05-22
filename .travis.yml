@@ -22,6 +22,7 @@ script: bundle exec rake spec
 git:
   submodules: false
 before_install:
+  - gem install bundler
   - |
       master_sha="$(ruby -e "puts '`git submodule status spec/fixtures/spec-repos/master`'.strip.sub(/^-/, '').split(/\s/, 2).first")"
       curl -ssL "https://github.com/CocoaPods/Specs/archive/$master_sha.tar.gz" | tar xz -C spec/fixtures/spec-repos
