@@ -17,6 +17,20 @@ module Pod
         end
       end
 
+      it 'handles SSH as well as HTTP' do
+        VCR.use_cassette('GitHub', :record => :new_episodes) do
+          repo = GitHub.repo('git@github.com:CocoaPods/CocoaPods')
+          repo['name'].should == 'CocoaPods'
+        end
+      end
+
+      it 'strips any trailing .git suffix' do
+        VCR.use_cassette('GitHub', :record => :new_episodes) do
+          repo = GitHub.repo('git@github.com:CocoaPods/CocoaPods.git')
+          repo['name'].should == 'CocoaPods'
+        end
+      end
+
       it 'returns the information of a repo with dots in the name' do
         VCR.use_cassette('GitHub', :record => :new_episodes) do
           repo = GitHub.repo('https://github.com/contentful/contentful.objc')

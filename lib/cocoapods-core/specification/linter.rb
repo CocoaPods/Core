@@ -365,6 +365,10 @@ module Pod
       end
 
       def _validate_test_type(t)
+        unless consumer.spec.test_specification?
+          results.add_error('test_type', 'Test type can only be used for test specifications.')
+          return
+        end
         supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES
         results.add_error('test_type', "The test type `#{t}` is not supported. " \
           "Supported test type values are #{supported_test_types}.") unless supported_test_types.include?(t)

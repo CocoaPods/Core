@@ -330,6 +330,7 @@ module Pod
     #          Returns the list of changed spec paths.
     #
     def update(show_output)
+      return [] if unchanged_github_repo?
       prev_commit_hash = git_commit_hash
       update_git_repo(show_output)
       refresh_metadata
@@ -435,6 +436,12 @@ module Pod
       command = "git -C \"#{repo}\" " << args.join(' ')
       command << ' 2>&1' if include_error
       (`#{command}` || '').strip
+    end
+
+    def unchanged_github_repo?
+      url = repo_git(%w(config --get remote.origin.url))
+      return unless url =~ /github.com/
+      !GitHub.modified_since_commit(url, git_commit_hash)
     end
 
     #-------------------------------------------------------------------------#

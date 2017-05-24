@@ -249,9 +249,27 @@ module Pod
 
       #------------------#
 
-      it 'allows to specify the test type' do
-        @subspec.test_type = :unit
-        @subspec_consumer.test_type.should == :unit
+      it 'returns nil for test type for a root spec' do
+        @consumer.test_type.should.be.nil
+      end
+
+      it 'returns nil for test type for subspec' do
+        @subspec_consumer.test_type.should.be.nil
+      end
+
+      it 'returns the default test type for a test subspec' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.test_type.should.be == :unit
+      end
+
+      it 'allows to specify the unit test type for a test subspec' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.test_type = :unit
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.test_type.should.be == :unit
       end
     end
 
