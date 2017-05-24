@@ -126,7 +126,7 @@ module Pod
           found_set_names = query_word_results_hash.values.reduce(:&)
           found_set_names ||= []
           sets = found_set_names.map do |name|
-            aggregate.representative_set(name)
+            aggregate.representative_set_for_search(name)
           end
           # Remove nil values because representative_set return nil if no pod is found in any of the sources.
           sets.compact!
