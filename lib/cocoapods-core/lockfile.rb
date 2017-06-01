@@ -350,13 +350,15 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      yamlString = YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
-      to_hash['SPEC CHECKSUMS'].each { |k,v| 
-        wrongStr = k + ': \'' + v + '\''
-        rightStr = k + ': ' + v
-        yamlString = yamlString.gsub( wrongStr,  rightStr)
-      }
-      yamlString      
+      yaml_string = YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
+      to_hash['SPEC CHECKSUMS'].each do |key, value|
+        wrong_fromat_string = key + ': \'' + value + '\''
+        right_fromat_string = key + ': ' + value
+        if yaml_string.include? wrong_fromat_string
+          yaml_string = yaml_string.gsub(wrong_fromat_string, right_fromat_string)
+        end
+      end
+      yaml_string
     end
 
     #-------------------------------------------------------------------------#
