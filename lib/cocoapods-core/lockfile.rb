@@ -350,7 +350,13 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
+      yamlString = YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
+      to_hash['SPEC CHECKSUMS'].each { |k,v| 
+        wrongStr = k + ': \'' + v + '\''
+        rightStr = k + ': ' + v
+        yamlString = yamlString.gsub( wrongStr,  rightStr)
+      }
+      yamlString      
     end
 
     #-------------------------------------------------------------------------#
