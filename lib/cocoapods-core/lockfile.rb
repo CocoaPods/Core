@@ -354,9 +354,7 @@ module Pod
       to_hash['SPEC CHECKSUMS'].each do |key, value|
         wrong_fromat_string = key + ': \'' + value + '\''
         right_fromat_string = key + ': ' + value
-        if yaml_string.include? wrong_fromat_string
-          yaml_string = yaml_string.gsub(wrong_fromat_string, right_fromat_string)
-        end
+        yaml_string = yaml_string.gsub(wrong_fromat_string, right_fromat_string) if yaml_string.include? wrong_fromat_string
       end
       yaml_string
     end
