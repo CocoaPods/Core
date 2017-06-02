@@ -9,6 +9,9 @@
   [Kyle Fuller](https://github.com/kylef)
   [#369](https://github.com/CocoaPods/Core/pull/369)
 
+* Allow the use of `macos` in place of `osx` as a platform name.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 ##### Bug Fixes
 
 * Fix typo in `specification.rb`  

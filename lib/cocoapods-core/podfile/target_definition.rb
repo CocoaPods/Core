@@ -483,6 +483,7 @@ module Pod
       # @return [void]
       #
       def set_platform(name, target = nil)
+        name = :osx if name == :macos
         unless [:ios, :osx, :tvos, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
             'must be `:ios`, `:osx`, `:tvos`, or `:watchos`.'
