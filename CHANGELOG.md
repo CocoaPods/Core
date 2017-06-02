@@ -213,6 +213,10 @@
   [Daniel Tomlinson](https://github.com/dantoml)
   [#334](https://github.com/CocoaPods/Core/pull/334)
 
+* Hash `TargetDefinition` labels if they are over 60 characters.  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [#5491](https://github.com/CocoaPods/CocoaPods/issues/5491)
+
 ##### Bug Fixes
 
 * None.  

@@ -107,11 +107,19 @@ module Pod
       #
       def label
         if root? && name == 'Pods'
-          'Pods'
+          label = 'Pods'
         elsif exclusive? || parent.nil?
-          "Pods-#{name}"
+          label = "Pods-#{name}"
         else
-          "#{parent.label}-#{name}"
+          label = "#{parent.label}-#{name}"
+        end
+
+        if label.length >= 60
+          require 'digest'
+          digest = Digest::MD5.hexdigest(label)
+          "Pods-#{digest}"
+        else
+          label
         end
       end
 

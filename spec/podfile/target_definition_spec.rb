@@ -104,6 +104,12 @@ module Pod
         @parent.label.should == 'Pods-MyApp'
       end
 
+      it 'hashes its label if it would be longer than 60 characters' do
+        grandchild = Podfile::TargetDefinition.new('MyReallyReallyReallyLongTargetNameToTestHashing', @child)
+
+        grandchild.label.should == 'Pods-1f7f1acb17c13639f8dec82492cc1018'
+      end
+
       it 'returns `Pods` as the label if its name is default' do
         target_def = Podfile::TargetDefinition.new('Pods', @podfile)
         target_def.label.should == 'Pods'
