@@ -63,7 +63,7 @@ module Pod
         COCOAPODS: #{CORE_VERSION}
       LOCKFILE
     end
-    
+
     def self.podfile
       podfile = Podfile.new do
         platform :ios
@@ -333,7 +333,7 @@ module Pod
         @lockfile.write_to_disk(path)
         path.read.should == old_yaml
       end
-      
+
       it 'overwrites a different lockfile' do
         path = SpecHelper.temporary_directory + 'Podfile.lock'
         path.delete if path.exist?
@@ -344,7 +344,7 @@ module Pod
 
         @lockfile.should == Lockfile.from_file(path)
       end
-      
+
       it 'fix strange quotation marks in lockfile' do
         @lockfile = Lockfile.new(YAMLHelper.load_string(Sample.quotation_marks_yaml))
         @lockfile.to_yaml.should == Sample.yaml
