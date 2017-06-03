@@ -9,7 +9,7 @@ PATH
   remote: .
   specs:
     cocoapods-core (1.2.1)
-      activesupport (>= 4.0.2, < 5)
+      activesupport (>= 4.0.2, < 6)
       fuzzy_match (~> 2.0.4)
       nap (~> 1.0)
 
@@ -45,7 +45,7 @@ GEM
       rb-kqueue (>= 0.2)
     metaclass (0.0.4)
     method_source (0.8.2)
-    minitest (5.10.1)
+    minitest (5.10.2)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.2)
@@ -98,10 +98,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport (>= 4.0.2, < 5)
   awesome_print
   bacon
   cocoapods-core!
-  codeclimate-test-reporter
+  codeclimate-test-reporter (~> 0.4.1)
   json!
   kicker
   mocha
@@ -110,9 +111,9 @@ DEPENDENCIES
   pry
   rake
   rb-fsevent
-  rubocop
+  rubocop (~> 0.38.0)
   vcr
   webmock
 
 BUNDLED WITH
-   1.13.6
+   1.15.0
