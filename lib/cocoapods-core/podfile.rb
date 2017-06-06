@@ -87,7 +87,8 @@ module Pod
     #         definitions.
     #
     def dependencies
-      target_definition_list.map(&:dependencies).flatten.uniq
+      return @podfile_dependencies if defined? @podfile_dependencies
+      @podfile_dependencies = target_definition_list.map(&:dependencies).flatten.uniq
     end
 
     #-------------------------------------------------------------------------#
