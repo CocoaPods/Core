@@ -27,8 +27,11 @@
 
 * Fix typo in `specification.rb`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
-  [#376](https://github.com/CocoaPods/Core/pull/376)  
-
+  [#376](https://github.com/CocoaPods/Core/pull/376)
+  
+* Fix Strange quotation marks in `lockfile.rb`  
+  [Dacaiguoguo](https://github.com/dacaiguoguogmail)
+  [#381](https://github.com/CocoaPods/Core/pull/381) 
 
 ## 1.2.1 (2017-04-11)
 
