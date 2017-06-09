@@ -868,11 +868,18 @@ module Pod
         return false unless options.is_a?(Hash)
 
         subspecs = options.delete(:subspecs)
+        test_specs = options.delete(:testspecs)
+
         subspecs.each do |ss|
           store_pod("#{name}/#{ss}", *requirements.dup)
         end if subspecs
+
+        test_specs.each do |ss|
+          store_pod("#{name}/#{ss}", *requirements.dup)
+        end if test_specs
+
         requirements.pop if options.empty?
-        !subspecs.nil?
+        !subspecs.nil? || !test_specs.nil?
       end
 
       #-----------------------------------------------------------------------#

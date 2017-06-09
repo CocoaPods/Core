@@ -232,6 +232,22 @@ module Pod
         @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking)
       end
 
+      it 'allows depending on testspecs' do
+        @parent.store_pod('RestKit', :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Tests)
+      end
+
+      it 'allows depending on both subspecs and testspecs' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking))
+        @parent.store_pod('RestKit', :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking RestKit/Tests)
+      end
+
+      it 'allows depending on both subspecs and testspecs in chaining' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking), :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking RestKit/Tests)
+      end
+
       #--------------------------------------#
 
       it "doesn't inhibit warnings per pod by default" do
