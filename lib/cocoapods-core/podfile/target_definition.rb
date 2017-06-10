@@ -852,8 +852,8 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :subspecs from the requirements list, and stores the pods
-      # with the given subspecs as dependencies.
+      # Removes :subspecs and :testspecs from the requirements list, and stores the pods
+      # with the given subspecs or test specs as dependencies.
       #
       # @param  [String] name
       #
@@ -879,7 +879,7 @@ module Pod
         end if test_specs
 
         requirements.pop if options.empty?
-        !subspecs.nil? || !test_specs.nil?
+        !subspecs.nil?
       end
 
       #-----------------------------------------------------------------------#
