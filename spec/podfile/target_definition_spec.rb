@@ -234,13 +234,13 @@ module Pod
 
       it 'allows depending on testspecs' do
         @parent.store_pod('RestKit', :testspecs => %w(Tests))
-        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Tests)
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Tests)
       end
 
       it 'allows depending on both subspecs and testspecs' do
         @parent.store_pod('RestKit', :subspecs => %w(Networking))
         @parent.store_pod('RestKit', :testspecs => %w(Tests))
-        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking RestKit/Tests)
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Networking RestKit/Tests)
       end
 
       it 'allows depending on both subspecs and testspecs in chaining' do

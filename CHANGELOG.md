@@ -25,6 +25,10 @@
 
 ##### Bug Fixes
 
+* Correctly include parent dependencies when parsing testspecs
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#384](https://github.com/CocoaPods/Core/pull/384)
+
 * Fix typo in `specification.rb`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#376](https://github.com/CocoaPods/Core/pull/376)
