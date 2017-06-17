@@ -25,6 +25,10 @@
 
 ##### Bug Fixes
 
+* Cache version result for each pod and segments  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#385](https://github.com/CocoaPods/Core/pull/385)
+
 * Correctly include parent dependencies when parsing testspecs
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#384](https://github.com/CocoaPods/Core/pull/384)

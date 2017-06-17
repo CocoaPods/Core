@@ -59,6 +59,17 @@ module Pod
       it 'returns nil if the Pod could not be found' do
         @source.versions('Unknown_Pod').should.be.nil
       end
+
+      it 'returns cached versions for a Pod' do
+        pod_path = @source.pod_path('JSONKit')
+        pod_path_children = pod_path.children
+        pod_path_children.each { |v| v.expects(:directory?).returns(true).once }
+        pod_path.expects(:children).returns(pod_path_children)
+        @source.expects(:pod_path).with('JSONKit').twice.returns(pod_path)
+        @source.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.13', '1.4']
+        @source.versions('JSONKit').map(&:to_s).should == ['999.999.999', '1.13', '1.4']
+        @source.instance_variable_get(:@versions_by_name).should == { 'JSONKit' => [Version.new('999.999.999'), Version.new('1.13'), Version.new('1.4')] }
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -214,6 +225,16 @@ module Pod
           VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
             @source.expects(:update_git_repo)
             @source.send :update, true
+          end
+        end
+
+        it 'clears the versions by name cache when updated' do
+          VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
+            @source.expects(:update_git_repo).with(true)
+            @source.versions('RestKit')
+            @source.instance_variable_get(:@versions_by_name).count.should == 1
+            @source.send :update, true
+            @source.instance_variable_get(:@versions_by_name).should.be.empty
           end
         end
       end

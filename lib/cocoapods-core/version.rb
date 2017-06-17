@@ -198,11 +198,11 @@ module Pod
     end
 
     def numeric_segments
-      segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
+      @numeric_segments ||= segments.take_while { |s| s.is_a?(Numeric) }.reverse_each.drop_while { |s| s == 0 }.reverse
     end
 
     def prerelease_segments
-      segments.drop_while { |s| s.is_a?(Numeric) }
+      @prerelease_segments ||= segments.drop_while { |s| s.is_a?(Numeric) }
     end
 
     def compare_segments(other)
