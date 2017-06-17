@@ -143,6 +143,11 @@ module Pod
       @spec.prepare_command.should == 'ruby prepare_script.rb'
     end
 
+    it 'returns whether the Pod should build a static framework' do
+      @spec.static_framework = true
+      @spec.static_framework.should == true
+    end
+
     it 'returns whether the Pod has been deprecated' do
       @spec.deprecated = true
       @spec.deprecated.should == true

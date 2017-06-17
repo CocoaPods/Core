@@ -76,6 +76,11 @@ module Pod
         @spec.attributes_hash['prepare_command'].should == 'ruby build_files.rb'
       end
 
+      it 'allows to specify whether the Pod has a static_framework' do
+        @spec.static_framework = true
+        @spec.attributes_hash['static_framework'].should == true
+      end
+
       it 'allows to specify whether the Pod has been deprecated' do
         @spec.deprecated = true
         @spec.attributes_hash['deprecated'].should == true
