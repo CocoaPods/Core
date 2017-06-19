@@ -273,7 +273,6 @@ module Pod
         :svn  => [:folder, :tag, :revision].freeze,
         :hg   => [:revision].freeze,
         :http => [:flatten, :type, :sha256, :sha1].freeze,
-        :path => nil,
       }.freeze
 
       # @!method source=(source)
@@ -333,10 +332,6 @@ module Pod
       #     @option http [String] :http compressed source URL
       #     @option http [String] :type file type. Supports zip, tgz, bz2, txz and tar
       #     @option http [String] :sha1 SHA hash. Supports SHA1 and SHA256
-      #
-      #   @overload source=(path)
-      #     @param  [Hash] path
-      #     @option path [String] :path local source path
       #
       root_attribute :source,
                      :container => Hash,
