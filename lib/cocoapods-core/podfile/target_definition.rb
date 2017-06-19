@@ -23,6 +23,7 @@ module Pod
         @internal_hash = internal_hash || {}
         @parent = parent
         @children = []
+        @label = nil
         self.name ||= name
         if parent.is_a?(TargetDefinition)
           parent.children << self
@@ -106,13 +107,13 @@ module Pod
       #         name.
       #
       def label
-        if root? && name == 'Pods'
-          'Pods'
-        elsif exclusive? || parent.nil?
-          "Pods-#{name}"
-        else
-          "#{parent.label}-#{name}"
-        end
+        @label ||= if root? && name == 'Pods'
+                     'Pods'
+                   elsif exclusive? || parent.nil?
+                     "Pods-#{name}"
+                   else
+                     "#{parent.label}-#{name}"
+                   end
       end
 
       alias_method :to_s, :label
@@ -145,6 +146,7 @@ module Pod
       # @return [void]
       #
       def name=(name)
+        @label = nil
         set_hash_value('name', name)
       end
 
