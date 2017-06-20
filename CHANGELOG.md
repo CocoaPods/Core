@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Cleanup DSL for `spec.source` - remove mentioning of `:path`.
+  [Maksym Komarychev](https://github.com/maxkomarychev)
+  [#388](https://github.com/CocoaPods/Core/pull/388)
 
 
 ## 1.3.0.beta.1 (2017-06-06)
