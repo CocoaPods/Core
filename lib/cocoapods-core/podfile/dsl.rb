@@ -334,6 +334,48 @@ module Pod
         self.current_target_definition = parent
       end
 
+      # Adds a script phase to be integrated with this target. A script phase can be used to execute an arbitrary
+      # script that can use all Xcode environment variables during execution. A target may include multiple script
+      # phases which they will be added in the order they were declared. Deleting a script phase will effectively remove
+      # it from the target if it has been added previously.
+      #
+      # @example
+      #   script_phase :name => 'HelloWorldScript', :script => 'echo "Hello World"'
+      #
+      # @example
+      #   script_phase :name => 'HelloWorldScript', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby'
+      #
+      # @param    [Hash] options
+      #           the options for this script phase.
+      #
+      # @option   options [String] :name
+      #           the name of the script phase. This option is required.
+      #
+      # @option   options [String] :script
+      #           the body of the script to execute. This option is required.
+      #
+      # @option   options [String] :shell_path
+      #           the shell path to use for this script phase, for example `/usr/bin/ruby` to use Ruby for this phase.
+      #
+      # @option   options [Array<String>] :input_paths
+      #           the input paths to use for script. This is used by Xcode to determine whether to re-execute this
+      #           script phase if the input paths have changed or not.
+      #
+      # @option   options [Array<String>] :output_paths
+      #           the output paths to use for script. This is used by Xcode to avoid re-executing this script phase if
+      #           none of the output paths have changed.
+      #
+      # @option   options [Boolean] :show_env_vars_in_log
+      #           whether this script phase should output the environment variables during execution.
+      #
+      # @return   [void]
+      #
+      def script_phase(options)
+        raise Informative, 'Script phases can only be added within target definitions.' if current_target_definition.root?
+        raise Informative, 'Script phases cannot be added to abstract targets.' if current_target_definition.abstract?
+        current_target_definition.store_script_phase(options)
+      end
+
       # Defines a new abstract target that can be used for convenient
       # target dependency inheritance.
       #

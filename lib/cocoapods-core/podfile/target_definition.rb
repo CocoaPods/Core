@@ -288,6 +288,14 @@ module Pod
 
       #--------------------------------------#
 
+      # @return [Array<Hash>] The list of the script phases of the target definition.
+      #
+      def script_phases
+        get_hash_value('script_phases') || []
+      end
+
+      #--------------------------------------#
+
       # @return [Bool] whether the target definition should inhibit warnings
       #         for a single pod. If inhibit_all_warnings is true, it will
       #         return true for any asked pod.
@@ -575,6 +583,41 @@ module Pod
         end
       end
 
+      #--------------------------------------#
+
+      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
+
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log].freeze
+
+      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
+
+      # Stores the script phase to add for this target definition.
+      #
+      # @param  [Hash] options
+      #         The options to use for this script phase. The required keys
+      #         are: `:name`, `:script`, while the optional keys are:
+      #         `:shell_path`, `:input_files`, `:output_files` and `:show_env_vars_in_log`.
+      #
+      # @return [void]
+      #
+      def store_script_phase(options)
+        option_keys = options.keys
+        unrecognized_keys = option_keys - ALL_SCRIPT_PHASE_KEYS
+        unless unrecognized_keys.empty?
+          raise StandardError, "Unrecognized options `#{unrecognized_keys}` in shell script `#{options}` within `#{name}` target. " \
+            "Available options are `#{ALL_SCRIPT_PHASE_KEYS}`."
+        end
+        missing_required_keys = SCRIPT_PHASE_REQUIRED_KEYS - option_keys
+        unless missing_required_keys.empty?
+          raise StandardError, "Missing required shell script phase options `#{missing_required_keys.join(', ')}`"
+        end
+        script_phases_hash = get_hash_value('script_phases', [])
+        if script_phases_hash.map { |script_phase_options| script_phase_options[:name] }.include?(options[:name])
+          raise StandardError, "Script phase with name `#{options[:name]}` name already present for target `#{name}`."
+        end
+        script_phases_hash << options
+      end
+
       #-----------------------------------------------------------------------#
 
       public
@@ -595,6 +638,7 @@ module Pod
         user_project_path
         build_configurations
         dependencies
+        script_phases
         children
         configuration_pod_whitelist
         uses_frameworks
