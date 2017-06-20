@@ -25,6 +25,10 @@
 
 ##### Bug Fixes
 
+* Cache target definition label value  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#387](https://github.com/CocoaPods/Core/pull/387)
+
 * Cache version result for each pod and segments  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#385](https://github.com/CocoaPods/Core/pull/385)
