@@ -25,10 +25,7 @@ files.
 $ [sudo] gem install cocoapods-core
 ```
 
-The `cocoapods-core` gem requires either:
-
-- Ruby 1.8.7 (shipped with OS X 10.8).
-- Ruby 1.9.3 (recommended).
+The `cocoapods-core` gem requires Ruby 2.0.0 or later.
 
 ## Collaborate
 
