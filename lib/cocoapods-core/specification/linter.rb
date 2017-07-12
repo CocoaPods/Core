@@ -48,6 +48,7 @@ module Pod
         if spec
           validate_root_name
           check_required_attributes
+          check_requires_arc_attribute
           run_root_validation_hooks
           perform_all_specs_analysis
         else
@@ -95,6 +96,20 @@ module Pod
           unless names_match
             results.add_error('name', 'The name of the spec should match the ' \
                               'name of the file.')
+          end
+        end
+      end
+
+      # Generates a warning if the requires_arc attribute has true or false string values.
+      #
+      # @return [void]
+      #
+      def check_requires_arc_attribute
+        attribute = DSL.attributes.values.find { |attr| attr.name == :requires_arc }
+        if attribute
+          value = spec.send(attribute.name)
+          if value == 'true' || value == 'false'
+            results.add_warning('requires_arc', value + ' is considered to be the name of a file.')
           end
         end
       end
@@ -370,8 +385,10 @@ module Pod
           return
         end
         supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES
-        results.add_error('test_type', "The test type `#{t}` is not supported. " \
-          "Supported test type values are #{supported_test_types}.") unless supported_test_types.include?(t)
+        unless supported_test_types.include?(t)
+          results.add_error('test_type', "The test type `#{t}` is not supported. " \
+            "Supported test type values are #{supported_test_types}.")
+        end
       end
 
       # Performs validations related to github sources.

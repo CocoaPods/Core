@@ -23,7 +23,7 @@ module Pod
 
       it 'analyzes all the specifications of a repo' do
         @reporter.analyze
-        @reporter.report.analyzed_paths.count.should == 10
+        @reporter.report.analyzed_paths.count.should == 11
       end
 
       it 'is robust against malformed specifications' do
@@ -42,6 +42,12 @@ module Pod
         @reporter.analyze
         errors = @reporter.report.pods_by_error.keys.join("\n")
         errors.should.match /Incorrect path/
+      end
+
+      it 'checks if requires_arc has the string value of true or false' do
+        @reporter.analyze
+        warnings = @reporter.report.pods_by_warning.keys.join("\n")
+        warnings.should.match /true is considered to be the name of a file/
       end
 
       it 'checks for any stray specifications' do
