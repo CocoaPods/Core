@@ -19,6 +19,12 @@ module Pod
           parent ? "#{parent.name}/#{base_name}" : base_name
         end
 
+        # @return [Bool, String, Array<String>] The requires_arc value.
+        #
+        def requires_arc
+          attributes_hash['requires_arc']
+        end
+
         # @return [Version] The version of the Pod.
         #
         # @todo   The version is memoized because the Resolvers sets the head

@@ -8,8 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Check requires_arc for true/false strings
+  [Vinay Guthal](https://github.com/VinayGuthal)
+  [#393](https://github.com/CocoaPods/Core/pull/393)
 
 ## 1.3.0.beta.2 (2017-06-22)
 

@@ -6,6 +6,7 @@ module Pod
       @spec = Spec.new do |s|
         s.name = 'Pod'
         s.version = '1.0'
+        s.requires_arc = true
         s.subspec 'Subspec' do
         end
       end
@@ -167,6 +168,10 @@ module Pod
     it 'returns the custom module map file, if specified' do
       @spec.module_map = 'module.modulemap'
       @spec.module_map.should == 'module.modulemap'
+    end
+
+    it 'returns the correct requires_arc value, if specified' do
+      @spec.requires_arc.should == true
     end
   end
 end
