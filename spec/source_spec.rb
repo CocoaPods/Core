@@ -241,6 +241,7 @@ module Pod
 
       describe 'for a non-GitHub source' do
         it 'always calls update_git_repo' do
+          @source.expects(:url).returns('https://myhost.com/myorg/myrepo.git')
           @source.expects(:update_git_repo)
           @source.send :update, true
         end

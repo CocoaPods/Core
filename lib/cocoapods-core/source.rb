@@ -441,7 +441,6 @@ module Pod
     end
 
     def unchanged_github_repo?
-      url = repo_git(%w(config --get remote.origin.url))
       return unless url =~ /github.com/
       !GitHub.modified_since_commit(url, git_commit_hash)
     end
