@@ -20,7 +20,7 @@
 
 ##### Bug Fixes
 
-* Cleanup DSL for `spec.source` - remove mentioning of `:path`.
+* Cleanup DSL for `spec.source` - remove mentioning of `:path`.  
   [Maksym Komarychev](https://github.com/maxkomarychev)
   [#388](https://github.com/CocoaPods/Core/pull/388)
 
@@ -47,7 +47,7 @@
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#385](https://github.com/CocoaPods/Core/pull/385)
 
-* Correctly include parent dependencies when parsing testspecs
+* Correctly include parent dependencies when parsing testspecs  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#384](https://github.com/CocoaPods/Core/pull/384)
 
