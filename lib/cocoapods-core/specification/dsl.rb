@@ -458,6 +458,25 @@ module Pod
 
       #------------------#
 
+      # @!method static_framework=(flag)
+      #
+      #   Indicates, that if use_frameworks! is specified, the
+      #   pod should include a static library framework.
+      #
+      #   @example
+      #
+      #     spec.static_framework = true
+      #
+      #   @param [Bool] flag
+      #          Indicates, that if use_frameworks! is specified, the
+      #          pod should include a static library framework.
+      #
+      root_attribute :static_framework,
+                     :types => [TrueClass, FalseClass],
+                     :default_value => false
+
+      #------------------#
+
       # @!method deprecated=(flag)
       #
       #   Whether the library has been deprecated.
