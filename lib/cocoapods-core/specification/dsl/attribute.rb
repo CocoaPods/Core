@@ -31,6 +31,7 @@ module Pod
 
           @multi_platform = options.delete(:multi_platform) { true       }
           @root_only      = options.delete(:root_only)      { false      }
+          @test_only      = options.delete(:test_only)      { false      }
           @inherited      = options.delete(:inherited)      { @root_only }
           @required       = options.delete(:required)       { false      }
           @singularize    = options.delete(:singularize)    { false      }
@@ -119,6 +120,13 @@ module Pod
         #
         def root_only?
           @root_only
+        end
+
+        # @return [Bool] whether the attribute should be specified only on
+        #         test specifications.
+        #
+        def test_only?
+          @test_only
         end
 
         # @return [Bool] whether the attribute is multi-platform and should

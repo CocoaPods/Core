@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add `requires_app_host` DSL attribute  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#399](https://github.com/CocoaPods/Core/pull/399)
+
 * Introduce `static_framework` podspec attribute
   [Paul Beusterien](https://github.com/paulb777)
   [#386](https://github.com/CocoaPods/Core/pull/386)
