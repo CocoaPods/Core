@@ -1355,7 +1355,11 @@ module Pod
       #
       #   test_spec.test_type = :unit
       #
-      # @param  [Symbol] type
+      # @example
+      #
+      #   test_spec.test_type = 'unit'
+      #
+      # @param  [Symbol, String] type
       #         The test type to use.
       attribute :test_type,
                 :types => [Symbol, String],
