@@ -94,6 +94,28 @@ module Pod
         EOT
       end
 
+      it 'converts a hash with complex keys' do
+        value = { 'Key' => {
+          "\n\t  \r\t\b\r\n  " => 'spaces galore',
+          '!abc' => 'abc',
+          '!ABC' => 'ABC',
+          '123' => '123',
+          "a # 'comment'?" => "a # 'comment'?",
+          %q('"' lotsa '"""'''" quotes) => %q('"' lotsa '"""'''" quotes),
+        } }
+        result = YAMLHelper.convert(value)
+        result.should == <<-EOT.strip_heredoc
+          Key:
+            "\\n\\t  \\r\\t\\b\\r\\n  ": spaces galore
+            "!abc": abc
+            "!ABC": ABC
+            "'\\"' lotsa '\\"\\"\\"'''\\" quotes": "'\\"' lotsa '\\"\\"\\"'''\\" quotes"
+            '123': '123'
+            "a # 'comment'?": "a # 'comment'?"
+        EOT
+        YAMLHelper.load_string(result).should == value
+      end
+
       it 'handles nil' do
         value = { 'foo' => nil }
         result = YAMLHelper.convert(value)

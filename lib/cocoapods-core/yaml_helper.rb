@@ -96,6 +96,7 @@ module Pod
         case value
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
+        when String     then process_string(value)
         else                 YAML.dump(value, :line_width => 2**31 - 1).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '')
         end.strip
       end
@@ -270,6 +271,20 @@ module Pod
         when Symbol then sorting_string(value.to_s)
         when Array  then sorting_string(value.first)
         when Hash   then value.keys.map { |key| key.to_s.downcase }.sort.first
+        else             raise "Cannot sort #{value.inspect}"
+        end
+      end
+
+      def process_string(string)
+        case string
+        when /\A\s*\z/
+          string.inspect
+        when /\A\d+(\.\d+)?\z/
+          "'#{string}'"
+        when %r{\A\w[\w/ \(\)~<>=\.-]*\z}
+          string
+        else
+          string.inspect
         end
       end
     end
