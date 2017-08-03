@@ -286,6 +286,17 @@ module Pod
         test_type_error.message.should.include?('The test type `unknown` is not supported.')
       end
 
+      it 'checks the test type value is correct using a JSON podspec' do
+        podspec = '{"subspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
+        File.open(path, 'w') { |f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        results = linter.results
+        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
+        test_type_error.should.be.nil
+      end
+
       #------------------#
 
       it 'checks if the description is not an empty string' do
