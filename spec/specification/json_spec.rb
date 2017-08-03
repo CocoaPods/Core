@@ -187,6 +187,14 @@ module Pod
         result.test_specs.first.test_type.should.equal :unit
       end
 
+      it 'can load test specification from json' do
+        json = '{"subspecs": [{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        result = Specification.from_json(json)
+        result.test_specs.count.should.equal 1
+        result.test_specs.first.test_specification?.should.be.true
+        result.test_specs.first.test_type.should.equal :unit
+      end
+
       it 'can be safely converted back and forth to a hash' do
         result = Specification.from_hash(@spec.to_hash)
         result.should == @spec

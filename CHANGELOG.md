@@ -4,9 +4,7 @@
 
 ##### Enhancements
 
-* Introduce `static_framework` podspec attribute
-  [Paul Beusterien](https://github.com/paulb777)
-  [#386](https://github.com/CocoaPods/Core/pull/386)
+* None.  
 
 ##### Bug Fixes
 
