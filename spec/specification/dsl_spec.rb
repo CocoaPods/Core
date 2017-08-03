@@ -390,6 +390,20 @@ module Pod
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
       end
+
+      it 'allows you to specify a test type as string' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = 'unit'
+          end
+        end
+        test_spec = a_spec.subspecs.first
+        test_spec.class.should == Specification
+        test_spec.name.should == 'Spec/Tests'
+        test_spec.test_specification?.should == true
+        test_spec.test_type.should == :unit
+      end
     end
 
     #-----------------------------------------------------------------------------#

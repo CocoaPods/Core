@@ -1358,7 +1358,7 @@ module Pod
       # @param  [Symbol] type
       #         The test type to use.
       attribute :test_type,
-                :types => [Symbol],
+                :types => [Symbol, String],
                 :multi_platform => false
 
       # Represents a test specification for the library. Here you can place all

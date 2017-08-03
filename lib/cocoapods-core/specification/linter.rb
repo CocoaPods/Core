@@ -384,8 +384,8 @@ module Pod
           results.add_error('test_type', 'Test type can only be used for test specifications.')
           return
         end
-        supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES
-        unless supported_test_types.include?(t)
+        supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES.map(&:to_s)
+        unless supported_test_types.include?(t.to_s)
           results.add_error('test_type', "The test type `#{t}` is not supported. " \
             "Supported test type values are #{supported_test_types}.")
         end

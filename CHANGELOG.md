@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix JSON deserialization for test specs  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#396](https://github.com/CocoaPods/Core/pull/396)
 
 
 ## 1.3.0 (2017-08-02)

@@ -127,6 +127,12 @@ module Pod
         }]
       end
 
+      it 'writes test type for test subspec in json' do
+        @spec.test_spec {}
+        hash = @spec.to_json
+        hash.should.include '"name":"Tests","test_type":"unit"'
+      end
+
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',
@@ -144,6 +150,14 @@ module Pod
           'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }, { 'name' => 'Tests', 'test_type' => :unit }],
         }
         result = Specification.from_hash(hash)
+        result.test_specs.count.should.equal 1
+        result.test_specs.first.test_specification?.should.be.true
+        result.test_specs.first.test_type.should.equal :unit
+      end
+
+      it 'can load test specification from json' do
+        json = '{"subspecs": [{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        result = Specification.from_json(json)
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
