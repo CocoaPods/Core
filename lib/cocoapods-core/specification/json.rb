@@ -26,8 +26,12 @@ module Pod
           platforms = Hash[available_platforms.map { |p| [p.name.to_s, p.deployment_target && p.deployment_target.to_s] }]
           hash['platforms'] = platforms
         end
-        unless subspecs.empty?
-          hash['subspecs'] = subspecs.map(&:to_hash)
+        all_testspecs, all_subspecs = subspecs.partition(&:test_specification?)
+        unless all_testspecs.empty?
+          hash['testspecs'] = all_testspecs.map(&:to_hash)
+        end
+        unless all_subspecs.empty?
+          hash['subspecs'] = all_subspecs.map(&:to_hash)
         end
         hash
       end
@@ -49,8 +53,11 @@ module Pod
 
     # Configures a new specification from the given hash.
     #
-    # @param  [Hash] the hash which contains the information of the
+    # @param  [Hash] hash the hash which contains the information of the
     #         specification.
+    #
+    # @param  [Specification] parent the parent of the specification unless the
+    #         specification is a root.
     #
     # @return [Specification] the specification
     #
@@ -58,14 +65,19 @@ module Pod
       spec = Spec.new(parent)
       attributes_hash = hash.dup
       subspecs = attributes_hash.delete('subspecs')
+      testspecs = attributes_hash.delete('testspecs')
       spec.attributes_hash = attributes_hash
       spec.test_specification = !attributes_hash['test_type'].nil?
-      if subspecs
-        spec.subspecs = subspecs.map do |s_hash|
-          Specification.from_hash(s_hash, spec)
-        end
-      end
+      spec.subspecs.concat(subspecs_from_hash(spec, subspecs))
+      spec.subspecs.concat(subspecs_from_hash(spec, testspecs))
       spec
+    end
+
+    def self.subspecs_from_hash(spec, subspecs)
+      return [] if subspecs.nil?
+      subspecs.map do |s_hash|
+        Specification.from_hash(s_hash, spec)
+      end
     end
 
     #-----------------------------------------------------------------------#
