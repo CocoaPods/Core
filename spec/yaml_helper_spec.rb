@@ -39,6 +39,22 @@ module Pod
         YAMLHelper.load_string(result).should == value
       end
 
+      it 'converts weird strings' do
+        {
+          'true' => "'true'",
+          'false' => "'false'",
+          'null' => "'null'",
+          '-1' => "'-1'",
+          '' => '""',
+          '!' => '"!"',
+          '~' => "'~'",
+        }.each do |given, expected|
+          converted = YAMLHelper.convert(given)
+          converted[0..-2].should == expected
+          YAMLHelper.load_string("---\n#{converted}").should == given
+        end
+      end
+
       it 'converts a symbol' do
         value = :value
         result = YAMLHelper.convert(value)

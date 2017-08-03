@@ -275,11 +275,26 @@ module Pod
         end
       end
 
+      RESOLVED_TAGS = [
+        'null', 'Null', 'NULL', '~', '', # resolve to null
+        'true', 'True', 'TRUE', 'false', 'False', 'FALSE', # bool
+        /[-+]?[0-9]+/, # base 10 int
+        /00[0-7]+/, # base 8 int
+        /0x[0-9a-fA-F]+/, # base 16 int
+        /[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?/, # float
+        /[-+]?\.(inf|Inf|INF)/, # infinity
+        /\.(nan|NaN|NAN)/, # NaN
+      ].freeze
+      private_constant :RESOLVED_TAGS
+
+      RESOLVED_TAGS_PATTERN = /\A#{Regexp.union(RESOLVED_TAGS)}\z/
+      private_constant :RESOLVED_TAGS_PATTERN
+
       def process_string(string)
         case string
         when /\A\s*\z/
           string.inspect
-        when /\A\d+(\.\d+)?\z/
+        when RESOLVED_TAGS_PATTERN
           "'#{string}'"
         when %r{\A\w[\w/ \(\)~<>=\.-]*\z}
           string
