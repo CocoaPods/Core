@@ -10,6 +10,10 @@
 
 ##### Bug Fixes
 
+* Split testspecs from subspecs during JSON serialization  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#398](https://github.com/CocoaPods/Core/pull/398)
+
 * Fix JSON deserialization for test specs  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#396](https://github.com/CocoaPods/Core/pull/396)
