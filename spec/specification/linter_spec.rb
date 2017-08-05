@@ -287,6 +287,17 @@ module Pod
       end
 
       it 'checks the test type value is correct using a JSON podspec' do
+        podspec = '{"testspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
+        File.open(path, 'w') { |f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        results = linter.results
+        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
+        test_type_error.should.be.nil
+      end
+
+      it 'checks the test type value is correctly set in a subspec using 1.3.0 JSON podspec' do
         podspec = '{"subspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
         path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
         File.open(path, 'w') { |f| f.write(podspec) }
