@@ -1,5 +1,18 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* Introduce `static_framework` podspec attribute
+  [Paul Beusterien](https://github.com/paulb777)
+  [#386](https://github.com/CocoaPods/Core/pull/386)
+
+##### Bug Fixes
+
+* None.
+
+
 ## 1.3.1 (2017-08-06)
 
 ##### Enhancements
