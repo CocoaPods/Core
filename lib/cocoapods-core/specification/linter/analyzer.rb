@@ -140,6 +140,10 @@ module Pod
             results.add_error('attributes', "Can't set `#{attribute.name}` attribute for " \
               "subspecs (in `#{consumer.spec.name}`).")
           end
+          if attribute.test_only? && !value.nil? && !consumer.spec.test_specification?
+            results.add_error('attributes', "Attribute `#{attribute.name}` can only be set " \
+              "within test specs (in `#{consumer.spec.name}`).")
+          end
         end
 
         # Validates the given value for the given attribute.

@@ -138,6 +138,11 @@ module Pod
 
       # @!group Test Support
 
+      # @return [Bool] Whether this test specification requires an app host.
+      #
+      spec_attr_accessor :requires_app_host
+      alias_method :requires_app_host?, :requires_app_host
+
       # @return [Symbol] the test type supported by this specification.
       #
       spec_attr_accessor :test_type

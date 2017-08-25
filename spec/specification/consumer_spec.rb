@@ -271,6 +271,14 @@ module Pod
         test_consumer = Specification::Consumer.new(test_spec, :ios)
         test_consumer.test_type.should.be == :unit
       end
+
+      it 'allows to specify whether the specification requires an app host' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.requires_app_host = true
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.requires_app_host?.should.be.true
+      end
     end
 
     #-------------------------------------------------------------------------#
