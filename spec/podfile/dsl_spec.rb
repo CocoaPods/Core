@@ -508,6 +508,26 @@ module Pod
       end
     end
 
+    describe 'script phases' do
+      it 'raises when adding a script phase to the root target definition' do
+        should.raise(Informative) do
+          Podfile.new do
+            script_phase :name => 'PhaseName', :script => 'echo "Hello World"'
+          end
+        end.message.should == 'Script phases can only be added within target definitions.'
+      end
+
+      it 'raises when adding a script phase to an abstract target' do
+        should.raise(Informative) do
+          Podfile.new do
+            abstract_target 'AbstractTarget' do
+              script_phase :name => 'PhaseName', :script => 'echo "Hello World"'
+            end
+          end
+        end.message.should == 'Script phases cannot be added to abstract targets.'
+      end
+    end
+
     #-------------------------------------------------------------------------#
   end
 end

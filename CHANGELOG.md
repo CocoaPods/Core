@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add Podfile DSL for `script_phase`  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#389](https://github.com/CocoaPods/Core/pull/389)
+
 * Add `requires_app_host` DSL attribute  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#399](https://github.com/CocoaPods/Core/pull/399)
