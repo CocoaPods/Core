@@ -409,6 +409,15 @@ module Pod
         @child.all_whitelisted_configurations.sort.should == %w(Debug Release)
       end
 
+      it 'whitelistes pod configurations with testspecs' do
+        @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
+        @parent.store_pod('RestKit', :testspecs => %w(Tests), :configuration => 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit/Tests', 'Debug')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit/Tests', 'Release')
+      end
+
       #--------------------------------------#
 
       it 'returns its platform' do

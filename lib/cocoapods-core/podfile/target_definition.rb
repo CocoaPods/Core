@@ -921,7 +921,8 @@ module Pod
         end if subspecs
 
         test_specs.each do |ss|
-          store_pod("#{name}/#{ss}", *requirements.dup)
+          requirements_copy = requirements.map(&:dup)
+          store_pod("#{name}/#{ss}", *requirements_copy)
         end if test_specs
 
         requirements.pop if options.empty?
