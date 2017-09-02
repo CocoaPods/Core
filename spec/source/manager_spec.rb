@@ -20,13 +20,13 @@ module Pod
       end
 
       it 'returns all the sources' do
-        @sources_manager.all.map(&:name).should == %w(master test_prefixed_repo test_repo)
+        @sources_manager.all.map(&:name).should == %w(master test_empty_dir_repo test_prefixed_repo test_repo)
       end
 
       it 'includes all sources in an aggregate for a dependency if no source is specified' do
         dependency = Dependency.new('JSONKit', '1.4')
         aggregate = @sources_manager.aggregate_for_dependency(dependency)
-        aggregate.sources.map(&:name).should == %w(master test_prefixed_repo test_repo)
+        aggregate.sources.map(&:name).should == %w(master test_empty_dir_repo test_prefixed_repo test_repo)
       end
 
       it 'includes only the one source in an aggregate for a dependency if a source is specified' do

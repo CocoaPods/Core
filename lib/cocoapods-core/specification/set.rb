@@ -42,6 +42,11 @@ module Pod
       #         is used to disambiguate.
       #
       def specification
+        unless highest_version_spec_path
+          raise Informative, "Could not find the highest version for `#{name}`. "\
+                             "This could be due to an empty #{name} directory in a local repository."
+        end
+
         Specification.from_file(highest_version_spec_path)
       end
 
