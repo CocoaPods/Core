@@ -6,6 +6,7 @@ module Pod
       @spec = Spec.new do |s|
         s.name = 'Pod'
         s.version = '1.0'
+        s.requires_arc = true
         s.subspec 'Subspec' do
         end
       end
@@ -142,6 +143,11 @@ module Pod
       @spec.prepare_command.should == 'ruby prepare_script.rb'
     end
 
+    it 'returns whether the Pod should build a static framework' do
+      @spec.static_framework = true
+      @spec.static_framework.should == true
+    end
+
     it 'returns whether the Pod has been deprecated' do
       @spec.deprecated = true
       @spec.deprecated.should == true
@@ -167,6 +173,10 @@ module Pod
     it 'returns the custom module map file, if specified' do
       @spec.module_map = 'module.modulemap'
       @spec.module_map.should == 'module.modulemap'
+    end
+
+    it 'returns the correct requires_arc value, if specified' do
+      @spec.requires_arc.should == true
     end
   end
 end

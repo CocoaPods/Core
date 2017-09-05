@@ -4,10 +4,21 @@
 
 ##### Enhancements
 
-* Introduce `test_specification` DSL  
+* Fix requirements cloning for `:testspecs`  
+  [Justin Martin](https://github.com/justinseanmartin)
+  [#401](https://github.com/CocoaPods/Core/pull/401)
+
+* Add Podfile DSL for `script_phase`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
-  [Kyle Fuller](https://github.com/kylef)
-  [#369](https://github.com/CocoaPods/Core/pull/369)
+  [#389](https://github.com/CocoaPods/Core/pull/389)
+
+* Add `requires_app_host` DSL attribute  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#399](https://github.com/CocoaPods/Core/pull/399)
+
+* Introduce `static_framework` podspec attribute
+  [Paul Beusterien](https://github.com/paulb777)
+  [#386](https://github.com/CocoaPods/Core/pull/386)
 
 ##### Bug Fixes
 
@@ -15,6 +26,106 @@
   [yanzhiwei147](https://github.com/yanzhiwei147)  
   [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
+
+## 1.3.1 (2017-08-06)
+
+##### Enhancements
+
+* Introduce `static_framework` podspec attribute
+  [Paul Beusterien](https://github.com/paulb777)
+  [#386](https://github.com/CocoaPods/Core/pull/386)
+
+##### Bug Fixes
+
+* Split testspecs from subspecs during JSON serialization  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#398](https://github.com/CocoaPods/Core/pull/398)
+
+* Fix JSON deserialization for test specs  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#396](https://github.com/CocoaPods/Core/pull/396)
+
+
+## 1.3.0 (2017-08-02)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.3.0.rc.1 (2017-07-27)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.3.0.beta.3 (2017-07-19)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Check requires_arc for true/false strings
+  [Vinay Guthal](https://github.com/VinayGuthal)
+  [#393](https://github.com/CocoaPods/Core/pull/393)
+
+## 1.3.0.beta.2 (2017-06-22)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Cleanup DSL for `spec.source` - remove mentioning of `:path`.  
+  [Maksym Komarychev](https://github.com/maxkomarychev)
+  [#388](https://github.com/CocoaPods/Core/pull/388)
+
+
+## 1.3.0.beta.1 (2017-06-06)
+
+##### Enhancements
+
+* Introduce `test_specification` DSL  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [Kyle Fuller](https://github.com/kylef)
+  [#369](https://github.com/CocoaPods/Core/pull/369)
+
+* Allow the use of `macos` in place of `osx` as a platform name.  
+  [Samuel Giddins](https://github.com/segiddins)
+
+##### Bug Fixes
+
+* Cache target definition label value  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#387](https://github.com/CocoaPods/Core/pull/387)
+
+* Cache version result for each pod and segments  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#385](https://github.com/CocoaPods/Core/pull/385)
+
+* Correctly include parent dependencies when parsing testspecs  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#384](https://github.com/CocoaPods/Core/pull/384)
+
+* Fix typo in `specification.rb`  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#376](https://github.com/CocoaPods/Core/pull/376)
+  
+* Fix Strange quotation marks in `lockfile.rb`  
+  [Dacaiguoguo](https://github.com/dacaiguoguogmail)
+  [#381](https://github.com/CocoaPods/Core/pull/381) 
 
 ## 1.2.1 (2017-04-11)
 

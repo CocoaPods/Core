@@ -232,6 +232,22 @@ module Pod
         @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking)
       end
 
+      it 'allows depending on testspecs' do
+        @parent.store_pod('RestKit', :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Tests)
+      end
+
+      it 'allows depending on both subspecs and testspecs' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking))
+        @parent.store_pod('RestKit', :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Networking RestKit/Tests)
+      end
+
+      it 'allows depending on both subspecs and testspecs in chaining' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking), :testspecs => %w(Tests))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking RestKit/Tests)
+      end
+
       #--------------------------------------#
 
       it "doesn't inhibit warnings per pod by default" do
@@ -309,6 +325,41 @@ module Pod
 
       #--------------------------------------#
 
+      it 'raises if script phase is missing required key' do
+        e = lambda { @parent.store_script_phase(:name => 'PhaseName') }.should.raise Podfile::StandardError
+        e.message.should == 'Missing required shell script phase options `script`'
+      end
+
+      it 'raises if script phase includes an unrecognized key' do
+        e = lambda { @parent.store_script_phase(:name => 'PhaseName', :unknown => 'Unknown') }.should.raise Podfile::StandardError
+        e.message.should == 'Unrecognized options `[:unknown]` in shell script `{:name=>"PhaseName", :unknown=>"Unknown"}` within `MyApp` target. ' \
+          'Available options are `[:name, :script, :shell_path, :input_files, :output_files, :show_env_vars_in_log]`.'
+      end
+
+      it 'raises if the same script phase name already exists' do
+        e = lambda do
+          @parent.store_script_phase(:name => 'PhaseName', :script => 'echo "Hello World"')
+          @parent.store_script_phase(:name => 'PhaseName', :script => 'echo "Hello World"')
+        end.should.raise Podfile::StandardError
+        e.message.should == 'Script phase with name `PhaseName` name already present for target `MyApp`.'
+      end
+
+      it 'stores a script phase if requirements are provided' do
+        @parent.store_script_phase(:name => 'PhaseName', :script => 'echo "Hello World"')
+        @parent.script_phases.should == [
+          { :name => 'PhaseName', :script => 'echo "Hello World"' },
+        ]
+      end
+
+      it 'stores a script phase with requirements and optional keys' do
+        @parent.store_script_phase(:name => 'PhaseName', :script => 'echo "Hello World"', :shell_path => :'/usr/bin/ruby')
+        @parent.script_phases.should == [
+          { :name => 'PhaseName', :script => 'echo "Hello World"', :shell_path => :'/usr/bin/ruby' },
+        ]
+      end
+
+      #--------------------------------------#
+
       it 'whitelists pods by default' do
         @parent.store_pod('ObjectiveSugar')
         @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
@@ -356,6 +407,15 @@ module Pod
         @root.whitelist_pod_for_configuration('Objective-Record', 'Debug')
         @root.all_whitelisted_configurations.sort.should == %w(Debug Release)
         @child.all_whitelisted_configurations.sort.should == %w(Debug Release)
+      end
+
+      it 'whitelistes pod configurations with testspecs' do
+        @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
+        @parent.store_pod('RestKit', :testspecs => %w(Tests), :configuration => 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit/Tests', 'Debug')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit/Tests', 'Release')
       end
 
       #--------------------------------------#

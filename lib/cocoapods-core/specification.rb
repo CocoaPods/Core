@@ -255,7 +255,7 @@ module Pod
     #
     # @return   [Specification] the subspec with the given name or self.
     #
-    def subspec_by_name(relative_name, raise_if_missing = true, include_test_specications = false)
+    def subspec_by_name(relative_name, raise_if_missing = true, include_test_specifications = false)
       if relative_name.nil? || relative_name == base_name
         self
       elsif relative_name.downcase == base_name.downcase
@@ -264,7 +264,7 @@ module Pod
       else
         remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
-        subspec = subspecs.find { |s| s.base_name == subspec_name && (include_test_specications || !s.test_specification?) }
+        subspec = subspecs.find { |s| s.base_name == subspec_name && (include_test_specifications || !s.test_specification?) }
         unless subspec
           if raise_if_missing
             raise Informative, 'Unable to find a specification named ' \
@@ -273,7 +273,7 @@ module Pod
             return nil
           end
         end
-        subspec.subspec_by_name(remainder, raise_if_missing, include_test_specications)
+        subspec.subspec_by_name(remainder, raise_if_missing, include_test_specifications)
       end
     end
 

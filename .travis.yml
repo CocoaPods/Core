@@ -8,20 +8,16 @@ addons:
  code_climate:
    repo_token: 186c49521e629c51591c86f057f49fe388ce87603e04b5486f0c92f26f2a455f
 rvm:
-  # Latest stable Ruby
-  - 2.4.0
-  # OS X 10.9.5-10.10.0 (2.0.0-p481)
-  - 2.0.0-p481
-  # OS X 10.9.3-10.9.4
-  - 2.0.0-p451
-  # OS X 10.9.0-10.9.2
-  - 2.0.0-p247
+  - 2.0.0-p647
+  - 2.3.4
+  - 2.4.1
 env:
   - LANG="en_US.UTF-8"
 script: bundle exec rake spec
 git:
   submodules: false
 before_install:
+  - gem install bundler
   - |
       master_sha="$(ruby -e "puts '`git submodule status spec/fixtures/spec-repos/master`'.strip.sub(/^-/, '').split(/\s/, 2).first")"
       curl -ssL "https://github.com/CocoaPods/Specs/archive/$master_sha.tar.gz" | tar xz -C spec/fixtures/spec-repos

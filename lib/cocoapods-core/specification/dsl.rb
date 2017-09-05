@@ -273,7 +273,6 @@ module Pod
         :svn  => [:folder, :tag, :revision].freeze,
         :hg   => [:revision].freeze,
         :http => [:flatten, :type, :sha256, :sha1].freeze,
-        :path => nil,
       }.freeze
 
       # @!method source=(source)
@@ -333,10 +332,6 @@ module Pod
       #     @option http [String] :http compressed source URL
       #     @option http [String] :type file type. Supports zip, tgz, bz2, txz and tar
       #     @option http [String] :sha1 SHA hash. Supports SHA1 and SHA256
-      #
-      #   @overload source=(path)
-      #     @param  [Hash] path
-      #     @option path [String] :path local source path
       #
       root_attribute :source,
                      :container => Hash,
@@ -463,6 +458,25 @@ module Pod
 
       #------------------#
 
+      # @!method static_framework=(flag)
+      #
+      #   Indicates, that if use_frameworks! is specified, the
+      #   pod should include a static library framework.
+      #
+      #   @example
+      #
+      #     spec.static_framework = true
+      #
+      #   @param [Bool] flag
+      #          Indicates, that if use_frameworks! is specified, the
+      #          pod should include a static library framework.
+      #
+      root_attribute :static_framework,
+                     :types => [TrueClass, FalseClass],
+                     :default_value => false
+
+      #------------------#
+
       # @!method deprecated=(flag)
       #
       #   Whether the library has been deprecated.
@@ -472,7 +486,7 @@ module Pod
       #     spec.deprecated = true
       #
       #   @param [Bool] flag
-      #           whether the library has been deprecated.
+      #          whether the library has been deprecated.
       #
       root_attribute :deprecated,
                      :types => [TrueClass, FalseClass],
@@ -539,6 +553,7 @@ module Pod
       #
       def platform=(args)
         name, deployment_target = args
+        name = :osx if name.to_s == 'macos'
         attributes_hash['platforms'] = if name
                                          { name.to_s => deployment_target }
                                        else
@@ -702,6 +717,10 @@ module Pod
       #   @example
       #
       #     spec.weak_framework = 'Twitter'
+      #
+      #   @example
+      #
+      #     spec.weak_frameworks = 'Twitter', 'SafariServices'
       #
       #   @param  [String, Array<String>] weak_frameworks
       #           A list of frameworks names.
@@ -1336,11 +1355,32 @@ module Pod
       #
       #   test_spec.test_type = :unit
       #
-      # @param  [Symbol] type
+      # @example
+      #
+      #   test_spec.test_type = 'unit'
+      #
+      # @param  [Symbol, String] type
       #         The test type to use.
       attribute :test_type,
-                :types => [Symbol],
-                :multi_platform => false
+                :types => [Symbol, String],
+                :multi_platform => false,
+                :test_only => true
+
+      # @!method requires_app_host=(flag)
+      #
+      #  Whether a test specification requires an app host to run tests. This only applies to test specifications.
+      #
+      #   @example
+      #
+      #     test_spec.requires_app_host = true
+      #
+      #   @param [Bool] flag
+      #          whether a test specification requires an app host to run tests.
+      #
+      attribute :requires_app_host,
+                :types => [TrueClass, FalseClass],
+                :default_value => false,
+                :test_only => true
 
       # Represents a test specification for the library. Here you can place all
       # your tests for your podspec along with the test dependencies.
@@ -1437,6 +1477,8 @@ module Pod
       def osx
         PlatformProxy.new(self, :osx)
       end
+
+      alias macos osx
 
       # Provides support for specifying tvOS attributes.
       #

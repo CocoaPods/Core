@@ -35,14 +35,14 @@ module Pod
 
       it 'exposes its name as string' do
         Platform.ios.string_name.should == 'iOS'
-        Platform.osx.string_name.should == 'OS X'
+        Platform.osx.string_name.should == 'macOS'
         Platform.tvos.string_name.should == 'tvOS'
         Platform.watchos.string_name.should == 'watchOS'
       end
 
       it 'exposes a safe variant of its name as string' do
         Platform.ios.safe_string_name.should == 'iOS'
-        Platform.osx.safe_string_name.should == 'OSX'
+        Platform.osx.safe_string_name.should == 'macOS'
         Platform.tvos.safe_string_name.should == 'tvOS'
         Platform.watchos.safe_string_name.should == 'watchOS'
       end
@@ -62,11 +62,11 @@ module Pod
 
       it 'presents an accurate string representation' do
         @platform.to_s.should == 'iOS'
-        Platform.new(:osx).to_s.should == 'OS X'
+        Platform.new(:osx).to_s.should == 'macOS'
         Platform.new(:watchos).to_s.should == 'watchOS'
         Platform.new(:tvos).to_s.should == 'tvOS'
         Platform.new(:ios, '5.0.0').to_s.should == 'iOS 5.0.0'
-        Platform.new(:osx, '10.7').to_s.should == 'OS X 10.7'
+        Platform.new(:osx, '10.7').to_s.should == 'macOS 10.7'
         Platform.new(:watchos, '2.0').to_s.should == 'watchOS 2.0'
         Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end
@@ -173,7 +173,7 @@ module Pod
 
       it 'returns the string name of a given symbolic name' do
         Platform.string_name(:ios).should == 'iOS'
-        Platform.string_name(:osx).should == 'OS X'
+        Platform.string_name(:osx).should == 'macOS'
         Platform.string_name(:win).should == 'win'
       end
     end

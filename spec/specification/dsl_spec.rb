@@ -76,6 +76,11 @@ module Pod
         @spec.attributes_hash['prepare_command'].should == 'ruby build_files.rb'
       end
 
+      it 'allows to specify whether the Pod has a static_framework' do
+        @spec.static_framework = true
+        @spec.attributes_hash['static_framework'].should == true
+      end
+
       it 'allows to specify whether the Pod has been deprecated' do
         @spec.deprecated = true
         @spec.attributes_hash['deprecated'].should == true
@@ -385,6 +390,20 @@ module Pod
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
       end
+
+      it 'allows you to specify a test type as string' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = 'unit'
+          end
+        end
+        test_spec = a_spec.subspecs.first
+        test_spec.class.should == Specification
+        test_spec.name.should == 'Spec/Tests'
+        test_spec.test_specification?.should == true
+        test_spec.test_type.should == :unit
+      end
     end
 
     #-----------------------------------------------------------------------------#
@@ -405,6 +424,13 @@ module Pod
 
       it 'allows to specify OS X attributes' do
         @spec.osx.preserve_paths = ['APath']
+        @spec.attributes_hash['osx']['preserve_paths'].should == ['APath']
+        @spec.attributes_hash['preserve_paths'].should.be.nil
+        @spec.attributes_hash['ios'].should.be.nil
+      end
+
+      it 'allows to specify OS X attributes as macOS' do
+        @spec.macos.preserve_paths = ['APath']
         @spec.attributes_hash['osx']['preserve_paths'].should == ['APath']
         @spec.attributes_hash['preserve_paths'].should.be.nil
         @spec.attributes_hash['ios'].should.be.nil

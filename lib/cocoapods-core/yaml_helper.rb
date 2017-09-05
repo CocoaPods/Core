@@ -96,6 +96,7 @@ module Pod
         case value
         when Array      then process_array(value)
         when Hash       then process_hash(value, hash_keys_hint)
+        when String     then process_string(value)
         else                 YAML.dump(value, :line_width => 2**31 - 1).sub(/\A---/, '').sub(/[.]{3}\s*\Z/, '')
         end.strip
       end
@@ -270,6 +271,35 @@ module Pod
         when Symbol then sorting_string(value.to_s)
         when Array  then sorting_string(value.first)
         when Hash   then value.keys.map { |key| key.to_s.downcase }.sort.first
+        else             raise "Cannot sort #{value.inspect}"
+        end
+      end
+
+      RESOLVED_TAGS = [
+        'null', 'Null', 'NULL', '~', '', # resolve to null
+        'true', 'True', 'TRUE', 'false', 'False', 'FALSE', # bool
+        /[-+]?[0-9]+/, # base 10 int
+        /00[0-7]+/, # base 8 int
+        /0x[0-9a-fA-F]+/, # base 16 int
+        /[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?/, # float
+        /[-+]?\.(inf|Inf|INF)/, # infinity
+        /\.(nan|NaN|NAN)/, # NaN
+      ].freeze
+      private_constant :RESOLVED_TAGS
+
+      RESOLVED_TAGS_PATTERN = /\A#{Regexp.union(RESOLVED_TAGS)}\z/
+      private_constant :RESOLVED_TAGS_PATTERN
+
+      def process_string(string)
+        case string
+        when /\A\s*\z/
+          string.inspect
+        when RESOLVED_TAGS_PATTERN
+          "'#{string}'"
+        when %r{\A\w[\w/ \(\)~<>=\.-]*\z}
+          string
+        else
+          string.inspect
         end
       end
     end

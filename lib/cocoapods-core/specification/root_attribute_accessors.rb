@@ -19,6 +19,12 @@ module Pod
           parent ? "#{parent.name}/#{base_name}" : base_name
         end
 
+        # @return [Bool, String, Array<String>] The requires_arc value.
+        #
+        def requires_arc
+          attributes_hash['requires_arc']
+        end
+
         # @return [Version] The version of the Pod.
         #
         # @todo   The version is memoized because the Resolvers sets the head
@@ -144,6 +150,13 @@ module Pod
         def prepare_command
           command = attributes_hash['prepare_command']
           command.strip_heredoc.chomp if command
+        end
+
+        # @return [Bool] Indicates, that if use_frameworks! is specified, the
+        #         framework should include a static library.
+        #
+        def static_framework
+          attributes_hash['static_framework']
         end
 
         # @return [Bool] Whether the Pod has been deprecated.

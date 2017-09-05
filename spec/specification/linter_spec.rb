@@ -253,28 +253,6 @@ module Pod
 
       #------------------#
 
-      it 'checks that test type cannot be set at the root spec' do
-        podspec = 'Pod::Spec.new do |s|; s.test_type = :unit; end'
-        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') { |f| f.write(podspec) }
-        linter = Specification::Linter.new(path)
-        linter.lint
-        results = linter.results
-        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
-        test_type_error.message.should == 'Test type can only be used for test specifications.'
-      end
-
-      it 'checks that test type cannot be set for subspecs' do
-        podspec = "Pod::Spec.new do |s|; s.subspec 'subspec' do |ss|; ss.test_type = :unit; end end"
-        path = SpecHelper.temporary_directory + 'BananaLib.podspec'
-        File.open(path, 'w') { |f| f.write(podspec) }
-        linter = Specification::Linter.new(path)
-        linter.lint
-        results = linter.results
-        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
-        test_type_error.message.should == 'Test type can only be used for test specifications.'
-      end
-
       it 'checks the test type value is correct' do
         podspec = 'Pod::Spec.new do |s|; s.test_spec do |ts|; ts.test_type = :unknown; end end'
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
@@ -284,6 +262,28 @@ module Pod
         results = linter.results
         test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
         test_type_error.message.should.include?('The test type `unknown` is not supported.')
+      end
+
+      it 'checks the test type value is correct using a JSON podspec' do
+        podspec = '{"testspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
+        File.open(path, 'w') { |f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        results = linter.results
+        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
+        test_type_error.should.be.nil
+      end
+
+      it 'checks the test type value is correctly set in a subspec using 1.3.0 JSON podspec' do
+        podspec = '{"subspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
+        File.open(path, 'w') { |f| f.write(podspec) }
+        linter = Specification::Linter.new(path)
+        linter.lint
+        results = linter.results
+        test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
+        test_type_error.should.be.nil
       end
 
       #------------------#

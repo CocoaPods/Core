@@ -48,6 +48,7 @@ module Pod
         if spec
           validate_root_name
           check_required_attributes
+          check_requires_arc_attribute
           run_root_validation_hooks
           perform_all_specs_analysis
         else
@@ -95,6 +96,20 @@ module Pod
           unless names_match
             results.add_error('name', 'The name of the spec should match the ' \
                               'name of the file.')
+          end
+        end
+      end
+
+      # Generates a warning if the requires_arc attribute has true or false string values.
+      #
+      # @return [void]
+      #
+      def check_requires_arc_attribute
+        attribute = DSL.attributes.values.find { |attr| attr.name == :requires_arc }
+        if attribute
+          value = spec.send(attribute.name)
+          if value == 'true' || value == 'false'
+            results.add_warning('requires_arc', value + ' is considered to be the name of a file.')
           end
         end
       end
@@ -203,6 +218,8 @@ module Pod
 
       # @!group Root spec validation helpers
 
+      # Performs validations related to the `authors` attribute.
+      #
       def _validate_authors(a)
         if a.is_a? Hash
           if a == { 'YOUR NAME HERE' => 'YOUR EMAIL HERE' }
@@ -212,6 +229,8 @@ module Pod
         end
       end
 
+      # Performs validations related to the `version` attribute.
+      #
       def _validate_version(v)
         if v.to_s.empty?
           results.add_error('version', 'A version is required.')
@@ -222,6 +241,7 @@ module Pod
       end
 
       # Performs validations related to the `module_name` attribute.
+      #
       def _validate_module_name(m)
         unless m.nil? || m =~ /^[a-z_][0-9a-z_]*$/i
           results.add_error('module_name', 'The module name of a spec' \
@@ -364,14 +384,14 @@ module Pod
         end
       end
 
+      # Performs validations related to the `test_type` attribute.
+      #
       def _validate_test_type(t)
-        unless consumer.spec.test_specification?
-          results.add_error('test_type', 'Test type can only be used for test specifications.')
-          return
+        supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES.map(&:to_s)
+        unless supported_test_types.include?(t.to_s)
+          results.add_error('test_type', "The test type `#{t}` is not supported. " \
+            "Supported test type values are #{supported_test_types}.")
         end
-        supported_test_types = Specification::DSL::SUPPORTED_TEST_TYPES
-        results.add_error('test_type', "The test type `#{t}` is not supported. " \
-          "Supported test type values are #{supported_test_types}.") unless supported_test_types.include?(t)
       end
 
       # Performs validations related to github sources.

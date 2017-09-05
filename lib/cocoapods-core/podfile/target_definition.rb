@@ -23,6 +23,7 @@ module Pod
         @internal_hash = internal_hash || {}
         @parent = parent
         @children = []
+        @label = nil
         self.name ||= name
         if parent.is_a?(TargetDefinition)
           parent.children << self
@@ -106,13 +107,13 @@ module Pod
       #         name.
       #
       def label
-        if root? && name == 'Pods'
-          'Pods'
-        elsif exclusive? || parent.nil?
-          "Pods-#{name}"
-        else
-          "#{parent.label}-#{name}"
-        end
+        @label ||= if root? && name == 'Pods'
+                     'Pods'
+                   elsif exclusive? || parent.nil?
+                     "Pods-#{name}"
+                   else
+                     "#{parent.label}-#{name}"
+                   end
       end
 
       alias_method :to_s, :label
@@ -145,6 +146,7 @@ module Pod
       # @return [void]
       #
       def name=(name)
+        @label = nil
         set_hash_value('name', name)
       end
 
@@ -282,6 +284,14 @@ module Pod
       #
       def build_configurations=(hash)
         set_hash_value('build_configurations', hash) unless hash.empty?
+      end
+
+      #--------------------------------------#
+
+      # @return [Array<Hash>] The list of the script phases of the target definition.
+      #
+      def script_phases
+        get_hash_value('script_phases') || []
       end
 
       #--------------------------------------#
@@ -483,6 +493,7 @@ module Pod
       # @return [void]
       #
       def set_platform(name, target = nil)
+        name = :osx if name == :macos
         unless [:ios, :osx, :tvos, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
             'must be `:ios`, `:osx`, `:tvos`, or `:watchos`.'
@@ -572,6 +583,41 @@ module Pod
         end
       end
 
+      #--------------------------------------#
+
+      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
+
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log].freeze
+
+      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
+
+      # Stores the script phase to add for this target definition.
+      #
+      # @param  [Hash] options
+      #         The options to use for this script phase. The required keys
+      #         are: `:name`, `:script`, while the optional keys are:
+      #         `:shell_path`, `:input_files`, `:output_files` and `:show_env_vars_in_log`.
+      #
+      # @return [void]
+      #
+      def store_script_phase(options)
+        option_keys = options.keys
+        unrecognized_keys = option_keys - ALL_SCRIPT_PHASE_KEYS
+        unless unrecognized_keys.empty?
+          raise StandardError, "Unrecognized options `#{unrecognized_keys}` in shell script `#{options}` within `#{name}` target. " \
+            "Available options are `#{ALL_SCRIPT_PHASE_KEYS}`."
+        end
+        missing_required_keys = SCRIPT_PHASE_REQUIRED_KEYS - option_keys
+        unless missing_required_keys.empty?
+          raise StandardError, "Missing required shell script phase options `#{missing_required_keys.join(', ')}`"
+        end
+        script_phases_hash = get_hash_value('script_phases', [])
+        if script_phases_hash.map { |script_phase_options| script_phase_options[:name] }.include?(options[:name])
+          raise StandardError, "Script phase with name `#{options[:name]}` name already present for target `#{name}`."
+        end
+        script_phases_hash << options
+      end
+
       #-----------------------------------------------------------------------#
 
       public
@@ -592,6 +638,7 @@ module Pod
         user_project_path
         build_configurations
         dependencies
+        script_phases
         children
         configuration_pod_whitelist
         uses_frameworks
@@ -851,8 +898,8 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :subspecs from the requirements list, and stores the pods
-      # with the given subspecs as dependencies.
+      # Removes :subspecs and :testspecs from the requirements list, and stores the pods
+      # with the given subspecs or test specs as dependencies.
       #
       # @param  [String] name
       #
@@ -867,9 +914,17 @@ module Pod
         return false unless options.is_a?(Hash)
 
         subspecs = options.delete(:subspecs)
+        test_specs = options.delete(:testspecs)
+
         subspecs.each do |ss|
           store_pod("#{name}/#{ss}", *requirements.dup)
         end if subspecs
+
+        test_specs.each do |ss|
+          requirements_copy = requirements.map(&:dup)
+          store_pod("#{name}/#{ss}", *requirements_copy)
+        end if test_specs
+
         requirements.pop if options.empty?
         !subspecs.nil?
       end

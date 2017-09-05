@@ -8,6 +8,7 @@ gemspec
 gem 'json', :git => 'https://github.com/segiddins/json.git', :branch => 'seg-1.7.7-ruby-2.2'
 
 group :development do
+  gem 'activesupport', '>= 4.0.2', '< 5' # Pinned < 5 to ensure we're speccing 4.x.x
   gem 'bacon'
   gem 'mocha'
   gem 'mocha-on-bacon'
@@ -16,8 +17,8 @@ group :development do
   gem 'vcr'
   gem 'webmock'
 
-  gem 'codeclimate-test-reporter', :require => nil
-  gem 'rubocop'
+  gem 'codeclimate-test-reporter', '~> 0.4.1', :require => nil
+  gem 'rubocop', '~> 0.38.0'
 end
 
 group :debugging do
