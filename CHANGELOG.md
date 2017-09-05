@@ -22,11 +22,11 @@
 
 ##### Bug Fixes
 
-* Fix TypeError - no implicit conversion of nil into String.
+* Fix `search` command crash while specs directory not exist.
   [yanzhiwei147](https://github.com/yanzhiwei147)  
   [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
-* Miss the path while get specs name form ssh url.
+* Fix `name_for_url` return same name while input such as `ssh://git@cocoapods.xx.my:/cocoapods/specs.git` and `ssh://git@cocoapods.xx.my:/Mirrors/specs.git`
   [yanzhiwei147](https://github.com/yanzhiwei147)  
   [#7008](https://github.com/CocoaPods/CocoaPods/issues/7008)
 

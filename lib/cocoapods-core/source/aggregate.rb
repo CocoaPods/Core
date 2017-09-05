@@ -50,8 +50,8 @@ module Pod
       # @return [Set] The most representative set for the Pod with the given
       #         name. Returns nil if no representative source found containing a pod with given name.
       #
+      # Deprecated: Please use `representative_set_for_search` instead.
       def representative_set(name)
-        warn '[DEPRECATION] `representative_set` is deprecated.  Please use `representative_set_for_search` instead.'
         representative_source = nil
         highest_version = nil
         sources.each do |source|
