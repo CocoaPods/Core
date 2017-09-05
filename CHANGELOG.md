@@ -22,7 +22,9 @@
 
 ##### Bug Fixes
 
-* None.
+* Provide a better error message when encountering empty spec directories  
+  [David Airapetyan](https://github.com/davidair)
+  [#5184](https://github.com/CocoaPods/CocoaPods/issues/5184)
 
 
 ## 1.3.1 (2017-08-06)
