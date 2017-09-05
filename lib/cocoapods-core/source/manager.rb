@@ -362,6 +362,11 @@ module Pod
       #          name_for_url('https://sourceforge.org/Artsy/Specs.git')
       #            # sourceforge-artsy-specs
       #
+      # @example A non-Github.com URL with SSH
+      #
+      #          name_for_url('ssh://git@cocoapods.xx.my:/cocoapods/Specs.git')
+      #            # xx-cocoapods-specs
+      #
       # @example A file URL
       #
       #           name_for_url('file:///Artsy/Specs.git')
@@ -389,6 +394,9 @@ module Pod
           base = 'master'
         when %r{github.com[:/]+(.+)/(.+)}
           base = Regexp.last_match[1]
+        when %r{^ssh:\/\/\S+@(\S+):{1}(.+)$}
+          host, path = Regexp.last_match.captures
+          base = base_from_host_and_path[host, path]
         when %r{^\S+@(\S+)[:/]+(.+)$}
           host, path = Regexp.last_match.captures
           base = base_from_host_and_path[host, path]

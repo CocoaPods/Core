@@ -213,6 +213,12 @@ module Pod
             @sources_manager.send(:name_for_url, url).
               should == 'sourceforge-artsy-specs-1'
           end
+
+          it 'supports ssh URLs with user component' do
+            url = 'ssh://git@cocoapods.xx.my:/cocoapods/specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'xx-cocoapods-specs'
+          end
         end
       end
     end

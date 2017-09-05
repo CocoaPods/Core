@@ -26,6 +26,10 @@
   [yanzhiwei147](https://github.com/yanzhiwei147)  
   [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
+* Miss the path while get specs name form ssh url.
+  [yanzhiwei147](https://github.com/yanzhiwei147)  
+  [#7008](https://github.com/CocoaPods/CocoaPods/issues/7008)
+
 
 ## 1.3.1 (2017-08-06)
 
