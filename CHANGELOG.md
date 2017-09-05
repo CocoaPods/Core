@@ -4,15 +4,15 @@
 
 ##### Enhancements
 
-* Fix requirements cloning for `:testspecs`
+* Fix requirements cloning for `:testspecs`  
   [Justin Martin](https://github.com/justinseanmartin)
   [#401](https://github.com/CocoaPods/Core/pull/401)
 
-* Add Podfile DSL for `script_phase`
+* Add Podfile DSL for `script_phase`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#389](https://github.com/CocoaPods/Core/pull/389)
 
-* Add `requires_app_host` DSL attribute
+* Add `requires_app_host` DSL attribute  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#399](https://github.com/CocoaPods/Core/pull/399)
 
@@ -22,7 +22,7 @@
 
 ##### Bug Fixes
 
-* Provide a better error message when encountering empty spec directories
+* Provide a better error message when encountering empty spec directories  
   [David Airapetyan](https://github.com/davidair)
   [#5184](https://github.com/CocoaPods/CocoaPods/issues/5184)
 
@@ -37,11 +37,11 @@
 
 ##### Bug Fixes
 
-* Split testspecs from subspecs during JSON serialization
+* Split testspecs from subspecs during JSON serialization  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#398](https://github.com/CocoaPods/Core/pull/398)
 
-* Fix JSON deserialization for test specs
+* Fix JSON deserialization for test specs  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#396](https://github.com/CocoaPods/Core/pull/396)
 
@@ -50,29 +50,29 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.3.0.rc.1 (2017-07-27)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.3.0.beta.3 (2017-07-19)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
@@ -84,11 +84,11 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* Cleanup DSL for `spec.source` - remove mentioning of `:path`.
+* Cleanup DSL for `spec.source` - remove mentioning of `:path`.  
   [Maksym Komarychev](https://github.com/maxkomarychev)
   [#388](https://github.com/CocoaPods/Core/pull/388)
 
@@ -97,89 +97,89 @@
 
 ##### Enhancements
 
-* Introduce `test_specification` DSL
+* Introduce `test_specification` DSL  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [Kyle Fuller](https://github.com/kylef)
   [#369](https://github.com/CocoaPods/Core/pull/369)
 
-* Allow the use of `macos` in place of `osx` as a platform name.
+* Allow the use of `macos` in place of `osx` as a platform name.  
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
-* Cache target definition label value
+* Cache target definition label value  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#387](https://github.com/CocoaPods/Core/pull/387)
 
-* Cache version result for each pod and segments
+* Cache version result for each pod and segments  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#385](https://github.com/CocoaPods/Core/pull/385)
 
-* Correctly include parent dependencies when parsing testspecs
+* Correctly include parent dependencies when parsing testspecs  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#384](https://github.com/CocoaPods/Core/pull/384)
 
-* Fix typo in `specification.rb`
+* Fix typo in `specification.rb`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#376](https://github.com/CocoaPods/Core/pull/376)
-
-* Fix Strange quotation marks in `lockfile.rb`
+  
+* Fix Strange quotation marks in `lockfile.rb`  
   [Dacaiguoguo](https://github.com/dacaiguoguogmail)
-  [#381](https://github.com/CocoaPods/Core/pull/381)
+  [#381](https://github.com/CocoaPods/Core/pull/381) 
 
 ## 1.2.1 (2017-04-11)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.2.1.rc.1 (2017-04-05)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.2.1.beta.1 (2017-03-08)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.2.0 (2017-01-28)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.2.0.rc.1 (2017-01-13)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* Prevent crashing When a `Specification` has a `description` but no `summary`.
+* Prevent crashing When a `Specification` has a `description` but no `summary`.  
   [Danielle Tomlinson](https://github.com/dantoml)
   [#6360](https://github.com/CocoaPods/CocoaPods/issues/6360)
 
@@ -188,11 +188,11 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* Fix handling of version numbers in specifications.
+* Fix handling of version numbers in specifications.  
   [Danielle Tomlinson](https://github.com/dantoml)
   [#363](https://github.com/CocoaPods/Core/pull/363)
 
@@ -200,17 +200,17 @@
 
 ##### Enhancements
 
-* Improve dependency resolution performance by caching specification hashes.
+* Improve dependency resolution performance by caching specification hashes.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#5180](https://github.com/CocoaPods/CocoaPods/issues/5180)
 
-* Add support for version metadata as specified by http://semver.org/#spec-item-10.
+* Add support for version metadata as specified by http://semver.org/#spec-item-10.  
   [Danielle Tomlinson](https://github.com/dantoml)
   [#6224](https://github.com/CocoaPods/CocoaPods/issues/6224)
 
 ##### Bug Fixes
 
-* Raise an error if `inherit!` is used on an abstract target.
+* Raise an error if `inherit!` is used on an abstract target.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#5342](https://github.com/CocoaPods/CocoaPods/issues/5342)
 
@@ -219,66 +219,66 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.1 (2016-10-20)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.0 (2016-10-19)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.0.rc.3 (2016-10-10)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.0.rc.2 (2016-09-13)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.0.rc.1 (2016-09-10)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* Use `git -C` rather than `Dir.chdir`.
+* Use `git -C` rather than `Dir.chdir`.  
   [Ben Asher](https://github.com/benasher44)
   [#352](https://github.com/CocoaPods/Core/pull/352)
 
@@ -287,58 +287,58 @@
 
 ##### Enhancements
 
-* Improved comparison between Semver pre-release versions.
+* Improved comparison between Semver pre-release versions.  
   [Ben Asher](https://github.com/benasher44)
   [#350](https://github.com/CocoaPods/Core/pull/350)
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.1.0.beta.1 (2016-07-11)
 
 ##### Enhancements
 
-* Improved warning message for the renaming of `xcodeproj` to `project` in the `Podfile` DSL.
+* Improved warning message for the renaming of `xcodeproj` to `project` in the `Podfile` DSL.  
   [Olivier Halligon](https://github.com/AliSoftware)
   [#327](https://github.com/CocoaPods/Core/pull/327)
 
-* Improved documentation of the `deployment_target` attribute in the `Podspec` DSL.
+* Improved documentation of the `deployment_target` attribute in the `Podspec` DSL.  
   [Olivier Halligon](https://github.com/AliSoftware)
   [#329](https://github.com/CocoaPods/Core/pull/329)
 
-* Add missing space to not-found message.
+* Add missing space to not-found message.  
   [Boris Bügling](https://github.com/neonichu)
   [#330](https://github.com/CocoaPods/Core/pull/330)
 
 * Specifying a `platform` twice for the same target in a Podfile raises a
-  helpful error.
+  helpful error.  
   [Samuel Giddins](https://github.com/segiddins)
   [#328](https://github.com/CocoaPods/Core/issues/328)
 
-* Specifying multiple `post_install` hooks in a Podfile raises an error.
+* Specifying multiple `post_install` hooks in a Podfile raises an error.  
   [Daniel Tomlinson](https://github.com/dantoml)
   [#334](https://github.com/CocoaPods/Core/pull/334)
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.0.1 (2016-06-01)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* Fixed path checking for case-insensitive filesystems.
+* Fixed path checking for case-insensitive filesystems.  
   [Coder-256](https://github.com/Coder-256)
   [CocoaPods#5039](https://github.com/CocoaPods/CocoaPods/issues/5039)
 
-* Fail more gracefully when a Podfile includes `pod pod 'Dependency'`.
+* Fail more gracefully when a Podfile includes `pod pod 'Dependency'`.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5379](https://github.com/CocoaPods/CocoaPods/issues/5379)
 
@@ -347,23 +347,23 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.0.0.rc.2 (2016-05-04)
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
 * Allow inheriting from a parent target definition that is abstract without a
-  platform set.
+  platform set.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5242](https://github.com/CocoaPods/CocoaPods/issues/5242)
 
@@ -372,13 +372,13 @@
 
 ##### Enhancements
 
-* Improve error message on MasterSource networking errors.
+* Improve error message on MasterSource networking errors.  
   [Daniel Tomlinson](https://github.com/DanielTomlinson)
   [CocoaPods#5175](https://github.com/CocoaPods/CocoaPods/issues/5175)
 
 ##### Bug Fixes
 
-* Root attributes are inherited by default.
+* Root attributes are inherited by default.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5177](https://github.com/CocoaPods/CocoaPods/issues/5177)
 
@@ -387,38 +387,38 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.0.0.beta.7 (2016-04-15)
 
 ##### Enhancements
 
-* Add support for sharded `Specs` directories in a source.
+* Add support for sharded `Specs` directories in a source.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5002](https://github.com/CocoaPods/CocoaPods/issues/5002)
 
 * Migrate the `Pod::SourcesManager` singleton to be the `Pod::Source::Manager`
-  class.
+  class.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * Add support for specifying a list of tags in a source for breaking backwards
-  compatibility with old CocoaPods versions.
+  compatibility with old CocoaPods versions.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5002](https://github.com/CocoaPods/CocoaPods/issues/5002)
 
 ##### Bug Fixes
 
-* Allow the master specs repo to be cloned using a `git://` URL.
+* Allow the master specs repo to be cloned using a `git://` URL.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#5062](https://github.com/CocoaPods/CocoaPods/issues/5062)
 
 * Appending to an existing search index will now make new pods visible via
-  search.
+  search.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [CocoaPods#5031](https://github.com/CocoaPods/CocoaPods/issues/5031)
 
@@ -428,36 +428,36 @@
 ##### Enhancements
 
 * Add `MasterSource` and refactor `Source::Aggregate` to be setup with
-  `Array<Source>`.
+  `Array<Source>`.  
   [Daniel Tomlinson](https://github.com/DanielTomlinson)
   [CocoaPods#5005](https://github.com/CocoaPods/CocoaPods/issues/5005)
 
 ##### Bug Fixes
 
-* None.
+* None.  
 
 
 ## 1.0.0.beta.5 (2016-03-08)
 
 ##### Enhancements
 
-* Allow a specification's root attributes to be accessible from a `consumer`.
+* Allow a specification's root attributes to be accessible from a `consumer`.  
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
 * Allow search paths target inheritance when the parent is the target definition
-  with `inherit! :search_paths`.
+  with `inherit! :search_paths`.  
   [Samuel Giddins](https://github.com/segiddins)
   [#4943](https://github.com/CocoaPods/CocoaPods/issues/4943)
 
 * Ensure `Podfile.lock`s won't be generated with extraneous `>-` tokens in
-  their YAML.
+  their YAML.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4740](https://github.com/CocoaPods/CocoaPods/issues/4740)
 
 * Make a spec's custom `module_map` accessible from a `consumer` in a
-  multi-platform compatible manner.
+  multi-platform compatible manner.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -466,14 +466,14 @@
 ##### Enhancements
 
 * The linter rejects `default_subspecs` defined in subspecs of podspecs.
-  They were never taken into account for subspecs.
+  They were never taken into account for subspecs.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#305](https://github.com/CocoaPods/Core/pull/305)
 
 ##### Bug Fixes
 
 * Specification platform proxies (e.g. `spec.ios` or `spec.osx`) will raise more
-  informative errors when trying to set non-multiplatform attributes.
+  informative errors when trying to set non-multiplatform attributes.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -481,27 +481,27 @@
 
 ##### Breaking
 
-* The `xcodeproj` Podfile DSL method has been renamed to `project`.
+* The `xcodeproj` Podfile DSL method has been renamed to `project`.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#298](https://github.com/CocoaPods/Core/issues/298)
 
 ##### Enhancements
 
-* Add the ability to disable inhibiting warnings per pod.
+* Add the ability to disable inhibiting warnings per pod.  
   Now `:inhibit_warnings => false` option can be used in podfile to disable
-  inhibition for specific pods.
+  inhibition for specific pods.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
 
 ##### Bug Fixes
 
 * Fix accessing `use_frameworks?` without accidentally clearing the value when
   it was explicitly set to `false`, so that it would be evaluated as `true` on
-  the next access.
+  the next access.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Core#301](https://github.com/CocoaPods/Core/pull/301)
 
 * Fix parsing of dependencies created from a string that includes the `HEAD`
-  specifier and version information.
+  specifier and version information.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
 
@@ -511,13 +511,13 @@
 ##### Enhancements
 
 * Dependencies created from a string that use the `HEAD` specifier are properly
-  parsed, ignoring the obsolete specifier.
+  parsed, ignoring the obsolete specifier.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4710](https://github.com/CocoaPods/CocoaPods/issues/4710)
 
 ##### Bug Fixes
 
-* Fix specifying `configuration(s)` for a pod inside a target block.
+* Fix specifying `configuration(s)` for a pod inside a target block.   
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4707](https://github.com/CocoaPods/CocoaPods/issues/4707)
 
@@ -527,74 +527,74 @@
 ##### Breaking
 
 * The `link_with` Podfile DSL method has been removed in favor of target
-  inheritance.
+  inheritance.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * The `:exclusive => true` Podfile DSL target option has been removed in favor
-  of the `inherit! :search_paths` directive.
+  of the `inherit! :search_paths` directive.  
   [Samuel Giddins](https://github.com/segiddins)
 
-* The specification of `:head` dependencies has been removed.
+* The specification of `:head` dependencies has been removed.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * The deprecated `:local` dependency option has been removed in favor of the
-  equivalent `:path` option.
+  equivalent `:path` option.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * The deprecated `dependency` method in the Podfile DSL has been removed in
-  favor of the equivalent `pod` method.
+  favor of the equivalent `pod` method.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * The deprecated `preferred_dependency` method in the Specification DSL has been
-  removed in favor of the equivalent `default_subspecs` method.
+  removed in favor of the equivalent `default_subspecs` method.  
   [Samuel Giddins](https://github.com/segiddins)
 
-* The `docset_url` Specification attribute has been removed.
+* The `docset_url` Specification attribute has been removed.  
   [Samuel Giddins](https://github.com/segiddins)
   [#284](https://github.com/CocoaPods/Core/issues/284)
 
 ##### Enhancements
 
-* Add support for specifying :source with a pod dependency.
+* Add support for specifying :source with a pod dependency.  
   [Eric Firestone](https://github.com/efirestone)
   [#278](https://github.com/CocoaPods/Core/pull/278)
 
-* Add ability to get all platforms.
+* Add ability to get all platforms.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#11](https://github.com/CocoaPods/cocoapods-search/issues/11)
 
-* Improve `pod search` performance while using _`--full`_ flag.
+* Improve `pod search` performance while using _`--full`_ flag.  
   [Muhammed Yavuz Nuzumlalı](https://github.com/manuyavuz)
   [cocoapods-search#8](https://github.com/CocoaPods/cocoapods-search/issues/8)
 
-* The Lockfile now contains the Podfile's checksum.
+* The Lockfile now contains the Podfile's checksum.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * The serialized version of podspecs now includes the default platforms a pod
-  supports for improved forwards compatibility.
+  supports for improved forwards compatibility.  
   [Samuel Giddins](https://github.com/segiddins)
   [#267](https://github.com/CocoaPods/Core/issues/267)
 
 * The Podfile now allows specifying installation options via the `install!`
-  directive.
+  directive.  
   [Samuel Giddins](https://github.com/segiddins)
   [#151](https://github.com/CocoaPods/Core/issues/151)
 
 * The Podfile now allows marking targets as `abstract` and specifying the pod
-  inheritance mode via the `inherit!` directive.
+  inheritance mode via the `inherit!` directive.  
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
-* Allow non-exact version matches to be equal while maintaining a sort order.
+* Allow non-exact version matches to be equal while maintaining a sort order.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4365](https://github.com/CocoaPods/CocoaPods/issues/4365)
 
-* Target definitions now inherit configuration whitelist settings.
+* Target definitions now inherit configuration whitelist settings.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3605](https://github.com/CocoaPods/CocoaPods/issues/3605)
 
-* Ensure that YAML serialization doesn't incorrectly break long strings.
+* Ensure that YAML serialization doesn't incorrectly break long strings.  
   [Christopher Vollick](https://github.com/psycotica0)
 
 
@@ -608,7 +608,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * Podfiles now have a `checksum` property that reflects the internal state of
-  the Podfile.
+  the Podfile.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -617,17 +617,17 @@ This version only introduces changes in the CocoaPods gem.
 ##### Breaking
 
 * Activesupport 4 is now required, breaking compatibility with applications
-  locked to `3.x.y`.
+  locked to `3.x.y`.  
 
 ##### Bug Fixes
 
-* Fixes crash when using plugins where activesupport 4 was not installed.
+* Fixes crash when using plugins where activesupport 4 was not installed.  
   [Delisa Mason](https://github.com/kattrali)
   [#266](https://github.com/CocoaPods/Core/pull/266)
 
 ##### Enhancements
 
-* Add `tvos` as a new platform.
+* Add `tvos` as a new platform.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#263](https://github.com/CocoaPods/Core/pull/263)
 
@@ -641,7 +641,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Bug Fixes
 
-* This release fixes a file permissions error when using the RubyGem.
+* This release fixes a file permissions error when using the RubyGem.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -649,7 +649,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Bug Fixes
 
-* Ensure all gem files are readable.
+* Ensure all gem files are readable.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#4085](https://github.com/CocoaPods/CocoaPods/issues/4085)
 
@@ -658,22 +658,22 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Enhancements
 
-* Gracefully handle missing root podspecs when auto-detecting.
+* Gracefully handle missing root podspecs when auto-detecting.  
   [Hugo Tunius](https://github.com/k0nserv)
   [#3919](https://github.com/CocoaPods/CocoaPods/issues/3919)
 
 * When comparing versions with unequal numbers of trailing zeros, the one with
   fewer zeros will only compare less than the other when they are otherwise
-  equal.
+  equal.  
   [Gabriele Petronella](https://github.com/gabro)
   [cocoapods.org#185](https://github.com/CocoaPods/cocoapods.org/issues/185)
 
-* Support converting objects of arbitrary classes to YAML.
+* Support converting objects of arbitrary classes to YAML.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3907](https://github.com/CocoaPods/CocoaPods/issues/3907)
 
 * Add a 'public_only' flag to linter results for warnings that are only
-  appropriate for public specification.
+  appropriate for public specification.  
   [Samuel Giddins](https://github.com/segiddins)
   [#190](https://github.com/CocoaPods/Core/issues/190)
   [CocoaPods#2682](https://github.com/CocoaPods/CocoaPods/issues/2682)
@@ -684,7 +684,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Bug Fixes
 
 * The `major`, `minor`, and `patch` properties of versions will now always
-  return a number.
+  return a number.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -703,7 +703,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Bug Fixes
 
 * All string values written via the Podspec Ruby DSL will automatically have
-  extraneous spaces stripped.
+  extraneous spaces stripped.  
   [Samuel Giddins](https://github.com/segiddins)
   [#239](https://github.com/CocoaPods/Core/issues/239)
 
@@ -713,20 +713,20 @@ This version only introduces changes in the CocoaPods gem.
 ##### Breaking
 
 * Deprecate the `xcconfig` attribute in the Podspec DSL, which is replaced by
-  the new attributes `pod_target_xcconfig` and `user_target_xcconfig`.
+  the new attributes `pod_target_xcconfig` and `user_target_xcconfig`.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [CocoaPods#3465](https://github.com/CocoaPods/CocoaPods/issues/3465)
 
 ##### Enhancements
 
-* Add support for specifying the CocoaPods version in the podspec.
+* Add support for specifying the CocoaPods version in the podspec.  
   [Daniel Tomlinson](https://github.com/DanielTomlinson)
   [Core#240](https://github.com/CocoaPods/Core/issues/240)
 
-* Attempt to detect (and warn) when a podfile has smart quotes.
+* Attempt to detect (and warn) when a podfile has smart quotes.  
   [Samuel Giddins](https://github.com/segiddins)
 
-* Add `watchos` as a new platform.
+* Add `watchos` as a new platform.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#249](https://github.com/CocoaPods/Core/pull/249)
 
@@ -736,7 +736,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * A more useful DSLError will be shown when there are syntax errors in a Ruby
-  Podfile or Podspec.
+  Podfile or Podspec.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2651](https://github.com/CocoaPods/CocoaPods/issues/2651)
 
@@ -761,13 +761,13 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * Only re-write lockfiles if they are changed, in an attempt to avoid exposing
-  Psych serialization changes across Ruby versions.
+  Psych serialization changes across Ruby versions.  
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
 * On case-insensitive HFS+ file systems, try to make queries for specs in
-  spec repos to be case-preserved.
+  spec repos to be case-preserved.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2910](https://github.com/CocoaPods/CocoaPods/issues/2910)
   [CocoaPods#3024](https://github.com/CocoaPods/CocoaPods/issues/3024)
@@ -778,18 +778,18 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * Allow specifying multiple subspec pod dependencies inline in the Podfile,
-  via `pod 'Pod', :subspecs => ['Subspec1', 'Subspec2']`.
+  via `pod 'Pod', :subspecs => ['Subspec1', 'Subspec2']`.  
   [Samuel Giddins](https://github.com/segiddins)
   [#221](https://github.com/CocoaPods/Core/issues/221)
 
-* Allow specifying a custom module map file.
+* Allow specifying a custom module map file.  
   [Samuel Giddins](https://github.com/segiddins)
   [Marius Rackwitz](https://github.com/mrackwitz)
   [#218](https://github.com/CocoaPods/Core/issues/218)
 
 ##### Bug Fixes
 
-* The linter will now ensure that subspecs' names do not contain whitespace.
+* The linter will now ensure that subspecs' names do not contain whitespace.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [Joshua Kalpin](https://github.com/Kapin)
   [Samuel Giddins](https://github.com/segiddins)
@@ -798,12 +798,12 @@ This version only introduces changes in the CocoaPods gem.
   [#202](https://github.com/CocoaPods/Core/pull/202)
   [#233](https://github.com/CocoaPods/Core/pull/233)
 
-* The linter fails now if root attributes occur on subspec level.
+* The linter fails now if root attributes occur on subspec level.  
   [Marius Rackwitz](https://github.com/mrackwitz)
   [#233](https://github.com/CocoaPods/Core/pull/233)
 
 * Inhibit warnings for pods that only have the `inhibit_warnings` option enabled
-  on a subspec.
+  on a subspec.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2777](https://github.com/CocoaPods/CocoaPods/issues/2777)
 
@@ -823,13 +823,13 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * DSL errors now show more context when errors such as `SyntaxError` are
-  encountered.
+  encountered.  
   [Samuel Giddins](https://github.com/segiddins)
 
 ##### Bug Fixes
 
 * Allow a `Dependency` to be initialized with no non-nil external source
-  key-value pairs and not be considered external.
+  key-value pairs and not be considered external.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3320](https://github.com/CocoaPods/CocoaPods/issues/3320)
 
@@ -839,7 +839,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Bug Fixes
 
 * Ensure that strings that are serialized to YAML are escaped and quoted, if
-  needed.
+  needed.  
   [Samuel Giddins](https://github.com/segiddins)
   [#213](https://github.com/CocoaPods/Core/issues/213)
   [CocoaPods/CocoaPods#2837](https://github.com/CocoaPods/CocoaPods/issues/2837)
@@ -850,7 +850,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Bug Fixes
 
 * The linter will no longer erroneously warn that a specification has been
-  deprecated in favor of itself.
+  deprecated in favor of itself.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#3197](https://github.com/CocoaPods/CocoaPods/issues/3197)
 
@@ -860,7 +860,7 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * The linter now validates that every specification attribute is of the correct
-  type.
+  type.  
   [Samuel Giddins](https://github.com/segiddins)
   [#220](https://github.com/CocoaPods/Core/issues/220)
   [CocoaPods#2923](https://github.com/CocoaPods/CocoaPods/issues/2923)
@@ -868,7 +868,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Bug Fixes
 
-* Allow the `podspec` Podfile DSL flag to work with JSON podspecs.
+* Allow the `podspec` Podfile DSL flag to work with JSON podspecs.  
   [Samuel Giddins](https://github.com/segiddins)
   [#201](https://github.com/CocoaPods/Core/issues/201)
   [CocoaPods#2952](https://github.com/CocoaPods/CocoaPods/issues/2952)
@@ -883,43 +883,43 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * The Linter will now ensure against marking a spec as
-  `deprecated_in_favor_of` itself.
+  `deprecated_in_favor_of` itself.  
   [Keith Smiley](https://github.com/Keithbsmiley)
   [#212](https://github.com/CocoaPods/Core/pull/212)
 
-* Added `module_name` attribute for use with frameworks.
+* Added `module_name` attribute for use with frameworks.  
   [Boris Bügling](https://github.com/neonichu)
   [#205](https://github.com/CocoaPods/Core/issues/205)
 
 * Evaluate a Specification in `.from_string` in the context of the directory
-  the specification is in.
+  the specification is in.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2875](https://github.com/CocoaPods/CocoaPods/issues/2875)
 
-* Added `use_frameworks!` flag to the Podfile DSL.
+* Added `use_frameworks!` flag to the Podfile DSL.  
   [Boris Bügling](https://github.com/neonichu)
   [Core#204](https://github.com/CocoaPods/Core/issues/204)
 
-* Added `plugins` method to the Podfile DSL.
+* Added `plugins` method to the Podfile DSL.  
   [Samuel Giddins](https://github.com/segiddins)
 
 * Lint specifications authors, ensuring that they are neither empty nor the
-  default.
+  default.  
   [Samuel Giddins](https://github.com/segiddins)
   [#214](https://github.com/CocoaPods/Core/issues/214)
 
 ##### Bug Fixes
 
 * Fixes the reading of dependencies that have spaces in their subspecs' name
-  from Lockfiles.
+  from Lockfiles.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2850](https://github.com/CocoaPods/CocoaPods/issues/2850)
 
-* The Linter will now give a warning if Github Gists begin with `www`
+* The Linter will now give a warning if Github Gists begin with `www`  
   [Joshua Kalpin](https://github.com/Kapin)
   [Core#200](https://github.com/CocoaPods/Core/pull/200)
 
-* Fixes handling of missing sub-subspecs in the resolver.
+* Fixes handling of missing sub-subspecs in the resolver.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2922](https://github.com/CocoaPods/CocoaPods/issues/2922)
 
@@ -929,13 +929,13 @@ This version only introduces changes in the CocoaPods gem.
 ##### Enhancements
 
 * Allow the specification of file patterns which require ARC with
-  `requires_arc`.
+  `requires_arc`.  
   [Kyle Fuller](https://github.com/kylef)
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#532](https://github.com/CocoaPods/CocoaPods/issues/532)
 
 * Allow the specification of plugins and an optional hash of options
-  for the plugin in the Podfile.
+  for the plugin in the Podfile.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -948,14 +948,14 @@ This version only introduces changes in the CocoaPods gem.
 ##### Breaking
 
 * Support for Ruby < 2.0.0 has been dropped. CocoaPods now depends on
-  Ruby 2.0.0 or greater.
+  Ruby 2.0.0 or greater.  
   [Eloy Durán](https://github.com/alloy)
 
 ##### Enhancements
 
 * Remove `Specification::Set` attributes related to dependency resolution.
   Removed because the new, enhanced resolver no longer uses them to keep track
-  of the source for requirements.
+  of the source for requirements.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2637](https://github.com/CocoaPods/CocoaPods/pull/2637)
 
@@ -963,13 +963,13 @@ This version only introduces changes in the CocoaPods gem.
 
 * Fixes an issue when finding a `Source` based on the spec-repo's `git` URL
   when `git` is configured to rewrite URLs with the `url.<base>.insteadOf`
-  option.
+  option.  
   [Eloy Durán](https://github.com/alloy)
   [CocoaPods#2724](https://github.com/CocoaPods/CocoaPods/issues/2724)
   [CocoaPods#2696](https://github.com/CocoaPods/CocoaPods/issues/2696)
   [CocoaPods#2625](https://github.com/CocoaPods/CocoaPods/issues/2625)
 
-* Fixes an issue linting the `flatten` for http sources in a podspec.
+* Fixes an issue linting the `flatten` for http sources in a podspec.  
   [Eloy Durán](https://github.com/alloy)
   [Core#193](https://github.com/CocoaPods/Core/issues/193)
 
@@ -989,27 +989,27 @@ This version only introduces changes in the CocoaPods gem.
 ##### Breaking
 
 * Remove the notion of a `DataProvider` and move the handling of `Source` data
-  from the file system into the `Source` class itself.
+  from the file system into the `Source` class itself.  
   [Samuel Giddins](https://github.com/segiddins)
   [#183](https://github.com/CocoaPods/Core/issues/183)
 
 ##### Enhancements
 
-* Optimize `Source#search` to avoid iterating through all available sets.
+* Optimize `Source#search` to avoid iterating through all available sets.  
   [Samuel Giddins](https://github.com/segiddins)
   [#182](https://github.com/CocoaPods/Core/issues/182)
 
-* Set Sources are used in the order in which they are provided.
+* Set Sources are used in the order in which they are provided.  
   [Thomas Visser](https://github.com/Thomvis)
   [CocoaPods#2556](https://github.com/CocoaPods/CocoaPods/issues/2556)
 
 ##### Bug Fixes
 
-* Fixes the reading of subspecs with spaces from Lockfiles.
+* Fixes the reading of subspecs with spaces from Lockfiles.  
   [Samuel Giddins](https://github.com/segiddins)
   [#176](https://github.com/CocoaPods/Core/issues/176)
 
-* Fixes an issue with local git spec repositories without git remotes.
+* Fixes an issue with local git spec repositories without git remotes.  
   [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2590](https://github.com/CocoaPods/CocoaPods/issues/2590)
 
@@ -1018,7 +1018,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Bug Fixes
 
-* [Linter] Fix the license extension check.
+* [Linter] Fix the license extension check.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2525](https://github.com/CocoaPods/CocoaPods/issues/2525)
 
@@ -1027,16 +1027,16 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Enhancements
 
-* Drop policy to not require a git commit for `0.0.1` versions.
+* Drop policy to not require a git commit for `0.0.1` versions.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2335](https://github.com/CocoaPods/CocoaPods/issues/2335)
 
-* Removes the unused `Source::GitHubDataProvider` class.
+* Removes the unused `Source::GitHubDataProvider` class.  
   [Samuel Giddins](https://github.com/segiddins)
   [#174](https://github.com/CocoaPods/Core/pull/174)
 
 * Adds a `url` attribute to `Source`.
-  Note that this attribute is currently only gathered from `git`.
+  Note that this attribute is currently only gathered from `git`.  
   [Samuel Giddins](https://github.com/segiddins)
 
 
@@ -1044,7 +1044,7 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Bug Fixes
 
-* Fixes an issue linting specifications with invalid HTTP source.
+* Fixes an issue linting specifications with invalid HTTP source.  
   [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2463](https://github.com/CocoaPods/CocoaPods/issues/2463)
 
@@ -1063,31 +1063,31 @@ This version only introduces changes in the CocoaPods gem.
   [#154](https://github.com/CocoaPods/Core/pull/154)
 
 * Added methods `deprecated?` and `deprecation_description` to
-  `RootAttributesAccessors`.
+  `RootAttributesAccessors`.  
   [Hugo Tunius](https://github.com/k0nserv)
   [#157](https://github.com/CocoaPods/Core/pull/157)
   [CocoaPods#2180](https://github.com/CocoaPods/CocoaPods/issues/2180)
 
-* The specification `requires_arc` attribute now defaults to true.
+* The specification `requires_arc` attribute now defaults to true.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#267](https://github.com/CocoaPods/CocoaPods/issues/267)
 
-* Now the specification linter warns if git sources use SSH URLs.
+* Now the specification linter warns if git sources use SSH URLs.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#118](https://github.com/CocoaPods/Core/issues/118)
 
-* Removed legacy deprecation warnings of the Specification DSL.
+* Removed legacy deprecation warnings of the Specification DSL.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
 
-* Improved error messages for merge conflicts of the Podfile.
+* Improved error messages for merge conflicts of the Podfile.  
   [Taylor Halliday](https://github.com/tayhalla)
   [#147](https://github.com/CocoaPods/Core/pull/147)
 
-* Only allow certain extensions for license files.
+* Only allow certain extensions for license files.  
   [Samuel Giddins](https://github.com/segiddins)
   [CocoaPods#2407](https://github.com/CocoaPods/CocoaPods/issues/2407)
 
-* The linter now checks a JSON specification for unknown keys.
+* The linter now checks a JSON specification for unknown keys.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [#88](https://github.com/CocoaPods/Core/issues/88)
 
@@ -1104,21 +1104,21 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Enhancements
 
-* Extracted URL validation into its own module.
+* Extracted URL validation into its own module.  
   [Boris Bügling](https://github.com/neonichu)
   [#115](https://github.com/CocoaPods/Core/issues/115)
   [#116](https://github.com/CocoaPods/Core/pull/116)
 
-* Gracefully handle unexpected source structure.
+* Gracefully handle unexpected source structure.  
   [Samuel E. Giddins](https://github.com/segiddins)
   [#110](https://github.com/CocoaPods/Core/issues/110)
 
 * Linter warnings and errors are now prefixed with \[`ATTRIBUTE_NAME`\].
-  This `ATTRIBUTE_NAME` specifies which property caused the error/warning.
+  This `ATTRIBUTE_NAME` specifies which property caused the error/warning.  
   [Joshua Kalpin](https://github.com/Kapin)
   [#122](https://github.com/CocoaPods/Core/pull/122)
 
-* Add support for the specification of multiple `default_subspecs`.
+* Add support for the specification of multiple `default_subspecs`.  
   [Kyle Fuller](https://github.com/kylef)
   [CocoaPods#2099](https://github.com/CocoaPods/CocoaPods/issues/2099)
 
@@ -1127,70 +1127,70 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Enhancements
 
-* Make Platform instances usable as Hash keys.
+* Make Platform instances usable as Hash keys.  
   [Eloy Durán](https://github.com/alloy)
   [#109](https://github.com/CocoaPods/Core/pull/109)
 
-* Accept new sources for Pods when they are just redirects of the old one.
+* Accept new sources for Pods when they are just redirects of the old one.  
   [Boris Bügling](https://github.com/neonichu)
   [#101](https://github.com/CocoaPods/Core/issues/101)
   [#102](https://github.com/CocoaPods/Core/pull/102)
 
 * Show informative error message when a merge conflict is detected in a YAML
-  file.
+  file.  
   [Luis de la Rosa](https://github.com/luisdelarosa)
   [#69](https://github.com/CocoaPods/Core/issues/69)
   [#100](https://github.com/CocoaPods/Core/pull/100)
 
 * Added a check to the linter to ensure that the `social_media_url` has
-  been changed from the example value.
+  been changed from the example value.  
   [Richard Lee](https://github.com/dlackty)
   [#67](https://github.com/CocoaPods/Core/issues/67)
   [#85](https://github.com/CocoaPods/Core/pull/85)
 
-* Partial refactor of `Pod::Linter` class.
+* Partial refactor of `Pod::Linter` class.  
   [Joshua Kalpin](https://github.com/Kapin)
   [#50](https://github.com/CocoaPods/Core/pull/50)
 
 * Added `deprecated` and `deprecated_in_favor_of` attributes to Specification
-  DSL.
+  DSL.  
   [Paul Young](https://github.com/paulyoung)
   [#87](https://github.com/CocoaPods/Core/pull/87)
 
 * The linter now checks `framework` and `library` attributes for invalid
-  strings.
+  strings.  
   [Paul Williamson](https://github.com/squarefrog)
   [Fabio Pelosin](irrationalfab)
   [#66](https://github.com/CocoaPods/Core/issues/66)
   [#96](https://github.com/CocoaPods/Core/pull/96)
   [#105](https://github.com/CocoaPods/Core/issues/105)
 
-* Ignore any pod that begins with a `.`.
+* Ignore any pod that begins with a `.`.  
   [Dustin Clark](https://github.com/clarkda)
   [#97](https://github.com/CocoaPods/Core/pull/97)
   [#98](https://github.com/CocoaPods/Core/issues/98)
 
-* The Linter will not check for comments anymore.
+* The Linter will not check for comments anymore.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [#108](https://github.com/CocoaPods/Core/issues/108)
 
-* Removed legacy checks from the linter.
+* Removed legacy checks from the linter.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [#108](https://github.com/CocoaPods/Core/issues/108)
 
 ##### Bug Fixes
 
-* Fixed logic for default subspec attribute in nested subspecs.
+* Fixed logic for default subspec attribute in nested subspecs.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#1021](https://github.com/CocoaPods/CocoaPods/issues/1021)
 
 * Added logic to handle subspecs and platform scopes to linter check of
-  the `requries_arc` attribute.
+  the `requries_arc` attribute.  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [CocoaPods#2005](https://github.com/CocoaPods/CocoaPods/issues/2005)
 
 * The linter no longer considers empty a Specification if it only specifies the
-  `resource_bundle` attribute.
+  `resource_bundle` attribute.  
   [Joshua Kalpin](https://github.com/Kapin)
   [#63](https://github.com/CocoaPods/Core/issues/63)
   [#95](https://github.com/CocoaPods/Core/pull/95)
@@ -1206,13 +1206,13 @@ This version only introduces changes in the CocoaPods gem.
 
 * The specification now strips the indentation of the `prefix_header` and
   `prepare_command` to aide their declaration as a here document (similarly to
-  what it already does with the description).
+  what it already does with the description).  
   [Fabio Pelosin](https://github.com/fabiopelosin)
   [#51](https://github.com/CocoaPods/Core/issues/51)
 
 ##### Bug Fixes
 
-* Fix linting for Pods which declare a private repo as the source.
+* Fix linting for Pods which declare a private repo as the source.  
   [Boris Bügling](https://github.com/neonichu)
   [#82](https://github.com/CocoaPods/Core/issues/82)
 
@@ -1220,15 +1220,15 @@ This version only introduces changes in the CocoaPods gem.
 
 ##### Enhancements
 
-* Changed all references to the optimistic operator.
+* Changed all references to the optimistic operator.  
   [Luis de la Rosa](https://github.com/luisdelarosa)
 
-* Check requires_arc set explicitly in podspec.
+* Check requires_arc set explicitly in podspec.  
   [Richard Lee](https://github.com/dlackty)
 
 ##### Bug Fixes
 
-* Fix crash related to the usage of `s.version` in the git tag.
+* Fix crash related to the usage of `s.version` in the git tag.  
   [Joel Parsons](https://github.com/joelparsons)
 
 ## 0.30.0 (2014-03-28)
