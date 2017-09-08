@@ -50,6 +50,7 @@ module Pod
       # @return [Set] The most representative set for the Pod with the given
       #         name. Returns nil if no representative source found containing a pod with given name.
       #
+      # Deprecated: Please use `representative_set_for_search` instead.
       def representative_set(name)
         representative_source = nil
         highest_version = nil
@@ -60,6 +61,32 @@ module Pod
             if highest_version.nil? || (highest_version < source_version)
               highest_version = source_version
               representative_source = source
+
+            end
+          end
+        end
+        representative_source ? Specification::Set.new(name, representative_source) : nil
+      end
+
+      # Returns a set configured with the source which contains the all version in the aggregate.
+      #
+      # @param  [String] name
+      #         The name of the Pod.
+      #
+      # @return [Set] The most representative set for the Pod with the given
+      #         name. Returns nil if no representative source found containing a pod with given name.
+      #
+      def representative_set_for_search(name)
+        representative_source = nil
+        pods_by_source = {}
+        sources.each do |source|
+          source_versions = source.versions(name)
+          if source_versions
+            key = source.name + '_' + name
+            if pods_by_source[key].nil?
+              representative_source ||= []
+              representative_source << source
+              pods_by_source[key] = source
             end
           end
         end

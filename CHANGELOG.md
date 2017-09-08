@@ -26,6 +26,14 @@
   [David Airapetyan](https://github.com/davidair)
   [#5184](https://github.com/CocoaPods/CocoaPods/issues/5184)
 
+* Fix `search` command crash while specs directory not exist.
+  [yanzhiwei147](https://github.com/yanzhiwei147)  
+  [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
+
+* Fix `name_for_url` return same name while input such as `ssh://git@cocoapods.xx.my:/cocoapods/specs.git` and `ssh://git@cocoapods.xx.my:/Mirrors/specs.git`
+  [yanzhiwei147](https://github.com/yanzhiwei147)  
+  [#7008](https://github.com/CocoaPods/CocoaPods/issues/7008)
+
 
 ## 1.3.1 (2017-08-06)
 
@@ -128,28 +136,6 @@
   [#381](https://github.com/CocoaPods/Core/pull/381) 
 
 ## 1.2.1 (2017-04-11)
-
-##### Enhancements
-
-* None.  
-
-##### Bug Fixes
-
-* None.  
-
-
-## 1.2.1.rc.1 (2017-04-05)
-
-##### Enhancements
-
-* None.  
-
-##### Bug Fixes
-
-* None.  
-
-
-## 1.2.1.beta.1 (2017-03-08)
 
 ##### Enhancements
 
