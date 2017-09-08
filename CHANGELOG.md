@@ -22,6 +22,10 @@
 
 ##### Bug Fixes
 
+* Provide a better error message when encountering empty spec directories  
+  [David Airapetyan](https://github.com/davidair)
+  [#5184](https://github.com/CocoaPods/CocoaPods/issues/5184)
+
 * Fix `search` command crash while specs directory not exist.
   [yanzhiwei147](https://github.com/yanzhiwei147)  
   [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)

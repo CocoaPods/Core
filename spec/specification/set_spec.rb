@@ -106,4 +106,19 @@ module Pod
       @set.versions.map(&:to_s).should == ['1.0']
     end
   end
+
+  #---------------------------------------------------------------------------#
+
+  describe 'Handling empty directories' do
+    before do
+      repos = [Source.new(fixture('spec-repos/test_empty_dir_repo'))]
+      @set = Source::Aggregate.new(repos).search_by_name('EmptyDir_spec').first
+    end
+
+    it 'raises when encountering empty directories' do
+      @set.name.should == 'EmptyDir_spec'
+      exception = lambda { @set.specification }.should.raise Informative
+      exception.message.should.include 'Could not find the highest version for `EmptyDir_spec`.'
+    end
+  end
 end
