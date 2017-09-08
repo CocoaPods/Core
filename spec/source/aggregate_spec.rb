@@ -58,6 +58,11 @@ module Pod
         set = @aggregate.representative_set('JSONKit')
         set.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.4']
       end
+
+      it 'returns a set configured for search sources which contains all versions' do
+        set = @aggregate.representative_set_for_search('JSONKit')
+        set.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.5pre', '1.4']
+      end
     end
 
     #-------------------------------------------------------------------------#
