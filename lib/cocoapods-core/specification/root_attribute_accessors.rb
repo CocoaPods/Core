@@ -152,6 +152,12 @@ module Pod
           command.strip_heredoc.chomp if command
         end
 
+        # @return [Bool] Indicates whether or not a pch file should be generated.
+        #
+        def skip_pch
+          attributes_hash['skip_pch']
+        end
+
         # @return [Bool] Indicates, that if use_frameworks! is specified, the
         #         framework should include a static library.
         #
