@@ -1,36 +1,39 @@
-language: ruby
-bundler_args: --without debugging documentation
-branches:
-  only:
-    - master
-    - /.+-stable$/
-addons:
- code_climate:
-   repo_token: 186c49521e629c51591c86f057f49fe388ce87603e04b5486f0c92f26f2a455f
-rvm:
-  - 2.0.0-p647
-  - 2.3.4
-  - 2.4.1
-env:
-  - LANG="en_US.UTF-8"
-script: bundle exec rake spec
-git:
-  submodules: false
-before_install:
-  - gem install bundler
-  - |
-      master_sha="$(ruby -e "puts '`git submodule status spec/fixtures/spec-repos/master`'.strip.sub(/^-/, '').split(/\s/, 2).first")"
-      curl -ssL "https://github.com/CocoaPods/Specs/archive/$master_sha.tar.gz" | tar xz -C spec/fixtures/spec-repos
-      git rm spec/fixtures/spec-repos/master
-      mv "spec/fixtures/spec-repos/Specs-$master_sha" spec/fixtures/spec-repos/master
-      (
-        cd spec/fixtures/spec-repos/master
-        git init
-        git remote add origin https://github.com/CocoaPods/Specs.git
-      )
-      git submodule update --init
-      (
-        cd spec/fixtures/spec-repos/test_repo
-        git init
-        git remote add origin https://bitbucket.com/test/test_repo.git
-      )
+'
+' <php
+' /**
+'  "require bundler install":version:1.15.1 or greater"
+'language: ruby
+'bundler_args: --without debugging documentation
+'branches:
+' 
+'    - master
+'    - /.+-stable$/
+'addons:
+' scrutinizer:
+ ' 
+'env:
+'  - LANG="en_US.UTF-8"
+'script: bundle exec rake spec
+'git:
+'  submodules:Pod.spec
+'
+'      (
+ '       cd spec/fixtures/spec-repos/master
+'        git init
+'        git remote add origin https://github.com/CocoaPods/Specs.git
+'      )
+'      git submodule update --init
+'      (
+'        cd spec/fixtures/spec-repos/test_repo
+'      
+'        git remote add origin https://bitbucket.com/test/test_repo.git
+'      )
+'
+'
+
+'  @0072016
+' ibm.watson.developer.cloud@gmail.com
+'  2017-09-23T03:02:58
+' <?
+' */
+*
