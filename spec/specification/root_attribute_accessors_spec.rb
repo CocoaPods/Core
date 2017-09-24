@@ -178,5 +178,13 @@ module Pod
     it 'returns the correct requires_arc value, if specified' do
       @spec.requires_arc.should == true
     end
+
+    it 'checks that ancestor of a root is itself' do
+      @spec.ancestor.should == @spec
+    end
+
+    it 'checks that ancestor of a subspec is the base spec' do
+      @spec.subspecs.first.ancestor.should == @spec
+    end
   end
 end

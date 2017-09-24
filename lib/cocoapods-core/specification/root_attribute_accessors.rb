@@ -152,6 +152,14 @@ module Pod
           command.strip_heredoc.chomp if command
         end
 
+        # @return [Hash] Return the outermost spec
+        #
+        def ancestor
+          ancestor = self
+          ancestor = ancestor.parent until ancestor.parent.nil?
+          ancestor
+        end
+
         # @return [Bool] Indicates, that if use_frameworks! is specified, the
         #         framework should include a static library.
         #
