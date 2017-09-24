@@ -6,7 +6,7 @@
 
 * Add `ancestor` to return the outermost spec around a subspec  
   [Paul Beusterien](https://github.com/paulb777)
-  [#407](https://github.com/CocoaPods/Core/pull/407)
+  [#411](https://github.com/CocoaPods/Core/pull/411)
 
 ##### Bug Fixes
 
