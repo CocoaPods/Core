@@ -458,6 +458,21 @@ module Pod
 
       #------------------#
 
+      # @!method skip_pch=(flag)
+      #
+      #   Indicates whether or not a pch file should be generated.
+      #
+      #   @example
+      #
+      #     spec.skip_pch = true
+      #
+      #   @param [Bool] flag
+      #          Indicates whether or not a pch file should be generated.
+      #
+      root_attribute :skip_pch,
+                     :types => [TrueClass, FalseClass],
+                     :default_value => false
+
       # @!method static_framework=(flag)
       #
       #   Indicates, that if use_frameworks! is specified, the

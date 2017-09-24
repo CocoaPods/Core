@@ -76,6 +76,11 @@ module Pod
         @spec.attributes_hash['prepare_command'].should == 'ruby build_files.rb'
       end
 
+      it 'allows to specify whether the Pod should have a pch file' do
+        @spec.skip_pch = true
+        @spec.attributes_hash['skip_pch'].should == true
+      end
+
       it 'allows to specify whether the Pod has a static_framework' do
         @spec.static_framework = true
         @spec.attributes_hash['static_framework'].should == true
