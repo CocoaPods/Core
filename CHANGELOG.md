@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add `ancestor` to return the outermost spec around a subspec  
+  [Paul Beusterien](https://github.com/paulb777)
+  [#411](https://github.com/CocoaPods/Core/pull/411)
 
 ##### Bug Fixes
 
