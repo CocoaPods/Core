@@ -855,15 +855,19 @@ module Pod
       #
       #   A path to a prefix header file to inject in the prefix header of the
       #   pod project.
+      #   ':skip' indicates that the default CocoaPods prefix header should not
+      #   be generated.
       #
       #   ---
       #
-      #   This attribute is __not recommended__ as Pods should not pollute the
-      #   prefix header of other libraries or of the user project.
+      #   The file path options is __not recommended__ as Pods should not
+      #   pollute the prefix header of other libraries or of the user project.
+      #
       #
       #   @example
       #
       #     spec.prefix_header_file = 'iphone/include/prefix.pch'
+      #     spec.prefix_header_file = ':skip'
       #
       #   @param  [String] path
       #           The path to the prefix header file.
