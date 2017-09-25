@@ -855,8 +855,10 @@ module Pod
       #
       #   A path to a prefix header file to inject in the prefix header of the
       #   pod project.
-      #   false indicates that the default CocoaPods prefix header should not
+      #   `false` indicates that the default CocoaPods prefix header should not
       #   be generated.
+      #   `true` is the default and indicates that the default CocoaPods prefix
+      #   header should be generated.
       #
       #   ---
       #
