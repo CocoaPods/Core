@@ -855,7 +855,7 @@ module Pod
       #
       #   A path to a prefix header file to inject in the prefix header of the
       #   pod project.
-      #   ':skip' indicates that the default CocoaPods prefix header should not
+      #   false indicates that the default CocoaPods prefix header should not
       #   be generated.
       #
       #   ---
@@ -867,12 +867,17 @@ module Pod
       #   @example
       #
       #     spec.prefix_header_file = 'iphone/include/prefix.pch'
-      #     spec.prefix_header_file = ':skip'
       #
-      #   @param  [String] path
-      #           The path to the prefix header file.
+      #   @example
+      #
+      #     spec.prefix_header_file = false
+      #
+      #   @param  [Bool, String] path
+      #           The path to the prefix header file or whether to disable
+      #           prefix_header generation.
       #
       attribute :prefix_header_file,
+                :types => [TrueClass, FalseClass, String],
                 :inherited => true
 
       #------------------#

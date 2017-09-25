@@ -270,8 +270,8 @@ module Pod
       end
 
       it 'allows to skip prefix header file generation' do
-        @spec.prefix_header_file = ':skip'
-        @spec.attributes_hash['prefix_header_file'].should == ':skip'
+        @spec.prefix_header_file = false
+        @spec.attributes_hash['prefix_header_file'].should == false
       end
 
       it 'allows to specify a directory to use for the headers' do

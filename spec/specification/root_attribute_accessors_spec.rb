@@ -7,6 +7,7 @@ module Pod
         s.name = 'Pod'
         s.version = '1.0'
         s.requires_arc = true
+        s.prefix_header_file = false
         s.subspec 'Subspec' do
         end
       end
@@ -177,6 +178,10 @@ module Pod
 
     it 'returns the correct requires_arc value, if specified' do
       @spec.requires_arc.should == true
+    end
+
+    it 'returns the correct prefix_headers value, if specified' do
+      @spec.prefix_header_file.should == false
     end
   end
 end
