@@ -25,12 +25,6 @@ module Pod
           attributes_hash['requires_arc']
         end
 
-        # @return [Bool, String] The prefix_header_file value.
-        #
-        def prefix_header_file
-          attributes_hash['prefix_header_file']
-        end
-
         # @return [Version] The version of the Pod.
         #
         # @todo   The version is memoized because the Resolvers sets the head
