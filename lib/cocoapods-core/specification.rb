@@ -346,6 +346,12 @@ module Pod
       @consumers[platform] ||= Consumer.new(self, platform)
     end
 
+    # @return [Bool, String] The prefix_header_file value.
+    #
+    def prefix_header_file
+      attributes_hash['prefix_header_file']
+    end
+
     #-------------------------------------------------------------------------#
 
     public

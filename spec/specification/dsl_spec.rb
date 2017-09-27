@@ -269,6 +269,11 @@ module Pod
         @spec.attributes_hash['prefix_header_file'].should == 'iphone/include/prefix.pch'
       end
 
+      it 'allows to skip prefix header file generation' do
+        @spec.prefix_header_file = false
+        @spec.attributes_hash['prefix_header_file'].should == false
+      end
+
       it 'allows to specify a directory to use for the headers' do
         @spec.header_dir = 'Three20Core'
         @spec.attributes_hash['header_dir'].should == 'Three20Core'
