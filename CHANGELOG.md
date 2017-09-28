@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add podspec `script_phases` DSL
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#413](https://github.com/CocoaPods/Core/pull/413)
+
 * Update commments/docs to indicate prefix_header=false will skip pch generation  
   [Paul Beusterien](https://github.com/paulb777)
   [#412](https://github.com/CocoaPods/Core/pull/412)

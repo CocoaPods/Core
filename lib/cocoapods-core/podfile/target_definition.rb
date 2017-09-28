@@ -585,12 +585,6 @@ module Pod
 
       #--------------------------------------#
 
-      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
-
-      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log].freeze
-
-      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
-
       # Stores the script phase to add for this target definition.
       #
       # @param  [Hash] options
@@ -602,12 +596,12 @@ module Pod
       #
       def store_script_phase(options)
         option_keys = options.keys
-        unrecognized_keys = option_keys - ALL_SCRIPT_PHASE_KEYS
+        unrecognized_keys = option_keys - Specification::ALL_SCRIPT_PHASE_KEYS
         unless unrecognized_keys.empty?
           raise StandardError, "Unrecognized options `#{unrecognized_keys}` in shell script `#{options}` within `#{name}` target. " \
-            "Available options are `#{ALL_SCRIPT_PHASE_KEYS}`."
+            "Available options are `#{Specification::ALL_SCRIPT_PHASE_KEYS}`."
         end
-        missing_required_keys = SCRIPT_PHASE_REQUIRED_KEYS - option_keys
+        missing_required_keys = Specification::SCRIPT_PHASE_REQUIRED_KEYS - option_keys
         unless missing_required_keys.empty?
           raise StandardError, "Missing required shell script phase options `#{missing_required_keys.join(', ')}`"
         end

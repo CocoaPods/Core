@@ -115,6 +115,18 @@ module Pod
         }]
       end
 
+      it 'writes script phases' do
+        @spec.script_phases = [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
+        ]
+        hash = @spec.to_hash
+        hash['script_phases'].should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
+        ]
+      end
+
       it 'writes test type for test subspec' do
         @spec.test_spec {}
         hash = @spec.to_hash
@@ -158,6 +170,23 @@ module Pod
         result.test_specs.first.test_type.should.equal :unit
       end
 
+      it 'can load script phases from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'script_phases' => [
+            { :name => 'Hello World', :script => 'echo "Hello World"' },
+            { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' },
+          ],
+        }
+        result = Specification.from_hash(hash)
+        result.script_phases.count.should.equal 2
+        result.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' },
+        ]
+      end
+
       it 'can load test specification from 1.3.0 hash format' do
         hash = {
           'name' => 'BananaLib',
@@ -185,6 +214,15 @@ module Pod
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+      end
+
+      it 'can load script phases from json' do
+        json = '{"script_phases": [{"name": "Hello World", "script": "echo \"Hello World\""}]}'
+        result = Specification.from_json(json)
+        result.script_phases.count.should.equal 1
+        result.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+        ]
       end
 
       it 'can be safely converted back and forth to a hash' do

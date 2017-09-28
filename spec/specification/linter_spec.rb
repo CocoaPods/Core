@@ -457,6 +457,19 @@ module Pod
 
       #------------------#
 
+      it 'checks script phases include the required keys' do
+        @spec.script_phases = { :name => 'Hello World' }
+        result_should_include('script_phases', 'Missing required shell script phase options `script` in script phase `Hello World`.')
+      end
+
+      it 'checks script phases include the required keys' do
+        @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :unknown => 'unknown' }
+        result_should_include('script_phases', 'Unrecognized options `[:unknown]` in script phase `Hello World`. ' \
+          'Available options are `[:name, :script, :shell_path, :input_files, :output_files, :show_env_vars_in_log]`.')
+      end
+
+      #------------------#
+
       it 'accepts valid frameworks' do
         @spec.frameworks = %w(AddressBook Audio-Frameworks)
         @linter.lint

@@ -394,6 +394,23 @@ module Pod
         end
       end
 
+      # Performs validations related to the `script_phases` attribute.
+      #
+      def _validate_script_phases(s)
+        s.each do |script_phase|
+          keys = script_phase.keys
+          unrecognized_keys = keys - Specification::ALL_SCRIPT_PHASE_KEYS
+          unless unrecognized_keys.empty?
+            results.add_error('script_phases', "Unrecognized options `#{unrecognized_keys}` in script phase `#{script_phase[:name]}`. " \
+              "Available options are `#{Specification::ALL_SCRIPT_PHASE_KEYS}`.")
+          end
+          missing_required_keys = Specification::SCRIPT_PHASE_REQUIRED_KEYS - keys
+          unless missing_required_keys.empty?
+            results.add_error('script_phases', "Missing required shell script phase options `#{missing_required_keys.join(', ')}` in script phase `#{script_phase[:name]}`.")
+          end
+        end
+      end
+
       # Performs validations related to github sources.
       #
       def perform_github_source_checks(s)
