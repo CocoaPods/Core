@@ -368,6 +368,10 @@ module Pod
       # @option   options [Boolean] :show_env_vars_in_log
       #           whether this script phase should output the environment variables during execution.
       #
+      # @option   options [Symbol] :execution_position
+      #           specifies the position of which this script phase should be executed. The currently supported values are:
+      #           `:before_compile`, `:after_compile` and `:any` which is the default.
+      #
       # @return   [void]
       #
       def script_phase(options)

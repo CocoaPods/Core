@@ -118,11 +118,13 @@ module Pod
       it 'writes script phases' do
         @spec.script_phases = [
           { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello World 2', :script => 'echo "Hello World 2"', :execution_position => :after_compile },
           { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
         ]
         hash = @spec.to_hash
         hash['script_phases'].should == [
           { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello World 2', :script => 'echo "Hello World 2"', :execution_position => :after_compile },
           { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
         ]
       end
@@ -182,8 +184,8 @@ module Pod
         result = Specification.from_hash(hash)
         result.script_phases.count.should.equal 2
         result.script_phases.should == [
-          { :name => 'Hello World', :script => 'echo "Hello World"' },
-          { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' },
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby', :execution_position => :any },
         ]
       end
 
@@ -221,7 +223,16 @@ module Pod
         result = Specification.from_json(json)
         result.script_phases.count.should.equal 1
         result.script_phases.should == [
-          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any },
+        ]
+      end
+
+      it 'loads script phase execution position from json' do
+        json = '{"script_phases": [{"name": "Hello World", "script": "echo \"Hello World\"", "execution_position": "before_compile"}]}'
+        result = Specification.from_json(json)
+        result.script_phases.count.should.equal 1
+        result.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile },
         ]
       end
 

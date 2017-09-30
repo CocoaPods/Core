@@ -590,7 +590,7 @@ module Pod
       # @param  [Hash] options
       #         The options to use for this script phase. The required keys
       #         are: `:name`, `:script`, while the optional keys are:
-      #         `:shell_path`, `:input_files`, `:output_files` and `:show_env_vars_in_log`.
+      #         `:shell_path`, `:input_files`, `:output_files`, `:show_env_vars_in_log` and `:execution_position`.
       #
       # @return [void]
       #
@@ -598,7 +598,7 @@ module Pod
         option_keys = options.keys
         unrecognized_keys = option_keys - Specification::ALL_SCRIPT_PHASE_KEYS
         unless unrecognized_keys.empty?
-          raise StandardError, "Unrecognized options `#{unrecognized_keys}` in shell script `#{options}` within `#{name}` target. " \
+          raise StandardError, "Unrecognized options `#{unrecognized_keys}` in shell script `#{options[:name]}` within `#{name}` target. " \
             "Available options are `#{Specification::ALL_SCRIPT_PHASE_KEYS}`."
         end
         missing_required_keys = Specification::SCRIPT_PHASE_REQUIRED_KEYS - option_keys
@@ -608,6 +608,11 @@ module Pod
         script_phases_hash = get_hash_value('script_phases', [])
         if script_phases_hash.map { |script_phase_options| script_phase_options[:name] }.include?(options[:name])
           raise StandardError, "Script phase with name `#{options[:name]}` name already present for target `#{name}`."
+        end
+        options[:execution_position] = :any unless options.key?(:execution_position)
+        unless Specification::EXECUTION_POSITION_KEYS.include?(options[:execution_position])
+          raise StandardError, "Invalid execution position value `#{options[:execution_position]}` in shell script `#{options[:name]}` within `#{name}` target. " \
+            "Available options are `#{Specification::EXECUTION_POSITION_KEYS}`."
         end
         script_phases_hash << options
       end

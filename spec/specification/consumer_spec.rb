@@ -284,12 +284,12 @@ module Pod
 
       it 'returns the script phases in correct format' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
-        @consumer.script_phases.should == [{ :name => 'Hello World', :script => 'echo "Hello World"' }]
+        @consumer.script_phases.should == [{ :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any }]
       end
 
       it 'returns the script phases in correct format with optional options' do
         @spec.script_phases = { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' }
-        @consumer.script_phases.should == [{ :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' }]
+        @consumer.script_phases.should == [{ :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby', :execution_position => :any }]
       end
 
       it 'returns the script phases in correct format for multiple script phases' do
@@ -298,22 +298,31 @@ module Pod
           { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
         ]
         @consumer.script_phases.should == [
-          { :name => 'Hello World', :script => 'echo "Hello World"' },
-          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby', :execution_position => :any },
         ]
       end
 
       it 'handles multi-platform script phases' do
         @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }
-        @consumer.script_phases.should == [{ :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }]
+        @consumer.script_phases.should == [{ :name => 'Hello World iOS', :script => 'echo "Hello World iOS"', :execution_position => :any }]
       end
 
       it 'returns both global and multi platform script phases' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
-        @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }
+        @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"', :execution_position => :any }
         @consumer.script_phases.should == [
-          { :name => 'Hello World', :script => 'echo "Hello World"' },
-          { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' },
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any },
+          { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"', :execution_position => :any },
+        ]
+      end
+
+      it 'retains the value set for execution position' do
+        @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile }
+        @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"', :execution_position => :after_compile }
+        @consumer.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile },
+          { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"', :execution_position => :after_compile },
         ]
       end
 
