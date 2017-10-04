@@ -279,6 +279,47 @@ module Pod
         test_consumer = Specification::Consumer.new(test_spec, :ios)
         test_consumer.requires_app_host?.should.be.true
       end
+
+      #------------------#
+
+      it 'returns the script phases in correct format' do
+        @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
+        @consumer.script_phases.should == [{ :name => 'Hello World', :script => 'echo "Hello World"' }]
+      end
+
+      it 'returns the script phases in correct format with optional options' do
+        @spec.script_phases = { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' }
+        @consumer.script_phases.should == [{ :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' }]
+      end
+
+      it 'returns the script phases in correct format for multiple script phases' do
+        @spec.script_phases = [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
+        ]
+        @consumer.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' },
+        ]
+      end
+
+      it 'handles multi-platform script phases' do
+        @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }
+        @consumer.script_phases.should == [{ :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }]
+      end
+
+      it 'returns both global and multi platform script phases' do
+        @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
+        @spec.ios.script_phases = { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' }
+        @consumer.script_phases.should == [
+          { :name => 'Hello World', :script => 'echo "Hello World"' },
+          { :name => 'Hello World iOS', :script => 'echo "Hello World iOS"' },
+        ]
+      end
+
+      it 'returns the empty hash if no script phases have been specified' do
+        @consumer.script_phases.should == []
+      end
     end
 
     #-------------------------------------------------------------------------#

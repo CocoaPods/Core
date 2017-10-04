@@ -293,6 +293,16 @@ module Pod
         @spec.module_map = 'module.modulemap'
         @spec.attributes_hash['module_map'].should == 'module.modulemap'
       end
+
+      it 'allows to specify the script phases shipped with the Pod' do
+        @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
+        @spec.attributes_hash['script_phases'].should == { 'name' => 'Hello World', 'script' => 'echo "Hello World"' }
+      end
+
+      it 'allows to specify the script phases shipped with the Pod as a hash' do
+        @spec.script_phases = { :name => 'Hello Ruby World', :script => 'puts "Hello Ruby World"', :shell_path => 'usr/bin/ruby' }
+        @spec.attributes_hash['script_phases'].should == { 'name' => 'Hello Ruby World', 'script' => 'puts "Hello Ruby World"', 'shell_path' => 'usr/bin/ruby' }
+      end
     end
 
     #-----------------------------------------------------------------------------#
@@ -464,7 +474,7 @@ module Pod
         end
         singularized.map { |attr| attr.name.to_s }.sort.should == %w(
           authors compiler_flags default_subspecs frameworks libraries
-          preserve_paths resource_bundles resources screenshots
+          preserve_paths resource_bundles resources screenshots script_phases
           vendored_frameworks vendored_libraries weak_frameworks
         )
       end

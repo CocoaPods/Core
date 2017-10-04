@@ -92,7 +92,7 @@ module Pod
           if license.is_a?(String)
             { :type => license }
           elsif license.is_a?(Hash)
-            license = convert_keys_to_symbol(license)
+            license = Specification.convert_keys_to_symbol(license)
             license[:text] = license[:text].strip_heredoc if license[:text]
             license
           else
@@ -110,7 +110,7 @@ module Pod
         #         should be retrieved.
         #
         def source
-          convert_keys_to_symbol(attributes_hash['source'])
+          Specification.convert_keys_to_symbol(attributes_hash['source'])
         end
 
         # @return [String] A short description of the Pod.
@@ -184,27 +184,6 @@ module Pod
         #
         def module_map
           attributes_hash['module_map']
-        end
-
-        #---------------------------------------------------------------------#
-
-        private
-
-        # Converts the keys of the given hash to a string.
-        #
-        # @param  [Object] value
-        #         the value that needs to be stripped from the Symbols.
-        #
-        # @return [Hash] the hash with the strings instead of the keys.
-        #
-        def convert_keys_to_symbol(value)
-          return unless value
-          result = {}
-          value.each do |key, subvalue|
-            subvalue = convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
-            result[key.to_sym] = subvalue
-          end
-          result
         end
 
         #---------------------------------------------------------------------#

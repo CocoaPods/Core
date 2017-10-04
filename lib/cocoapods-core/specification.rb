@@ -352,6 +352,14 @@ module Pod
       attributes_hash['prefix_header_file']
     end
 
+    # @return [Array<Hash{Symbol=>String}>] The script_phases value.
+    #
+    def script_phases
+      attributes_hash['script_phases'].map do |script_phase|
+        Specification.convert_keys_to_symbol(script_phase)
+      end
+    end
+
     #-------------------------------------------------------------------------#
 
     public
@@ -376,11 +384,6 @@ module Pod
     #
     # @overload   supported_on_platform?(symbolic_name, deployment_target)
     #
-    #   @param    [Symbol] symbolic_name
-    #             the name of the platform which is checked for support.
-    #
-    #   @param    [String] deployment_target
-    #             the deployment target which is checked for support.
     #
     def supported_on_platform?(*platform)
       platform = Platform.new(*platform)
@@ -462,7 +465,7 @@ module Pod
     # @param  [Object] value
     #         the value to store.
     #
-    # @param  [Symbol] platform.
+    # @param  [Symbol] platform_name
     #         If provided the attribute is stored only for the given platform.
     #
     # @note   If the provides value is Hash the keys are converted to a string.
@@ -471,7 +474,7 @@ module Pod
     #
     def store_attribute(name, value, platform_name = nil)
       name = name.to_s
-      value = convert_keys_to_string(value) if value.is_a?(Hash)
+      value = Specification.convert_keys_to_string(value) if value.is_a?(Hash)
       value = value.strip_heredoc.strip if value.respond_to?(:strip_heredoc)
       if platform_name
         platform_name = platform_name.to_s
@@ -495,7 +498,22 @@ module Pod
       end
     end
 
-    private
+    # Converts the keys of the given hash to a string.
+    #
+    # @param  [Object] value
+    #         the value that needs to be stripped from the Symbols.
+    #
+    # @return [Hash] the hash with the strings instead of the keys.
+    #
+    def self.convert_keys_to_string(value)
+      return unless value
+      result = {}
+      value.each do |key, subvalue|
+        subvalue = Specification.convert_keys_to_string(subvalue) if subvalue.is_a?(Hash)
+        result[key.to_s] = subvalue
+      end
+      result
+    end
 
     # Converts the keys of the given hash to a string.
     #
@@ -504,12 +522,12 @@ module Pod
     #
     # @return [Hash] the hash with the strings instead of the keys.
     #
-    def convert_keys_to_string(value)
+    def self.convert_keys_to_symbol(value)
       return unless value
       result = {}
       value.each do |key, subvalue|
-        subvalue = convert_keys_to_string(subvalue) if subvalue.is_a?(Hash)
-        result[key.to_s] = subvalue
+        subvalue = Specification.convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
+        result[key.to_sym] = subvalue
       end
       result
     end

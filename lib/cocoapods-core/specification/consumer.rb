@@ -179,6 +179,11 @@ module Pod
       #
       spec_attr_accessor :resource_bundles
 
+      # @return [Array<Hash{Symbol=>String}>] An array of hashes where each hash
+      #         represents a script phase.
+      #
+      spec_attr_accessor :script_phases
+
       # @return [Array<String>] A hash where the key represents the
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
@@ -324,7 +329,11 @@ module Pod
       #
       def prepare_value(attr, value)
         if attr.container == Array
-          value = [*value].compact
+          value = if value.is_a?(Hash)
+                    [value]
+                  else
+                    [*value].compact
+                  end
         end
 
         hook_name = prepare_hook_name(attr)
@@ -359,6 +368,21 @@ module Pod
         if value
           value = value.join("\n") if value.is_a?(Array)
           value.strip_heredoc.chomp
+        end
+      end
+
+      # Converts the array of hashes (script phases) where keys are strings into symbols.
+      #
+      # @param  [Array<Hash{String=>String}>] value.
+      #         The value of the attribute as specified by the user.
+      #
+      # @return [Array<Hash{Symbol=>String}>] the script phases array with symbols for each hash instead of strings.
+      #
+      def _prepare_script_phases(value)
+        if value
+          value.map do |script_phase|
+            Specification.convert_keys_to_symbol(script_phase) if script_phase.is_a?(Hash)
+          end.compact
         end
       end
 

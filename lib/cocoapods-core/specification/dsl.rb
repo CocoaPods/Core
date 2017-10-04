@@ -1134,7 +1134,7 @@ module Pod
 
       #------------------#
 
-      # @!method resource_bundles=(*frameworks)
+      # @!method resource_bundles=(*resource_bundles)
       #
       #   This attribute allows to define the name and the file of the resource
       #   bundles which should be built for the Pod. They are specified as a
@@ -1271,6 +1271,46 @@ module Pod
       #
       attribute :module_map,
                 :root_only     => true
+
+      #------------------#
+
+      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
+
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log].freeze
+
+      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
+
+      # @!method script_phases=(*script_phases)
+      #
+      #   This attribute allows to define a script phase to execute as part of compilation of the Pod.
+      #   Unlike a prepare command, script phases execute as part of `xcodebuild` they can also utilize all environment
+      #   variables that are set during compilation.
+      #
+      #   A Pod can provide multiple script phases to execute and they will be added in the order they were
+      #   declared.
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"' }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } }
+      #
+      #   @example
+      #
+      #     spec.script_phases = [
+      #         { :name => 'Hello World', :script => 'echo "Hello World"' },
+      #         { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } },
+      #       ]
+      #
+      #   @param  [Array<Hash{Symbol=>String}>] script_phases
+      #           An array of hashes where each hash represents a single script phase.
+      #
+      attribute :script_phases,
+                :types => [Hash],
+                :container => Array,
+                :singularize => true
 
       #-----------------------------------------------------------------------#
 
