@@ -355,8 +355,15 @@ module Pod
     # @return [Array<Hash{Symbol=>String}>] The script_phases value.
     #
     def script_phases
-      attributes_hash['script_phases'].map do |script_phase|
-        Specification.convert_keys_to_symbol(script_phase)
+      script_phases = attributes_hash['script_phases'] || []
+      script_phases.map do |script_phase|
+        phase = Specification.convert_keys_to_symbol(script_phase)
+        phase[:execution_position] = if phase.key?(:execution_position)
+                                       phase[:execution_position].to_sym
+                                     else
+                                       :any
+                                     end
+        phase
       end
     end
 

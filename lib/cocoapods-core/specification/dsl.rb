@@ -1276,7 +1276,9 @@ module Pod
 
       SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
 
-      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log].freeze
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position].freeze
+
+      EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :any].freeze
 
       ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
 
@@ -1292,6 +1294,10 @@ module Pod
       #   @example
       #
       #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"' }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile }
       #
       #   @example
       #

@@ -122,6 +122,23 @@ module Pod
         spec_1.to_s.should == 'No-name'
       end
 
+      it 'returns any empty array without any script phases' do
+        spec = @spec.dup
+        spec.script_phases.should == []
+      end
+
+      it 'returns the script phases with keys converted to symbols' do
+        spec = @spec.dup
+        spec.script_phase = [{ 'name' => 'Hello World', 'script' => 'echo "Hello World"', 'execution_position' => :before_compile }]
+        spec.script_phases.should == [{ :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile }]
+      end
+
+      it 'returns the script phases with default execution position' do
+        spec = @spec.dup
+        spec.script_phase = [{ 'name' => 'Hello World', 'script' => 'echo "Hello World"' }]
+        spec.script_phases.should == [{ :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any }]
+      end
+
       describe '#validate_cocoapods_version' do
         it 'passes when none is specified' do
           spec_1 = Specification.new
