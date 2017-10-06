@@ -263,7 +263,7 @@ module Pod
       found = Pathname.glob(pod_path(query)).map { |path| path.basename.to_s }
       if [query] == found
         set = set(query)
-        set if set.specification.name == query
+        set if set.specification_name == query
       end
     end
 

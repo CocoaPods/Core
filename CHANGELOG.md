@@ -14,8 +14,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Improve performance of `Pod::Source#search`  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#416](https://github.com/CocoaPods/Core/pull/416)
 
 ## 1.4.0.beta.1 (2017-09-24)
 
