@@ -1289,7 +1289,10 @@ module Pod
       #   variables that are set during compilation.
       #
       #   A Pod can provide multiple script phases to execute and they will be added in the order they were
-      #   declared.
+      #   declared and after taking into consideration their execution position setting.
+      #
+      #   **Note** In order to provide visibility and awareness of the contents of all script phases,
+      #   a warning will be presented to the user upon installing your pod if it includes any script phases.
       #
       #   @example
       #
