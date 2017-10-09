@@ -30,7 +30,7 @@ module Pod
       #         the sources that contain a Pod.
       #
       def initialize(name, sources = [])
-        @name    = name
+        @name = name
         @sources = Array(sources)
       end
 
@@ -48,6 +48,12 @@ module Pod
         end
 
         Specification.from_file(highest_version_spec_path)
+      end
+
+      # @return [Specification] the top level specification for this set for any version.
+      #
+      def specification_name
+        Specification.from_file(specification_paths_for_version(any_version).first).name
       end
 
       # @return [Array<String>] the paths to specifications for the given
@@ -78,18 +84,16 @@ module Pod
       #         is used to disambiguate.
       #
       def highest_version_spec_path
-        specification_paths_for_version(highest_version).first
+        @highest_version_spec_path ||= specification_paths_for_version(highest_version).first
       end
 
       # @return [Hash{Source => Version}] all the available versions for the
       #         Pod grouped by source.
       #
       def versions_by_source
-        result = {}
-        sources.each do |source|
+        @versions_by_source ||= sources.each_with_object({}) do |source, result|
           result[source] = source.versions(name)
         end
-        result
       end
 
       def ==(other)
@@ -125,6 +129,14 @@ module Pod
           'highest_version' => highest_version.to_s,
           'highest_version_spec' => highest_version_spec_path.to_s,
         }
+      end
+
+      private
+
+      # @return [Version] A version known for this specification.
+      #
+      def any_version
+        versions_by_source.values.flatten.uniq.first
       end
 
       #-----------------------------------------------------------------------#
