@@ -680,7 +680,7 @@ module Pod
     def validate_cocoapods_version
       unless cocoapods_version.satisfied_by?(Version.create(CORE_VERSION))
         raise Informative, "`#{name}` requires CocoaPods version `#{cocoapods_version}`, " \
-                           "which is not satisified by your current version, `#{CORE_VERSION}`."
+                           "which is not satisfied by your current version, `#{CORE_VERSION}`."
       end
     end
   end
