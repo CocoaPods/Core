@@ -126,6 +126,21 @@ module Pod
       root_attribute :version,
                      :required => true
 
+      #------------------#
+
+      # @!method swift_version=(version)
+      #
+      #   The version of Swift that the specification supports.
+      #
+      #   @example
+      #
+      #     spec.swift_version = '3.2'
+      #
+      #   @param  [String] swift_version
+      #
+      root_attribute :swift_version,
+                     :multi_platform => false
+
       #-----------------------------------------------------------------------#
 
       # @!method cocoapods_version=(cocoapods_version)

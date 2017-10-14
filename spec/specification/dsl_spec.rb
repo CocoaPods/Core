@@ -19,6 +19,11 @@ module Pod
         @spec.attributes_hash['version'].should == '1.0'
       end
 
+      it 'allows specifying the swift version' do
+        @spec.swift_version = '3.0'
+        @spec.attributes_hash['swift_version'].should == '3.0'
+      end
+
       it 'allows specifying the cocoapods version' do
         @spec.cocoapods_version = '>= 0.36'
         @spec.attributes_hash['cocoapods_version'].should == '>= 0.36'
