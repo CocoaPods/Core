@@ -14,6 +14,10 @@
 
 ##### Bug Fixes
 
+* Fix typo when validating cocoapods version  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#418](https://github.com/CocoaPods/Core/pull/418)
+
 * Improve performance of `Pod::Source#search`  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#416](https://github.com/CocoaPods/Core/pull/416)
