@@ -4,7 +4,10 @@
 
 ##### Enhancements
 
-* None.  
+* Add `swift_version` DSL  
+  [Danielle Tomlinson](https://github.com/dantoml)
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#417](https://github.com/CocoaPods/Core/pull/417)
 
 ##### Bug Fixes
 
