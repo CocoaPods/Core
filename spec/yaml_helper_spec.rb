@@ -89,7 +89,7 @@ module Pod
         result.should == "Key: Value\n"
       end
 
-      it 'converts an hash which contains and array as one of the values' do
+      it 'converts an hash which contains an array as one of the values' do
         value = { 'Key' => %w(Value_1 Value_2) }
         result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
@@ -99,7 +99,25 @@ module Pod
         EOT
       end
 
-      it 'converts an hash which contains and array as one of the values' do
+      it 'converts an hash which contains an empty array as one of the values' do
+        value = { 'Key' => [] }
+        result = YAMLHelper.convert(value)
+        result.should == <<-YAML.strip_heredoc
+          Key:
+            []
+        YAML
+      end
+
+      it 'converts an array with contains an empty hash' do
+        value = { 'Key' => [{}] }
+        result = YAMLHelper.convert(value)
+        result.should == <<-YAML.strip_heredoc
+          Key:
+            - {}
+        YAML
+      end
+
+      it 'converts an hash which contains an array as one of the values' do
         value = { 'Key' => { 'Subkey' => %w(Value_1 Value_2) } }
         result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
