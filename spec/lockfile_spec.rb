@@ -16,6 +16,11 @@ module Pod
           - BananaLib (~> 1.0)
           - JSONKit (from `path/JSONKit.podspec`)
 
+        SPEC REPOS:
+          https://github.com/CocoaPods/Specs.git:
+            - BananaLib
+            - monkey
+
         EXTERNAL SOURCES:
           JSONKit:
             :podspec: path/JSONKit.podspec
@@ -45,6 +50,11 @@ module Pod
         DEPENDENCIES:
           - BananaLib (~> 1.0)
           - JSONKit (from `path/JSONKit.podspec`)
+
+        SPEC REPOS:
+          https://github.com/CocoaPods/Specs.git:
+            - BananaLib
+            - monkey
 
         EXTERNAL SOURCES:
           JSONKit:
@@ -97,6 +107,12 @@ module Pod
         },
       }
     end
+
+    def self.specs_by_source
+      {
+        Source.new(fixture('spec-repos/master')) => specs.reject { |s| s.name == 'JSONKit' },
+      }
+    end
   end
 
   #---------------------------------------------------------------------------#
@@ -141,7 +157,7 @@ module Pod
       #--------------------------------------#
 
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
       end
 
       it 'returns whether it is equal to another' do
@@ -150,7 +166,7 @@ module Pod
           pod 'BananaLib', '~>1.0'
         end
         @lockfile.should == @lockfile
-        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs, Sample.checkout_options)
+        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
       end
 
       it 'returns the list of the names of the  installed pods' do
@@ -179,6 +195,12 @@ module Pod
           Dependency.new('BananaLib', '~>1.0'),
           json_dep,
         ]
+      end
+
+      it 'returns the spec repo sources' do
+        @lockfile.pods_by_spec_repo.should == Sample.specs_by_source.map do |source, specs|
+          [source.url, specs.map(&:name)]
+        end.to_h
       end
 
       it 'includes the external source information in the generated dependencies' do
@@ -223,7 +245,8 @@ module Pod
             s.version = '1.4'
           end]
         @checkout_options = {}
-        @lockfile = Lockfile.generate(@podfile, @specs, @checkout_options)
+        @specs_by_source = {}
+        @lockfile = Lockfile.generate(@podfile, @specs, @checkout_options, @specs_by_source)
       end
 
       it 'detects an added Pod' do
@@ -294,7 +317,7 @@ module Pod
           :unchanged => ['BlocksKit'],
           :added => [],
         }
-        @lockfile = Lockfile.generate(podfile, @specs, @checkout_options)
+        @lockfile = Lockfile.generate(podfile, @specs, @checkout_options, @specs_by_source)
         podfile = Podfile.new do
           platform :ios
           pod 'BlocksKit'
@@ -313,7 +336,7 @@ module Pod
 
     describe 'Serialization' do
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
       end
 
       it 'can be store itself at the given path' do
@@ -359,6 +382,7 @@ module Pod
             { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
             'JSONKit (1.4)', 'monkey (1.0.8)'],
           'DEPENDENCIES' => ['BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'],
+          'SPEC REPOS' => { 'https://github.com/CocoaPods/Specs.git' => %w(BananaLib monkey) },
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'CHECKOUT OPTIONS' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
@@ -370,7 +394,7 @@ module Pod
       it 'handles when the podfile has no checksum' do
         podfile = Sample.podfile
         podfile.stubs(:checksum).returns(nil)
-        @lockfile = Lockfile.generate(podfile, Sample.specs, Sample.checkout_options)
+        @lockfile = Lockfile.generate(podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
         @lockfile.to_hash.should.not.key?('PODFILE CHECKSUM')
       end
 
@@ -401,7 +425,8 @@ module Pod
         checkout_options = {
           'BananaLib' => { :git => 'www.example.com', :tag => '1.0' },
         }
-        lockfile = Lockfile.generate(podfile, specs, checkout_options)
+        specs_by_source = { Source.new(fixture('spec-repos/master')) => specs.select { |s| s.name == 'monkey' } }
+        lockfile = Lockfile.generate(podfile, specs, checkout_options, specs_by_source)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
         lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
       end
@@ -411,7 +436,7 @@ module Pod
 
     describe 'Generation from a Podfile' do
       before do
-        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options)
+        @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
       end
 
       it 'stores the information of the installed pods and of their dependencies' do
