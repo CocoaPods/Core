@@ -10,7 +10,9 @@
   
 ##### Bug Fixes
 
-* None.  
+* The `Dependency#merge` method takes into account any `podspec_repo`s the dependencies
+  may have set.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.4.0 (2018-01-18)

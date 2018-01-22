@@ -185,6 +185,14 @@ module Pod
         dep1.should == dep3
       end
 
+      it 'is equal to another dependency if `podspec_repo` is the same' do
+        dep1 = Dependency.new('bananas', :source => 'GIT-URL')
+        dep2 = Dependency.new('bananas')
+        dep1.should.not == dep2
+        dep3 = Dependency.new('bananas', :source => 'GIT-URL')
+        dep1.should == dep3
+      end
+
       it 'supports Array#uniq' do
         d_1 = Dependency.new('bananas')
         d_2 = Dependency.new('bananas')
@@ -211,7 +219,12 @@ module Pod
       it 'it preserves the external source while merging with another dependency' do
         dep1 = Dependency.new('bananas', '1.9')
         dep2 = Dependency.new('bananas', :podspec => 'bananas')
+
         result = dep1.merge(dep2)
+        result.should.be.external
+        result.requirement.as_list.should == ['= 1.9']
+
+        result = dep2.merge(dep1)
         result.should.be.external
         result.requirement.as_list.should == ['= 1.9']
       end
@@ -222,6 +235,50 @@ module Pod
           dep2 = Dependency.new('orange', '1.9')
           dep1.merge(dep2)
         end
+      end
+
+      it 'preserves the podspec repo while merging' do
+        dep1 = Dependency.new('bananas', '~> 1.9')
+        dep2 = Dependency.new('bananas', :source => 'https://source.git')
+
+        expected = Dependency.new('bananas', '~> 1.9', :source => 'https://source.git')
+        dep1.merge(dep2).should == expected
+        dep2.merge(dep1).should == expected
+      end
+
+      it 'raises if there is an attempt to merge with two different podspec repos' do
+        should.raise ArgumentError do
+          dep1 = Dependency.new('bananas', :source => 'https://other.git')
+          dep2 = Dependency.new('bananas', :source => 'https://source.git')
+
+          dep1.merge(dep2)
+        end
+      end
+
+      it 'allows merging if both dependencies have the same podspec repo' do
+        dep1 = Dependency.new('bananas', '~> 1.9', :source => 'https://source.git')
+        dep2 = Dependency.new('bananas', :source => 'https://source.git')
+
+        expected = Dependency.new('bananas', '~> 1.9', :source => 'https://source.git')
+        dep1.merge(dep2).should == expected
+        dep2.merge(dep1).should == expected
+      end
+
+      it 'raises when attempting to merge with a podspec repo and external source' do
+        should.raise Informative do
+          dep1 = Dependency.new('bananas', :git => 'https://other.git')
+          dep2 = Dependency.new('bananas', :source => 'https://source.git')
+
+          dep1.merge(dep2)
+        end
+      end
+
+      it 'prefers the right hand side when external source keys overlap' do
+        dep1 = Dependency.new('bananas', :git => 'https://other.git')
+        dep2 = Dependency.new('bananas', :git => 'https://other/1.git')
+
+        dep1.merge(dep2).should == Dependency.new('bananas', :git => 'https://other/1.git')
+        dep2.merge(dep1).should == Dependency.new('bananas', :git => 'https://other.git')
       end
 
       #--------------------------------------#
