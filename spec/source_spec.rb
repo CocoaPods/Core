@@ -248,8 +248,8 @@ module Pod
       end
 
       it 'uses the only fast forward git option' do
-        @source.expects(:`).with("git -C \"#{@path}\" checkout master")
-        @source.expects(:`).with("git -C \"#{@path}\" pull --ff-only 2>&1")
+        @source.expects(:`).with("env -u GIT_CONFIG git -C \"#{@path}\" checkout master")
+        @source.expects(:`).with("env -u GIT_CONFIG git -C \"#{@path}\" pull --ff-only 2>&1")
         @source.send :update_git_repo
       end
 
@@ -257,8 +257,8 @@ module Pod
         path = @source.repo.join('.git', 'cocoapods_branch')
         path.dirname.mkpath
         path.open('w') { |f| f << 'random_branch' }
-        @source.expects(:`).with("git -C \"#{@path}\" checkout random_branch")
-        @source.expects(:`).with("git -C \"#{@path}\" pull --ff-only 2>&1")
+        @source.expects(:`).with("env -u GIT_CONFIG git -C \"#{@path}\" checkout random_branch")
+        @source.expects(:`).with("env -u GIT_CONFIG git -C \"#{@path}\" pull --ff-only 2>&1")
         begin
           @source.send(:update_git_repo)
         ensure

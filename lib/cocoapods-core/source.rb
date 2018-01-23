@@ -435,7 +435,7 @@ module Pod
     end
 
     def repo_git(args, include_error: false)
-      command = "git -C \"#{repo}\" " << args.join(' ')
+      command = "env -u GIT_CONFIG git -C \"#{repo}\" " << args.join(' ')
       command << ' 2>&1' if include_error
       (`#{command}` || '').strip
     end
