@@ -142,6 +142,19 @@ module Pod
       #
       # ------
       #
+      # ### Source
+      #
+      # By default the sources specified at the global level are searched in the order
+      # they are specified for a dependency match. This behaviour can be altered
+      # for a specific dependency by specifying the source with the dependency:
+      #
+      #     pod 'PonyDebugger', :source => 'https://github.com/CocoaPods/Specs.git'
+      #
+      # In this case only the specified source will be searched for the dependency
+      # and any global sources ignored.
+      #
+      # ------
+      #
       # ### Subspecs
       #
       # When installing a Pod via its name, it will install all of the
