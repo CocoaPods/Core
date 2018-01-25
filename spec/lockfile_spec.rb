@@ -111,6 +111,7 @@ module Pod
     def self.specs_by_source
       {
         Source.new(fixture('spec-repos/master')) => specs.reject { |s| s.name == 'JSONKit' },
+        Source.new(fixture('spec-repos/test_repo')) => [],
       }
     end
   end
@@ -198,9 +199,10 @@ module Pod
       end
 
       it 'returns the spec repo sources' do
-        @lockfile.pods_by_spec_repo.should == Sample.specs_by_source.map do |source, specs|
+        @lockfile.pods_by_spec_repo.should == Hash[Sample.specs_by_source.map do |source, specs|
+          next unless source.name == 'master'
           [source.url, specs.map(&:name)]
-        end.to_h
+        end.compact]
       end
 
       it 'includes the external source information in the generated dependencies' do
@@ -429,6 +431,16 @@ module Pod
         lockfile = Lockfile.generate(podfile, specs, checkout_options, specs_by_source)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
         lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
+      end
+
+      describe 'when the Podfile is empty' do
+        before do
+          @lockfile = Lockfile.generate(Podfile.new, [], [], {})
+        end
+
+        it 'generates a lockfile with only the version' do
+          @lockfile.to_yaml.should == "COCOAPODS: #{CORE_VERSION}\n"
+        end
       end
     end
 
