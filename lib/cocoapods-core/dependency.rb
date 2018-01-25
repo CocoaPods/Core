@@ -95,8 +95,7 @@ module Pod
             raise Informative, 'A dependency with a specified podspec repo may ' \
               "not include other source parameters (#{name})."
           end
-        else
-          @external_source = additional_params
+        elsif @external_source = additional_params
           unless requirements.empty?
             raise Informative, 'A dependency with an external source may not ' \
               "specify version requirements (#{name})."
@@ -216,7 +215,8 @@ module Pod
       self.class == other.class &&
         name == other.name &&
         requirement == other.requirement &&
-        external_source == other.external_source
+        external_source == other.external_source &&
+        podspec_repo == other.podspec_repo
     end
     alias_method :eql?, :==
 
@@ -249,24 +249,41 @@ module Pod
       unless name == other.name
         raise ArgumentError, "#{self} and #{other} have different names"
       end
+
       default   = Requirement.default
       self_req  = requirement
       other_req = other.requirement
 
-      dep = if other_req == default
-              self.class.new(name, self_req)
+      req = if other_req == default
+              self_req
             elsif self_req == default
-              self.class.new(name, other_req)
+              other_req
             else
-              self.class.new(name, self_req.as_list.concat(other_req.as_list))
+              self_req.as_list.concat(other_req.as_list)
             end
 
+      opts = {}
+
       if external_source || other.external_source
-        self_external_source  = external_source || {}
-        other_external_source = other.external_source || {}
-        dep.external_source = self_external_source.merge(other_external_source)
+        opts.
+          merge!(external_source || {}).
+          merge!(other.external_source || {})
+
+        req_to_set = req
+        req = []
       end
-      dep
+
+      if podspec_repo && other.podspec_repo && podspec_repo != other.podspec_repo
+        raise ArgumentError, "#{self} and #{other} have different podspec repos"
+      end
+
+      if repo = podspec_repo || other.podspec_repo
+        opts[:source] = repo
+      end
+
+      self.class.new(name, *req, opts).tap do |dep|
+        dep.instance_variable_set(:@requirement, Requirement.create(req_to_set)) if req_to_set
+      end
     end
 
     # Whether the dependency has any pre-release requirements
