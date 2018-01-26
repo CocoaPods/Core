@@ -109,6 +109,8 @@ module Pod
       # @return [String] the YAML representation of the given object.
       #
       def process_array(array)
+        return '[]' if array.empty?
+
         result = sorted_array(array).map do |array_value|
           processed = process_according_to_class(array_value)
           case array_value
@@ -143,6 +145,8 @@ module Pod
       # @return [String] the YAML representation of the given object.
       #
       def process_hash(hash, hash_keys_hint = nil, line_separator = "\n")
+        return '{}' if hash.empty?
+
         keys = sorted_array_with_hint(hash.keys, hash_keys_hint)
         key_lines = keys.map do |key|
           key_value = hash[key]

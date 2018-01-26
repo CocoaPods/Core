@@ -121,6 +121,17 @@ module Pod
       @dependencies
     end
 
+    # Returns pod names grouped by the spec repo they were sourced from.
+    #
+    # @return [Hash<String, Array<String>>] A hash, where the keys are spec
+    #         repo source URLs (or names), and the values are arrays of pod names.
+    #
+    # @note   It does not include pods that come from "external sources".
+    #
+    def pods_by_spec_repo
+      @pods_by_spec_repo ||= internal_data['SPEC REPOS']
+    end
+
     # Generates a dependency that requires the exact version of the Pod with the
     # given name.
     #
@@ -335,6 +346,7 @@ module Pod
     HASH_KEY_ORDER = [
       'PODS',
       'DEPENDENCIES',
+      'SPEC REPOS',
       'EXTERNAL SOURCES',
       'CHECKOUT OPTIONS',
       'SPEC CHECKSUMS',
@@ -375,10 +387,11 @@ module Pod
       #
       # @return [Lockfile] a new lockfile.
       #
-      def generate(podfile, specs, checkout_options)
+      def generate(podfile, specs, checkout_options, spec_repos)
         hash = {
           'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
+          'SPEC REPOS'       => generate_spec_repos(spec_repos),
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'CHECKOUT OPTIONS' => checkout_options,
           'SPEC CHECKSUMS'   => generate_checksums(specs),
@@ -438,6 +451,19 @@ module Pod
       #
       def generate_dependencies_data(podfile)
         podfile.dependencies.map(&:to_s).sort
+      end
+
+      # Generates the hash of spec repo sources used in the Podfile.
+      #
+      # @example  Output
+      #           { "https://github.com/CocoaPods/CocoaPods.git" => ["Alamofire", "Moya"] }
+      #
+      def generate_spec_repos(spec_repos)
+        Hash[spec_repos.map do |source, specs|
+          next unless source
+          next if specs.empty?
+          [source.url || source.name, specs.map(&:name)]
+        end.compact]
       end
 
       # Generates the information of the external sources.
