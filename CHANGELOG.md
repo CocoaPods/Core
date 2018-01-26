@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* `HTTP::perform_head_request` now includes a 1-byte `Range` header in the fallback GET
+  request.
+  [Kyle Fleming](https://github.com/kylefleming)
+  [#425](https://github.com/CocoaPods/Core/pull/425)
+
 * Update Podfile Reference Guide to include `:source` parameter for the `pod` statement  
   [Mark Woollard](https://github.com/mwoollard)
   [#7359](https://github.com/CocoaPods/CocoaPods/issues/7359)

@@ -44,7 +44,7 @@ module Pod
       begin
         url = get_actual_url(url)
         resp = perform_head_request(url)
-      rescue SocketError, URI::InvalidURIError, REST::Error, REST::DisconnectedError
+      rescue SocketError, URI::InvalidURIError, REST::Error, REST::Error::Connection
         resp = nil
       end
 
@@ -65,7 +65,12 @@ module Pod
       resp = ::REST.head(url, 'User-Agent' => USER_AGENT)
 
       if resp.status_code >= 400
-        resp = ::REST.get(url, 'User-Agent' => USER_AGENT)
+        resp = ::REST.get(url, 'User-Agent' => USER_AGENT,
+                               'Range' => 'bytes=0-0')
+
+        if resp.status_code >= 400
+          resp = ::REST.get(url, 'User-Agent' => USER_AGENT)
+        end
       end
 
       resp
