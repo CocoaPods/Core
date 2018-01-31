@@ -607,7 +607,7 @@ module Pod
     # @return [Specification] the specification
     #
     def self.from_string(spec_contents, path, subspec_name = nil)
-      path = Pathname.new(path)
+      path = Pathname.new(path).expand_path
       spec = nil
       Dir.chdir(path.parent.directory? ? path.parent : Dir.pwd) do
         case path.extname

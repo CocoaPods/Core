@@ -19,6 +19,9 @@
   may have set.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* When evaluating `.podspec` files, ensure that `__FILE__` refers to the correct file.  
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 1.4.0 (2018-01-18)
 
