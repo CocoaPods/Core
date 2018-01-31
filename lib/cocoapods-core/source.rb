@@ -42,11 +42,13 @@ module Pod
     #       option. See https://github.com/CocoaPods/CocoaPods/issues/2724.
     #
     def url
-      remote = repo_git(%w(config --get remote.origin.url))
-      if !remote.empty?
-        remote
-      elsif (repo + '.git').exist?
-        "file://#{repo}/.git"
+      @url ||= begin
+        remote = repo_git(%w(config --get remote.origin.url))
+        if !remote.empty?
+          remote
+        elsif (repo + '.git').exist?
+          "file://#{repo}/.git"
+        end
       end
     end
 

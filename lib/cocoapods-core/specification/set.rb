@@ -68,7 +68,7 @@ module Pod
       #         from highest to lowest.
       #
       def versions
-        versions_by_source.values.flatten.uniq.sort.reverse
+        @versions ||= versions_by_source.values.flatten.uniq.sort.reverse
       end
 
       # @return [Version] The highest version known of the specification.
