@@ -387,7 +387,7 @@ module Pod
       #
       # @return [Lockfile] a new lockfile.
       #
-      def generate(podfile, specs, checkout_options, spec_repos)
+      def generate(podfile, specs, checkout_options, spec_repos = {})
         hash = {
           'PODS'             => generate_pods_data(specs),
           'DEPENDENCIES'     => generate_dependencies_data(podfile),
