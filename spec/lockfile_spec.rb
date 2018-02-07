@@ -33,8 +33,6 @@ module Pod
           BananaLib: d46ca864666e216300a0653de197668b12e732a1
           JSONKit: 92ae5f71b77c8dec0cd8d0744adab79d38560949
 
-        PODFILE CHECKSUM: podfile_checksum
-
         COCOAPODS: #{CORE_VERSION}
       LOCKFILE
     end
@@ -67,8 +65,6 @@ module Pod
         SPEC CHECKSUMS:
           BananaLib: d46ca864666e216300a0653de197668b12e732a1
           JSONKit: '92ae5f71b77c8dec0cd8d0744adab79d38560949'
-
-        PODFILE CHECKSUM: podfile_checksum
 
         COCOAPODS: #{CORE_VERSION}
       LOCKFILE
@@ -388,7 +384,6 @@ module Pod
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'CHECKOUT OPTIONS' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
-          'PODFILE CHECKSUM' => 'podfile_checksum',
           'COCOAPODS' => CORE_VERSION,
         }
       end
