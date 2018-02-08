@@ -327,7 +327,6 @@ module Pod
     #     'EXTERNAL SOURCES' => { "JSONKit" => { :podspec => path/JSONKit.podspec } },
     #     'SPEC CHECKSUMS'   => { "BananaLib" => "439d9f683377ecf4a27de43e8cf3bce6be4df97b",
     #                             "JSONKit", "92ae5f71b77c8dec0cd8d0744adab79d38560949" },
-    #     'PODFILE CHECKSUM' => "439d9f683377ecf4a27de43e8cf3bce6be4df97b",
     #     'COCOAPODS'        => "0.17.0"
     #   }
     #
@@ -350,7 +349,6 @@ module Pod
       'EXTERNAL SOURCES',
       'CHECKOUT OPTIONS',
       'SPEC CHECKSUMS',
-      'PODFILE CHECKSUM',
       'COCOAPODS',
     ].map(&:freeze).freeze
 
@@ -395,7 +393,6 @@ module Pod
           'EXTERNAL SOURCES' => generate_external_sources_data(podfile),
           'CHECKOUT OPTIONS' => checkout_options,
           'SPEC CHECKSUMS'   => generate_checksums(specs),
-          'PODFILE CHECKSUM' => podfile.checksum,
           'COCOAPODS'        => CORE_VERSION,
         }
         Lockfile.new(hash)
