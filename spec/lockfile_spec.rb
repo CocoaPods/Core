@@ -205,6 +205,18 @@ module Pod
         end.compact]
       end
 
+      it 'only includes root names in spec repo sources' do
+        @lockfile = Lockfile.generate(Sample.podfile, [], {}, Source.new(fixture('spec-repos/master')) => Pod::Spec.new do |s|
+                                                                                                            s.name = 'foo'
+                                                                                                            s.version = '1.0.0'
+                                                                                                            s.subspec 'Core'
+                                                                                                            s.subspec 'NotCore'
+                                                                                                          end.recursive_subspecs)
+        @lockfile.pods_by_spec_repo.should == {
+          'https://github.com/CocoaPods/Specs.git' => %w(foo),
+        }
+      end
+
       it 'includes the external source information in the generated dependencies' do
         dep = @lockfile.dependencies.find { |d| d.name == 'JSONKit' }
         dep.external_source.should == { :podspec => 'path/JSONKit.podspec' }

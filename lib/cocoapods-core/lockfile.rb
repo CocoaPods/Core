@@ -462,7 +462,9 @@ module Pod
         Hash[spec_repos.map do |source, specs|
           next unless source
           next if specs.empty?
-          [source.url || source.name, specs.map(&:name)]
+          key = source.url || source.name
+          value = specs.map { |s| s.root.name }.uniq
+          [key, value]
         end.compact]
       end
 
