@@ -620,6 +620,26 @@ module Pod
         current_target_definition.inhibit_all_warnings = true
       end
 
+      # Use modular headers for all CocoaPods static libraries.
+      #
+      # ------
+      #
+      # This attribute is inherited by child target definitions.
+      #
+      # If you would like to use modular headers per Pod you can use the
+      # following syntax:
+      #
+      #     pod 'SSZipArchive', :modular_headers => true
+      #
+      # Additionally, when you use the `use_modular_headers!` attribute,
+      # you can exclude a particular Pod from modular headers using the following:
+      #
+      #     pod 'SSZipArchive', :modular_headers => false
+      #
+      def use_modular_headers!
+        current_target_definition.use_modular_headers_for_all_pods = true
+      end
+
       # Use frameworks instead of static libraries for Pods.
       #
       # ------

@@ -305,6 +305,61 @@ module Pod
       end
       #--------------------------------------#
 
+      it "doesn't use modular headers per pod by default" do
+        @parent.store_pod('ObjectiveSugar')
+        @parent.should.not.build_pod_as_module?('ObjectiveSugar')
+      end
+
+      it 'uses modular headers per pod if passed to store_pod' do
+        @parent.store_pod('Objective-Record', :head, :modular_headers => true)
+        @parent.should.build_pod_as_module?('Objective-Record')
+
+        @parent.store_pod('RestKit/Networking', :head, :modular_headers => true)
+        @parent.should.build_pod_as_module?('RestKit')
+      end
+
+      it 'does not use modular headers per pod if the option is false' do
+        @parent.inhibit_all_warnings = true
+        @parent.store_pod('ASIHTTPRequest', :modular_headers => false)
+        @parent.should.not.build_pod_as_module?('ASIHTTPRequest')
+      end
+
+      it 'must delete the hash if it was empty. otherwise breaks Dependency' do
+        reqs = [{ :modular_headers => true }]
+        @parent.send(:parse_modular_headers, 'Objective-Record', reqs)
+        reqs.should.be.empty
+      end
+
+      it 'returns if it should inhibit all warnings' do
+        @parent.use_modular_headers_for_all_pods = true
+        @parent.should.build_pod_as_module?('ObjectiveSugar')
+      end
+
+      it 'inherits the option to use modular headers for all pods' do
+        @parent.use_modular_headers_for_all_pods = true
+        @child.store_pod('ASIHTTPRequest')
+        @child.should.build_pod_as_module?('ASIHTTPRequest')
+      end
+
+      it 'inherits the option to use modular headers per pod' do
+        @parent.store_pod('Objective-Record', :modular_headers => true)
+        @child.should.build_pod_as_module?('Objective-Record')
+      end
+
+      it 'inherits the false option to use modular headers per pod' do
+        @parent.use_modular_headers_for_all_pods = true
+        @child.store_pod('ASIHTTPRequest', :modular_headers => false)
+        @child.should.not.build_pod_as_module?('ASIHTTPRequest')
+      end
+
+      it 'overriding inhibition per pod in child should not affect parent' do
+        @parent.store_pod('ASIHTTPRequest', :modular_headers => true)
+        @child.store_pod('ASIHTTPRequest', :modular_headers => false)
+        @child.should.not.build_pod_as_module?('ASIHTTPRequest')
+        @parent.should.build_pod_as_module?('ASIHTTPRequest')
+      end
+      #--------------------------------------#
+
       it 'returns if it should use frameworks' do
         @parent.use_frameworks!
         @parent.should.uses_frameworks?
