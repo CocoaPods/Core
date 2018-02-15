@@ -283,7 +283,7 @@ module Pod
           target.build_pod_as_module?('PonyDebugger').should.be.true
         end
 
-        it 'allows inhibiting in parent and not inhibiting in child on a single dependency' do
+        it 'allows modular headers in parent and not using them in child on a single dependency' do
           podfile = Podfile.new do
             target 'App' do
               pod 'PonyDebugger', :modular_headers => true
@@ -300,7 +300,7 @@ module Pod
           target.build_pod_as_module?('PonyDebugger').should.be.false
         end
 
-        it 'allows not inhibiting in parent and inhibiting in child on a single dependency' do
+        it 'allows not using modular headers in parent and using modular headers in child on a single dependency' do
           podfile = Podfile.new do
             target 'App' do
               pod 'PonyDebugger', :modular_headers => false
@@ -317,7 +317,7 @@ module Pod
           target.build_pod_as_module?('PonyDebugger').should.be.true
         end
 
-        it 'allows not inhibiting a single dependency in parent and inhibiting all dependencies in child' do
+        it 'allows not using modular headers a single dependency in parent and using modular headers all dependencies in child' do
           podfile = Podfile.new do
             target 'App' do
               pod 'PonyDebugger', :modular_headers => false
@@ -335,7 +335,7 @@ module Pod
           target.build_pod_as_module?('PonyDebugger').should.be.true
         end
 
-        it 'allows not inhibiting a single dependency in grandparent and inhibiting all dependencies in grandchild' do
+        it 'allows not using modular headers a single dependency in grandparent and using modular headers all dependencies in grandchild' do
           podfile = Podfile.new do
             target 'App' do
               pod 'PonyDebugger', :modular_headers => false

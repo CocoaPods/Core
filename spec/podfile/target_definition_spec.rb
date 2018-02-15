@@ -303,6 +303,7 @@ module Pod
         @child.should.not.inhibits_warnings_for_pod?('ASIHTTPRequest')
         @parent.should.inhibits_warnings_for_pod?('ASIHTTPRequest')
       end
+
       #--------------------------------------#
 
       it "doesn't use modular headers per pod by default" do
@@ -319,18 +320,18 @@ module Pod
       end
 
       it 'does not use modular headers per pod if the option is false' do
-        @parent.inhibit_all_warnings = true
+        @parent.use_modular_headers_for_all_pods = true
         @parent.store_pod('ASIHTTPRequest', :modular_headers => false)
         @parent.should.not.build_pod_as_module?('ASIHTTPRequest')
       end
 
-      it 'must delete the hash if it was empty. otherwise breaks Dependency' do
+      it 'deletes the hash if empty' do
         reqs = [{ :modular_headers => true }]
         @parent.send(:parse_modular_headers, 'Objective-Record', reqs)
         reqs.should.be.empty
       end
 
-      it 'returns if it should inhibit all warnings' do
+      it 'returns if it should use modular headers for all pods' do
         @parent.use_modular_headers_for_all_pods = true
         @parent.should.build_pod_as_module?('ObjectiveSugar')
       end
@@ -352,12 +353,13 @@ module Pod
         @child.should.not.build_pod_as_module?('ASIHTTPRequest')
       end
 
-      it 'overriding inhibition per pod in child should not affect parent' do
+      it 'overriding modular headers per pod in child should not affect parent' do
         @parent.store_pod('ASIHTTPRequest', :modular_headers => true)
         @child.store_pod('ASIHTTPRequest', :modular_headers => false)
         @child.should.not.build_pod_as_module?('ASIHTTPRequest')
         @parent.should.build_pod_as_module?('ASIHTTPRequest')
       end
+
       #--------------------------------------#
 
       it 'returns if it should use frameworks' do

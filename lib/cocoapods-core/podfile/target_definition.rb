@@ -464,9 +464,9 @@ module Pod
 
       # Returns the use_modular_headers hash pre-populated with default values.
       #
-      # @return [Hash<String, Array>] Hash with :all key for inhibiting all
-      #         warnings, :for_pods key for inhibiting warnings per Pod,
-      #         and :not_for_pods key for not inhibiting warnings per Pod.
+      # @return [Hash<String, Array>] Hash with :all key for building all
+      #         pods as modules, :for_pods key for building as module per Pod,
+      #         and :not_for_pods key for not biulding as module per Pod.
       #
       def use_modular_headers_hash
         raw_hash = raw_use_modular_headers_hash
@@ -475,15 +475,16 @@ module Pod
         else
           parent_hash = parent.send(:use_modular_headers_hash).dup
           if parent_hash['not_for_pods']
-            # Remove pods that are set to not inhibit inside parent if they are set to inhibit inside current target.
+            # Remove pods that are set to not use modular headers inside parent
+            # if they are set to use modular headers inside current target.
             parent_hash['not_for_pods'] -= Array(raw_hash['for_pods'])
           end
           if parent_hash['for_pods']
-            # Remove pods that are set to inhibit inside parent if they are set to not inhibit inside current target.
+            # Remove pods that are set to use modular headers inside parent if they are set to not use modular headers inside current target.
             parent_hash['for_pods'] -= Array(raw_hash['for_pods'])
           end
           if raw_hash['all']
-            # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
+            # Clean pods that are set to not use modular headers inside parent if use_modular_headers! was set.
             parent_hash['not_for_pods'] = nil
           end
           parent_hash.merge(raw_hash) do |_, l, r|
@@ -492,8 +493,8 @@ module Pod
         end
       end
 
-      # @return [Bool] whether the target definition should inhibit warnings
-      #         for a single pod. If inhibit_all_warnings is true, it will
+      # @return [Bool] whether the target definition should use modular headers
+      #         for a single pod. If use_modular_headers! is true, it will
       #         return true for any asked pod.
       #
       def build_pod_as_module?(pod_name)
@@ -508,8 +509,7 @@ module Pod
         end
       end
 
-      # Sets whether the target definition should inhibit the warnings during
-      # compilation for all pods.
+      # Sets whether the target definition should use modular headers for all pods.
       #
       # @param  [Bool] flag
       #         Whether the warnings should be suppressed.
@@ -520,13 +520,13 @@ module Pod
         raw_use_modular_headers_hash['all'] = flag
       end
 
-      # Inhibits warnings for a specific pod during compilation.
+      # Use modular headers for a specific pod during compilation.
       #
       # @param  [String] pod_name
-      #         Name of the pod for which the warnings will be inhibited or not.
+      #         Name of the pod for which modular headers will be used.
       #
-      # @param  [Bool] should_inhibit
-      #         Whether the warnings should be inhibited or not for given pod.
+      # @param  [Bool] flag
+      #         Whether modular headers should be used.
       #
       # @return [void]
       #
@@ -965,13 +965,13 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :inhibit_warnings from the requirements list, and adds
-      # the pod's name into internal hash for disabling warnings.
+      # Removes :modular_headers from the requirements list, and adds
+      # the pods name into internal hash for modular headers.
       #
       # @param [String] pod name
       #
       # @param [Array] requirements
-      #        If :inhibit_warnings is the only key in the hash, the hash
+      #        If :modular_headers is the only key in the hash, the hash
       #        should be destroyed because it confuses Gem::Dependency.
       #
       # @return [void]
