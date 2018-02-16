@@ -457,6 +457,96 @@ module Pod
 
       #--------------------------------------#
 
+      def raw_use_modular_headers_hash
+        get_hash_value('use_modular_headers', {})
+      end
+      private :raw_use_modular_headers_hash
+
+      # Returns the use_modular_headers hash pre-populated with default values.
+      #
+      # @return [Hash<String, Array>] Hash with :all key for building all
+      #         pods as modules, :for_pods key for building as module per Pod,
+      #         and :not_for_pods key for not biulding as module per Pod.
+      #
+      def use_modular_headers_hash
+        raw_hash = raw_use_modular_headers_hash
+        if exclusive?
+          raw_hash
+        else
+          parent_hash = parent.send(:use_modular_headers_hash).dup
+          if parent_hash['not_for_pods']
+            # Remove pods that are set to not use modular headers inside parent
+            # if they are set to use modular headers inside current target.
+            parent_hash['not_for_pods'] -= Array(raw_hash['for_pods'])
+          end
+          if parent_hash['for_pods']
+            # Remove pods that are set to use modular headers inside parent if they are set to not use modular headers inside current target.
+            parent_hash['for_pods'] -= Array(raw_hash['for_pods'])
+          end
+          if raw_hash['all']
+            # Clean pods that are set to not use modular headers inside parent if use_modular_headers! was set.
+            parent_hash['not_for_pods'] = nil
+          end
+          parent_hash.merge(raw_hash) do |_, l, r|
+            Array(l).concat(r).uniq
+          end
+        end
+      end
+
+      # @return [Bool] whether the target definition should use modular headers
+      #         for a single pod. If use_modular_headers! is true, it will
+      #         return true for any asked pod.
+      #
+      def build_pod_as_module?(pod_name)
+        if Array(use_modular_headers_hash['not_for_pods']).include?(pod_name)
+          false
+        elsif use_modular_headers_hash['all']
+          true
+        elsif !root? && parent.build_pod_as_module?(pod_name)
+          true
+        else
+          Array(use_modular_headers_hash['for_pods']).include? pod_name
+        end
+      end
+
+      # Sets whether the target definition should use modular headers for all pods.
+      #
+      # @param  [Bool] flag
+      #         Whether the warnings should be suppressed.
+      #
+      # @return [void]
+      #
+      def use_modular_headers_for_all_pods=(flag)
+        raw_use_modular_headers_hash['all'] = flag
+      end
+
+      # Use modular headers for a specific pod during compilation.
+      #
+      # @param  [String] pod_name
+      #         Name of the pod for which modular headers will be used.
+      #
+      # @param  [Bool] flag
+      #         Whether modular headers should be used.
+      #
+      # @return [void]
+      #
+      def set_use_modular_headers_for_pod(pod_name, flag)
+        hash_key = case flag
+                   when true
+                     'for_pods'
+                   when false
+                     'not_for_pods'
+                   when nil
+                     return
+                   else
+                     raise ArgumentError, "Got `#{flag.inspect}`, should be a boolean"
+                   end
+        raw_use_modular_headers_hash[hash_key] ||= []
+        raw_use_modular_headers_hash[hash_key] << pod_name
+      end
+
+      #--------------------------------------#
+
       PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.6', :tvos => '9.0', :watchos => '2.0' }.freeze
 
       # @return [Platform] the platform of the target definition.
@@ -542,6 +632,7 @@ module Pod
       def store_pod(name, *requirements)
         return if parse_subspecs(name, requirements) # This parse method must be called first
         parse_inhibit_warnings(name, requirements)
+        parse_modular_headers(name, requirements)
         parse_configuration_whitelist(name, requirements)
 
         if requirements && !requirements.empty?
@@ -634,6 +725,7 @@ module Pod
         link_with
         link_with_first_target
         inhibit_warnings
+        use_modular_headers
         user_project_path
         build_configurations
         dependencies
@@ -869,6 +961,28 @@ module Pod
         should_inhibit = options.delete(:inhibit_warnings)
         pod_name = Specification.root_name(name)
         set_inhibit_warnings_for_pod(pod_name, should_inhibit)
+
+        requirements.pop if options.empty?
+      end
+
+      # Removes :modular_headers from the requirements list, and adds
+      # the pods name into internal hash for modular headers.
+      #
+      # @param [String] pod name
+      #
+      # @param [Array] requirements
+      #        If :modular_headers is the only key in the hash, the hash
+      #        should be destroyed because it confuses Gem::Dependency.
+      #
+      # @return [void]
+      #
+      def parse_modular_headers(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
+
+        defines_module = options.delete(:modular_headers)
+        pod_name = Specification.root_name(name)
+        set_use_modular_headers_for_pod(pod_name, defines_module)
 
         requirements.pop if options.empty?
       end

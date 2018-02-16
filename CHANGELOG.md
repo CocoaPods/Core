@@ -12,6 +12,9 @@
 * Update Podfile Reference Guide to include `:source` parameter for the `pod` statement  
   [Mark Woollard](https://github.com/mwoollard)
   [#7359](https://github.com/CocoaPods/CocoaPods/issues/7359)
+
+* Allow enabling modular headers for pods in the Podfile.  
+  [Samuel Giddins](https://github.com/segiddins)
   
 ##### Bug Fixes
 

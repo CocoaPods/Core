@@ -207,6 +207,155 @@ module Pod
         end
       end
 
+      describe 'modular headers' do
+        it 'does not have modular headers by default' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger'
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+        end
+
+        it 'raises if :modular_headers value is not a boolean' do
+          should.raise ArgumentError do
+            podfile = Podfile.new do
+              pod 'PonyDebugger', :modular_headers => 'true'
+            end
+            target = podfile.target_definitions['Pods']
+            target.build_pod_as_module?('PonyDebugger').should.be.true
+          end.message.should.match /should be a boolean/
+        end
+
+        it 'allows modular headers on a single dependency' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger', :modular_headers => true
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not modular headers on a single dependency' do
+          podfile = Podfile.new do
+            use_modular_headers!
+            pod 'PonyDebugger', :modular_headers => false
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+        end
+
+        it 'allows modular headers on a single dependency in a target block' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => true
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not modular headers on a single dependency in a target block' do
+          podfile = Podfile.new do
+            use_modular_headers!
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => false
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+        end
+
+        it 'allows modular headers on a single dependency in a target block with inheritance' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => true
+              target 'Inherited' do
+                pod 'PonyDebugger', :modular_headers => false
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+
+        it 'allows modular headers in parent and not using them in child on a single dependency' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => true
+              target 'Inherited' do
+                pod 'PonyDebugger', :modular_headers => false
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+
+          target = podfile.target_definitions['Inherited']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+        end
+
+        it 'allows not using modular headers in parent and using modular headers in child on a single dependency' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => false
+              target 'Inherited' do
+                pod 'PonyDebugger', :modular_headers => true
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['Inherited']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not using modular headers a single dependency in parent and using modular headers all dependencies in child' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => false
+              target 'Inherited' do
+                use_modular_headers!
+                pod 'PonyDebugger'
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['Inherited']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+
+        it 'allows not using modular headers a single dependency in grandparent and using modular headers all dependencies in grandchild' do
+          podfile = Podfile.new do
+            target 'App' do
+              pod 'PonyDebugger', :modular_headers => false
+              target 'Inherited' do
+                target 'InheritedLevelTwo' do
+                  use_modular_headers!
+                  pod 'PonyDebugger'
+                end
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.build_pod_as_module?('PonyDebugger').should.be.false
+
+          target = podfile.target_definitions['InheritedLevelTwo']
+          target.build_pod_as_module?('PonyDebugger').should.be.true
+        end
+      end
+
       it 'allows specifying multiple subspecs' do
         podfile = Podfile.new do
           pod 'RestKit', '~> 0.24.0', :subspecs => %w(CoreData Networking), :configurations => %w(Release)
