@@ -185,6 +185,12 @@ module Pod
         @lockfile.version('BananaLib').should == Version.new('1.0')
       end
 
+      it 'returns the spec repo of a given pod' do
+        @lockfile.spec_repo('BananaLib').should == 'https://github.com/CocoaPods/Specs.git'
+        @lockfile.spec_repo('JSONKit').should.be.nil
+        @lockfile.spec_repo('monkey').should == 'https://github.com/CocoaPods/Specs.git'
+      end
+
       it 'returns the checksum for the given Pod' do
         @lockfile.checksum('BananaLib').should == 'd46ca864666e216300a0653de197668b12e732a1'
       end

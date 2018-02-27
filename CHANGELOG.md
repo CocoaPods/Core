@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add ability to lockfile to retrieve spec repo for pod name  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#434](https://github.com/CocoaPods/Core/pull/434)
+
 * `HTTP::perform_head_request` now includes a 1-byte `Range` header in the fallback GET
   request.
   [Kyle Fleming](https://github.com/kylefleming)

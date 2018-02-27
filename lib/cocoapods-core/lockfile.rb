@@ -77,7 +77,7 @@ module Pod
 
     # Returns the version of the given Pod.
     #
-    # @param [name] The name of the Pod (root name of the specification).
+    # @param [String] pod_name The name of the Pod (root name of the specification).
     #
     # @return [Version] The version of the pod.
     #
@@ -92,9 +92,21 @@ module Pod
       pod_versions[root_name]
     end
 
+    # Returns the source of the given Pod.
+    #
+    # @param [String] pod_name The name of the Pod (root name of the specification).
+    #
+    # @return [String] The source of the pod.
+    #
+    # @return [Nil] If there is no source stored for the given name.
+    #
+    def spec_repo(pod_name)
+      pods_by_spec_repo.detect { |key, values| break key if values.include?(pod_name) }
+    end
+
     # Returns the checksum for the given Pod.
     #
-    # @param [name] The name of the Pod (root name of the specification).
+    # @param [String] name The name of the Pod (root name of the specification).
     #
     # @return [String] The checksum of the specification for the given Pod.
     #
