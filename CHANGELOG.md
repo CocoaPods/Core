@@ -18,6 +18,10 @@
   
 ##### Bug Fixes
 
+* Fix crash when there's an empty source spec directory  
+  [Paul Beusterien](https://github.com/paulb777)
+  [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
+
 * The `Dependency#merge` method takes into account any `podspec_repo`s the dependencies
   may have set.  
   [Samuel Giddins](https://github.com/segiddins)
