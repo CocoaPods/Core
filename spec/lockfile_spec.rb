@@ -211,6 +211,11 @@ module Pod
         end.compact]
       end
 
+      it 'returns the spec repo sources when that section is missing' do
+        @lockfile = Lockfile.new({})
+        @lockfile.pods_by_spec_repo.should == {}
+      end
+
       it 'only includes root names in spec repo sources' do
         @lockfile = Lockfile.generate(Sample.podfile, [], {}, Source.new(fixture('spec-repos/master')) => Pod::Spec.new do |s|
                                                                                                             s.name = 'foo'
