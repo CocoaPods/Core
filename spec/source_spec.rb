@@ -131,6 +131,15 @@ module Pod
         @source.search('bAnAnAlIb').should.be.nil?
       end
 
+      describe 'when there is an empty directory' do
+        before { @empty_dir = @path.join('Specs', 'Empty').tap(&:mkpath) }
+        after { FileUtils.rm_r @empty_dir }
+
+        it 'returns nil' do
+          @source.search('Empty').should.be.nil
+        end
+      end
+
       describe '#search_by_name' do
         it 'properly configures the sources of a set in search by name' do
           source = Source.new(fixture('spec-repos/test_repo'))

@@ -262,7 +262,13 @@ module Pod
       if query.is_a?(Dependency)
         query = query.root_name
       end
-      found = Pathname.glob(pod_path(query)).map { |path| path.basename.to_s }
+
+      found = []
+      Pathname.glob(pod_path(query)) do |path|
+        next unless Dir.foreach(path).any? { |child| child != '.' && child != '..' }
+        found << path.basename.to_s
+      end
+
       if [query] == found
         set = set(query)
         set if set.specification_name == query
