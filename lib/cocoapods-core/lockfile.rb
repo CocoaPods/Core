@@ -77,7 +77,7 @@ module Pod
 
     # Returns the version of the given Pod.
     #
-    # @param [name] The name of the Pod (root name of the specification).
+    # @param [String] pod_name The name of the Pod (root name of the specification).
     #
     # @return [Version] The version of the pod.
     #
@@ -92,9 +92,21 @@ module Pod
       pod_versions[root_name]
     end
 
+    # Returns the source of the given Pod.
+    #
+    # @param [String] pod_name The name of the Pod (root name of the specification).
+    #
+    # @return [String] The source of the pod.
+    #
+    # @return [Nil] If there is no source stored for the given name.
+    #
+    def spec_repo(pod_name)
+      spec_repos_by_pod[pod_name]
+    end
+
     # Returns the checksum for the given Pod.
     #
-    # @param [name] The name of the Pod (root name of the specification).
+    # @param [String] name The name of the Pod (root name of the specification).
     #
     # @return [String] The checksum of the specification for the given Pod.
     #
@@ -234,6 +246,17 @@ module Pod
     #
     def checksum_data
       internal_data['SPEC CHECKSUMS'] || {}
+    end
+
+    # @return [Hash{String => String}] A hash containing the spec repo used for the specification
+    #         by the name of the root spec.
+    #
+    def spec_repos_by_pod
+      @spec_repos_by_pod ||= pods_by_spec_repo.each_with_object({}) do |(spec_repo, pods), spec_repos_by_pod|
+        pods.each do |pod|
+          spec_repos_by_pod[pod] = spec_repo
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#
