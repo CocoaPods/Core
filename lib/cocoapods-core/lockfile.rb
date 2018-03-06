@@ -141,7 +141,7 @@ module Pod
     # @note   It does not include pods that come from "external sources".
     #
     def pods_by_spec_repo
-      @pods_by_spec_repo ||= internal_data['SPEC REPOS']
+      @pods_by_spec_repo ||= internal_data['SPEC REPOS'] || {}
     end
 
     # Generates a dependency that requires the exact version of the Pod with the
