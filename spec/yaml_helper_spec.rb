@@ -45,9 +45,14 @@ module Pod
           'false' => "'false'",
           'null' => "'null'",
           '-1' => "'-1'",
-          '' => '""',
+          '' => "''",
           '!' => '"!"',
+          '!ProtoCompiler' => '"!ProtoCompiler"',
           '~' => "'~'",
+          'foo:' => '"foo:"',
+          'https://github.com/CocoaPods/Core.git' => 'https://github.com/CocoaPods/Core.git',
+          'a (from `b`)' => 'a (from `b`)',
+          'monkey (< 1.0.9, ~> 1.0.1)' => 'monkey (< 1.0.9, ~> 1.0.1)',
         }.each do |given, expected|
           converted = YAMLHelper.convert(given)
           converted[0..-2].should == expected
