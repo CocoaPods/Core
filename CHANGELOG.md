@@ -24,7 +24,7 @@
 
 * Fix crash when there's an empty source spec directory  
   [Paul Beusterien](https://github.com/paulb777)
-  [#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
+  [CocoaPods#6381](https://github.com/CocoaPods/CocoaPods/issues/6381)
 
 * The `Dependency#merge` method takes into account any `podspec_repo`s the dependencies
   may have set.  
@@ -32,6 +32,11 @@
 
 * When evaluating `.podspec` files, ensure that `__FILE__` refers to the correct file.  
   [Samuel Giddins](https://github.com/segiddins)
+
+* Serialize lockfiles that contain Pods with non-alphanumeric characters 
+  (such as `!`) properly.  
+  [Samuel Giddins](https://github.com/segiddins)
+  [CocoaPods#7302](https://github.com/CocoaPods/CocoaPods/issues/7302)
 
 
 ## 1.4.0 (2018-01-18)

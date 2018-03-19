@@ -385,9 +385,7 @@ module Pod
     # @note   The YAML string is prettified.
     #
     def to_yaml
-      yaml_string = YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
-      yaml_string = yaml_string.tr("'", '')
-      yaml_string.tr('"', '')
+      YAMLHelper.convert_hash(to_hash, HASH_KEY_ORDER, "\n\n")
     end
 
     #-------------------------------------------------------------------------#

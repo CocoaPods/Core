@@ -279,7 +279,7 @@ module Pod
         end
       end
 
-      RESOLVED_TAGS = [
+      RESOLVED_TAGS = Regexp.union(
         'null', 'Null', 'NULL', '~', '', # resolve to null
         'true', 'True', 'TRUE', 'false', 'False', 'FALSE', # bool
         /[-+]?[0-9]+/, # base 10 int
@@ -288,19 +288,29 @@ module Pod
         /[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?/, # float
         /[-+]?\.(inf|Inf|INF)/, # infinity
         /\.(nan|NaN|NAN)/, # NaN
-      ].freeze
+      )
       private_constant :RESOLVED_TAGS
+
+      INDICATOR_START_CHARS = %w(- ? : , [ ] { } # & * ! | > ' " % @ `).freeze
+      INDICATOR_START = /\A#{Regexp.union(INDICATOR_START_CHARS)}/
+      private_constant :INDICATOR_START_CHARS, :INDICATOR_START
 
       RESOLVED_TAGS_PATTERN = /\A#{Regexp.union(RESOLVED_TAGS)}\z/
       private_constant :RESOLVED_TAGS_PATTERN
 
+      VALID_PLAIN_SCALAR_STRING = %r{\A
+        [\w&&[^#{INDICATOR_START_CHARS}]] # valid first character
+        [\w/\ \(\)~<>=\.:`,-]* # all characters allowed after the first one
+      \z}ox
+      private_constant :VALID_PLAIN_SCALAR_STRING
+
       def process_string(string)
         case string
-        when /\A\s*\z/
-          string.inspect
         when RESOLVED_TAGS_PATTERN
           "'#{string}'"
-        when %r{\A\w[\w/ \(\)~<>=\.-]*\z}
+        when /\A\s*\z/, INDICATOR_START, /:\z/
+          string.inspect
+        when VALID_PLAIN_SCALAR_STRING
           string
         else
           string.inspect
