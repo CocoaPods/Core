@@ -1444,7 +1444,7 @@ module Pod
 
       # @!method requires_app_host=(flag)
       #
-      #  Whether a test specification requires an app host to run tests. This only applies to test specifications.
+      #   Whether a test specification requires an app host to run tests. This only applies to test specifications.
       #
       #   @example
       #
