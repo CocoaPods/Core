@@ -10,7 +10,7 @@ http_interactions:
       User-Agent:
       - CocoaPods
       Accept:
-      - application/vnd.github.chitauri-preview+sha
+      - application/vnd.github.v3.sha
       If-None-Match:
       - '"e8e31ca9304385f57ceeb030a29ddd0398660173"'
       Accept-Encoding:
@@ -25,7 +25,7 @@ http_interactions:
       Date:
       - Wed, 09 Mar 2016 21:44:05 GMT
       Content-Type:
-      - application/vnd.github.chitauri-preview+sha; charset=utf-8
+      - application/vnd.github.v3.sha; charset=utf-8
       Content-Length:
       - '40'
       Status:
@@ -69,6 +69,6 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 570c31dea8def019ec563be2326e053cc937e084
-    http_version: 
+    http_version:
   recorded_at: Wed, 09 Mar 2016 21:44:05 GMT
 recorded_with: VCR 2.9.3
