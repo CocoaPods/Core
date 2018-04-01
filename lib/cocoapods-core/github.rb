@@ -93,7 +93,7 @@ module Pod
       request_url = "https://api.github.com/repos/#{repo_id}/commits/master"
       headers = {
         'User-Agent' => 'CocoaPods',
-        'Accept' => 'application/vnd.github.chitauri-preview+sha',
+        'Accept' => 'application/vnd.github.v3.sha',
         'If-None-Match' => %("#{commit}"),
       }
 
