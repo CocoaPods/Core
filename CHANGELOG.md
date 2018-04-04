@@ -1,5 +1,16 @@
 # CocoaPods Core Changelog
 
+## Master
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.5.0 (2018-04-04)
 
 ##### Enhancements
