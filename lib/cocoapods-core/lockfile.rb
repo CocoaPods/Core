@@ -477,13 +477,13 @@ module Pod
       # Generates the hash of spec repo sources used in the Podfile.
       #
       # @example  Output
-      #           { "https://github.com/CocoaPods/CocoaPods.git" => ["Alamofire", "Moya"] }
+      #           { "https://github.com/cocoapods/cocoapods.git" => ["Alamofire", "Moya"] }
       #
       def generate_spec_repos(spec_repos)
         Hash[spec_repos.map do |source, specs|
           next unless source
           next if specs.empty?
-          key = source.url || source.name
+          key = source.url.downcase || source.name.downcase
           value = specs.map { |s| s.root.name }.uniq
           [key, value]
         end.compact]
