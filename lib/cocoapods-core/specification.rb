@@ -50,6 +50,16 @@ module Pod
       yield self if block_given?
     end
 
+    def initialize_copy(other)
+      super
+
+      @subspecs = @subspecs.map do |subspec|
+        subspec = subspec.dup
+        subspec.instance_variable_set :@parent, self
+        subspec
+      end
+    end
+
     # @return [Hash] the hash that stores the information of the attributes of
     #         the specification.
     #

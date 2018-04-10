@@ -26,6 +26,11 @@ module Pod
         @spec.subspecs.should == [@subspec]
       end
 
+      it 'allows dup-ing' do
+        dup = @spec.dup
+        dup.subspecs.first.parent.should.equal? dup
+      end
+
       it 'returns whether it is equal to another specification' do
         @spec.should == @spec
       end
