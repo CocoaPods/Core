@@ -290,13 +290,23 @@ module Pod
       result = {}
       [:added, :changed, :removed, :unchanged].each { |k| result[k] = [] }
 
-      installed_deps = dependencies.map do |dep|
-        dependencies_to_lock_pod_named(dep.root_name)
-      end.flatten
-      all_dep_names = (dependencies + podfile.dependencies).map(&:name).uniq
+      installed_deps = {}
+      dependencies.each do |dep|
+        name = dep.root_name
+        installed_deps[name] ||= dependencies_to_lock_pod_named(name)
+      end
+
+      installed_deps = installed_deps.values.flatten(1).group_by(&:name)
+
+      podfile_dependencies = podfile.dependencies
+      podfile_dependencies_by_name = podfile_dependencies.group_by(&:name)
+
+      all_dep_names = (dependencies + podfile_dependencies).map(&:name).uniq
       all_dep_names.each do |name|
-        installed_dep = installed_deps.find { |d| d.name == name }
-        podfile_dep   = podfile.dependencies.find { |d| d.name == name }
+        installed_dep   = installed_deps[name]
+        installed_dep &&= installed_dep.first
+        podfile_dep     = podfile_dependencies_by_name[name]
+        podfile_dep   &&= podfile_dep.first
 
         if installed_dep.nil?  then key = :added
         elsif podfile_dep.nil? then key = :removed
