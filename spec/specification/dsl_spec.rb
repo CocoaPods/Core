@@ -217,6 +217,12 @@ module Pod
             @spec.dependency('SVProgressHUD', :head)
           end.message.should.match /Unsupported version requirements/
         end
+
+        it 'raises when attempting to assign a value to dependency' do
+          should.raise Informative do
+            @spec.dependency = 'JSONKit', '1.5'
+          end.message.should.match /Cannot assign value to `dependency`. Did you mean: `dependency 'JSONKit', '1.5'`?/
+        end
       end
 
       #------------------#
