@@ -1157,9 +1157,9 @@ module Pod
       #   hash where the keys represent the name of the bundles and the values
       #   the file patterns that they should include.
       #
-      #   We strongly **recommend** library developers to adopt resource
-      #   bundles as there can be name collisions using the resources
-      #   attribute.
+      #   For building the Pod as a static library, we strongly **recommend**
+      #   library developers to adopt resource bundles as there can be name
+      #   collisions using the resources attribute.
       #
       #   The names of the bundles should at least include the name of the Pod
       #   to minimise the chance of name collisions.
@@ -1194,8 +1194,8 @@ module Pod
       #
       #   A list of resources that should be copied into the target bundle.
       #
-      #   We strongly **recommend** library developers to adopt [resource
-      #   bundles](http://guides.cocoapods.org/syntax/podspec.html#resource_bundles)
+      #   For building the Pod as a static library, we strongly **recommend**
+      #   library developers to adopt [resource bundles](http://guides.cocoapods.org/syntax/podspec.html#resource_bundles)
       #   as there can be name collisions using the resources attribute.
       #   Moreover, resources specified with this attribute are copied
       #   directly to the client target and therefore they are not
