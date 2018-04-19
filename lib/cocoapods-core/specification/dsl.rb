@@ -666,6 +666,12 @@ module Pod
         attributes_hash['dependencies'][name] = version_requirements
       end
 
+      def dependency=(args)
+        joined = args.join('\', \'')
+        arguments = "\'#{joined}\'"
+        raise Informative, "Cannot assign value to `dependency`. Did you mean: `dependency #{arguments}`?"
+      end
+
       #------------------#
 
       # @!method requires_arc=(flag)
