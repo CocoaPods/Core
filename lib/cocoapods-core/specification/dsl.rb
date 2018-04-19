@@ -956,6 +956,55 @@ module Pod
       attribute :header_mappings_dir,
                 :inherited => true
 
+      #------------------#
+
+      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
+
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position].freeze
+
+      EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :any].freeze
+
+      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
+
+      # @!method script_phases=(*script_phases)
+      #
+      #   This attribute allows to define a script phase to execute as part of compilation of the Pod.
+      #   Unlike a prepare command, script phases execute as part of `xcodebuild` they can also utilize all environment
+      #   variables that are set during compilation.
+      #
+      #   A Pod can provide multiple script phases to execute and they will be added in the order they were
+      #   declared and after taking into consideration their execution position setting.
+      #
+      #   **Note** In order to provide visibility and awareness of the contents of all script phases,
+      #   a warning will be presented to the user upon installing your pod if it includes any script phases.
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"' }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } }
+      #
+      #   @example
+      #
+      #     spec.script_phases = [
+      #         { :name => 'Hello World', :script => 'echo "Hello World"' },
+      #         { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } },
+      #       ]
+      #
+      #   @param  [Array<Hash{Symbol=>String}>] script_phases
+      #           An array of hashes where each hash represents a single script phase.
+      #
+      attribute :script_phases,
+                :types => [Hash],
+                :container => Array,
+                :singularize => true
+
       #-----------------------------------------------------------------------#
 
       # @!group File patterns
@@ -1293,55 +1342,6 @@ module Pod
       #
       attribute :module_map,
                 :root_only     => true
-
-      #------------------#
-
-      SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
-
-      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position].freeze
-
-      EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :any].freeze
-
-      ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
-
-      # @!method script_phases=(*script_phases)
-      #
-      #   This attribute allows to define a script phase to execute as part of compilation of the Pod.
-      #   Unlike a prepare command, script phases execute as part of `xcodebuild` they can also utilize all environment
-      #   variables that are set during compilation.
-      #
-      #   A Pod can provide multiple script phases to execute and they will be added in the order they were
-      #   declared and after taking into consideration their execution position setting.
-      #
-      #   **Note** In order to provide visibility and awareness of the contents of all script phases,
-      #   a warning will be presented to the user upon installing your pod if it includes any script phases.
-      #
-      #   @example
-      #
-      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"' }
-      #
-      #   @example
-      #
-      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile }
-      #
-      #   @example
-      #
-      #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } }
-      #
-      #   @example
-      #
-      #     spec.script_phases = [
-      #         { :name => 'Hello World', :script => 'echo "Hello World"' },
-      #         { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } },
-      #       ]
-      #
-      #   @param  [Array<Hash{Symbol=>String}>] script_phases
-      #           An array of hashes where each hash represents a single script phase.
-      #
-      attribute :script_phases,
-                :types => [Hash],
-                :container => Array,
-                :singularize => true
 
       #-----------------------------------------------------------------------#
 
