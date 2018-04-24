@@ -64,7 +64,7 @@ module Pod
       # @return [Array<Source>] The CocoaPods Master Repo source.
       #
       def master
-        sources(['master']).select { |s| s.repo.directory? }
+        sources([Pod::MasterSource::MASTER_REPO_NAME]).select { |s| s.repo.directory? }
       end
 
       # @!group Master repo
@@ -72,7 +72,7 @@ module Pod
       # @return [Pathname] The path of the master repo.
       #
       def master_repo_dir
-        source_dir('master')
+        source_dir(Pod::MasterSource::MASTER_REPO_NAME)
       end
 
       # @return [Bool] Checks if the master repo is usable.
@@ -283,7 +283,7 @@ module Pod
       #
       def source_from_path(path)
         @sources_by_path ||= Hash.new do |hash, key|
-          hash[key] = if key.basename.to_s == 'master'
+          hash[key] = if key.basename.to_s == Pod::MasterSource::MASTER_REPO_NAME
                         MasterSource.new(key)
                       else
                         Source.new(key)
@@ -386,7 +386,7 @@ module Pod
 
         case url.to_s.downcase
         when %r{github.com[:/]+cocoapods/specs}
-          base = 'master'
+          base = Pod::MasterSource::MASTER_REPO_NAME
         when %r{github.com[:/]+(.+)/(.+)}
           base = Regexp.last_match[1]
         when %r{^\S+@(\S+)[:/]+(.+)$}

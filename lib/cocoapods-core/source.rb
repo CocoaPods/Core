@@ -435,7 +435,7 @@ module Pod
 
     def git_tracking_branch
       path = repo.join('.git', 'cocoapods_branch')
-      path.file? ? path.read.strip : 'master'
+      path.file? ? path.read.strip : Pod::MasterSource::MASTER_REPO_NAME
     end
 
     def diff_until_commit_hash(commit_hash)
