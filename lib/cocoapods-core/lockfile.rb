@@ -493,7 +493,8 @@ module Pod
         Hash[spec_repos.map do |source, specs|
           next unless source
           next if specs.empty?
-          key = source.url.downcase || source.name.downcase
+          key = source.url || source.name
+          key = key.downcase if source.name == Pod::MasterSource::MASTER_REPO_NAME
           value = specs.map { |s| s.root.name }.uniq
           [key, value]
         end.compact]
