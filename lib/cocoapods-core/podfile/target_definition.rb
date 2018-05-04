@@ -748,6 +748,12 @@ module Pod
         hash
       end
 
+      def ==(other)
+        self.class == other.class &&
+          internal_hash == other.internal_hash &&
+          children == other.children
+      end
+
       # Configures a new target definition from the given hash.
       #
       # @param  [Hash] the hash which contains the information of the
@@ -767,7 +773,7 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      private
+      protected
 
       # @!group Private helpers
 
@@ -779,6 +785,8 @@ module Pod
       #         definition.
       #
       attr_accessor :internal_hash
+
+      private
 
       # Set a value in the internal hash of the target definition for the given
       # key.

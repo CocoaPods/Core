@@ -23,6 +23,17 @@ module Pod
         podfile.root_target_definitions.first.name.should == 'Pods'
       end
 
+      it 'is equatable' do
+        Podfile.new.should == Podfile.new
+
+        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile'))
+        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile')).tap { |pf| pf.defined_in_file = Pathname('foo') }
+        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile.yaml'))
+
+        Podfile.from_file(fixture('Podfile')).should.not == Podfile.new
+        Podfile.from_file(fixture('Podfile')).should.not == Podfile.from_ruby(fixture('Podfile'), fixture('Podfile').read.gsub(/pod '/, "pod 'A_"))
+      end
+
       extend SpecHelper::TemporaryDirectory
 
       it 'includes the line of the podfile that generated an exception' do

@@ -231,6 +231,11 @@ module Pod
       end
     end
 
+    def ==(other)
+      self.class == other.class &&
+        root_target_definitions == other.root_target_definitions
+    end
+
     # @!group Class methods
     #-------------------------------------------------------------------------#
 
