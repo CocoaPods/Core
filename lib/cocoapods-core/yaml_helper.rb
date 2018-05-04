@@ -254,11 +254,9 @@ module Pod
       # @return [Array] The sorted array.
       #
       def sorted_array(array)
-        array.sort do |x, y|
-          x_string = sorting_string(x)
-          y_string = sorting_string(y)
-          x_string <=> y_string
-        end
+        array.each_with_index.sort_by do |element, index|
+          [sorting_string(element), index]
+        end.map(&:first)
       end
 
       # Returns the string representation of a value useful for sorting.
@@ -275,7 +273,7 @@ module Pod
         when Symbol then sorting_string(value.to_s)
         when Array  then sorting_string(value.first)
         when Hash   then value.keys.map { |key| key.to_s.downcase }.sort.first
-        else             raise "Cannot sort #{value.inspect}"
+        else             raise ArgumentError, "Cannot sort #{value.inspect}"
         end
       end
 

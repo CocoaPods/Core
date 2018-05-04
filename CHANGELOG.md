@@ -15,6 +15,9 @@
 * Podfile objects are equatable.  
   [Samuel Giddins](https://github.com/segiddins)
 
+* Stably sort arrays being serialized into YAML.
+  [Samuel Giddins](https://github.com/segiddins)
+
 
 ## 1.5.0 (2018-04-04)
 
