@@ -8,6 +8,10 @@
 
 ##### Bug Fixes
 
+* Always lower case spec repo URL for 'SPEC REPOS'  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [CocoaPods#7586](https://github.com/CocoaPods/CocoaPods/issues/7586)
+
 * Calling `Specification#dup` will set the parent for subspecs to be 
   the new object.  
   [Samuel Giddins](https://github.com/segiddins)
@@ -27,9 +31,7 @@
 
 ##### Bug Fixes
 
-* Always lower case spec repo URL for 'SPEC REPOS'  
-  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
-  [CocoaPods#7586](https://github.com/CocoaPods/CocoaPods/issues/7586)
+* None.  
 
 ## 1.5.0.beta.1 (2018-03-23)
 
