@@ -8,7 +8,8 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix using `TargetDefinition` objects as hash keys.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.5.1 (2018-05-07)

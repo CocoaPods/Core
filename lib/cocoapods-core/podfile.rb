@@ -233,7 +233,7 @@ module Pod
 
     def ==(other)
       self.class == other.class &&
-        root_target_definitions == other.root_target_definitions
+        to_hash == other.to_hash
     end
 
     # @!group Class methods
