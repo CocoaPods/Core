@@ -748,12 +748,6 @@ module Pod
         hash
       end
 
-      def ==(other)
-        self.class == other.class &&
-          internal_hash == other.internal_hash &&
-          children == other.children
-      end
-
       # Configures a new target definition from the given hash.
       #
       # @param  [Hash] the hash which contains the information of the
