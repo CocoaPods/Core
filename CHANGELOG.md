@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.5.2 (2018-05-09)
 
 ##### Enhancements
 
