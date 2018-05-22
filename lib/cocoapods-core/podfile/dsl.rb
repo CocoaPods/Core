@@ -142,6 +142,20 @@ module Pod
       #
       # ------
       #
+      # ### Modular Headers
+      #
+      # If you would like to use modular headers per Pod you can use the
+      # following syntax:
+      #
+      #     pod 'SSZipArchive', :modular_headers => true
+      #
+      # Additionally, when you use the `use_modular_headers!` attribute,
+      # you can exclude a particular Pod from modular headers using the following:
+      #
+      #     pod 'SSZipArchive', :modular_headers => false
+      #
+      # ------
+      #
       # ### Source
       #
       # By default the sources specified at the global level are searched in the order

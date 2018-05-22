@@ -4,7 +4,8 @@
 
 ##### Enhancements
 
-* None.  
+* Update docs to include per-pod `:modular_headers` option.  
+  [Eric Amorde](https://github.com/amorde)
 
 ##### Bug Fixes
 
