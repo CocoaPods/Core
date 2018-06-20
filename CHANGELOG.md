@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Cache result of `Specification#checksum` and `Podfile#checksum` methods  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [CocoaPods#7854](https://github.com/CocoaPods/CocoaPods/issues/7854)
 
 
 ## 1.5.3 (2018-05-25)
