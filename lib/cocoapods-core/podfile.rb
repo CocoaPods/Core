@@ -223,11 +223,13 @@ module Pod
     # @return [Nil] If the podfile is not defined in a file.
     #
     def checksum
-      unless defined_in_file.nil?
-        require 'digest'
-        checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
-        checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
-        checksum
+      @checksum ||= begin
+        unless defined_in_file.nil?
+          require 'digest'
+          checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
+          checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+          checksum
+        end
       end
     end
 
