@@ -13,12 +13,6 @@ module Pod
         version.version.should == '1.2.3'
       end
 
-      it 'initializes from a string containing head information' do
-        version = Version.new('HEAD based on 1.2.3')
-        version.version.should == '1.2.3'
-        CoreUI.warnings.should == 'Ignoring obsolete HEAD specifier in `HEAD based on 1.2.3`'
-      end
-
       it 'serializes to a string' do
         version = Version.new('1.2.3')
         version.to_s.should == '1.2.3'

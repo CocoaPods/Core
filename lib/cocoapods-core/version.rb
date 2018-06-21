@@ -43,14 +43,7 @@ module Pod
     # @param  [String,Version] version
     #         A string representing a version, or another version.
     #
-    # @todo   Remove the `HEAD` code once everyone has migrated past 1.0.
-    #
     def initialize(version)
-      if version.is_a?(String) && version =~ /HEAD based on (.*)/
-        CoreUI.warn "Ignoring obsolete HEAD specifier in `#{version}`"
-        version = Regexp.last_match[1]
-      end
-
       raise ArgumentError, "Malformed version number string #{version}" unless
         self.class.correct?(version)
 
