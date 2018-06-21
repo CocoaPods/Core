@@ -21,10 +21,6 @@ module Pod
         @set.highest_version.should == Version.new('1.6.2')
       end
 
-      it 'returns a version available for the pod' do
-        @set.send(:any_version).should == Version.new('1.6.2')
-      end
-
       it 'returns the path of the spec with the highest version' do
         @set.highest_version_spec_path.should == @source.repo + 'CocoaLumberjack/1.6.2/CocoaLumberjack.podspec'
       end
