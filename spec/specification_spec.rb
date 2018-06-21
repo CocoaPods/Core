@@ -169,12 +169,6 @@ module Pod
           version.should == Version.new('1.0')
         end
 
-        it 'takes into account head information while returning the name and the version' do
-          name, version = Specification.name_and_version_from_string('libPusher (HEAD based on 1.0)')
-          name.should == 'libPusher'
-          version.should == Version.new('HEAD based on 1.0')
-        end
-
         it 'takes into account the full name of the subspec returning the name and the version' do
           string = 'RestKit/JSON (1.0)'
           name = Specification.name_and_version_from_string(string).first

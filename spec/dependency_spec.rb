@@ -125,13 +125,6 @@ module Pod
         dependency.requirement.as_list.should == ['= 1.23']
       end
 
-      it 'warns with head information' do
-        dependency = Dependency.new('cocoapods', '> 1.0')
-        dependency.specific_version = Version.new('HEAD based on 1.23')
-        dependency.requirement.as_list.should == ['= 1.23']
-        CoreUI.warnings.should == 'Ignoring obsolete HEAD specifier in `HEAD based on 1.23`'
-      end
-
       #--------------------------------------#
 
       it 'preserves the external source on duplication' do
