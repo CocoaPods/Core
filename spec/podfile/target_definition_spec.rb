@@ -571,6 +571,83 @@ module Pod
         @parent.swift_version.should == '2.3'
       end
 
+      it 'stores a single swift version requirement' do
+        @parent.store_swift_version_requirements('3.0')
+        @parent.send(:get_hash_value, 'swift_version_requirements').should == [
+          '3.0',
+        ]
+      end
+
+      it 'stores swift version requirements as strings' do
+        @parent.store_swift_version_requirements('>= 3.0', '< 4.0')
+        @parent.send(:get_hash_value, 'swift_version_requirements').should == [
+          '>= 3.0',
+          '< 4.0',
+        ]
+      end
+
+      it 'stores swift version requirements as an array of strings' do
+        @parent.store_swift_version_requirements(['>= 3.0', '< 4.0'])
+        @parent.send(:get_hash_value, 'swift_version_requirements').should == [
+          '>= 3.0',
+          '< 4.0',
+        ]
+      end
+
+      it 'stores swift version requirements as versions' do
+        @parent.store_swift_version_requirements(Version.new('3.0'), Version.new('4.0'))
+        @parent.send(:get_hash_value, 'swift_version_requirements').should == [
+          '3.0',
+          '4.0',
+        ]
+      end
+
+      it 'correctly returns whether a version of Swift is supported based on requirements' do
+        @parent.store_swift_version_requirements('>= 3.0', '< 4.0')
+        @parent.supports_swift_version?(Version.new('1.0')).should.be.false
+        @parent.supports_swift_version?(Version.new('2.0')).should.be.false
+        @parent.supports_swift_version?(Version.new('3.0')).should.be.true
+        @parent.supports_swift_version?(Version.new('3.2')).should.be.true
+        @parent.supports_swift_version?(Version.new('4.0')).should.be.false
+      end
+
+      it 'correclty returns whether a version of Swift is supported based on Version requirements' do
+        @parent.store_swift_version_requirements(Version.new('3.0'))
+        @parent.supports_swift_version?(Version.new('1.0')).should.be.false
+        @parent.supports_swift_version?(Version.new('2.0')).should.be.false
+        @parent.supports_swift_version?(Version.new('3.0')).should.be.true
+        @parent.supports_swift_version?(Version.new('3.2')).should.be.false
+        @parent.supports_swift_version?(Version.new('4.0')).should.be.false
+      end
+
+      it 'delegates to the parent for Swift version support if current target does not specify requirements' do
+        @parent.store_swift_version_requirements('>= 3.0', '< 4.0')
+        @child.supports_swift_version?(Version.new('1.0')).should.be.false
+        @child.supports_swift_version?(Version.new('2.0')).should.be.false
+        @child.supports_swift_version?(Version.new('3.0')).should.be.true
+        @child.supports_swift_version?(Version.new('3.2')).should.be.true
+        @child.supports_swift_version?(Version.new('4.0')).should.be.false
+      end
+
+      it 'returns the Swift version supported of the current target definition if specified' do
+        @child.store_swift_version_requirements('>= 4.0')
+        @parent.store_swift_version_requirements('>= 3.0', '< 4.0')
+        @child.supports_swift_version?(Version.new('1.0')).should.be.false
+        @child.supports_swift_version?(Version.new('2.0')).should.be.false
+        @child.supports_swift_version?(Version.new('3.0')).should.be.false
+        @child.supports_swift_version?(Version.new('3.2')).should.be.false
+        @child.supports_swift_version?(Version.new('4.0')).should.be.true
+        @child.supports_swift_version?(Version.new('4.2')).should.be.true
+      end
+
+      it 'accepts all Swift versions if no requirements are specified' do
+        @parent.supports_swift_version?(Version.new('1.0')).should.be.true
+        @parent.supports_swift_version?(Version.new('2.0')).should.be.true
+        @parent.supports_swift_version?(Version.new('3.0')).should.be.true
+        @parent.supports_swift_version?(Version.new('3.2')).should.be.true
+        @parent.supports_swift_version?(Version.new('4.0')).should.be.true
+      end
+
       #--------------------------------------#
 
       it 'stores a dependency on a pod as a sting if no requirements are provided' do

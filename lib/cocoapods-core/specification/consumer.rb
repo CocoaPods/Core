@@ -9,6 +9,7 @@ module Pod
     # - standardizing the attributes
     # - handling multi-platform values
     # - handle default values
+    # - handle automatic container wrapping of values
     # - handle inherited values
     #
     # This class allows to store the values of the attributes in the
