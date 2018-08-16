@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (1.5.3)
+    cocoapods-core (1.6.0.beta.1)
       activesupport (>= 4.0.2, < 6)
       fuzzy_match (~> 2.0.4)
       nap (~> 1.0)
@@ -119,4 +119,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   1.16.2
+   1.16.3
