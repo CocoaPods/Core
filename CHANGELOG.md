@@ -8,8 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Update documentation for `frameworks`, `weak_frameworks` and `libraries`.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#458](https://github.com/CocoaPods/Core/pull/458)
 
 ## 1.6.0.beta.1 (2018-08-16)
 
