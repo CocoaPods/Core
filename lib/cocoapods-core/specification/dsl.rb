@@ -710,8 +710,10 @@ module Pod
 
       # @!method frameworks=(*frameworks)
       #
-      #   A list of system frameworks that the user’s target needs to link
+      #   A list of system frameworks that this pod needs to link
       #   against.
+      #
+      #  **Note** these will link directly to the user's target if this pod is being built as a static library.
       #
       #   @example
       #
@@ -733,8 +735,10 @@ module Pod
 
       # @!method weak_frameworks=(*frameworks)
       #
-      #   A list of frameworks that the user’s target needs to **weakly** link
+      #   A list of frameworks that this pod needs to **weakly** link
       #   against.
+      #
+      #   **Note** these will link directly to the user's target if this pod is being built as a static library.
       #
       #   @example
       #
@@ -756,8 +760,10 @@ module Pod
 
       # @!method libraries=(*libraries)
       #
-      #   A list of system libraries that the user’s target (application) needs to
+      #   A list of system libraries that this pod needs to
       #   link against.
+      #
+      #   **Note** these will link directly to the user's target if this pod is being built as a static library.
       #
       #   @example
       #
