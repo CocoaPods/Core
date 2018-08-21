@@ -44,7 +44,17 @@
   "subspecs": [
     {
       "name": "GreenBanana",
-      "source_files": "GreenBanana"
+      "source_files": "GreenBanana",
+      "dependencies": {
+        "AFNetworking": []
+      }
+    },
+    {
+      "name": "YellowBanana",
+      "source_files": "YellowBanana",
+      "dependencies": {
+        "SDWebImage": []
+      }
     }
   ]
 }

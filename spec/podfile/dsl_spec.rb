@@ -405,7 +405,16 @@ module Pod
           platform :ios
           podspec :path => banalib_path
         end
-        podfile.dependencies.map(&:name).should == %w(monkey)
+        podfile.dependencies.map(&:name).should == %w(monkey AFNetworking SDWebImage)
+      end
+
+      it 'it can use use the dependencies of a podspec\'s subspec' do
+        banalib_path = fixture('BananaLib.podspec').to_s
+        podfile = Podfile.new(fixture('Podfile')) do
+          platform :ios
+          podspec :path => banalib_path, :subspec => 'GreenBanana'
+        end
+        podfile.dependencies.map(&:name).should == %w(monkey AFNetworking)
       end
 
       it 'allows specifying a child target definition' do
