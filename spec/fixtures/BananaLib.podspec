@@ -31,5 +31,11 @@ Pod::Spec.new do |s|
   s.dependency   'monkey', '~> 1.0.1', '< 1.0.9'
   s.subspec "GreenBanana" do |ss|
     ss.source_files = 'GreenBanana'
+    ss.dependency 'AFNetworking'
+  end
+
+  s.subspec "YellowBanana" do |ss|
+    ss.source_files = 'YellowBanana'
+    ss.dependency 'SDWebImage'
   end
 end

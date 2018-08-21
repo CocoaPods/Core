@@ -81,10 +81,18 @@ module Pod
 
       it 'handles subspecs when converted to a hash' do
         hash = @spec.to_hash
-        hash['subspecs'].should == [{
-          'name' => 'GreenBanana',
-          'source_files' => 'GreenBanana',
-        }]
+        hash['subspecs'].should == [
+          {
+            'name' => 'GreenBanana',
+            'source_files' => 'GreenBanana',
+            'dependencies' => { 'AFNetworking' => [] },
+          },
+          {
+            'name' => 'YellowBanana',
+            'source_files' => 'YellowBanana',
+            'dependencies' => { 'SDWebImage' => [] },
+          },
+        ]
       end
 
       it 'handles subspecs with different platforms' do
@@ -94,14 +102,22 @@ module Pod
           'tvos' => '9.0',
         }
         hash = @spec.to_hash
-        hash['subspecs'].should == [{
-          'name' => 'GreenBanana',
-          'source_files' => 'GreenBanana',
-          'platforms' => {
-            'ios' => '9.0',
-            'tvos' => '9.0',
+        hash['subspecs'].should == [
+          {
+            'name' => 'GreenBanana',
+            'source_files' => 'GreenBanana',
+            'dependencies' => { 'AFNetworking' => [] },
+            'platforms' => {
+              'ios' => '9.0',
+              'tvos' => '9.0',
+            },
           },
-        }]
+          {
+            'name' => 'YellowBanana',
+            'source_files' => 'YellowBanana',
+            'dependencies' => { 'SDWebImage' => [] },
+          },
+        ]
       end
 
       it 'handles subspecs when the parent spec specifies platforms and the subspec inherits' do
@@ -109,10 +125,18 @@ module Pod
           'tvos' => '9.0',
         }
         hash = @spec.to_hash
-        hash['subspecs'].should == [{
-          'name' => 'GreenBanana',
-          'source_files' => 'GreenBanana',
-        }]
+        hash['subspecs'].should == [
+          {
+            'name' => 'GreenBanana',
+            'source_files' => 'GreenBanana',
+            'dependencies' => { 'AFNetworking' => [] },
+          },
+          {
+            'name' => 'YellowBanana',
+            'source_files' => 'YellowBanana',
+            'dependencies' => { 'SDWebImage' => [] },
+          },
+        ]
       end
 
       it 'writes script phases' do
@@ -132,10 +156,18 @@ module Pod
       it 'writes test type for test subspec' do
         @spec.test_spec {}
         hash = @spec.to_hash
-        hash['subspecs'].should == [{
-          'name' => 'GreenBanana',
-          'source_files' => 'GreenBanana',
-        }]
+        hash['subspecs'].should == [
+          {
+            'name' => 'GreenBanana',
+            'source_files' => 'GreenBanana',
+            'dependencies' => { 'AFNetworking' => [] },
+          },
+          {
+            'name' => 'YellowBanana',
+            'source_files' => 'YellowBanana',
+            'dependencies' => { 'SDWebImage' => [] },
+          },
+        ]
         hash['testspecs'].should == [{
           'name' => 'Tests',
           'test_type' => :unit,

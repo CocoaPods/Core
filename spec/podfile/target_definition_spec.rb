@@ -554,6 +554,35 @@ module Pod
         ]
       end
 
+      it 'stores a dependency on a podspec\'s subspec' do
+        @parent.store_podspec(:subspec => 'Subspec')
+        @parent.send(:get_hash_value, 'podspecs').should == [
+          { :autodetect => true,
+            :subspec => 'Subspec',
+           },
+        ]
+      end
+
+      it 'stores a dependency on a podspec\'s subspecs' do
+        @parent.store_podspec(:subspecs => ['Subspec'])
+        @parent.send(:get_hash_value, 'podspecs').should == [
+          { :autodetect => true,
+            :subspecs => ['Subspec'],
+           },
+        ]
+      end
+
+      it 'raises if the provided podspec option type is error' do
+        e = lambda { @parent.store_podspec(:subspec => 123) }.should.raise Podfile::StandardError
+        e.message.should.match /should be a String/
+
+        e = lambda { @parent.store_podspec(:subspecs => 123) }.should.raise Podfile::StandardError
+        e.message.should.match /should be an Array of Strings/
+
+        e = lambda { @parent.store_podspec(:subspecs => ['a', 123]) }.should.raise Podfile::StandardError
+        e.message.should.match /should be an Array of Strings/
+      end
+
       it 'raises if the provided podspec options are unsupported' do
         e = lambda { @parent.store_podspec(:invent => 'BlocksKit') }.should.raise Podfile::StandardError
         e.message.should.match /Unrecognized options/
@@ -671,6 +700,17 @@ module Pod
           @parent.store_podspec(:path => path)
           @parent.send(:podspec_dependencies).should == [
             Dependency.new('monkey', '< 1.0.9', '~> 1.0.1'),
+            Dependency.new('AFNetworking'),
+            Dependency.new('SDWebImage'),
+          ]
+        end
+
+        it 'returns the dependencies of a subspec' do
+          path = SpecHelper::Fixture.fixture('BananaLib.podspec').to_s
+          @parent.store_podspec(:path => path, :subspec => 'GreenBanana')
+          @parent.send(:podspec_dependencies).should == [
+            Dependency.new('monkey', '< 1.0.9', '~> 1.0.1'),
+            Dependency.new('AFNetworking'),
           ]
         end
 

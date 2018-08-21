@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add support for specifying subspecs when using the `podspec` Podfile attribute  
+  [Whirlwind](https://github.com/whirlwind)
+  [#456](https://github.com/CocoaPods/Core/pull/456)
 
 ##### Bug Fixes
 
