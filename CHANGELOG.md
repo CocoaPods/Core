@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix docstring for Pod::Podfile.from_yaml  
+  [Jenn Kaplan](https://github.com/jkap)
+  [#459](https://github.com/CocoaPods/Core/pull/459)
 
 
 ## 1.6.0.beta.1 (2018-08-16)

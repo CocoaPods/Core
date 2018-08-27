@@ -307,10 +307,6 @@ module Pod
 
     # Configures a new Podfile from the given YAML representation.
     #
-    # @param  [String] yaml
-    #         The YAML encoded hash which contains the information of the
-    #         Podfile.
-    #
     # @param  [Pathname] path
     #         The path from which the Podfile is loaded.
     #
