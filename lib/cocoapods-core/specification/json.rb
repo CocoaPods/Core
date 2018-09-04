@@ -64,10 +64,10 @@ module Pod
     def self.from_hash(hash, parent = nil)
       spec = Spec.new(parent)
       attributes_hash = hash.dup
+      attributes_hash['type'] = attributes_hash['type'].nil? ? :root : attributes_hash['type']
       subspecs = attributes_hash.delete('subspecs')
       testspecs = attributes_hash.delete('testspecs')
       spec.attributes_hash = attributes_hash
-      spec.test_specification = !attributes_hash['test_type'].nil?
       spec.subspecs.concat(subspecs_from_hash(spec, subspecs))
       spec.subspecs.concat(subspecs_from_hash(spec, testspecs))
       spec
@@ -76,6 +76,17 @@ module Pod
     def self.subspecs_from_hash(spec, subspecs)
       return [] if subspecs.nil?
       subspecs.map do |s_hash|
+        # We've already have the JSON here and there is no 'type' property.
+        if s_hash['type'].nil?
+          # Backwards compatibility with subspecs and test specs.
+          s_hash['type'] = if s_hash['test_type'].nil?
+                             # if test_type is not available it is a :sub spec
+                             :sub
+                           else
+                             # if test_type is available it is a :test spec
+                             :test
+                           end
+        end
         Specification.from_hash(s_hash, spec)
       end
     end

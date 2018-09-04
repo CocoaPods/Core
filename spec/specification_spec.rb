@@ -18,8 +18,8 @@ module Pod
       end
 
       it 'returns the attributes hash' do
-        @spec.attributes_hash.should == { 'name' => 'Pod', 'version' => '1.0' }
-        @subspec.attributes_hash.should == { 'name' => 'Subspec' }
+        @spec.attributes_hash.should == { 'name' => 'Pod', 'version' => '1.0', 'type' => :root }
+        @subspec.attributes_hash.should == { 'name' => 'Subspec', 'type' => :sub }
       end
 
       it 'returns the subspecs' do
@@ -316,7 +316,7 @@ module Pod
           s.test_spec {}
         end
         test_spec = @spec.test_specs.first
-        @spec.subspec_by_name('Pod/Tests', false, true).should == test_spec
+        @spec.subspec_by_name('Pod/Tests', false, [:test]).should == test_spec
       end
 
       it 'returns a subspec given the relative name' do
@@ -516,6 +516,7 @@ module Pod
         @spec.store_attribute(:attribute, 'value')
         @spec.attributes_hash.should == {
           'name' => nil,
+          'type' => :root,
           'attribute' => 'value',
         }
       end
@@ -524,6 +525,7 @@ module Pod
         @spec.store_attribute(:attribute, 'value', :ios)
         @spec.attributes_hash.should == {
           'name' => nil,
+          'type' => :root,
           'ios' => { 'attribute' => 'value' },
         }
       end
@@ -532,6 +534,7 @@ module Pod
         @spec.store_attribute(:attribute, :key => 'value')
         @spec.attributes_hash.should == {
           'name' => nil,
+          'type' => :root,
           'attribute' => { 'key' => 'value' },
         }
       end
@@ -544,6 +547,7 @@ module Pod
         @spec.store_attribute(:attribute, value)
         @spec.attributes_hash.should == {
           'name' => nil,
+          'type' => :root,
           'attribute' => "foo\n  bar",
         }
       end
@@ -553,6 +557,7 @@ module Pod
         @spec.store_attribute(:attribute, value)
         @spec.attributes_hash.should == {
           'name' => nil,
+          'type' => :root,
           'attribute' => 'foo',
         }
       end

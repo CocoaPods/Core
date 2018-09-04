@@ -37,7 +37,24 @@ module Pod
           @analyzer = Specification::Linter::Analyzer.new(subspec.consumer(:ios), results)
           results = @analyzer.analyze
           results.count.should.be.equal(1)
-          expected = 'Can\'t set `homepage` attribute for subspecs (in `BananaLib/subspec`).'
+          expected = 'Can\'t set `homepage` attribute for sub specs (in `BananaLib/subspec`).'
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('attribute')
+        end
+      end
+
+      #----------------------------------------#
+
+      describe 'Test attributes' do
+        it 'fails a subspec with a test only attribute' do
+          subspec = @spec.subspec 'subspec' do |sp|
+            sp.requires_app_host = true
+          end
+          results = Specification::Linter::Results.new
+          @analyzer = Specification::Linter::Analyzer.new(subspec.consumer(:ios), results)
+          results = @analyzer.analyze
+          results.count.should.be.equal(1)
+          expected = 'Can\'t set `requires_app_host` attribute for sub specs (in `BananaLib/subspec`).'
           results.first.message.should.include?(expected)
           results.first.attribute_name.should.include?('attribute')
         end

@@ -77,7 +77,7 @@ module Pod
       end
 
       it 'is inherited by default if it is root only' do
-        attr = Attribute.new('name', :root_only => true)
+        attr = Attribute.new('name', :spec_types => [:root])
         attr.should.be.inherited
       end
     end

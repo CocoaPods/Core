@@ -14,6 +14,10 @@ module Pod
         @spec.attributes_hash['name'].should == 'Name'
       end
 
+      it 'should be a root spec' do
+        @spec.type.should == :root
+      end
+
       it 'allows to specify the version' do
         @spec.version = '1.0'
         @spec.attributes_hash['version'].should == '1.0'
@@ -389,6 +393,7 @@ module Pod
         subspec.parent.should == @spec
         subspec.class.should == Specification
         subspec.name.should == 'Spec/Subspec'
+        subspec.type.should == :sub
       end
 
       it 'should allow you to specify a preferred set of dependencies' do
@@ -413,6 +418,7 @@ module Pod
         test_spec = @spec.subspecs.first
         test_spec.class.should == Specification
         test_spec.name.should == 'Spec/Tests'
+        test_spec.type.should == :test
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
       end
@@ -427,6 +433,7 @@ module Pod
         test_spec = a_spec.subspecs.first
         test_spec.class.should == Specification
         test_spec.name.should == 'Spec/Tests'
+        test_spec.type.should == :test
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
       end

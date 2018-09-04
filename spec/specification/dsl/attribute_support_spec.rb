@@ -5,7 +5,7 @@ module Pod
     class TestClass
       extend Pod::Specification::DSL::AttributeSupport
       root_attribute :test_root_attribute,  :types => [String]
-      attribute :test_attribute,  :types => [String], :root_only => false
+      attribute :test_attribute,  :types => [String], :spec_types => Specification::SUPPORTED_TYPES.map(&:to_s)
 
       class << self
         attr_reader :attributes
