@@ -26,7 +26,7 @@ module Pod
         # @return [void]
         #
         def root_attribute(name, options = {})
-          options[:root_only] = true
+          options[:spec_types] = [:root]
           options[:multi_platform] = false
           store_attribute(name, options)
         end

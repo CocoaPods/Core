@@ -42,7 +42,9 @@ module Pod
         def check_attributes
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
-          valid_keys = attributes_keys + platform_keys
+          specification_internal_keys = Specification::INTERNAL_KEYS.map(&:to_s)
+
+          valid_keys = attributes_keys + platform_keys + specification_internal_keys
           attributes_hash = consumer.spec.attributes_hash
           keys = attributes_hash.keys
           Specification::DSL::PLATFORMS.each do |platform|
@@ -136,13 +138,9 @@ module Pod
         #         The value of the attribute.
         #
         def validate_attribute_occurrence(attribute, value)
-          if attribute.root_only? && !value.nil? && !consumer.spec.root?
-            results.add_error('attributes', "Can't set `#{attribute.name}` attribute for " \
-              "subspecs (in `#{consumer.spec.name}`).")
-          end
-          if attribute.test_only? && !value.nil? && !consumer.spec.test_specification?
-            results.add_error('attributes', "Attribute `#{attribute.name}` can only be set " \
-              "within test specs (in `#{consumer.spec.name}`).")
+          if !attribute.spec_types.include?(consumer.spec.type) && !value.nil?
+            results.add_error('attributes', "Can't set `#{attribute.name}` attribute for #{consumer.spec.type} "\
+              "specs (in `#{consumer.spec.name}`).")
           end
         end
 

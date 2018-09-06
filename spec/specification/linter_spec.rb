@@ -594,14 +594,14 @@ module Pod
 
       it 'fails a specification with a subspec with a module map' do
         @subspec.module_map = 'subspec.modulemap'
-        result_should_include('module_map', 'can\'t set', 'for subspecs')
+        result_should_include('module_map', 'Can\'t set', 'for sub specs')
       end
 
       #------------------#
 
       it 'fails a specification with a subspec with default subspecs' do
         @subspec.default_subspecs = 'Spec'
-        result_should_include('default_subspecs', 'can\'t set', 'for subspecs')
+        result_should_include('default_subspecs', 'Can\'t set', 'for sub specs')
       end
     end
   end

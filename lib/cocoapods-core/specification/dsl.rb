@@ -1341,7 +1341,7 @@ module Pod
       #           the path to the module map file that should be used.
       #
       attribute :module_map,
-                :root_only     => true
+                :spec_types => [:root]
 
       #-----------------------------------------------------------------------#
 
@@ -1420,7 +1420,7 @@ module Pod
       #   end
       #
       def subspec(name, &block)
-        subspec = Specification.new(self, name, &block)
+        subspec = Specification.new(self, name, :sub, &block)
         @subspecs << subspec
         subspec
       end
@@ -1443,10 +1443,11 @@ module Pod
       #
       # @param  [Symbol, String] type
       #         The test type to use.
+      #
       attribute :test_type,
                 :types => [Symbol, String],
                 :multi_platform => false,
-                :test_only => true
+                :spec_types => [:test]
 
       # @!method requires_app_host=(flag)
       #
@@ -1462,7 +1463,7 @@ module Pod
       attribute :requires_app_host,
                 :types => [TrueClass, FalseClass],
                 :default_value => false,
-                :test_only => true
+                :spec_types => [:test]
 
       # Represents a test specification for the library. Here you can place all
       # your tests for your podspec along with the test dependencies.
@@ -1481,7 +1482,7 @@ module Pod
       #   end
       #
       def test_spec(name = 'Tests', &block)
-        subspec = Specification.new(self, name, true, &block)
+        subspec = Specification.new(self, name, :test, &block)
         @subspecs << subspec
         subspec
       end
@@ -1519,7 +1520,7 @@ module Pod
                 :container => Array,
                 :singularize => true,
                 :multi_platform => false,
-                :root_only => true
+                :spec_types => [:root]
 
       #-----------------------------------------------------------------------#
 

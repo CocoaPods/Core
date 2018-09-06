@@ -10,6 +10,7 @@ module Pod
         expected = {
           'name' => 'BananaLib',
           'version' => '1.0',
+          'type' => 'root',
           'platforms' => {
             'osx' => nil,
             'ios' => nil,
@@ -49,6 +50,7 @@ module Pod
         expected = {
           'name' => 'BananaLib',
           'version' => '1.0',
+          'type' => 'root',
           'platforms' => {
             'osx' => nil,
             'ios' => nil,
@@ -77,6 +79,7 @@ module Pod
         hash = @spec.to_hash
         hash['name'].should == 'BananaLib'
         hash['version'].should == '1.0'
+        hash['type'].should == :root
       end
 
       it 'handles subspecs when converted to a hash' do
@@ -84,11 +87,13 @@ module Pod
         hash['subspecs'].should == [
           {
             'name' => 'GreenBanana',
+            'type' => :sub,
             'source_files' => 'GreenBanana',
             'dependencies' => { 'AFNetworking' => [] },
           },
           {
             'name' => 'YellowBanana',
+            'type' => :sub,
             'source_files' => 'YellowBanana',
             'dependencies' => { 'SDWebImage' => [] },
           },
@@ -105,6 +110,7 @@ module Pod
         hash['subspecs'].should == [
           {
             'name' => 'GreenBanana',
+            'type' => :sub,
             'source_files' => 'GreenBanana',
             'dependencies' => { 'AFNetworking' => [] },
             'platforms' => {
@@ -114,6 +120,7 @@ module Pod
           },
           {
             'name' => 'YellowBanana',
+            'type' => :sub,
             'source_files' => 'YellowBanana',
             'dependencies' => { 'SDWebImage' => [] },
           },
@@ -128,11 +135,13 @@ module Pod
         hash['subspecs'].should == [
           {
             'name' => 'GreenBanana',
+            'type' => :sub,
             'source_files' => 'GreenBanana',
             'dependencies' => { 'AFNetworking' => [] },
           },
           {
             'name' => 'YellowBanana',
+            'type' => :sub,
             'source_files' => 'YellowBanana',
             'dependencies' => { 'SDWebImage' => [] },
           },
@@ -159,11 +168,13 @@ module Pod
         hash['subspecs'].should == [
           {
             'name' => 'GreenBanana',
+            'type' => :sub,
             'source_files' => 'GreenBanana',
             'dependencies' => { 'AFNetworking' => [] },
           },
           {
             'name' => 'YellowBanana',
+            'type' => :sub,
             'source_files' => 'YellowBanana',
             'dependencies' => { 'SDWebImage' => [] },
           },
@@ -171,13 +182,14 @@ module Pod
         hash['testspecs'].should == [{
           'name' => 'Tests',
           'test_type' => :unit,
+          'type' => :test,
         }]
       end
 
       it 'writes test type for test subspec in json' do
         @spec.test_spec {}
         hash = @spec.to_json
-        hash.should.include '"name":"Tests","test_type":"unit"'
+        hash.should.include '"name":"Tests","type":"test","test_type":"unit"'
       end
 
       it 'can be loaded from an hash' do
@@ -187,10 +199,11 @@ module Pod
         }
         result = Specification.from_hash(hash)
         result.name.should == 'BananaLib'
+        result.type.should == :root
         result.version.to_s.should == '1.0'
       end
 
-      it 'can load test specification from hash' do
+      it 'can load test specification with backwards compatibility from hash without specifying test_spec' do
         hash = {
           'name' => 'BananaLib',
           'version' => '1.0',
@@ -198,10 +211,30 @@ module Pod
           'testspecs' => [{ 'name' => 'Tests', 'test_type' => :unit }],
         }
         result = Specification.from_hash(hash)
+        result.type.should == :root
         result.subspecs.count.should.equal 2
+        result.subspecs.first.type.should.equal :sub
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+        result.test_specs.first.type.should.equal :test
+      end
+
+      it 'can load test specification with from hash.' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }],
+          'testspecs' => [{ 'name' => 'Tests', 'type' => :test, 'test_type' => :unit }],
+        }
+        result = Specification.from_hash(hash)
+        result.type.should.equal :root
+        result.subspecs.count.should.equal 2
+        result.subspecs.first.type.should.equal :sub
+        result.test_specs.count.should.equal 1
+        result.test_specs.first.test_specification?.should.be.true
+        result.test_specs.first.test_type.should.equal :unit
+        result.test_specs.first.type.should.equal :test
       end
 
       it 'can load script phases from hash' do
@@ -228,26 +261,33 @@ module Pod
           'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }, { 'name' => 'Tests', 'test_type' => :unit }],
         }
         result = Specification.from_hash(hash)
+        result.type.should.equal :root
         result.subspecs.count.should.equal 2
+        result.subspecs.first.type.should.equal :sub
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+        result.test_specs.first.type.should.equal :test
       end
 
       it 'can load test specification from 1.3.0 JSON format' do
         json = '{"subspecs": [{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
         result = Specification.from_json(json)
+        result.type.should.equal :root
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+        result.test_specs.first.type.should.equal :test
       end
 
       it 'can load test specification from json' do
         json = '{"testspecs": [{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
         result = Specification.from_json(json)
+        result.type.should.equal :root
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+        result.test_specs.first.type.should.equal :test
       end
 
       it 'can load script phases from json' do

@@ -29,19 +29,18 @@ module Pod
         def initialize(name, options)
           @name = name
 
-          @multi_platform = options.delete(:multi_platform) { true       }
-          @root_only      = options.delete(:root_only)      { false      }
-          @test_only      = options.delete(:test_only)      { false      }
-          @inherited      = options.delete(:inherited)      { @root_only }
-          @required       = options.delete(:required)       { false      }
-          @singularize    = options.delete(:singularize)    { false      }
-          @file_patterns  = options.delete(:file_patterns)  { false      }
-          @container      = options.delete(:container)      { nil        }
-          @keys           = options.delete(:keys)           { nil        }
-          @default_value  = options.delete(:default_value)  { nil        }
-          @ios_default    = options.delete(:ios_default)    { nil        }
-          @osx_default    = options.delete(:osx_default)    { nil        }
-          @types          = options.delete(:types)          { [String]   }
+          @multi_platform = options.delete(:multi_platform) { true }
+          @spec_types     = options.delete(:spec_types)     { [:root, :sub, :test] }
+          @inherited      = options.delete(:inherited)      { root_only? }
+          @required       = options.delete(:required)       { false }
+          @singularize    = options.delete(:singularize)    { false }
+          @file_patterns  = options.delete(:file_patterns)  { false }
+          @container      = options.delete(:container)      { nil }
+          @keys           = options.delete(:keys)           { nil }
+          @default_value  = options.delete(:default_value)  { nil }
+          @ios_default    = options.delete(:ios_default)    { nil }
+          @osx_default    = options.delete(:osx_default)    { nil }
+          @types          = options.delete(:types)          { [String] }
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{self}"
@@ -108,6 +107,10 @@ module Pod
         #
         attr_reader :osx_default
 
+        # @return [Symbol] array of spec types that this attribute belongs to.
+        #
+        attr_reader :spec_types
+
         # @return [Bool] whether the specification should be considered invalid
         #         if a value for the attribute is not specified.
         #
@@ -119,7 +122,7 @@ module Pod
         #         root specification.
         #
         def root_only?
-          @root_only
+          @spec_types.include?(:root) && @spec_types.count == 1
         end
 
         # @return [Bool] whether the attribute should be specified only on
