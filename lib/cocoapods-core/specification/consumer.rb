@@ -185,6 +185,10 @@ module Pod
       #
       spec_attr_accessor :script_phases
 
+      # @return [Hash] A hash that contains the scheme configuration.
+      #
+      spec_attr_accessor :scheme
+
       # @return [Array<String>] A hash where the key represents the
       #         paths of the resources to copy and the values the paths of
       #         the resources that should be copied.
@@ -393,6 +397,17 @@ module Pod
             end
           end.compact
         end
+      end
+
+      # Converts the a scheme where keys are strings into symbols.
+      #
+      # @param  [Hash] value.
+      #         The value of the attribute as specified by the user.
+      #
+      # @return [Hash] the scheme with symbols as keys instead of strings or `nil` if the value is not a hash.
+      #
+      def _prepare_scheme(value)
+        Specification.convert_keys_to_symbol(value, :recursive => false) if value && value.is_a?(Hash)
       end
 
       # Ensures that the file patterns of the resource bundles are contained in

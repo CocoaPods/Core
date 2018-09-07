@@ -455,6 +455,18 @@ module Pod
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
       end
+
+      it 'allows you to specify a scheme for a test spec' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = 'unit'
+            test_spec.scheme = { :launch_arguments => %w(Arg1 Arg2), :environment_variables => { 'Key1' => 'Val1' } }
+          end
+        end
+        test_spec = a_spec.subspecs.first
+        test_spec.scheme.should == { :launch_arguments => %w(Arg1 Arg2), :environment_variables => { 'Key1' => 'Val1' } }
+      end
     end
 
     #-----------------------------------------------------------------------------#

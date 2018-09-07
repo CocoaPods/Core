@@ -9,8 +9,7 @@ module Pod
         linter = Specification::Linter.new(podspec_path)
         @spec = linter.spec
         results = Specification::Linter::Results.new
-        @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios),
-                                                        results)
+        @analyzer = Specification::Linter::Analyzer.new(@spec.consumer(:ios), results)
       end
 
       #----------------------------------------#
@@ -40,6 +39,43 @@ module Pod
           expected = 'Can\'t set `homepage` attribute for subspecs (in `BananaLib/subspec`).'
           results.first.message.should.include?(expected)
           results.first.attribute_name.should.include?('attribute')
+        end
+      end
+
+      #----------------------------------------#
+
+      describe 'Attribute Occurrence' do
+        it 'disallows root only attributes into subspecs' do
+          subspec = @spec.subspec 'subspec' do |sp|
+            sp.version = '1.0.0'
+          end
+          results = Specification::Linter::Results.new
+          @analyzer = Specification::Linter::Analyzer.new(subspec.consumer(:ios), results)
+          results = @analyzer.analyze
+          results.count.should.be.equal(1)
+          expected = "Can't set `version` attribute for subspecs (in `BananaLib/subspec`)."
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('attribute')
+        end
+
+        it 'disallows test only attributes into non test specs' do
+          @spec.test_spec {}
+          @spec.requires_app_host = true
+          results = @analyzer.analyze
+          results.count.should.be.equal(1)
+          expected = 'Attribute `requires_app_host` can only be set within test specs (in `BananaLib`).'
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('attribute')
+        end
+
+        it 'allows test only attributes into test specs' do
+          @spec.test_spec {}
+          test_spec = @spec.test_specs.first
+          test_spec.requires_app_host = true
+          results = Specification::Linter::Results.new
+          @analyzer = Specification::Linter::Analyzer.new(test_spec.consumer(:ios), results)
+          results = @analyzer.analyze
+          results.should.be.empty?
         end
       end
 

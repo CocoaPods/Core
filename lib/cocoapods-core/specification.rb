@@ -428,6 +428,13 @@ module Pod
       end
     end
 
+    # @return [Hash] The scheme value.
+    #
+    def scheme
+      value = attributes_hash['scheme'] || {}
+      Specification.convert_keys_to_symbol(value, :recursive => false)
+    end
+
     #-------------------------------------------------------------------------#
 
     public
@@ -571,30 +578,36 @@ module Pod
     # @param  [Object] value
     #         the value that needs to be stripped from the Symbols.
     #
-    # @return [Hash] the hash with the strings instead of the keys.
+    # @param  [Boolean] recursive
+    #         whether to convert keys of nested hashes.
     #
-    def self.convert_keys_to_string(value)
+    # @return [Hash] the hash with the keys as strings instead of symbols.
+    #
+    def self.convert_keys_to_string(value, recursive: true)
       return unless value
       result = {}
       value.each do |key, subvalue|
-        subvalue = Specification.convert_keys_to_string(subvalue) if subvalue.is_a?(Hash)
+        subvalue = Specification.convert_keys_to_string(subvalue) if recursive && subvalue.is_a?(Hash)
         result[key.to_s] = subvalue
       end
       result
     end
 
-    # Converts the keys of the given hash to a string.
+    # Converts the keys of the given hash to a symbol.
     #
     # @param  [Object] value
-    #         the value that needs to be stripped from the Symbols.
+    #         the value that needs to be stripped from the Strings.
     #
-    # @return [Hash] the hash with the strings instead of the keys.
+    # @param  [Boolean] recursive
+    #         whether to convert keys of nested hashes.
     #
-    def self.convert_keys_to_symbol(value)
+    # @return [Hash] the hash with the keys as symbols instead of strings.
+    #
+    def self.convert_keys_to_symbol(value, recursive: true)
       return unless value
       result = {}
       value.each do |key, subvalue|
-        subvalue = Specification.convert_keys_to_symbol(subvalue) if subvalue.is_a?(Hash)
+        subvalue = Specification.convert_keys_to_symbol(subvalue) if recursive && subvalue.is_a?(Hash)
         result[key.to_sym] = subvalue
       end
       result

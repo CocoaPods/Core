@@ -280,6 +280,14 @@ module Pod
         test_consumer.requires_app_host?.should.be.true
       end
 
+      it 'returns the scheme configuration of a test spec' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.scheme = { :launch_arguments => ['Arg1'] }
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.scheme.should == { :launch_arguments => ['Arg1'] }
+      end
+
       #------------------#
 
       it 'returns the script phases in correct format' do
