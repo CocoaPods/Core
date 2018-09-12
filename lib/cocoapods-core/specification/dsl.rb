@@ -1486,6 +1486,28 @@ module Pod
         subspec
       end
 
+      # Represents an app specification for the library. Here you can place all
+      # your app source files for your podspec along with the app dependencies.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.app_spec do |app_spec|
+      #       app_spec.source_files = 'NSAttributedString+CCLFormat.m'
+      #       app_spec.dependency 'AFNetworking'
+      #     end
+      #   end
+      #
+      def app_spec(name = 'App', &block)
+        appspec = Specification.new(self, name, :app_specification => true, &block)
+        @subspecs << appspec
+        appspec
+      end
+
       #------------------#
 
       # @!method default_subspecs=(subspec_array)
