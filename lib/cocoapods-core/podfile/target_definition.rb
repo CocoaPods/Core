@@ -586,7 +586,7 @@ module Pod
         name = :osx if name == :macos
         unless [:ios, :osx, :tvos, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            'must be `:ios`, `:osx`, `:tvos`, or `:watchos`.'
+            'must be `:ios`, `:osx`, `:macos`, `:tvos`, or `:watchos`.'
         end
 
         if target
