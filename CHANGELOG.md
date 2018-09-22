@@ -6,7 +6,7 @@
 
 * Introduce `example_specification` DSL  
   [Jeff Verkoeyen](https://github.com/jverkoey)
-  [####](https://github.com/CocoaPods/Core/pull/###)
+  [#463](https://github.com/CocoaPods/Core/pull/463)
 
 * Add support for specifying subspecs when using the `podspec` Podfile attribute  
   [Whirlwind](https://github.com/whirlwind)
