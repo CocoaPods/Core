@@ -434,6 +434,37 @@ module Pod
 
     #-----------------------------------------------------------------------------#
 
+    describe 'Example specs' do
+      before do
+        @spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.example_spec do |example_spec|
+          end
+        end
+      end
+
+      it 'allows you to specify an example spec' do
+        example_spec = @spec.subspecs.first
+        example_spec.class.should == Specification
+        example_spec.name.should == 'Spec/Example'
+        example_spec.example_specification?.should == true
+      end
+
+      it 'allows you to specify an example type as string' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.example_spec do |example_spec|
+          end
+        end
+        example_spec = a_spec.subspecs.first
+        example_spec.class.should == Specification
+        example_spec.name.should == 'Spec/Examples'
+        example_spec.example_specification?.should == true
+      end
+    end
+
+    #-----------------------------------------------------------------------------#
+
     describe 'Multi-Platform' do
       before do
         @spec = Spec.new do |s|

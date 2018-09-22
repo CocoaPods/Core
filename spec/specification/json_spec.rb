@@ -204,6 +204,19 @@ module Pod
         result.test_specs.first.test_type.should.equal :unit
       end
 
+      it 'can load example specification from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }],
+          'examplespecs' => [{ 'name' => 'Examples' }],
+        }
+        result = Specification.from_hash(hash)
+        result.subspecs.count.should.equal 2
+        result.example_specs.count.should.equal 1
+        result.example_specs.first.example_specification?.should.be.true
+      end
+
       it 'can load script phases from hash' do
         hash = {
           'name' => 'BananaLib',
@@ -248,6 +261,13 @@ module Pod
         result.test_specs.count.should.equal 1
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.test_type.should.equal :unit
+      end
+
+      it 'can load example specification from json' do
+        json = '{"examplespecs": [{"name": "Examples","source_files": "Examples/**/*.{h,m}"}]}'
+        result = Specification.from_json(json)
+        result.example_specs.count.should.equal 1
+        result.example_specs.first.example_specification?.should.be.true
       end
 
       it 'can load script phases from json' do

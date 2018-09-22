@@ -1486,6 +1486,27 @@ module Pod
         subspec
       end
 
+      # Represents an example specification for the library. Here you can place all
+      # your examples for your podspec along with the example dependencies.
+      #
+      # ---
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.example_spec do |example_spec|
+      #       example_spec.source_files = 'examples/*.{h,m}'
+      #     end
+      #   end
+      #
+      def example_spec(name = 'Examples', &block)
+        subspec = Specification.new(self, name, false, true, &block)
+        @subspecs << subspec
+        subspec
+      end
+
       #------------------#
 
       # @!method default_subspecs=(subspec_array)

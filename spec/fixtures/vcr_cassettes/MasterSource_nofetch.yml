@@ -69,6 +69,74 @@ http_interactions:
     body:
       encoding: UTF-8
       string: 570c31dea8def019ec563be2326e053cc937e084
-    http_version:
+    http_version: 
   recorded_at: Wed, 09 Mar 2016 21:44:04 GMT
-recorded_with: VCR 2.9.3
+- request:
+    method: get
+    uri: https://api.github.com/repos/CocoaPods/Core/commits/master
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - CocoaPods
+      Accept:
+      - application/vnd.github.v3.sha
+      If-None-Match:
+      - '"d840bba894ece5a2a5bc82d008dbefe61066e063"'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 304
+      message: Not Modified
+    headers:
+      Server:
+      - GitHub.com
+      Date:
+      - Sat, 22 Sep 2018 19:59:15 GMT
+      Content-Type:
+      - application/octet-stream
+      Status:
+      - 304 Not Modified
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '60'
+      X-Ratelimit-Reset:
+      - '1537649955'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      Etag:
+      - '"d840bba894ece5a2a5bc82d008dbefe61066e063"'
+      Last-Modified:
+      - Tue, 11 Sep 2018 22:02:33 GMT
+      Access-Control-Expose-Headers:
+      - ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Frame-Options:
+      - deny
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Content-Security-Policy:
+      - default-src 'none'
+      X-Runtime-Rack:
+      - '0.018863'
+      X-Github-Request-Id:
+      - 0FDD:0E56:B5F3C1:1D70F74:5BA69F12
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Sat, 22 Sep 2018 19:59:15 GMT
+recorded_with: VCR 3.0.3

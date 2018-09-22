@@ -26,9 +26,13 @@ module Pod
           platforms = Hash[available_platforms.map { |p| [p.name.to_s, p.deployment_target && p.deployment_target.to_s] }]
           hash['platforms'] = platforms
         end
-        all_testspecs, all_subspecs = subspecs.partition(&:test_specification?)
+        all_testspecs, remaining_subspecs = subspecs.partition(&:test_specification?)
+        all_examplespecs, all_subspecs = remaining_subspecs.partition(&:example_specification?)
         unless all_testspecs.empty?
           hash['testspecs'] = all_testspecs.map(&:to_hash)
+        end
+        unless all_examplespecs.empty?
+          hash['examplespecs'] = all_examplespecs.map(&:to_hash)
         end
         unless all_subspecs.empty?
           hash['subspecs'] = all_subspecs.map(&:to_hash)
@@ -66,10 +70,12 @@ module Pod
       attributes_hash = hash.dup
       subspecs = attributes_hash.delete('subspecs')
       testspecs = attributes_hash.delete('testspecs')
+      examplespecs = attributes_hash.delete('examplespecs')
       spec.attributes_hash = attributes_hash
       spec.test_specification = !attributes_hash['test_type'].nil?
       spec.subspecs.concat(subspecs_from_hash(spec, subspecs))
       spec.subspecs.concat(subspecs_from_hash(spec, testspecs))
+      spec.subspecs.concat(subspecs_from_hash(spec, examplespecs))
       spec
     end
 

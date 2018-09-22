@@ -235,21 +235,26 @@ module Pod
           end
           s.test_spec do |_tsp|
           end
+          s.example_spec do |_esp|
+          end
         end
         @subspec = @spec.subspecs.first
         @test_subspec = @spec.test_specs.first
+        @example_subspec = @spec.example_specs.first
       end
 
       it 'returns the root spec' do
         @spec.root.should == @spec
         @subspec.root.should == @spec
         @test_subspec.root.should == @spec
+        @example_subspec.root.should == @spec
       end
 
       it 'returns whether it is a root spec' do
         @spec.root?.should.be.true
         @subspec.root?.should.be.false
         @test_subspec.root?.should.be.false
+        @example_subspec.root?.should.be.false
       end
 
       it 'returns whether it is a subspec' do
@@ -257,6 +262,8 @@ module Pod
         @subspec.subspec?.should.be.true
         @test_subspec.subspec?.should.be.true
         @test_subspec.test_specification?.should.be.true
+        @example_subspec.subspec?.should.be.true
+        @example_subspec.example_specification?.should.be.true
       end
     end
 
@@ -307,6 +314,17 @@ module Pod
         @spec.subspec_by_name('Pod/Tests', false).should. nil?
       end
 
+      it "doesn't return the example subspec given its name" do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking'
+          s.osx.dependency 'MagicalRecord'
+          s.example_spec {}
+        end
+        @spec.subspec_by_name('Pod/Examples', false).should. nil?
+      end
+
       it "does return the test subspec given it's name when including test subspecs" do
         @spec = Spec.new do |s|
           s.name = 'Pod'
@@ -317,6 +335,18 @@ module Pod
         end
         test_spec = @spec.test_specs.first
         @spec.subspec_by_name('Pod/Tests', false, true).should == test_spec
+      end
+
+      it "does return the example subspec given it's name when including example subspecs" do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking'
+          s.osx.dependency 'MagicalRecord'
+          s.example_spec {}
+        end
+        example_spec = @spec.example_specs.first
+        @spec.subspec_by_name('Pod/Examples', false, false, true).should == example_spec
       end
 
       it 'returns a subspec given the relative name' do
@@ -381,6 +411,14 @@ module Pod
           Dependency.new('Pod/SubspeciOS', '1.0')]
       end
 
+      it 'excludes the example subspec from the subspec dependencies' do
+        @spec.example_spec {}
+        @spec.subspec_dependencies.sort.should == [
+          Dependency.new('Pod/Subspec', '1.0'),
+          Dependency.new('Pod/SubspecOSX', '1.0'),
+          Dependency.new('Pod/SubspeciOS', '1.0')]
+      end
+
       it 'returns all the dependencies' do
         @spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
@@ -390,6 +428,15 @@ module Pod
       it 'returns the test spec dependencies' do
         test_spec = @spec.test_spec { |s| s.dependency 'OCMock' }
         test_spec.dependencies.sort.should == [
+          Dependency.new('AFNetworking'),
+          Dependency.new('MagicalRecord'),
+          Dependency.new('OCMock'),
+        ]
+      end
+
+      it 'returns the example spec dependencies' do
+        example_spec = @spec.example_spec { |s| s.dependency 'OCMock' }
+        example_spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('OCMock'),

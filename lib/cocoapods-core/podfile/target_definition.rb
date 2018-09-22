@@ -1031,8 +1031,8 @@ module Pod
         requirements.pop if options.empty?
       end
 
-      # Removes :subspecs and :testspecs from the requirements list, and stores the pods
-      # with the given subspecs or test specs as dependencies.
+      # Removes :subspecs, :testspecs and :examplespecs from the requirements list, and stores the
+      # pods with the given subspecs, test specs, or example specs as dependencies.
       #
       # @param  [String] name
       #
@@ -1048,6 +1048,7 @@ module Pod
 
         subspecs = options.delete(:subspecs)
         test_specs = options.delete(:testspecs)
+        example_specs = options.delete(:examplespecs)
 
         subspecs.each do |ss|
           store_pod("#{name}/#{ss}", *requirements.dup)
@@ -1057,6 +1058,11 @@ module Pod
           requirements_copy = requirements.map(&:dup)
           store_pod("#{name}/#{ss}", *requirements_copy)
         end if test_specs
+
+        example_specs.each do |ss|
+          requirements_copy = requirements.map(&:dup)
+          store_pod("#{name}/#{ss}", *requirements_copy)
+        end if example_specs
 
         requirements.pop if options.empty?
         !subspecs.nil?
