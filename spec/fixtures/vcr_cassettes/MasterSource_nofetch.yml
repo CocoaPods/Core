@@ -71,4 +71,77 @@ http_interactions:
       string: 570c31dea8def019ec563be2326e053cc937e084
     http_version:
   recorded_at: Wed, 09 Mar 2016 21:44:04 GMT
-recorded_with: VCR 2.9.3
+- request:
+    method: get
+    uri: https://api.github.com/repos/CocoaPods/Core/commits/master
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - CocoaPods
+      Accept:
+      - application/vnd.github.v3.sha
+      If-None-Match:
+      - '"252d4ed495c6835e53e38991dcad34010e27c9d9"'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 09 Oct 2018 17:12:34 GMT
+      Content-Type:
+      - application/vnd.github.v3.sha; charset=utf-8
+      Content-Length:
+      - '40'
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      X-Ratelimit-Limit:
+      - '60'
+      X-Ratelimit-Remaining:
+      - '57'
+      X-Ratelimit-Reset:
+      - '1539108439'
+      Cache-Control:
+      - public, max-age=60, s-maxage=60
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Etag:
+      - '"393af3e82c7cf1a2b691b6bc30b3d25674354816"'
+      Last-Modified:
+      - Mon, 24 Sep 2018 21:17:21 GMT
+      X-Github-Media-Type:
+      - github.v3; param=sha
+      Access-Control-Expose-Headers:
+      - ETag, Link, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval
+      Access-Control-Allow-Origin:
+      - "*"
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      X-Frame-Options:
+      - deny
+      X-Content-Type-Options:
+      - nosniff
+      X-Xss-Protection:
+      - 1; mode=block
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Content-Security-Policy:
+      - default-src 'none'
+      X-Runtime-Rack:
+      - '0.103870'
+      X-Github-Request-Id:
+      - C6B7:0F78:534043:6793EA:5BBCE182
+    body:
+      encoding: UTF-8
+      string: 393af3e82c7cf1a2b691b6bc30b3d25674354816
+    http_version:
+  recorded_at: Tue, 09 Oct 2018 17:12:34 GMT
+recorded_with: VCR 3.0.3

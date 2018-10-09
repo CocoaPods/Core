@@ -204,6 +204,20 @@ module Pod
         result.test_specs.first.test_type.should.equal :unit
       end
 
+      it 'can load app specification from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'subspecs' => [{ 'name' => 'GreenBanana', 'source_files' => 'GreenBanana' }],
+          'appspecs' => [{ 'name' => 'App' }],
+        }
+        result = Specification.from_hash(hash)
+        result.subspecs.count.should.equal 2
+        result.app_specs.count.should.equal 1
+        result.app_specs.first.name.should == 'BananaLib/App'
+        result.app_specs.first.app_specification?.should.be.true
+      end
+
       it 'can load script phases from hash' do
         hash = {
           'name' => 'BananaLib',
