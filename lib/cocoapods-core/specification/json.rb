@@ -26,9 +26,10 @@ module Pod
           platforms = Hash[available_platforms.map { |p| [p.name.to_s, p.deployment_target && p.deployment_target.to_s] }]
           hash['platforms'] = platforms
         end
-        all_appspecs = subspecs.select(&:app_specification?)
-        all_testspecs = subspecs.select(&:test_specification?)
-        all_subspecs = subspecs.select(&:library_specification?)
+        specs_by_type = subspecs.group_by(&:spec_type)
+        all_appspecs = specs_by_type[:app] || []
+        all_testspecs = specs_by_type[:test] || []
+        all_subspecs = specs_by_type[:library] || []
 
         hash['testspecs'] = all_testspecs.map(&:to_hash) unless all_testspecs.empty?
         hash['appspecs'] = all_appspecs.map(&:to_hash) unless all_appspecs.empty?

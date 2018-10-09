@@ -231,6 +231,20 @@ module Pod
 
     public
 
+    # Spec types currently supported in cocoapods.
+    SUPPORTED_SPEC_TYPES = [:library, :app, :test].freeze
+
+    # @return [Symbol] Spec type of the current spec.
+    #
+    # @note see #SUPPORTED_SPEC_TYPES for the list of available spec_types.
+    #
+    def spec_type
+      return :app if app_specification?
+      return :test if test_specification?
+
+      :library
+    end
+
     # @!group Dependencies & Subspecs
 
     # @return [Bool] If this specification is a library specification.

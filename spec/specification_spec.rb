@@ -291,6 +291,13 @@ module Pod
         @test_subspec.app_specification?.should.be.false
         @app_subspec.app_specification?.should.be.true
       end
+
+      it 'returns the correct spec_type' do
+        @spec.spec_type.should == :library
+        @subspec.spec_type.should == :library
+        @test_subspec.spec_type.should == :test
+        @app_subspec.spec_type.should == :app
+      end
     end
 
     #-------------------------------------------------------------------------#
@@ -462,7 +469,7 @@ module Pod
 
       it 'returns the app spec dependencies' do
         app_spec = @spec.app_spec { |s| s.dependency 'OCMock' }
-        app_spec .dependencies.sort.should == [
+        app_spec.dependencies.sort.should == [
           Dependency.new('AFNetworking'),
           Dependency.new('MagicalRecord'),
           Dependency.new('OCMock'),
