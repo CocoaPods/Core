@@ -234,6 +234,10 @@ module Pod
       #                  A hash containing changed specification paths for each source.
       #
       def update_search_index_if_needed_in_background(changed_spec_paths)
+        if Gem.win_platform?
+          update_search_index_if_needed(changed_spec_paths)
+          return
+        end
         Process.fork do
           Process.daemon
           update_search_index_if_needed(changed_spec_paths)

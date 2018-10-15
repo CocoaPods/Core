@@ -251,6 +251,21 @@ module Pod
         changed_paths = { @test_source => %w(Specs/BananaLib/1.0/BananaLib.podspec Specs/JSONKit/1.4/JSONKit.podspec) }
         @sources_manager.update_search_index_if_needed(changed_paths)
       end
+
+      it 'process fork is called when updating search index in background' do
+        Process.expects(:fork)
+
+        changed_paths = { @test_source => %w(Specs/BananaLib/1.0/BananaLib.podspec Specs/JSONKit/1.4/JSONKit.podspec) }
+        @sources_manager.update_search_index_if_needed_in_background(changed_paths)
+      end
+
+      it 'process fork is not called when updating search index in background on Windows' do
+        Gem.stubs(:win_platform?).returns(true)
+        Process.stubs(:fork).at_most(0)
+
+        changed_paths = { @test_source => %w(Specs/BananaLib/1.0/BananaLib.podspec Specs/JSONKit/1.4/JSONKit.podspec) }
+        @sources_manager.update_search_index_if_needed_in_background(changed_paths)
+      end
     end
 
     #-------------------------------------------------------------------------#

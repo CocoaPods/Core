@@ -15,6 +15,10 @@
 
 ##### Enhancements
 
+* Windows support - do not use fork when updating the index  
+  [David Airapetyan](https://github.com/davidair)
+  [#466](https://github.com/CocoaPods/Core/pull/466)
+
 * Add support for specifying subspecs when using the `podspec` Podfile attribute  
   [Whirlwind](https://github.com/whirlwind)
   [#456](https://github.com/CocoaPods/Core/pull/456)
