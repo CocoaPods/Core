@@ -63,7 +63,7 @@ module Pod
     #
     # @return [Specification] the specification
     #
-    def self.from_hash(hash, parent = nil, test_specification = false, app_specification = false)
+    def self.from_hash(hash, parent = nil, test_specification: false, app_specification: false)
       attributes_hash = hash.dup
       spec = Spec.new(parent, nil, test_specification, :app_specification => app_specification)
       subspecs = attributes_hash.delete('subspecs')
@@ -84,10 +84,12 @@ module Pod
       spec
     end
 
-    def self.subspecs_from_hash(spec, subspecs, test_specifications, app_specifications)
+    def self.subspecs_from_hash(spec, subspecs, test_specification, app_specification)
       return [] if subspecs.nil?
       subspecs.map do |s_hash|
-        Specification.from_hash(s_hash, spec, test_specifications, app_specifications)
+        Specification.from_hash(s_hash, spec,
+                                :test_specification => test_specification,
+                                :app_specification => app_specification)
       end
     end
 
