@@ -1048,6 +1048,7 @@ module Pod
 
         subspecs = options.delete(:subspecs)
         test_specs = options.delete(:testspecs)
+        app_specs = options.delete(:appspecs)
 
         subspecs.each do |ss|
           store_pod("#{name}/#{ss}", *requirements.dup)
@@ -1057,6 +1058,11 @@ module Pod
           requirements_copy = requirements.map(&:dup)
           store_pod("#{name}/#{ss}", *requirements_copy)
         end if test_specs
+
+        app_specs.each do |as|
+          requirements_copy = requirements.map(&:dup)
+          store_pod("#{name}/#{as}", *requirements_copy)
+        end if app_specs
 
         requirements.pop if options.empty?
         !subspecs.nil?

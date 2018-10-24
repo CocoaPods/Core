@@ -237,15 +237,43 @@ module Pod
         @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Tests)
       end
 
+      it 'allows depending on appspecs' do
+        @parent.store_pod('RestKit', :appspecs => %w(App))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/App)
+      end
+
       it 'allows depending on both subspecs and testspecs' do
         @parent.store_pod('RestKit', :subspecs => %w(Networking))
         @parent.store_pod('RestKit', :testspecs => %w(Tests))
         @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/Networking RestKit/Tests)
       end
 
+      it 'allows depending on both subspecs and appspecs' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking))
+        @parent.store_pod('RestKit', :appspecs => %w(App))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit/App RestKit/Networking)
+      end
+
+      it 'allows depending on subspecs, testspecs, and appspecs' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking))
+        @parent.store_pod('RestKit', :testspecs => %w(Tests))
+        @parent.store_pod('RestKit', :appspecs => %w(App))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit RestKit RestKit/App RestKit/Networking RestKit/Tests)
+      end
+
       it 'allows depending on both subspecs and testspecs in chaining' do
         @parent.store_pod('RestKit', :subspecs => %w(Networking), :testspecs => %w(Tests))
         @parent.dependencies.map(&:name).sort.should == %w(RestKit/Networking RestKit/Tests)
+      end
+
+      it 'allows depending on both subspecs and appspecs in chaining' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking), :appspecs => %w(App))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/App RestKit/Networking)
+      end
+
+      it 'allows depending on subspecs, testspecs, and appspecs in chaining' do
+        @parent.store_pod('RestKit', :subspecs => %w(Networking), :testspecs => %w(Tests), :appspecs => %w(App))
+        @parent.dependencies.map(&:name).sort.should == %w(RestKit/App RestKit/Networking RestKit/Tests)
       end
 
       #--------------------------------------#
@@ -485,6 +513,27 @@ module Pod
         @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
         @parent.should.pod_whitelisted_for_configuration?('RestKit/Tests', 'Debug')
         @parent.should.not.pod_whitelisted_for_configuration?('RestKit', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit/Tests', 'Release')
+      end
+
+      it 'whitelistes pod configurations with appspecs' do
+        @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
+        @parent.store_pod('RestKit', :appspecs => %w(App), :configuration => 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit/App', 'Debug')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit/App', 'Release')
+      end
+
+      it 'whitelistes pod configurations with appspecs and testspecs' do
+        @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
+        @parent.store_pod('RestKit', :testspecs => %w(Tests), :configuration => 'Debug')
+        @parent.store_pod('RestKit', :appspecs => %w(App), :configuration => 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit/App', 'Debug')
+        @parent.should.pod_whitelisted_for_configuration?('RestKit/Tests', 'Debug')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('RestKit/App', 'Release')
         @parent.should.not.pod_whitelisted_for_configuration?('RestKit/Tests', 'Release')
       end
 

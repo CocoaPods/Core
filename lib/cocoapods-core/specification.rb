@@ -37,13 +37,18 @@ module Pod
     # @param [Bool] test_specification
     #        Whether the specification is a test specification
     #
-    def initialize(parent = nil, name = nil, test_specification = false)
+    # @param [Bool] app_specification
+    #        Whether the specification is an app specification
+    #
+    def initialize(parent = nil, name = nil, test_specification = false, app_specification: false)
+      raise StandardError, "#{self} can not be both an app and test specification." if test_specification && app_specification
       @attributes_hash = {}
       @subspecs = []
       @consumers = {}
       @parent = parent
       @hash_value = nil
       @test_specification = test_specification
+      @app_specification = app_specification
       attributes_hash['name'] = name
       attributes_hash['test_type'] = :unit if test_specification
 
@@ -73,6 +78,11 @@ module Pod
     #
     attr_accessor :test_specification
     alias_method :test_specification?, :test_specification
+
+    # @return [Bool] If this specification is an app specification.
+    #
+    attr_accessor :app_specification
+    alias_method :app_specification?, :app_specification
 
     # Checks if a specification is equal to the given one according its name
     # and to its version.
@@ -221,7 +231,37 @@ module Pod
 
     public
 
+    # Spec types currently supported in cocoapods.
+    SUPPORTED_SPEC_TYPES = [:library, :app, :test].freeze
+
+    # @return [Symbol] Spec type of the current spec.
+    #
+    # @note see #SUPPORTED_SPEC_TYPES for the list of available spec_types.
+    #
+    def spec_type
+      return :app if app_specification?
+      return :test if test_specification?
+
+      :library
+    end
+
     # @!group Dependencies & Subspecs
+
+    # @return [Bool] If this specification is a library specification.
+    #
+    # @note a library specification is a specification that is not of type app or test.
+    #
+    def library_specification?
+      !app_specification? && !test_specification?
+    end
+
+    # @return [Bool] If this specification is not a library specification.
+    #
+    # @note see #library_specification?
+    #
+    def non_library_specification?
+      !library_specification?
+    end
 
     # @return [Symbol] the test type supported if this is a test specification.
     #
@@ -234,6 +274,20 @@ module Pod
     #
     def test_specs
       subspecs.select(&:test_specification?)
+    end
+
+    # @return [Array<Specification>] the list of all the app subspecs of
+    #         a specification.
+    #
+    def app_specs
+      subspecs.select(&:app_specification?)
+    end
+
+    # @return [Array<Specification>] the list of all the non libary (app or test) subspecs of
+    #         a specification.
+    #
+    def non_library_specs
+      subspecs.select(&:non_library_specification?)
     end
 
     # @return [Array<Specification>] the recursive list of all the subspecs of
@@ -265,7 +319,7 @@ module Pod
     #
     # @return   [Specification] the subspec with the given name or self.
     #
-    def subspec_by_name(relative_name, raise_if_missing = true, include_test_specifications = false)
+    def subspec_by_name(relative_name, raise_if_missing = true, include_non_library_specifications = false)
       if relative_name.nil? || relative_name == base_name
         self
       elsif relative_name.downcase == base_name.downcase
@@ -274,7 +328,7 @@ module Pod
       else
         remainder = relative_name[base_name.size + 1..-1]
         subspec_name = remainder.split('/').shift
-        subspec = subspecs.find { |s| s.base_name == subspec_name && (include_test_specifications || !s.test_specification?) }
+        subspec = subspecs.find { |s| s.base_name == subspec_name && (include_non_library_specifications || !s.non_library_specification?) }
         unless subspec
           if raise_if_missing
             raise Informative, 'Unable to find a specification named ' \
@@ -283,7 +337,7 @@ module Pod
             return nil
           end
         end
-        subspec.subspec_by_name(remainder, raise_if_missing, include_test_specifications)
+        subspec.subspec_by_name(remainder, raise_if_missing, include_non_library_specifications)
       end
     end
 
@@ -307,7 +361,7 @@ module Pod
     #
     def subspec_dependencies(platform = nil)
       specs = if default_subspecs.empty?
-                subspecs.compact.reject(&:test_specification?)
+                subspecs.compact.reject(&:non_library_specification?)
               else
                 default_subspecs.map do |subspec_name|
                   root.subspec_by_name("#{name}/#{subspec_name}")

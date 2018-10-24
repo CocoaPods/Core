@@ -26,13 +26,15 @@ module Pod
           platforms = Hash[available_platforms.map { |p| [p.name.to_s, p.deployment_target && p.deployment_target.to_s] }]
           hash['platforms'] = platforms
         end
-        all_testspecs, all_subspecs = subspecs.partition(&:test_specification?)
-        unless all_testspecs.empty?
-          hash['testspecs'] = all_testspecs.map(&:to_hash)
-        end
-        unless all_subspecs.empty?
-          hash['subspecs'] = all_subspecs.map(&:to_hash)
-        end
+        specs_by_type = subspecs.group_by(&:spec_type)
+        all_appspecs = specs_by_type[:app] || []
+        all_testspecs = specs_by_type[:test] || []
+        all_subspecs = specs_by_type[:library] || []
+
+        hash['testspecs'] = all_testspecs.map(&:to_hash) unless all_testspecs.empty?
+        hash['appspecs'] = all_appspecs.map(&:to_hash) unless all_appspecs.empty?
+        hash['subspecs'] = all_subspecs.map(&:to_hash) unless all_subspecs.empty?
+
         hash
       end
     end
@@ -61,22 +63,33 @@ module Pod
     #
     # @return [Specification] the specification
     #
-    def self.from_hash(hash, parent = nil)
-      spec = Spec.new(parent)
+    def self.from_hash(hash, parent = nil, test_specification: false, app_specification: false)
       attributes_hash = hash.dup
+      spec = Spec.new(parent, nil, test_specification, :app_specification => app_specification)
       subspecs = attributes_hash.delete('subspecs')
       testspecs = attributes_hash.delete('testspecs')
-      spec.attributes_hash = attributes_hash
+      appspecs = attributes_hash.delete('appspecs')
+
+      ## backwards compatibility with 1.3.0
       spec.test_specification = !attributes_hash['test_type'].nil?
-      spec.subspecs.concat(subspecs_from_hash(spec, subspecs))
-      spec.subspecs.concat(subspecs_from_hash(spec, testspecs))
+
+      testspecs.each { |ts| ts['test_specification'] = true; } unless testspecs.nil?
+      appspecs.each { |ts| ts['app_specification'] = true; } unless appspecs.nil?
+
+      spec.attributes_hash = attributes_hash
+      spec.subspecs.concat(subspecs_from_hash(spec, subspecs, false, false))
+      spec.subspecs.concat(subspecs_from_hash(spec, testspecs, true, false))
+      spec.subspecs.concat(subspecs_from_hash(spec, appspecs, false, true))
+
       spec
     end
 
-    def self.subspecs_from_hash(spec, subspecs)
+    def self.subspecs_from_hash(spec, subspecs, test_specification, app_specification)
       return [] if subspecs.nil?
       subspecs.map do |s_hash|
-        Specification.from_hash(s_hash, spec)
+        Specification.from_hash(s_hash, spec,
+                                :test_specification => test_specification,
+                                :app_specification => app_specification)
       end
     end
 
