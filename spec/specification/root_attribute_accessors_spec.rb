@@ -26,12 +26,24 @@ module Pod
       @spec.version.should == Version.new('1.0')
     end
 
-    describe '#swift_version' do
-      it 'return swift version of the specification' do
-        @spec.swift_version.should.be.nil
-        @spec.swift_version = '3.2'
-        @spec.swift_version.should == Version.new('3.2')
-      end
+    it 'return the single swift version of the specification' do
+      @spec.swift_versions = '3.2'
+      @spec.swift_versions.map(&:to_s).should == ['3.2']
+    end
+
+    it 'return multiple swift versions of the specification' do
+      @spec.swift_versions = %w(4.0 3.2 3.2)
+      @spec.swift_versions.map(&:to_s).should == %w(3.2 4.0)
+    end
+
+    it 'return uniq and sorted swift versions of the specification' do
+      @spec.swift_versions = %w(4.0 3.2 3.2)
+      @spec.swift_versions.map(&:to_s).should == %w(3.2 4.0)
+    end
+
+    it 'return swift version of the specification' do
+      @spec.swift_versions = %w(3.2 4.0)
+      @spec.swift_version.should == Version.new('4.0')
     end
 
     it 'returns the cocoapods version requirement of the specification' do

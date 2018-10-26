@@ -140,7 +140,7 @@ module Pod
       # Sets the path of the user project this target definition should link
       # with.
       #
-      # @param  [String] path
+      # @param  [String] name
       #         The path of the project.
       #
       # @return [void]
@@ -393,6 +393,27 @@ module Pod
         get_hash_value('swift_version')
       end
 
+      # @return [Array<String>] the Swift version requirements this target definition enforces.
+      #
+      def swift_version_requirements
+        get_hash_value('swift_version_requirements')
+      end
+
+      # Queries the target if a version of Swift is supported or not.
+      #
+      # @param  [Version] swift_version
+      #         The Swift version to query against.
+      #
+      # @return [Boolean] Whether the target accepts the specified Swift version.
+      #
+      def supports_swift_version?(swift_version)
+        if swift_version_requirements.nil?
+          root? || parent.supports_swift_version?(swift_version)
+        else
+          Requirement.create(swift_version_requirements).satisfied_by?(swift_version)
+        end
+      end
+
       #--------------------------------------#
 
       # Whether a specific pod should be linked to the target when building for
@@ -610,6 +631,17 @@ module Pod
         set_platform(name, target)
       end
 
+      # Stores the Swift version requirements to be used for this target.
+      #
+      # @param   [String, Version, Array<String>, Array<Version>] requirements
+      #          The set of requirements this target supports.
+      #
+      # @return [void]
+      #
+      def store_swift_version_requirements(*requirements)
+        set_hash_value('swift_version_requirements', requirements.flatten.map(&:to_s))
+      end
+
       #--------------------------------------#
 
       # Stores the dependency for a Pod with the given name.
@@ -742,6 +774,7 @@ module Pod
         children
         configuration_pod_whitelist
         uses_frameworks
+        swift_version_requirements
         inheritance
         abstract
         swift_version
@@ -966,7 +999,7 @@ module Pod
       # Removes :inhibit_warnings from the requirements list, and adds
       # the pod's name into internal hash for disabling warnings.
       #
-      # @param [String] pod name
+      # @param [String] name The name of the pod
       #
       # @param [Array] requirements
       #        If :inhibit_warnings is the only key in the hash, the hash
@@ -988,7 +1021,7 @@ module Pod
       # Removes :modular_headers from the requirements list, and adds
       # the pods name into internal hash for modular headers.
       #
-      # @param [String] pod name
+      # @param [String] name The name of the pod
       #
       # @param [Array] requirements
       #        If :modular_headers is the only key in the hash, the hash
@@ -1011,7 +1044,7 @@ module Pod
       # and adds the pod's name into the internal hash for which pods should be
       # linked in which configuration only.
       #
-      # @param [String] pod name
+      # @param [String] name The name of the pod
       #
       # @param [Array] requirements
       #        If :configurations is the only key in the hash, the hash

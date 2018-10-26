@@ -847,6 +847,39 @@ module Pod
         raise Informative, 'Specifying multiple `post_install` hooks is unsupported.' if @post_install_callback
         @post_install_callback = block
       end
+
+      # Specifies the Swift version requirements this target definition supports.
+      #
+      # **Note** These requirements are inherited from the parent, if specified and if none
+      # are specified at the root level then all versions are considered to be supported.
+      #
+      # @param   [String, Version, Array<String>, Array<Version>] requirements
+      #          The set of requirements this target supports.
+      #
+      # @example
+      #
+      #   target 'MyApp' do
+      #     supports_swift_versions '>= 3.0', '< 4.0'
+      #     pod 'AFNetworking', '~> 1.0'
+      #   end
+      #
+      # @example
+      #
+      #   supports_swift_versions '>= 3.0', '< 4.0'
+      #
+      #   target 'MyApp' do
+      #     pod 'AFNetworking', '~> 1.0'
+      #   end
+      #
+      #   target 'ZipApp' do
+      #     pod 'SSZipArchive'
+      #   end
+      #
+      # @return   [void]
+      #
+      def supports_swift_versions(*requirements)
+        current_target_definition.store_swift_version_requirements(*requirements)
+      end
     end
   end
 end
