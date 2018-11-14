@@ -221,7 +221,9 @@ module Pod
             return  1 if rhs.nil?
           end
 
-          return lhs <=> rhs if lhs <=> rhs
+          if comparison = lhs <=> rhs
+            return comparison
+          end
           return 1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
           return -1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
         end
