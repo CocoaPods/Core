@@ -287,7 +287,10 @@ module Pod
       #
       def source_from_path(path)
         @sources_by_path ||= Hash.new do |hash, key|
-          hash[key] = if key.basename.to_s == Pod::MasterSource::MASTER_REPO_NAME
+          hash[key] = case
+                      when (key + '.url').exist?
+                        CDNSource.new(key)
+                      when key.basename.to_s == Pod::MasterSource::MASTER_REPO_NAME
                         MasterSource.new(key)
                       else
                         Source.new(key)

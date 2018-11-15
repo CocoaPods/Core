@@ -45,7 +45,22 @@ require 'vcr'
 VCR.configure do |c|
   c.cassette_library_dir = ROOT + 'spec/fixtures/vcr_cassettes'
   c.hook_into :webmock
-  c.ignore_hosts 'codeclimate.com'
+  c.ignore_hosts 'codeclimate.com', 'localhost'
+end
+
+# CDN repo
+#--------------------------------------#
+
+require 'webrick'
+CDN_MOCK_SERVER = WEBrick::HTTPServer.new(:BindAddress => '0.0.0.0',
+                                          :Port => 4321,
+                                          :DocumentRoot => ROOT + 'spec/fixtures/mock_cdn_repo_remote',
+                                          :Logger => ENV['WEBRICK_DEBUG'].nil? ? WEBrick::Log.new('/dev/null') : nil,
+                                          :AccessLog => ENV['WEBRICK_DEBUG'].nil? ? [] : nil,
+                                         )
+Thread.new do
+  CDN_MOCK_SERVER.start
+  Thread.current.exit
 end
 
 # Silence the output
