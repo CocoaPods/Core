@@ -1463,7 +1463,7 @@ module Pod
       attribute :test_type,
                 :types => [Symbol, String],
                 :multi_platform => false,
-                :test_only => true
+                :spec_types => [:test]
 
       # @!method requires_app_host=(flag)
       #
@@ -1479,7 +1479,7 @@ module Pod
       attribute :requires_app_host,
                 :types => [TrueClass, FalseClass],
                 :default_value => false,
-                :test_only => true
+                :spec_types => [:test]
 
       # Represents a test specification for the library. Here you can place all
       # your tests for your podspec along with the test dependencies.

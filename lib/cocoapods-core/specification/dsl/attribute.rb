@@ -7,6 +7,10 @@ module Pod
       class Attribute
         require 'active_support/inflector/inflections'
 
+        # Spec types currently supported.
+        #
+        SUPPORTED_SPEC_TYPES = [:library, :app, :test].freeze
+
         # @return [Symbol] the name of the attribute.
         #
         attr_reader :name
@@ -31,7 +35,7 @@ module Pod
 
           @multi_platform = options.delete(:multi_platform) { true       }
           @root_only      = options.delete(:root_only)      { false      }
-          @test_only      = options.delete(:test_only)      { false      }
+          @spec_types     = options.delete(:spec_types)     { SUPPORTED_SPEC_TYPES }
           @inherited      = options.delete(:inherited)      { @root_only }
           @required       = options.delete(:required)       { false      }
           @singularize    = options.delete(:singularize)    { false      }
@@ -45,6 +49,9 @@ module Pod
 
           unless options.empty?
             raise StandardError, "Unrecognized options: #{options} for #{self}"
+          end
+          unless (@spec_types - SUPPORTED_SPEC_TYPES).empty?
+            raise StandardError, "Unrecognized spec type option: #{@spec_types} for #{self}"
           end
         end
 
@@ -126,7 +133,7 @@ module Pod
         #         test specifications.
         #
         def test_only?
-          @test_only
+          @spec_types == [:test]
         end
 
         # @return [Bool] whether the attribute is multi-platform and should

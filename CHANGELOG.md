@@ -4,7 +4,10 @@
 
 ##### Enhancements
 
-* None.  
+* Replace `test_only` attribute option with `spec_types`.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#470](https://github.com/CocoaPods/Core/pull/470)
+
 
 ##### Bug Fixes
 
