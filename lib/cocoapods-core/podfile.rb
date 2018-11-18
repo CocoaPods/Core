@@ -255,7 +255,7 @@ module Pod
       end
 
       case path.extname
-      when '', '.podfile'
+      when '', '.podfile', '.rb'
         Podfile.from_ruby(path)
       when '.yaml'
         Podfile.from_yaml(path)
