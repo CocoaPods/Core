@@ -415,6 +415,13 @@ module Pod
         Podfile.from_file(path)
       end
 
+      it 'handles the `rb` extension' do
+        path = fixture('Podfile.rb')
+        Pathname.any_instance.stubs(:exist?).returns(true)
+        Podfile.expects(:from_ruby)
+        Podfile.from_file(path)
+      end
+
       it 'can be initialized from a YAML file' do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
         yaml_podfile = Podfile.from_file(fixture('Podfile.yaml'))
