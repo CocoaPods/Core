@@ -677,14 +677,19 @@ module Pod
           end
         end
         unless version_requirements.all? { |req| req.is_a?(String) }
-          unless version_requirements.is_a?(Hash)
-            version_requirements.each do |requirement|
-              raise Informative, "Podspecs can only use remote pods as dependencies. :path is not supported" if requirement[:path] != nil
-              raise Informative, "Podspecs can only use remote pods as dependencies. :git is not supported" if requirement[:git] != nil
+          version_requirements.each do |requirement|
+            if requirement.is_a?(Hash)
+              if requirement[:path] != nil
+                raise Informative, "Podspecs can only use remote pods as dependencies. :path is not supported"
+              elsif requirement[:git] != nil
+                raise Informative, "Podspecs can only use remote pods as dependencies. :git is not supported"
+              end
             end
           end
-          raise Informative, "Unsupported version requirements. #{version_requirements} is not valid."
+
+         raise Informative, "Unsupported version requirements. #{version_requirements.inspect()} is not valid."
         end
+
         attributes_hash['dependencies'] ||= {}
         attributes_hash['dependencies'][name] = version_requirements
       end
