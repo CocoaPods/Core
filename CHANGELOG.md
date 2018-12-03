@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Better error messages, if unallowed version requirement is specified in Podspec.
+  [Wolfgang Lutz][https://github.com/lutzifer]  
+  [#466](https://github.com/CocoaPods/Core/pull/474)
+
 * DSL for `scheme` support.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#7577](https://github.com/CocoaPods/CocoaPods/issues/7577)
