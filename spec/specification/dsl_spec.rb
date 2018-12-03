@@ -245,13 +245,13 @@ module Pod
 
         it 'raises if the requirements specify :git' do
           should.raise Informative do
-            @spec.dependency('SVProgressHUD', :git => "AnyPath")
+            @spec.dependency('SVProgressHUD', :git => 'AnyPath')
           end.message.should.match /Podspecs can only use remote pods as dependencies. :git is not supported/
         end
 
         it 'raises if the requirements specify :path' do
           should.raise Informative do
-            @spec.dependency('SVProgressHUD', :path => "AnyPath")
+            @spec.dependency('SVProgressHUD', :path => 'AnyPath')
           end.message.should.match /Podspecs can only use remote pods as dependencies. :path is not supported/
         end
 
