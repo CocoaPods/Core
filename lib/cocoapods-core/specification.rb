@@ -292,9 +292,9 @@ module Pod
     #
     def recursive_subspecs
       mapper = lambda do |spec|
-        spec.subspecs.map do |subspec|
+        spec.subspecs.flat_map do |subspec|
           [subspec, *mapper.call(subspec)]
-        end.flatten
+        end
       end
       mapper.call(self)
     end
@@ -383,9 +383,9 @@ module Pod
       if platform
         consumer(platform).dependencies || []
       else
-        available_platforms.map do |spec_platform|
+        available_platforms.flat_map do |spec_platform|
           consumer(spec_platform).dependencies
-        end.flatten.uniq
+        end.uniq
       end
     end
 

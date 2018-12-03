@@ -17,7 +17,7 @@ module Pod
       # @return [Array<String>] the names of all the pods available.
       #
       def all_pods
-        sources.map(&:pods).flatten.uniq
+        sources.flat_map(&:pods).uniq
       end
 
       # @return [Array<Set>] The sets for all the pods available.

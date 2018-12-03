@@ -76,7 +76,7 @@ module Pod
     # @return [Array<TargetDefinition>] all target definitions in the Podfile.
     #
     def target_definition_list
-      root_target_definitions.map { |td| [td, td.recursive_children] }.flatten
+      root_target_definitions.flat_map { |td| [td, td.recursive_children] }
     end
 
     # @return [Array<TargetDefinition>] The root target definitions.
@@ -87,7 +87,7 @@ module Pod
     #         definitions.
     #
     def dependencies
-      target_definition_list.map(&:dependencies).flatten.uniq
+      target_definition_list.flat_map(&:dependencies).uniq
     end
 
     #-------------------------------------------------------------------------#

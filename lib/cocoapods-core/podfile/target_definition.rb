@@ -38,7 +38,7 @@ module Pod
       #         from this one.
       #
       def recursive_children
-        (children + children.map(&:recursive_children)).flatten
+        (children + children.flat_map(&:recursive_children))
       end
 
       # @return [Bool] Whether the target definition is root.
@@ -946,7 +946,7 @@ module Pod
       #
       def podspec_dependencies
         podspecs = get_hash_value('podspecs') || []
-        podspecs.map do |options|
+        podspecs.flat_map do |options|
           file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
           subspec_names = options[:subspecs] || options[:subspec]
@@ -956,12 +956,12 @@ module Pod
                     subspec_names = [subspec_names] if subspec_names.is_a?(String)
                     subspec_names.map { |subspec_name| spec.subspec_by_name("#{spec.name}/#{subspec_name}") }
                   end
-          specs.map do |subspec|
+          specs.flat_map do |subspec|
             all_specs = [subspec, *subspec.recursive_subspecs]
-            all_deps = all_specs.map { |s| s.dependencies(platform) }.flatten
+            all_deps = all_specs.flat_map { |s| s.dependencies(platform) }
             all_deps.reject { |dep| dep.root_name == subspec.root.name }
-          end.flatten
-        end.flatten.uniq
+          end
+        end.uniq
       end
 
       # The path of the podspec with the given options.
