@@ -4,7 +4,7 @@
 
 ##### Enhancements
 
-* Better error messages, if unallowed version requirement is specified in Podspec.
+* Better error messages, if unallowed version requirement is specified in Podspec.  
   [Wolfgang Lutz][https://github.com/lutzifer]  
   [#466](https://github.com/CocoaPods/Core/pull/474)
 

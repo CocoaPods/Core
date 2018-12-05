@@ -680,9 +680,9 @@ module Pod
           version_requirements.each do |requirement|
             if requirement.is_a?(Hash)
               if !requirement[:path].nil?
-                raise Informative, 'Podspecs can only use remote pods as dependencies. :path is not supported'
+                raise Informative, 'Podspecs cannot specify the source of dependencies. The :path option is not supported. :path can be used in the Podfile instead to override global dependencies.'
               elsif !requirement[:git].nil?
-                raise Informative, 'Podspecs can only use remote pods as dependencies. :git is not supported'
+                raise Informative, 'Podspecs cannot specify the source of dependencies. The :git option is not supported. :git can be used in the Podfile instead to override global dependencies.'
               end
             end
           end
