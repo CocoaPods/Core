@@ -893,6 +893,7 @@ module Pod
           if inhibit_hash['all']
             # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
             parent_hash['not_for_pods'] = nil
+            inhibit_hash.delete('all') if parent_hash['all']
           end
           parent_hash.merge(inhibit_hash) do |_, l, r|
             Array(l).concat(r).uniq

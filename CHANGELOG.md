@@ -11,8 +11,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Fix a crash when using `inhibit_all_warnings!` in parent and child scopes  
+  [Eric Amorde](https://github.com/amorde)
+  [#472](https://github.com/CocoaPods/Core/issues/472)
 
 ## 1.6.0.beta.2 (2018-10-17)
 

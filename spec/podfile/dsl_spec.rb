@@ -205,6 +205,25 @@ module Pod
           target = podfile.target_definitions['InheritedLevelTwo']
           target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
         end
+
+        it 'allows inhibiting all warnings in parent and child scopes' do
+          podfile = Podfile.new do
+            inhibit_all_warnings!
+            target 'App' do
+              pod 'PonyDebugger'
+              inhibit_all_warnings!
+              target 'Inherited' do
+                inhibit_all_warnings!
+              end
+            end
+          end
+
+          target = podfile.target_definitions['App']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+
+          target = podfile.target_definitions['Inherited']
+          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+        end
       end
 
       describe 'modular headers' do
