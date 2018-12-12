@@ -464,14 +464,32 @@ module Pod
 
       it 'checks script phases include the required keys' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :unknown => 'unknown' }
-        result_should_include('script_phases', 'Unrecognized options `[:unknown]` in script phase `Hello World`. ' \
-          'Available options are `[:name, :script, :shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position]`.')
+        result_should_include('script_phases', 'Unrecognized option(s) `unknown` in script phase `Hello World`. ' \
+          'Available options are `name, script, shell_path, input_files, output_files, show_env_vars_in_log, execution_position`.')
       end
 
       it 'checks script phases include a valid execution position value' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :unknown }
         result_should_include('script_phases', 'Invalid execution position value `unknown` in shell script `Hello World`. ' \
-          'Available options are `[:before_compile, :after_compile, :any]`.')
+          'Available options are `before_compile, after_compile, any`.')
+      end
+
+      #------------------#
+
+      it 'accepts valid scheme values' do
+        @spec.scheme = { :launch_arguments => ['Arg1'], :environment_variables => { 'Key1' => 'Val1' } }
+        @linter.lint
+        @linter.results.should.be.empty
+      end
+
+      it 'checks scheme launch arguments key type' do
+        @spec.scheme = { :launch_arguments => 'Arg1' }
+        result_should_include('scheme', 'Expected an array for key `launch_arguments`.')
+      end
+
+      it 'checks scheme environment variables key type' do
+        @spec.scheme = { :environment_variables => [] }
+        result_should_include('scheme', 'Expected a hash for key `environment_variables`.')
       end
 
       #------------------#

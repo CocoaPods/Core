@@ -401,8 +401,8 @@ module Pod
           keys = script_phase.keys
           unrecognized_keys = keys - Specification::ALL_SCRIPT_PHASE_KEYS
           unless unrecognized_keys.empty?
-            results.add_error('script_phases', "Unrecognized options `#{unrecognized_keys}` in script phase `#{script_phase[:name]}`. " \
-              "Available options are `#{Specification::ALL_SCRIPT_PHASE_KEYS}`.")
+            results.add_error('script_phases', "Unrecognized option(s) `#{unrecognized_keys.join(', ')}` in script phase `#{script_phase[:name]}`. " \
+              "Available options are `#{Specification::ALL_SCRIPT_PHASE_KEYS.join(', ')}`.")
           end
           missing_required_keys = Specification::SCRIPT_PHASE_REQUIRED_KEYS - keys
           unless missing_required_keys.empty?
@@ -410,8 +410,19 @@ module Pod
           end
           unless Specification::EXECUTION_POSITION_KEYS.include?(script_phase[:execution_position])
             results.add_error('script_phases', "Invalid execution position value `#{script_phase[:execution_position]}` in shell script `#{script_phase[:name]}`. " \
-            "Available options are `#{Specification::EXECUTION_POSITION_KEYS}`.")
+            "Available options are `#{Specification::EXECUTION_POSITION_KEYS.join(', ')}`.")
           end
+        end
+      end
+
+      # Performs validation related to the `scheme` attribute.
+      #
+      def _validate_scheme(s)
+        if s.key?(:launch_arguments) && !s[:launch_arguments].is_a?(Array)
+          results.add_error('scheme', 'Expected an array for key `launch_arguments`.')
+        end
+        if s.key?(:environment_variables) && !s[:environment_variables].is_a?(Hash)
+          results.add_error('scheme', 'Expected a hash for key `environment_variables`.')
         end
       end
 

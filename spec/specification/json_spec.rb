@@ -153,6 +153,12 @@ module Pod
         ]
       end
 
+      it 'writes scheme configuration' do
+        @spec.scheme = { :launch_arguments => ['Arg1'] }
+        hash = @spec.to_hash
+        hash['scheme'].should == { 'launch_arguments' => ['Arg1'] }
+      end
+
       it 'writes test type for test subspec' do
         @spec.test_spec {}
         hash = @spec.to_hash
@@ -216,6 +222,16 @@ module Pod
         result.app_specs.count.should.equal 1
         result.app_specs.first.name.should == 'BananaLib/App'
         result.app_specs.first.app_specification?.should.be.true
+      end
+
+      it 'can load scheme configuration from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'scheme' => { 'launch_arguments' => ['Arg1'] },
+        }
+        result = Specification.from_hash(hash)
+        result.scheme.should == { :launch_arguments => ['Arg1'] }
       end
 
       it 'can load script phases from hash' do

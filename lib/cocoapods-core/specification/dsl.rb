@@ -1250,7 +1250,7 @@ module Pod
       #         'OtherResources' => ['MapView/Map/OtherResources/*.png']
       #       }
       #
-      #   @param  [Hash{String=>String}] resource_bundles
+      #   @param  [Hash{String=>String}, Hash{String=>Array<String>}] resource_bundles
       #           A hash where the keys are the names of the resource bundles
       #           and the values are their relative file patterns.
       #
@@ -1460,6 +1460,7 @@ module Pod
       #
       # @param  [Symbol, String] type
       #         The test type to use.
+      #
       attribute :test_type,
                 :types => [Symbol, String],
                 :multi_platform => false,
@@ -1480,6 +1481,30 @@ module Pod
                 :types => [TrueClass, FalseClass],
                 :default_value => false,
                 :spec_types => [:test]
+
+      SCHEME_KEYS = [:launch_arguments, :environment_variables].freeze
+
+      # @!method scheme=(flag)
+      #
+      #   Specifies the scheme configuration to be used for this specification.
+      #
+      #   ---
+      #
+      #   @example
+      #
+      #     spec.scheme = { :launch_arguments => ['Arg1'] }
+      #
+      #   @example
+      #
+      #     spec.scheme = { :launch_arguments => ['Arg1', 'Arg2'], :environment_variables => { 'Key1' => 'Val1'} }
+      #
+      #   @param  [Hash] scheme
+      #           the scheme configuration to be used for this specification.
+      #
+      attribute :scheme,
+                :types => [Hash],
+                :container => Hash,
+                :keys => SCHEME_KEYS
 
       # Represents a test specification for the library. Here you can place all
       # your tests for your podspec along with the test dependencies.

@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* DSL for `scheme` support.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#7577](https://github.com/CocoaPods/CocoaPods/issues/7577)
+
 * Replace `test_only` attribute option with `spec_types`.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#470](https://github.com/CocoaPods/Core/pull/470)
