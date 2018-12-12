@@ -7,6 +7,7 @@
 * DSL for `scheme` support.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#7577](https://github.com/CocoaPods/CocoaPods/issues/7577)
+  [#479](https://github.com/CocoaPods/Core/pull/479)
 
 * Replace `test_only` attribute option with `spec_types`.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)

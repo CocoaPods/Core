@@ -610,6 +610,13 @@ module Pod
 
       #------------------#
 
+      it 'fails if a subspec specifies a scheme' do
+        @subspec.scheme = { :launch_arguments => ['Arg1'] }
+        result_should_include('scheme', 'Scheme configuration is not currently supported for subspecs.')
+      end
+
+      #------------------#
+
       it 'fails a specification with a subspec with a module map' do
         @subspec.module_map = 'subspec.modulemap'
         result_should_include('module_map', 'can\'t set', 'for subspecs')
