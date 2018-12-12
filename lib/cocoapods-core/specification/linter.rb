@@ -418,11 +418,17 @@ module Pod
       # Performs validation related to the `scheme` attribute.
       #
       def _validate_scheme(s)
-        if s.key?(:launch_arguments) && !s[:launch_arguments].is_a?(Array)
-          results.add_error('scheme', 'Expected an array for key `launch_arguments`.')
-        end
-        if s.key?(:environment_variables) && !s[:environment_variables].is_a?(Hash)
-          results.add_error('scheme', 'Expected a hash for key `environment_variables`.')
+        unless s.empty?
+          if consumer.spec.subspec? && consumer.spec.library_specification?
+            results.add_error('scheme', 'Scheme configuration is not currently supported for subspecs.')
+            return
+          end
+          if s.key?(:launch_arguments) && !s[:launch_arguments].is_a?(Array)
+            results.add_error('scheme', 'Expected an array for key `launch_arguments`.')
+          end
+          if s.key?(:environment_variables) && !s[:environment_variables].is_a?(Hash)
+            results.add_error('scheme', 'Expected a hash for key `environment_variables`.')
+          end
         end
       end
 
