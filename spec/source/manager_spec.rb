@@ -34,6 +34,12 @@ module Pod
         aggregate.sources.map(&:name).should == %w(master test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo)
       end
 
+      it 'includes all sources in an aggregate for a dependency if non-existent source is specified' do
+        dependency = Dependency.new('JSONKit', '1.4', :source => 'https://url/to/nonexistent/specs.git')
+        aggregate = @sources_manager.aggregate_for_dependency(dependency)
+        aggregate.sources.map(&:name).should == %w(master test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo)
+      end
+
       it 'includes only the one source in an aggregate for a dependency if a source is specified' do
         repo_url = 'https://url/to/specs.git'
         dependency = Dependency.new('JSONKit', '1.4', :source => repo_url)

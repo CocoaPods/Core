@@ -33,15 +33,12 @@ module Pod
       #         will be used.
       #
       def aggregate_for_dependency(dependency)
-        if dependency.podspec_repo
-          source = source_with_url(dependency.podspec_repo)
-          raise StandardError, '[Bug] Failed to find known source with the URL ' \
-            "#{dependency.podspec_repo.inspect}" if source.nil?
+        return aggregate if dependency.podspec_repo.nil?
 
-          aggregate_with_repos([source.repo])
-        else
-          aggregate
-        end
+        source = source_with_url(dependency.podspec_repo)
+        return aggregate if source.nil?
+
+        aggregate_with_repos([source.repo])
       end
 
       # @return [Array<Source>] The list of the sources with the given names.
