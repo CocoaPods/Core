@@ -528,9 +528,93 @@ module Pod
             end,
           ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
-          pods_data.should == [{
-            'BananaLib (1.0)' => ['monkey (< 1.0.9)', 'tree (~> 1.0.1)'],
-          }]
+          pods_data.should == [
+            { 'BananaLib (1.0)' => ['monkey (< 1.0.9)', 'tree (~> 1.0.1)'] },
+          ]
+        end
+
+        it 'sort pods by lowercase' do
+          specs = [
+            Specification.new do |s|
+              s.name = 'a'
+              s.version = '1.0'
+              s.dependency 'monkey', '< 1.0.9'
+            end,
+            Specification.new do |s|
+              s.name = 'b'
+              s.version = '1.0'
+            end,
+            Specification.new do |s|
+              s.name = 'C'
+              s.version = '1.0'
+              s.dependency 'tree', '~> 1.0.1'
+            end,
+          ]
+          pods_data = Lockfile.send(:generate_pods_data, specs)
+          pods_data.should == [
+            { 'a (1.0)' => ['monkey (< 1.0.9)'] },
+            'b (1.0)',
+            { 'C (1.0)' => ['tree (~> 1.0.1)'] },
+          ]
+        end
+
+        it 'sorts dependencies for the pod by lowercase' do
+          specs = [
+            Specification.new do |s|
+              s.name = 'BananaLib'
+              s.version = '1.0'
+              s.dependency 'a', '< 1.0.9'
+            end,
+            Specification.new do |s|
+              s.name = 'BananaLib'
+              s.version = '1.0'
+              s.dependency 'b', '< 1.0.8'
+            end,
+            Specification.new do |s|
+              s.name = 'BananaLib'
+              s.version = '1.0'
+              s.dependency 'C', '~> 1.0.1'
+            end,
+          ]
+          pods_data = Lockfile.send(:generate_pods_data, specs)
+          pods_data.should == [
+            { 'BananaLib (1.0)' => ['a (< 1.0.9)', 'b (< 1.0.8)', 'C (~> 1.0.1)'] },
+          ]
+        end
+      end
+
+      describe '#generate_dependencies_data' do
+        it 'sorts dependencies by lowercase' do
+          podfile = Podfile.new do
+            pod 'a'
+            pod 'b'
+            pod 'C'
+          end
+          dependencies_data = Lockfile.send(:generate_dependencies_data, podfile)
+          dependencies_data.should == %w(a b C)
+        end
+      end
+
+      describe '#generate_spec_repos' do
+        it 'sorts specs per spec repo by lowercase' do
+          spec_repos = {
+            Source.new(fixture('spec-repos/master')) => [
+              Specification.new do |s|
+                s.name = 'a'
+                s.version = '1.0'
+              end,
+              Specification.new do |s|
+                s.name = 'b'
+                s.version = '1.0'
+              end,
+              Specification.new do |s|
+                s.name = 'C'
+                s.version = '1.0'
+              end,
+            ],
+          }
+          spec_repos_data = Lockfile.send(:generate_spec_repos, spec_repos)
+          spec_repos_data.should == { 'https://github.com/cocoapods/specs.git' => %w(a b C) }
         end
       end
     end

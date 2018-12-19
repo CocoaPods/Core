@@ -16,6 +16,12 @@
 
 ##### Bug Fixes
 
+* Fix several array sorting inconsistencies when generating a Lockfile.  
+  When a Lockfile is being written to disk, `YAMLHelper` sorts arrays by `&:downcase`.  
+  When a new Lockfile is generated, the sort order is plain lexicographical.  
+  This causes pods like `GoogleSignIn` and `GTMSessionFetcher` being in a different order in each case, causing `--deployment` to report an error when in fact the Lockfile wouldn't be changed.  
+  [Igor Makarov](https://github.com/igor-makarov)
+
 * Fix a crash when using `inhibit_all_warnings!` in parent and child scopes  
   [Eric Amorde](https://github.com/amorde)
   [#472](https://github.com/CocoaPods/Core/issues/472)

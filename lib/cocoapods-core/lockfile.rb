@@ -454,22 +454,17 @@ module Pod
       #
       #
       def generate_pods_data(specs)
-        pod_and_deps = specs.map do |spec|
-          [spec.to_s, spec.all_dependencies.map(&:to_s).sort]
-        end.uniq
+        pods_and_deps_merged = specs.reduce({}) do |result, spec|
+          name = spec.to_s
+          result[name] ||= []
+          result[name].concat(spec.all_dependencies.map(&:to_s))
+          result
+        end
 
-        tmp = {}
-        pod_and_deps.each do |name, deps|
-          if tmp[name]
-            tmp[name].concat(deps).uniq!
-          else
-            tmp[name] = deps
-          end
+        pod_and_deps = pods_and_deps_merged.map do |name, deps|
+          deps.empty? ? name : { name => YAMLHelper.sorted_array(deps.uniq) }
         end
-        pod_and_deps = tmp.sort_by(&:first).map do |name, deps|
-          deps.empty? ? name : { name => deps }
-        end
-        pod_and_deps
+        YAMLHelper.sorted_array(pod_and_deps)
       end
 
       # Generates the list of the dependencies of the Podfile.
@@ -481,7 +476,7 @@ module Pod
       # @return   [Array] the generated data.
       #
       def generate_dependencies_data(podfile)
-        podfile.dependencies.map(&:to_s).sort
+        YAMLHelper.sorted_array(podfile.dependencies.map(&:to_s))
       end
 
       # Generates the hash of spec repo sources used in the Podfile.
@@ -496,7 +491,7 @@ module Pod
           key = source.url || source.name
           key = key.downcase if source.name == Pod::MasterSource::MASTER_REPO_NAME
           value = specs.map { |s| s.root.name }.uniq
-          [key, value]
+          [key, YAMLHelper.sorted_array(value)]
         end.compact]
       end
 

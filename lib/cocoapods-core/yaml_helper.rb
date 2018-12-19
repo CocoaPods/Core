@@ -239,6 +239,8 @@ module Pod
         end
       end
 
+      public
+
       # Sorts an array according to the string representation of it values.
       # This method allows to sort arrays which contains strings or hashes.
       #
@@ -258,6 +260,8 @@ module Pod
           [sorting_string(element), index]
         end.map(&:first)
       end
+
+      private
 
       # Returns the string representation of a value useful for sorting.
       #
