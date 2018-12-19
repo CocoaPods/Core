@@ -677,8 +677,21 @@ module Pod
           end
         end
         unless version_requirements.all? { |req| req.is_a?(String) }
-          raise Informative, 'Unsupported version requirements'
+          version_requirements.each do |requirement|
+            if requirement.is_a?(Hash)
+              if !requirement[:path].nil?
+                raise Informative, 'Podspecs cannot specify the source of dependencies. The `:path` option is not supported.'\
+                                   ' `:path` can be used in the Podfile instead to override global dependencies.'
+              elsif !requirement[:git].nil?
+                raise Informative, 'Podspecs cannot specify the source of dependencies. The `:git` option is not supported.'\
+                                   ' `:git` can be used in the Podfile instead to override global dependencies.'
+              end
+            end
+          end
+
+          raise Informative, "Unsupported version requirements. #{version_requirements.inspect} is not valid."
         end
+
         attributes_hash['dependencies'] ||= {}
         attributes_hash['dependencies'][name] = version_requirements
       end
