@@ -246,13 +246,13 @@ module Pod
         it 'raises if the requirements specify :git' do
           should.raise Informative do
             @spec.dependency('SVProgressHUD', :git => 'AnyPath')
-          end.message.should.match /Podspecs cannot specify the source of dependencies. The :git option is not supported.\.*/
+          end.message.should.match /Podspecs cannot specify the source of dependencies. The `:git` option is not supported.\.*/
         end
 
         it 'raises if the requirements specify :path' do
           should.raise Informative do
             @spec.dependency('SVProgressHUD', :path => 'AnyPath')
-          end.message.should.match /Podspecs cannot specify the source of dependencies. The :path option is not supported.\.*/
+          end.message.should.match /Podspecs cannot specify the source of dependencies. The `:path` option is not supported.\.*/
         end
 
         it 'raises when attempting to assign a value to dependency' do
