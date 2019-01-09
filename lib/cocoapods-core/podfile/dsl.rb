@@ -20,7 +20,7 @@ module Pod
     #     target 'MyApp' do
     #       pod 'ObjectiveSugar', '~> 0.5'
     #
-    #       target "MyAppTests" do
+    #       target 'MyAppTests' do
     #         inherit! :search_paths
     #         pod 'OCMock', '~> 2.0.1'
     #       end
