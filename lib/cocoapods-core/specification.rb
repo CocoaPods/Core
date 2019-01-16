@@ -624,19 +624,39 @@ module Pod
     #
     # @return [Nil] If the specification is not defined in a file.
     #
-    def checksum
+    def file_checksum
       @checksum ||= begin
         if root?
-          unless defined_in_file.nil?
-            require 'digest'
-            checksum = Digest::SHA1.hexdigest(File.read(defined_in_file))
-            checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
-            checksum
-          end
+          generate_checksum(File.read(defined_in_file)) unless defined_in_file.nil?
         else
           root.checksum
         end
       end
+    end
+
+    # @!group Specifcation representation
+
+    # @return [String] The SHA1 digest of the specification pretty JSON.
+    #
+    def checksum
+      @checksum ||= begin
+        if root?
+          generate_checksum(to_pretty_json)
+        else
+          root.checksum
+        end
+      end
+    end
+
+    # @!group Generate checksum for string
+    
+    # @return [String] The SHA1 digest of the string.
+    #
+    def generate_checksum(content) 
+      require 'digest'
+      checksum = Digest::SHA1.hexdigest(content)
+      checksum = checksum.encode('UTF-8') if checksum.respond_to?(:encode)
+      checksum
     end
 
     # @return [String] the path where the specification is defined, if loaded
