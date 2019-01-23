@@ -11,6 +11,21 @@
 * None.  
 
 
+## 1.6.0.beta.2 (2018-10-17)
+
+##### Enhancements
+
+* Add support for specifying subspecs when using the `podspec` Podfile attribute  
+  [Whirlwind](https://github.com/whirlwind)
+  [#456](https://github.com/CocoaPods/Core/pull/456)
+
+##### Bug Fixes
+
+* Fix docstring for Pod::Podfile.from_yaml  
+  [Jenn Kaplan](https://github.com/jkap)
+  [#459](https://github.com/CocoaPods/Core/pull/459)
+
+
 ## 1.6.0.beta.1 (2018-08-16)
 
 ##### Enhancements

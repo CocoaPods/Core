@@ -586,7 +586,7 @@ module Pod
         name = :osx if name == :macos
         unless [:ios, :osx, :tvos, :watchos].include?(name)
           raise StandardError, "Unsupported platform `#{name}`. Platform " \
-            'must be `:ios`, `:osx`, `:tvos`, or `:watchos`.'
+            'must be `:ios`, `:osx`, `:macos`, `:tvos`, or `:watchos`.'
         end
 
         if target
@@ -663,15 +663,24 @@ module Pod
       # @return [void]
       #
       def store_podspec(options = nil)
-        if options
-          unless options.keys.all? { |key| [:name, :path].include?(key) }
-            raise StandardError, 'Unrecognized options for the podspec ' \
-              "method `#{options}`"
-          end
-          get_hash_value('podspecs', []) << options
-        else
-          get_hash_value('podspecs', []) << { :autodetect => true }
+        options ||= {}
+        unless options.keys.all? { |key| [:name, :path, :subspecs, :subspec].include?(key) }
+          raise StandardError, 'Unrecognized options for the podspec ' \
+            "method `#{options}`"
         end
+        if subspec_name = options[:subspec]
+          unless subspec_name.is_a?(String)
+            raise StandardError, "Option `:subspec => #{subspec_name.inspect}` should be a String"
+          end
+        end
+        if subspec_names = options[:subspecs]
+          if !subspec_names.is_a?(Array) || !subspec_names.all? { |name| name.is_a? String }
+            raise StandardError, "Option `:subspecs => #{subspec_names.inspect}` " \
+            'should be an Array of Strings'
+          end
+        end
+        options[:autodetect] = true if !options.include?(:name) && !options.include?(:path)
+        get_hash_value('podspecs', []) << options
       end
 
       #--------------------------------------#
@@ -907,9 +916,18 @@ module Pod
         podspecs.map do |options|
           file = podspec_path_from_options(options)
           spec = Specification.from_file(file)
-          all_specs = [spec, *spec.recursive_subspecs]
-          all_deps = all_specs.map { |s| s.dependencies(platform) }.flatten
-          all_deps.reject { |dep| dep.root_name == spec.root.name }
+          subspec_names = options[:subspecs] || options[:subspec]
+          specs = if subspec_names.blank?
+                    [spec]
+                  else
+                    subspec_names = [subspec_names] if subspec_names.is_a?(String)
+                    subspec_names.map { |subspec_name| spec.subspec_by_name("#{spec.name}/#{subspec_name}") }
+                  end
+          specs.map do |subspec|
+            all_specs = [subspec, *subspec.recursive_subspecs]
+            all_deps = all_specs.map { |s| s.dependencies(platform) }.flatten
+            all_deps.reject { |dep| dep.root_name == subspec.root.name }
+          end.flatten
         end.flatten.uniq
       end
 

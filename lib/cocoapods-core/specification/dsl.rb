@@ -988,13 +988,13 @@ module Pod
       #
       #   @example
       #
-      #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } }
+      #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' }
       #
       #   @example
       #
       #     spec.script_phases = [
       #         { :name => 'Hello World', :script => 'echo "Hello World"' },
-      #         { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' } },
+      #         { :name => 'Hello Ruby World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' },
       #       ]
       #
       #   @param  [Array<Hash{Symbol=>String}>] script_phases
