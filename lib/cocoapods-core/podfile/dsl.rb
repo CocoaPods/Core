@@ -185,6 +185,18 @@ module Pod
       #
       #     pod 'QueryKit', :subspecs => ['Attribute', 'QuerySet']
       #
+      # ### Test Specs
+      #
+      # Test specs can be optionally included via the `:testspecs` option. By default,
+      # none of a Pod's test specs are included.
+      #
+      # You may specify a list of test spec names to install using the following:
+      #
+      #     pod 'AFNetworking', :testspecs => ['UnitTests', 'SomeOtherTests']
+      #
+      # The values provided to `:testspecs` correspond to the name provided to the
+      # `test_spec` DSL attribute in a Podspec.
+      #
       # ------
       #
       # Dependencies can be obtained also from external sources.
