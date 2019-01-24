@@ -1260,7 +1260,7 @@ module Pod
       #
       #     spec.resource_bundles = {
       #         'MapBox' => ['MapView/Map/Resources/*.png'],
-      #         'OtherResources' => ['MapView/Map/OtherResources/*.png']
+      #         'MapBoxOtherResources' => ['MapView/Map/OtherResources/*.png']
       #       }
       #
       #   @param  [Hash{String=>String}, Hash{String=>Array<String>}] resource_bundles
