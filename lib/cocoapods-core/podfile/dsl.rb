@@ -768,8 +768,7 @@ module Pod
       # @param    [String] source
       #           The URL of a specs repository.
       #
-      # @example  Specifying to first use the Artsy repository and then the
-      #           CocoaPods Master Repository
+      # @example  Specifying to first use the Artsy repository and then the CocoaPods Master Repository
       #
       #           source 'https://github.com/artsy/Specs.git'
       #           source 'https://github.com/CocoaPods/Specs.git'
