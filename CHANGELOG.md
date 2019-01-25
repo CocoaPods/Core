@@ -38,6 +38,18 @@
   [Eric Amorde](https://github.com/amorde)
   [#472](https://github.com/CocoaPods/Core/issues/472)
 
+
+## 1.6.0.rc.1 (2019-01-25)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.6.0.beta.2 (2018-10-17)
 
 ##### Enhancements
