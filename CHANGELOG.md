@@ -39,6 +39,17 @@
   [#472](https://github.com/CocoaPods/Core/issues/472)
 
 
+## 1.6.0.rc.2 (2019-01-29)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.6.0.rc.1 (2019-01-25)
 
 ##### Enhancements
