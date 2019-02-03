@@ -174,8 +174,8 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#update' do
-      it 'does nothing' do
-        @source.expects(:debug).with('No need to update CDN-backed repo').once
+      it 'returns empty array' do
+        CDNSource.any_instance.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
         @source.update(true).should == []
       end
     end
@@ -210,11 +210,20 @@ module Pod
         @source.search('BeaconKit')
       end
 
+      def get_versions(relative_path)
+        path = @source.repo.join(relative_path)
+        File.read(path).split("\n")
+      end
+
       it 'refreshes all index files' do
-        CDNSource.any_instance.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
-        pod_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join('index.txt')
-        CDNSource.any_instance.expects(:download_file).with(pod_relative_path).returns(pod_relative_path)
-        @source = CDNSource.new(@path)
+        @source.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
+        pod_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join('index.txt').to_s
+        @source.expects(:download_file).with(pod_relative_path).returns(pod_relative_path)
+        get_versions(pod_relative_path).each do |version|
+          podspec_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join(version).join('BeaconKit.podspec.json').to_s
+          @source.expects(:download_file).with(podspec_relative_path).returns(podspec_relative_path)
+        end
+        @source.update(true)
       end
 
       def get_etag(relative_path)
@@ -223,13 +232,18 @@ module Pod
         File.read(etag_path) if File.exist?(etag_path)
       end
 
+      def all_local_files
+        [@source.repo.join('**/*.yml'), @source.repo.join('**/*.txt'), @source.repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
+      end
+
       it 'handles ETag and If-None-Match headers' do
-        pod_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join('index.txt')
-        ['CocoaPods-version.yml', pod_relative_path].each do |path|
-          CDNSource.any_instance.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(path)}" }
-          CDNSource.any_instance.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{path}" }
-        end
         @source = CDNSource.new(@path)
+        all_local_files.each do |path|
+          relative_path = path.relative_path_from(@source.repo)
+          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{relative_path}, has ETag? #{get_etag(path)}" }
+          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{relative_path}" }
+        end
+        @source.update(true)
       end
     end
   end
