@@ -9,6 +9,7 @@ module Pod
     # @param [String] repo The name of the repository
     #
     def initialize(repo)
+      @check_existing_files_for_update = false
       # Optimization: we initialize startup_time when the source is first initialized
       # and then test file modification dates against it. Any file that was touched
       # after the source was initialized, is considered fresh enough.
@@ -42,18 +43,14 @@ module Pod
 
         specs_dir.mkpath
         download_file('CocoaPods-version.yml')
-
-        preheat_existing_files
       end
 
       super
     end
 
     def preheat_existing_files
-      # Optimization: all the version index files in the local cache will in all probability be
-      # requested anyaway, better preload them in parallel.
-      glob_pattern = repo.join('*/**/*.txt')
-      loaders = Pathname.glob(glob_pattern).map { |f| f.relative_path_from(repo) }.map do |file|
+      all_existing_files = [repo.join('**/*.yml'), repo.join('**/*.txt'), repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
+      loaders = all_existing_files.map { |f| f.relative_path_from(repo).to_s }.map do |file|
         Concurrent::Promise.execute(:executor => @executor) do
           download_file(file)
         end
@@ -91,7 +88,7 @@ module Pod
 
       pod_path_actual = pod_path(name)
       pod_path_relative = relative_pod_path(name)
-      versions_file_path_relative = pod_path_relative.join(INDEX_FILE_NAME)
+      versions_file_path_relative = pod_path_relative.join(INDEX_FILE_NAME).to_s
       download_file(versions_file_path_relative)
 
       return nil unless pod_path_actual.join(INDEX_FILE_NAME).exist?
@@ -106,7 +103,7 @@ module Pod
           podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
           unless pod_path_actual.join(podspec_version_path_relative).exist?
             loaders << Concurrent::Promise.execute(:executor => @executor) do
-              download_file(pod_path_relative.join(podspec_version_path_relative))
+              download_file(pod_path_relative.join(podspec_version_path_relative).to_s)
             end
           end
           begin
@@ -137,7 +134,7 @@ module Pod
       raise ArgumentError, 'No version' unless version
 
       podspec_version_path_relative = Pathname.new(version.to_s).join("#{name}.podspec.json")
-      relative_podspec = relative_pod_path(name).join(podspec_version_path_relative)
+      relative_podspec = relative_pod_path(name).join(podspec_version_path_relative).to_s
       download_file(relative_podspec)
       pod_path(name).join(podspec_version_path_relative)
     end
@@ -168,7 +165,7 @@ module Pod
         query = query.root_name
       end
 
-      found = download_file(relative_pod_path(query).join(INDEX_FILE_NAME))
+      found = download_file(relative_pod_path(query).join(INDEX_FILE_NAME).to_s)
 
       if found
         set = set(query)
@@ -195,20 +192,30 @@ module Pod
       end
     end
 
-    # Does nothing, since CDN-backed repo is updated live.
+    # Check update dates for all existing files.
+    # Does not download non-existing specs, since CDN-backed repo is updated live.
     #
     # @param  [Bool] show_output
     #
-    # @return  [Array<String>] changed_spec_paths
-    #          Returns the list of changed spec paths.
+    # @return  [Array<String>] Always returns empty array, as it cannot know
+    #          everything that actually changed.
     #
     def update(_show_output)
-      debug 'No need to update CDN-backed repo'
+      @check_existing_files_for_update = true
+      begin
+        preheat_existing_files
+      ensure
+        @check_existing_files_for_update = false
+      end
       []
     end
 
     def git?
-      false
+      # Long story here. This property is actually used solely by Source::Manager to determine
+      # which sources are updatable. Ideally, this would require a name change but @segiddins
+      # has pointed out that it is public and could break plugins.
+      # In any case, CDN-backed repos can be updated and therefore the value ought to be true.
+      true
     end
 
     private
@@ -231,9 +238,16 @@ module Pod
       file_remote_url = url + partial_url.to_s
       path = repo + partial_url
 
-      if File.exist?(path) && @startup_time < File.mtime(path)
-        debug "CDN: #{name} Relative path: #{partial_url} modified during this run! Returning local"
-        return partial_url
+      if File.exist?(path)
+        if @startup_time < File.mtime(path)
+          debug "CDN: #{name} Relative path: #{partial_url} modified during this run! Returning local"
+          return partial_url
+        end
+
+        unless @check_existing_files_for_update
+          debug "CDN: #{name} Relative path: #{partial_url} exists! Returning local because checking is only perfomed in repo update"
+          return partial_url
+        end
       end
 
       path.dirname.mkpath
