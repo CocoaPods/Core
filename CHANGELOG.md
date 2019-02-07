@@ -4,17 +4,6 @@
 
 ##### Enhancements
 
-* None.  
-
-##### Bug Fixes
-
-* None.  
-
-
-## 1.6.0 (2019-02-07)
-
-##### Enhancements
-
 * Add documentation for the `:testspecs` option on the `pod` Podfile DSL  
   [Eric Amorde](https://github.com/amorde)
   [#506](https://github.com/CocoaPods/Core/issues/506)
@@ -49,6 +38,16 @@
   [Eric Amorde](https://github.com/amorde)
   [#472](https://github.com/CocoaPods/Core/issues/472)
 
+
+## 1.6.0 (2019-02-07)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
 
 ## 1.6.0.rc.2 (2019-01-29)
 
