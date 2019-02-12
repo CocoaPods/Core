@@ -264,6 +264,7 @@ module Pod
           Specification.new do |s|
             s.name = 'BlocksKit'
             s.version = '1.0.0'
+            s.subspec 'Subspec'
           end,
           Specification.new do |s|
             s.name = 'JSONKit'
@@ -321,6 +322,20 @@ module Pod
           platform :ios
           pod 'BlocksKit'
           pod 'JSONKit', '> 1.0'
+        end
+        @lockfile.detect_changes_with_podfile(podfile).should == {
+          :changed => [],
+          :removed => [],
+          :unchanged => %w(BlocksKit JSONKit),
+          :added => [],
+        }
+      end
+
+      it "it doesn't mark as changed Pods whose change subspecs" do
+        podfile = Podfile.new do
+          platform :ios
+          pod 'BlocksKit/Subspec'
+          pod 'JSONKit'
         end
         @lockfile.detect_changes_with_podfile(podfile).should == {
           :changed => [],

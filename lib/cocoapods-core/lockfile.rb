@@ -290,29 +290,44 @@ module Pod
       result = {}
       [:added, :changed, :removed, :unchanged].each { |k| result[k] = [] }
 
-      installed_deps = {}
-      dependencies.each do |dep|
-        name = dep.root_name
-        installed_deps[name] ||= dependencies_to_lock_pod_named(name)
-      end
-
-      installed_deps = installed_deps.values.flatten(1).group_by(&:name)
+      installed_versions = pod_versions.blank? ? {} : pod_versions.map do |name, version|
+        { Specification.root_name(name) => version }
+      end.reduce(:merge)
+      installed_external_sources = external_sources_data.blank? ? {} : external_sources_data.map do |name, hash|
+        { Specification.root_name(name) => hash }
+      end.reduce(:merge)
 
       podfile_dependencies = podfile.dependencies
-      podfile_dependencies_by_name = podfile_dependencies.group_by(&:name)
+      podfile_dependencies_by_name = podfile_dependencies.group_by(&:root_name)
 
-      all_dep_names = (dependencies + podfile_dependencies).map(&:name).uniq
+      all_dep_names = (podfile_dependencies_by_name.keys + dependencies.map(&:root_name)).uniq
       all_dep_names.each do |name|
-        installed_dep   = installed_deps[name]
-        installed_dep &&= installed_dep.first
-        podfile_dep     = podfile_dependencies_by_name[name]
-        podfile_dep   &&= podfile_dep.first
+        podfile_deps = podfile_dependencies_by_name[name]
+        key = if podfile_deps.blank?
+                :removed
+              else
+                podfile_dep_with_external_source = podfile_deps.find(&:external_source)
+                unless podfile_dep_with_external_source.blank?
+                  podfile_external_source = podfile_dep_with_external_source.external_source
+                end
 
-        if installed_dep.nil?  then key = :added
-        elsif podfile_dep.nil? then key = :removed
-        elsif podfile_dep.compatible?(installed_dep) then key = :unchanged
-        else key = :changed
-        end
+                installed_external_source = installed_external_sources[name]
+
+                if installed_external_source != podfile_external_source
+                  :changed
+                else
+                  installed_version = installed_versions[name]
+                  if installed_version.blank?
+                    :added
+                  elsif podfile_deps.find do |dependency|
+                    !dependency.requirement.none? && !dependency.requirement.satisfied_by?(installed_version)
+                  end
+                    :changed
+                  else
+                    :unchanged
+                  end
+                end
+              end
         result[key] << name
       end
       result
