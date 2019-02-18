@@ -48,7 +48,7 @@ module Pod
       end
 
       it 'returns nil if the Pod could not be found' do
-        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/Unknown_Pod\/index\.txt Response: 404/ }
+        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/Unknown_Pod\/index\.txt Response: 404} }
         @source.versions('Unknown_Pod').should.be.nil
       end
 
@@ -126,7 +126,7 @@ module Pod
       end
 
       it 'matches case' do
-        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/bEacoNKIT\/index\.txt Response: 404/ }
+        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/bEacoNKIT\/index\.txt Response: 404} }
         @source.search('bEacoNKIT').should.be.nil?
       end
 

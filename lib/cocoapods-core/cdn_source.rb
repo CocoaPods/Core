@@ -276,7 +276,7 @@ module Pod
       when 404
         debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
         nil
-      else 
+      else
         raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
       end
     end
