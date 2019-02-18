@@ -273,6 +273,11 @@ module Pod
         debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
         File.open(etag_path, 'w') { |f| f.write(etag_new) } unless etag_new.nil?
         partial_url
+      when 404
+        debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
+        nil
+      else 
+        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
       end
     end
 
