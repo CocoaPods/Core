@@ -48,7 +48,15 @@ module Pod
       end
 
       it 'returns nil if the Pod could not be found' do
+        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/Unknown_Pod\/index\.txt Response: 404} }
         @source.versions('Unknown_Pod').should.be.nil
+      end
+
+      it 'raises if unexpected HTTP error' do
+        REST.expects(:get).returns(REST::Response.new(500))
+        should.raise Informative do
+          @source.versions('Unknown_Pod')
+        end.message.should.match /CDN: .* Relative path couldn\'t be downloaded: .* Response: 500/
       end
 
       it 'returns cached versions for a Pod' do
@@ -118,6 +126,7 @@ module Pod
       end
 
       it 'matches case' do
+        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/bEacoNKIT\/index\.txt Response: 404} }
         @source.search('bEacoNKIT').should.be.nil?
       end
 
