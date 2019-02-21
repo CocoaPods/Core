@@ -4,23 +4,12 @@
 
 ##### Enhancements
 
-* None.  
-
-##### Bug Fixes
-
-* None.  
-
-
-## 1.6.1 (2019-02-21)
-
-##### Enhancements
-
 * Add documentation for the `:testspecs` option on the `pod` Podfile DSL  
   [Eric Amorde](https://github.com/amorde)
   [#506](https://github.com/CocoaPods/Core/issues/506)
 
 * Better error messages, if unallowed version requirement is specified in Podspec.  
-  [Wolfgang Lutz][https://github.com/lutzifer]  
+  [Wolfgang Lutz][https://github.com/lutzifer]
   [#466](https://github.com/CocoaPods/Core/pull/474)
 
 * DSL for `scheme` support.  
@@ -48,6 +37,17 @@
 * Fix a crash when using `inhibit_all_warnings!` in parent and child scopes  
   [Eric Amorde](https://github.com/amorde)
   [#472](https://github.com/CocoaPods/Core/issues/472)
+
+
+## 1.6.1 (2019-02-21)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
 
 
 ## 1.6.0 (2019-02-07)
