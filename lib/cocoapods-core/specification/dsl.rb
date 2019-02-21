@@ -581,7 +581,7 @@ module Pod
       #
       # @param  [Array<Symbol, String>] args
       #         A tuple where the first value is the name of the platform,
-      #         (either `:ios` or `:osx`) and the second is the deployment
+      #         (`:osx`, `:ios`, `:tvos` or `:watchos`) and the second is the deployment
       #         target.
       #
       def platform=(args)
