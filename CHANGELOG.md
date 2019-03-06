@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add support for `xcfilelist` in `script_phase` DSL.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#517](https://github.com/CocoaPods/Core/pull/517)
 
 ##### Bug Fixes
 

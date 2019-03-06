@@ -418,7 +418,8 @@ module Pod
       it 'raises if script phase includes an unrecognized key' do
         e = lambda { @parent.store_script_phase(:name => 'PhaseName', :unknown => 'Unknown') }.should.raise Podfile::StandardError
         e.message.should == 'Unrecognized options `[:unknown]` in shell script `PhaseName` within `MyApp` target. ' \
-          'Available options are `[:name, :script, :shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position]`.'
+          'Available options are `[:name, :script, :shell_path, :input_files, :output_files, :input_file_lists, ' \
+            ':output_file_lists, :show_env_vars_in_log, :execution_position]`.'
       end
 
       it 'raises if script phase includes an invalid execution position key' do
