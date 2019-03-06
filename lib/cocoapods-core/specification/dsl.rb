@@ -990,7 +990,8 @@ module Pod
 
       SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
 
-      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :show_env_vars_in_log, :execution_position].freeze
+      SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :input_file_lists, :output_file_lists,
+                                    :show_env_vars_in_log, :execution_position].freeze
 
       EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :any].freeze
 
@@ -1019,6 +1020,18 @@ module Pod
       #   @example
       #
       #     spec.script_phase = { :name => 'Hello World', :script => 'puts "Hello World"', :shell_path => '/usr/bin/ruby' }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"',
+      #       :input_files => ['/path/to/input_file.txt'], :output_files => ['/path/to/output_file.txt']
+      #     }
+      #
+      #   @example
+      #
+      #     spec.script_phase = { :name => 'Hello World', :script => 'echo "Hello World"',
+      #       :input_file_lists => ['/path/to/input_files.xcfilelist'], :output_file_lists => ['/path/to/output_files.xcfilelist']
+      #     }
       #
       #   @example
       #

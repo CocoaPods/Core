@@ -399,13 +399,21 @@ module Pod
       # @option   options [String] :shell_path
       #           the shell path to use for this script phase, for example `/usr/bin/ruby` to use Ruby for this phase.
       #
-      # @option   options [Array<String>] :input_paths
-      #           the input paths to use for script. This is used by Xcode to determine whether to re-execute this
-      #           script phase if the input paths have changed or not.
+      # @option   options [Array<String>] :input_files
+      #           the input paths to use for this script phase. This is used by Xcode to determine whether to re-execute
+      #           this script phase if the input paths have changed or not.
       #
-      # @option   options [Array<String>] :output_paths
-      #           the output paths to use for script. This is used by Xcode to avoid re-executing this script phase if
-      #           none of the output paths have changed.
+      # @option   options [Array<String>] :output_files
+      #           the output paths to use for this script phase. This is used by Xcode to avoid re-executing this script
+      #           phase if none of the output paths have changed.
+      #
+      # @option   options [Array<String>] :input_file_lists
+      #           the input file lists to use for this script phase. This is used by Xcode to determine whether to
+      #           re-execute this script phase if the input paths have changed or not.
+      #
+      # @option   options [Array<String>] :output_file_lists
+      #           the output file lists to use for this script phase. This is used by Xcode to avoid re-executing this
+      #           script phase if none of the output paths have changed.
       #
       # @option   options [Boolean] :show_env_vars_in_log
       #           whether this script phase should output the environment variables during execution.
