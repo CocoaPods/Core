@@ -1508,6 +1508,21 @@ module Pod
                 :default_value => false,
                 :spec_types => [:test]
 
+      # @!method app_host_name=(name)
+      #
+      #   The app specification to use as an app host, if necessary.
+      #
+      #   @example
+      #
+      #     test_spec.app_host_name = 'Foo'
+      #
+      #   @param [String] name
+      #          The app specification to use as an app host, if necessary.
+      #
+      attribute :app_host_name,
+                :types => [String],
+                :spec_types => [:test]
+
       SCHEME_KEYS = [:launch_arguments, :environment_variables].freeze
 
       # @!method scheme=(flag)

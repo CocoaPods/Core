@@ -289,6 +289,14 @@ module Pod
         test_consumer.requires_app_host?.should.be.true
       end
 
+      it 'allows to specify a specific app host to use' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.app_host_name = 'Foo/App'
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.app_host_name.should == 'Foo/App'
+      end
+
       it 'returns the scheme configuration of a test spec' do
         @spec.test_spec {}
         test_spec = @spec.test_specs.first
