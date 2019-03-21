@@ -305,6 +305,15 @@ module Pod
 
       #------------------#
 
+      it 'fails a test spec with `requires_app_host = false` and `app_host_name` set' do
+        @spec.test_specification = true
+        @spec.requires_app_host = false
+        @spec.app_host_name = 'Foo/App'
+        result_should_include('app_host_name', 'requires_app_host')
+      end
+
+      #------------------#
+
       it 'checks if the description is not an empty string' do
         @spec.stubs(:description).returns('')
         result_should_include('description', 'empty')

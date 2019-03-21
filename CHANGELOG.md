@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add `test_spec.app_spec_name` to DSL  
+  [jkap](https://github.com/jkap)
+  [#520](https://github.com/CocoaPods/Core/pull/520)
 
 ##### Bug Fixes
 
