@@ -1511,10 +1511,24 @@ module Pod
       # @!method app_host_name=(name)
       #
       #   The app specification to use as an app host, if necessary.
+      #   Requires `test_spec.requires_app_host` to be `true`.
       #
-      #   @example
+      # @example
       #
-      #     test_spec.app_host_name = 'Foo'
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.test_spec do |test_spec|
+      #       test_spec.source_files = 'NSAttributedString+CCLFormatTests.m'
+      #       test_spec.requires_app_host = true
+      #       test_spec.app_host_name = 'NSAttributedString+CCLFormat/App'
+      #     end
+      #
+      #     spec.app_spec 'App' do |app_spec|
+      #       app_spec.source_files = 'NSAttributedString+CCLFormat.m'
+      #       app_spec.dependency 'AFNetworking'
+      #     end
+      #   end
       #
       #   @param [String] name
       #          The app specification to use as an app host, if necessary.
