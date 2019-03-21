@@ -394,8 +394,8 @@ module Pod
         end
       end
 
-      def _validate_app_host_name(n)
-        unless @consumer.requires_app_host?
+      def _validate_app_host_name(_n)
+        unless consumer.requires_app_host?
           results.add_error('app_host_name', '`requires_app_host` must be set to ' \
             '`true` when `app_host_name` is specified.')
         end
