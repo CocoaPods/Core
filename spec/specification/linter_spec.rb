@@ -312,6 +312,14 @@ module Pod
         result_should_include('app_host_name', 'requires_app_host')
       end
 
+      it 'passes a test spec with `requires_app_host = true` and `app_host_name` set' do
+        @spec.test_specification = true
+        @spec.requires_app_host = true
+        @spec.app_host_name = 'Foo/App'
+        @linter.lint
+        @linter.results.should.be.empty?
+      end
+
       #------------------#
 
       it 'checks if the description is not an empty string' do
