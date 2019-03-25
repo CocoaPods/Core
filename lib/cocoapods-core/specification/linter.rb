@@ -394,10 +394,18 @@ module Pod
         end
       end
 
-      def _validate_app_host_name(_n)
+      def _validate_app_host_name(n)
         unless consumer.requires_app_host?
           results.add_error('app_host_name', '`requires_app_host` must be set to ' \
             '`true` when `app_host_name` is specified.')
+        end
+
+        parent_spec_name = (consumer.spec.parent && consumer.spec.parent.name) || consumer.name
+        podspec_name, appspec_name = n.split('/')
+
+        unless podspec_name == parent_spec_name || consumer.dependencies.map(&:name).include?(appspec_name)
+          results.add_error('app_host_name', "Test spec must depend on `#{podspec_name}` " \
+            'to use it as an app host.')
         end
       end
 

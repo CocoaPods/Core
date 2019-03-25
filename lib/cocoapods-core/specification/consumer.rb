@@ -144,7 +144,7 @@ module Pod
       spec_attr_accessor :requires_app_host
       alias_method :requires_app_host?, :requires_app_host
 
-      # @return [String?] Name of the app host this spec requires
+      # @return [String] Name of the app host this spec requires
       #
       spec_attr_accessor :app_host_name
 
