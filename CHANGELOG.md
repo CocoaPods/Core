@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix linting a JSON podspec that contains test or app subspecs.
+  This allows affected specs to be pushed to trunk.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.7.0.beta.2 (2019-03-08)
