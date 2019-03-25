@@ -48,7 +48,7 @@ module Pod
       end
 
       before do
-        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
+        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.1/BananaLib.podspec'
         @podspec_path = fixture(fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
       end
@@ -57,6 +57,23 @@ module Pod
         valid = @linter.lint
         @linter.results.should.be.empty?
         valid.should.be.true
+      end
+
+      describe 'with a spec loaded from json' do
+        before do
+          fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.1/BananaLib.podspec'
+          podspec_path = fixture(fixture_path)
+          podspec = Pod::Specification.from_file(podspec_path)
+          json = podspec.to_pretty_json
+          podspec = Pod::Specification.from_string(json, podspec_path.sub_ext('.podspec.json'))
+          @linter = Specification::Linter.new(podspec)
+        end
+
+        it 'accepts a valid podspec' do
+          valid = @linter.lint
+          @linter.results.should.be.empty?
+          valid.should.be.true
+        end
       end
 
       it 'compacts multi_platform attributes' do

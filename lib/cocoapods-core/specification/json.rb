@@ -73,9 +73,6 @@ module Pod
       ## backwards compatibility with 1.3.0
       spec.test_specification = !attributes_hash['test_type'].nil?
 
-      testspecs.each { |ts| ts['test_specification'] = true; } unless testspecs.nil?
-      appspecs.each { |ts| ts['app_specification'] = true; } unless appspecs.nil?
-
       spec.attributes_hash = attributes_hash
       spec.subspecs.concat(subspecs_from_hash(spec, subspecs, false, false))
       spec.subspecs.concat(subspecs_from_hash(spec, testspecs, true, false))
