@@ -699,7 +699,7 @@ module Pod
         when '.json'
           spec = Specification.from_json(spec_contents)
         else
-          raise Informative, "Unsupported specification format `#{path.extname}`."
+          raise Informative, "Unsupported specification format `#{path.extname}` for spec at `#{path}`."
         end
       end
 
