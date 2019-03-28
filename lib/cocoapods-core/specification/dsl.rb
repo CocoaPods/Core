@@ -1511,8 +1511,8 @@ module Pod
       # @!method app_host_name=(name)
       #
       #   The app specification to use as an app host, if necessary.
-      #   
-      #   **Note** Requires `test_spec.requires_app_host` to be `true`.
+      #
+      #   **Note** If the app host is in another pod, you must depend on that pod using `test_spec.dependency 'PodName'`
       #
       # @example
       #

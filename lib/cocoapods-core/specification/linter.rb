@@ -404,8 +404,9 @@ module Pod
         podspec_name, appspec_name = n.split('/')
 
         unless podspec_name == parent_spec_name || consumer.dependencies.map(&:name).include?(appspec_name)
-          results.add_error('app_host_name', "Test spec must depend on `#{podspec_name}` " \
-            'to use it as an app host.')
+          results.add_error('app_host_name', "The app host name specified by #{consumer.spec.name} could " \
+            "not be found. Either explicitly declare it within #{podspec_name} or add a dependency to the " \
+            'podspec that specifies it.')
         end
       end
 
