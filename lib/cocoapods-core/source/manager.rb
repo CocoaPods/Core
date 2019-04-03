@@ -249,8 +249,12 @@ module Pod
         @updated_search_index ||= begin
           if search_index_path.exist?
             require 'json'
-            index = JSON.parse(search_index_path.read)
-            index if index.is_a?(Hash) # TODO: should we also check if hash has correct hierarchy?
+            begin
+              index = JSON.parse(search_index_path.read)
+              index if index.is_a?(Hash) # TODO: should we also check if hash has correct hierarchy?
+            rescue JSON::ParserError
+              search_index_path.delete
+              nil
           end
         end
       end
