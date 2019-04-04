@@ -137,7 +137,7 @@ module Pod
         end
       end
 
-      it "deletes the search index file if it is invalid" do
+      it 'deletes the search index file if it is invalid' do
         @sources_manager.save_search_index(nil)
         @sources_manager.stored_search_index.should.be.nil
         @sources_manager.search_index_path.exist?.should.be.false
