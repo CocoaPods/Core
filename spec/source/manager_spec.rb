@@ -137,6 +137,12 @@ module Pod
         end
       end
 
+      it 'deletes the search index file if it is invalid' do
+        @sources_manager.save_search_index(nil)
+        @sources_manager.stored_search_index.should.be.nil
+        @sources_manager.search_index_path.exist?.should.be.false
+      end
+
       it "generates the search index before performing a search if it doesn't exist" do
         @sources_manager.stubs(:all).returns([@test_source])
         Source::Aggregate.any_instance.expects(:generate_search_index_for_source).with(@test_source).returns('BananaLib' => ['BananaLib'])
