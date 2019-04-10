@@ -205,7 +205,7 @@ module Pod
       compare = proc do |segments, other_segments, is_pre_release|
         limit = [segments.size, other_segments.size].max
 
-        (0..limit).each do |i|
+        0.upto(limit) do |i|
           lhs = segments[i]
           rhs = other_segments[i]
 
@@ -224,8 +224,6 @@ module Pod
           if comparison = lhs <=> rhs
             return comparison
           end
-          return 1 if lhs.is_a?(String) && rhs.is_a?(Numeric)
-          return -1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
         end
       end
 
