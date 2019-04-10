@@ -68,7 +68,8 @@ module Pod
     #         For more info, see: http://semver.org
     #
     def prerelease?
-      @prerelease ||= @version =~ /[a-zA-Z\-]/
+      return @prerelease if defined?(@prerelease)
+      @prerelease = @version =~ /[a-zA-Z\-]/
     end
 
     # @return [Bool] Whether a string representation is correct.
