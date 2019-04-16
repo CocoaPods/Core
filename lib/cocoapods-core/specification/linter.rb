@@ -400,13 +400,9 @@ module Pod
             '`true` when `app_host_name` is specified.')
         end
 
-        parent_spec_name = (consumer.spec.parent && consumer.spec.parent.name) || consumer.name
-        podspec_name, appspec_name = n.split('/')
-
-        unless podspec_name == parent_spec_name || consumer.dependencies.map(&:name).include?(appspec_name)
-          results.add_error('app_host_name', "The app host name specified by #{consumer.spec.name} could " \
-            "not be found. Either explicitly declare it within #{podspec_name} or add a dependency to the " \
-            'podspec that specifies it.')
+        unless consumer.dependencies.map(&:name).include?(n)
+          results.add_error('app_host_name', "The app host name (#{n}) specified by #{consumer.spec.name} could " \
+            'not be found. You must explicitly declare a dependency on that app spec.')
         end
       end
 
