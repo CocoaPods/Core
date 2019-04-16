@@ -292,7 +292,7 @@ module Pod
     #
     def prerelease?
       return @prerelease if defined?(@prerelease)
-      @prerelease = requirement.requirements.any(&:prerelease?)
+      @prerelease = requirement.requirements.any? { |_op, version| version.prerelease? }
     end
 
     # Checks whether the dependency would be satisfied by the specification
