@@ -276,6 +276,18 @@ module Pod
 
       #--------------------------------------#
 
+      it 'returns whether a dependency has pre-release requirements' do
+        Dependency.new('A').should.not.be.prerelease
+        Dependency.new('A', '1.0').should.not.be.prerelease
+        Dependency.new('A', '1.0', '< 3').should.not.be.prerelease
+
+        Dependency.new('A', '1.beta').should.be.prerelease
+        Dependency.new('A', '~> 1.0.0.beta').should.be.prerelease
+        Dependency.new('A', '~> 2', '< 1.0.0.beta').should.be.prerelease
+      end
+
+      #--------------------------------------#
+
       it 'matches a specification with the correct name' do
         dep = Dependency.new('bananas', '1.0')
         dep.should.match?('bananas', '1.0')
