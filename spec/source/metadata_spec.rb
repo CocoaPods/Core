@@ -39,6 +39,30 @@ module Pod
       end
     end
 
+    describe '#last_compatible_version' do
+      it 'returns the last compatible version if available' do
+        metadata_hash = {
+          'min' => '1.9.0',
+          'max' => '2.0.0',
+          'last_compatible_versions' => %w(1.0 1.4 2.0),
+        }
+        metadata = Source::Metadata.new(metadata_hash)
+        result = metadata.last_compatible_version(Version.new('1.5.0'))
+        result.should == Pod::Version.new('1.4.0')
+      end
+
+      it 'raises when unable to find a compatible version' do
+        metadata_hash = {
+          'min' => '2.0.0',
+          'max' => '2.0.0',
+        }
+        metadata = Source::Metadata.new(metadata_hash)
+        should.raise Pod::Informative do
+          metadata.last_compatible_version(Version.new('1.5.0'))
+        end.message.should.match /Unable to find compatible version/
+      end
+    end
+
     describe '#compatible?' do
       it 'returns whether a repository is compatible' do
         @metadata = Source::Metadata.new('min' => '0.0.1')

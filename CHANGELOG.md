@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix a crash when searching for a compatible version of a Source that has a higher version requirement  
+  [Eric Amorde](https://github.com/amorde)
+  [#482](https://github.com/CocoaPods/Core/issues/482)
 
 
 ## 1.7.0.beta.3 (2019-03-27)
