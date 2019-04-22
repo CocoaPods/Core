@@ -1512,7 +1512,9 @@ module Pod
       #
       #   The app specification to use as an app host, if necessary.
       #
-      #   **Note** If the app host is in another pod, you must depend on that pod using `test_spec.dependency 'PodName'`
+      # @note
+      #
+      #    You must depend on that app spec using `test_spec.dependency 'PodName'`.
       #
       # @example
       #

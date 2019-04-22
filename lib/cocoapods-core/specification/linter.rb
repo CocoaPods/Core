@@ -401,7 +401,7 @@ module Pod
         end
 
         unless consumer.dependencies.map(&:name).include?(n)
-          results.add_error('app_host_name', "The app host name (#{n}) specified by #{consumer.spec.name} could " \
+          results.add_error('app_host_name', "The app host name (#{n}) specified by `#{consumer.spec.name}` could " \
             'not be found. You must explicitly declare a dependency on that app spec.')
         end
       end
