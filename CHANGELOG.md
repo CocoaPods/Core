@@ -4,8 +4,10 @@
 
 ##### Enhancements
 
-* Add `test_spec.app_spec_name` to DSL  
+* Allow test specs to specify an `app_host_name` to point to an app spec whose
+  application is used as the test's app host.  
   [jkap](https://github.com/jkap)
+  [Samuel Giddins](https://github.com/segiddins)
   [#520](https://github.com/CocoaPods/Core/pull/520)
 
 ##### Bug Fixes
