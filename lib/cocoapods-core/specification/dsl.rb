@@ -1525,6 +1525,7 @@ module Pod
       #       test_spec.source_files = 'NSAttributedString+CCLFormatTests.m'
       #       test_spec.requires_app_host = true
       #       test_spec.app_host_name = 'NSAttributedString+CCLFormat/App'
+      #       test_spec.dependency 'NSAttributedString+CCLFormat/App'
       #     end
       #
       #     spec.app_spec 'App' do |app_spec|
