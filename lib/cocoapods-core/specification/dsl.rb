@@ -1508,6 +1508,39 @@ module Pod
                 :default_value => false,
                 :spec_types => [:test]
 
+      # @!method app_host_name=(name)
+      #
+      #   The app specification to use as an app host, if necessary.
+      #
+      # @note
+      #
+      #    You must depend on that app spec using `test_spec.dependency 'PodName'`.
+      #
+      # @example
+      #
+      #   Pod::Spec.new do |spec|
+      #     spec.name = 'NSAttributedString+CCLFormat'
+      #
+      #     spec.test_spec do |test_spec|
+      #       test_spec.source_files = 'NSAttributedString+CCLFormatTests.m'
+      #       test_spec.requires_app_host = true
+      #       test_spec.app_host_name = 'NSAttributedString+CCLFormat/App'
+      #       test_spec.dependency 'NSAttributedString+CCLFormat/App'
+      #     end
+      #
+      #     spec.app_spec 'App' do |app_spec|
+      #       app_spec.source_files = 'NSAttributedString+CCLFormat.m'
+      #       app_spec.dependency 'AFNetworking'
+      #     end
+      #   end
+      #
+      #   @param [String] name
+      #          The app specification to use as an app host, if necessary.
+      #
+      attribute :app_host_name,
+                :types => [String],
+                :spec_types => [:test]
+
       SCHEME_KEYS = [:launch_arguments, :environment_variables].freeze
 
       # @!method scheme=(flag)

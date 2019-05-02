@@ -291,8 +291,8 @@ module Pod
     # @return [Bool] Whether the dependency has any pre-release requirements
     #
     def prerelease?
-      @prerelease ||= requirement.requirements.
-        any? { |r| Version.new(r[1].version).prerelease? }
+      return @prerelease if defined?(@prerelease)
+      @prerelease = requirement.requirements.any? { |_op, version| version.prerelease? }
     end
 
     # Checks whether the dependency would be satisfied by the specification

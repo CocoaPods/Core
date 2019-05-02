@@ -305,6 +305,41 @@ module Pod
 
       #------------------#
 
+      it 'fails a test spec with `requires_app_host = false` and `app_host_name` set' do
+        @spec.test_specification = true
+        @spec.requires_app_host = false
+        @spec.app_host_name = 'BananaLib/App'
+        result_ignore('must explicitly declare a dependency')
+        result_should_include('app_host_name', 'requires_app_host')
+      end
+
+      it 'passes a test spec with `requires_app_host = true` and `app_host_name` set' do
+        @spec.test_specification = true
+        @spec.requires_app_host = true
+        @spec.app_host_name = 'BananaLib/App'
+        @spec.dependency 'BananaLib/App'
+        @linter.lint
+        @linter.results.should.be.empty?
+      end
+
+      it 'fails a test spec requiring an app host from a pod that isn\'t required' do
+        @spec.test_specification = true
+        @spec.requires_app_host = true
+        @spec.app_host_name = 'Foo/App'
+        result_should_include('app_host_name', 'Foo')
+      end
+
+      it 'passes a test spec requiring an app host from a pod that is listed as a dependency' do
+        @spec.dependency 'Foo/App'
+        @spec.test_specification = true
+        @spec.requires_app_host = true
+        @spec.app_host_name = 'Foo/App'
+        @linter.lint
+        @linter.results.should.be.empty?
+      end
+
+      #------------------#
+
       it 'checks if the description is not an empty string' do
         @spec.stubs(:description).returns('')
         result_should_include('description', 'empty')
