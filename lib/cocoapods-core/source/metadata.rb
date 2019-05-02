@@ -53,7 +53,7 @@ module Pod
       def last_compatible_version(target_version)
         return unless minimum_cocoapods_version
         return if minimum_cocoapods_version <= target_version
-        @last_compatible_versions.reverse_each.bsearch { |v| v <= target_version }.tap do |version|
+        @last_compatible_versions.reverse.bsearch { |v| v <= target_version }.tap do |version|
           raise Informative, 'Unable to find compatible version' unless version
         end
       end
