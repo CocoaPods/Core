@@ -71,6 +71,9 @@
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#470](https://github.com/CocoaPods/Core/pull/470)
 
+* Windows support - do not use fork when updating the index  
+  [David Airapetyan](https://github.com/davidair)
+  [#466](https://github.com/CocoaPods/Core/pull/466)
 
 ##### Bug Fixes
 
@@ -135,10 +138,6 @@
 ## 1.6.0.beta.2 (2018-10-17)
 
 ##### Enhancements
-
-* Windows support - do not use fork when updating the index  
-  [David Airapetyan](https://github.com/davidair)
-  [#466](https://github.com/CocoaPods/Core/pull/466)
 
 * Add support for specifying subspecs when using the `podspec` Podfile attribute  
   [Whirlwind](https://github.com/whirlwind)
