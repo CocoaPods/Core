@@ -371,6 +371,19 @@ module Pod
         end
       end
 
+      # Converts the test type value from a string to a symbol.
+      #
+      # @param  [String, Symbol] value.
+      #         The value of the test type attributed as specified by the user.
+      #
+      # @return [Symbol] the test type as a symbol.
+      #
+      def _prepare_test_type(value)
+        if value
+          value.to_sym
+        end
+      end
+
       # Converts the array of hashes (script phases) where keys are strings into symbols.
       #
       # @param  [Array<Hash{String=>String}>] value.

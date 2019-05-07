@@ -8,8 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Ensure `test_type` value is converted to a symbol from consumers of JSON podspecs.
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#504](https://github.com/CocoaPods/Core/pull/504)
 
 ## 1.6.1 (2019-02-21)
 
