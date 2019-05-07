@@ -272,6 +272,15 @@ module Pod
         test_consumer.test_type.should.be == :unit
       end
 
+      it 'returns the test type as a symbol when consuming JSON specs' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.test_type = :unit
+        json_spec = @spec.to_json
+        test_consumer = Specification::Consumer.new(Specification.from_json(json_spec).test_specs.first, :ios)
+        test_consumer.test_type.should.be == :unit
+      end
+
       it 'allows to specify whether the specification requires an app host' do
         @spec.test_spec {}
         test_spec = @spec.test_specs.first
