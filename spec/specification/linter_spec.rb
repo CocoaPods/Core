@@ -176,9 +176,14 @@ module Pod
         result_should_include('license', 'unrecognized `name` key')
       end
 
-      xit 'checks the source for unknown keys' do
-        call = lambda { @spec.source = { :tig => 'www.example.com/repo.tig' } }
-        call.should.raise StandardError
+      it 'checks that source is a hash' do
+        @spec.source = '.'
+        result_should_include('source', 'Unsupported type `String`, expected `Hash`')
+      end
+
+      it 'checks the source for unknown keys' do
+        @spec.source = { :tig => 'www.example.com/repo.tig' }
+        result_should_include('[keys]', 'Missing primary key for `source` attribute. The acceptable ones are: `git, hg, http, svn`.')
       end
 
       it 'checks the required attributes' do

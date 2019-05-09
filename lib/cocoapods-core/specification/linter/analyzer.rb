@@ -180,6 +180,10 @@ module Pod
         end
 
         def validate_attribute_hash_keys(attribute, value)
+          unless value.is_a?(Hash)
+            results.add_error(attribute.name, "Unsupported type `#{value.class}`, expected `Hash`")
+            return
+          end
           major_keys = value.keys & attribute.keys.keys
           if major_keys.count.zero?
             results.add_warning('keys', "Missing primary key for `#{attribute.name}` " \

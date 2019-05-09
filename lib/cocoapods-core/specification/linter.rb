@@ -350,6 +350,7 @@ module Pod
       # Performs validations related to the `source` attribute.
       #
       def _validate_source(s)
+        return unless s.is_a?(Hash)
         if git = s[:git]
           tag, commit = s.values_at(:tag, :commit)
           version = spec.version.to_s
