@@ -12,7 +12,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Emit an error when a Podspec has an incorrect type for the `source` attribute  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
 
 ## 1.7.0.rc.1 (2019-05-02)

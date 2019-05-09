@@ -131,7 +131,12 @@ module Pod
         #         should be retrieved.
         #
         def source
-          Specification.convert_keys_to_symbol(attributes_hash['source'])
+          value = attributes_hash['source']
+          if value && value.is_a?(Hash)
+            Specification.convert_keys_to_symbol(value)
+          else
+            value
+          end
         end
 
         # @return [String] A short description of the Pod.
