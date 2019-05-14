@@ -35,6 +35,11 @@ module Pod
         hash['appspecs'] = all_appspecs.map(&:to_hash) unless all_appspecs.empty?
         hash['subspecs'] = all_subspecs.map(&:to_hash) unless all_subspecs.empty?
 
+        # Since CocoaPods 1.7 version the DSL has changed to be pluralized. When we serialize a podspec to JSON with
+        # 1.7, ensure that we also include the singular version in the hash to maintain backwards compatibility with
+        # < 1.7 versions.
+        hash['swift_version'] = swift_version.to_s unless swift_version.nil?
+
         hash
       end
     end
