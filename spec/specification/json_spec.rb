@@ -327,12 +327,14 @@ module Pod
           @spec.swift_version = '1.0'
           hash = @spec.to_hash
           hash['swift_versions'].should == '1.0'
+          hash['swift_version'].should == '1.0'
         end
 
         it 'writes swift version pluralized' do
           @spec.swift_versions = ['1.0']
           hash = @spec.to_hash
           hash['swift_versions'].should == ['1.0']
+          hash['swift_version'].should == '1.0'
         end
 
         it 'reads swift version from a string' do
@@ -363,6 +365,7 @@ module Pod
           }
           result = Specification.from_hash(hash)
           result.swift_versions.map(&:to_s).should == %w(3.2)
+          result.swift_version.to_s.should == '3.2'
         end
 
         it 'combines old and new swift version declarations' do
@@ -374,6 +377,7 @@ module Pod
           }
           result = Specification.from_hash(hash)
           result.swift_versions.map(&:to_s).should == %w(3.2 4.0 4.1)
+          result.swift_version.to_s.should == '4.1'
         end
       end
     end

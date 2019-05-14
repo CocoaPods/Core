@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Ensure `swift_version` singular version is included in JSON representation.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#8635](https://github.com/CocoaPods/CocoaPods/issues/8635)
 
 
 ## 1.7.0.rc.1 (2019-05-02)
