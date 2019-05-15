@@ -42,7 +42,8 @@ module Pod
         def check_attributes
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
-          valid_keys = attributes_keys + platform_keys
+          deprecated_keys = ['swift_version']
+          valid_keys = attributes_keys + platform_keys + deprecated_keys
           attributes_hash = consumer.spec.attributes_hash
           keys = attributes_hash.keys
           Specification::DSL::PLATFORMS.each do |platform|
