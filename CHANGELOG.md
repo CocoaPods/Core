@@ -79,10 +79,6 @@
 
 ##### Bug Fixes
 
-* Ensure `test_type` value is converted to a symbol from consumers of JSON podspecs.  
-  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
-  [#504](https://github.com/CocoaPods/Core/pull/504)
-
 * Fix several array sorting inconsistencies when generating a Lockfile.  
   When a Lockfile is being written to disk, `YAMLHelper` sorts arrays by `&:downcase`.  
   When a new Lockfile is generated, the sort order is plain lexicographical.  
