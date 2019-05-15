@@ -17,6 +17,19 @@
   [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
 
+## 1.7.0.rc.2 (2019-05-15)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Ensure `swift_version` singular version is included in JSON representation.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#8635](https://github.com/CocoaPods/CocoaPods/issues/8635)
+
+
 ## 1.7.0.rc.1 (2019-05-02)
 
 ##### Enhancements
@@ -77,12 +90,11 @@
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#470](https://github.com/CocoaPods/Core/pull/470)
 
+* Windows support - do not use fork when updating the index  
+  [David Airapetyan](https://github.com/davidair)
+  [#466](https://github.com/CocoaPods/Core/pull/466)
 
 ##### Bug Fixes
-
-* Ensure `test_type` value is converted to a symbol from consumers of JSON podspecs.  
-  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
-  [#504](https://github.com/CocoaPods/Core/pull/504)
 
 * Fix several array sorting inconsistencies when generating a Lockfile.  
   When a Lockfile is being written to disk, `YAMLHelper` sorts arrays by `&:downcase`.  
@@ -93,6 +105,19 @@
 * Fix a crash when using `inhibit_all_warnings!` in parent and child scopes  
   [Eric Amorde](https://github.com/amorde)
   [#472](https://github.com/CocoaPods/Core/issues/472)
+
+
+## 1.6.2 (2019-05-15)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Ensure `test_type` value is converted to a symbol from consumers of JSON podspecs.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#504](https://github.com/CocoaPods/Core/pull/504)
 
 
 ## 1.6.1 (2019-02-21)
@@ -141,10 +166,6 @@
 ## 1.6.0.beta.2 (2018-10-17)
 
 ##### Enhancements
-
-* Windows support - do not use fork when updating the index  
-  [David Airapetyan](https://github.com/davidair)
-  [#466](https://github.com/CocoaPods/Core/pull/466)
 
 * Add support for specifying subspecs when using the `podspec` Podfile attribute  
   [Whirlwind](https://github.com/whirlwind)
