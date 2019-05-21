@@ -20,6 +20,9 @@ module Pod
         :max_threads => 200,
         :max_queue => 0 # unbounded work queue
       )
+
+      @version_arrays_by_fragment_by_name = {}
+
       super(repo)
     end
 
@@ -84,35 +87,33 @@ module Pod
       return nil unless specs_dir
       raise ArgumentError, 'No name' unless name
 
+      fragment = pod_shard_fragment(name)
+
+      ensure_versions_file_loaded(fragment)
+
       return @versions_by_name[name] unless @versions_by_name[name].nil?
 
       pod_path_actual = pod_path(name)
       pod_path_relative = relative_pod_path(name)
-      versions_file_path_relative = pod_path_relative.join(INDEX_FILE_NAME).to_s
-      download_file(versions_file_path_relative)
 
-      return nil unless pod_path_actual.join(INDEX_FILE_NAME).exist?
+      return nil if @version_arrays_by_fragment_by_name[fragment][name].nil?
 
       loaders = []
-      @versions_by_name[name] ||= local_file(versions_file_path_relative) do |file|
-        file.map do |v|
-          version = v.chomp
-
-          # Optimization: ensure all the podspec files at least exist. The correct one will get refreshed
-          # in #specification_path regardless.
-          podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
-          unless pod_path_actual.join(podspec_version_path_relative).exist?
-            loaders << Concurrent::Promise.execute(:executor => @executor) do
-              download_file(pod_path_relative.join(podspec_version_path_relative).to_s)
-            end
+      @versions_by_name[name] ||= @version_arrays_by_fragment_by_name[fragment][name].map do |version|
+        # Optimization: ensure all the podspec files at least exist. The correct one will get refreshed
+        # in #specification_path regardless.
+        podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
+        unless pod_path_actual.join(podspec_version_path_relative).exist?
+          loaders << Concurrent::Promise.execute(:executor => @executor) do
+            download_file(pod_path_relative.join(podspec_version_path_relative).to_s)
           end
-          begin
-            Version.new(version) if version[0, 1] != '.'
-          rescue ArgumentError
-            raise Informative, 'An unexpected version directory ' \
-            "`#{version}` was encountered for the " \
-            "`#{pod_dir}` Pod in the `#{name}` repository."
-          end
+        end
+        begin
+          Version.new(version) if version[0, 1] != '.'
+        rescue ArgumentError
+          raise Informative, 'An unexpected version directory ' \
+          "`#{version}` was encountered for the " \
+          "`#{pod_dir}` Pod in the `#{name}` repository."
         end
       end.compact.sort.reverse
       Concurrent::Promise.zip(*loaders).wait!
@@ -146,6 +147,12 @@ module Pod
       raise Informative, "Can't retrieve all the specs for a CDN-backed source, it will take forever"
     end
 
+    # @return [Array<Sets>] the sets of all the Pods.
+    #
+    def pod_sets
+      raise Informative, "Can't retrieve all the pod sets for a CDN-backed source, it will take forever"
+    end
+
     # @!group Searching the source
     #-------------------------------------------------------------------------#
 
@@ -165,7 +172,13 @@ module Pod
         query = query.root_name
       end
 
-      found = download_file(relative_pod_path(query).join(INDEX_FILE_NAME).to_s)
+      fragment = pod_shard_fragment(query)
+
+      ensure_versions_file_loaded(fragment)
+
+      version_arrays_by_name = @version_arrays_by_fragment_by_name[fragment] || {}
+
+      found = version_arrays_by_name[query].nil? ? nil : query
 
       if found
         set = set(query)
@@ -220,12 +233,37 @@ module Pod
 
     private
 
-    # Index files contain all the sub directories in the directory, separated by
-    # a newline. We use those because you can't get a directory listing from a CDN.
-    INDEX_FILE_NAME = 'index.txt'.freeze
+    def ensure_versions_file_loaded(fragment)
+      return if !@version_arrays_by_fragment_by_name[fragment].nil? && !@check_existing_files_for_update
+
+      # Index file that contains all the versions for all the pods in the shard.
+      # We use those because you can't get a directory listing from a CDN.
+      index_file_name = index_file_name_for_fragment(fragment)
+      download_file(index_file_name)
+      versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
+      @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
+        row = row.split('/')
+        pod = row.shift
+        versions = row
+
+        hash[pod] = versions
+        hash
+      end
+    end
+
+    def index_file_name_for_fragment(fragment)
+      fragment_joined = fragment.join('_')
+      fragment_joined = '_' + fragment_joined unless fragment.empty?
+      "all_pods_versions#{fragment_joined}.txt"
+    end
+
+    def pod_shard_fragment(pod_name)
+      metadata.path_fragment(pod_name)[0..-2]
+    end
 
     def local_file(partial_url)
-      File.open(repo.join(partial_url)) do |file|
+      file_path = repo.join(partial_url)
+      File.open(file_path) do |file|
         yield file if block_given?
       end
     end
@@ -257,9 +295,18 @@ module Pod
       etag = File.read(etag_path) if File.exist?(etag_path)
       debug "CDN: #{name} Relative path: #{partial_url}, has ETag? #{etag}" unless etag.nil?
 
+      download_from_url(partial_url, file_remote_url, etag)
+    end
+
+    def download_from_url(partial_url, file_remote_url, etag)
+      path = repo + partial_url
+      etag_path = path.sub_ext(path.extname + '.etag')
+
       response = etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
 
       case response.status_code
+      when 301
+        download_from_url(partial_url, response.headers['location'].first, etag)
       when 304
         debug "CDN: #{name} Relative path not modified: #{partial_url}"
         # We need to update the file modification date, as it is later used for freshness
