@@ -17,6 +17,17 @@
   [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
 
+## 1.7.1 (2019-05-30)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.7.0 (2019-05-22)
 
 ##### Enhancements
