@@ -337,7 +337,7 @@ module Pod
       if string.respond_to?(:encoding) && string.encoding.name != 'UTF-8'
         string.encode!('UTF-8')
       end
-      hash = JSON.parse(string, symbolize_names: false)
+      hash = JSON.parse(string, :symbolize_names => false)
       from_hash(hash, path)
     end
 
