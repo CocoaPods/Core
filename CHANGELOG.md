@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Allow json support to Podfile
+  [Itay Brenner](https://github.com/itaybre)
+  [#545](https://github.com/CocoaPods/Core/pull/545)
+
 * Allow test specs to specify an `app_host_name` to point to an app spec whose
   application is used as the test's app host.  
   [jkap](https://github.com/jkap)
