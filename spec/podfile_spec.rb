@@ -431,8 +431,8 @@ module Pod
 
       it 'can be initialized from a JSON file' do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
-        yaml_podfile = Podfile.from_file(fixture('Podfile.json'))
-        ruby_podfile.to_hash.should == yaml_podfile.to_hash
+        json_podfile = Podfile.from_file(fixture('Podfile.json'))
+        ruby_podfile.to_hash.should == json_podfile.to_hash
       end
 
       it "raises if the given initialization file doesn't exists" do
