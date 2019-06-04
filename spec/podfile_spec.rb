@@ -29,6 +29,7 @@ module Pod
         Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile'))
         Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile')).tap { |pf| pf.defined_in_file = Pathname('foo') }
         Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile.yaml'))
+        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile.json'))
 
         Podfile.from_file(fixture('Podfile')).should.not == Podfile.new
         Podfile.from_file(fixture('Podfile')).should.not == Podfile.from_ruby(fixture('Podfile'), fixture('Podfile').read.gsub(/pod '/, "pod 'A_"))
@@ -428,6 +429,12 @@ module Pod
         ruby_podfile.to_hash.should == yaml_podfile.to_hash
       end
 
+      it 'can be initialized from a JSON file' do
+        ruby_podfile = Podfile.from_file(fixture('Podfile'))
+        yaml_podfile = Podfile.from_file(fixture('Podfile.json'))
+        ruby_podfile.to_hash.should == yaml_podfile.to_hash
+      end
+
       it "raises if the given initialization file doesn't exists" do
         should.raise Informative do
           Podfile.from_file('Missing-file')
@@ -438,7 +445,7 @@ module Pod
         Pathname.any_instance.stubs(:exist?).returns(true)
         File.stubs(:open).returns('')
         should.raise Informative do
-          Podfile.from_file('Podfile.json')
+          Podfile.from_file('Podfile.txt')
         end.message.should.match /Unsupported Podfile format/
       end
 
