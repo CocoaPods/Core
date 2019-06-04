@@ -4,7 +4,7 @@
 
 ##### Enhancements
 
-* Allow json support to Podfile
+* Allow json support to Podfile  
   [Itay Brenner](https://github.com/itaybre)
   [#545](https://github.com/CocoaPods/Core/pull/545)
 
