@@ -110,6 +110,10 @@ module Pod
         merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:user_target_xcconfig))
       end
 
+      # @return [Hash{String => String}] the Info.plist values for the current specification
+      #
+      spec_attr_accessor :info_plist
+
       # @return [String] The contents of the prefix header.
       #
       spec_attr_accessor :prefix_header_contents
@@ -313,12 +317,7 @@ module Pod
           r.compact
         elsif attr.container == Hash
           existing_value.merge(new_value) do |_, old, new|
-            if new.is_a?(Array) || old.is_a?(Array)
-              r = [*old] + [*new]
-              r.compact
-            else
-              old + ' ' + new
-            end
+            merge_hash_value(attr, old, new)
           end
         else
           new_value
@@ -350,6 +349,33 @@ module Pod
           send(hook_name, value)
         else
           value
+        end
+      end
+
+      private
+
+      # Merges two values in a hash together based on the needs of the attribute
+      #
+      # @param  [Specification::DSL::Attribute] attr
+      #         the attribute for which that value is needed.
+      #
+      # @param  [Object] old the value from the original hash
+      #
+      # @param  [Object] new the value from the new hash
+      #
+      # @return [Object] the merged value
+      #
+      def merge_hash_value(attr, old, new)
+        case attr.name
+        when :info_plist
+          new
+        else
+          if new.is_a?(Array) || old.is_a?(Array)
+            r = Array(old) + Array(new)
+            r.compact
+          else
+            old + ' ' + new
+          end
         end
       end
 

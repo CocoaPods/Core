@@ -180,6 +180,38 @@ module Pod
 
       #------------------#
 
+      describe 'info_plist' do
+        it 'allows specifying Info.plist values' do
+          value = {
+            'SOME_VAR' => 'SOME_VALUE',
+          }
+          @spec.info_plist = value
+          @consumer.info_plist.should == value
+        end
+
+        it 'does not inherit values from the parent' do
+          @spec.info_plist = {
+            'SOME_VAR' => 'SOME_VALUE',
+          }
+          @subspec.info_plist = {
+            'OTHER_VAR' => 'OTHER_VALUE',
+          }
+          @subspec_consumer.info_plist.should == {
+            'OTHER_VAR' => 'OTHER_VALUE',
+          }
+        end
+
+        it 'allows specifying values by platform' do
+          @spec.info_plist = { 'CFBundleIdentifier' => 'org.cocoapods.MyLib' }
+          @spec.osx.info_plist = { 'CFBundleIdentifier' => 'org.cocoapods.MyLibOSX' }
+          osx_consumer = Specification::Consumer.new(@spec, :osx)
+          osx_consumer.info_plist.should == { 'CFBundleIdentifier' => 'org.cocoapods.MyLibOSX' }
+          @consumer.info_plist.should == { 'CFBundleIdentifier' => 'org.cocoapods.MyLib' }
+        end
+      end
+
+      #------------------#
+
       it 'allows to specify the contents of the prefix header' do
         @spec.prefix_header_contents = '#import <UIKit/UIKit.h>'
         @consumer.prefix_header_contents.should == '#import <UIKit/UIKit.h>'

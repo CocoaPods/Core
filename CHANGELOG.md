@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add Info.plist DSL to Specifications  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods/CocoaPods#8753](https://github.com/CocoaPods/CocoaPods/issues/8753)
+
 * Add `project_name` DSL to allow grouping pods into projects.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#547](https://github.com/CocoaPods/Core/pull/547)

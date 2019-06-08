@@ -435,6 +435,12 @@ module Pod
       Specification.convert_keys_to_symbol(value, :recursive => false)
     end
 
+    # @return [Hash] The Info.plist value.
+    #
+    def info_plist
+      attributes_hash['info_plist'] || {}
+    end
+
     #-------------------------------------------------------------------------#
 
     public
