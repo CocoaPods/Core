@@ -39,6 +39,20 @@ module Pod
       end
     end
 
+    describe '#path_fragment' do
+      it 'returns correct shard in array form' do
+        @metadata.path_fragment('DfPodTest').should == %w(2 2 2 DfPodTest)
+      end
+
+      it 'handles one-character names' do
+        @metadata.path_fragment('T').should == %w(b 9 e T)
+      end
+
+      it 'handles non-ascii names' do
+        @metadata.path_fragment('🔒').should == %w(c 5 1 🔒)
+      end
+    end
+
     describe '#last_compatible_version' do
       it 'returns the last compatible version if available' do
         metadata_hash = {

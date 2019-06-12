@@ -4,9 +4,26 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe CDNSource do
     before do
+      def get_canonical_versions(relative_path)
+        path = @remote_dir.join(relative_path)
+        File.read(path).split("\n")
+      end
+
+      def get_etag(relative_path)
+        path = @source.repo.join(relative_path)
+        etag_path = path.sub_ext(path.extname + '.etag')
+        File.read(etag_path) if File.exist?(etag_path)
+      end
+
+      def all_local_files
+        [@source.repo.join('**/*.yml'), @source.repo.join('**/*.txt'), @source.repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
+      end
+
       @path = fixture('spec-repos/test_cdn_repo_local')
       Pathname.glob(@path.join('*')).each(&:rmtree)
       @source = CDNSource.new(@path)
+
+      @remote_dir = fixture('mock_cdn_repo_remote')
     end
 
     after do
@@ -48,7 +65,6 @@ module Pod
       end
 
       it 'returns nil if the Pod could not be found' do
-        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/Unknown_Pod\/index\.txt Response: 404} }
         @source.versions('Unknown_Pod').should.be.nil
       end
 
@@ -102,9 +118,10 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#pod_sets' do
-      it 'returns all the pod sets' do
-        expected = %w(BeaconKit SDWebImage)
-        @source.pod_sets.map(&:name).sort.uniq.should == expected
+      it 'raises an error' do
+        should.raise Informative do
+          @source.pod_sets
+        end.message.should.match /Can't retrieve all the pod sets for a CDN-backed source, it will take forever/
       end
     end
 
@@ -126,7 +143,7 @@ module Pod
       end
 
       it 'matches case' do
-        @source.expects(:debug).with { |cmd| cmd =~ %r{CDN: #{@source.name} Relative path couldn't be downloaded: Specs\/.*\/bEacoNKIT\/index\.txt Response: 404} }
+        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path downloaded: all_pods_versions_9_5_b\.txt, save ETag:/ }
         @source.search('bEacoNKIT').should.be.nil?
       end
 
@@ -219,30 +236,23 @@ module Pod
         @source.search('BeaconKit')
       end
 
-      def get_versions(relative_path)
-        path = @source.repo.join(relative_path)
-        File.read(path).split("\n")
-      end
-
       it 'refreshes all index files' do
         @source.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
-        pod_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join('index.txt').to_s
-        @source.expects(:download_file).with(pod_relative_path).returns(pod_relative_path)
-        get_versions(pod_relative_path).each do |version|
-          podspec_relative_path = @source.pod_path('BeaconKit').relative_path_from(@source.repo).join(version).join('BeaconKit.podspec.json').to_s
-          @source.expects(:download_file).with(podspec_relative_path).returns(podspec_relative_path)
+        @source.expects(:download_file).with('all_pods_versions_2_0_9.txt').returns('all_pods_versions_2_0_9.txt')
+
+        ['BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5', 'SDWebImage/2.4/2.5/2.6/2.7/2.7.4/3.0/3.1/4.0.0/4.0.0-beta/4.0.0-beta2'].each do |row|
+          row = row.split('/')
+          pod = row.shift
+          versions = row
+
+          next unless pod == 'BeaconKit'
+
+          versions.each do |version|
+            podspec_relative_path = @source.pod_path(pod).relative_path_from(@source.repo).join(version).join("#{pod}.podspec.json").to_s
+            @source.expects(:download_file).with(podspec_relative_path).returns(podspec_relative_path)
+          end
         end
         @source.update(true)
-      end
-
-      def get_etag(relative_path)
-        path = @source.repo.join(relative_path)
-        etag_path = path.sub_ext(path.extname + '.etag')
-        File.read(etag_path) if File.exist?(etag_path)
-      end
-
-      def all_local_files
-        [@source.repo.join('**/*.yml'), @source.repo.join('**/*.txt'), @source.repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
       end
 
       it 'handles ETag and If-None-Match headers' do

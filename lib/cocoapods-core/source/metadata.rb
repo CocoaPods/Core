@@ -47,7 +47,7 @@ module Pod
                        hashed.slice!(0, length)
                      end
                    end
-        prefixes.concat([pod_name, version]).compact.join(File::SEPARATOR)
+        prefixes.concat([pod_name, version]).compact
       end
 
       def last_compatible_version(target_version)
