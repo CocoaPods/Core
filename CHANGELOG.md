@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.7.2 (2019-06-13)
 
 ##### Enhancements
 
