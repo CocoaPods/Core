@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* CDNSource: Use a more compact, sharded index retrieving for the pod versions  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#541](https://github.com/CocoaPods/Core/pull/541)
 
 ##### Bug Fixes
 
