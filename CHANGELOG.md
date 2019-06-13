@@ -17,6 +17,19 @@
   [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
 
+## 1.7.2 (2019-06-13)
+
+##### Enhancements
+
+* CDNSource: Use a more compact, sharded index retrieving for the pod versions  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#541](https://github.com/CocoaPods/Core/pull/541)
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.7.1 (2019-05-30)
 
 ##### Enhancements
