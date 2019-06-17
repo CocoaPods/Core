@@ -75,6 +75,27 @@ module Pod
         end.message.should.match /CDN: .* Relative path couldn\'t be downloaded: .* Response: 500/
       end
 
+      it 'raises if unexpected non-HTTP error' do
+        REST.expects(:get).raises(Exception, 'test message')
+        should.raise Exception do
+          @source.versions('Unknown_Pod')
+        end.message.should.== 'test message'
+      end
+
+      it 'raises cumulative error when more than one Future rejects' do
+        REST.expects(:get).with('http://localhost:4321/all_pods_versions_2_0_9.txt').returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5'))
+        versions = %w(0 1 2 3 4 5)
+        messages = versions.map do |index|
+          message = "test message #{index}"
+          REST.expects(:get).with("http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").raises(Exception, message)
+          message
+        end
+
+        should.raise Informative do
+          @source.versions('BeaconKit')
+        end.message.should.== "CDN: test_cdn_repo_local Repo update failed - 6 error(s):\n" + messages.join("\n")
+      end
+
       it 'returns cached versions for a Pod' do
         pod_path_children = %w(1.0.5 1.0.4 1.0.3 1.0.2 1.0.1 1.0.0)
         @source.versions('BeaconKit').map(&:to_s).should == pod_path_children
