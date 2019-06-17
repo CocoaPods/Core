@@ -4,7 +4,13 @@
 
 ##### Enhancements
 
-* None.  
+* CDNSource: Lower the thread pool limit to 50 and add an environment variable to override it.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
+
+* CDNSource: Improve the error messaging from multi-threaded code.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
 
 ##### Bug Fixes
 
