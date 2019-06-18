@@ -93,7 +93,7 @@ module Pod
 
         should.raise Informative do
           @source.versions('BeaconKit')
-        end.message.should.== "CDN: test_cdn_repo_local Repo update failed - 6 error(s):\n" + messages.join("\n")
+        end.message.should.== "CDN: #{@source.name} Repo update failed - 6 error(s):\n" + messages.join("\n")
       end
 
       it 'returns cached versions for a Pod' do
