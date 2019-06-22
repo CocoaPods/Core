@@ -6,6 +6,7 @@ module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
   #
   class CDNSource < Source
+    MAX_CDN_NETWORK_THREADS = 50
     MAX_NUMBER_OF_RETRIES = 5
 
     # @param [String] repo The name of the repository
@@ -19,7 +20,7 @@ module Pod
 
       @executor = Concurrent::ThreadPoolExecutor.new(
         :min_threads => 5,
-        :max_threads => (ENV['MAX_CDN_NETWORK_THREADS'] || 50).to_i,
+        :max_threads => (ENV['MAX_CDN_NETWORK_THREADS'] || MAX_CDN_NETWORK_THREADS).to_i,
         :max_queue => 0 # unbounded work queue
       )
 

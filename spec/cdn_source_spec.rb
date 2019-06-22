@@ -94,7 +94,7 @@ module Pod
           returns(REST::Response.new(200, {}, real_podspec))
 
         spec = @source.specification('BeaconKit', '1.0.0')
-        spec.name.should.== 'BeaconKit'
+        spec.name.should == 'BeaconKit'
       end
 
       it 'raises cumulative error when more than one Future rejects' do
