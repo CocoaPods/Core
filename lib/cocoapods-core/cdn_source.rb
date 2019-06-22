@@ -6,6 +6,8 @@ module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
   #
   class CDNSource < Source
+    MAX_NUMBER_OF_RETRIES = 5
+
     # @param [String] repo The name of the repository
     #
     def initialize(repo)
@@ -309,11 +311,7 @@ module Pod
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      begin
-        response = etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
-      rescue => e
-        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url}, error: #{e}"
-      end
+      response = download_retrying_connection_errors(partial_url, file_remote_url, etag)
 
       case response.status_code
       when 301
@@ -336,6 +334,17 @@ module Pod
         nil
       else
         raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
+      end
+    end
+
+    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
+      etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
+    rescue REST::Error => e
+      if retries <= 0
+        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url}, error: #{e}"
+      else
+        debug "CDN: #{name} Relative path: #{partial_url} error: #{e} - retrying"
+        download_retrying_connection_errors(partial_url, file_remote_url, etag, retries - 1)
       end
     end
 

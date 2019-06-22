@@ -12,6 +12,10 @@
   [Igor Makarov](https://github.com/igor-makarov)
   [#551](https://github.com/CocoaPods/Core/pull/551)
 
+* CDNSource: Retry connection errors.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
+
 ##### Bug Fixes
 
 * None.  
