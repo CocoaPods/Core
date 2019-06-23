@@ -16,6 +16,9 @@ module Pod
   #     "#{SPEC_NAME}/#{VERSION}/#{SPEC_NAME}.podspec"
   #
   class Source
+    # The default branch in which the specs are stored
+    DEFAULT_SPECS_BRANCH = 'master'.freeze
+
     # @return [Pod::Source::Metadata] The metadata for this source.
     #
     attr_reader :metadata
@@ -435,7 +438,7 @@ module Pod
 
     def git_tracking_branch
       path = repo.join('.git', 'cocoapods_branch')
-      path.file? ? path.read.strip : Pod::MasterSource::MASTER_REPO_NAME
+      path.file? ? path.read.strip : DEFAULT_SPECS_BRANCH
     end
 
     def diff_until_commit_hash(commit_hash)
