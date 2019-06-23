@@ -51,9 +51,8 @@ module Pod
 
       it "raises if the repo doesn't exist" do
         path = fixture('spec-repos/non_existing')
-        should.raise Informative do
-          CDNSource.new(path)
-        end.message.should.match /Unable to find a source named: `non_existing`/
+        @source = CDNSource.new(path)
+        @source.metadata.should.be.nil?
       end
     end
 

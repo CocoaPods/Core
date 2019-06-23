@@ -489,7 +489,7 @@ module Pod
           next unless source
           next if specs.empty?
           key = source.url || source.name
-          key = key.downcase if source.name == Pod::MasterSource::MASTER_REPO_NAME
+          key = Pod::TrunkSource::TRUNK_REPO_NAME if source.name == Pod::TrunkSource::TRUNK_REPO_NAME
           value = specs.map { |s| s.root.name }.uniq
           [key, YAMLHelper.sorted_array(value)]
         end.compact]

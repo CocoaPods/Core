@@ -3,7 +3,7 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe DSLError do
     before do
-      @dsl_path = fixture('spec-repos/master/Three20/1.0.11/Three20.podspec')
+      @dsl_path = fixture('standard_error_podspec/Three20.podspec')
       backtrace = [
         "#{@dsl_path}:2:in `error line'",
         "#{@dsl_path}:127:in `block (2 levels) in _eval_podspec'",

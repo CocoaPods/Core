@@ -17,7 +17,7 @@ module Pod
           - JSONKit (from `path/JSONKit.podspec`)
 
         SPEC REPOS:
-          https://github.com/cocoapods/specs.git:
+          trunk:
             - BananaLib
             - monkey
 
@@ -52,7 +52,7 @@ module Pod
           - JSONKit (from `path/JSONKit.podspec`)
 
         SPEC REPOS:
-          https://github.com/cocoapods/specs.git:
+          trunk:
             - BananaLib
             - monkey
 
@@ -110,7 +110,7 @@ module Pod
 
     def self.specs_by_source
       {
-        Source.new(fixture('spec-repos/master')) => specs.reject { |s| s.name == 'JSONKit' },
+        TrunkSource.new(fixture('spec-repos/trunk')) => specs.reject { |s| s.name == 'JSONKit' },
         Source.new(fixture('spec-repos/test_repo')) => [],
       }
     end
@@ -186,9 +186,9 @@ module Pod
       end
 
       it 'returns the spec repo of a given pod' do
-        @lockfile.spec_repo('BananaLib').should == 'https://github.com/cocoapods/specs.git'
+        @lockfile.spec_repo('BananaLib').should == 'trunk'
         @lockfile.spec_repo('JSONKit').should.be.nil
-        @lockfile.spec_repo('monkey').should == 'https://github.com/cocoapods/specs.git'
+        @lockfile.spec_repo('monkey').should == 'trunk'
       end
 
       it 'returns the checksum for the given Pod' do
@@ -206,8 +206,8 @@ module Pod
 
       it 'returns the spec repo sources' do
         @lockfile.pods_by_spec_repo.should == Hash[Sample.specs_by_source.map do |source, specs|
-          next unless source.name == 'master'
-          [source.url.downcase, specs.map(&:name)]
+          next unless source.name == 'trunk'
+          ['trunk', specs.map(&:name)]
         end.compact]
       end
 
@@ -217,14 +217,14 @@ module Pod
       end
 
       it 'only includes root names in spec repo sources' do
-        @lockfile = Lockfile.generate(Sample.podfile, [], {}, Source.new(fixture('spec-repos/master')) => Pod::Spec.new do |s|
-                                                                                                            s.name = 'foo'
-                                                                                                            s.version = '1.0.0'
-                                                                                                            s.subspec 'Core'
-                                                                                                            s.subspec 'NotCore'
-                                                                                                          end.recursive_subspecs)
+        @lockfile = Lockfile.generate(Sample.podfile, [], {}, TrunkSource.new(fixture('spec-repos/trunk')) => Pod::Spec.new do |s|
+                                                                                                                s.name = 'foo'
+                                                                                                                s.version = '1.0.0'
+                                                                                                                s.subspec 'Core'
+                                                                                                                s.subspec 'NotCore'
+                                                                                                              end.recursive_subspecs)
         @lockfile.pods_by_spec_repo.should == {
-          'https://github.com/cocoapods/specs.git' => %w(foo),
+          'trunk' => %w(foo),
         }
       end
 
@@ -407,7 +407,7 @@ module Pod
             { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
             'JSONKit (1.4)', 'monkey (1.0.8)'],
           'DEPENDENCIES' => ['BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'],
-          'SPEC REPOS' => { 'https://github.com/cocoapods/specs.git' => %w(BananaLib monkey) },
+          'SPEC REPOS' => { 'trunk' => %w(BananaLib monkey) },
           'EXTERNAL SOURCES' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'CHECKOUT OPTIONS' => { 'JSONKit' => { :podspec => 'path/JSONKit.podspec' } },
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
@@ -450,7 +450,7 @@ module Pod
         checkout_options = {
           'BananaLib' => { :git => 'www.example.com', :tag => '1.0' },
         }
-        specs_by_source = { Source.new(fixture('spec-repos/master')) => specs.select { |s| s.name == 'monkey' } }
+        specs_by_source = { TrunkSource.new(fixture('spec-repos/trunk')) => specs.select { |s| s.name == 'monkey' } }
         lockfile = Lockfile.generate(podfile, specs, checkout_options, specs_by_source)
         lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
         lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
@@ -598,7 +598,7 @@ module Pod
       describe '#generate_spec_repos' do
         it 'sorts specs per spec repo by lowercase' do
           spec_repos = {
-            Source.new(fixture('spec-repos/master')) => [
+            TrunkSource.new(fixture('spec-repos/trunk')) => [
               Specification.new do |s|
                 s.name = 'a'
                 s.version = '1.0'
@@ -614,7 +614,7 @@ module Pod
             ],
           }
           spec_repos_data = Lockfile.send(:generate_spec_repos, spec_repos)
-          spec_repos_data.should == { 'https://github.com/cocoapods/specs.git' => %w(a b C) }
+          spec_repos_data.should == { 'trunk' => %w(a b C) }
         end
       end
     end

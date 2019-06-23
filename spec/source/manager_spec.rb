@@ -25,19 +25,19 @@ module Pod
       end
 
       it 'returns all the sources' do
-        @sources_manager.all.map(&:name).should == %w(master test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo)
+        @sources_manager.all.map(&:name).should == %w(artsy test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo test_repo_without_specs_dir trunk)
       end
 
       it 'includes all sources in an aggregate for a dependency if no source is specified' do
         dependency = Dependency.new('JSONKit', '1.4')
         aggregate = @sources_manager.aggregate_for_dependency(dependency)
-        aggregate.sources.map(&:name).should == %w(master test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo)
+        aggregate.sources.map(&:name).should == %w(artsy test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo test_repo_without_specs_dir trunk)
       end
 
       it 'includes all sources in an aggregate for a dependency if non-existent source is specified' do
         dependency = Dependency.new('JSONKit', '1.4', :source => 'https://url/to/nonexistent/specs.git')
         aggregate = @sources_manager.aggregate_for_dependency(dependency)
-        aggregate.sources.map(&:name).should == %w(master test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo)
+        aggregate.sources.map(&:name).should == %w(artsy test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo test_repo_without_specs_dir trunk)
       end
 
       it 'includes only the one source in an aggregate for a dependency if a source is specified' do
@@ -152,21 +152,11 @@ module Pod
 
       describe 'managing sources by URL' do
         describe 'generating a repo name from a URL' do
-          it 'uses `master` for the master CocoaPods repository' do
-            url = 'https://github.com/CocoaPods/Specs.git'
+          it 'uses `trunk` for the CDN CocoaPods repository' do
+            url = 'https://cdn.cocoapods.org/'
             Pathname.any_instance.stubs(:exist?).
               returns(false).then.returns(true)
-            @sources_manager.send(:name_for_url, url).should == 'master'
-
-            url = 'git@github.com:CocoaPods/Specs.git'
-            Pathname.any_instance.stubs(:exist?).
-              returns(false).then.returns(true)
-            @sources_manager.send(:name_for_url, url).should == 'master'
-
-            url = 'git@github.com:/CocoaPods/Specs.git'
-            Pathname.any_instance.stubs(:exist?).
-              returns(false).then.returns(true)
-            @sources_manager.send(:name_for_url, url).should == 'master'
+            @sources_manager.send(:name_for_url, url).should == 'trunk'
           end
 
           it 'uses the organization name for github.com URLs' do
@@ -289,7 +279,7 @@ module Pod
 
     describe 'Master repo' do
       it 'returns the master repo dir' do
-        @sources_manager.master_repo_dir.to_s.should.match %r{fixtures/spec-repos/master}
+        @sources_manager.master_repo_dir.to_s.should.match %r{fixtures/spec-repos/trunk}
       end
 
       it 'returns an empty array for master sources when the master repo has not been set up' do

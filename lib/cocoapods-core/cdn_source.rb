@@ -44,7 +44,8 @@ module Pod
     def refresh_metadata
       if metadata.nil?
         unless repo.exist?
-          raise Informative, "Unable to find a source named: `#{name}`"
+          debug "CDN: Repo #{name} does not exist!"
+          return
         end
 
         specs_dir.mkpath
