@@ -30,7 +30,7 @@ module Pod
 
     describe '#pods' do
       it 'returns the available Pods' do
-        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
       end
 
       it "raises if the repo doesn't exists" do
@@ -86,7 +86,7 @@ module Pod
 
     describe '#all_specs' do
       it 'returns all the specifications' do
-        expected = %w(BananaLib IncorrectPath JSONKit JSONSpec)
+        expected = %w(BananaLib IncorrectPath JSONKit JSONSpec React)
         @source.all_specs.map(&:name).sort.uniq.should == expected
       end
     end
@@ -105,7 +105,7 @@ module Pod
 
     describe '#pod_sets' do
       it 'returns all the pod sets' do
-        expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
         @source.pod_sets.map(&:name).sort.uniq.should == expected
       end
     end
@@ -334,7 +334,7 @@ module Pod
 
     describe '#pods' do
       it 'returns the available Pods' do
-        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
       end
 
       it 'raises if the repo does not exist' do
