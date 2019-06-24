@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Replace git-based `MasterSource` with CDN-based `TrunkSource`  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#552](https://github.com/CocoaPods/Core/pull/552)
+
 * Add Info.plist DSL to Specifications  
   [Eric Amorde](https://github.com/amorde)
   [CocoaPods/CocoaPods#8753](https://github.com/CocoaPods/CocoaPods/issues/8753)
