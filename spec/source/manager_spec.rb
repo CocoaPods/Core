@@ -159,6 +159,13 @@ module Pod
             @sources_manager.send(:name_for_url, url).should == 'trunk'
           end
 
+          it 'uses `trunk` for the CDN CocoaPods repository without a slash' do
+            url = 'https://cdn.cocoapods.org'
+            Pathname.any_instance.stubs(:exist?).
+              returns(false).then.returns(true)
+            @sources_manager.send(:name_for_url, url).should == 'trunk'
+          end
+
           it 'uses the organization name for github.com URLs' do
             url = 'https://github.com/segiddins/banana.git'
             @sources_manager.send(:name_for_url, url).should == 'segiddins'

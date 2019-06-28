@@ -394,7 +394,7 @@ module Pod
         end
 
         case url.to_s.downcase
-        when Pod::TrunkSource::TRUNK_REPO_URL.downcase
+        when %r{https://#{Regexp.quote(trunk_repo_hostname)}}i
           base = Pod::TrunkSource::TRUNK_REPO_NAME
         when %r{github.com[:/]+(.+)/(.+)}
           base = Regexp.last_match[1]
@@ -415,6 +415,12 @@ module Pod
           name = "#{base}-#{i}"
         end
         name
+      end
+
+      # Returns hostname for for `trunk` URL.
+      #
+      def trunk_repo_hostname
+        URI.parse(TrunkSource::TRUNK_REPO_URL).host.downcase.freeze
       end
     end
   end

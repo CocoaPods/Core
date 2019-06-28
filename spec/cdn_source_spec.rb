@@ -19,15 +19,26 @@ module Pod
         [@source.repo.join('**/*.yml'), @source.repo.join('**/*.txt'), @source.repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
       end
 
-      @path = fixture('spec-repos/test_cdn_repo_local')
-      Pathname.glob(@path.join('*')).each(&:rmtree)
-      @source = CDNSource.new(@path)
+      def save_url(url)
+        File.open(@path.join('.url'), 'w') { |f| f.write(url) }
+      end
+
+      def cleanup
+        Pathname.glob(@path.join('*')).each(&:rmtree)
+        @path.join('.url').delete if @path.join('.url').exist?
+      end
 
       @remote_dir = fixture('mock_cdn_repo_remote')
+
+      @path = fixture('spec-repos/test_cdn_repo_local')
+      cleanup
+      save_url('http://localhost:4321/')
+
+      @source = CDNSource.new(@path)
     end
 
     after do
-      Pathname.glob(@path.join('*')).each(&:rmtree)
+      cleanup
     end
 
     #-------------------------------------------------------------------------#
@@ -39,6 +50,30 @@ module Pod
 
       it 'return its type' do
         @source.type.should == 'CDN'
+      end
+
+      it 'works when the root URL has a trailing slash' do
+        save_url('http://localhost:4321/')
+        @source = CDNSource.new(@path)
+        @source.url.should == 'http://localhost:4321/'
+      end
+
+      it 'works when the root URL has a trailing path' do
+        save_url('http://localhost:4321/trail/ing/path/')
+        @source = CDNSource.new(@path)
+        @source.url.should == 'http://localhost:4321/trail/ing/path/'
+      end
+
+      it 'works when the root URL has no trailing slash' do
+        save_url('http://localhost:4321')
+        @source = CDNSource.new(@path)
+        @source.url.should == 'http://localhost:4321/'
+      end
+
+      it 'works when the root URL file has a newline' do
+        save_url("http://localhost:4321/\n")
+        @source = CDNSource.new(@path)
+        @source.url.should == 'http://localhost:4321/'
       end
     end
 

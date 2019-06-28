@@ -32,7 +32,7 @@ module Pod
     # @return [String] The URL of the source.
     #
     def url
-      @url ||= File.read(repo.join('.url'))
+      @url ||= File.read(repo.join('.url')).chomp.chomp('/') + '/'
     end
 
     # @return [String] The type of the source.
