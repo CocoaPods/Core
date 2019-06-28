@@ -17,6 +17,27 @@
   [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
 
+## 1.7.3 (2019-06-28)
+
+##### Enhancements
+
+* CDNSource: Lower the thread pool limit to 50 and add an environment variable to override it.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
+
+* CDNSource: Improve the error messaging from multi-threaded code.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
+
+* CDNSource: Retry connection errors.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#551](https://github.com/CocoaPods/Core/pull/551)
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.7.2 (2019-06-13)
 
 ##### Enhancements

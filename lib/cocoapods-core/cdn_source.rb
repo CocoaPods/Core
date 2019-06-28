@@ -6,6 +6,9 @@ module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
   #
   class CDNSource < Source
+    MAX_CDN_NETWORK_THREADS = 50
+    MAX_NUMBER_OF_RETRIES = 5
+
     # @param [String] repo The name of the repository
     #
     def initialize(repo)
@@ -16,8 +19,8 @@ module Pod
       @startup_time = Time.new
 
       @executor = Concurrent::ThreadPoolExecutor.new(
-        :min_threads => 1,
-        :max_threads => 200,
+        :min_threads => 5,
+        :max_threads => (ENV['MAX_CDN_NETWORK_THREADS'] || MAX_CDN_NETWORK_THREADS).to_i,
         :max_queue => 0 # unbounded work queue
       )
 
@@ -54,11 +57,14 @@ module Pod
     def preheat_existing_files
       all_existing_files = [repo.join('**/*.yml'), repo.join('**/*.txt'), repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
       loaders = all_existing_files.map { |f| f.relative_path_from(repo).to_s }.map do |file|
-        Concurrent::Promise.execute(:executor => @executor) do
+        Concurrent::Promises.future_on(@executor) do
           download_file(file)
         end
       end
-      Concurrent::Promise.zip(*loaders).wait!
+
+      catching_concurrent_errors do
+        Concurrent::Promises.zip(*loaders).wait!
+      end
     end
 
     # @return [Pathname] The directory where the specs are stored.
@@ -104,7 +110,7 @@ module Pod
         # in #specification_path regardless.
         podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
         unless pod_path_actual.join(podspec_version_path_relative).exist?
-          loaders << Concurrent::Promise.execute(:executor => @executor) do
+          loaders << Concurrent::Promises.future_on(@executor) do
             download_file(pod_path_relative.join(podspec_version_path_relative).to_s)
           end
         end
@@ -113,10 +119,14 @@ module Pod
         rescue ArgumentError
           raise Informative, 'An unexpected version directory ' \
           "`#{version}` was encountered for the " \
-          "`#{pod_dir}` Pod in the `#{name}` repository."
+          "`#{pod_path_actual}` Pod in the `#{name}` repository."
         end
       end.compact.sort.reverse
-      Concurrent::Promise.zip(*loaders).wait!
+
+      catching_concurrent_errors do
+        Concurrent::Promises.zip(*loaders).wait!
+      end
+
       @versions_by_name[name]
     end
 
@@ -302,7 +312,7 @@ module Pod
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      response = etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
+      response = download_retrying_connection_errors(partial_url, file_remote_url, etag)
 
       case response.status_code
       when 301
@@ -328,12 +338,30 @@ module Pod
       end
     end
 
+    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
+      etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
+    rescue REST::Error => e
+      if retries <= 0
+        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url}, error: #{e}"
+      else
+        debug "CDN: #{name} Relative path: #{partial_url} error: #{e} - retrying"
+        download_retrying_connection_errors(partial_url, file_remote_url, etag, retries - 1)
+      end
+    end
+
     def debug(message)
       if defined?(Pod::UI)
         Pod::UI.message(message)
       else
         CoreUI.puts(message)
       end
+    end
+
+    def catching_concurrent_errors
+      yield
+    rescue Concurrent::MultipleErrors => e
+      errors = e.errors
+      raise Informative, "CDN: #{name} Repo update failed - #{e.errors.size} error(s):\n#{errors.join("\n")}"
     end
   end
 end
