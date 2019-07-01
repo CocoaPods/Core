@@ -68,6 +68,11 @@ module Pod
         @source.versions('Unknown_Pod').should.be.nil
       end
 
+      it 'does not error when a Pod name need URI escaping' do
+        @source.versions('СерафимиМногоꙮчитїи').map(&:to_s).should == %w(1.0.0)
+        @source.specification('СерафимиМногоꙮчитїи', '1.0.0').name.should == 'СерафимиМногоꙮчитїи'
+      end
+
       it 'raises if unexpected HTTP error' do
         REST.expects(:get).returns(REST::Response.new(500))
         should.raise Informative do
