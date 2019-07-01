@@ -283,7 +283,7 @@ module Pod
     end
 
     def download_file(partial_url)
-      file_remote_url = url + partial_url.to_s
+      file_remote_url = URI.encode(url + partial_url.to_s)
       path = repo + partial_url
 
       if File.exist?(path)
