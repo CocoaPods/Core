@@ -390,6 +390,25 @@ module Pod
 
       #--------------------------------------#
 
+      it 'stores the project name for a given pod' do
+        @parent.store_pod('ASIHTTPRequest', :project_name => 'SomeProject')
+        @parent.project_name_for_pod('ASIHTTPRequest').should == 'SomeProject'
+        @parent.project_name_for_pod('UnknownPod').should.be.nil
+      end
+
+      it 'inherits the project name option to use for a pod' do
+        @parent.store_pod('ASIHTTPRequest', :project_name => 'SomeProject')
+        @child.project_name_for_pod('ASIHTTPRequest').should == 'SomeProject'
+      end
+
+      it 'honors the project name directly set from the target definition before delegating to parent' do
+        @parent.store_pod('ASIHTTPRequest', :project_name => 'SomeProject')
+        @child.store_pod('ASIHTTPRequest', :project_name => 'SomeOtherProject')
+        @child.project_name_for_pod('ASIHTTPRequest').should == 'SomeOtherProject'
+      end
+
+      #--------------------------------------#
+
       it 'returns if it should use frameworks' do
         @parent.use_frameworks!
         @parent.should.uses_frameworks?
@@ -508,7 +527,7 @@ module Pod
         @child.all_whitelisted_configurations.sort.should == %w(Debug Release)
       end
 
-      it 'whitelistes pod configurations with testspecs' do
+      it 'whitelists pod configurations with testspecs' do
         @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
         @parent.store_pod('RestKit', :testspecs => %w(Tests), :configuration => 'Debug')
         @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
@@ -517,7 +536,7 @@ module Pod
         @parent.should.not.pod_whitelisted_for_configuration?('RestKit/Tests', 'Release')
       end
 
-      it 'whitelistes pod configurations with appspecs' do
+      it 'whitelists pod configurations with appspecs' do
         @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
         @parent.store_pod('RestKit', :appspecs => %w(App), :configuration => 'Debug')
         @parent.should.pod_whitelisted_for_configuration?('RestKit', 'Debug')
@@ -526,7 +545,7 @@ module Pod
         @parent.should.not.pod_whitelisted_for_configuration?('RestKit/App', 'Release')
       end
 
-      it 'whitelistes pod configurations with appspecs and testspecs' do
+      it 'whitelists pod configurations with appspecs and testspecs' do
         @parent.build_configurations = { 'Debug' => :debug, 'Release' => :release }
         @parent.store_pod('RestKit', :testspecs => %w(Tests), :configuration => 'Debug')
         @parent.store_pod('RestKit', :appspecs => %w(App), :configuration => 'Debug')

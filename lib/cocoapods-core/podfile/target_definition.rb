@@ -296,6 +296,20 @@ module Pod
 
       #--------------------------------------#
 
+      # @return [String] The project name to use for the given pod name or `nil` if none specified.
+      #
+      # @note   When querying for a subspec then use the root pod spec name instead as this is what's stored.
+      #
+      def project_name_for_pod(pod_name)
+        if root?
+          raw_project_names_hash[pod_name]
+        else
+          raw_project_names_hash[pod_name] || parent.project_name_for_pod(pod_name)
+        end
+      end
+
+      #--------------------------------------#
+      #
       # @return [Bool] whether the target definition should inhibit warnings
       #         for a single pod. If inhibit_all_warnings is true, it will
       #         return true for any asked pod.
@@ -666,6 +680,7 @@ module Pod
         parse_inhibit_warnings(name, requirements)
         parse_modular_headers(name, requirements)
         parse_configuration_whitelist(name, requirements)
+        parse_project_name(name, requirements)
 
         if requirements && !requirements.empty?
           pod = { name => requirements }
@@ -769,6 +784,7 @@ module Pod
         use_modular_headers
         user_project_path
         build_configurations
+        project_names
         dependencies
         script_phases
         children
@@ -1040,6 +1056,33 @@ module Pod
 
         requirements.pop if options.empty?
       end
+
+      # Removes :project_name from the requirements list, and adds
+      # the pods name into internal hash.
+      #
+      # @param [String] name The name of the pod
+      #
+      # @param [Array] requirements
+      #        If :project_name is the only key in the hash, the hash
+      #        should be destroyed because it confuses Gem::Dependency.
+      #
+      # @return [void]
+      #
+      def parse_project_name(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
+
+        project_name = options.delete(:project_name)
+        pod_name = Specification.root_name(name)
+        raw_project_names_hash[pod_name] = project_name if project_name
+
+        requirements.pop if options.empty?
+      end
+
+      def raw_project_names_hash
+        get_hash_value('project_names', {})
+      end
+      private :raw_project_names_hash
 
       # Removes :configurations or :configuration from the requirements list,
       # and adds the pod's name into the internal hash for which pods should be

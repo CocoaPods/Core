@@ -226,6 +226,17 @@ module Pod
         end
       end
 
+      describe 'project names' do
+        it 'sets the project name for a given pod' do
+          podfile = Podfile.new do
+            pod 'PonyDebugger', :project_name => 'PonyProject'
+          end
+
+          target = podfile.target_definitions['Pods']
+          target.project_name_for_pod('PonyDebugger').should == 'PonyProject'
+        end
+      end
+
       describe 'modular headers' do
         it 'does not have modular headers by default' do
           podfile = Podfile.new do
