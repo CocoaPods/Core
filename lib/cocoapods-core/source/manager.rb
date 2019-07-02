@@ -61,7 +61,7 @@ module Pod
       # @return [Array<Source>] The CocoaPods Master Repo source.
       #
       def master
-        sources([Pod::MasterSource::MASTER_REPO_NAME]).select { |s| s.repo.directory? }
+        sources([Pod::TrunkSource::TRUNK_REPO_NAME]).select { |s| s.repo.directory? }
       end
 
       # @!group Master repo
@@ -69,7 +69,7 @@ module Pod
       # @return [Pathname] The path of the master repo.
       #
       def master_repo_dir
-        source_dir(Pod::MasterSource::MASTER_REPO_NAME)
+        source_dir(Pod::TrunkSource::TRUNK_REPO_NAME)
       end
 
       # @return [Bool] Checks if the master repo is usable.
@@ -290,10 +290,10 @@ module Pod
       def source_from_path(path)
         @sources_by_path ||= Hash.new do |hash, key|
           hash[key] = case
+                      when key.basename.to_s == Pod::TrunkSource::TRUNK_REPO_NAME
+                        TrunkSource.new(key)
                       when (key + '.url').exist?
                         CDNSource.new(key)
-                      when key.basename.to_s == Pod::MasterSource::MASTER_REPO_NAME
-                        MasterSource.new(key)
                       else
                         Source.new(key)
                       end
@@ -394,8 +394,8 @@ module Pod
         end
 
         case url.to_s.downcase
-        when %r{github.com[:/]+cocoapods/specs}
-          base = Pod::MasterSource::MASTER_REPO_NAME
+        when %r{https://#{Regexp.quote(trunk_repo_hostname)}}i
+          base = Pod::TrunkSource::TRUNK_REPO_NAME
         when %r{github.com[:/]+(.+)/(.+)}
           base = Regexp.last_match[1]
         when %r{^\S+@(\S+)[:/]+(.+)$}
@@ -415,6 +415,12 @@ module Pod
           name = "#{base}-#{i}"
         end
         name
+      end
+
+      # Returns hostname for for `trunk` URL.
+      #
+      def trunk_repo_hostname
+        URI.parse(TrunkSource::TRUNK_REPO_URL).host.downcase.freeze
       end
     end
   end

@@ -648,7 +648,7 @@ module Pod
 
     describe 'Subspec' do
       before do
-        @fixture_path = 'spec-repos/master/RestKit/0.20.1/RestKit.podspec'
+        @fixture_path = 'lint_podspec/RestKit.podspec'
       end
 
       behaves_like 'Linter'

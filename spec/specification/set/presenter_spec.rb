@@ -4,7 +4,9 @@ module Pod
   describe Specification::Set::Presenter do
     describe 'Set Information' do
       before do
-        set = Source::Aggregate.new([MasterSource.new(fixture('spec-repos/master')), MasterSource.new(fixture('spec-repos/test_repo'))]).search_by_name('JSONKit').first
+        sources = [TrunkSource.new(fixture('spec-repos/trunk')), Source.new(fixture('spec-repos/test_repo'))]
+        sets = Source::Aggregate.new(sources).search_by_name('JSONKit')
+        set = sets.find { |s| s.name == 'JSONKit' }
         @presenter = Spec::Set::Presenter.new(set)
       end
 
@@ -27,11 +29,11 @@ module Pod
       end
 
       it 'returns the versions by source' do
-        @presenter.versions_by_source.should == '1.5pre, 1.4 [master repo] - 999.999.999, 1.13, 1.4 [test_repo repo]'
+        @presenter.versions_by_source.should == '999.999.999, 1.13, 1.4 [test_repo repo] - 1.5pre, 1.4 [trunk repo]'
       end
 
       it 'returns the sources' do
-        @presenter.sources.should == %w(master test_repo)
+        @presenter.sources.should == %w(test_repo trunk)
       end
 
       it 'returns the correct deprecation description' do
@@ -45,7 +47,7 @@ module Pod
 
     describe 'Specification Information' do
       before do
-        @source = Source.new(fixture('spec-repos/master'))
+        @source = TrunkSource.new(fixture('spec-repos/trunk'))
         set = Spec::Set.new('CocoaLumberjack', @source)
         @presenter = Spec::Set::Presenter.new(set)
       end
@@ -64,7 +66,7 @@ module Pod
       end
 
       it 'returns the homepage' do
-        @presenter.homepage.should == 'https://github.com/robbiehanson/CocoaLumberjack'
+        @presenter.homepage.should == 'https://github.com/CocoaLumberjack/CocoaLumberjack'
       end
 
       it 'returns the description' do
@@ -80,11 +82,11 @@ module Pod
       end
 
       it 'returns the source_url' do
-        @presenter.source_url.should == 'https://github.com/robbiehanson/CocoaLumberjack.git'
+        @presenter.source_url.should == 'https://github.com/CocoaLumberjack/CocoaLumberjack.git'
       end
 
       it 'returns the platform' do
-        @presenter.platform.should == 'iOS - macOS - tvOS - watchOS'
+        @presenter.platform.should == 'iOS 8.0 - macOS 10.10 - tvOS 9.0 - watchOS 3.0'
       end
 
       it 'returns the license' do
@@ -92,19 +94,20 @@ module Pod
       end
 
       it 'returns the subspecs' do
-        @presenter.subspecs.should.nil?
+        @presenter.subspecs.map(&:name).should == ['CocoaLumberjack/Core', 'CocoaLumberjack/Swift']
 
         set = Spec::Set.new('RestKit', @source)
         @presenter = Spec::Set::Presenter.new(set)
         subspecs = @presenter.subspecs
         subspecs.last.class.should == Specification
-        subspecs.map(&:name).should == ['RestKit/Core', 'RestKit/ObjectMapping', 'RestKit/Network', 'RestKit/CoreData', 'RestKit/Testing', 'RestKit/Search', 'RestKit/Support']
+        subspecs.map(&:name).should == ['RestKit/Core', 'RestKit/ObjectMapping', 'RestKit/Network', 'RestKit/CoreData', 'RestKit/Testing',
+                                        'RestKit/Search', 'RestKit/Support', 'RestKit/CocoaLumberjack']
       end
     end
 
     describe 'Statistics' do
       before do
-        @source = Source.new(fixture('spec-repos/master'))
+        @source = TrunkSource.new(fixture('spec-repos/trunk'))
         set = Spec::Set.new('CocoaLumberjack', @source)
         metrics = {
           'github' => {

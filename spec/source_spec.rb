@@ -30,7 +30,7 @@ module Pod
 
     describe '#pods' do
       it 'returns the available Pods' do
-        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
       end
 
       it "raises if the repo doesn't exists" do
@@ -86,7 +86,7 @@ module Pod
 
     describe '#all_specs' do
       it 'returns all the specifications' do
-        expected = %w(BananaLib IncorrectPath JSONKit JSONSpec)
+        expected = %w(BananaLib IncorrectPath JSONKit JSONSpec React)
         @source.all_specs.map(&:name).sort.uniq.should == expected
       end
     end
@@ -105,7 +105,7 @@ module Pod
 
     describe '#pod_sets' do
       it 'returns all the pod sets' do
-        expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        expected = %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
         @source.pod_sets.map(&:name).sort.uniq.should == expected
       end
     end
@@ -219,28 +219,28 @@ module Pod
         before do
           # The master source repo uses GitHub, so we recycle that here. Note
           # that we initialize it as just a `Source`, though.
-          @path = fixture('spec-repos/master')
+          @path = fixture('spec-repos/artsy')
           @source = Source.new(@path)
         end
 
         it 'does not git fetch if the GitHub API returns not-modified' do
-          VCR.use_cassette('MasterSource_nofetch', :record => :new_episodes) do
+          VCR.use_cassette('Source_nofetch', :record => :new_episodes) do
             @source.expects(:update_git_repo).never
             @source.send :update, true
           end
         end
 
         it 'fetches if the GitHub API returns modified' do
-          VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
+          VCR.use_cassette('Source_fetch', :record => :new_episodes) do
             @source.expects(:update_git_repo)
             @source.send :update, true
           end
         end
 
         it 'clears the versions by name cache when updated' do
-          VCR.use_cassette('MasterSource_fetch', :record => :new_episodes) do
+          VCR.use_cassette('Source_fetch', :record => :new_episodes) do
             @source.expects(:update_git_repo).with(true)
-            @source.versions('RestKit')
+            @source.versions('React')
             @source.instance_variable_get(:@versions_by_name).count.should == 1
             @source.send :update, true
             @source.instance_variable_get(:@versions_by_name).should.be.empty
@@ -334,7 +334,7 @@ module Pod
 
     describe '#pods' do
       it 'returns the available Pods' do
-        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec)
+        @source.pods.should == %w(BananaLib Faulty_spec IncorrectPath JSONKit JSONSpec React)
       end
 
       it 'raises if the repo does not exist' do
@@ -361,9 +361,9 @@ module Pod
       end
 
       it 'uses the root of the repo as the specs dir if the `Specs` folder is not present' do
-        repo = fixture('spec-repos/master')
+        repo = fixture('spec-repos/test_repo_without_specs_dir')
         @source = Source.new(repo)
-        @source.send(:specs_dir).to_s.should.end_with('master')
+        @source.send(:specs_dir).to_s.should.end_with('test_repo_without_specs_dir')
       end
     end
 

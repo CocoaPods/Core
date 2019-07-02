@@ -6,7 +6,7 @@ module Pod
     # JSONKit is in test repo has version 1.4 (duplicated) and the 999.999.999.
     #
     before do
-      repos = [Source.new(fixture('spec-repos/test_repo')), MasterSource.new(fixture('spec-repos/master'))]
+      repos = [Source.new(fixture('spec-repos/test_repo')), Source.new(fixture('spec-repos/artsy'))]
       @aggregate = Source::Aggregate.new(repos)
     end
 
@@ -14,7 +14,7 @@ module Pod
 
     describe 'In general' do
       it 'returns the sources' do
-        @aggregate.sources.map(&:name).sort.should == %w(master test_repo)
+        @aggregate.sources.map(&:name).sort.should == %w(artsy test_repo)
       end
 
       it 'returns the name of all the available pods' do
@@ -29,23 +29,23 @@ module Pod
         banana_sets.count.should == 1
         banana_sets.first.sources.map(&:name).should == %w(test_repo)
 
-        json_set = sets.select { |set| set.name == 'JSONKit' }
+        json_set = sets.select { |set| set.name == 'React' }
         json_set.count.should == 1
-        json_set.first.sources.map(&:name).should == %w(test_repo master)
+        json_set.first.sources.map(&:name).should == %w(test_repo artsy)
       end
 
       it 'searches the sets by dependency' do
-        dep = Dependency.new('JSONKit')
+        dep = Dependency.new('React')
         set = @aggregate.search(dep)
-        set.name.should == 'JSONKit'
-        set.sources.map(&:name).should == %w(test_repo master)
+        set.name.should == 'React'
+        set.sources.map(&:name).should == %w(test_repo artsy)
       end
 
       it 'searches the sets specifying a dependency on a subspec' do
-        dep = Dependency.new('RestKit/Network')
+        dep = Dependency.new('React/Core')
         set = @aggregate.search(dep)
-        set.name.should == 'RestKit'
-        set.sources.map(&:name).should == %w(master)
+        set.name.should == 'React'
+        set.sources.map(&:name).should == %w(test_repo artsy)
       end
 
       it "returns nil if a specification can't be found" do
@@ -64,11 +64,10 @@ module Pod
 
     describe 'Search' do
       it 'searches the sets by name' do
-        sets = @aggregate.search_by_name('JSONKit')
-        sets.count.should == 1
-        set = sets.first
-        set.name.should == 'JSONKit'
-        set.sources.map(&:name).should == %w(test_repo master)
+        sets = @aggregate.search_by_name('React')
+        set = sets.find { |s| s.name == 'React' }
+        set.name.should == 'React'
+        set.sources.map(&:name).should == %w(test_repo artsy)
       end
 
       it 'properly configures the sources of a set in search by name' do
@@ -103,7 +102,7 @@ module Pod
 
       it 'generates the search index for source' do
         index = @aggregate.generate_search_index_for_source(@test_source)
-        text = 'BananaLib Chunky bananas! Full of chunky bananas. Banana Corp Monkey Boy monkey@banana-corp.local'
+        text = 'BananaLib Chunky bananas! Full chunky bananas. Banana Corp Monkey Boy monkey@banana-corp.local'
         text.split.each do |word|
           index[word].should == %w(BananaLib)
         end
