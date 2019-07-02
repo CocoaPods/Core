@@ -120,6 +120,14 @@ module Pod
         @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
         @spec.attributes_hash['deprecated_in_favor_of'].should == 'NewMoreAwesomePod'
       end
+
+      it 'allows specifying info.plist values' do
+        hash = {
+          'SOME_VAR' => 'SOME_VALUE',
+        }
+        @spec.info_plist = hash
+        @spec.attributes_hash['info_plist'].should == hash
+      end
     end
 
     #-----------------------------------------------------------------------------#

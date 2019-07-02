@@ -495,6 +495,15 @@ module Pod
         end
       end
 
+      # @param [Hash,Object] value
+      #
+      def _validate_info_plist(value)
+        return if value.empty?
+        if consumer.spec.subspec? && consumer.spec.library_specification?
+          results.add_error('info_plist', 'Info.plist configuration is not currently supported for subspecs.')
+        end
+      end
+
       #-----------------------------------------------------------------------#
 
       # @!group All specs validation helpers

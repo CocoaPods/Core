@@ -704,6 +704,39 @@ module Pod
 
       #------------------#
 
+      # @!method info_plist=(info_plist)
+      #
+      #   Key-Value pairs to add to the generated `Info.plist`.
+      #
+      #   The values will be merged with the default values that
+      #   CocoaPods generates, overridding any duplicates.
+      #
+      #   For library specs, the values will be merged into the generated Info.plist
+      #   for libraries that are integrated using frameworks. It will have no effect
+      #   for static libraries.
+      #
+      #   Subspecs (other than app and test specs) are not supported.
+      #
+      #   For app specs, the values will be merged into the application host's `Info.plist`.
+      #
+      #   For test specs, the values will be merged into the test bundle's `Info.plist`.
+      #
+      #   @example
+      #
+      #     spec.info_plist = {
+      #       'CFBundleIdentifier' => 'com.myorg.MyLib',
+      #       'MY_VAR' => 'SOME_VALUE'
+      #     }
+      #
+      #   @param  [Hash] info_plist
+      #           The Info.plist values for the Pod.
+      #
+      attribute :info_plist,
+                :container => Hash,
+                :inherited => false
+
+      #------------------#
+
       # @!method requires_arc=(flag)
       #
       #   `requires_arc` allows you to specify which source_files use ARC.

@@ -159,6 +159,18 @@ module Pod
         hash['scheme'].should == { 'launch_arguments' => ['Arg1'] }
       end
 
+      it 'writes Info.plist configuration' do
+        @spec.info_plist = {
+          'CFBundleIdentifier' => 'org.cocoapods.MyAwesomeLib',
+          'SOME_VAR' => 'SOME_VALUE',
+        }
+        hash = @spec.to_hash
+        hash['info_plist'].should == {
+          'CFBundleIdentifier' => 'org.cocoapods.MyAwesomeLib',
+          'SOME_VAR' => 'SOME_VALUE',
+        }
+      end
+
       it 'writes test type for test subspec' do
         @spec.test_spec {}
         hash = @spec.to_hash
@@ -315,6 +327,12 @@ module Pod
         result.script_phases.should == [
           { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :before_compile },
         ]
+      end
+
+      it 'can load Info.plist configuration from json' do
+        json = '{"info_plist": {"CFBundleIdentifier": "org.mycompany.MyLib"}}'
+        result = Specification.from_json(json)
+        result.info_plist.should == { 'CFBundleIdentifier' => 'org.mycompany.MyLib' }
       end
 
       it 'can be safely converted back and forth to a hash' do

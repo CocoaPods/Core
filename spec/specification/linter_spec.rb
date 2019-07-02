@@ -686,6 +686,13 @@ module Pod
         @subspec.default_subspecs = 'Spec'
         result_should_include('default_subspecs', 'can\'t set', 'for subspecs')
       end
+
+      #------------------#
+
+      it 'fails if a subspec specifies info_plist' do
+        @subspec.info_plist = { 'SOME_VAR' => 'SOME_VALUE' }
+        result_should_include('info_plist', 'Info.plist configuration is not currently supported for subspecs.')
+      end
     end
   end
 end
