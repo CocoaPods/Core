@@ -260,6 +260,12 @@ module Pod
         result_should_include('version', '0')
       end
 
+      it 'handles invalid version strings' do
+        @spec.stubs(:version).raises('Bad version')
+        result_ignore('attributes')
+        result_should_include('version', 'Unable to validate due to exception: Bad version')
+      end
+
       #------------------#
 
       it 'checks the summary length' do

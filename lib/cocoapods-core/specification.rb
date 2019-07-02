@@ -125,8 +125,9 @@ module Pod
     #         clients.
     #
     def to_s
-      if name && !version.version.empty?
-        "#{name} (#{version})"
+      specified_version = attributes_hash['version'] || ''
+      if name && !specified_version.empty?
+        "#{name} (#{specified_version})"
       elsif name
         name
       else
