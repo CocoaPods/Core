@@ -24,6 +24,10 @@
   [Eric Amorde](https://github.com/amorde)
   [CocoaPods/CocoaPods#5420](https://github.com/CocoaPods/CocoaPods/issues/5420)
 
+* Gracefully handle invalid version values during linting.  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods/CocoaPods#8785](https://github.com/CocoaPods/CocoaPods/issues/8785)
+
 
 ## 1.7.3 (2019-06-28)
 

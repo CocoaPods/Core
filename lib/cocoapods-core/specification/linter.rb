@@ -121,15 +121,19 @@ module Pod
       def check_required_attributes
         attributes = DSL.attributes.values.select(&:required?)
         attributes.each do |attr|
-          value = spec.send(attr.name)
-          unless value && (!value.respond_to?(:empty?) || !value.empty?)
-            if attr.name == :license
-              results.add_warning('attributes', 'Missing required attribute ' \
-              "`#{attr.name}`.")
-            else
-              results.add_error('attributes', 'Missing required attribute ' \
-               "`#{attr.name}`.")
+          begin
+            value = spec.send(attr.name)
+            unless value && (!value.respond_to?(:empty?) || !value.empty?)
+              if attr.name == :license
+                results.add_warning('attributes', 'Missing required attribute ' \
+                "`#{attr.name}`.")
+              else
+                results.add_error('attributes', 'Missing required attribute ' \
+                 "`#{attr.name}`.")
+              end
             end
+          rescue => exception
+            results.add_error('attributes', "Unable to parse attribute `#{attr.name}` due to error: #{exception}")
           end
         end
       end
@@ -187,9 +191,13 @@ module Pod
         attributes.each do |attr|
           validation_hook = "_validate_#{attr.name}"
           next unless respond_to?(validation_hook, true)
-          value = target.send(attr.name)
-          next unless value
-          send(validation_hook, value)
+          begin
+            value = target.send(attr.name)
+            next unless value
+            send(validation_hook, value)
+          rescue => e
+            results.add_error(attr.name, "Unable to validate due to exception: #{e}")
+          end
         end
       end
 
