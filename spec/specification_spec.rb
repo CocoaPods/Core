@@ -113,8 +113,15 @@ module Pod
         original_hash.should != new_hash
       end
 
-      it 'produces a string representation suitable for UI output.' do
-        @spec.to_s.should == 'Pod (1.0)'
+      describe '#to_s' do
+        it 'produces a string representation suitable for UI output.' do
+          @spec.to_s.should == 'Pod (1.0)'
+        end
+
+        it 'handles invalid version strings' do
+          @spec.version = '{SOME_VERSION}'
+          @spec.to_s.should == 'Pod ({SOME_VERSION})'
+        end
       end
 
       it 'handles the case where no version is available in the string representation' do
