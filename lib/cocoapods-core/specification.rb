@@ -204,9 +204,9 @@ module Pod
         gsub(/[^a-zA-Z0-9_]/, '_').gsub(/_+/, '_')
     end
 
-    # @return [Object, Nil] 
+    # @return [Object, Nil]
     #         the raw value specified for the version attribute, or nil
-    # 
+    #
     def raw_version
       root.attributes_hash['version']
     end
