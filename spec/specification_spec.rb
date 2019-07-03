@@ -122,6 +122,15 @@ module Pod
           @spec.version = '{SOME_VERSION}'
           @spec.to_s.should == 'Pod ({SOME_VERSION})'
         end
+
+        it 'includes the version in subspecs' do
+          @subspec.to_s.should == 'Pod/Subspec (1.0)'
+        end
+
+        it 'includes malformed versions in subspecs' do
+          @spec.version = '{SOME_VERSION}'
+          @subspec.to_s.should == 'Pod/Subspec ({SOME_VERSION})'
+        end
       end
 
       it 'handles the case where no version is available in the string representation' do

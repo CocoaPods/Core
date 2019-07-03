@@ -125,7 +125,7 @@ module Pod
     #         clients.
     #
     def to_s
-      specified_version = attributes_hash['version'] || ''
+      specified_version = raw_version || ''
       if name && !specified_version.empty?
         "#{name} (#{specified_version})"
       elsif name
@@ -202,6 +202,13 @@ module Pod
       return nil if name.nil?
       I18n.transliterate(name).gsub(/^([0-9])/, '_\1').
         gsub(/[^a-zA-Z0-9_]/, '_').gsub(/_+/, '_')
+    end
+
+    # @return [Object, Nil]
+    #         the raw value specified for the version attribute, or nil
+    #
+    def raw_version
+      root.attributes_hash['version']
     end
 
     #-------------------------------------------------------------------------#
