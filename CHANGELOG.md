@@ -33,6 +33,20 @@
   [CocoaPods/CocoaPods#8785](https://github.com/CocoaPods/CocoaPods/issues/8785)
 
 
+## 1.7.4 (2019-07-09)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Use URI escaping in `CDNSource`.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#554](https://github.com/CocoaPods/Core/pull/554)
+  [CocoaPods#8951](https://github.com/CocoaPods/CocoaPods/issues/8951)
+
+
 ## 1.7.3 (2019-06-28)
 
 ##### Enhancements
