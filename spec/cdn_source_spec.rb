@@ -112,7 +112,7 @@ module Pod
         should.raise Informative do
           @source.specification('BeaconKit', '1.0.0')
         end.message.
-          should.== "CDN: #{@source.name} Relative path couldn\'t be downloaded: Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json Response: 500"
+          should.== "CDN: #{@source.name} Relative path couldn\'t be downloaded: #{@source.url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json Response: 500"
       end
 
       it 'raises if unexpected non-HTTP error' do

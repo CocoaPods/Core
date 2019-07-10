@@ -317,6 +317,7 @@ module Pod
 
       case response.status_code
       when 301
+        debug "Redirecting #{file_remote_url} -> #{response.headers['location'].first}"
         download_from_url(partial_url, response.headers['location'].first, etag)
       when 304
         debug "CDN: #{name} Relative path not modified: #{partial_url}"
@@ -335,7 +336,7 @@ module Pod
         debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
         nil
       else
-        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
+        raise Informative, "CDN: #{name} Relative path couldn't be downloaded: #{file_remote_url} Response: #{response.status_code}"
       end
     end
 
