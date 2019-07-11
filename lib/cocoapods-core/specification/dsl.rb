@@ -305,7 +305,7 @@ module Pod
         :git  => [:tag, :branch, :commit, :submodules].freeze,
         :svn  => [:folder, :tag, :revision].freeze,
         :hg   => [:revision].freeze,
-        :http => [:flatten, :type, :sha256, :sha1].freeze,
+        :http => [:flatten, :type, :sha256, :sha1, :headers].freeze,
       }.freeze
 
       # @!method source=(source)
