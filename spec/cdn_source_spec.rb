@@ -4,9 +4,9 @@ require File.expand_path('../spec_helper', __FILE__)
 module Pod
   describe CDNSource do
     before do
-      def get_canonical_versions(relative_path)
+      def get_canonical_file(relative_path)
         path = @remote_dir.join(relative_path)
-        File.read(path).split("\n")
+        File.read(path)
       end
 
       def get_etag(relative_path)
@@ -20,6 +20,7 @@ module Pod
       end
 
       def save_url(url)
+        @url = url
         File.open(@path.join('.url'), 'w') { |f| f.write(url) }
       end
 
@@ -107,12 +108,29 @@ module Pod
         @source.specification('СерафимиМногоꙮчитїи', '1.0.0').name.should == 'СерафимиМногоꙮчитїи'
       end
 
+      it 'handles redirects' do
+        relative_path = 'Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json'
+        podspec = get_canonical_file(relative_path)
+        original_url = 'http://localhost:4321/' + relative_path
+        redirect_url = 'http://localhost:4321/redirected/' + relative_path
+        REST.expects(:get).
+          with(original_url).
+          returns(REST::Response.new(301, 'location' => [redirect_url]))
+        REST.expects(:get).
+          with(redirect_url).
+          returns(REST::Response.new(200, {}, podspec))
+
+        @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
+        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path downloaded: #{Regexp.quote(relative_path)}, save ETag:/ }
+        @source.specification('BeaconKit', '1.0.0')
+      end
+
       it 'raises if unexpected HTTP error' do
         REST.expects(:get).returns(REST::Response.new(500))
         should.raise Informative do
           @source.specification('BeaconKit', '1.0.0')
         end.message.
-          should.== "CDN: #{@source.name} Relative path couldn\'t be downloaded: #{@source.url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json Response: 500"
+          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json Response: 500"
       end
 
       it 'raises if unexpected non-HTTP error' do
@@ -120,7 +138,7 @@ module Pod
         should.raise Informative do
           @source.specification('BeaconKit', '1.0.0')
         end.message.
-          should.== "CDN: #{@source.name} Relative path couldn\'t be downloaded: Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
+          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
       end
 
       it 'retries after unexpected non-HTTP error' do
@@ -146,12 +164,12 @@ module Pod
             at_least_once.
             with("http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
             raises(Errno::ECONNREFUSED)
-          "CDN: #{@source.name} Relative path couldn't be downloaded: Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
+          "CDN: #{@source.name} URL couldn't be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
         end
 
         should.raise Informative do
           @source.versions('BeaconKit')
-        end.message.should.== "CDN: #{@source.name} Repo update failed - 6 error(s):\n" + messages.join("\n")
+        end.message.should.include "CDN: #{@source.name} Repo update failed - 6 error(s):\n" + messages.join("\n")
       end
 
       it 'returns cached versions for a Pod' do
