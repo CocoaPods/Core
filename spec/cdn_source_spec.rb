@@ -125,7 +125,7 @@ module Pod
         @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: all_pods_versions_2_0_9.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
         @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, save ETag:" }
-        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0) 
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'raises if unexpected HTTP error' do
@@ -155,7 +155,7 @@ module Pod
           with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
           returns(REST::Response.new(200, {}, ''))
 
-        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0) 
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'raises cumulative error when more than one Future rejects' do
@@ -363,11 +363,16 @@ module Pod
         @source.search('СерафимиМногоꙮчитїи')
         @source.specification('СерафимиМногоꙮчитїи', '1.0.0')
         @source = CDNSource.new(@path)
-        @source.expects(:debug).with{ |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
+        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Going to update 5 files")
         @source.expects(:debug).with("CDN: #{@source.name} Relative path: deprecated_podspecs.txt modified during this run! Returning local")
-        
-        expected_files = %w(CocoaPods-version.yml all_pods_versions_2_0_9.txt all_pods_versions_3_8_f.txt Specs/3/8/f/СерафимиМногоꙮчитїи/1.0.0/СерафимиМногоꙮчитїи.podspec.json)
+
+        expected_files = %w(
+          CocoaPods-version.yml
+          all_pods_versions_2_0_9.txt
+          all_pods_versions_3_8_f.txt
+          Specs/3/8/f/СерафимиМногоꙮчитїи/1.0.0/СерафимиМногоꙮчитїи.podspec.json
+        )
         expected_files.each do |path|
           @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(@path.join(path))}" }
           @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{path}" }
@@ -377,10 +382,10 @@ module Pod
 
       it 'handles ETag and If-None-Match headers' do
         @source = CDNSource.new(@path)
-        @source.expects(:debug).with{ |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
+        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Going to update 3 files")
         @source.expects(:debug).with("CDN: #{@source.name} Relative path: deprecated_podspecs.txt modified during this run! Returning local")
-        
+
         expected_files = %w(CocoaPods-version.yml all_pods_versions_2_0_9.txt)
         expected_files.each do |path|
           @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(@path.join(path))}" }
