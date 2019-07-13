@@ -109,8 +109,7 @@ module Pod
       end
 
       it 'handles redirects' do
-        relative_path = 'Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json'
-        podspec = get_canonical_file(relative_path)
+        relative_path = 'all_pods_versions_2_0_9.txt'
         original_url = 'http://localhost:4321/' + relative_path
         redirect_url = 'http://localhost:4321/redirected/' + relative_path
         REST.expects(:get).
@@ -118,40 +117,45 @@ module Pod
           returns(REST::Response.new(301, 'location' => [redirect_url]))
         REST.expects(:get).
           with(redirect_url).
-          returns(REST::Response.new(200, {}, podspec))
+          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
+        REST.expects(:get).
+          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(REST::Response.new(200, {}, ''))
 
+        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: all_pods_versions_2_0_9.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
-        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path downloaded: #{Regexp.quote(relative_path)}, save ETag:/ }
-        @source.specification('BeaconKit', '1.0.0')
+        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, save ETag:" }
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0) 
       end
 
       it 'raises if unexpected HTTP error' do
         REST.expects(:get).returns(REST::Response.new(500))
         should.raise Informative do
-          @source.specification('BeaconKit', '1.0.0')
+          @source.versions('BeaconKit')
         end.message.
-          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json Response: 500"
+          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: 500"
       end
 
       it 'raises if unexpected non-HTTP error' do
         REST.expects(:get).at_least_once.raises(Errno::ECONNREFUSED)
         should.raise Informative do
-          @source.specification('BeaconKit', '1.0.0')
+          @source.versions('BeaconKit')
         end.message.
-          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
+          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt, error: #{Errno::ECONNREFUSED.new}"
       end
 
       it 'retries after unexpected non-HTTP error' do
-        real_podspec = File.read(@remote_dir.join(*%w(Specs 2 0 9 BeaconKit 1.0.0 BeaconKit.podspec.json)))
         REST.expects(:get).
-          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
           at_most(2).
           raises(Errno::ECONNREFUSED).
           then.
-          returns(REST::Response.new(200, {}, real_podspec))
+          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
+        REST.expects(:get).
+          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(REST::Response.new(200, {}, ''))
 
-        spec = @source.specification('BeaconKit', '1.0.0')
-        spec.name.should == 'BeaconKit'
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0) 
       end
 
       it 'raises cumulative error when more than one Future rejects' do
@@ -342,33 +346,27 @@ module Pod
     describe 'with cached files' do
       before do
         @source.search('BeaconKit')
+        File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
+        FileUtils.rm_rf(@path.join('deprecated_podspecs.txt.etag'))
       end
 
       it 'refreshes all index files' do
+        @source.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt').twice
         @source.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
         @source.expects(:download_file).with('all_pods_versions_2_0_9.txt').returns('all_pods_versions_2_0_9.txt')
-
-        ['BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5', 'SDWebImage/2.4/2.5/2.6/2.7/2.7.4/3.0/3.1/4.0.0/4.0.0-beta/4.0.0-beta2'].each do |row|
-          row = row.split('/')
-          pod = row.shift
-          versions = row
-
-          next unless pod == 'BeaconKit'
-
-          versions.each do |version|
-            podspec_relative_path = @source.pod_path(pod).relative_path_from(@source.repo).join(version).join("#{pod}.podspec.json").to_s
-            @source.expects(:download_file).with(podspec_relative_path).returns(podspec_relative_path)
-          end
-        end
         @source.update(true)
       end
 
       it 'handles ETag and If-None-Match headers' do
         @source = CDNSource.new(@path)
-        all_local_files.each do |path|
-          relative_path = path.relative_path_from(@source.repo)
-          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{relative_path}, has ETag? #{get_etag(path)}" }
-          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{relative_path}" }
+        @source.expects(:debug).with("CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag: 7b75e0-0-5d29c598")
+        @source.expects(:debug).with("CDN: #{@source.name} Going to update 3 files")
+        @source.expects(:debug).with("CDN: #{@source.name} Relative path: deprecated_podspecs.txt modified during this run! Returning local")
+        
+        expected_files = %w(CocoaPods-version.yml all_pods_versions_2_0_9.txt)
+        expected_files.each do |path|
+          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(@path.join(path))}" }
+          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{path}" }
         end
         @source.update(true)
       end
