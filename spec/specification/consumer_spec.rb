@@ -304,6 +304,14 @@ module Pod
         test_consumer.test_type.should.be == :unit
       end
 
+      it 'allows to specify the ui test type for a test subspec' do
+        @spec.test_spec {}
+        test_spec = @spec.test_specs.first
+        test_spec.test_type = :ui
+        test_consumer = Specification::Consumer.new(test_spec, :ios)
+        test_consumer.test_type.should.be == :ui
+      end
+
       it 'returns the test type as a symbol when consuming JSON specs' do
         @spec.test_spec {}
         test_spec = @spec.test_specs.first
