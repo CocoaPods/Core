@@ -156,6 +156,10 @@ module Pod
     def specification_path(name, version)
       raise ArgumentError, 'No name' unless name
       raise ArgumentError, 'No version' unless version
+      unless versions(name).include?(Version.new(version))
+        raise StandardError, "Unable to find the specification #{name} " \
+          "(#{version}) in the #{self.name} source."
+      end
 
       podspec_version_path_relative = Pathname.new(version.to_s).join("#{name}.podspec.json")
       relative_podspec = relative_pod_path(name).join(podspec_version_path_relative).to_s

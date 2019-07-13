@@ -190,6 +190,17 @@ module Pod
         spec.name.should == 'BeaconKit'
         spec.version.should.to_s == '1.0.5'
       end
+
+      it 'does not attempt to access a version not in the version index' do
+        @source.versions('BeaconKit')
+
+        @source.expects(:download_file).never
+        @source.expects(:local_file).never
+
+        should.raise StandardError do
+          @source.specification('BeaconKit', Version.new('9.9.9'))
+        end.message.should.include 'Unable to find the specification BeaconKit (9.9.9) in the test_cdn_repo_local source.'
+      end
     end
 
     #-------------------------------------------------------------------------#
