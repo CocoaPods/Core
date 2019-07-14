@@ -350,11 +350,15 @@ module Pod
       #         The URL of the source.
       #
       def source_with_url(url)
-        url = url.downcase.gsub(/.git$/, '')
+        url = canonic_url(url)
         url = 'https://github.com/cocoapods/specs' if url =~ %r{github.com[:/]+cocoapods/specs}
         all.find do |source|
-          source.url && source.url.downcase.gsub(/.git$/, '') == url
+          source.url && canonic_url(source.url) == url
         end
+      end
+
+      def canonic_url(url)
+        url.downcase.gsub(/\.git$/, '').gsub(%r{\/$}, '')
       end
 
       # Returns a suitable repository name for `url`.

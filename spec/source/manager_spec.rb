@@ -228,6 +228,16 @@ module Pod
               should == 'sourceforge-artsy-specs-1'
           end
         end
+
+        describe '#source_with_url' do
+          it 'should find CDN with trailing slash' do
+            @sources_manager.send(:source_with_url, 'https://cdn.cocoapods.org/').name.should == 'trunk'
+          end
+
+          it 'should find CDN without trailing slash' do
+            @sources_manager.send(:source_with_url, 'https://cdn.cocoapods.org').name.should == 'trunk'
+          end
+        end
       end
     end
 
