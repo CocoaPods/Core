@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Don't `Dir.chdir` when loading `Pod::Specification` from JSON  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#565](https://github.com/CocoaPods/Core/pull/565)
+
 * Replace git-based `MasterSource` with CDN-based `TrunkSource`  
   [Igor Makarov](https://github.com/igor-makarov)
   [#552](https://github.com/CocoaPods/Core/pull/552)
