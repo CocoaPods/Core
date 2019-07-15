@@ -56,8 +56,9 @@ module Pod
     end
 
     def preheat_existing_files
-      all_existing_files = [repo.join('**/*.yml'), repo.join('**/*.txt'), repo.join('**/*.json')].map(&Pathname.method(:glob)).flatten
-      loaders = all_existing_files.map { |f| f.relative_path_from(repo).to_s }.map do |file|
+      files_to_update = files_definitely_to_update + deprecated_local_podspecs
+      debug "CDN: #{name} Going to update #{files_to_update.count} files"
+      loaders = files_to_update.map do |file|
         Concurrent::Promises.future_on(@executor) do
           download_file(file)
         end
@@ -66,6 +67,17 @@ module Pod
       catching_concurrent_errors do
         Concurrent::Promises.zip(*loaders).wait!
       end
+    end
+
+    def files_definitely_to_update
+      Pathname.glob(repo.join('**/*.{txt,yml}')).map { |f| f.relative_path_from(repo).to_s }
+    end
+
+    def deprecated_local_podspecs
+      download_file('deprecated_podspecs.txt')
+      local_file('deprecated_podspecs.txt', &:to_a).
+        map { |f| Pathname.new(f.chomp) }.
+        select { |f| repo.join(f).exist? }
     end
 
     # @return [Pathname] The directory where the specs are stored.
@@ -144,6 +156,10 @@ module Pod
     def specification_path(name, version)
       raise ArgumentError, 'No name' unless name
       raise ArgumentError, 'No version' unless version
+      unless versions(name).include?(Version.new(version))
+        raise StandardError, "Unable to find the specification #{name} " \
+          "(#{version}) in the #{self.name} source."
+      end
 
       podspec_version_path_relative = Pathname.new(version.to_s).join("#{name}.podspec.json")
       relative_podspec = relative_pod_path(name).join(podspec_version_path_relative).to_s
