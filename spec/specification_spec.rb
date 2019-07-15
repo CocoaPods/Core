@@ -687,6 +687,7 @@ module Pod
       end
 
       it 'can be initialized from a JSON file' do
+        Dir.expects(:chdir).never
         spec = Spec.from_file(fixture('BananaLib.podspec.json'))
         spec.class.should == Spec
         spec.name.should == 'BananaLib'

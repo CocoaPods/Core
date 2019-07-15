@@ -703,18 +703,18 @@ module Pod
     def self.from_string(spec_contents, path, subspec_name = nil)
       path = Pathname.new(path).expand_path
       spec = nil
-      Dir.chdir(path.parent.directory? ? path.parent : Dir.pwd) do
-        case path.extname
-        when '.podspec'
+      case path.extname
+      when '.podspec'
+        Dir.chdir(path.parent.directory? ? path.parent : Dir.pwd) do
           spec = ::Pod._eval_podspec(spec_contents, path)
           unless spec.is_a?(Specification)
             raise Informative, "Invalid podspec file at path `#{path}`."
           end
-        when '.json'
-          spec = Specification.from_json(spec_contents)
-        else
-          raise Informative, "Unsupported specification format `#{path.extname}` for spec at `#{path}`."
         end
+      when '.json'
+        spec = Specification.from_json(spec_contents)
+      else
+        raise Informative, "Unsupported specification format `#{path.extname}` for spec at `#{path}`."
       end
 
       spec.defined_in_file = path
