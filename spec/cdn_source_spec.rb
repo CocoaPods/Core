@@ -29,6 +29,11 @@ module Pod
         @path.join('.url').delete if @path.join('.url').exist?
       end
 
+      def print_dir(tag)
+        STDERR.puts tag
+        STDERR.puts Pathname.glob(@path.join('*')).sort.join("\n")
+      end
+
       @remote_dir = fixture('mock_cdn_repo_remote')
 
       @path = fixture('spec-repos/test_cdn_repo_local')
@@ -314,7 +319,7 @@ module Pod
     describe '#update' do
       it 'returns empty array' do
         File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
-        CDNSource.any_instance.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt').twice
+        CDNSource.any_instance.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
         CDNSource.any_instance.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
         @source.update(true).should == []
       end
@@ -348,12 +353,11 @@ module Pod
     describe 'with cached files' do
       before do
         @source.search('BeaconKit')
-        File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
-        FileUtils.rm_rf(@path.join('deprecated_podspecs.txt.etag'))
       end
 
       it 'refreshes all index files' do
-        @source.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt').twice
+        File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
+        @source.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
         @source.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
         @source.expects(:download_file).with('all_pods_versions_2_0_9.txt').returns('all_pods_versions_2_0_9.txt')
         @source.update(true)
@@ -362,12 +366,13 @@ module Pod
       it 'refreshes deprecated podspecs' do
         @source.search('СерафимиМногоꙮчитїи')
         @source.specification('СерафимиМногоꙮчитїи', '1.0.0')
+        @source.update(true)
         @source = CDNSource.new(@path)
-        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
-        @source.expects(:debug).with("CDN: #{@source.name} Going to update 5 files")
-        @source.expects(:debug).with("CDN: #{@source.name} Relative path: deprecated_podspecs.txt modified during this run! Returning local")
+
+        @source.expects(:debug).with("CDN: #{@source.name} Going to update 4 files")
 
         expected_files = %w(
+          deprecated_podspecs.txt
           CocoaPods-version.yml
           all_pods_versions_2_0_9.txt
           all_pods_versions_3_8_f.txt
@@ -381,15 +386,15 @@ module Pod
       end
 
       it 'handles ETag and If-None-Match headers' do
+        @source.update(true)
         @source = CDNSource.new(@path)
-        @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: deprecated_podspecs.txt, save ETag:" }
-        @source.expects(:debug).with("CDN: #{@source.name} Going to update 3 files")
-        @source.expects(:debug).with("CDN: #{@source.name} Relative path: deprecated_podspecs.txt modified during this run! Returning local")
 
-        expected_files = %w(CocoaPods-version.yml all_pods_versions_2_0_9.txt)
+        @source.expects(:debug).with("CDN: #{@source.name} Going to update 2 files")
+
+        expected_files = %w(deprecated_podspecs.txt CocoaPods-version.yml all_pods_versions_2_0_9.txt)
         expected_files.each do |path|
-          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(@path.join(path))}" }
-          @source.expects(:debug).with { |cmd| cmd == "CDN: #{@source.name} Relative path not modified: #{path}" }
+          @source.expects(:debug).with("CDN: #{@source.name} Relative path: #{path}, has ETag? #{get_etag(@path.join(path))}")
+          @source.expects(:debug).with("CDN: #{@source.name} Relative path not modified: #{path}")
         end
         @source.update(true)
       end

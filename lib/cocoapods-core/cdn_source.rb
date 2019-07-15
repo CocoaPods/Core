@@ -56,7 +56,7 @@ module Pod
     end
 
     def preheat_existing_files
-      files_to_update = files_definitely_to_update + deprecated_local_podspecs
+      files_to_update = files_definitely_to_update + deprecated_local_podspecs - ['deprecated_podspecs.txt']
       debug "CDN: #{name} Going to update #{files_to_update.count} files"
       loaders = files_to_update.map do |file|
         Concurrent::Promises.future_on(@executor) do
