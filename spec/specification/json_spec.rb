@@ -198,6 +198,14 @@ module Pod
         hash.should.include '"name":"Tests","test_type":"unit"'
       end
 
+      it 'writes ui test type for test subspec in json' do
+        @spec.test_spec do |test|
+          test.test_type = :ui
+        }
+        hash = @spec.to_json
+        hash.should.include '"name":"Tests","test_type":"ui"'
+      end
+
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',
@@ -299,6 +307,17 @@ module Pod
         result.test_specs.first.test_specification?.should.be.true
         result.test_specs.first.app_specification?.should.be.false
         result.test_specs.first.test_type.should.equal :unit
+      end
+
+      it 'can load ui test specification from json' do
+        json = '{"testspecs": [{"name": "Tests","test_type": "ui","source_files": "Tests/**/*.{h,m}"}]}'
+        result = Specification.from_json(json)
+        result.non_library_specs.count.should.equal 1
+        result.test_specs.count.should.equal 1
+        result.app_specs.count.should.equal 0
+        result.test_specs.first.test_specification?.should.be.true
+        result.test_specs.first.app_specification?.should.be.false
+        result.test_specs.first.test_type.should.equal :ui
       end
 
       it 'can load app specification from json' do
