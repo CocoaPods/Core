@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add support for UI test specs with `test_type` value `:ui`  
+  [Yavuz Nuzumlali](https://github.com/manuyavuz)
+  [#562](https://github.com/CocoaPods/Core/pull/562)
+
 * Don't `Dir.chdir` when loading `Pod::Specification` from JSON  
   [Igor Makarov](https://github.com/igor-makarov)
   [#565](https://github.com/CocoaPods/Core/pull/565)
