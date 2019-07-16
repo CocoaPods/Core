@@ -293,7 +293,12 @@ module Pod
       end
 
       it 'checks the test type value is correct using a JSON podspec' do
-        podspec = '{"testspecs":[{"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"}]}'
+        podspec = '{
+          "testspecs":[
+            {"name": "Tests","test_type": "unit","source_files": "Tests/**/*.{h,m}"},
+            {"name": "Tests","test_type": "ui","source_files": "Tests/**/*.{h,m}"}
+          ]
+        }'
         path = SpecHelper.temporary_directory + 'BananaLib.podspec.json'
         File.open(path, 'w') { |f| f.write(podspec) }
         linter = Specification::Linter.new(path)

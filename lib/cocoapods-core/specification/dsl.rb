@@ -1503,7 +1503,7 @@ module Pod
 
       # The list of the test types currently supported.
       #
-      SUPPORTED_TEST_TYPES = [:unit].freeze
+      SUPPORTED_TEST_TYPES = [:unit, :ui].freeze
 
       # The test type this specification supports. This only applies to test specifications.
       #
