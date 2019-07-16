@@ -454,7 +454,7 @@ module Pod
         end
       end
 
-      it 'allows you to specify a test spec' do
+      it 'allows you to specify a unit test spec' do
         test_spec = @spec.subspecs.first
         test_spec.class.should == Specification
         test_spec.name.should == 'Spec/Tests'
@@ -462,7 +462,7 @@ module Pod
         test_spec.test_type.should == :unit
       end
 
-      it 'allows you to specify a test type as string' do
+      it 'allows you to specify a unit test type as string' do
         a_spec = Spec.new do |spec|
           spec.name = 'Spec'
           spec.test_spec do |test_spec|
@@ -474,6 +474,34 @@ module Pod
         test_spec.name.should == 'Spec/Tests'
         test_spec.test_specification?.should == true
         test_spec.test_type.should == :unit
+      end
+
+      it 'allows you to specify a ui test spec' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = :ui
+          end
+        end
+        test_spec = a_spec.subspecs.first
+        test_spec.class.should == Specification
+        test_spec.name.should == 'Spec/Tests'
+        test_spec.test_specification?.should == true
+        test_spec.test_type.should == :ui
+      end
+
+      it 'allows you to specify a ui test type as string' do
+        a_spec = Spec.new do |spec|
+          spec.name = 'Spec'
+          spec.test_spec do |test_spec|
+            test_spec.test_type = 'ui'
+          end
+        end
+        test_spec = a_spec.subspecs.first
+        test_spec.class.should == Specification
+        test_spec.name.should == 'Spec/Tests'
+        test_spec.test_specification?.should == true
+        test_spec.test_type.should == :ui
       end
 
       it 'allows you to specify a scheme for a test spec' do
