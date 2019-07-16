@@ -201,7 +201,7 @@ module Pod
       it 'writes ui test type for test subspec in json' do
         @spec.test_spec do |test|
           test.test_type = :ui
-        }
+        end
         hash = @spec.to_json
         hash.should.include '"name":"Tests","test_type":"ui"'
       end
