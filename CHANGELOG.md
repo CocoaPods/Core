@@ -46,6 +46,17 @@
   [CocoaPods/CocoaPods#8785](https://github.com/CocoaPods/CocoaPods/issues/8785)
 
 
+## 1.7.5 (2019-07-19)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.7.4 (2019-07-09)
 
 ##### Enhancements
