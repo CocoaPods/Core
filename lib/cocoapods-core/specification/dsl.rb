@@ -1188,7 +1188,7 @@ module Pod
       #
       #   ---
       #
-      #   These patterns are matched against the source files to include headers 
+      #   These patterns are matched against the source files to include headers
       #   that will be exposed to the user’s project and
       #   from which documentation will be generated. When the library is built,
       #   these headers will appear in the build directory. If no public headers
