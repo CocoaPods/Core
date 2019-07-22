@@ -369,6 +369,8 @@ module Pod
         case attr.name
         when :info_plist
           new
+        when ->(name) { spec.non_library_specification? && [:pod_target_xcconfig, :user_target_xcconfig, :xcconfig].include?(name) }
+          new
         else
           if new.is_a?(Array) || old.is_a?(Array)
             r = Array(old) + Array(new)
