@@ -250,12 +250,12 @@ module Pod
       []
     end
 
-    def git?
-      # Long story here. This property is actually used solely by Source::Manager to determine
-      # which sources are updatable. Ideally, this would require a name change but @segiddins
-      # has pointed out that it is public and could break plugins.
-      # In any case, CDN-backed repos can be updated and therefore the value ought to be true.
+    def updateable?
       true
+    end
+
+    def git?
+      false
     end
 
     private

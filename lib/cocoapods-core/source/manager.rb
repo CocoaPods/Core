@@ -312,27 +312,27 @@ module Pod
         @aggregates_by_repos[repos] ||= Source::Aggregate.new(sources)
       end
 
-      # @return [Source] The git source with the given name. If no git source
+      # @return [Source] The updateable source with the given name. If no updateable source
       #         with given name is found it raises.
       #
       # @param  [String] name
       #         The name of the source.
       #
-      def git_source_named(name)
+      def updateable_source_named(name)
         specified_source = sources([name]).first
         unless specified_source
           raise Informative, "Unable to find the `#{name}` repo."
         end
-        unless specified_source.git?
-          raise Informative, "The `#{name}` repo is not a git repo."
+        unless specified_source.updateable?
+          raise Informative, "The `#{name}` repo is not a updateable repo."
         end
         specified_source
       end
 
-      # @return [Source] The list of the git sources.
+      # @return [Source] The list of the updateable sources.
       #
-      def git_sources
-        all.select(&:git?)
+      def updateable_sources
+        all.select(&:updateable?)
       end
 
       # @return [Pathname] The path of the source with the given name.

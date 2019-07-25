@@ -58,7 +58,7 @@ module Pod
     # @return [String] The type of the source.
     #
     def type
-      'file system'
+      git? ? 'git' : 'file system'
     end
 
     alias_method :to_s, :name
@@ -356,8 +356,12 @@ module Pod
       diff_until_commit_hash(prev_commit_hash)
     end
 
+    def updateable?
+      git?
+    end
+
     def git?
-      !repo_git(%w(rev-parse HEAD)).empty?
+      repo.join('.git').exist? && !repo_git(%w(rev-parse HEAD)).empty?
     end
 
     def verify_compatibility!
