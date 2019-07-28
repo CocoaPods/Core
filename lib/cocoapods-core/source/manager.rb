@@ -122,9 +122,15 @@ module Pod
           end
           found_set_names = query_word_results_hash.values.reduce(:&)
           found_set_names ||= []
+
+          sets_from_non_indexable = aggregate.sources.reject(&:indexable?).map { |s| s.search_by_name(query, true) }.flatten
+
+          found_set_names += sets_from_non_indexable.map(&:name).flatten.uniq
+
           sets = found_set_names.map do |name|
             aggregate.representative_set(name)
           end
+
           # Remove nil values because representative_set return nil if no pod is found in any of the sources.
           sets.compact!
         else
