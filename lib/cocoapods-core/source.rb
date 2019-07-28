@@ -364,6 +364,10 @@ module Pod
       repo.join('.git').exist? && !repo_git(%w(rev-parse HEAD)).empty?
     end
 
+    def indexable?
+      true
+    end
+
     def verify_compatibility!
       return if metadata.compatible?(CORE_VERSION)
 

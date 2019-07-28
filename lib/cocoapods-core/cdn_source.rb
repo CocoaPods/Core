@@ -258,6 +258,10 @@ module Pod
       false
     end
 
+    def indexable?
+      false
+    end
+
     private
 
     def ensure_versions_file_loaded(fragment)

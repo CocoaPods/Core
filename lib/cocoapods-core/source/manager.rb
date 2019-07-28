@@ -182,7 +182,7 @@ module Pod
       #
       def updated_search_index
         index = stored_search_index || {}
-        all.each do |source|
+        indexable_sources.each do |source|
           source_name = source.name
           unless index[source_name]
             CoreUI.print "Creating search index for spec repo '#{source_name}'.."
@@ -203,6 +203,7 @@ module Pod
         search_index = stored_search_index
         return unless search_index
         changed_spec_paths.each_pair do |source, spec_paths|
+          next unless source.indexable?
           index_for_source = search_index[source.name]
           next unless index_for_source && !spec_paths.empty?
           updated_pods = source.pods_for_specification_paths(spec_paths)
@@ -333,6 +334,12 @@ module Pod
       #
       def updateable_sources
         all.select(&:updateable?)
+      end
+
+      # @return [Source] The list of the indexable sources.
+      #
+      def indexable_sources
+        all.select(&:indexable?)
       end
 
       # @return [Pathname] The path of the source with the given name.
