@@ -74,6 +74,7 @@ module Pod
 
       it 'can perform a full text search of the sets' do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         sets = @sources_manager.search_by_name('Chunky', true)
         sets.all? { |s| s.class == Specification::Set }.should.be.true
         sets.any? { |s| s.name == 'BananaLib' }.should.be.true
@@ -81,6 +82,7 @@ module Pod
 
       it 'can perform a full text regexp search of the sets' do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         sets = @sources_manager.search_by_name('Ch[aeiou]nky', true)
         sets.all? { |s| s.class == Specification::Set }.should.be.true
         sets.any? { |s| s.name == 'BananaLib' }.should.be.true
@@ -145,6 +147,7 @@ module Pod
 
       it "generates the search index before performing a search if it doesn't exist" do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         Source::Aggregate.any_instance.expects(:generate_search_index_for_source).with(@test_source).returns('BananaLib' => ['BananaLib'])
         @sources_manager.updated_search_index = nil
         @sources_manager.search_by_name('BananaLib', true)
