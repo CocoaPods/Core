@@ -1,12 +1,16 @@
 require 'fileutils'
+require 'algoliasearch'
 require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
   describe CDNSource do
     before do
-      def get_canonical_file(relative_path)
-        path = @remote_dir.join(relative_path)
-        File.read(path)
+      def canonical_file(relative_path)
+        @remote_dir.join(relative_path)
+      end
+
+      def read_canonical_file(relative_path)
+        File.read(canonical_file(relative_path))
       end
 
       def get_etag(relative_path)
@@ -282,11 +286,31 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
-    describe '#search_by_name' do
-      it 'does not support full-text search' do
-        should.raise Informative do
-          @source.search_by_name('beacon', true)
-        end.message.should.match /Can't perform full text search, it will take forever/
+    describe '#search_by_name - Algolia' do
+      before do
+        @source.send(:download_file, 'AlgoliaSearch.yml')
+      end
+
+      it 'supports full-text search with Algolia' do
+        @source.search('BeaconKit')
+        Algolia::Index.any_instance.stubs(:search).with('beacon', :attributesToRetrieve => 'name').returns('hits' => [{ 'name' => 'BeaconKit' }])
+        sets = @source.search_by_name('beacon', true)
+        sets.first.name.should == 'BeaconKit'
+      end
+
+      it 'configures full-text search with Algolia from CDN file' do
+        @source.search('BeaconKit')
+        @source.expects(:download_file).with('AlgoliaSearch.yml').returns('AlgoliaSearch.yml')
+        Algolia::Index.any_instance.stubs(:search).with('beacon', :attributesToRetrieve => 'name').returns('hits' => [{ 'name' => 'BeaconKit' }])
+        sets = @source.search_by_name('beacon', true)
+        sets.first.name.should == 'BeaconKit'
+      end
+
+      it 'does not perform any heavy CDN operations if nothing was found' do
+        @source.expects(:download_file).with('AlgoliaSearch.yml').returns('AlgoliaSearch.yml')
+        Algolia::Index.any_instance.stubs(:search).with('beacon', :attributesToRetrieve => 'name').returns('hits' => [])
+        @source.expects(:download_file).never
+        @source.search_by_name('beacon', true).should == []
       end
     end
 

@@ -58,6 +58,13 @@ module Pod
         aggregate.sources
       end
 
+      # @return [Array<Source>] The list of all the non-indexable sources known to this
+      #         installation of CocoaPods.
+      #
+      def all_non_indexable
+        aggregate.sources.reject(&:indexable?)
+      end
+
       # @return [Array<Source>] The CocoaPods Master Repo source.
       #
       def master
@@ -122,9 +129,15 @@ module Pod
           end
           found_set_names = query_word_results_hash.values.reduce(:&)
           found_set_names ||= []
+
+          sets_from_non_indexable = all_non_indexable.map { |s| s.search_by_name(query, true) }.flatten
+
+          found_set_names += sets_from_non_indexable.map(&:name).flatten.uniq
+
           sets = found_set_names.map do |name|
             aggregate.representative_set(name)
           end
+
           # Remove nil values because representative_set return nil if no pod is found in any of the sources.
           sets.compact!
         else
@@ -182,7 +195,7 @@ module Pod
       #
       def updated_search_index
         index = stored_search_index || {}
-        all.each do |source|
+        indexable_sources.each do |source|
           source_name = source.name
           unless index[source_name]
             CoreUI.print "Creating search index for spec repo '#{source_name}'.."
@@ -203,6 +216,7 @@ module Pod
         search_index = stored_search_index
         return unless search_index
         changed_spec_paths.each_pair do |source, spec_paths|
+          next unless source.indexable?
           index_for_source = search_index[source.name]
           next unless index_for_source && !spec_paths.empty?
           updated_pods = source.pods_for_specification_paths(spec_paths)
@@ -312,27 +326,33 @@ module Pod
         @aggregates_by_repos[repos] ||= Source::Aggregate.new(sources)
       end
 
-      # @return [Source] The git source with the given name. If no git source
+      # @return [Source] The updateable source with the given name. If no updateable source
       #         with given name is found it raises.
       #
       # @param  [String] name
       #         The name of the source.
       #
-      def git_source_named(name)
+      def updateable_source_named(name)
         specified_source = sources([name]).first
         unless specified_source
           raise Informative, "Unable to find the `#{name}` repo."
         end
-        unless specified_source.git?
-          raise Informative, "The `#{name}` repo is not a git repo."
+        unless specified_source.updateable?
+          raise Informative, "The `#{name}` repo is not a updateable repo."
         end
         specified_source
       end
 
-      # @return [Source] The list of the git sources.
+      # @return [Source] The list of the updateable sources.
       #
-      def git_sources
-        all.select(&:git?)
+      def updateable_sources
+        all.select(&:updateable?)
+      end
+
+      # @return [Source] The list of the indexable sources.
+      #
+      def indexable_sources
+        all.select(&:indexable?)
       end
 
       # @return [Pathname] The path of the source with the given name.

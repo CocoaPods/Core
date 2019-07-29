@@ -219,14 +219,21 @@ module Pod
     #         the search term. Can be a regular expression.
     #
     # @param  [Bool] full_text_search
-    #         not supported due to performance reasons
+    #         performed using Algolia
     #
     # @note   full text search requires to load the specification for each pod,
     #         and therefore not supported.
     #
     def search_by_name(query, full_text_search = false)
       if full_text_search
-        raise Informative, "Can't perform full text search, it will take forever"
+        require 'algoliasearch'
+        begin
+          algolia_result = algolia_search_index.search(query, :attributesToRetrieve => 'name')
+          names = algolia_result['hits'].map { |r| r['name'] }
+          names.map { |n| set(n) }.reject { |s| s.versions.compact.empty? }
+        rescue Algolia::AlgoliaError => e
+          raise Informative, "CDN: #{name} - Cannot perform full-text search because Algolia returned an error: #{e}"
+        end
       else
         super(query)
       end
@@ -250,12 +257,16 @@ module Pod
       []
     end
 
-    def git?
-      # Long story here. This property is actually used solely by Source::Manager to determine
-      # which sources are updatable. Ideally, this would require a name change but @segiddins
-      # has pointed out that it is public and could break plugins.
-      # In any case, CDN-backed repos can be updated and therefore the value ought to be true.
+    def updateable?
       true
+    end
+
+    def git?
+      false
+    end
+
+    def indexable?
+      false
     end
 
     private
@@ -275,6 +286,18 @@ module Pod
 
         hash[pod] = versions
         hash
+      end
+    end
+
+    def algolia_search_index
+      @index ||= begin
+        require 'algoliasearch'
+
+        raise Informative, "Cannot perform full-text search in repo #{name} because it's missing Algolia config" if download_file('AlgoliaSearch.yml').nil?
+        algolia_config = YAMLHelper.load_string(local_file('AlgoliaSearch.yml', &:read))
+
+        client = Algolia::Client.new(:application_id => algolia_config['application_id'], :api_key => algolia_config['api_key'])
+        Algolia::Index.new(algolia_config['index'], client)
       end
     end
 

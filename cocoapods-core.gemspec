@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activesupport', '>= 4.0.2', '< 6'
   s.add_runtime_dependency 'nap', '~> 1.0'
-  s.add_runtime_dependency 'fuzzy_match', "~> 2.0.4"
+  s.add_runtime_dependency 'fuzzy_match', '~> 2.0.4'
+  s.add_runtime_dependency 'algoliasearch', '~> 1.0'
 
   s.add_development_dependency 'bacon', '~> 1.1'
 

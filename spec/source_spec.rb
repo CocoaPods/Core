@@ -14,7 +14,13 @@ module Pod
         @source.name.should == 'test_repo'
       end
 
-      it 'return its type' do
+      it 'return its type when git' do
+        @source.type.should == 'git'
+      end
+
+      it 'return its type when git' do
+        @path = fixture('spec-repos/test_empty_dir_repo')
+        @source = Source.new(@path)
         @source.type.should == 'file system'
       end
 

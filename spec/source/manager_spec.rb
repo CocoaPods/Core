@@ -1,3 +1,4 @@
+require 'algoliasearch'
 require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
@@ -6,13 +7,17 @@ module Pod
 
     before do
       @test_source = Source.new(fixture('spec-repos/test_repo'))
+      @test_source_cdn_path = fixture('spec-repos/test_cdn_repo_local')
+      File.open(@test_source_cdn_path.join('.url'), 'w') { |f| f.write('http://localhost:4321/') }
+      @test_source_cdn = CDNSource.new(@test_source_cdn_path)
+
       @sources_manager = Source::Manager.new(fixture('spec-repos'))
       @sources_manager.search_index_path = SpecHelper.temporary_directory + 'search_index.json'
     end
 
     after do
-      test_cdn_repo_local_path = fixture('spec-repos/test_cdn_repo_local')
-      Pathname.glob(test_cdn_repo_local_path.join('*')).each(&:rmtree)
+      Pathname.glob(@test_source_cdn_path.join('*')).each(&:rmtree)
+      @test_source_cdn_path.join('.url').rmtree
     end
 
     #-------------------------------------------------------------------------#
@@ -74,6 +79,7 @@ module Pod
 
       it 'can perform a full text search of the sets' do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         sets = @sources_manager.search_by_name('Chunky', true)
         sets.all? { |s| s.class == Specification::Set }.should.be.true
         sets.any? { |s| s.name == 'BananaLib' }.should.be.true
@@ -81,9 +87,19 @@ module Pod
 
       it 'can perform a full text regexp search of the sets' do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         sets = @sources_manager.search_by_name('Ch[aeiou]nky', true)
         sets.all? { |s| s.class == Specification::Set }.should.be.true
         sets.any? { |s| s.name == 'BananaLib' }.should.be.true
+      end
+
+      it 'can perform a full text search of the sets on a CDN' do
+        @sources_manager.stubs(:all).returns([@test_source_cdn])
+        @sources_manager.stubs(:all_non_indexable).returns([@test_source_cdn])
+        Algolia::Index.any_instance.stubs(:search).with('beacon', :attributesToRetrieve => 'name').returns('hits' => [{ 'name' => 'BeaconKit' }])
+        sets = @sources_manager.search_by_name('beacon', true)
+        sets.all? { |s| s.class == Specification::Set }.should.be.true
+        sets.any? { |s| s.name == 'BeaconKit' }.should.be.true
       end
 
       describe 'Sorting algorithm' do
@@ -145,6 +161,7 @@ module Pod
 
       it "generates the search index before performing a search if it doesn't exist" do
         @sources_manager.stubs(:all).returns([@test_source])
+        @sources_manager.stubs(:all_non_indexable).returns([])
         Source::Aggregate.any_instance.expects(:generate_search_index_for_source).with(@test_source).returns('BananaLib' => ['BananaLib'])
         @sources_manager.updated_search_index = nil
         @sources_manager.search_by_name('BananaLib', true)
