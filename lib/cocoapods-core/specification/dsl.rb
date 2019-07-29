@@ -709,7 +709,7 @@ module Pod
       #   Key-Value pairs to add to the generated `Info.plist`.
       #
       #   The values will be merged with the default values that
-      #   CocoaPods generates, overridding any duplicates.
+      #   CocoaPods generates, overriding any duplicates.
       #
       #   For library specs, the values will be merged into the generated Info.plist
       #   for libraries that are integrated using frameworks. It will have no effect
