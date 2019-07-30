@@ -45,7 +45,7 @@
   [Eric Amorde](https://github.com/amorde)
   [CocoaPods/CocoaPods#8785](https://github.com/CocoaPods/CocoaPods/issues/8785)
 
-* Pass a non-browser user agent for social media validation
+* Pass a non-browser user agent for social media validation  
   [Dov Frankel](https://github.com/abbeycode)
   [#571](https://github.com/CocoaPods/Core/pull/571)
   [CocoaPods#9049](https://github.com/CocoaPods/CocoaPods/issues/9049)
