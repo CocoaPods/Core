@@ -8,11 +8,11 @@ module Pod
     #
     # @return [string]
     #
-    def self.get_actual_url(url)
+    def self.get_actual_url(url, user_agent = nil)
       redirects = 0
 
       loop do
-        response = perform_head_request(url)
+        response = perform_head_request(url, user_agent)
 
         if [301, 302, 303, 307, 308].include? response.status_code
           location = response.headers['location'].first
@@ -38,12 +38,12 @@ module Pod
     #
     # @return [REST::response]
     #
-    def self.validate_url(url)
+    def self.validate_url(url, user_agent = nil)
       return nil unless url =~ /^#{URI.regexp}$/
 
       begin
-        url = get_actual_url(url)
-        resp = perform_head_request(url)
+        url = get_actual_url(url, user_agent)
+        resp = perform_head_request(url, user_agent)
       rescue SocketError, URI::InvalidURIError, REST::Error, REST::Error::Connection
         resp = nil
       end
@@ -59,17 +59,19 @@ module Pod
     #
     # @return [REST::response]
     #
-    def self.perform_head_request(url)
+    def self.perform_head_request(url, user_agent)
       require 'rest'
 
-      resp = ::REST.head(url, 'User-Agent' => USER_AGENT)
+      user_agent ||= USER_AGENT
+
+      resp = ::REST.head(url, 'User-Agent' => user_agent)
 
       if resp.status_code >= 400
-        resp = ::REST.get(url, 'User-Agent' => USER_AGENT,
+        resp = ::REST.get(url, 'User-Agent' => user_agent,
                                'Range' => 'bytes=0-0')
 
         if resp.status_code >= 400
-          resp = ::REST.get(url, 'User-Agent' => USER_AGENT)
+          resp = ::REST.get(url, 'User-Agent' => user_agent)
         end
       end
 
