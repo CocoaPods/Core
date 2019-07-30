@@ -48,6 +48,7 @@
 * Pass a non-browser user agent for social media validation  
   [Dov Frankel](https://github.com/abbeycode)
   [#571](https://github.com/CocoaPods/Core/pull/571)
+  [CocoaPods#9053](https://github.com/CocoaPods/Cocoapods/pull/9053)
   [CocoaPods#9049](https://github.com/CocoaPods/CocoaPods/issues/9049)
 
 ## 1.7.5 (2019-07-19)
