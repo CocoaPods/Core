@@ -8,7 +8,7 @@ module Pod
     #
     # @return [string]
     #
-    def self.get_actual_url(url, user_agent=nil)
+    def self.get_actual_url(url, user_agent = nil)
       redirects = 0
 
       loop do
@@ -38,7 +38,7 @@ module Pod
     #
     # @return [REST::response]
     #
-    def self.validate_url(url, user_agent=nil)
+    def self.validate_url(url, user_agent = nil)
       return nil unless url =~ /^#{URI.regexp}$/
 
       begin
