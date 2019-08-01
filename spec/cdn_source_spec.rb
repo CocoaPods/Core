@@ -153,6 +153,46 @@ module Pod
           should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt, error: #{Errno::ECONNREFUSED.new}"
       end
 
+      it 'retries after unexpected HTTP error' do
+        REST.expects(:get).
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          at_most(5).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          then.
+          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
+        REST.expects(:get).
+          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(REST::Response.new(200, {}, ''))
+
+        [4, 8, 16, 32].each do |seconds|
+          @source.expects(:sleep_for).with(seconds)
+        end
+
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
+      end
+
+      it 'fails after unexpected HTTP error retries are exhausted' do
+        REST.expects(:get).
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          at_most(5).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503)).
+          returns(REST::Response.new(503))
+
+        [4, 8, 16, 32].each do |seconds|
+          @source.expects(:sleep_for).with(seconds)
+        end
+
+        should.raise Informative do
+          @source.versions('BeaconKit')
+        end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: 503"
+      end
+
       it 'retries after unexpected non-HTTP error' do
         REST.expects(:get).
           with('http://localhost:4321/all_pods_versions_2_0_9.txt').
@@ -165,6 +205,21 @@ module Pod
           returns(REST::Response.new(200, {}, ''))
 
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
+      end
+
+      it 'fails after unexpected non-HTTP error retries are exhausted' do
+        REST.expects(:get).
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          at_most(5).
+          raises(Errno::ECONNREFUSED).
+          raises(Errno::ECONNREFUSED).
+          raises(Errno::ECONNREFUSED).
+          raises(Errno::ECONNREFUSED).
+          raises(Errno::ECONNREFUSED)
+
+        should.raise Informative do
+          @source.versions('BeaconKit')
+        end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt, error: Connection refused"
       end
 
       it 'raises cumulative error when more than one Future rejects' do
