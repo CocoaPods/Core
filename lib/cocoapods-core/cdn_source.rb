@@ -7,7 +7,7 @@ module Pod
   #
   class CDNSource < Source
     MAX_CDN_NETWORK_THREADS = (ENV['MAX_CDN_NETWORK_THREADS'] || 50).to_i
-    MAX_NUMBER_OF_RETRIES = (ENV['COCOAPODS_MAX_NUMBER_OF_RETRIES'] || 5).to_i
+    MAX_NUMBER_OF_RETRIES = (ENV['COCOAPODS_CDN_MAX_NUMBER_OF_RETRIES'] || 5).to_i
 
     # @param [String] repo The name of the repository
     #
