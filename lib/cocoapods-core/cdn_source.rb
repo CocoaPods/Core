@@ -345,20 +345,20 @@ module Pod
       etag = File.read(etag_path) if File.exist?(etag_path)
       debug "CDN: #{name} Relative path: #{partial_url}, has ETag? #{etag}" unless etag.nil?
 
-      download_from_url(partial_url, file_remote_url, etag)
+      download_retrying_retryable_errors(partial_url, file_remote_url, etag)
     end
 
-    def download_from_url(partial_url, file_remote_url, etag)
+    def download_retrying_retryable_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      response = download_retrying_connection_errors(partial_url, file_remote_url, etag)
+      response = download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
 
       case response.status_code
       when 301
         redirect_location = response.headers['location'].first
         debug "CDN: #{name} Redirecting from #{file_remote_url} to #{redirect_location}"
-        download_from_url(partial_url, redirect_location, etag)
+        download_retrying_retryable_errors(partial_url, redirect_location, etag)
       when 304
         debug "CDN: #{name} Relative path not modified: #{partial_url}"
         # We need to update the file modification date, as it is later used for freshness
@@ -375,15 +375,31 @@ module Pod
       when 404
         debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
         nil
+      when 502, 503, 504
+        if retries <= 1
+          raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status_code}"
+        else
+          sleep_for(backoff_time(retries))
+          download_retrying_retryable_errors(partial_url, file_remote_url, etag, retries - 1)
+        end
       else
         raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status_code}"
       end
     end
 
-    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
+    def backoff_time(retries)
+      current_retry = MAX_NUMBER_OF_RETRIES - retries
+      4 * 2**current_retry
+    end
+
+    def sleep_for(seconds)
+      sleep(seconds)
+    end
+
+    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
       etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
     rescue REST::Error => e
-      if retries <= 0
+      if retries <= 1
         raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url}, error: #{e}"
       else
         debug "CDN: #{name} Relative path: #{partial_url} error: #{e} - retrying"
