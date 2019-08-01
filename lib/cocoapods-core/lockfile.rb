@@ -33,9 +33,12 @@ module Pod
     # @param  [Pathname] path
     #         the path where the lockfile is serialized.
     #
+    # @param  [Boolean] warn_if_contains_old_spec_repo
+    #         analyze the Lockfile and warn if it contains the old git spec repo.
+    #
     # @return [Lockfile] a new lockfile.
     #
-    def self.from_file(path)
+    def self.from_file(path, warn_if_contains_old_spec_repo = false)
       return nil unless path.exist?
       hash = YAMLHelper.load_file(path)
       unless hash && hash.is_a?(Hash)
@@ -43,7 +46,36 @@ module Pod
       end
       lockfile = Lockfile.new(hash)
       lockfile.defined_in_file = path
+      lockfile.warn_if_contains_old_spec_repo if warn_if_contains_old_spec_repo
       lockfile
+    end
+
+    # Analyzes the Lockfile and warn if it contains the old git spec repo.
+    #
+    def warn_if_contains_old_spec_repo
+      old_spec_repo = pods_by_spec_repo.keys.find { |r| r =~ %r{github\.com(\/|:)cocoapods\/specs}i }
+      return if old_spec_repo.nil?
+
+      warning = "The Lockfile at '#{defined_in_file}' references the old spec repo `#{old_spec_repo}`\n" \
+                "Please update to the new trunk CDN at `#{TrunkSource::TRUNK_REPO_URL}`\n"
+      bundler_prefix = ENV['BUNDLE_GEMFILE'].nil? ? '' : 'bundle exec '
+      command = "#{bundler_prefix}ruby -e \"require 'cocoapods'; Pod::Lockfile.remove_old_spec_repo('#{defined_in_file}')\""
+      CoreUI.warn "#{warning}\n" \
+                  " - If you can, delete `#{defined_in_file}`\n" \
+                  " - If you can't delete it, run `#{command}` and then `#{bundler_prefix}pod install`"
+    end
+
+    # Loads the Lockfile removes the old git spec repo from it.
+    #
+    # @param  [String] path
+    #         the path where the lockfile is serialized.
+    #
+    def self.remove_old_spec_repo(path)
+      pathname = Pathname.new(path)
+      lockfile = from_file(pathname, false)
+      old_spec_repos = lockfile.pods_by_spec_repo.keys.select { |r| r =~ %r{github\.com(\/|:)cocoapods\/specs}i }
+      old_spec_repos.each { |r| lockfile.pods_by_spec_repo.delete(r) }
+      lockfile.write_to_disk(pathname)
     end
 
     # @return [String] the file where the Lockfile is serialized.
