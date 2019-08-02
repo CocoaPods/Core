@@ -27,11 +27,6 @@ module Pod
 
         # @return [Version] The version of the Pod.
         #
-        # @todo   The version is memoized because the Resolvers sets the head
-        #         state on it. This information should be stored in the
-        #         specification instance and the lockfile should have a more
-        #         robust handling of head versions (like a dedicated section).
-        #
         def version
           if root?
             @version ||= Version.new(attributes_hash['version'])

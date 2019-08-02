@@ -69,20 +69,6 @@ module Pod
     #
     #             Dependency.new('Artsy+UILabels', '~> 1.0', :source => 'https://github.com/Artsy/Specs.git')
     #
-    # @overload   initialize(name, is_head)
-    #
-    #   @param    [String] name
-    #             the name of the Pod.
-    #
-    #   @param    [Symbol] is_head
-    #             a symbol that can be `:head` or nil.
-    #
-    #   @todo     Remove `:head` code once everyone has migrated past CocoaPods 1.0.
-    #
-    #   @example  Initialization with the head option
-    #
-    #             Dependency.new('RestKit', :head)
-    #
     def initialize(name = nil, *requirements)
       if requirements.last.is_a?(Hash)
         additional_params = requirements.pop.select { |_, v| !v.nil? }
@@ -121,10 +107,6 @@ module Pod
 
     # @return [Requirement] the requirement of this dependency (a set of
     #         one or more version restrictions).
-    #
-    # @todo   The specific version is stripped from head information because
-    #         because its string representation would not parse. It would
-    #         be better to add something like Version#display_string.
     #
     def requirement
       if specific_version
@@ -357,8 +339,6 @@ module Pod
     #           part by clients that need to create a dependency equal to the
     #           original one.
     #
-    # @todo     Remove the `HEAD` code once everyone has migrated past 1.0.
-    #
     # @return   [Dependency] the dependency described by the string.
     #
     def self.from_string(string)
@@ -367,9 +347,6 @@ module Pod
       version = match_data[2]
       version = version.gsub(/[()]/, '') if version
       case version
-      when / HEAD( \(based on #{Pod::Version::VERSION_PATTERN}\))?/
-        CoreUI.warn "Ignoring obsolete `HEAD` specifier in `#{string}`"
-        Dependency.new(name)
       when nil, /from `(.*)(`|')/
         Dependency.new(name)
       else
