@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.8.0.beta.1 (2019-08-02)
+
+##### Enhancements
+
 * Add support for UI test specs with `test_type` value `:ui`  
   [Yavuz Nuzumlali](https://github.com/manuyavuz)
   [#562](https://github.com/CocoaPods/Core/pull/562)
