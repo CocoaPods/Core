@@ -352,6 +352,7 @@ module Pod
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
+      puts "CDN: Downloading #{partial_url}..."
       response = download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
 
       case response.status_code
@@ -396,7 +397,7 @@ module Pod
       sleep(seconds)
     end
 
-    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
+    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
       etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
     rescue REST::Error => e
       if retries <= 1
@@ -408,11 +409,12 @@ module Pod
     end
 
     def debug(message)
-      if defined?(Pod::UI)
-        Pod::UI.message(message)
-      else
-        CoreUI.puts(message)
-      end
+      puts "CDN: #{message}"
+      # if defined?(Pod::UI)
+      #   Pod::UI.message(message)
+      # else
+      #   CoreUI.puts(message)
+      # end
     end
 
     def catching_concurrent_errors
