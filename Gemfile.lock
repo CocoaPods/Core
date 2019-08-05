@@ -11,6 +11,7 @@ PATH
     cocoapods-core (1.8.0.beta.1)
       activesupport (>= 4.0.2, < 6)
       algoliasearch (~> 1.0)
+      concurrent-ruby (~> 1.0)
       fuzzy_match (~> 2.0.4)
       nap (~> 1.0)
 
