@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Extend `script_phase` DSL to support dependency file.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#579](https://github.com/CocoaPods/Core/pull/579)
 
 ##### Bug Fixes
 

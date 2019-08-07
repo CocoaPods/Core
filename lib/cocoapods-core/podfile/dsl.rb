@@ -422,6 +422,9 @@ module Pod
       #           specifies the position of which this script phase should be executed. The currently supported values are:
       #           `:before_compile`, `:after_compile` and `:any` which is the default.
       #
+      # @option   options [String] :dependency_file
+      #           specifies the dependency file to use for this script phase.
+      #
       # @return   [void]
       #
       def script_phase(options)
