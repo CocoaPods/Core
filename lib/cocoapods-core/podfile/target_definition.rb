@@ -737,7 +737,8 @@ module Pod
       # @param  [Hash] options
       #         The options to use for this script phase. The required keys
       #         are: `:name`, `:script`, while the optional keys are:
-      #         `:shell_path`, `:input_files`, `:output_files`, `:show_env_vars_in_log` and `:execution_position`.
+      #         `:shell_path`, `:input_files`, `:output_files`, `:show_env_vars_in_log`, `:execution_position` and
+      #         `:dependency_file`.
       #
       # @return [void]
       #
