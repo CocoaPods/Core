@@ -1,6 +1,16 @@
 require 'fileutils'
 require 'algoliasearch'
+require 'concurrent'
+require 'typhoeus'
 require File.expand_path('../spec_helper', __FILE__)
+
+module Mocha
+  class Expectation
+    def with_url(expected_url)
+      with { |url, _| url == expected_url }
+    end
+  end
+end
 
 module Pod
   describe CDNSource do
@@ -36,6 +46,29 @@ module Pod
       def print_dir(tag)
         STDERR.puts tag
         STDERR.puts Pathname.glob(@path.join('*')).sort.join("\n")
+      end
+
+      def fulfilled_future(result)
+        Concurrent::Promises.fulfilled_future(result)
+      end
+
+      def resolved_event
+        Concurrent::Promises.resolved_event
+      end
+
+      def typhoeus_http_response_future(code, headers = {}, body = '')
+        fulfilled_future(Typhoeus::Response.new(
+                           :response_code => code,
+                           :headers => headers,
+                           :response_body => body,
+        ))
+      end
+
+      def typhoeus_non_http_response_future(code)
+        fulfilled_future(Typhoeus::Response.new(
+                           :response_code => 0,
+                           :return_code => code,
+        ))
       end
 
       @remote_dir = fixture('mock_cdn_repo_remote')
@@ -121,15 +154,15 @@ module Pod
         relative_path = 'all_pods_versions_2_0_9.txt'
         original_url = 'http://localhost:4321/' + relative_path
         redirect_url = 'http://localhost:4321/redirected/' + relative_path
-        REST.expects(:get).
-          with(original_url).
-          returns(REST::Response.new(301, 'location' => [redirect_url]))
-        REST.expects(:get).
-          with(redirect_url).
-          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
-        REST.expects(:get).
-          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(REST::Response.new(200, {}, ''))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url(original_url).
+          returns(typhoeus_http_response_future(301, 'location' => redirect_url))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url(redirect_url).
+          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(typhoeus_http_response_future(200, {}, ''))
 
         @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: all_pods_versions_2_0_9.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
@@ -138,7 +171,8 @@ module Pod
       end
 
       it 'raises if unexpected HTTP error' do
-        REST.expects(:get).returns(REST::Response.new(500))
+        @source.expects(:download_typhoeus_impl_async).
+          returns(typhoeus_http_response_future(500))
         should.raise Informative do
           @source.versions('BeaconKit')
         end.message.
@@ -146,46 +180,51 @@ module Pod
       end
 
       it 'raises if unexpected non-HTTP error' do
-        REST.expects(:get).at_least_once.raises(Errno::ECONNREFUSED)
+        @source.expects(:download_typhoeus_impl_async).
+          at_least_once.
+          returns(typhoeus_non_http_response_future(:couldnt_connect))
+
+        @source.expects(:sleep_async).at_least_once.with(anything).returns(resolved_event)
+
         should.raise Informative do
           @source.versions('BeaconKit')
         end.message.
-          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt, error: #{Errno::ECONNREFUSED.new}"
+          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
 
       it 'retries after unexpected HTTP error' do
-        REST.expects(:get).
-          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
           at_most(5).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
           then.
-          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
-        REST.expects(:get).
-          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(REST::Response.new(200, {}, ''))
+          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(typhoeus_http_response_future(200, {}, ''))
 
         [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_for).with(seconds)
+          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
         end
 
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'fails after unexpected HTTP error retries are exhausted' do
-        REST.expects(:get).
-          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
           at_most(5).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503)).
-          returns(REST::Response.new(503))
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503)).
+          returns(typhoeus_http_response_future(503))
 
         [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_for).with(seconds)
+          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
         end
 
         should.raise Informative do
@@ -194,45 +233,56 @@ module Pod
       end
 
       it 'retries after unexpected non-HTTP error' do
-        REST.expects(:get).
-          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          at_most(2).
-          raises(Errno::ECONNREFUSED).
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          at_most(5).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
           then.
-          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
-        REST.expects(:get).
-          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(REST::Response.new(200, {}, ''))
+          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(typhoeus_http_response_future(200, {}, ''))
+
+        [4, 8, 16, 32].each do |seconds|
+          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        end
 
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'fails after unexpected non-HTTP error retries are exhausted' do
-        REST.expects(:get).
-          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
           at_most(5).
-          raises(Errno::ECONNREFUSED).
-          raises(Errno::ECONNREFUSED).
-          raises(Errno::ECONNREFUSED).
-          raises(Errno::ECONNREFUSED).
-          raises(Errno::ECONNREFUSED)
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect)).
+          returns(typhoeus_non_http_response_future(:couldnt_connect))
+
+        [4, 8, 16, 32].each do |seconds|
+          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        end
 
         should.raise Informative do
           @source.versions('BeaconKit')
-        end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt, error: Connection refused"
+        end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
 
       it 'raises cumulative error when more than one Future rejects' do
-        REST.expects(:get).
-          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5'))
         versions = %w(0 1 2 3 4 5)
         messages = versions.map do |index|
-          REST.expects(:get).
+          @source.expects(:download_typhoeus_impl_async).
             at_least_once.
-            with("http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
-            raises(Errno::ECONNREFUSED)
-          "CDN: #{@source.name} URL couldn't be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json, error: #{Errno::ECONNREFUSED.new}"
+            with_url("http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
+            returns(typhoeus_http_response_future(500, {}, 'Some error'))
+          "CDN: #{@source.name} URL couldn't be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json Response: 500 Some error"
         end
 
         should.raise Informative do
@@ -399,7 +449,7 @@ module Pod
       it 'returns empty array' do
         File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
         CDNSource.any_instance.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
-        CDNSource.any_instance.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
+        CDNSource.any_instance.expects(:download_file_async).with('CocoaPods-version.yml').returns(fulfilled_future('CocoaPods-version.yml'))
         @source.update(true).should == []
       end
     end
@@ -437,8 +487,8 @@ module Pod
       it 'refreshes all index files' do
         File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
         @source.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
-        @source.expects(:download_file).with('CocoaPods-version.yml').returns('CocoaPods-version.yml')
-        @source.expects(:download_file).with('all_pods_versions_2_0_9.txt').returns('all_pods_versions_2_0_9.txt')
+        @source.expects(:download_file_async).with('CocoaPods-version.yml').returns(fulfilled_future('CocoaPods-version.yml'))
+        @source.expects(:download_file_async).with('all_pods_versions_2_0_9.txt').returns(fulfilled_future('all_pods_versions_2_0_9.txt'))
         @source.update(true)
       end
 

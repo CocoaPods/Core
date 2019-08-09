@@ -1,13 +1,19 @@
 require 'cocoapods-core/source'
 require 'rest'
 require 'concurrent'
+require 'typhoeus'
 
 module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
   #
   class CDNSource < Source
-    MAX_CDN_NETWORK_THREADS = (ENV['MAX_CDN_NETWORK_THREADS'] || 50).to_i
+    include Concurrent
+
     MAX_NUMBER_OF_RETRIES = (ENV['COCOAPODS_CDN_MAX_NUMBER_OF_RETRIES'] || 5).to_i
+    # Single thread executor for all network activity.
+    HYDRA_EXECUTOR = Concurrent::SingleThreadExecutor.new
+
+    private_constant :HYDRA_EXECUTOR
 
     # @param [String] repo The name of the repository
     #
@@ -17,12 +23,6 @@ module Pod
       # and then test file modification dates against it. Any file that was touched
       # after the source was initialized, is considered fresh enough.
       @startup_time = Time.new
-
-      @executor = Concurrent::ThreadPoolExecutor.new(
-        :min_threads => 5,
-        :max_threads => MAX_CDN_NETWORK_THREADS,
-        :max_queue => 0 # unbounded work queue
-      )
 
       @version_arrays_by_fragment_by_name = {}
 
@@ -58,14 +58,12 @@ module Pod
     def preheat_existing_files
       files_to_update = files_definitely_to_update + deprecated_local_podspecs - ['deprecated_podspecs.txt']
       debug "CDN: #{name} Going to update #{files_to_update.count} files"
-      loaders = files_to_update.map do |file|
-        Concurrent::Promises.future_on(@executor) do
-          download_file(file)
-        end
-      end
 
-      catching_concurrent_errors do
-        Concurrent::Promises.zip(*loaders).wait!
+      concurrent_requests_catching_errors do
+        loaders = files_to_update.map do |file|
+          download_file_async(file)
+        end
+        Promises.zip_futures_on(HYDRA_EXECUTOR, *loaders).wait!
       end
     end
 
@@ -117,27 +115,28 @@ module Pod
 
       return nil if @version_arrays_by_fragment_by_name[fragment][name].nil?
 
-      loaders = []
-      @versions_by_name[name] ||= @version_arrays_by_fragment_by_name[fragment][name].map do |version|
-        # Optimization: ensure all the podspec files at least exist. The correct one will get refreshed
-        # in #specification_path regardless.
-        podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
-        unless pod_path_actual.join(podspec_version_path_relative).exist?
-          loaders << Concurrent::Promises.future_on(@executor) do
-            download_file(pod_path_relative.join(podspec_version_path_relative).to_s)
-          end
-        end
-        begin
-          Version.new(version) if version[0, 1] != '.'
-        rescue ArgumentError
-          raise Informative, 'An unexpected version directory ' \
-          "`#{version}` was encountered for the " \
-          "`#{pod_path_actual}` Pod in the `#{name}` repository."
-        end
-      end.compact.sort.reverse
+      concurrent_requests_catching_errors do
+        loaders = []
 
-      catching_concurrent_errors do
-        Concurrent::Promises.zip(*loaders).wait!
+        @versions_by_name[name] ||= @version_arrays_by_fragment_by_name[fragment][name].map do |version|
+          # Optimization: ensure all the podspec files at least exist. The correct one will get refreshed
+          # in #specification_path regardless.
+          podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
+
+          unless pod_path_actual.join(podspec_version_path_relative).exist?
+            loaders << download_file_async(pod_path_relative.join(podspec_version_path_relative).to_s)
+          end
+
+          begin
+            Version.new(version) if version[0, 1] != '.'
+          rescue ArgumentError
+            raise Informative, 'An unexpected version directory ' \
+            "`#{version}` was encountered for the " \
+            "`#{pod_path_actual}` Pod in the `#{name}` repository."
+          end
+        end.compact.sort.reverse
+
+        Promises.zip_futures_on(HYDRA_EXECUTOR, *loaders).wait!
       end
 
       @versions_by_name[name]
@@ -323,18 +322,22 @@ module Pod
     end
 
     def download_file(partial_url)
+      download_file_async(partial_url).wait!
+    end
+
+    def download_file_async(partial_url)
       file_remote_url = URI.encode(url + partial_url.to_s)
       path = repo + partial_url
 
       if File.exist?(path)
         if @startup_time < File.mtime(path)
           debug "CDN: #{name} Relative path: #{partial_url} modified during this run! Returning local"
-          return partial_url
+          return Promises.fulfilled_future(partial_url, HYDRA_EXECUTOR)
         end
 
         unless @check_existing_files_for_update
           debug "CDN: #{name} Relative path: #{partial_url} exists! Returning local because checking is only perfomed in repo update"
-          return partial_url
+          return Promises.fulfilled_future(partial_url, HYDRA_EXECUTOR)
         end
       end
 
@@ -345,46 +348,61 @@ module Pod
       etag = File.read(etag_path) if File.exist?(etag_path)
       debug "CDN: #{name} Relative path: #{partial_url}, has ETag? #{etag}" unless etag.nil?
 
-      download_retrying_retryable_errors(partial_url, file_remote_url, etag)
+      download_and_save_with_retries_async(partial_url, file_remote_url, etag)
     end
 
-    def download_retrying_retryable_errors(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
+    def download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries = MAX_NUMBER_OF_RETRIES)
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      response = download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
+      download_typhoeus_impl_async(file_remote_url, etag).then do |response|
+        case response.response_code
+        when 301
+          redirect_location = response.headers['location']
+          debug "CDN: #{name} Redirecting from #{file_remote_url} to #{redirect_location}"
+          download_and_save_with_retries_async(partial_url, redirect_location, etag)
+        when 304
+          debug "CDN: #{name} Relative path not modified: #{partial_url}"
+          # We need to update the file modification date, as it is later used for freshness
+          # optimization. See #initialize for more information.
+          FileUtils.touch path
+          partial_url
+        when 200
+          File.open(path, 'w') { |f| f.write(response.response_body) }
 
-      case response.status_code
-      when 301
-        redirect_location = response.headers['location'].first
-        debug "CDN: #{name} Redirecting from #{file_remote_url} to #{redirect_location}"
-        download_retrying_retryable_errors(partial_url, redirect_location, etag)
-      when 304
-        debug "CDN: #{name} Relative path not modified: #{partial_url}"
-        # We need to update the file modification date, as it is later used for freshness
-        # optimization. See #initialize for more information.
-        FileUtils.touch path
-        partial_url
-      when 200
-        File.open(path, 'w') { |f| f.write(response.body) }
-
-        etag_new = response.headers['etag'].first if response.headers.include?('etag')
-        debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
-        File.open(etag_path, 'w') { |f| f.write(etag_new) } unless etag_new.nil?
-        partial_url
-      when 404
-        debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status_code}"
-        nil
-      when 502, 503, 504
-        if retries <= 1
-          raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status_code}"
+          etag_new = response.headers['etag']
+          debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
+          File.open(etag_path, 'w') { |f| f.write(etag_new) } unless etag_new.nil?
+          partial_url
+        when 404
+          debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.response_code}"
+          nil
+        when 502, 503, 504
+          if retries <= 1
+            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
+          else
+            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}, retries: #{retries - 1}"
+            exponential_backoff_async(retries).then do
+              download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
+            end
+          end
+        when 0
+          if retries <= 1
+            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}"
+          else
+            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}, retries: #{retries - 1}"
+            exponential_backoff_async(retries).then do
+              download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
+            end
+          end
         else
-          sleep_for(backoff_time(retries))
-          download_retrying_retryable_errors(partial_url, file_remote_url, etag, retries - 1)
+          raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
         end
-      else
-        raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status_code}"
-      end
+      end.run
+    end
+
+    def exponential_backoff_async(retries)
+      sleep_async(backoff_time(retries))
     end
 
     def backoff_time(retries)
@@ -392,19 +410,27 @@ module Pod
       4 * 2**current_retry
     end
 
-    def sleep_for(seconds)
-      sleep(seconds)
+    def sleep_async(seconds)
+      Promises.schedule_on(HYDRA_EXECUTOR, seconds)
     end
 
-    def download_retrying_connection_errors(partial_url, file_remote_url, etag, retries)
-      etag.nil? ? REST.get(file_remote_url) : REST.get(file_remote_url, 'If-None-Match' => etag)
-    rescue REST::Error => e
-      if retries <= 1
-        raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url}, error: #{e}"
-      else
-        debug "CDN: #{name} Relative path: #{partial_url} error: #{e} - retrying"
-        download_retrying_connection_errors(partial_url, file_remote_url, etag, retries - 1)
+    def download_typhoeus_impl_async(file_remote_url, etag)
+      request = Typhoeus::Request.new(
+        file_remote_url,
+        :method => :get,
+        :http_version => :httpv2_0,
+        :timeout => 10,
+        :connecttimeout => 10,
+        :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
+      )
+
+      future = Promises.resolvable_future_on(HYDRA_EXECUTOR)
+      queue_request(request)
+      request.on_complete do |response|
+        future.fulfill(response)
       end
+
+      future
     end
 
     def debug(message)
@@ -415,11 +441,17 @@ module Pod
       end
     end
 
-    def catching_concurrent_errors
+    def concurrent_requests_catching_errors
       yield
-    rescue Concurrent::MultipleErrors => e
+    rescue MultipleErrors => e
       errors = e.errors
       raise Informative, "CDN: #{name} Repo update failed - #{e.errors.size} error(s):\n#{errors.join("\n")}"
+    end
+
+    def queue_request(request)
+      @hydra ||= Typhoeus::Hydra.new
+      @hydra.queue(request)
+      HYDRA_EXECUTOR.post(@hydra, &:run)
     end
   end
 end
