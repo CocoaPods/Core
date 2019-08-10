@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Expand `use_frameworks!` DSL to accept linkage style.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#581](https://github.com/CocoaPods/Core/pull/581)
+
 * Extend `script_phase` DSL to support dependency file.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#579](https://github.com/CocoaPods/Core/pull/579)

@@ -334,7 +334,7 @@ module Pod
         }
       end
 
-      it 'includes uses frameworks' do
+      it 'includes build type' do
         podfile = Podfile.new do
           pod 'ObjectiveSugar'
           use_frameworks!
@@ -344,7 +344,7 @@ module Pod
             'name' => 'Pods',
             'abstract' => true,
             'dependencies' => ['ObjectiveSugar'],
-            'uses_frameworks' => true,
+            'uses_frameworks' => { :linkage => :dynamic, :packaging => :framework },
           ],
         }
       end

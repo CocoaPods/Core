@@ -365,25 +365,48 @@ module Pod
 
       #--------------------------------------#
 
-      # Sets whether the target definition should build a framework.
+      # The (desired) build type for the pods integrated in this target definition. Defaults to static libraries and can
+      # only be overridden through Pod::Podfile::DSL#use_frameworks!.
       #
-      # @param  [Bool] flag
-      #         Whether a framework should be built.
+      # @return [Hash]
+      #
+      def build_type
+        if root?
+          get_hash_value('uses_frameworks', :linkage => :static, :packaging => :library)
+        else
+          get_hash_value('uses_frameworks', parent.build_type)
+        end
+      end
+
+      # Sets whether the target definition's pods should be built as frameworks.
+      #
+      # @param [Boolean, Hash] option
+      #        Whether pods that are integrated in this target should be built as frameworks. If the option is a
+      #        boolean then the value affects both packaging and linkage styles. If set to true, then dynamic frameworks
+      #        are used and if it's set to false, then static libraries are used. If the option is a hash then
+      #        `:framework` packaging is implied and the user configures the `:linkage` style to use.
       #
       # @return [void]
       #
-      def use_frameworks!(flag = true)
-        set_hash_value('uses_frameworks', flag)
+      def use_frameworks!(option = true)
+        value = case option
+                when true, false
+                  { :linkage => option ? :dynamic : :static, :packaging => option ? :framework : :library }
+                when Hash
+                  option.merge(:packaging => :framework)
+                else
+                  raise ArgumentError, "Got `#{option.inspect}`, should be a boolean or hash."
+                end
+        set_hash_value('uses_frameworks', value)
       end
 
-      # @return [Bool] whether the target definition should build
-      #         a framework.
+      # @return [Bool] whether the target definition pods should be built as frameworks.
       #
       def uses_frameworks?
         if internal_hash['uses_frameworks'].nil?
           root? ? false : parent.uses_frameworks?
         else
-          get_hash_value('uses_frameworks')
+          build_type[:packaging] == :framework
         end
       end
 
