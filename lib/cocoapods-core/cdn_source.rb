@@ -432,12 +432,17 @@ module Pod
     def download_typhoeus_impl_async(file_remote_url, etag)
       # Create a prefereably HTTP/2 request - the protocol is ultimately responsible for picking
       # the maximum supported protocol
+      # When debugging with proxy, use the following extra options:
+      # :proxy => 'http://localhost:8888',
+      # :ssl_verifypeer => false,
+      # :ssl_verifyhost => 0,
       request = Typhoeus::Request.new(
         file_remote_url,
         :method => :get,
         :http_version => :httpv2_0,
         :timeout => 10,
         :connecttimeout => 10,
+        :accept_encoding => 'gzip',
         :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
       )
 
