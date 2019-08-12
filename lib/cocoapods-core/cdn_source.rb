@@ -60,9 +60,11 @@ module Pod
       debug "CDN: #{name} Going to update #{files_to_update.count} files"
 
       concurrent_requests_catching_errors do
+        # Queue all tasks first
         loaders = files_to_update.map do |file|
           download_file_async(file)
         end
+        # Block and wait for all to complete running on Hydra
         Promises.zip_futures_on(HYDRA_EXECUTOR, *loaders).wait!
       end
     end
@@ -124,6 +126,7 @@ module Pod
           podspec_version_path_relative = Pathname.new(version).join("#{name}.podspec.json")
 
           unless pod_path_actual.join(podspec_version_path_relative).exist?
+            # Queue all podspec download tasks first
             loaders << download_file_async(pod_path_relative.join(podspec_version_path_relative).to_s)
           end
 
@@ -136,6 +139,7 @@ module Pod
           end
         end.compact.sort.reverse
 
+        # Block and wait for all to complete running on Hydra
         Promises.zip_futures_on(HYDRA_EXECUTOR, *loaders).wait!
       end
 
@@ -322,6 +326,9 @@ module Pod
     end
 
     def download_file(partial_url)
+      # Block the main thread waiting for Hydra to finish
+      #
+      # Used for single-file downloads
       download_file_async(partial_url).wait!
     end
 
@@ -355,7 +362,7 @@ module Pod
       path = repo + partial_url
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      download_typhoeus_impl_async(file_remote_url, etag).then do |response|
+      download_task = download_typhoeus_impl_async(file_remote_url, etag).then do |response|
         case response.response_code
         when 301
           redirect_location = response.headers['location']
@@ -378,6 +385,7 @@ module Pod
           debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.response_code}"
           nil
         when 502, 503, 504
+          # Retryable HTTP errors, usually related to server overloading
           if retries <= 1
             raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
           else
@@ -387,6 +395,7 @@ module Pod
             end
           end
         when 0
+          # Non-HTTP errors, usually network layer
           if retries <= 1
             raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}"
           else
@@ -398,7 +407,12 @@ module Pod
         else
           raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
         end
-      end.run
+      end
+
+      # Calling `Future#run` flattens the chained futures created by retries or redirects
+      #
+      # Does not, in fact, run the task - that is already happening in Hydra at this point
+      download_task.run
     end
 
     def exponential_backoff_async(retries)
@@ -411,10 +425,13 @@ module Pod
     end
 
     def sleep_async(seconds)
+      # Async sleep to avoid blocking either the main or the Hydra thread
       Promises.schedule_on(HYDRA_EXECUTOR, seconds)
     end
 
     def download_typhoeus_impl_async(file_remote_url, etag)
+      # Create a prefereably HTTP/2 request - the protocol is ultimately responsible for picking
+      # the maximum supported protocol
       request = Typhoeus::Request.new(
         file_remote_url,
         :method => :get,
@@ -430,6 +447,7 @@ module Pod
         future.fulfill(response)
       end
 
+      # This `Future` should never reject, network errors are exposed on `Typhoeus::Response`
       future
     end
 
@@ -444,13 +462,23 @@ module Pod
     def concurrent_requests_catching_errors
       yield
     rescue MultipleErrors => e
+      # aggregated error message from `Concurrent`
       errors = e.errors
       raise Informative, "CDN: #{name} Repo update failed - #{e.errors.size} error(s):\n#{errors.join("\n")}"
     end
 
     def queue_request(request)
       @hydra ||= Typhoeus::Hydra.new
+
+      # Queue the request into the Hydra (libcurl reactor).
       @hydra.queue(request)
+
+      # Cycle the reactor on a separate thread
+      #
+      # The way it works is that if more requests are queued while Hydra is in the `#run`
+      # method, it will keep executing them
+      #
+      # The upcoming calls to `#run` will simply run empty.
       HYDRA_EXECUTOR.post(@hydra, &:run)
     end
   end
