@@ -700,12 +700,12 @@ module Pod
       # @example
       #
       #   target 'MyApp' do
-      #     use_frameworks!(:linkage => :dynamic)
+      #     use_frameworks! :linkage => :dynamic
       #     pod 'AFNetworking', '~> 1.0'
       #   end
       #
       #   target 'ZipApp' do
-      #     use_frameworks!(:linkage => :static)
+      #     use_frameworks! :linkage => :static
       #     pod 'SSZipArchive'
       #   end
       #

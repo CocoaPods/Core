@@ -448,22 +448,27 @@ module Pod
       end
 
       it 'returns the default build type' do
-        @parent.build_type.should == { :linkage => :static, :packaging => :library }
+        @parent.build_type.should == BuildType.static_library
       end
 
       it 'returns the default frameworks build type' do
         @parent.use_frameworks!
-        @parent.build_type.should == { :linkage => :dynamic, :packaging => :framework }
+        @parent.build_type.should == BuildType.dynamic_framework
       end
 
-      it 'returns the configured frameworks build type' do
+      it 'returns the configured dynamic framework build type' do
+        @parent.use_frameworks!(:linkage => :dynamic)
+        @parent.build_type.should == BuildType.dynamic_framework
+      end
+
+      it 'returns the configured static framework build type' do
         @parent.use_frameworks!(:linkage => :static)
-        @parent.build_type.should == { :linkage => :static, :packaging => :framework }
+        @parent.build_type.should == BuildType.static_framework
       end
 
       it 'inherits the build type' do
         @parent.use_frameworks!
-        @child.build_type.should == { :linkage => :dynamic, :packaging => :framework }
+        @child.build_type.should == BuildType.dynamic_framework
       end
 
       #--------------------------------------#

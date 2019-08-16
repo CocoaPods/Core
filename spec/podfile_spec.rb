@@ -428,6 +428,20 @@ module Pod
         ruby_podfile.to_hash.should == yaml_podfile.to_hash
       end
 
+      it 'can properly parse a boolean uses_frameworks value from a YAML file' do
+        podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksBoolean.yaml'))
+        target_definition = podfile.target_definitions['SampleApp']
+        target_definition.uses_frameworks?.should.be.true
+        target_definition.build_type.should == BuildType.dynamic_framework
+      end
+
+      it 'can properly parse a hash uses_frameworks value from a YAML file' do
+        podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksHash.yaml'))
+        target_definition = podfile.target_definitions['SampleApp']
+        target_definition.uses_frameworks?.should.be.true
+        target_definition.build_type.should == BuildType.dynamic_framework
+      end
+
       it "raises if the given initialization file doesn't exists" do
         should.raise Informative do
           Podfile.from_file('Missing-file')

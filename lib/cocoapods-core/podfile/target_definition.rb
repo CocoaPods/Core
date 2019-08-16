@@ -368,13 +368,19 @@ module Pod
       # The (desired) build type for the pods integrated in this target definition. Defaults to static libraries and can
       # only be overridden through Pod::Podfile::DSL#use_frameworks!.
       #
-      # @return [Hash]
+      # @return [BuildType]
       #
       def build_type
-        if root?
-          get_hash_value('uses_frameworks', :linkage => :static, :packaging => :library)
+        value = get_hash_value('uses_frameworks', root? ? BuildType.static_library : parent.build_type)
+        case value
+        when true, false
+          value ? BuildType.dynamic_framework : BuildType.static_library
+        when Hash
+          BuildType.new(:linkage => value.fetch(:linkage), :packaging => value.fetch(:packaging))
+        when BuildType
+          value
         else
-          get_hash_value('uses_frameworks', parent.build_type)
+          raise ArgumentError, "Got `#{value.inspect}`, should be a boolean, hash or BuildType."
         end
       end
 
@@ -391,13 +397,13 @@ module Pod
       def use_frameworks!(option = true)
         value = case option
                 when true, false
-                  { :linkage => option ? :dynamic : :static, :packaging => option ? :framework : :library }
+                  option ? BuildType.dynamic_framework : BuildType.static_library
                 when Hash
-                  option.merge(:packaging => :framework)
+                  BuildType.new(:linkage => option.fetch(:linkage), :packaging => :framework)
                 else
                   raise ArgumentError, "Got `#{option.inspect}`, should be a boolean or hash."
                 end
-        set_hash_value('uses_frameworks', value)
+        set_hash_value('uses_frameworks', value.to_hash)
       end
 
       # @return [Bool] whether the target definition pods should be built as frameworks.
@@ -406,7 +412,7 @@ module Pod
         if internal_hash['uses_frameworks'].nil?
           root? ? false : parent.uses_frameworks?
         else
-          build_type[:packaging] == :framework
+          build_type.framework?
         end
       end
 

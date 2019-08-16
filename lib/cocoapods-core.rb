@@ -32,6 +32,7 @@ module Pod
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
   autoload :YAMLHelper,     'cocoapods-core/yaml_helper'
+  autoload :BuildType,      'cocoapods-core/build_type'
 
   # TODO: Fix
   #
