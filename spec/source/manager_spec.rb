@@ -61,7 +61,6 @@ module Pod
       end
 
       it 'includes only the one source in an aggregate for a dependency if a source is specified by name' do
-        repo_url = 'https://url/to/specs.git'
         dependency = Dependency.new('JSONKit', '1.4', :source => 'repo_name')
 
         source = mock
