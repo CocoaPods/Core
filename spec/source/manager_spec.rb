@@ -45,7 +45,7 @@ module Pod
         aggregate.sources.map(&:name).should == %w(artsy test_cdn_repo_local test_empty_dir_repo test_prefixed_repo test_repo test_repo_without_specs_dir trunk)
       end
 
-      it 'includes only the one source in an aggregate for a dependency if a source is specified' do
+      it 'includes only the one source in an aggregate for a dependency if a source is specified by URL' do
         repo_url = 'https://url/to/specs.git'
         dependency = Dependency.new('JSONKit', '1.4', :source => repo_url)
 
@@ -54,6 +54,22 @@ module Pod
         source.stubs(:repo).returns('path')
 
         @sources_manager.expects(:source_with_url).with(repo_url).returns(source)
+        @sources_manager.expects(:source_from_path).with('path').returns(source)
+
+        aggregate = @sources_manager.aggregate_for_dependency(dependency)
+        aggregate.sources.map(&:name).should == [source.name]
+      end
+
+      it 'includes only the one source in an aggregate for a dependency if a source is specified by name' do
+        repo_url = 'https://url/to/specs.git'
+        dependency = Dependency.new('JSONKit', '1.4', :source => 'repo_name')
+
+        source = mock
+        source.stubs(:name).returns('repo_name')
+        source.stubs(:repo).returns('path')
+
+        @sources_manager.expects(:source_with_url).with('repo_name').returns(nil)
+        @sources_manager.expects(:source_with_name).with('repo_name').returns(source)
         @sources_manager.expects(:source_from_path).with('path').returns(source)
 
         aggregate = @sources_manager.aggregate_for_dependency(dependency)
