@@ -334,7 +334,7 @@ module Pod
         }
       end
 
-      it 'includes uses frameworks' do
+      it 'includes build type' do
         podfile = Podfile.new do
           pod 'ObjectiveSugar'
           use_frameworks!
@@ -344,7 +344,7 @@ module Pod
             'name' => 'Pods',
             'abstract' => true,
             'dependencies' => ['ObjectiveSugar'],
-            'uses_frameworks' => true,
+            'uses_frameworks' => { :linkage => :dynamic, :packaging => :framework },
           ],
         }
       end
@@ -426,6 +426,20 @@ module Pod
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
         yaml_podfile = Podfile.from_file(fixture('Podfile.yaml'))
         ruby_podfile.to_hash.should == yaml_podfile.to_hash
+      end
+
+      it 'can properly parse a boolean uses_frameworks value from a YAML file' do
+        podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksBoolean.yaml'))
+        target_definition = podfile.target_definitions['SampleApp']
+        target_definition.uses_frameworks?.should.be.true
+        target_definition.build_type.should == BuildType.dynamic_framework
+      end
+
+      it 'can properly parse a hash uses_frameworks value from a YAML file' do
+        podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksHash.yaml'))
+        target_definition = podfile.target_definitions['SampleApp']
+        target_definition.uses_frameworks?.should.be.true
+        target_definition.build_type.should == BuildType.dynamic_framework
       end
 
       it "raises if the given initialization file doesn't exists" do

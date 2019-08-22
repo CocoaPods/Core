@@ -365,25 +365,54 @@ module Pod
 
       #--------------------------------------#
 
-      # Sets whether the target definition should build a framework.
+      # The (desired) build type for the pods integrated in this target definition. Defaults to static libraries and can
+      # only be overridden through Pod::Podfile::DSL#use_frameworks!.
       #
-      # @param  [Bool] flag
-      #         Whether a framework should be built.
+      # @return [BuildType]
+      #
+      def build_type
+        value = get_hash_value('uses_frameworks', root? ? BuildType.static_library : parent.build_type)
+        case value
+        when true, false
+          value ? BuildType.dynamic_framework : BuildType.static_library
+        when Hash
+          BuildType.new(:linkage => value.fetch(:linkage), :packaging => value.fetch(:packaging))
+        when BuildType
+          value
+        else
+          raise ArgumentError, "Got `#{value.inspect}`, should be a boolean, hash or BuildType."
+        end
+      end
+
+      # Sets whether the target definition's pods should be built as frameworks.
+      #
+      # @param [Boolean, Hash] option
+      #        Whether pods that are integrated in this target should be built as frameworks. If the option is a
+      #        boolean then the value affects both packaging and linkage styles. If set to true, then dynamic frameworks
+      #        are used and if it's set to false, then static libraries are used. If the option is a hash then
+      #        `:framework` packaging is implied and the user configures the `:linkage` style to use.
       #
       # @return [void]
       #
-      def use_frameworks!(flag = true)
-        set_hash_value('uses_frameworks', flag)
+      def use_frameworks!(option = true)
+        value = case option
+                when true, false
+                  option ? BuildType.dynamic_framework : BuildType.static_library
+                when Hash
+                  BuildType.new(:linkage => option.fetch(:linkage), :packaging => :framework)
+                else
+                  raise ArgumentError, "Got `#{option.inspect}`, should be a boolean or hash."
+                end
+        set_hash_value('uses_frameworks', value.to_hash)
       end
 
-      # @return [Bool] whether the target definition should build
-      #         a framework.
+      # @return [Bool] whether the target definition pods should be built as frameworks.
       #
       def uses_frameworks?
         if internal_hash['uses_frameworks'].nil?
           root? ? false : parent.uses_frameworks?
         else
-          get_hash_value('uses_frameworks')
+          build_type.framework?
         end
       end
 

@@ -414,6 +414,26 @@ module Pod
         @parent.should.uses_frameworks?
       end
 
+      it 'returns it does not use frameworks if its explicitly specified' do
+        @parent.use_frameworks!(false)
+        @parent.should.not.uses_frameworks?
+      end
+
+      it 'returns if it should use frameworks by specifying static linkage' do
+        @parent.use_frameworks!(:linkage => :static)
+        @parent.should.uses_frameworks?
+      end
+
+      it 'returns if it should use frameworks by specifying dynamic linkage' do
+        @parent.use_frameworks!(:linkage => :dynamic)
+        @parent.should.uses_frameworks?
+      end
+
+      it 'raises when an invalid type is used' do
+        e = lambda { @parent.use_frameworks!(1) }.should.raise ArgumentError
+        e.message.should == 'Got `1`, should be a boolean or hash.'
+      end
+
       it 'inherits the option to use frameworks' do
         @parent.use_frameworks!
         @child.should.uses_frameworks?
@@ -425,6 +445,30 @@ module Pod
         @child.should.not.uses_frameworks?
         # make sure that the value is not accidentally overwritten on access
         @child.should.not.uses_frameworks?
+      end
+
+      it 'returns the default build type' do
+        @parent.build_type.should == BuildType.static_library
+      end
+
+      it 'returns the default frameworks build type' do
+        @parent.use_frameworks!
+        @parent.build_type.should == BuildType.dynamic_framework
+      end
+
+      it 'returns the configured dynamic framework build type' do
+        @parent.use_frameworks!(:linkage => :dynamic)
+        @parent.build_type.should == BuildType.dynamic_framework
+      end
+
+      it 'returns the configured static framework build type' do
+        @parent.use_frameworks!(:linkage => :static)
+        @parent.build_type.should == BuildType.static_framework
+      end
+
+      it 'inherits the build type' do
+        @parent.use_frameworks!
+        @child.build_type.should == BuildType.dynamic_framework
       end
 
       #--------------------------------------#

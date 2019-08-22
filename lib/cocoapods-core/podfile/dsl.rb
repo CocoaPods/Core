@@ -680,14 +680,39 @@ module Pod
         current_target_definition.use_modular_headers_for_all_pods = true
       end
 
-      # Use frameworks instead of static libraries for Pods.
+      # Use frameworks instead of static libraries for Pods. When using frameworks, you may also specify the `:linkage`
+      # style to use, either `:static` or `:dynamic`.
       #
       # ------
       #
       # This attribute is inherited by child target definitions.
       #
-      def use_frameworks!(flag = true)
-        current_target_definition.use_frameworks!(flag)
+      # @param [Boolean, Hash] option
+      #        The option to use for configuring packaging and linkage style.
+      #
+      # @example
+      #
+      #   target 'MyApp' do
+      #     use_frameworks!
+      #     pod 'AFNetworking', '~> 1.0'
+      #   end
+      #
+      # @example
+      #
+      #   target 'MyApp' do
+      #     use_frameworks! :linkage => :dynamic
+      #     pod 'AFNetworking', '~> 1.0'
+      #   end
+      #
+      #   target 'ZipApp' do
+      #     use_frameworks! :linkage => :static
+      #     pod 'SSZipArchive'
+      #   end
+      #
+      # @return   [void]
+      #
+      def use_frameworks!(option = true)
+        current_target_definition.use_frameworks!(option)
       end
 
       # Specifies the Swift version requirements this target definition supports.

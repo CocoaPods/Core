@@ -1,0 +1,15 @@
+---
+installation_method:
+  name: cocoapods
+sources:
+  - https://cdn.cocoapods.org/
+target_definitions:
+  - abstract: true
+    children:
+      - children:
+          - abstract: false
+            inheritance: search_paths
+            name: SampleAppTests
+        name: SampleApp
+        uses_frameworks: true
+    name: Pods
