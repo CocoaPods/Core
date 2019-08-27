@@ -17,6 +17,17 @@
 * None.  
 
 
+## 1.8.0.beta.2 (2019-08-27)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.8.0.beta.1 (2019-08-02)
 
 ##### Enhancements
