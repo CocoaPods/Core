@@ -35,7 +35,7 @@ module Pod
       def aggregate_for_dependency(dependency)
         return aggregate if dependency.podspec_repo.nil?
 
-        source = source_with_url(dependency.podspec_repo)
+        source = source_with_url(dependency.podspec_repo) || source_with_name(dependency.podspec_repo)
         return aggregate if source.nil?
 
         aggregate_with_repos([source.repo])
@@ -326,6 +326,17 @@ module Pod
         @aggregates_by_repos[repos] ||= Source::Aggregate.new(sources)
       end
 
+      # @return [Source] The source with the given name.
+      #
+      # @param  [String] name
+      #         The name of the source.
+      #
+      def source_with_name(name)
+        source = sources([name]).first
+        return nil unless source.repo.exist?
+        source
+      end
+
       # @return [Source] The updateable source with the given name. If no updateable source
       #         with given name is found it raises.
       #
@@ -333,7 +344,7 @@ module Pod
       #         The name of the source.
       #
       def updateable_source_named(name)
-        specified_source = sources([name]).first
+        specified_source = source_with_name(name)
         unless specified_source
           raise Informative, "Unable to find the `#{name}` repo."
         end
