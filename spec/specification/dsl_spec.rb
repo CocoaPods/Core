@@ -268,6 +268,26 @@ module Pod
             @spec.dependency = 'JSONKit', '1.5'
           end.message.should.match /Cannot assign value to `dependency`. Did you mean: `dependency 'JSONKit', '1.5'`?/
         end
+
+        describe 'configurations for dependency' do
+          it 'stores the whitelisted configurations for a given dependency' do
+            @spec.dependency('SVProgressHUD', :configurations => %w(Debug Release))
+            @spec.attributes_hash['dependencies'].should == { 'SVProgressHUD' => [] }
+            @spec.attributes_hash['configuration_pod_whitelist'].should == { 'SVProgressHUD' => %w(debug release) }
+          end
+
+          it 'does not store the whitelisted configurations for a dependency if no configurations are specified' do
+            @spec.dependency('SVProgressHUD')
+            @spec.attributes_hash['dependencies'].should == { 'SVProgressHUD' => [] }
+            @spec.attributes_hash['configuration_pod_whitelist'].should.be.nil
+          end
+
+          it 'raises if a whitelisted configuration for a dependency is not supported' do
+            should.raise Informative do
+              @spec.dependency('SVProgressHUD', :configurations => ['Beta'])
+            end.message.should.equal 'Only `Debug` & `Release` are allowed under configurations for dependency on `SVProgressHUD`. Found `beta`.'
+          end
+        end
       end
 
       #------------------#

@@ -515,6 +515,51 @@ module Pod
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspeciOS', '1.0')]
       end
+
+      it 'returns always true that a dependency is whitelisted if no configurations are specified' do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking'
+        end
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :debug).should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'debug').should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Debug').should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :release).should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'release').should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Release').should.be.true
+      end
+
+      it 'returns correctly whether a dependency is whitelisted for a given config' do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.dependency 'AFNetworking', :configurations => ['Debug']
+        end
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :debug).should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'debug').should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Debug').should.be.true
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :release).should.be.false
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'release').should.be.false
+        @spec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Release').should.be.false
+      end
+
+      it 'returns correctly whether a dependency is whitelisted for a given config in a subspec' do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.version = '1.0'
+          s.subspec 'Subspec' do |sp|
+            sp.dependency 'AFNetworking', :configurations => ['Debug']
+          end
+        end
+        @subspec = @spec.subspecs.first
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :debug).should.be.true
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'debug').should.be.true
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Debug').should.be.true
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), :release).should.be.false
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'release').should.be.false
+        @subspec.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'Release').should.be.false
+      end
     end
 
     #-------------------------------------------------------------------------#

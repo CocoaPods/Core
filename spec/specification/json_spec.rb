@@ -206,6 +206,55 @@ module Pod
         hash.should.include '"name":"Tests","test_type":"ui"'
       end
 
+      describe 'Dependency Configuration Support' do
+        it 'does not write the configuration whitelist for a pod if unspecified' do
+          @spec.dependency 'AFNetworking'
+          hash = @spec.to_hash
+          hash['configuration_pod_whitelist'].should.be.nil
+        end
+
+        it 'writes the array string configuration whitelist for a given pod' do
+          @spec.dependency 'AFNetworking', :configurations => ['Debug']
+          hash = @spec.to_hash
+          hash['configuration_pod_whitelist'].should == {
+            'AFNetworking' => [
+              'debug',
+            ],
+          }
+        end
+
+        it 'writes the array symbol configuration whitelist for a given pod' do
+          @spec.dependency 'AFNetworking', :configurations => [:debug]
+          hash = @spec.to_hash
+          hash['configuration_pod_whitelist'].should == {
+            'AFNetworking' => [
+              'debug',
+            ],
+          }
+        end
+
+        it 'writes the symbol configuration whitelist for a given pod' do
+          @spec.dependency 'AFNetworking', :configurations => :debug
+          hash = @spec.to_hash
+          hash['configuration_pod_whitelist'].should == {
+            'AFNetworking' => [
+              'debug',
+            ],
+          }
+        end
+
+        it 'loads the configuration whitelist for a pod' do
+          hash = {
+            'name' => 'BananaLib',
+            'version' => '1.0',
+            'dependencies' => { 'AFNetworking' => [] },
+            'configuration_pod_whitelist' => { 'AFNetworking' => ['debug'] },
+          }
+          result = Specification.from_hash(hash)
+          result.dependency_whitelisted_for_configuration?(Dependency.new('AFNetworking'), 'debug').should.be.true
+        end
+      end
+
       it 'can be loaded from an hash' do
         hash = {
           'name' => 'BananaLib',

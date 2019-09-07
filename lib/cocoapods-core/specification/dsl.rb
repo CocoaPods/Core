@@ -653,6 +653,12 @@ module Pod
       #   spec.dependency 'AFNetworking', '~> 1.0'
       #
       # @example
+      #   spec.dependency 'AFNetworking', '~> 1.0', :configurations => ['Debug']
+      #
+      # @example
+      #   spec.dependency 'AFNetworking', '~> 1.0', :configurations => :debug
+      #
+      # @example
       #   spec.dependency 'RestKit/CoreData', '~> 0.20.0'
       #
       # @example
@@ -676,16 +682,22 @@ module Pod
             end
           end
         end
-        unless version_requirements.all? { |req| req.is_a?(String) }
-          version_requirements.each do |requirement|
-            if requirement.is_a?(Hash)
-              if !requirement[:path].nil?
-                raise Informative, 'Podspecs cannot specify the source of dependencies. The `:path` option is not supported.'\
-                                   ' `:path` can be used in the Podfile instead to override global dependencies.'
-              elsif !requirement[:git].nil?
-                raise Informative, 'Podspecs cannot specify the source of dependencies. The `:git` option is not supported.'\
-                                   ' `:git` can be used in the Podfile instead to override global dependencies.'
-              end
+
+        configurations_option = version_requirements.find { |option| option.is_a?(Hash) && option.key?(:configurations) }
+        whitelisted_configurations = if configurations_option
+                                       version_requirements.delete(configurations_option)
+                                       Array(configurations_option.delete(:configurations)).map { |c| c.to_s.downcase }
+                                     end
+
+        dependency_options = version_requirements.reject { |req| req.is_a?(String) }
+        dependency_options.each do |dependency_option|
+          if dependency_option.is_a?(Hash)
+            if !dependency_option[:path].nil?
+              raise Informative, 'Podspecs cannot specify the source of dependencies. The `:path` option is not supported.'\
+                                 ' `:path` can be used in the Podfile instead to override global dependencies.'
+            elsif !dependency_option[:git].nil?
+              raise Informative, 'Podspecs cannot specify the source of dependencies. The `:git` option is not supported.'\
+                                 ' `:git` can be used in the Podfile instead to override global dependencies.'
             end
           end
 
@@ -694,6 +706,15 @@ module Pod
 
         attributes_hash['dependencies'] ||= {}
         attributes_hash['dependencies'][name] = version_requirements
+
+        unless whitelisted_configurations.nil?
+          if (extras = whitelisted_configurations - %w(debug release)) && !extras.empty?
+            raise Informative, "Only `Debug` & `Release` are allowed under configurations for dependency on `#{name}`. " \
+              "Found #{extras.map { |configuration| "`#{configuration}`" }.to_sentence}."
+          end
+          attributes_hash['configuration_pod_whitelist'] ||= {}
+          attributes_hash['configuration_pod_whitelist'][name] = whitelisted_configurations
+        end
       end
 
       def dependency=(args)
