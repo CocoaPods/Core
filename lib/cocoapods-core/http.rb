@@ -70,8 +70,8 @@ module Pod
         netrc_content = Netrc.read
         unless netrc_content.nil?
           user, pass = netrc_content[URI(file_remote_url).host]
-          unless (user.nil? or pass.nil?)
-            options = {:username => user, :password => pass}
+          unless user.nil? || pass.nil?
+            options = { :username => user, :password => pass }
           end
         end
       end
@@ -100,7 +100,7 @@ module Pod
         end
 
         if resp.status_code == 401
-          resp = download(url, {'User-Agent' => user_agent})
+          resp = download(url, 'User-Agent' => user_agent)
         end
       end
 
