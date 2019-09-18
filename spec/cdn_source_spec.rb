@@ -139,7 +139,7 @@ module Pod
       end
 
       it 'handles authentication with autologin' do
-        Netrc.expects(:read).returns({ 'localhost' => %w(admin admin) })
+        Netrc.expects(:read).returns('localhost' => %w(admin admin))
 
         REST.expects(:get).
           with('http://localhost:4321/all_pods_versions_2_0_9.txt').
