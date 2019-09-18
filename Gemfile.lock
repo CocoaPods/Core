@@ -60,6 +60,7 @@ GEM
       mocha (>= 0.13.0)
     multi_json (1.12.1)
     nap (1.1.0)
+    netrc (0.11.0)
     notify (0.5.2)
     parser (2.4.0.0)
       ast (~> 2.2)
@@ -116,6 +117,7 @@ DEPENDENCIES
   kicker
   mocha
   mocha-on-bacon
+  netrc
   prettybacon
   pry
   public_suffix (>= 2.0.5, < 3)

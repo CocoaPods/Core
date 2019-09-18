@@ -13,6 +13,7 @@ group :development do
   gem 'bacon'
   gem 'mocha'
   gem 'mocha-on-bacon'
+  gem 'netrc'
   gem 'prettybacon'
   gem 'rake'
   gem 'vcr'

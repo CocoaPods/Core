@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'algoliasearch'
+require 'netrc'
 require File.expand_path('../spec_helper', __FILE__)
 
 module Pod
@@ -135,6 +136,24 @@ module Pod
         @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
         @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json, save ETag:" }
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
+      end
+
+      it 'handles authentication with autologin' do
+        Netrc.expects(:read).returns({"localhost" => ["admin", "admin"]})
+
+        REST.expects(:get).
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          returns(REST::Response.new(401))
+
+        REST.expects(:get).
+          with('http://localhost:4321/all_pods_versions_2_0_9.txt', {}, {:username => 'admin', :password => 'admin'}).
+          returns(REST::Response.new(200, {}, 'BeaconKit/1.0.0'))
+        
+        REST.expects(:get).
+          with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(REST::Response.new(200, {}, ''))
+        @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
+        
       end
 
       it 'raises if unexpected HTTP error' do

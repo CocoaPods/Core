@@ -1,3 +1,5 @@
+require 'netrc'
+require 'rest'
 require 'uri'
 
 module Pod
@@ -51,6 +53,31 @@ module Pod
       resp
     end
 
+    # Performs GET request
+    # @param file_remote_url The URL.
+    # @param headers The request headers hash.
+    # @param options The request options hash.
+    # @param auto_login The flag to use ~/.netrc file for autologin into restricted sources.
+    #
+    # @return [REST::response]
+    #
+    def self.download(file_remote_url, headers = {}, options = {}, auto_login = true)
+      if auto_login
+        # disabling mandatory 600 access mode. Safe one because no write functionality.
+        Netrc.configure do |config|
+          config[:allow_permissive_netrc_file] = true
+        end
+        netrc_content = Netrc.read
+        unless netrc_content.nil?
+          user, pass = netrc_content[URI(file_remote_url).host]
+          unless (user.nil? or pass.nil?)
+            options = {:username => user, :password => pass}
+          end
+        end
+      end
+      REST.get(file_remote_url, headers, options)
+    end
+
     #-------------------------------------------------------------------------#
 
     private
@@ -60,8 +87,6 @@ module Pod
     # @return [REST::response]
     #
     def self.perform_head_request(url, user_agent)
-      require 'rest'
-
       user_agent ||= USER_AGENT
 
       resp = ::REST.head(url, 'User-Agent' => user_agent)
@@ -72,6 +97,10 @@ module Pod
 
         if resp.status_code >= 400
           resp = ::REST.get(url, 'User-Agent' => user_agent)
+        end
+
+        if resp.status_code == 401
+          resp = download(url, {'User-Agent' => user_agent})
         end
       end
 
