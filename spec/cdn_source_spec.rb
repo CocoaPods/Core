@@ -153,7 +153,6 @@ module Pod
           with('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
           returns(REST::Response.new(200, {}, ''))
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
-
       end
 
       it 'raises if unexpected HTTP error' do
