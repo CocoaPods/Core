@@ -41,6 +41,7 @@ module Pod
       def cleanup
         Pathname.glob(@path.join('*')).each(&:rmtree)
         @path.join('.url').delete if @path.join('.url').exist?
+        ENV['NETRC'] = nil
       end
 
       def print_dir(tag)
@@ -137,6 +138,8 @@ module Pod
     #-------------------------------------------------------------------------#
 
     describe '#versions' do
+      extend SpecHelper::TemporaryDirectory
+
       it 'returns the available versions of a Pod' do
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.5 1.0.4 1.0.3 1.0.2 1.0.1 1.0.0)
       end
@@ -148,6 +151,23 @@ module Pod
       it 'does not error when a Pod name need URI escaping' do
         @source.versions('СерафимиМногоꙮчитїи').map(&:to_s).should == %w(1.0.0)
         @source.specification('СерафимиМногоꙮчитїи', '1.0.0').name.should == 'СерафимиМногоꙮчитїи'
+      end
+
+      it 'uses netrc when provided' do
+        save_url('http://localhost:4321/authorization')
+        @source = CDNSource.new(@path)
+
+        netrc_file = temporary_directory + '.netrc'
+        File.open(netrc_file, 'w') { |f| f.write("machine localhost\nlogin user1\npassword xxx\n") }
+
+        ENV['NETRC'] = temporary_directory.to_s
+        auth = nil
+        CDN_MOCK_SERVER.mount_proc('/authorization') do |req, res|
+          auth = req['Authorization']
+          res.body = ''
+        end
+        @source.versions('Unknown_Pod').should.be.nil
+        auth.should == 'Basic dXNlcjE6eHh4'
       end
 
       it 'handles redirects' do
