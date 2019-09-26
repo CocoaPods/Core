@@ -2,6 +2,7 @@ require 'cocoapods-core/source'
 require 'rest'
 require 'concurrent'
 require 'typhoeus'
+require 'netrc'
 
 module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
@@ -443,6 +444,8 @@ module Pod
         :timeout => 10,
         :connecttimeout => 10,
         :accept_encoding => 'gzip',
+        :netrc => :optional,
+        :netrc_file => Netrc.default_path,
         :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
       )
 
