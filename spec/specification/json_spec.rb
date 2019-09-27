@@ -374,6 +374,17 @@ module Pod
           hash['swift_version'].should == '1.0'
         end
 
+        it 'does not alter the attribute hash when loading swift versions' do
+          @spec.swift_versions = ['4.2', '5.0']
+          first_hash = @spec.to_hash
+          first_hash['swift_versions'].should == ['4.2', '5.0']
+          first_hash['swift_version'].should == '5.0'
+          spec_from_hash = Specification.from_hash(first_hash)
+          second_hash = spec_from_hash.to_hash
+          second_hash['swift_versions'].should == ['4.2', '5.0']
+          second_hash['swift_version'].should == '5.0'
+        end
+
         it 'reads swift version from a string' do
           hash = {
             'name' => 'BananaLib',

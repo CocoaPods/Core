@@ -47,7 +47,7 @@ module Pod
         #
         def swift_versions
           @swift_versions ||= begin
-            swift_versions = Array(attributes_hash['swift_versions'])
+            swift_versions = Array(attributes_hash['swift_versions']).dup
             # Pre 1.7.0, the DSL was singularized as it supported only a single version of Swift. In 1.7.0 the DSL
             # is now pluralized always and a specification can support multiple versions of Swift. This ensures
             # we parse the old JSON serialized format and include it as part of the Swift versions supported.
