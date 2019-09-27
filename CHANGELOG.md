@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Do not alter `swift_versions` attribute when calculating Swift versions.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#592](https://github.com/CocoaPods/Core/pull/592)
 
 
 ## 1.8.0 (2019-09-23)
