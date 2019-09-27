@@ -17,6 +17,23 @@
 * None.  
 
 
+## 1.8.1 (2019-09-27)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Do not alter `swift_versions` attribute when calculating Swift versions.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#592](https://github.com/CocoaPods/Core/pull/592)
+
+* Update `concurrent-ruby` gem dependency to '\~> 1.1'.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#591](https://github.com/CocoaPods/Core/pull/591)
+
+
 ## 1.8.0 (2019-09-23)
 
 ##### Enhancements
