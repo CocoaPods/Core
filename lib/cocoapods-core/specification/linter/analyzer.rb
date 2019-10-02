@@ -28,6 +28,14 @@ module Pod
 
         attr_reader :results
 
+        # @return [Array<String>] Keys that are valid but have been deprecated.
+        #
+        DEPRECATED_KEYS = ['swift_version'].freeze
+
+        # @return [Array<String>] Keys that are only used for internal purposes.
+        #
+        INTERNAL_KEYS = ['configuration_pod_whitelist'].freeze
+
         # Checks the attributes hash for any unknown key which might be the
         # result of a misspelling in a JSON file.
         #
@@ -42,8 +50,7 @@ module Pod
         def check_attributes
           attributes_keys = Pod::Specification::DSL.attributes.keys.map(&:to_s)
           platform_keys = Specification::DSL::PLATFORMS.map(&:to_s)
-          deprecated_keys = ['swift_version']
-          valid_keys = attributes_keys + platform_keys + deprecated_keys
+          valid_keys = attributes_keys + platform_keys + DEPRECATED_KEYS + INTERNAL_KEYS
           attributes_hash = consumer.spec.attributes_hash
           keys = attributes_hash.keys
           Specification::DSL::PLATFORMS.each do |platform|

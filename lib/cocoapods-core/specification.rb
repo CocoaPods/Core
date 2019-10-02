@@ -403,10 +403,29 @@ module Pod
       dependencies(platform) + subspec_dependencies(platform)
     end
 
+    # Returns whether a dependency is whitelisted for the given configuration.
+    #
+    # @param  [Pod::Dependency] dependency
+    #         the dependency verify.
+    #
+    # @param  [Symbol, String] configuration
+    #         the configuration to check against.
+    #
+    # @return [Bool] whether the dependency is whitelisted or not.
+    #
+    def dependency_whitelisted_for_configuration?(dependency, configuration)
+      inherited = -> { root? ? true : parent.dependency_whitelisted_for_configuration?(dependency, configuration) }
+
+      return inherited[] unless configuration_whitelist = attributes_hash['configuration_pod_whitelist']
+      return inherited[] unless whitelist_for_pod = configuration_whitelist[dependency.name]
+
+      whitelist_for_pod.include?(configuration.to_s.downcase)
+    end
+
     # Returns a consumer to access the multi-platform attributes.
     #
     # @param  [String, Symbol, Platform] platform
-    #         he platform of the consumer
+    #         the platform of the consumer
     #
     # @return [Specification::Consumer] the consumer for the given platform
     #
