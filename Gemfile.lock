@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (1.8.1)
+    cocoapods-core (1.8.2)
       activesupport (>= 4.0.2, < 6)
       algoliasearch (~> 1.0)
       concurrent-ruby (~> 1.1)
@@ -53,7 +53,7 @@ GEM
       rb-kqueue (>= 0.2)
     metaclass (0.0.4)
     method_source (0.8.2)
-    minitest (5.12.0)
+    minitest (5.12.2)
     mocha (1.2.1)
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.3)
