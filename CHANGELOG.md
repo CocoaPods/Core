@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Follow up fix to [#595](https://github.com/CocoaPods/Core/pull/595) not to delete other hashes during serialization.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#598](https://github.com/CocoaPods/Core/pull/598)
 
 
 ## 1.8.2 (2019-10-03)
@@ -21,6 +23,7 @@
 
 * Ensure that specs can round-trip to JSON byte-for-byte identical.  
   [Samuel Giddins](https://github.com/segiddins)
+  [#595](https://github.com/CocoaPods/Core/pull/595)
 
 
 ## 1.8.1 (2019-09-27)
