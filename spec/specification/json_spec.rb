@@ -63,6 +63,23 @@ module Pod
         spec = Specification.new(nil, 'BananaLib')
         spec.to_pretty_json.should.end_with "\n"
       end
+
+      it 'can round-trip' do
+        spec = Specification.new do |s|
+          s.name = 'BananaLib'
+          s.app_spec 'App'
+          s.test_spec 'Tests'
+          s.version = '17.0'
+          s.swift_versions = %w(5.0)
+        end
+
+        json = spec.to_pretty_json
+
+        loaded_spec = Specification.from_json(json)
+        new_json = loaded_spec.to_pretty_json
+
+        new_json.should.equal json
+      end
     end
 
     #-------------------------------------------------------------------------#
