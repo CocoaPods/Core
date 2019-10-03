@@ -22,6 +22,7 @@ module Pod
       #
       def to_hash
         hash = attributes_hash.dup
+        hash.delete('platforms')
         if root? || available_platforms != parent.available_platforms
           platforms = Hash[available_platforms.map { |p| [p.name.to_s, p.deployment_target && p.deployment_target.to_s] }]
           hash['platforms'] = platforms
@@ -31,13 +32,17 @@ module Pod
         all_testspecs = specs_by_type[:test] || []
         all_subspecs = specs_by_type[:library] || []
 
+        hash.delete('testspecs')
         hash['testspecs'] = all_testspecs.map(&:to_hash) unless all_testspecs.empty?
+        hash.delete('appspecs')
         hash['appspecs'] = all_appspecs.map(&:to_hash) unless all_appspecs.empty?
+        hash.delete('subspecs')
         hash['subspecs'] = all_subspecs.map(&:to_hash) unless all_subspecs.empty?
 
         # Since CocoaPods 1.7 version the DSL has changed to be pluralized. When we serialize a podspec to JSON with
         # 1.7, ensure that we also include the singular version in the hash to maintain backwards compatibility with
         # < 1.7 versions.
+        hash.delete('swift_version')
         hash['swift_version'] = swift_version.to_s unless swift_version.nil?
 
         hash

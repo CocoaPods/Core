@@ -8,7 +8,8 @@
 
 ##### Bug Fixes
 
-* None.  
+* Ensure that specs can round-trip to JSON byte-for-byte identical.  
+  [Samuel Giddins](https://github.com/segiddins)
 
 
 ## 1.8.1 (2019-09-27)
