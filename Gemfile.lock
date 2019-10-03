@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (1.8.1)
+    cocoapods-core (1.8.2)
       activesupport (>= 4.0.2, < 6)
       algoliasearch (~> 1.0)
       concurrent-ruby (~> 1.1)
@@ -114,6 +114,7 @@ DEPENDENCIES
   codeclimate-test-reporter (~> 0.4.1)
   json!
   kicker
+  minitest (= 5.12.0)
   mocha
   mocha-on-bacon
   prettybacon
