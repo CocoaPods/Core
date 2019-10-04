@@ -67,6 +67,7 @@ module Pod
       it 'can round-trip' do
         spec = Specification.new do |s|
           s.name = 'BananaLib'
+          s.platform = :ios, '9.0'
           s.app_spec 'App'
           s.test_spec 'Tests'
           s.version = '17.0'
@@ -79,6 +80,15 @@ module Pod
         new_json = loaded_spec.to_pretty_json
 
         new_json.should.equal json
+      end
+
+      it 'maintains correct order of keys across versions' do
+        %w(14 15 16 17 18).each do |version|
+          json = File.read(File.expand_path("../../fixtures/CannonPodder#{version}.podspec.json", __FILE__))
+          loaded_spec = Specification.from_json(json)
+          new_json = loaded_spec.to_pretty_json
+          new_json.should.equal json
+        end
       end
     end
 

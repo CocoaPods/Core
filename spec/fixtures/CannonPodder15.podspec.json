@@ -1,0 +1,44 @@
+{
+  "name": "CannonPodder",
+  "version": "1.0.0",
+  "summary": "Small library that can be used to test CocoaPods stuff (CI, building etc.)",
+  "homepage": "https://www.cannonpodder.com",
+  "license": {
+    "type": "Proprietary",
+    "text": "© 2019 Someone, Inc."
+  },
+  "authors": {
+    "CocoaPods": "cocoapods@cocoapods.org"
+  },
+  "source": {
+    "git": "https://somegitserver.com/cannonpodder.git",
+    "tag": "1.0.0"
+  },
+  "platforms": {
+    "ios": "9.0",
+    "osx": "10.10"
+  },
+  "source_files": "Sources/**/*.{h,m}",
+  "private_header_files": "Sources/Internal/**/*.h",
+  "resource_bundles": {
+    "CannonPodderResources": [
+      "Resources/**/*"
+    ]
+  },
+  "subspecs": [
+    {
+      "name": "Subspec",
+      "source_files": "Tests/**/*.{h,m}",
+      "resource_bundles": {
+        "CannonPodderTestResources": [
+          "Tests/Resources/**/*"
+        ]
+      },
+      "dependencies": {
+        "OCMock": [
+
+        ]
+      }
+    }
+  ]
+}
