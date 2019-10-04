@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.8.3 (2019-10-04)
 
 ##### Enhancements
 
