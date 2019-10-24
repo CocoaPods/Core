@@ -16,6 +16,10 @@
 * Extend `script_phase` DSL to support dependency file.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#579](https://github.com/CocoaPods/Core/pull/579)
+  
+* Make initializing `Platform` with the string 'macos' equivalent to calling `Platform.macos`  
+  [Eric Amorde](https://github.com/amorde)
+  [#602](https://github.com/CocoaPods/Core/pull/602) 
 
 ##### Bug Fixes
 
