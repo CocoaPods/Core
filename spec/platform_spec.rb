@@ -29,8 +29,14 @@ module Pod
       end
 
       it 'can be initialized with a string symbolic name' do
-        Platform.new('ios')
-        @platform.name.should == :ios
+        platform = Platform.new('ios')
+        platform.name.should == :ios
+      end
+
+      it 'can be initialized with a string representing macOS' do
+        platform = Platform.new('macos')
+        platform.name.should == :osx
+        platform.string_name.should == 'macOS'
       end
 
       it 'exposes its name as string' do

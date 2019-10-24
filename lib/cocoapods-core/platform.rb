@@ -45,6 +45,10 @@ module Pod
         @symbolic_name = input.name
         @deployment_target = input.deployment_target
       else
+        # Allow `Platform.new('macos')` to be equivalent to `Platform.macos`
+        if input == 'macos'
+          input = 'osx'
+        end
         @symbolic_name = input.to_sym
         target = target[:deployment_target] if target.is_a?(Hash)
         @deployment_target = Version.create(target)
