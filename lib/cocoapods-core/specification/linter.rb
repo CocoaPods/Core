@@ -450,6 +450,9 @@ module Pod
           if s.key?(:environment_variables) && !s[:environment_variables].is_a?(Hash)
             results.add_error('scheme', 'Expected a hash for key `environment_variables`.')
           end
+          if s.key?(:code_coverage) && ![true, false].include?(s[:code_coverage])
+            results.add_error('scheme', 'Expected a boolean for key `code_coverage`.')
+          end
         end
       end
 

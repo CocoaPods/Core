@@ -546,7 +546,8 @@ module Pod
       #------------------#
 
       it 'accepts valid scheme values' do
-        @spec.scheme = { :launch_arguments => ['Arg1'], :environment_variables => { 'Key1' => 'Val1' } }
+        @spec.scheme = { :launch_arguments => ['Arg1'], :environment_variables => { 'Key1' => 'Val1' },
+                         :code_coverage => true }
         @linter.lint
         @linter.results.should.be.empty
       end
@@ -559,6 +560,11 @@ module Pod
       it 'checks scheme environment variables key type' do
         @spec.scheme = { :environment_variables => [] }
         result_should_include('scheme', 'Expected a hash for key `environment_variables`.')
+      end
+
+      it 'checks scheme code coverage key type' do
+        @spec.scheme = { :code_coverage => 1 }
+        result_should_include('scheme', 'Expected a boolean for key `code_coverage`.')
       end
 
       #------------------#

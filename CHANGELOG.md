@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* Add `code_coverage` support for scheme DSL.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#603](https://github.com/CocoaPods/Core/pull/603)
+  [CocoaPods/CocoaPods#8921](https://github.com/CocoaPods/CocoaPods/issues/8921)
+
 * Add `:configurations` DSL for podspec dependencies.  
   [Samuel Giddins](https://github.com/segiddins)
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
