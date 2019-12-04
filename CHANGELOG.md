@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Allow specifying no default subspec.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#584](https://github.com/CocoaPods/Core/issues/584)
+  
 * Add `code_coverage` support for scheme DSL.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#603](https://github.com/CocoaPods/Core/pull/603)

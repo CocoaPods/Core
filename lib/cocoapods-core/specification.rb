@@ -346,11 +346,17 @@ module Pod
       end
     end
 
-    # @return [Array<String>] the name of the default subspecs if provided.
+    # @return [Array<String>, Symbol] the name(s) of the default subspecs if provided or :none for no default subspecs.
     #
     def default_subspecs
       # TODO: remove singular form and update the JSON specs.
-      Array(attributes_hash['default_subspecs'] || attributes_hash['default_subspec'])
+      value = Array(attributes_hash['default_subspecs'] || attributes_hash['default_subspec'])
+      first = value.first
+      if first == :none || first == 'none'
+        first.to_sym
+      else
+        value
+      end
     end
 
     # Returns the dependencies on subspecs.
@@ -367,6 +373,8 @@ module Pod
     def subspec_dependencies(platform = nil)
       specs = if default_subspecs.empty?
                 subspecs.compact.reject(&:non_library_specification?)
+              elsif default_subspecs == :none
+                []
               else
                 default_subspecs.map do |subspec_name|
                   root.subspec_by_name("#{name}/#{subspec_name}")

@@ -430,6 +430,12 @@ module Pod
         spec.default_subspecs.should == %w(Subspec1)
       end
 
+      it 'supports the specification of the default subspecs as a symbol' do
+        spec = @spec.dup
+        spec.default_subspecs = :none
+        spec.default_subspecs.should == :none
+      end
+
       it 'returns the dependencies on its subspecs' do
         @spec.subspec_dependencies.sort.should == [
           Dependency.new('Pod/Subspec', '1.0'),
@@ -442,6 +448,11 @@ module Pod
           Dependency.new('Pod/Subspec', '1.0'),
           Dependency.new('Pod/SubspeciOS', '1.0'),
         ]
+      end
+
+      it 'returns no default subspecs if none is specified' do
+        @spec.default_subspecs = :none
+        @spec.subspec_dependencies.should.be.empty
       end
 
       it 'returns a dependency on a default subspecs if it is specified' do

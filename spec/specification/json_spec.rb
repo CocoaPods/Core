@@ -347,6 +347,36 @@ module Pod
         ]
       end
 
+      it 'can load default subspecs from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'default_subspecs' => 'BananaLibSubSpec',
+          'subspecs' => [
+            {
+              'name' => 'BananaLibSubSpec',
+            },
+          ],
+        }
+        result = Specification.from_hash(hash)
+        result.default_subspecs.should == ['BananaLibSubSpec']
+      end
+
+      it 'can load no default subspecs from hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'default_subspecs' => 'none',
+          'subspecs' => [
+            {
+              'name' => 'BananaLibSubSpec',
+            },
+          ],
+        }
+        result = Specification.from_hash(hash)
+        result.default_subspecs.should == :none
+      end
+
       it 'can load test specification from 1.3.0 hash format' do
         hash = {
           'name' => 'BananaLib',

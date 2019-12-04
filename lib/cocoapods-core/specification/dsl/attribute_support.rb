@@ -17,7 +17,7 @@ module Pod
         # multi-platform, they don't have inheritance, and they never have a
         # default value.
         #
-        # @param  [String] name
+        # @param  [Symbol, String] name
         #         The name of the attribute.
         #
         # @param  [Hash] options
@@ -36,7 +36,7 @@ module Pod
         # Regular attributes in general support inheritance and multi-platform
         # values, so resolving them for a given specification is not trivial.
         #
-        # @param  [String] name
+        # @param  [Symbol, String] name
         #         The name of the attribute.
         #
         # @param  [Hash] options
