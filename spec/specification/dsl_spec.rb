@@ -460,6 +460,11 @@ module Pod
         @spec.default_subspecs = 'Preferred-Subspec1', 'Preferred-Subspec2'
         @spec.attributes_hash['default_subspecs'].should == %w(Preferred-Subspec1 Preferred-Subspec2)
       end
+
+      it 'should allow you to specify an empty preferred set of dependencies' do
+        @spec.default_subspecs = :none
+        @spec.attributes_hash['default_subspecs'].should == :none
+      end
     end
 
     #-----------------------------------------------------------------------------#

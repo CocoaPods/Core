@@ -1669,8 +1669,11 @@ module Pod
       # @!method default_subspecs=(subspec_array)
       #
       #   An array of subspecs names that should be used as preferred dependency.
-      #   If not specified a specifications requires all its subspecs as
+      #   If not specified, a specification requires all of its subspecs as
       #   dependencies.
+      #
+      #   You may use the value `:none` to specify that none of the subspecs are
+      #   required to compile this pod and that all subspecs are optional.
       #
       #   ---
       #
@@ -1687,17 +1690,21 @@ module Pod
       #     spec.default_subspec = 'Core'
       #
       #   @example
+      #
       #     spec.default_subspecs = 'Core', 'UI'
       #
-      #   @param  [Array<String>] subspec_names
+      #   @example
+      #
+      #     spec.default_subspecs = :none
+      #
+      #   @param  [Array<String>, String, Symbol] subspec_names
       #           An array of subspec names that should be inherited as
       #           dependency.
       #
-      attribute :default_subspecs,
-                :container => Array,
-                :singularize => true,
-                :multi_platform => false,
-                :root_only => true
+      root_attribute :default_subspecs,
+                     :container => Array,
+                     :types => [Array, String, Symbol],
+                     :singularize => true
 
       #-----------------------------------------------------------------------#
 
