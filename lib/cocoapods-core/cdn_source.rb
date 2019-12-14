@@ -378,7 +378,7 @@ module Pod
         when 200
           File.open(path, 'w') { |f| f.write(response.response_body) }
 
-          etag_new = response.headers['etag']
+          etag_new = response.headers['etag'] unless response.headers.nil?
           debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
           File.open(etag_path, 'w') { |f| f.write(etag_new) } unless etag_new.nil?
           partial_url
