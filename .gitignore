@@ -15,5 +15,5 @@ documentation/
 .bundle/
 
 # trunk source
-spec/fixtures/spec-repos/trunk/**
-!spec/fixtures/spec-repos/trunk/.url
+spec/fixtures/spec-repos/trunk/**/*.etag
+spec/fixtures/spec-repos/trunk/*.yml
