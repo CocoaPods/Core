@@ -21,6 +21,8 @@ module Pod
       it 'identifies release versions' do
         version = Version.new('1.0.0')
         version.should.not.be.prerelease
+        version = Version.new('1.0.0+exp.sha1.77cb5a')
+        version.should.not.be.prerelease
       end
 
       it 'matches Semantic Version pre-release versions' do
