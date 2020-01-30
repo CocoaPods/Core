@@ -190,6 +190,18 @@ module Pod
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
+      it 'handles responses with no headers' do
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          returns(typhoeus_http_response_future(200, nil, 'BeaconKit/1.0.0'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(typhoeus_http_response_future(200, nil, '{}'))
+        should.not.raise do
+          @source.versions('BeaconKit')
+        end
+      end
+
       it 'raises if unexpected HTTP error' do
         @source.expects(:download_typhoeus_impl_async).
           returns(typhoeus_http_response_future(500))
