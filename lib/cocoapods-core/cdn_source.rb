@@ -1,7 +1,6 @@
 require 'cocoapods-core/source'
 require 'rest'
 require 'concurrent'
-require 'typhoeus'
 require 'netrc'
 
 module Pod
@@ -431,6 +430,8 @@ module Pod
     end
 
     def download_typhoeus_impl_async(file_remote_url, etag)
+      require 'typhoeus'
+
       # Create a prefereably HTTP/2 request - the protocol is ultimately responsible for picking
       # the maximum supported protocol
       # When debugging with proxy, use the following extra options:
