@@ -11,6 +11,19 @@
 * None.  
 
 
+## 1.9.0.beta.3 (2020-02-04)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix a crash when an HTTP(S) response has no headers  
+  [Eric Amorde](https://github.com/amorde)
+  [#607](https://github.com/CocoaPods/Core/pull/607)
+
+
 ## 1.9.0.beta.2 (2019-12-17)
 
 ##### Enhancements
