@@ -2,6 +2,7 @@ require 'cocoapods-core/source'
 require 'rest'
 require 'concurrent'
 require 'netrc'
+require 'addressable'
 
 module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
