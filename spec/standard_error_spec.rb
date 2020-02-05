@@ -39,7 +39,23 @@ module Pod
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
       @err.stubs(:underlying_exception).returns(syntax_error)
       File.stubs(:read).returns(code)
-      @err.message.should == <<-MSG.strip_heredoc
+      @err.message.should == if Pod::Version.new(RUBY_VERSION) >= Pod::Version.new('2.7.0')
+                               <<-MSG.strip_heredoc
+
+        [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input
+        puts())
+              ^
+        .
+
+         #  from #{@dsl_path.expand_path}:2
+         #  -------------------------------------------
+         #  puts 'hi'
+         >  puts())
+         #  puts 'bye'
+         #  -------------------------------------------
+        MSG
+                             else
+                               <<-MSG.strip_heredoc
 
         [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input.
 
@@ -49,7 +65,8 @@ module Pod
          >  puts())
          #  puts 'bye'
          #  -------------------------------------------
-      MSG
+        MSG
+                             end
     end
 
     it 'uses the passed-in contents' do
