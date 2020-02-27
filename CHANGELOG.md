@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add a post_integrate_hook API  
+  [lucasmpaim](https://github.com/lucasmpaim)
+  [#7432](https://github.com/CocoaPods/CocoaPods/issues/7432)
 
 ##### Bug Fixes
 

@@ -930,6 +930,26 @@ module Pod
         raise Informative, 'Specifying multiple `post_install` hooks is unsupported.' if @post_install_callback
         @post_install_callback = block
       end
+
+      # This hook allows you to make changes after the project is written
+      # to disk.
+      #
+      # It receives the
+      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
+      # as its only argument.
+      #
+      # @example  Customising the build settings of all targets
+      #
+      #   post_integrate do |installer|
+      #     # some change after project write to disk
+      #   end
+      #
+      # @return   [void]
+      #
+      def post_integrate(&block)
+        raise Informative, 'Specifying multiple `post_integrate` hooks is unsupported.' if @post_integrate_callback
+        @post_integrate_callback = block
+      end
     end
   end
 end
