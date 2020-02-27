@@ -183,6 +183,23 @@ module Pod
       end
     end
 
+    # Calls the post integrate callback if defined.
+    #
+    # @param  [Pod::Installer] installer
+    #         the installer that is performing the installation.
+    #
+    # @return [Bool] whether a post install callback was specified and it was
+    #         called.
+    #
+    def post_integrate!(installer)
+      if @post_integrate_callback
+        @post_integrate_callback.call(installer)
+        true
+      else
+        false
+      end
+    end
+
     #-------------------------------------------------------------------------#
 
     public

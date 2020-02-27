@@ -93,6 +93,12 @@ module Pod
         result = Podfile.new { post_install { |_installer| } }.post_install!(:an_installer)
         result.should.be == true
       end
+
+      it 'indicates if the post integrate hook was executed' do
+        Podfile.new {}.post_integrate!(:an_installer).should.be == false
+        result = Podfile.new { post_integrate { |_installer| } }.post_integrate!(:an_installer)
+        result.should.be == true
+      end
     end
 
     #-------------------------------------------------------------------------#
