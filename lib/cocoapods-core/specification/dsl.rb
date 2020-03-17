@@ -1246,6 +1246,13 @@ module Pod
                 :file_patterns => true,
                 :singularize => true
 
+
+      attribute :on_demand_resources,
+                :container     => Array,
+                :file_patterns => true,
+                :singularize   => true
+
+
       #------------------#
 
       # @!method resource_bundles=(*resource_bundles)
@@ -1314,6 +1321,7 @@ module Pod
                 :container     => Array,
                 :file_patterns => true,
                 :singularize   => true
+
 
       #------------------#
 

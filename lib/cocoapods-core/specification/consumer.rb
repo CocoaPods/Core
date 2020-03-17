@@ -109,6 +109,7 @@ module Pod
         attr = Specification::DSL.attributes[:user_target_xcconfig]
         merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:user_target_xcconfig))
       end
+      spec_attr_accessor :on_demand_resources
 
       # @return [String] The contents of the prefix header.
       #
