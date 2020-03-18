@@ -1301,7 +1301,23 @@ module Pod
                 :file_patterns => true,
                 :singularize => true
 
+      #------------------#
 
+      # @!method on_demand_resources=(on_demand_resources)
+      #
+      #   A list of on_demand_resources that should be copied into the target bundle.
+      #
+      #   @example
+      #
+      #     spec.on_demand_resources = 'Resources/HockeySDK.bundle'
+      #
+      #   @example
+      #
+      #     spec.on_demand_resources = ['Images/*.png', 'Sounds/*']
+      #
+      #   @param  [String, Array<String>] resources
+      #           The on_demand_resources shipped with the Pod.
+      #
       attribute :on_demand_resources,
                 :container     => Array,
                 :file_patterns => true,

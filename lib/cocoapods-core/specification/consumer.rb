@@ -109,6 +109,11 @@ module Pod
         attr = Specification::DSL.attributes[:user_target_xcconfig]
         merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:user_target_xcconfig))
       end
+
+      # @return [Array<String>] A hash where the key represents the
+      #         paths of the on_demand_resources to copy and the values the paths of
+      #         the on_demand_resources that should be copied.
+      #
       spec_attr_accessor :on_demand_resources
 
       # @return [Hash{String => String}] the Info.plist values for the current specification
