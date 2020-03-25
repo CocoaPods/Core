@@ -26,7 +26,7 @@ module Pod
       # @param  [String] name
       #         the name of the Pod.
       #
-      # @param  [Array<Source>,Source] sources
+      # @param  [Array<Source>, Source] sources
       #         the sources that contain a Pod.
       #
       def initialize(name, sources = [])

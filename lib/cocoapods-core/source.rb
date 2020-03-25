@@ -111,6 +111,9 @@ module Pod
     #         stored.
     #
     def pod_path(name)
+      'Specs/a/b/c/dq/Alamofire'
+      '.'
+      './Some/Folder/Alamofire'
       specs_dir.join(*metadata.path_fragment(name))
     end
 
