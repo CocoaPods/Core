@@ -7,7 +7,7 @@ module Pod
       #
       attr_reader :sources
 
-      # @param  [Array<Source>] repos_dirs @see Sources
+      # @param  [Array<Source>] sources @see Sources
       #
       def initialize(sources)
         raise "Cannot initialize an aggregate with a nil source: (#{sources})" if sources.include?(nil)
