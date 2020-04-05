@@ -288,6 +288,7 @@ module Pod
       # Performs validations related to the `homepage` attribute.
       #
       def _validate_homepage(h)
+        return unless h.is_a?(String)
         if h =~ %r{http://EXAMPLE}
           results.add_warning('homepage', 'The homepage has not been updated' \
            ' from default')
