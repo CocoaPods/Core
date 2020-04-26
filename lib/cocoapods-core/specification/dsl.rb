@@ -1305,24 +1305,21 @@ module Pod
 
       # @!method on_demand_resources=(on_demand_resources)
       #
-      #   A list of on_demand_resources that should be copied into the target bundle.
+      #   A list of on_demand_resource that should be copied into the target bundle.
       #
       #   @example
       #
-      #     spec.on_demand_resources = 'Resources/HockeySDK.bundle'
-      #
-      #   @example
-      #
-      #     spec.on_demand_resources = ['Images/*.png', 'Sounds/*']
-      #
+      #   s.on_demand_resources = {
+      #       'Tag1' => ['file1.png', 'file2.png']
+      #   }
       #   @param  [String, Array<String>] resources
       #           The on_demand_resources shipped with the Pod.
       #
       attribute :on_demand_resources,
-                :container     => Array,
+                :types => [String, Array],
+                :container => Hash,
                 :file_patterns => true,
-                :singularize   => true
-
+                :singularize => true
 
       #------------------#
 

@@ -110,9 +110,9 @@ module Pod
         merge_values(attr, value_for_attribute(:xcconfig), value_for_attribute(:user_target_xcconfig))
       end
 
-      # @return [Array<String>] A hash where the key represents the
-      #         paths of the on_demand_resources to copy and the values the paths of
-      #         the on_demand_resources that should be copied.
+      # @return [Hash{String=>String}]]  hash where the keys are the names of
+      #         the on demand resource and the values are their relative file
+      #         patterns.
       #
       spec_attr_accessor :on_demand_resources
 
@@ -470,6 +470,24 @@ module Pod
       # @return [Hash] the resources.
       #
       def _prepare_resource_bundles(value)
+        result = {}
+        if value
+          value.each do |key, patterns|
+            result[key] = [*patterns].compact
+          end
+        end
+        result
+      end
+
+      # Ensures that the file patterns of the on demand resources are contained in
+      # an array.
+      #
+      # @param  [String, Array, Hash] value.
+      #         The value of the attribute as specified by the user.
+      #
+      # @return [Hash] the resources.
+      #
+      def _prepare_on_demand_resources(value)
         result = {}
         if value
           value.each do |key, patterns|
