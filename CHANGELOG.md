@@ -10,6 +10,10 @@
 
 ##### Enhancements
 
+* Added `ensure_bundler!` flag to the Podfile DSL.  
+  [Sean Reinhardt](https://github.com/seanreinhardtapps)
+  [#9325](https://github.com/CocoaPods/CocoaPods/issues/9325)
+  
 * Add a post_integrate_hook API  
   [lucasmpaim](https://github.com/lucasmpaim)
   [#7432](https://github.com/CocoaPods/CocoaPods/issues/7432)

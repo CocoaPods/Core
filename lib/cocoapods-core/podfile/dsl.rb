@@ -71,6 +71,35 @@ module Pod
         set_hash_value('installation_method', 'name' => installation_method, 'options' => options)
       end
 
+      # Raises a warning when CocoaPods is run using the Global Gemset.
+      # A Semantic version can be supplied to warn if the bundler version
+      # does not match the required version.
+      #
+      # @param   [String] version
+      #          The required bundler version, in semantic version format.
+      #
+      # @example
+      #
+      #   ensure_bundler!
+      #
+      # @example
+      #
+      #   ensure_bundler! '~> 2.0.0'
+      #
+      # @return  [void]
+      #
+      def ensure_bundler!(version = nil)
+        unless current_target_definition.root?
+          raise Informative, 'The Ensure Bundler check can only be set at the root level of the Podfile.'
+        end
+        unless %w(BUNDLE_BIN_PATH BUNDLE_GEMFILE).all? { |key| ENV.key?(key) }
+          CoreUI.warn "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+        end
+        unless ENV['BUNDLER_VERSION'].nil? || Requirement.create(version).satisfied_by?(Version.new(ENV['BUNDLER_VERSION']))
+          CoreUI.warn "The installed Bundler version: #{ENV['BUNDLER_VERSION']} does not match the required version: #{version}"
+        end
+      end
+
       #-----------------------------------------------------------------------#
 
       # @!group Dependencies
