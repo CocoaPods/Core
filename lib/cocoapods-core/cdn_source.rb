@@ -376,7 +376,7 @@ module Pod
           FileUtils.touch path
           partial_url
         when 200
-          File.open(path, 'w') { |f| f.write(response.response_body) }
+          File.open(path, 'w') { |f| f.write(response.response_body.force_encoding('UTF-8')) }
 
           etag_new = response.headers['etag'] unless response.headers.nil?
           debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
