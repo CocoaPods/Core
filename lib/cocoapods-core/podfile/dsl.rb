@@ -112,6 +112,7 @@ module Pod
       #              specify in your version requirement. The example is equal to
       #              `>= 0.1.2` combined with `< 0.2.0` and will always match the
       #              latest known version matching your requirements.
+      # * `~> 0`     Version 0 and the versions up to 1, not including 1.
       # * `~> 0.1.3-beta.0` Beta and release versions for 0.1.3, release versions
       #              up to 0.2 excluding 0.2. Components separated by a dash (-)
       #              will not be considered for the version requirement.
