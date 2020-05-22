@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.9.2 (2020-05-22)
 
 ##### Enhancements
 
