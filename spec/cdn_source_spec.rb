@@ -202,6 +202,20 @@ module Pod
         end
       end
 
+      it 'forces UTF-8 encoding for the body' do
+        mock_json_body = mock
+        mock_json_body.expects(:force_encoding).with('UTF-8').at_least_once
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
+          returns(typhoeus_http_response_future(200, nil, 'BeaconKit/1.0.0'))
+        @source.expects(:download_typhoeus_impl_async).
+          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          returns(typhoeus_http_response_future(200, {}, mock_json_body))
+        should.not.raise do
+          @source.versions('BeaconKit')
+        end
+      end
+
       it 'raises if unexpected HTTP error' do
         @source.expects(:download_typhoeus_impl_async).
           returns(typhoeus_http_response_future(500))

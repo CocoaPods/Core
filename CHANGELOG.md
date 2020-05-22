@@ -13,6 +13,18 @@
 * None.  
 
 
+## 1.9.2 (2020-05-22)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix a crash when JSON Podspec encoding is guessed incorrectly  
+  [Jason Schroeder](https://github.com/jasonschroeder-sfdc)
+  [#629](https://github.com/CocoaPods/Core/pull/629)
+
 ## 1.9.1 (2020-03-09)
 
 ##### Enhancements
