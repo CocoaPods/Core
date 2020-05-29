@@ -13,6 +13,19 @@
 * None.  
 
 
+## 1.9.3 (2020-05-29)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* CDNSource - Run a rudimentary local check to help with CDN client robustness.  
+  [Igor Makarov](https://github.com/igor-makarov)
+  [#632](https://github.com/CocoaPods/Core/pull/632)
+  [CocoaPods#9814](https://github.com/CocoaPods/CocoaPods/issues/9814)
+
 ## 1.9.2 (2020-05-22)
 
 ##### Enhancements
