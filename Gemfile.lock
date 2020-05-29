@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (1.9.2)
+    cocoapods-core (1.9.3)
       activesupport (>= 4.0.2, < 6)
       algoliasearch (~> 1.0)
       concurrent-ruby (~> 1.1)
