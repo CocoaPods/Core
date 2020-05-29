@@ -355,6 +355,15 @@ module Pod
         spec.version.should.to_s == '1.0.5'
       end
 
+      it 'downloads specification again if file is not valid' do
+        # create empty podspec file
+        FileUtils.mkdir_p(@path + 'Specs/2/0/9/BeaconKit/1.0.5')
+        FileUtils.touch(@path + 'Specs/2/0/9/BeaconKit/1.0.5/BeaconKit.podspec.json')
+        spec = @source.specification('BeaconKit', Version.new('1.0.5'))
+        spec.name.should == 'BeaconKit'
+        spec.version.should.to_s == '1.0.5'
+      end
+
       it 'does not attempt to access a version not in the version index' do
         @source.versions('BeaconKit')
 

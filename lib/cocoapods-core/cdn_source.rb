@@ -315,6 +315,11 @@ module Pod
       metadata.path_fragment(pod_name)[0..-2]
     end
 
+    def local_file_okay?(partial_url)
+      file_path = repo.join(partial_url)
+      File.exist?(file_path) && File.size(file_path) > 0
+    end
+
     def local_file(partial_url)
       file_path = repo.join(partial_url)
       File.open(file_path) do |file|
@@ -337,7 +342,8 @@ module Pod
       file_remote_url = Addressable::URI.encode(url + partial_url.to_s)
       path = repo + partial_url
 
-      if File.exist?(path)
+      file_okay = local_file_okay?(partial_url)
+      if file_okay
         if @startup_time < File.mtime(path)
           debug "CDN: #{name} Relative path: #{partial_url} modified during this run! Returning local"
           return Promises.fulfilled_future(partial_url, HYDRA_EXECUTOR)
@@ -353,7 +359,7 @@ module Pod
 
       etag_path = path.sub_ext(path.extname + '.etag')
 
-      etag = File.read(etag_path) if File.exist?(etag_path)
+      etag = File.read(etag_path) if file_okay && File.exist?(etag_path)
       debug "CDN: #{name} Relative path: #{partial_url}, has ETag? #{etag}" unless etag.nil?
 
       download_and_save_with_retries_async(partial_url, file_remote_url, etag)
