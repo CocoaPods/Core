@@ -1261,7 +1261,8 @@ module Pod
 
       # @!method vendored_frameworks=(*frameworks)
       #
-      #   The paths of the framework bundles that come shipped with the Pod.
+      #   The paths of the framework bundles that come shipped with the Pod. Supports both `.framework` and `.xcframework` bundles.
+      #   The frameworks will be made available to the Pod and to the consumers of the pod.
       #
       #   @example
       #
@@ -1269,7 +1270,7 @@ module Pod
       #
       #   @example
       #
-      #     spec.vendored_frameworks = 'MyFramework.framework', 'TheirFramework.framework'
+      #     spec.vendored_frameworks = 'MyFramework.framework', 'TheirFramework.xcframework'
       #
       #   @param  [String, Array<String>] vendored_frameworks
       #           A list of framework bundles paths.
@@ -1283,7 +1284,8 @@ module Pod
 
       # @!method vendored_libraries=(*frameworks)
       #
-      #   The paths of the libraries that come shipped with the Pod.
+      #   The paths of the libraries that come shipped with the Pod. The libraries will be available to the Pod and the
+      #   consumers of the Pod.
       #
       #   @example
       #
