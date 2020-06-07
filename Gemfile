@@ -8,7 +8,7 @@ gemspec
 gem 'json', :git => 'https://github.com/segiddins/json.git', :branch => 'seg-1.7.7-ruby-2.2'
 
 group :development do
-  gem 'activesupport', '>= 4.0.2', '!= 4.2.11.12', '< 5' # Pinned < 5 to ensure we're speccing 4.x.x
+  gem 'activesupport', '>= 5.0', '< 6' # Pinned < 5 to ensure we're speccing 4.x.x
   gem 'public_suffix', '>= 2.0.5', '< 3' # pinned since 3+ drops support for Ruby 2.0
   gem 'minitest', '5.12.0' # Pinned since > 5.12.0+ drops support for Ruby 2.0
   gem 'bacon'

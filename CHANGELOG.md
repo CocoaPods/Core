@@ -2,6 +2,12 @@
 
 ## Master
 
+##### Breaking
+
+* Drop support for Ruby 2.0 and 2.2. Minimum required Ruby version is now 2.3.3 (included on macOS High Sierra)  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods#9821](https://github.com/CocoaPods/CocoaPods/issues/9821)
+
 ##### Enhancements
 
 * Add a post_integrate_hook API  

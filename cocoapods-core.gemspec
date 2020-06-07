@@ -19,7 +19,8 @@ Gem::Specification.new do |s|
   s.files         =  Dir["lib/**/*.rb"] + %w{ README.md LICENSE }
   s.require_paths =  %w{ lib }
 
-  s.add_runtime_dependency 'activesupport', '>= 4.0.2', '< 6'
+  # 6.0 requires Ruby 2.5.0
+  s.add_runtime_dependency 'activesupport', '> 5.0', '< 6'
   s.add_runtime_dependency 'nap', '~> 1.0'
   s.add_runtime_dependency 'fuzzy_match', '~> 2.0.4'
   s.add_runtime_dependency 'algoliasearch', '~> 1.0'
@@ -34,6 +35,6 @@ Gem::Specification.new do |s|
   ## Make sure you can build the gem on older versions of RubyGems too:
   s.rubygems_version = "1.6.2"
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.3.3'
   s.specification_version = 3 if s.respond_to? :specification_version
 end
