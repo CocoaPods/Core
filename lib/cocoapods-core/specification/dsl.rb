@@ -1305,6 +1305,26 @@ module Pod
 
       #------------------#
 
+      # @!method on_demand_resources=(on_demand_resources)
+      #
+      #   A list of on_demand_resource that should be copied into the target bundle.
+      #
+      #   @example
+      #
+      #   s.on_demand_resources = {
+      #       'Tag1' => ['file1.png', 'file2.png']
+      #   }
+      #   @param  [String, Array<String>] resources
+      #           The on_demand_resources shipped with the Pod.
+      #
+      attribute :on_demand_resources,
+                :types => [String, Array],
+                :container => Hash,
+                :file_patterns => true,
+                :singularize => true
+
+      #------------------#
+
       # @!method resource_bundles=(*resource_bundles)
       #
       #   This attribute allows to define the name and the file of the resource
@@ -1371,6 +1391,7 @@ module Pod
                 :container     => Array,
                 :file_patterns => true,
                 :singularize   => true
+
 
       #------------------#
 

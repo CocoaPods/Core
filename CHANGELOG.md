@@ -9,7 +9,10 @@
   [CocoaPods#9821](https://github.com/CocoaPods/CocoaPods/issues/9821)
 
 ##### Enhancements
-
+* Support On-Demand Resource   
+  [JunyiXie](https://github.com/JunyiXie)
+  [#issue_number](https://github.com/CocoaPods/Core/pull/622)
+  
 * Add a post_integrate_hook API  
   [lucasmpaim](https://github.com/lucasmpaim)
   [#7432](https://github.com/CocoaPods/CocoaPods/issues/7432)
