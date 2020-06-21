@@ -679,6 +679,102 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    describe 'ensure_bundler!' do
+      def stash_bundler_environment
+        @stored_bundle_gemfile = ENV['BUNDLE_GEMFILE']
+        @stored_bundle_bin_path = ENV['BUNDLE_BIN_PATH']
+        @stored_bundle_version = ENV['BUNDLER_VERSION']
+      end
+
+      def restore_bundler_environment
+        ENV['BUNDLE_BIN_PATH'] = @stored_bundle_bin_path
+        ENV['BUNDLE_GEMFILE'] = @stored_bundle_gemfile
+        ENV['BUNDLER_VERSION'] = @stored_bundle_version
+      end
+
+      it 'prints warning when bundler environment not found' do
+        stash_bundler_environment
+        ENV['BUNDLE_BIN_PATH'] = nil
+        ENV['BUNDLE_GEMFILE'] = nil
+        ENV['BUNDLER_VERSION'] = nil
+        Podfile.new do
+          ensure_bundler!
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+      end
+
+      it 'prints warning when a bundler env variable not found' do
+        stash_bundler_environment
+        ENV['BUNDLE_GEMFILE'] = nil
+        Podfile.new do
+          ensure_bundler!
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+      end
+
+      it 'has no warning with bundler environment' do
+        stash_bundler_environment
+        ENV['BUNDLE_GEMFILE'] = 'mock argument'
+        ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
+        ENV['BUNDLER_VERSION'] = '1.17.1'
+        Podfile.new do
+          ensure_bundler!
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should.be.empty
+      end
+
+      it 'prints version warning when version argument fails match' do
+        stash_bundler_environment
+        ENV['BUNDLE_GEMFILE'] = 'mock argument'
+        ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
+        ENV['BUNDLER_VERSION'] = '1.17.1'
+        Podfile.new do
+          ensure_bundler! '2.0.0'
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should == 'The installed Bundler version: 1.17.1 does not match the required version: 2.0.0'
+      end
+
+      it 'has no warning with semantic version match' do
+        stash_bundler_environment
+        ENV['BUNDLE_GEMFILE'] = 'mock argument'
+        ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
+        ENV['BUNDLER_VERSION'] = '2.0.9'
+        Podfile.new do
+          ensure_bundler! '~> 2.0.0'
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should.be.empty
+      end
+
+      it 'skips version check with missing bundle version (edge case)' do
+        stash_bundler_environment
+        ENV['BUNDLE_GEMFILE'] = 'mock argument'
+        ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
+        ENV['BUNDLER_VERSION'] = nil
+        Podfile.new do
+          ensure_bundler! '2.0.0'
+        end
+        restore_bundler_environment
+        CoreUI.warnings.should.be.empty
+      end
+
+      it 'raises with ensure_bundler! outside of root' do
+        should.raise(Informative) do
+          Podfile.new do
+            target 'App' do
+              ensure_bundler!
+            end
+          end
+        end.message.should == 'The Ensure Bundler check can only be set at the root level of the Podfile.'
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
     describe 'Deprecations' do
       it 'raises when using the #link_with method' do
         should.raise(Informative) do
