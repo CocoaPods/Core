@@ -565,7 +565,7 @@ module Pod
       it 'assigns a deployment target to the platforms if not specified' do
         @podfile.target_definitions['Pods'].platform.deployment_target.to_s.should == '4.3'
         @podfile.target_definitions[:test].platform.deployment_target.to_s.should == '4.3'
-        @podfile.target_definitions[:osx_target].platform.deployment_target.to_s.should == '10.6'
+        @podfile.target_definitions[:osx_target].platform.deployment_target.to_s.should == '10.9'
       end
 
       it "automatically marks a target as exclusive if the parent platform doesn't match" do
