@@ -697,21 +697,23 @@ module Pod
         ENV['BUNDLE_BIN_PATH'] = nil
         ENV['BUNDLE_GEMFILE'] = nil
         ENV['BUNDLER_VERSION'] = nil
-        Podfile.new do
-          ensure_bundler!
-        end
+        should.raise(Informative) do
+          Podfile.new do
+            ensure_bundler!
+          end
+        end.message.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
         restore_bundler_environment
-        CoreUI.warnings.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
       end
 
       it 'prints warning when a bundler env variable not found' do
         stash_bundler_environment
         ENV['BUNDLE_GEMFILE'] = nil
-        Podfile.new do
-          ensure_bundler!
-        end
+        should.raise(Informative) do
+          Podfile.new do
+            ensure_bundler!
+          end
+        end.message.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
         restore_bundler_environment
-        CoreUI.warnings.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
       end
 
       it 'has no warning with bundler environment' do
@@ -731,11 +733,12 @@ module Pod
         ENV['BUNDLE_GEMFILE'] = 'mock argument'
         ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
         ENV['BUNDLER_VERSION'] = '1.17.1'
-        Podfile.new do
-          ensure_bundler! '2.0.0'
-        end
+        should.raise(Informative) do
+          Podfile.new do
+            ensure_bundler! '2.0.0'
+          end
+        end.message.should == 'The installed Bundler version: 1.17.1 does not match the required version: 2.0.0'
         restore_bundler_environment
-        CoreUI.warnings.should == 'The installed Bundler version: 1.17.1 does not match the required version: 2.0.0'
       end
 
       it 'has no warning with semantic version match' do
