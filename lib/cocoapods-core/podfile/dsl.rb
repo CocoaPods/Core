@@ -93,10 +93,10 @@ module Pod
           raise Informative, 'The Ensure Bundler check can only be set at the root level of the Podfile.'
         end
         unless %w(BUNDLE_BIN_PATH BUNDLE_GEMFILE).all? { |key| ENV.key?(key) }
-          CoreUI.warn "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+          raise Informative, "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
         end
         unless ENV['BUNDLER_VERSION'].nil? || Requirement.create(version).satisfied_by?(Version.new(ENV['BUNDLER_VERSION']))
-          CoreUI.warn "The installed Bundler version: #{ENV['BUNDLER_VERSION']} does not match the required version: #{version}"
+          raise Informative, "The installed Bundler version: #{ENV['BUNDLER_VERSION']} does not match the required version: #{version}"
         end
       end
 
