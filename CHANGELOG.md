@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.10.0.beta.1 (2020-07-17)
 
 ##### Breaking
 
