@@ -2,6 +2,17 @@
 
 ## Master
 
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.10.0.beta.1 (2020-07-17)
+
 ##### Breaking
 
 * Drop support for Ruby 2.0 and 2.2. Minimum required Ruby version is now 2.3.3 (included on macOS High Sierra)  
