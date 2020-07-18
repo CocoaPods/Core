@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'fuzzy_match', '~> 2.0.4'
   s.add_runtime_dependency 'algoliasearch', '~> 1.0'
   s.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
-  s.add_runtime_dependency 'typhoeus', '~> 1.0'
+  s.add_runtime_dependency 'net-http2', '~> 0.18'
   s.add_runtime_dependency 'netrc', '~> 0.11'
   s.add_runtime_dependency "addressable", '~> 2.6'
   s.add_runtime_dependency "public_suffix"
