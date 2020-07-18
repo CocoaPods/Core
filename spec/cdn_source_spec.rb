@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'algoliasearch'
 require 'concurrent'
-require 'typhoeus'
+require 'net-http2'
 require File.expand_path('../spec_helper', __FILE__)
 
 module Mocha
@@ -58,18 +58,12 @@ module Pod
       end
 
       def typhoeus_http_response_future(code, headers = {}, body = '')
-        fulfilled_future(Typhoeus::Response.new(
-                           :response_code => code,
-                           :headers => headers,
-                           :response_body => body,
-        ))
+        fulfilled_future(NetHttp2::Response.new(:headers => headers.merge!(:status => code),
+                                                :body => body))
       end
 
-      def typhoeus_non_http_response_future(code)
-        fulfilled_future(Typhoeus::Response.new(
-                           :response_code => 0,
-                           :return_code => code,
-        ))
+      def typhoeus_non_http_response_future(_code)
+        fulfilled_future(NetHttp2::Response.new(:headers => { :status => 0 }))
       end
 
       @remote_dir = fixture('mock_cdn_repo_remote')

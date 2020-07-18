@@ -1,8 +1,10 @@
 require 'cocoapods-core/source'
+require 'cocoapods-core/cdn_source/cdn_host_reactor'
 require 'rest'
 require 'concurrent'
 require 'netrc'
 require 'addressable'
+require 'uri'
 
 module Pod
   # Subclass of Pod::Source to provide support for CDN-based Specs repositories
@@ -19,6 +21,8 @@ module Pod
     # @param [String] repo The name of the repository
     #
     def initialize(repo)
+      @reactors = {}
+
       @check_existing_files_for_update = false
       # Optimization: we initialize startup_time when the source is first initialized
       # and then test file modification dates against it. Any file that was touched
@@ -370,7 +374,7 @@ module Pod
       etag_path = path.sub_ext(path.extname + '.etag')
 
       download_task = download_typhoeus_impl_async(file_remote_url, etag).then do |response|
-        case response.response_code
+        case response.status.to_i
         when 301
           redirect_location = response.headers['location']
           debug "CDN: #{name} Redirecting from #{file_remote_url} to #{redirect_location}"
@@ -382,21 +386,21 @@ module Pod
           FileUtils.touch path
           partial_url
         when 200
-          File.open(path, 'w') { |f| f.write(response.response_body.force_encoding('UTF-8')) }
+          File.open(path, 'w') { |f| f.write(response.body.force_encoding('UTF-8')) }
 
           etag_new = response.headers['etag'] unless response.headers.nil?
           debug "CDN: #{name} Relative path downloaded: #{partial_url}, save ETag: #{etag_new}"
           File.open(etag_path, 'w') { |f| f.write(etag_new) } unless etag_new.nil?
           partial_url
         when 404
-          debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.response_code}"
+          debug "CDN: #{name} Relative path couldn't be downloaded: #{partial_url} Response: #{response.status}"
           nil
         when 502, 503, 504
           # Retryable HTTP errors, usually related to server overloading
           if retries <= 1
-            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
+            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status} #{response.body}"
           else
-            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}, retries: #{retries - 1}"
+            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status} #{response.body}, retries: #{retries - 1}"
             exponential_backoff_async(retries).then do
               download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
             end
@@ -404,15 +408,15 @@ module Pod
         when 0
           # Non-HTTP errors, usually network layer
           if retries <= 1
-            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}"
+            raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.body}"
           else
-            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}, retries: #{retries - 1}"
+            debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.body}, retries: #{retries - 1}"
             exponential_backoff_async(retries).then do
               download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
             end
           end
         else
-          raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
+          raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.status} #{response.body}"
         end
       end
 
@@ -437,34 +441,33 @@ module Pod
     end
 
     def download_typhoeus_impl_async(file_remote_url, etag)
-      require 'typhoeus'
-
       # Create a prefereably HTTP/2 request - the protocol is ultimately responsible for picking
       # the maximum supported protocol
       # When debugging with proxy, use the following extra options:
       # :proxy => 'http://localhost:8888',
       # :ssl_verifypeer => false,
       # :ssl_verifyhost => 0,
-      request = Typhoeus::Request.new(
-        file_remote_url,
-        :method => :get,
-        :http_version => :httpv2_0,
-        :timeout => 10,
-        :connecttimeout => 10,
-        :accept_encoding => 'gzip',
-        :netrc => :optional,
-        :netrc_file => Netrc.default_path,
-        :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
-      )
+      # request = Typhoeus::Request.new(
+      #   file_remote_url,
+      #   :method => :get,
+      #   :http_version => :httpv2_0,
+      #   :timeout => 10,
+      #   :connecttimeout => 10,
+      #   :accept_encoding => 'gzip',
+      #   :netrc => :optional,
+      #   :netrc_file => Netrc.default_path,
+      #   :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
+      # )
 
-      future = Promises.resolvable_future_on(HYDRA_EXECUTOR)
-      queue_request(request)
-      request.on_complete do |response|
-        future.fulfill(response)
-      end
+      reactor = reactor_for(file_remote_url)
 
-      # This `Future` should never reject, network errors are exposed on `Typhoeus::Response`
+      future = reactor.get(file_remote_url, etag, HYDRA_EXECUTOR)
+
       future
+    end
+
+    def reactor_for(uri)
+      @reactors[URI(uri).host] ||= CDNHostReactor.new(uri)
     end
 
     def debug(message)
@@ -481,21 +484,6 @@ module Pod
       # aggregated error message from `Concurrent`
       errors = e.errors
       raise Informative, "CDN: #{name} Repo update failed - #{e.errors.size} error(s):\n#{errors.join("\n")}"
-    end
-
-    def queue_request(request)
-      @hydra ||= Typhoeus::Hydra.new
-
-      # Queue the request into the Hydra (libcurl reactor).
-      @hydra.queue(request)
-
-      # Cycle the reactor on a separate thread
-      #
-      # The way it works is that if more requests are queued while Hydra is in the `#run`
-      # method, it will keep executing them
-      #
-      # The upcoming calls to `#run` will simply run empty.
-      HYDRA_EXECUTOR.post(@hydra, &:run)
     end
   end
 end
