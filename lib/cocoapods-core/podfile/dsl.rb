@@ -936,6 +936,26 @@ module Pod
         @pre_install_callback = block
       end
 
+      # This hook allows you to make changes before the project is written
+      # to disk.
+      #
+      # It receives the
+      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
+      # as its only argument.
+      #
+      # @example  Customising the dependencies before integration
+      #
+      #   pre_integrate do |installer|
+      #     # perform some changes on dependencies
+      #   end
+      #
+      # @return   [void]
+      #
+      def pre_integrate(&block)
+        raise Informative, 'Specifying multiple `pre_integrate` hooks is unsupported.' if @pre_integrate_callback
+        @pre_integrate_callback = block
+      end
+
       # This hook allows you to make any last changes to the generated Xcode
       # project before it is written to disk, or any other tasks you might want
       # to perform.

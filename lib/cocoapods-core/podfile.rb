@@ -166,6 +166,23 @@ module Pod
       end
     end
 
+    # Calls the pre integrate callback if defined.
+    #
+    # @param  [Pod::Installer] installer
+    #         the installer that is performing the installation.
+    #
+    # @return [Bool] whether a pre install callback was specified and it was
+    #         called.
+    #
+    def pre_integrate!(installer)
+      if @pre_integrate_callback
+        @pre_integrate_callback.call(installer)
+        true
+      else
+        false
+      end
+    end
+
     # Calls the post install callback if defined.
     #
     # @param  [Pod::Installer] installer

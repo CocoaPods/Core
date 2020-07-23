@@ -21,7 +21,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add a pre_integrate_hook API  
+  [dcvz](https://github.com/dcvz)
+  [#643](https://github.com/CocoaPods/Core/pull/643)
 
 ##### Bug Fixes
 
