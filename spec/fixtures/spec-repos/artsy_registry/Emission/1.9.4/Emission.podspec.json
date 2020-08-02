@@ -1,0 +1,132 @@
+{
+  "name": "Emission",
+  "version": "1.9.4",
+  "summary": "React Native Components used by Eigen.",
+  "homepage": "https://github.com/artsy/emission",
+  "license": "MIT",
+  "authors": {
+    "Artsy Mobile": "mobile@artsy.net"
+  },
+  "source": {
+    "git": "https://github.com/artsy/emission.git",
+    "tag": "v1.9.4"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "Pod/Classes/**/*.{h,m}",
+  "preserve_paths": "Pod/Classes/**/*.generated.objc",
+  "resources": "Pod/Assets/{Emission.js,assets,PreHeatedGraphQLCache}",
+  "dependencies": {
+    "Artsy+UIColors": [
+
+    ],
+    "Artsy+UIFonts": [
+      ">= 3.0.0"
+    ],
+    "Extraction": [
+      ">= 1.2.1"
+    ],
+    "Pulley": [
+
+    ],
+    "ISO8601DateFormatter": [
+
+    ],
+    "SDWebImage": [
+      ">= 3.7.2",
+      "< 4"
+    ],
+    "React/Core": [
+      "0.57.7"
+    ],
+    "React/CxxBridge": [
+      "0.57.7"
+    ],
+    "React/RCTAnimation": [
+      "0.57.7"
+    ],
+    "React/RCTCameraRoll": [
+      "0.57.7"
+    ],
+    "React/RCTImage": [
+      "0.57.7"
+    ],
+    "React/RCTLinkingIOS": [
+      "0.57.7"
+    ],
+    "React/RCTNetwork": [
+      "0.57.7"
+    ],
+    "React/RCTText": [
+      "0.57.7"
+    ],
+    "React/RCTGeolocation": [
+      "0.57.7"
+    ],
+    "React/RCTActionSheet": [
+      "0.57.7"
+    ],
+    "yoga": [
+      "0.57.7.React"
+    ],
+    "DoubleConversion": [
+      "1.1.6"
+    ],
+    "Folly": [
+      "2016.10.31.00"
+    ],
+    "glog": [
+      "0.3.5"
+    ],
+    "tipsi-stripe": [
+      "5.2.4"
+    ],
+    "react-native-mapbox-gl": [
+      "6.1.4"
+    ],
+    "SentryReactNative": [
+      "0.30.3"
+    ],
+    "RNSVG": [
+      "9.0.4"
+    ]
+  },
+  "native_version": 29,
+  "release_date": "Mar 29, 2019",
+  "sha": "1ce37d524069ebe83355d6e1345f5143640bfb30",
+  "react_native_version": "0.57.7",
+  "app_registry": [
+    "Consignments",
+    "Artist",
+    "Home",
+    "Gene",
+    "WorksForYou",
+    "MyProfile",
+    "MySellingProfile",
+    "MyProfileEdit",
+    "Inbox",
+    "CitySavedList",
+    "Conversation",
+    "Inquiry",
+    "Favorites",
+    "BidFlow",
+    "Fair",
+    "FairMoreInfo",
+    "FairBooth",
+    "FairArtists",
+    "FairArtworks",
+    "FairExhibitors",
+    "FairBMWArtActivation",
+    "Show",
+    "ShowArtists",
+    "ShowArtworks",
+    "ShowMoreInfo",
+    "Map",
+    "City",
+    "CityPicker",
+    "CityBMWList",
+    "CityFairList",
+    "CitySectionList"
+  ]
+}

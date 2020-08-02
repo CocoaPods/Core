@@ -51,6 +51,8 @@ module Pod
           remote
         elsif (repo + '.git').exist?
           "file://#{repo}/.git"
+        elsif registry?
+          YAML.load(File.read(repo.join('.registry-rc.yml')))['registry_url']
         end
       end
     end
@@ -58,7 +60,13 @@ module Pod
     # @return [String] The type of the source.
     #
     def type
-      git? ? 'git' : 'file system'
+      if git?
+        'git'
+      elsif registry?
+        'registry'
+      else
+        'file system'
+      end
     end
 
     alias_method :to_s, :name
@@ -344,7 +352,11 @@ module Pod
     def update(show_output)
       return [] if unchanged_github_repo?
       prev_commit_hash = git_commit_hash
-      update_git_repo(show_output)
+      if git?
+        update_git_repo(show_output)
+      else
+        update_registry_repo
+      end
       @versions_by_name.clear
       refresh_metadata
       if version = metadata.last_compatible_version(Version.new(CORE_VERSION))
@@ -357,11 +369,15 @@ module Pod
     end
 
     def updateable?
-      git?
+      git? || registry?
     end
 
     def git?
       repo.join('.git').exist? && !repo_git(%w(rev-parse HEAD)).empty?
+    end
+
+    def registry?
+      repo.join('.registry-rc.yml').exist?
     end
 
     def indexable?
@@ -442,6 +458,16 @@ module Pod
       repo_git(['checkout', git_tracking_branch])
       output = repo_git(%w(pull --ff-only), :include_error => true)
       CoreUI.puts output if show_output
+    end
+
+    def update_registry_repo
+      options = {
+        :http => @url,
+        :type => 'tgz',
+        :flatten => true,
+      }
+      downloader = Downloader.for_target(@repo, options)
+      downloader.download
     end
 
     def git_tracking_branch

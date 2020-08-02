@@ -1,0 +1,78 @@
+{
+  "name": "Emission",
+  "version": "1.7.2",
+  "summary": "React Native Components used by Eigen.",
+  "homepage": "https://github.com/artsy/emission",
+  "license": "MIT",
+  "authors": {
+    "Eloy Durán": "eloy@artsy.net",
+    "Maxim Cramer": "maxim@artsy.net",
+    "Sarah Scott": "sarah.scott@artsy.net"
+  },
+  "source": {
+    "git": "https://github.com/artsy/emission.git",
+    "tag": "v1.7.2"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*.{h,m}",
+  "preserve_paths": "Pod/Classes/**/*.generated.objc",
+  "resources": "Pod/Assets/{Emission.js,assets}",
+  "dependencies": {
+    "Artsy+UIColors": [
+
+    ],
+    "Artsy+UIFonts": [
+      ">= 3.0.0"
+    ],
+    "Extraction": [
+      ">= 1.2.1"
+    ],
+    "React/Core": [
+      "0.54.4"
+    ],
+    "React/CxxBridge": [
+      "0.54.4"
+    ],
+    "React/RCTAnimation": [
+      "0.54.4"
+    ],
+    "React/RCTCameraRoll": [
+      "0.54.4"
+    ],
+    "React/RCTImage": [
+      "0.54.4"
+    ],
+    "React/RCTLinkingIOS": [
+      "0.54.4"
+    ],
+    "React/RCTNetwork": [
+      "0.54.4"
+    ],
+    "React/RCTText": [
+      "0.54.4"
+    ],
+    "yoga": [
+      "0.54.4.React"
+    ],
+    "DoubleConversion": [
+      "1.1.5"
+    ],
+    "Folly": [
+      "2016.09.26.00"
+    ],
+    "glog": [
+      "0.3.4"
+    ],
+    "SDWebImage": [
+      ">= 3.7.2",
+      "< 4"
+    ],
+    "SentryReactNative": [
+      "0.30.3"
+    ]
+  },
+  "native_version": 8
+}
