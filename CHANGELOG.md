@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.10.0.beta.2 (2020-08-12)
 
 ##### Enhancements
 
