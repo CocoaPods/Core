@@ -247,6 +247,11 @@ module Pod
               should == 'company-pods-specs'
           end
 
+          it 'supports ssh URLs with user and port' do
+            url = 'ssh://git@company.com:1234/pods/specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'company-pods-specs'
+          end
           it 'appends a number to the name if the base name dir exists' do
             url = 'https://github.com/segiddins/banana.git'
             Pathname.any_instance.stubs(:exist?).
