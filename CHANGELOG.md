@@ -19,8 +19,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Fix for repository name resolving in `name_for_url` when repository url uses SSH and contains a port number  
+  [Michał Nierebiński](https://github.com/CanIntoSpace)  
+  [#650](https://github.com/CocoaPods/Core/pull/650)
 
 ## 1.10.0.beta.2 (2020-08-12)
 
