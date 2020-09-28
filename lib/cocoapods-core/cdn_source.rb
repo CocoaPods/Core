@@ -108,6 +108,7 @@ module Pod
       raise ArgumentError, 'No name' unless name
 
       fragment = pod_shard_fragment(name)
+      puts "===== FRAGMENT FOR #{name}: #{fragment}."
 
       ensure_versions_file_loaded(fragment)
 
@@ -281,6 +282,7 @@ module Pod
       # Index file that contains all the versions for all the pods in the shard.
       # We use those because you can't get a directory listing from a CDN.
       index_file_name = index_file_name_for_fragment(fragment)
+      puts "====== INDEX FILE NAmE FOR #{fragment} -- #{index_file_name}"
       download_file(index_file_name)
       versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
       @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
@@ -397,19 +399,24 @@ module Pod
             raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
           else
             debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}, retries: #{retries - 1}"
-            exponential_backoff_async(retries).then do
-              download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
-            end
+            download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
           end
         when 0
           # Non-HTTP errors, usually network layer
+          puts "====== ERROR! #{name}"
+          puts "RESPONSE: #{response}"
+          puts "FAILURE: #{response.failure?}"
+          puts "EFFECTIVE URL: #{response.effective_url}"
+          puts "STATUS MESSAGE: #{response.status_message}"
+          puts "RETURN MESSAGE: #{response.return_message}"
+          puts "RESPONSE BODY: #{response.response_body}"
           if retries <= 1
             raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}"
           else
             debug "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.return_message}, retries: #{retries - 1}"
-            exponential_backoff_async(retries).then do
-              download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
-            end
+            # exponential_backoff_async(retries).then do
+            download_and_save_with_retries_async(partial_url, file_remote_url, etag, retries - 1)
+            # end
           end
         else
           raise Informative, "CDN: #{name} URL couldn't be downloaded: #{file_remote_url} Response: #{response.response_code} #{response.response_body}"
@@ -423,7 +430,7 @@ module Pod
     end
 
     def exponential_backoff_async(retries)
-      sleep_async(backoff_time(retries))
+      # sleep_async(backoff_time(retries))
     end
 
     def backoff_time(retries)
@@ -439,6 +446,7 @@ module Pod
     def download_typhoeus_impl_async(file_remote_url, etag)
       require 'typhoeus'
 
+      Typhoeus::Config.verbose = true
       # Create a prefereably HTTP/2 request - the protocol is ultimately responsible for picking
       # the maximum supported protocol
       # When debugging with proxy, use the following extra options:
@@ -454,8 +462,13 @@ module Pod
         :accept_encoding => 'gzip',
         :netrc => :optional,
         :netrc_file => Netrc.default_path,
+        :sslversion => :sslv3,
+        :ssl_verifypeer => false,
+        :ssl_verifyhost => 0,
         :headers => etag.nil? ? {} : { 'If-None-Match' => etag },
       )
+
+      puts "REQUEST OPTIONS: #{request.options}"
 
       future = Promises.resolvable_future_on(HYDRA_EXECUTOR)
       queue_request(request)
@@ -468,11 +481,12 @@ module Pod
     end
 
     def debug(message)
-      if defined?(Pod::UI)
-        Pod::UI.message(message)
-      else
-        CoreUI.puts(message)
-      end
+      CoreUI.puts(message)
+      # if defined?(Pod::UI)
+      #   Pod::UI.message(message)
+      # else
+      #   CoreUI.puts(message)
+      # end
     end
 
     def concurrent_requests_catching_errors
