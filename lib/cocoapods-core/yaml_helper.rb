@@ -284,6 +284,8 @@ module Pod
       RESOLVED_TAGS = Regexp.union(
         'null', 'Null', 'NULL', '~', '', # resolve to null
         'true', 'True', 'TRUE', 'false', 'False', 'FALSE', # bool
+        'yes', 'Yes', 'YES', 'no', 'No', 'NO', # yes/no
+        'on', 'On', 'ON', 'off', 'Off', 'OFF', # no/off
         /[-+]?[0-9]+/, # base 10 int
         /00[0-7]+/, # base 8 int
         /0x[0-9a-fA-F]+/, # base 16 int
