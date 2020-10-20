@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.10.0 (2020-10-20)
 
 ##### Enhancements
 
