@@ -8,7 +8,7 @@ GIT
 PATH
   remote: .
   specs:
-    cocoapods-core (1.10.0.rc.1)
+    cocoapods-core (1.10.0)
       activesupport (> 5.0, < 6)
       addressable (~> 2.6)
       algoliasearch (~> 1.0)
@@ -29,7 +29,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    algoliasearch (1.27.3)
+    algoliasearch (1.27.4)
       httpclient (~> 2.8, >= 2.8.3)
       json (>= 1.5.1)
     ast (2.4.0)
