@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Allow version `0` to be used.  
+  [Eloy Durán](https://github.com/alloy)
+  [#657](https://github.com/CocoaPods/Core/pull/657)
 
 ##### Bug Fixes
 
