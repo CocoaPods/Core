@@ -255,11 +255,6 @@ module Pod
         result_should_include('version', 'required')
       end
 
-      it 'checks the version is higher than 0' do
-        @spec.stubs(:version).returns(Pod::Version.new('0'))
-        result_should_include('version', '0')
-      end
-
       it 'handles invalid version strings' do
         @spec.stubs(:version).raises('Bad version')
         result_ignore('attributes')

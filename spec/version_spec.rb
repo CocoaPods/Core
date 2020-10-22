@@ -18,6 +18,12 @@ module Pod
         version.to_s.should == '1.2.3'
       end
 
+      it 'does not accept negative versions' do
+        should.raise ArgumentError do
+          Version.new('-1')
+        end
+      end
+
       it 'identifies release versions' do
         version = Version.new('1.0.0')
         version.should.not.be.prerelease

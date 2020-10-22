@@ -242,9 +242,6 @@ module Pod
       def _validate_version(v)
         if v.to_s.empty?
           results.add_error('version', 'A version is required.')
-        elsif v <= Version::ZERO
-          results.add_error('version', 'The version of the spec should be' \
-          ' higher than 0.')
         end
       end
 
