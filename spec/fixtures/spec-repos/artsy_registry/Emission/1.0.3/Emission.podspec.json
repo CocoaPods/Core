@@ -1,0 +1,42 @@
+{
+  "name": "Emission",
+  "version": "1.0.3",
+  "summary": "React Native Components used by Eigen.",
+  "homepage": "https://github.com/artsy/emission",
+  "license": "MIT",
+  "authors": {
+    "Eloy Durán": "eloy@artsy.net",
+    "Maxim Cramer": "maxim@artsy.net",
+    "Sarah Scott": "sarah.scott@artsy.net"
+  },
+  "source": {
+    "git": "https://github.com/artsy/emission.git",
+    "tag": "1.0.3"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*.{h,m}",
+  "resources": "Pod/Assets/Emission.js",
+  "dependencies": {
+    "Artsy+UIFonts": [
+      ">= 1.1.0"
+    ],
+    "Extraction": [
+
+    ],
+    "SDWebImage": [
+      ">= 3.7.2"
+    ],
+    "React/Core": [
+      "0.27.1"
+    ],
+    "React/RCTText": [
+      "0.27.1"
+    ],
+    "React/RCTNetwork": [
+      "0.27.1"
+    ]
+  }
+}

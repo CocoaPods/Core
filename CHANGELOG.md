@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Support for CocoaPods registries.
+  [yahavi](https://github.com/yahavi)
+  [#644](https://github.com/CocoaPods/Core/pull/644)
 
 ##### Bug Fixes
 

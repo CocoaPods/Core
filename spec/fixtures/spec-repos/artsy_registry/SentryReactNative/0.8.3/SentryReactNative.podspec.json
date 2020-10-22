@@ -1,0 +1,29 @@
+{
+  "name": "SentryReactNative",
+  "version": "0.8.3",
+  "license": "MIT",
+  "summary": "Official Sentry client for react-native",
+  "authors": "Sentry",
+  "homepage": "https://github.com/getsentry/react-native-sentry",
+  "source": {
+    "git": "https://github.com/getsentry/react-native-sentry.git",
+    "tag": "v0.8.3"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "preserve_paths": "*.js",
+  "dependencies": {
+    "React": [
+
+    ],
+    "Sentry": [
+      "~> 2.1.9"
+    ],
+    "RSSwizzle": [
+      "~> 0.1.0"
+    ]
+  },
+  "source_files": "ios/RNSentry*.{h,m}",
+  "public_header_files": "ios/RNSentry.h"
+}

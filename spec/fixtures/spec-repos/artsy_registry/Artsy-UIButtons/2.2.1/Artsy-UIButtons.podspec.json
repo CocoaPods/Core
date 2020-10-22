@@ -1,0 +1,32 @@
+{
+  "name": "Artsy-UIButtons",
+  "version": "2.2.1",
+  "summary": "Artsy's UIButton subclasses.",
+  "homepage": "https://github.com/artsy/Artsy-UIButtons",
+  "license": "MIT",
+  "authors": {
+    "Laura Brown": "laurabrown1113@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/artsy/Artsy-UIButtons.git",
+    "tag": "2.2.1"
+  },
+  "social_media_url": "https://twitter.com/artsy",
+  "platforms": {
+    "ios": "7.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes",
+  "frameworks": "UIKit",
+  "dependencies": {
+    "Artsy+UIColors": [
+      "~> 3.0"
+    ],
+    "Artsy+UIFonts": [
+
+    ],
+    "UIView+BooleanAnimations": [
+
+    ]
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "name": "Extraction",
+  "version": "1.2.1",
+  "summary": "UI components shared between Eigen and Emission.",
+  "homepage": "https://github.com/artsy/extraction",
+  "license": "MIT",
+  "authors": {
+    "Eloy Durán": "eloy.de.enige@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/artsy/extraction.git",
+    "tag": "1.2.1"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "subspecs": [
+    {
+      "name": "ARSwitchView",
+      "source_files": "Extraction/Classes/ARSwitchView.{h,m}",
+      "dependencies": {
+        "Artsy+UIFonts": [
+          ">= 1.1.0"
+        ],
+        "Artsy+UIColors": [
+
+        ],
+        "FLKAutoLayout": [
+
+        ],
+        "UIView+BooleanAnimations": [
+
+        ]
+      }
+    },
+    {
+      "name": "ARSpinner",
+      "source_files": "Extraction/Classes/ARSpinner.{h,m}",
+      "dependencies": {
+        "Extraction/UIView+ARSpinner": [
+
+        ],
+        "UIView+BooleanAnimations": [
+
+        ]
+      }
+    },
+    {
+      "name": "UIView+ARSpinner",
+      "source_files": "Extraction/Classes/UIView+ARSpinner.{h,m}",
+      "dependencies": {
+        "Extraction/ARAnimationContinuation": [
+
+        ]
+      }
+    },
+    {
+      "name": "ARAnimationContinuation",
+      "source_files": "Extraction/Classes/ARAnimationContinuation.{h,m}"
+    },
+    {
+      "name": "UILabel+Typography",
+      "source_files": "Extraction/Classes/UILabel+Typography.{h,m}"
+    },
+    {
+      "name": "ARLoadFailureView",
+      "source_files": "Extraction/Classes/ARLoadFailureView.{h,m}",
+      "resources": "Extraction/Assets/ARLoadFailureRetryIcon@2x.png",
+      "dependencies": {
+        "Extraction/UILabel+Typography": [
+
+        ],
+        "ORStackView": [
+          "< 3"
+        ],
+        "Artsy-UIButtons": [
+
+        ]
+      }
+    }
+  ]
+}

@@ -24,6 +24,12 @@ module Pod
         @source.type.should == 'file system'
       end
 
+      it 'return its type when registry' do
+        @path = fixture('spec-repos/artsy_registry')
+        @source = Source.new(@path)
+        @source.type.should == 'registry'
+      end
+
       it 'can be ordered according to its name' do
         s1 = Source.new(Pathname.new 'customized')
         s2 = Source.new(Pathname.new 'master')
