@@ -99,6 +99,18 @@ module Pod
           attributes_hash['social_media_url']
         end
 
+        # @return [String] The readme.
+        #
+        def readme
+          attributes_hash['readme']
+        end
+
+        # @return [String] The changelog.
+        #
+        def changelog
+          attributes_hash['changelog']
+        end
+
         # @return [Hash] A hash containing the license information of the Pod.
         #
         # @note   The indentation is stripped from the license text.
