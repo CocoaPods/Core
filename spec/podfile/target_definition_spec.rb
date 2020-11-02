@@ -548,6 +548,17 @@ module Pod
         @child.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
       end
 
+      it 'child pods for configurations can merge from parent' do
+        @parent.store_pod('ObjectiveSugar', :configuration => 'Release')
+        @child.store_pod('AFNetworking', :configuration => 'Release')
+        @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @parent.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @child.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
+        @child.should.not.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Debug')
+        @child.should.pod_whitelisted_for_configuration?('AFNetworking', 'Release')
+        @child.should.not.pod_whitelisted_for_configuration?('AFNetworking', 'Debug')
+      end
+
       it 'coerces configuration names to strings' do
         @parent.store_pod('ObjectiveSugar', :configuration => :Release)
         @parent.should.pod_whitelisted_for_configuration?('ObjectiveSugar', 'Release')
