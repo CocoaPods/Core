@@ -350,7 +350,7 @@ module Pod
         end
 
         unless @check_existing_files_for_update
-          debug "CDN: #{name} Relative path: #{partial_url} exists! Returning local because checking is only perfomed in repo update"
+          debug "CDN: #{name} Relative path: #{partial_url} exists! Returning local because checking is only performed in repo update"
           return Promises.fulfilled_future(partial_url, HYDRA_EXECUTOR)
         end
       end
