@@ -10,7 +10,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Ignore path when checking vendored_libraries `lib[name].a` format.
+  [Ivan Romanovski](https://github.com/IvanRomanovski)
+  [#626](https://github.com/CocoaPods/Core/pull/626)
 
 
 ## 1.10.0 (2020-10-20)

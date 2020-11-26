@@ -645,7 +645,7 @@ module Pod
       #------------------#
 
       it 'accepts valid vendored_libraries' do
-        @spec.vendored_libraries = 'libCoconut.a'
+        @spec.vendored_libraries = ['libCoconut.a', 'path/libCoconut.a', '**/lib*.a']
         @linter.lint
         @linter.results.should.be.empty?
       end
