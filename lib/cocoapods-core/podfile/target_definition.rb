@@ -963,7 +963,7 @@ module Pod
         if exclusive?
           whitelist_hash
         else
-          parent.send(:configuration_pod_whitelist).merge(whitelist_hash) { |l, r| (l + r).uniq }
+          parent.send(:configuration_pod_whitelist).merge(whitelist_hash) { |_, l, r| Array(l).concat(r).uniq }
         end
       end
 
