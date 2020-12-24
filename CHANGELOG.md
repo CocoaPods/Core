@@ -8,6 +8,10 @@
   [Eloy Durán](https://github.com/alloy)
   [#657](https://github.com/CocoaPods/Core/pull/657)
 
+* Update comments/docs to indicate `module_map=false` will skip `modulemap` file generation.  
+  [Sergey Erokhin](https://github.com/till0xff)
+  [#664](https://github.com/CocoaPods/Core/pull/664)
+
 ##### Bug Fixes
 
 * None.  

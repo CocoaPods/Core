@@ -370,6 +370,11 @@ module Pod
         @spec.attributes_hash['module_map'].should == 'module.modulemap'
       end
 
+      it 'allows to skip modulemap file generation' do
+        @spec.module_map = false
+        @spec.attributes_hash['module_map'].should == false
+      end
+
       it 'allows to specify the script phases shipped with the Pod' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"' }
         @spec.attributes_hash['script_phases'].should == { 'name' => 'Hello World', 'script' => 'echo "Hello World"' }

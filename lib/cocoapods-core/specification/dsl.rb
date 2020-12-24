@@ -1428,6 +1428,12 @@ module Pod
       #   The module map file that should be used when this pod is integrated as
       #   a framework.
       #
+      #   `false` indicates that the default CocoaPods `modulemap` file should not
+      #   be generated.
+      #
+      #   `true` is the default and indicates that the default CocoaPods
+      #   `modulemap` file should be generated.
+      #
       #   ---
       #
       #   By default, CocoaPods creates a module map file based upon the public
@@ -1437,11 +1443,17 @@ module Pod
       #
       #     spec.module_map = 'source/module.modulemap'
       #
-      #   @param  [String] module_map
-      #           the path to the module map file that should be used.
+      #   @example
+      #
+      #     spec.module_map = false
+      #
+      #   @param  [String, Bool] module_map
+      #           the path to the module map file that should be used
+      #           or whether to disable module_map generation.
       #
       attribute :module_map,
-                :root_only     => true
+                :types => [TrueClass, FalseClass, String],
+                :root_only => true
 
       #-----------------------------------------------------------------------#
 
