@@ -1427,8 +1427,10 @@ module Pod
       #
       #   The module map file that should be used when this pod is integrated as
       #   a framework.
+      #
       #   `false` indicates that the default CocoaPods `modulemap` file should not
       #   be generated.
+      #
       #   `true` is the default and indicates that the default CocoaPods
       #   `modulemap` file should be generated.
       #
