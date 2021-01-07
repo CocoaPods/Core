@@ -17,6 +17,17 @@
 * None.  
 
 
+## 1.10.1 (2021-01-07)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.10.0 (2020-10-20)
 
 ##### Enhancements
