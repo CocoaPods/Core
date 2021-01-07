@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add a pre_integrate_hook API  
+  [David Chavez](https://github.com/dcvz)
+  [#643](https://github.com/CocoaPods/Core/pull/643)
+
 * Allow version `0` to be used.  
   [Eloy Durán](https://github.com/alloy)
   [#657](https://github.com/CocoaPods/Core/pull/657)
@@ -21,9 +25,7 @@
 
 ##### Enhancements
 
-* Add a pre_integrate_hook API  
-  [dcvz](https://github.com/dcvz)
-  [#643](https://github.com/CocoaPods/Core/pull/643)
+* None.
 
 ##### Bug Fixes
 
