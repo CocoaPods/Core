@@ -921,9 +921,7 @@ module Pod
       # This hook allows you to make any changes to the Pods after they have
       # been downloaded but before they are installed.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
       # @example  Defining a pre-install hook in a Podfile.
       #
@@ -939,9 +937,7 @@ module Pod
       # This hook allows you to make changes before the project is written
       # to disk.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
       # @example  Customizing the dependencies before integration
       #
@@ -960,9 +956,7 @@ module Pod
       # project before it is written to disk, or any other tasks you might want
       # to perform.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
       # @example  Customizing the build settings of all targets
       #
@@ -984,9 +978,7 @@ module Pod
       # This hook allows you to make changes after the project is written
       # to disk.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
       # @example  Customizing the build settings of all targets
       #
