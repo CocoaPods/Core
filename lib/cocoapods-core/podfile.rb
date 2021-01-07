@@ -171,7 +171,7 @@ module Pod
     # @param  [Pod::Installer] installer
     #         the installer that is performing the installation.
     #
-    # @return [Bool] whether a pre install callback was specified and it was
+    # @return [Bool] whether a pre integrate callback was specified and it was
     #         called.
     #
     def pre_integrate!(installer)

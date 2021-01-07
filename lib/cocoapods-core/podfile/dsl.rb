@@ -943,7 +943,7 @@ module Pod
       # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Customising the dependencies before integration
+      # @example  Customizing the dependencies before integration
       #
       #   pre_integrate do |installer|
       #     # perform some changes on dependencies
@@ -964,7 +964,7 @@ module Pod
       # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Customising the build settings of all targets
+      # @example  Customizing the build settings of all targets
       #
       #   post_install do |installer|
       #     installer.pods_project.targets.each do |target|
@@ -988,7 +988,7 @@ module Pod
       # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
       # as its only argument.
       #
-      # @example  Customising the build settings of all targets
+      # @example  Customizing the build settings of all targets
       #
       #   post_integrate do |installer|
       #     # some change after project write to disk
