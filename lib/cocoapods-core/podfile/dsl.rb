@@ -921,9 +921,7 @@ module Pod
       # This hook allows you to make any changes to the Pods after they have
       # been downloaded but before they are installed.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
       # @example  Defining a pre-install hook in a Podfile.
       #
@@ -936,15 +934,31 @@ module Pod
         @pre_install_callback = block
       end
 
+      # This hook allows you to make changes before the project is written
+      # to disk.
+      #
+      # It receives the [Pod::Installer] as its only argument.
+      #
+      # @example  Customizing the dependencies before integration
+      #
+      #   pre_integrate do |installer|
+      #     # perform some changes on dependencies
+      #   end
+      #
+      # @return   [void]
+      #
+      def pre_integrate(&block)
+        raise Informative, 'Specifying multiple `pre_integrate` hooks is unsupported.' if @pre_integrate_callback
+        @pre_integrate_callback = block
+      end
+
       # This hook allows you to make any last changes to the generated Xcode
       # project before it is written to disk, or any other tasks you might want
       # to perform.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
-      # @example  Customising the build settings of all targets
+      # @example  Customizing the build settings of all targets
       #
       #   post_install do |installer|
       #     installer.pods_project.targets.each do |target|
@@ -964,11 +978,9 @@ module Pod
       # This hook allows you to make changes after the project is written
       # to disk.
       #
-      # It receives the
-      # [`Pod::Installer`](http://rubydoc.info/gems/cocoapods/Pod/Installer/)
-      # as its only argument.
+      # It receives the [Pod::Installer] as its only argument.
       #
-      # @example  Customising the build settings of all targets
+      # @example  Customizing the build settings of all targets
       #
       #   post_integrate do |installer|
       #     # some change after project write to disk

@@ -84,6 +84,12 @@ module Pod
         result.should.be == true
       end
 
+      it 'indicates if the pre integrate hook was executed' do
+        Podfile.new {}.pre_integrate!(:an_installer).should.be == false
+        result = Podfile.new { pre_integrate { |_installer| } }.pre_integrate!(:an_installer)
+        result.should.be == true
+      end
+
       it 'returns all dependencies of all targets combined' do
         @podfile.dependencies.map(&:name).sort.should == %w(ASIHTTPRequest JSONKit Reachability SSZipArchive)
       end
