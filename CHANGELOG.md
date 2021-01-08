@@ -36,7 +36,7 @@
 
 ##### Enhancements
 
-* None.
+* None.  
 
 ##### Bug Fixes
 
