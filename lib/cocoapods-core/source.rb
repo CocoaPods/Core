@@ -167,9 +167,11 @@ module Pod
       pod_dir = pod_path(name)
       return unless pod_dir.exist?
       @versions_by_name[name] ||= pod_dir.children.map do |v|
+        next nil unless v.directory?
         basename = v.basename.to_s
+        next unless basename[0, 1] != '.'
         begin
-          Version.new(basename) if v.directory? && basename[0, 1] != '.'
+          Version.new(basename)
         rescue ArgumentError
           raise Informative, 'An unexpected version directory ' \
            "`#{basename}` was encountered for the " \
@@ -264,6 +266,11 @@ module Pod
       end
       if query.is_a?(Dependency)
         query = query.root_name
+      end
+
+      if (versions = @versions_by_name[query]) && !versions.empty?
+        set = set(query)
+        return set if set.specification_name == query
       end
 
       found = []

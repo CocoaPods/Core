@@ -109,11 +109,16 @@ module Pod
     #         one or more version restrictions).
     #
     def requirement
-      if specific_version
-        Requirement.new(Version.new(specific_version.version))
-      else
-        @requirement
-      end
+      @specific_requirement || @requirement
+    end
+
+    # @param [Version] version the specific version to point to
+    #
+    def specific_version=(version)
+      @specific_version = version
+      @specific_requirement = if version
+                                Requirement.new(Version.new(version.version))
+                              end
     end
 
     # @return [Bool] whether the dependency points to a subspec.
@@ -196,9 +201,9 @@ module Pod
     def ==(other)
       self.class == other.class &&
         name == other.name &&
-        requirement == other.requirement &&
         external_source == other.external_source &&
-        podspec_repo == other.podspec_repo
+        podspec_repo == other.podspec_repo &&
+        requirement == other.requirement
     end
     alias_method :eql?, :==
 
