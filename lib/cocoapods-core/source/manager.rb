@@ -265,6 +265,11 @@ module Pod
             require 'json'
             begin
               index = JSON.parse(search_index_path.read)
+              unless index # JSON.parse("null") => nil
+                search_index_path.delete
+                return nil
+              end
+
               index if index.is_a?(Hash) # TODO: should we also check if hash has correct hierarchy?
             rescue JSON::ParserError
               search_index_path.delete
