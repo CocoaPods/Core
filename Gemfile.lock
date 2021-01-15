@@ -9,7 +9,7 @@ PATH
       fuzzy_match (~> 2.0.4)
       nap (~> 1.0)
       netrc (~> 0.11)
-      public_suffix
+      public_suffix (~> 4.0)
       typhoeus (~> 1.0)
 
 GEM

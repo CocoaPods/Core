@@ -27,14 +27,10 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'concurrent-ruby', '~> 1.1'
   s.add_runtime_dependency 'typhoeus', '~> 1.0'
   s.add_runtime_dependency 'netrc', '~> 0.11'
-  s.add_runtime_dependency "addressable", '~> 2.6'
-  s.add_runtime_dependency "public_suffix"
+  s.add_runtime_dependency 'addressable', '~> 2.6'
+  s.add_runtime_dependency 'public_suffix', '~> 4.0'
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
-  ## Make sure you can build the gem on older versions of RubyGems too:
-  s.rubygems_version = "1.6.2"
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.3.3'
-  s.specification_version = 3 if s.respond_to? :specification_version
+  s.required_ruby_version = '>= 2.6'
 end
