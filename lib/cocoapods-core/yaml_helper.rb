@@ -212,8 +212,6 @@ module Pod
 
       #-----------------------------------------------------------------------#
 
-      private
-
       # @!group Array Sorting
 
       # Sorts an array using another one as a sort hint. All the values of the
@@ -291,21 +289,21 @@ module Pod
         /0x[0-9a-fA-F]+/, # base 16 int
         /[-+]?(\.[0-9]+|[0-9]+(\.[0-9]*)?)([eE][-+]?[0-9]+)?/, # float
         /[-+]?\.(inf|Inf|INF)/, # infinity
-        /\.(nan|NaN|NAN)/, # NaN
+        /\.(nan|NaN|NAN)/ # NaN
       )
       private_constant :RESOLVED_TAGS
 
       INDICATOR_START_CHARS = %w(- ? : , [ ] { } # & * ! | > ' " % @ `).freeze
-      INDICATOR_START = /\A#{Regexp.union(INDICATOR_START_CHARS)}/
+      INDICATOR_START = /\A#{Regexp.union(INDICATOR_START_CHARS)}/.freeze
       private_constant :INDICATOR_START_CHARS, :INDICATOR_START
 
-      RESOLVED_TAGS_PATTERN = /\A#{Regexp.union(RESOLVED_TAGS)}\z/
+      RESOLVED_TAGS_PATTERN = /\A#{Regexp.union(RESOLVED_TAGS)}\z/.freeze
       private_constant :RESOLVED_TAGS_PATTERN
 
       VALID_PLAIN_SCALAR_STRING = %r{\A
         [\w&&[^#{INDICATOR_START_CHARS}]] # valid first character
         [\w/\ \(\)~<>=\.:`,-]* # all characters allowed after the first one
-      \z}ox
+      \z}ox.freeze
       private_constant :VALID_PLAIN_SCALAR_STRING
 
       def process_string(string)
