@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     cocoapods-core (1.10.1)
-      activesupport (> 5.0, < 6)
+      activesupport (~> 6.0)
       addressable (~> 2.6)
       algoliasearch (~> 1.0)
       concurrent-ruby (~> 1.1)
@@ -15,11 +15,12 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.4.4)
+    activesupport (6.1.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     algoliasearch (1.27.5)
@@ -82,11 +83,10 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.10.1)
-    thread_safe (0.3.6)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
-    tzinfo (1.2.9)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.4)
+      concurrent-ruby (~> 1.0)
     unicode-display_width (1.7.0)
     vcr (6.0.0)
     webmock (3.11.0)
@@ -94,6 +94,7 @@ GEM
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.7.0)
+    zeitwerk (2.4.2)
 
 PLATFORMS
   ruby

@@ -19,8 +19,7 @@ Gem::Specification.new do |s|
   s.files         =  Dir["lib/**/*.rb"] + %w{ README.md LICENSE }
   s.require_paths =  %w{ lib }
 
-  # 6.0 requires Ruby 2.5.0
-  s.add_runtime_dependency 'activesupport', '> 5.0', '< 6'
+  s.add_runtime_dependency 'activesupport', '~> 6.0'
   s.add_runtime_dependency 'nap', '~> 1.0'
   s.add_runtime_dependency 'fuzzy_match', '~> 2.0.4'
   s.add_runtime_dependency 'algoliasearch', '~> 1.0'
