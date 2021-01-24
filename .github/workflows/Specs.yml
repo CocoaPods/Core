@@ -31,6 +31,7 @@ jobs:
       - name: Run bundle install
         run: |
           gem install bundler -v "~> 1.17"
+          bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3 --without debugging documentation
 
       - name: Run Specs + Rubocop

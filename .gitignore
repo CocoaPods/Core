@@ -13,6 +13,7 @@ coverage/
 .idea/
 documentation/
 .bundle/
+vendor/bundle
 
 # trunk source
 spec/fixtures/spec-repos/trunk/**/*.etag
