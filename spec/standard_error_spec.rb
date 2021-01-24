@@ -33,9 +33,9 @@ module Pod
 
     it 'parses syntax error messages for well-formed messages' do
       code = "puts 'hi'\nputs())\nputs 'bye'"
-      # rubocop:disable Eval
+      # rubocop:disable Security/Eval
       syntax_error = should.raise(SyntaxError) { eval(code, nil, @dsl_path.to_s) }
-      # rubocop:enable Eval
+      # rubocop:enable Security/Eval
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
       @err.stubs(:underlying_exception).returns(syntax_error)
       File.stubs(:read).returns(code)

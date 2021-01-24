@@ -4,6 +4,7 @@ require:
 AllCops:
   Include:
     - lib/**/*.rb
+    - spec/**/*.rb
     - Rakefile
     - Gemfile
     - "*.gemspec"
