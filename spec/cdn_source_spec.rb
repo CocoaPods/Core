@@ -1,7 +1,5 @@
 require 'fileutils'
 require 'algoliasearch'
-require 'concurrent'
-require 'typhoeus'
 require File.expand_path('../spec_helper', __FILE__)
 
 module Mocha
@@ -38,6 +36,16 @@ module Pod
         File.open(@path.join('.url'), 'w') { |f| f.write(url) }
       end
 
+      def silencing_async_log_noise 
+        save_log_level = Async.logger.level
+        Async.logger.level = :fatal
+        begin
+          yield
+        ensure
+          Async.logger.level = save_log_level
+        end
+      end
+
       def cleanup
         Pathname.glob(@path.join('*')).each(&:rmtree)
         @path.join('.url').delete if @path.join('.url').exist?
@@ -49,29 +57,6 @@ module Pod
         STDERR.puts Pathname.glob(@path.join('*')).sort.join("\n")
       end
 
-      def fulfilled_future(result)
-        Concurrent::Promises.fulfilled_future(result)
-      end
-
-      def resolved_event
-        Concurrent::Promises.resolved_event
-      end
-
-      def typhoeus_http_response_future(code, headers = {}, body = '')
-        fulfilled_future(Typhoeus::Response.new(
-                           :response_code => code,
-                           :headers => headers,
-                           :response_body => body,
-        ))
-      end
-
-      def typhoeus_non_http_response_future(code)
-        fulfilled_future(Typhoeus::Response.new(
-                           :response_code => 0,
-                           :return_code => code,
-        ))
-      end
-
       @remote_dir = fixture('mock_cdn_repo_remote')
 
       @path = fixture('spec-repos/test_cdn_repo_local')
@@ -79,9 +64,14 @@ module Pod
       save_url('http://localhost:4321/')
 
       @source = CDNSource.new(@path)
+      @source.stubs(:make_sleep).returns(nil)
+
+      Async.logger.expects(:call).never
     end
 
     after do
+      @source.unstub(:make_sleep)
+      WebMock.reset!
       cleanup
     end
 
@@ -158,7 +148,7 @@ module Pod
         @source = CDNSource.new(@path)
 
         netrc_file = temporary_directory + '.netrc'
-        File.open(netrc_file, 'w') { |f| f.write("machine localhost\nlogin user1\npassword xxx\n") }
+        File.open(netrc_file, 'w', 0o600) { |f| f.write("machine localhost\nlogin user1\npassword xxx\n") }
 
         ENV['NETRC'] = temporary_directory.to_s
         auth = nil
@@ -174,15 +164,13 @@ module Pod
         relative_path = 'all_pods_versions_2_0_9.txt'
         original_url = 'http://localhost:4321/' + relative_path
         redirect_url = 'http://localhost:4321/redirected/' + relative_path
-        @source.expects(:download_typhoeus_impl_async).
-          with_url(original_url).
-          returns(typhoeus_http_response_future(301, 'location' => redirect_url))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url(redirect_url).
-          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(typhoeus_http_response_future(200, {}, ''))
+
+        WebMock.stub_request(:get, original_url).
+          to_return(:status => 301, :headers => { 'location' => redirect_url })
+        WebMock.stub_request(:get, redirect_url).
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0')
+        WebMock.stub_request(:get, 'http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          to_return(:status => 200, :headers => {}, :body => '')
 
         @source.expects(:debug).with { |cmd| cmd.include? "CDN: #{@source.name} Relative path downloaded: all_pods_versions_2_0_9.txt, save ETag:" }
         @source.expects(:debug).with("CDN: #{@source.name} Redirecting from #{original_url} to #{redirect_url}")
@@ -190,150 +178,136 @@ module Pod
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
-      it 'handles responses with no headers' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          returns(typhoeus_http_response_future(200, nil, 'BeaconKit/1.0.0'))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(typhoeus_http_response_future(200, nil, '{}'))
-        should.not.raise do
-          @source.versions('BeaconKit')
-        end
-      end
-
-      it 'forces UTF-8 encoding for the body' do
-        mock_json_body = mock
-        mock_json_body.expects(:force_encoding).with('UTF-8').at_least_once
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          returns(typhoeus_http_response_future(200, nil, 'BeaconKit/1.0.0'))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(typhoeus_http_response_future(200, {}, mock_json_body))
-        should.not.raise do
-          @source.versions('BeaconKit')
-        end
-      end
-
       it 'raises if unexpected HTTP error' do
-        @source.expects(:download_typhoeus_impl_async).
-          returns(typhoeus_http_response_future(500))
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_return(:status => 500, :headers => {}, :body => '')
+
         should.raise Informative do
-          @source.versions('BeaconKit')
+          silencing_async_log_noise do
+            @source.versions('BeaconKit')
+          end
         end.message.
-          should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: 500"
+          should.include "CDN: #{@source.name} URL couldn't be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: 500"
       end
 
       it 'raises if unexpected non-HTTP error' do
-        @source.expects(:download_typhoeus_impl_async).
-          at_least_once.
-          returns(typhoeus_non_http_response_future(:couldnt_connect))
-
-        @source.expects(:sleep_async).at_least_once.with(anything).returns(resolved_event)
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_raise(SocketError)
 
         should.raise Informative do
-          @source.versions('BeaconKit')
+          silencing_async_log_noise do
+            @source.versions('BeaconKit')
+          end
         end.message.
           should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
 
       it 'retries after unexpected HTTP error' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          at_most(5).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          then.
-          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(typhoeus_http_response_future(200, {}, ''))
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0')
 
-        [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        WebMock.stub_request(:get, 'http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          to_return(:status => 200, :headers => {}, :body => '')
+
+        [4, 8, 16, 32].each_with_index do |seconds, i|
+          @source.expects(:backoff_time).with(Pod::CDNSource::MAX_NUMBER_OF_RETRIES - i).returns(seconds)
         end
 
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'fails after unexpected HTTP error retries are exhausted' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          at_most(5).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503)).
-          returns(typhoeus_http_response_future(503))
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '').
+          to_return(:status => 503, :headers => {}, :body => '')
 
-        [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        [4, 8, 16, 32].each_with_index do |seconds, i|
+          @source.expects(:backoff_time).with(Pod::CDNSource::MAX_NUMBER_OF_RETRIES - i).returns(seconds)
         end
 
         should.raise Informative do
-          @source.versions('BeaconKit')
+          silencing_async_log_noise do
+            @source.versions('BeaconKit')
+          end
         end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: 503"
       end
 
       it 'retries after unexpected non-HTTP error' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          at_most(5).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          then.
-          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0'))
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
-          returns(typhoeus_http_response_future(200, {}, ''))
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0')
 
-        [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        WebMock.stub_request(:get, 'http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.0/BeaconKit.podspec.json').
+          to_return(:status => 200, :headers => {}, :body => '')
+
+        [4, 8, 16, 32].each_with_index do |seconds, i|
+          @source.expects(:backoff_time).with(Pod::CDNSource::MAX_NUMBER_OF_RETRIES - i).returns(seconds)
         end
 
         @source.versions('BeaconKit').map(&:to_s).should == %w(1.0.0)
       end
 
       it 'fails after unexpected non-HTTP error retries are exhausted' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          at_most(5).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect)).
-          returns(typhoeus_non_http_response_future(:couldnt_connect))
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_raise(SocketError).
+          to_raise(SocketError)
 
-        [4, 8, 16, 32].each do |seconds|
-          @source.expects(:sleep_async).with(seconds).returns(resolved_event)
+        [4, 8, 16, 32].each_with_index do |seconds, i|
+          @source.expects(:backoff_time).with(Pod::CDNSource::MAX_NUMBER_OF_RETRIES - i).returns(seconds)
         end
 
         should.raise Informative do
-          @source.versions('BeaconKit')
+          silencing_async_log_noise do
+            @source.versions('BeaconKit')
+          end
         end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
 
-      it 'raises cumulative error when more than one Future rejects' do
-        @source.expects(:download_typhoeus_impl_async).
-          with_url('http://localhost:4321/all_pods_versions_2_0_9.txt').
-          returns(typhoeus_http_response_future(200, {}, 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5'))
-        versions = %w(0 1 2 3 4 5)
-        messages = versions.map do |index|
-          @source.expects(:download_typhoeus_impl_async).
-            at_least_once.
-            with_url("http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
-            returns(typhoeus_http_response_future(500, {}, 'Some error'))
+      it 'raises cumulative error when concurrent requests have errors' do
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5')
+
+        messages = %w(0 1 2 3 4 5).map do |index|
+          WebMock.stub_request(:get, "http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
+            to_return(:status => 500, :headers => {}, :body => 'Some error')
+
           "CDN: #{@source.name} URL couldn't be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json Response: 500 Some error"
         end
 
         should.raise Informative do
           @source.versions('BeaconKit')
         end.message.should.include "CDN: #{@source.name} Repo update failed - 6 error(s):\n" + messages.join("\n")
+      end
+
+      it 'raises cumulative error only for errored requests' do
+        WebMock.stub_request(:get, 'http://localhost:4321/all_pods_versions_2_0_9.txt').
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5')
+        WebMock.stub_request(:get, 'http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.4/BeaconKit.podspec.json').
+          to_return(:status => 200, :headers => {}, :body => 'BeaconKit/1.0.0/1.0.1/1.0.2/1.0.3/1.0.4/1.0.5')
+
+        messages = %w(0 1 2 3 5).map do |index|
+          WebMock.stub_request(:get, "http://localhost:4321/Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json").
+            to_return(:status => 500, :headers => {}, :body => 'Some error')
+
+          "CDN: #{@source.name} URL couldn't be downloaded: #{@url}Specs/2/0/9/BeaconKit/1.0.#{index}/BeaconKit.podspec.json Response: 500 Some error"
+        end
+
+        should.raise Informative do
+          @source.versions('BeaconKit')
+        end.message.should.include "CDN: #{@source.name} Repo update failed - 5 error(s):\n" + messages.join("\n")
       end
 
       it 'returns cached versions for a Pod' do
@@ -502,9 +476,10 @@ module Pod
 
     describe '#update' do
       it 'returns empty array' do
-        File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
+        File.open(@path.join('deprecated_podspecs.txt'), 'w') {}
+
         CDNSource.any_instance.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
-        CDNSource.any_instance.expects(:download_file_async).with('CocoaPods-version.yml').returns(fulfilled_future('CocoaPods-version.yml'))
+        CDNSource.any_instance.expects(:download_file_async).with('CocoaPods-version.yml')
         @source.update(true).should == []
       end
     end
@@ -542,8 +517,8 @@ module Pod
       it 'refreshes all index files' do
         File.open(@path.join('deprecated_podspecs.txt'), 'w') { |f| }
         @source.expects(:download_file).with('deprecated_podspecs.txt').returns('deprecated_podspecs.txt')
-        @source.expects(:download_file_async).with('CocoaPods-version.yml').returns(fulfilled_future('CocoaPods-version.yml'))
-        @source.expects(:download_file_async).with('all_pods_versions_2_0_9.txt').returns(fulfilled_future('all_pods_versions_2_0_9.txt'))
+        @source.expects(:download_file_async).with('CocoaPods-version.yml')
+        @source.expects(:download_file_async).with('all_pods_versions_2_0_9.txt')
         @source.update(true)
       end
 
