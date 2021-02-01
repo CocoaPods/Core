@@ -525,6 +525,20 @@ module Pod
 
       #------------------#
 
+      it 'checks if the readme has been changed from default' do
+        @spec.stubs(:readme).returns('https://www.example.com/README')
+        result_should_include('readme', 'default')
+      end
+
+      #------------------#
+
+      it 'checks if the changelog has been changed from default' do
+        @spec.stubs(:changelog).returns('https://www.example.com/CHANGELOG')
+        result_should_include('changelog', 'default')
+      end
+
+      #------------------#
+
       it 'checks script phases include the required keys' do
         @spec.script_phases = { :name => 'Hello World' }
         result_should_include('script_phases', 'Missing required shell script phase options `script` in script phase `Hello World`.')
