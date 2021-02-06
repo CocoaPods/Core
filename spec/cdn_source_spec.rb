@@ -36,16 +36,6 @@ module Pod
         File.open(@path.join('.url'), 'w') { |f| f.write(url) }
       end
 
-      def silencing_async_log_noise 
-        save_log_level = Async.logger.level
-        Async.logger.level = :fatal
-        begin
-          yield
-        ensure
-          Async.logger.level = save_log_level
-        end
-      end
-
       def cleanup
         Pathname.glob(@path.join('*')).each(&:rmtree)
         @path.join('.url').delete if @path.join('.url').exist?
@@ -65,13 +55,19 @@ module Pod
 
       @source = CDNSource.new(@path)
       @source.stubs(:make_sleep).returns(nil)
+      
+      @save_log_level = Async.logger.level
 
-      Async.logger.expects(:call).never
+      # silence "unawaited task error" false positives to reduce log noise
+      # see https://github.com/socketry/async/issues/91 for more discussion
+      # uncomment for debug purposes
+      Async.logger.level = :fatal
     end
 
     after do
       @source.unstub(:make_sleep)
       WebMock.reset!
+      Async.logger.level = @save_log_level
       cleanup
     end
 
@@ -183,9 +179,7 @@ module Pod
           to_return(:status => 500, :headers => {}, :body => '')
 
         should.raise Informative do
-          silencing_async_log_noise do
-            @source.versions('BeaconKit')
-          end
+          @source.versions('BeaconKit')
         end.message.
           should.include "CDN: #{@source.name} URL couldn't be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: 500"
       end
@@ -195,9 +189,7 @@ module Pod
           to_raise(SocketError)
 
         should.raise Informative do
-          silencing_async_log_noise do
-            @source.versions('BeaconKit')
-          end
+          @source.versions('BeaconKit')
         end.message.
           should.include "CDN: #{@source.name} URL couldn\'t be downloaded: #{@url}all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
@@ -233,9 +225,7 @@ module Pod
         end
 
         should.raise Informative do
-          silencing_async_log_noise do
-            @source.versions('BeaconKit')
-          end
+          @source.versions('BeaconKit')
         end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: 503"
       end
 
@@ -270,9 +260,7 @@ module Pod
         end
 
         should.raise Informative do
-          silencing_async_log_noise do
-            @source.versions('BeaconKit')
-          end
+          @source.versions('BeaconKit')
         end.message.should.include "CDN: #{@source.name} URL couldn't be downloaded: http://localhost:4321/all_pods_versions_2_0_9.txt Response: Couldn't connect to server"
       end
 
