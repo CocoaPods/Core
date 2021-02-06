@@ -61,7 +61,7 @@ module Pod
       # silence "unawaited task error" false positives to reduce log noise
       # see https://github.com/socketry/async/issues/91 for more discussion
       # uncomment for debug purposes
-      Async.logger.level = :fatal
+      # Async.logger.level = :fatal
     end
 
     after do
