@@ -327,9 +327,9 @@ module Pod
       podfile = Podfile.new(path) do
         # rubocop:disable Lint/RescueException
         begin
-          # rubocop:disable Eval
+          # rubocop:disable Security/Eval
           eval(contents, nil, path.to_s)
-          # rubocop:enable Eval
+          # rubocop:enable Security/Eval
         rescue Exception => e
           message = "Invalid `#{path.basename}` file: #{e.message}"
           raise DSLError.new(message, path, e, contents)

@@ -824,9 +824,9 @@ module Pod
   #
   #
   def self._eval_podspec(string, path)
-    # rubocop:disable Eval
+    # rubocop:disable Security/Eval
     eval(string, nil, path.to_s)
-    # rubocop:enable Eval
+    # rubocop:enable Security/Eval
 
     # rubocop:disable Lint/RescueException
   rescue Exception => e
