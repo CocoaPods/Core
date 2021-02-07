@@ -298,6 +298,13 @@ module Pod
         end.message.should.include "CDN: #{@source.name} Repo update failed - 5 error(s):\n" + messages.join("\n")
       end
 
+      it 'remote' do
+        save_url('https://cdn.cocoapods.org/')
+        @source = CDNSource.new(@path)
+
+        @source.versions('BeaconKit')
+      end
+
       it 'returns cached versions for a Pod' do
         pod_path_children = %w(1.0.5 1.0.4 1.0.3 1.0.2 1.0.1 1.0.0)
         @source.versions('BeaconKit').map(&:to_s).should == pod_path_children
