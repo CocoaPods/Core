@@ -302,6 +302,7 @@ module Pod
         save_url('https://cdn.cocoapods.org/')
         @source = CDNSource.new(@path)
 
+        @source.versions('RxSwift').map(&:to_s).should.include '6.0.0'
         @source.versions('BeaconKit').map(&:to_s).should.include '1.0.0'
       end
 
