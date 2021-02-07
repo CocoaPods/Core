@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Specs + Rubocop
         env:
-          NIO4_PURE: ${{ matrix.nio }}
+          NIO4R_PURE: ${{ matrix.nio }}
         run: bundle exec rake spec
 
 on:
