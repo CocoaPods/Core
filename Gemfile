@@ -2,8 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'nio4r', '2.5.4'
-
 group :development do
   gem 'bacon'
   gem 'mocha', '< 1.5'
