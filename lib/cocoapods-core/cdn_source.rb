@@ -82,9 +82,9 @@ module Pod
             download_file_async(file)
           end
         end
+      ensure
+        http_client.close
       end
-    ensure
-      http_client.close
     end
 
     def files_definitely_to_update
@@ -148,6 +148,8 @@ module Pod
             end
           end
         end
+      ensure
+        http_client.close  
       end
 
       @versions_by_name[name] ||= @version_arrays_by_fragment_by_name[fragment][name].map do |version|
@@ -157,8 +159,6 @@ module Pod
           "`#{version}` was encountered for the " \
           "`#{pod_path_actual}` Pod in the `#{name}` repository."
       end.compact.sort.reverse
-    ensure
-      http_client.close
     end
 
     # Returns the path of the specification with the given name and version.
@@ -348,11 +348,10 @@ module Pod
     def download_file(partial_url)
       Sync do
         download_file_async(partial_url)
+        http_client.close
       end
 
       partial_url
-    ensure
-      http_client.close
     end
 
     def download_file_async(partial_url)
