@@ -371,7 +371,7 @@ module Pod
 
       download_task = download_typhoeus_impl_async(file_remote_url, etag).then do |response|
         case response.response_code
-        when 301
+        when 301, 302
           redirect_location = response.headers['location']
           debug "CDN: #{name} Redirecting from #{file_remote_url} to #{redirect_location}"
           download_and_save_with_retries_async(partial_url, redirect_location, etag)
