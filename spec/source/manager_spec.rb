@@ -198,29 +198,56 @@ module Pod
             @sources_manager.send(:name_for_url, url).should == 'trunk'
           end
 
-          it 'uses the organization name for github.com URLs' do
+          it 'uses the organization and repo name for github.com URLs' do
             url = 'https://github.com/segiddins/banana.git'
+            @sources_manager.send(:name_for_url, url).should == 'segiddins-banana'
+          end
+
+          it 'uses the organization name only for github.com specs URLs' do
+            url = 'https://github.com/segiddins/Specs.git'
             @sources_manager.send(:name_for_url, url).should == 'segiddins'
           end
 
           it 'uses a combination of host and path for other URLs' do
             url = 'https://sourceforge.org/Artsy/Specs.git'
             @sources_manager.send(:name_for_url, url).
-              should == 'sourceforge-artsy-specs'
+              should == 'sourceforge-artsy'
+            url = 'https://sourceforge.org.au/Artsy/Specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'sourceforge-artsy'
+            url = 'https://pvt.sourceforge.org.au/Artsy/Specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'sourceforge-artsy'
+          end
+
+          it 'can understand arbitrary URI schemes' do
+            url = 'banana://website.org/Artsy/Specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'website-artsy'
+          end
+
+          it 'should raise on completely ridiculous non-URL input' do
+            url = '    '
+            should.raise Informative do
+              @sources_manager.send(:name_for_url, url)
+            end.message.should.== "Couldn't determine repo name for URL: #{url}"
           end
 
           it 'supports scp-style URLs' do
             url = 'git@git-host.com:specs.git'
             @sources_manager.send(:name_for_url, url).
-              should == 'git-host-specs'
+              should == 'git-host'
 
             url = 'git@git-host.com/specs.git'
             @sources_manager.send(:name_for_url, url).
-              should == 'git-host-specs'
+              should == 'git-host'
 
             url = 'git@git-host.com:/specs.git'
             @sources_manager.send(:name_for_url, url).
-              should == 'git-host-specs'
+              should == 'git-host'
+            url = 'git@github.com/segiddins/Specs'
+            @sources_manager.send(:name_for_url, url).
+              should == 'segiddins'
           end
 
           it 'supports ssh URLs with an aliased hostname' do
@@ -230,9 +257,12 @@ module Pod
           end
 
           it 'supports file URLs' do
-            url = 'file:///Users/kurrytran/pod-specs'
+            url = 'file:///Users/kurrytran/etc'
             @sources_manager.send(:name_for_url, url).
-              should == 'users-kurrytran-pod-specs'
+              should == 'users-kurrytran-etc'
+            url = 'file:///Users/kurrytran/specs'
+            @sources_manager.send(:name_for_url, url).
+              should == 'users-kurrytran'
           end
 
           it 'uses the repo name if no parent directory' do
@@ -244,20 +274,20 @@ module Pod
           it 'supports ssh URLs with no user component' do
             url = 'ssh://company.com/pods/specs.git'
             @sources_manager.send(:name_for_url, url).
-              should == 'company-pods-specs'
+              should == 'company-pods'
           end
 
           it 'appends a number to the name if the base name dir exists' do
             url = 'https://github.com/segiddins/banana.git'
             Pathname.any_instance.stubs(:exist?).
               returns(true).then.returns(false)
-            @sources_manager.send(:name_for_url, url).should == 'segiddins-1'
+            @sources_manager.send(:name_for_url, url).should == 'segiddins-banana-1'
 
             url = 'https://sourceforge.org/Artsy/Specs.git'
             Pathname.any_instance.stubs(:exist?).
               returns(true).then.returns(false)
             @sources_manager.send(:name_for_url, url).
-              should == 'sourceforge-artsy-specs-1'
+              should == 'sourceforge-artsy-1'
           end
         end
 

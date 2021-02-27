@@ -1,3 +1,5 @@
+require 'public_suffix'
+
 module Pod
   class Source
     class Manager
@@ -409,12 +411,12 @@ module Pod
       # @example A non-Github.com URL
       #
       #          name_for_url('https://sourceforge.org/Artsy/Specs.git')
-      #            # sourceforge-artsy-specs
+      #            # sourceforge-artsy
       #
       # @example A file URL
       #
       #           name_for_url('file:///Artsy/Specs.git')
-      #             # artsy-specs
+      #             # artsy
       #
       # @param  [#to_s] url
       #         The URL of the source.
@@ -424,28 +426,48 @@ module Pod
       def name_for_url(url)
         base_from_host_and_path = lambda do |host, path|
           if host && !host.empty?
-            base = host.split('.')[-2] || host
-            base += '-'
+            domain = PublicSuffix.parse(host) rescue nil
+            base = [domain&.sld || host]
+            base = [] if base == %w(github)
           else
-            base = ''
+            base = []
           end
 
-          base + path.gsub(/.git$/, '').gsub(%r{^/}, '').split('/').join('-')
+          path = path.gsub(/.git$/, '').gsub(%r{^/}, '').split('/')
+          path.delete('specs')
+
+          (base + path).join('-')
         end
 
-        case url.to_s.downcase
+        valid_url = lambda do |url|
+          url =~ URI.regexp && (URI(url) rescue false)
+        end
+
+        valid_scp_url = lambda do |url|
+          valid_url['scp://' + url]
+        end
+
+        url = url.to_s.downcase
+
+        case url
         when %r{https://#{Regexp.quote(trunk_repo_hostname)}}i
+          # Main CDN repo
           base = Pod::TrunkSource::TRUNK_REPO_NAME
-        when %r{github.com[:/]+(.+)/(.+)}
-          base = Regexp.last_match[1]
-        when %r{^\S+@(\S+)[:/]+(.+)$}
-          host, path = Regexp.last_match.captures
-          base = base_from_host_and_path[host, path]
-        when URI.regexp
-          url = URI(url.downcase)
+        when valid_url
+          # HTTPS URL or something similar
+          url = valid_url[url]
           base = base_from_host_and_path[url.host, url.path]
+        when valid_scp_url
+          # SCP-style URLs for private git repos
+          url = valid_scp_url[url]
+          base = base_from_host_and_path[url.host, url.path]
+        when %r{(?:git|ssh|https?|git@([-\w.]+)):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$}i
+          # Additional SCP-style URLs for private git repos
+          host, _, path = Regexp.last_match.captures
+          base = base_from_host_and_path[host, path]
         else
-          base = url.to_s.downcase
+          # This is nearly impossible, with all the previous cases
+          raise Informative, "Couldn't determine repo name for URL: #{url}"
         end
 
         name = base
