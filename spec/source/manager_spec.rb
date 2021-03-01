@@ -220,6 +220,11 @@ module Pod
               should == 'sourceforge-artsy'
           end
 
+          it 'does not remove /specs path component if it is not the last one' do
+            url = 'https://sourceforge.org.au/Specs/Path/Repo.git'
+            @sources_manager.send(:name_for_url, url).should == 'sourceforge-specs-path-repo'
+          end
+
           it 'can understand arbitrary URI schemes' do
             url = 'banana://website.org/Artsy/Specs.git'
             @sources_manager.send(:name_for_url, url).

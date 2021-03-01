@@ -434,7 +434,7 @@ module Pod
           end
 
           path = path.gsub(/.git$/, '').gsub(%r{^/}, '').split('/')
-          path.delete('specs')
+          path.pop if path.last == 'specs'
 
           (base + path).join('-')
         end
