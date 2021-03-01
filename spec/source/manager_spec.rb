@@ -291,8 +291,13 @@ module Pod
             url = 'https://sourceforge.org/Artsy/Specs.git'
             Pathname.any_instance.stubs(:exist?).
               returns(true).then.returns(false)
-            @sources_manager.send(:name_for_url, url).
-              should == 'sourceforge-artsy-1'
+            @sources_manager.send(:name_for_url, url).should == 'sourceforge-artsy-1'
+
+            url = 'https://sourceforge.org/Artsy/Specs.git'
+            Pathname.any_instance.stubs(:exist?).
+              returns(true).then.
+              returns(true).then.returns(false)
+            @sources_manager.send(:name_for_url, url).should == 'sourceforge-artsy-2'
           end
         end
 

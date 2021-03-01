@@ -471,8 +471,7 @@ module Pod
         end
 
         name = base
-        infinity = 1.0 / 0
-        (1..infinity).each do |i|
+        (1..).each do |i|
           break unless source_dir(name).exist?
           name = "#{base}-#{i}"
         end
