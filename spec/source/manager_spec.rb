@@ -243,6 +243,10 @@ module Pod
             @sources_manager.send(:name_for_url, url).
               should == 'git-host'
 
+            url = 'org-123456789@github.com:mycompany/ios-companypods.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'mycompany-ios-companypods'
+
             url = 'git@git-host.com/specs.git'
             @sources_manager.send(:name_for_url, url).
               should == 'git-host'
@@ -278,6 +282,12 @@ module Pod
 
           it 'supports ssh URLs with no user component' do
             url = 'ssh://company.com/pods/specs.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'company-pods'
+          end
+
+          it 'supports ssh URLs with user and port' do
+            url = 'ssh://git@company.com:1234/pods/specs.git'
             @sources_manager.send(:name_for_url, url).
               should == 'company-pods'
           end
