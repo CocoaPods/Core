@@ -243,6 +243,10 @@ module Pod
             @sources_manager.send(:name_for_url, url).
               should == 'git-host'
 
+            url = 'org-123456789@github.com:mycompany/ios-companypods.git'
+            @sources_manager.send(:name_for_url, url).
+              should == 'mycompany-ios-companypods'
+
             url = 'git@git-host.com/specs.git'
             @sources_manager.send(:name_for_url, url).
               should == 'git-host'
