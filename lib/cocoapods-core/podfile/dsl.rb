@@ -566,7 +566,7 @@ module Pod
       # Specifies the platform for which a static library should be built.
       #
       # CocoaPods provides a default deployment target if one is not specified.
-      # The current default values are `4.3` for iOS, `10.6` for OS X, `9.0` for tvOS
+      # The current default values are `4.3` for iOS, `10.9` for OS X, `9.0` for tvOS
       # and `2.0` for watchOS.
       #
       # If the deployment target requires it (iOS < `4.3`), `armv6`
