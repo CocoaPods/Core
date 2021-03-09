@@ -340,9 +340,10 @@ module Pod
       #
       def _validate_vendored_libraries(vendored_libraries)
         vendored_libraries.each do |lib|
-          lib_name = lib.downcase
+          basename = File.basename(lib)
+          lib_name = basename.downcase
           unless lib_name.end_with?('.a') && lib_name.start_with?('lib')
-            results.add_warning('vendored_libraries', "`#{File.basename(lib)}` does not match the expected static library name format `lib[name].a`")
+            results.add_warning('vendored_libraries', "`#{basename}` does not match the expected static library name format `lib[name].a`")
           end
         end
       end
