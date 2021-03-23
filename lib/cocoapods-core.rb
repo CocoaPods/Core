@@ -28,6 +28,7 @@ module Pod
   autoload :Podfile,        'cocoapods-core/podfile'
   autoload :Source,         'cocoapods-core/source'
   autoload :CDNSource,      'cocoapods-core/cdn_source'
+  autoload :SingleSource,   'cocoapods-core/single_source'
   autoload :TrunkSource,    'cocoapods-core/trunk_source'
   autoload :Specification,  'cocoapods-core/specification'
   autoload :StandardError,  'cocoapods-core/standard_error'
