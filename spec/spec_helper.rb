@@ -54,6 +54,13 @@ Thread.new do
   Thread.current.exit
 end
 
+# Force CDNSource uses HTTP1, because WebMock doesn't support HTTP 2 yet
+#--------------------------------------#
+
+silence_warnings do
+  Pod::CDNSource::FORCE_HTTP2 = false
+end
+
 # Silence the output
 #--------------------------------------#
 
