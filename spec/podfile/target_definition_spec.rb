@@ -488,7 +488,7 @@ module Pod
       it 'raises if script phase includes an invalid execution position key' do
         e = lambda { @parent.store_script_phase(:name => 'PhaseName', :script => 'echo "Hello World"', :execution_position => :unknown) }.should.raise Podfile::StandardError
         e.message.should == 'Invalid execution position value `unknown` in shell script `PhaseName` within `MyApp` target. ' \
-          'Available options are `[:before_compile, :after_compile, :any]`.'
+          'Available options are `[:before_compile, :after_compile, :before_headers, :after_headers, :any]`.'
       end
 
       it 'raises if the same script phase name already exists' do
