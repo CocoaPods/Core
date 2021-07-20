@@ -535,7 +535,7 @@ module Pod
       it 'checks script phases include a valid execution position value' do
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :unknown }
         result_should_include('script_phases', 'Invalid execution position value `unknown` in shell script `Hello World`. ' \
-          'Available options are `before_compile, after_compile, any`.')
+          'Available options are `before_compile, after_compile, before_headers, after_headers, any`.')
       end
 
       #------------------#

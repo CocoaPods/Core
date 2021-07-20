@@ -1047,7 +1047,7 @@ module Pod
       SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :input_file_lists, :output_file_lists,
                                     :show_env_vars_in_log, :execution_position, :dependency_file].freeze
 
-      EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :any].freeze
+      EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :before_headers, :after_headers, :any].freeze
 
       ALL_SCRIPT_PHASE_KEYS = (SCRIPT_PHASE_REQUIRED_KEYS + SCRIPT_PHASE_OPTIONAL_KEYS).freeze
 

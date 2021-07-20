@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add `before_headers` and `after_headers` execution position DSL.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#686](https://github.com/CocoaPods/Core/pull/686)
+
 * Add a pre_integrate_hook API  
   [David Chavez](https://github.com/dcvz)
   [#643](https://github.com/CocoaPods/Core/pull/643)

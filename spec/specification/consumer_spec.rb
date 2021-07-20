@@ -391,7 +391,7 @@ module Pod
         ]
       end
 
-      it 'returns the empty hash if no script phases have been specified' do
+      it 'returns the empty array if no script phases have been specified' do
         @consumer.script_phases.should == []
       end
     end
