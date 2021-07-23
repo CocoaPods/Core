@@ -22,7 +22,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Bump addressable dependency to 2.8.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#688](https://github.com/CocoaPods/Core/pull/688)
 
 
 ## 1.10.1 (2021-01-07)
