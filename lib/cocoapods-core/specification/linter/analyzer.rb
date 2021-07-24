@@ -102,7 +102,7 @@ module Pod
         # Check empty subspec attributes
         #
         def check_if_spec_is_empty
-          methods = %w( source_files resources resource_bundles preserve_paths
+          methods = %w( source_files on_demand_resources resources resource_bundles preserve_paths
                         dependencies vendored_libraries vendored_frameworks )
           empty_patterns = methods.all? { |m| consumer.send(m).empty? }
           empty = empty_patterns && consumer.spec.subspecs.empty?

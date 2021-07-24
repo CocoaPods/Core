@@ -4,6 +4,11 @@
 
 ##### Enhancements
 
+* Add support for `on_demand_resources` DSL.  
+  [JunyiXie](https://github.com/JunyiXie)
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#690](https://github.com/CocoaPods/Core/pull/690)
+
 * Add `before_headers` and `after_headers` execution position DSL.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#686](https://github.com/CocoaPods/Core/pull/686)

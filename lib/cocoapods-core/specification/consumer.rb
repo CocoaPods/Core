@@ -182,7 +182,13 @@ module Pod
       #
       spec_attr_accessor :vendored_libraries
 
-      # @return [Hash{String=>String}]]  hash where the keys are the names of
+      # @return [Hash{String => Array<String>}] hash where the keys are the tags of
+      #         the on demand resources and the values are their relative file
+      #         patterns.
+      #
+      spec_attr_accessor :on_demand_resources
+
+      # @return [Hash{String=>String}]] hash where the keys are the names of
       #         the resource bundles and the values are their relative file
       #         patterns.
       #
@@ -453,6 +459,24 @@ module Pod
       #
       def _prepare_scheme(value)
         Specification.convert_keys_to_symbol(value, :recursive => false) if value && value.is_a?(Hash)
+      end
+
+      # Ensures that the file patterns of the on demand resources are contained in
+      # an array.
+      #
+      # @param  [String, Array, Hash] value.
+      #         The value of the attribute as specified by the user.
+      #
+      # @return [Hash] the on demand resources1.
+      #
+      def _prepare_on_demand_resources(value)
+        result = {}
+        if value
+          value.each do |key, patterns|
+            result[key] = [*patterns].compact
+          end
+        end
+        result
       end
 
       # Ensures that the file patterns of the resource bundles are contained in

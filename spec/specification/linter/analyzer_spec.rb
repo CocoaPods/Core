@@ -184,6 +184,7 @@ module Pod
         it 'checks if a specification is empty' do
           consumer = Specification::Consumer
           consumer.any_instance.stubs(:source_files).returns([])
+          consumer.any_instance.stubs(:on_demand_resources).returns({})
           consumer.any_instance.stubs(:resources).returns({})
           consumer.any_instance.stubs(:resource_bundles).returns([])
           consumer.any_instance.stubs(:preserve_paths).returns([])
