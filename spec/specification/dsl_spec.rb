@@ -420,6 +420,16 @@ module Pod
         @spec.attributes_hash['vendored_libraries'].should == ['libProj4.a']
       end
 
+      it 'allows to specify the on demand resources shipped with the Pod' do
+        @spec.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
+        @spec.attributes_hash['on_demand_resources'].should == { 'Maps' => 'MapView/Map/Resources/*.png' }
+      end
+
+      it 'allows to specify the on demand resources shipped with the Pod as an array' do
+        @spec.on_demand_resources = { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
+        @spec.attributes_hash['on_demand_resources'].should == { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
+      end
+
       it 'allows to specify the resources bundles shipped with the Pod' do
         @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
         @spec.attributes_hash['resource_bundles'].should == { 'MapBox' => 'MapView/Map/Resources/*.png' }
@@ -599,7 +609,7 @@ module Pod
           spec.should.respond_to(attr.writer_name)
         end
         singularized.map { |attr| attr.name.to_s }.sort.should == %w(
-          authors compiler_flags default_subspecs frameworks libraries
+          authors compiler_flags default_subspecs frameworks libraries on_demand_resources
           preserve_paths resource_bundles resources screenshots script_phases
           swift_versions vendored_frameworks vendored_libraries weak_frameworks
         )

@@ -456,6 +456,30 @@ module Pod
 
       #------------------#
 
+      it 'returns the on demand resources specified as a string wrapped in an array' do
+        @spec.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
+        @consumer.on_demand_resources.should == { 'Maps' => ['MapView/Map/Resources/*.png'] }
+      end
+
+      it 'returns the on demand resources specified as an array wrapped in an array' do
+        @spec.on_demand_resources = { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
+        @consumer.on_demand_resources.should == { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
+      end
+
+      it 'handles multi-platform on demand resources' do
+        @spec.ios.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
+        @consumer.on_demand_resources.should == { 'Maps' => ['MapView/Map/Resources/*.png'] }
+      end
+
+      it 'merges multi platform on demand resources  if needed' do
+        @spec.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
+        @spec.ios.on_demand_resources = { 'Maps-iOS' => 'MapView/Map/iOS/Resources/*.png' }
+        @consumer.on_demand_resources.should == {
+          'Maps' => ['MapView/Map/Resources/*.png'],
+          'Maps-iOS' => ['MapView/Map/iOS/Resources/*.png'],
+        }
+      end
+
       it 'returns the resource bundles' do
         @spec.resource_bundles = { 'MapBox' => 'MapView/Map/Resources/*.png' }
         @consumer.resource_bundles.should == { 'MapBox' => ['MapView/Map/Resources/*.png'] }
