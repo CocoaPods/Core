@@ -71,6 +71,16 @@ module Pod
         @spec.attributes_hash['social_media_url'].should == 'https://twitter.com/cocoapods'
       end
 
+      it 'allows to specify the readme' do
+        @spec.readme = 'https://www.example.com/readme'
+        @spec.attributes_hash['readme'].should == 'https://www.example.com/readme'
+      end
+
+      it 'allows to specify the changelog' do
+        @spec.changelog = 'https://www.example.com/changelog'
+        @spec.attributes_hash['changelog'].should == 'https://www.example.com/changelog'
+      end
+
       it 'allows to specify the license' do
         @spec.license = { :type => 'MIT', :file => 'MIT-LICENSE' }
         @spec.attributes_hash['license'].should == { 'type' => 'MIT', 'file' => 'MIT-LICENSE' }

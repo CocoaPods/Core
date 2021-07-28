@@ -517,6 +517,24 @@ module Pod
         end
       end
 
+      # Performs validations related to the `readme` attribute.
+      #
+      def _validate_readme(s)
+        if s =~ %r{https://www.example.com/README}
+          results.add_warning('readme', 'The readme has ' \
+            'not been updated from the default.')
+        end
+      end
+
+      # Performs validations related to the `changelog` attribute.
+      #
+      def _validate_changelog(s)
+        if s =~ %r{https://www.example.com/CHANGELOG}
+          results.add_warning('changelog', 'The changelog has ' \
+            'not been updated from the default.')
+        end
+      end
+
       # @param [Hash,Object] value
       #
       def _validate_info_plist(value)
