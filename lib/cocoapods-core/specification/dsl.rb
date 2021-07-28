@@ -299,6 +299,36 @@ module Pod
 
       #------------------#
 
+      # @!method readme=(readme)
+      #
+      #   The URL for the README markdown file for this pod version.
+      #
+      #   @example
+      #
+      #     spec.readme = 'https://www.example.com/Pod-1.5-README.md'
+      #
+      #   @param  [String] readme
+      #           the readme markdown URL.
+      #
+      root_attribute :readme
+
+      #------------------#
+
+      # @!method changelog=(changelog)
+      #
+      #   The URL for the CHANGELOG markdown file for this pod version.
+      #
+      #   @example
+      #
+      #     spec.changelog = 'https://www.example.com/Pod-1.5-CHANGELOG.md'
+      #
+      #   @param  [String] changelog
+      #           the changelog markdown URL.
+      #
+      root_attribute :changelog
+
+      #------------------#
+
       # The keys accepted by the hash of the source attribute.
       #
       SOURCE_KEYS = {

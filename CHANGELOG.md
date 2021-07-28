@@ -32,6 +32,17 @@
   [#688](https://github.com/CocoaPods/Core/pull/688)
 
 
+## 1.10.2 (2021-07-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.10.1 (2021-01-07)
 
 ##### Enhancements

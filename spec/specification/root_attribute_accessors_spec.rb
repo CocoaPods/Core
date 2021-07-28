@@ -90,6 +90,16 @@ module Pod
       @spec.social_media_url.should == 'www.example.com'
     end
 
+    it 'returns the readme' do
+      @spec.readme = 'www.example.com'
+      @spec.readme.should == 'www.example.com'
+    end
+
+    it 'returns the changelog' do
+      @spec.changelog = 'www.example.com'
+      @spec.changelog.should == 'www.example.com'
+    end
+
     it 'supports the license attribute specified as a string' do
       @spec.license = 'MIT'
       @spec.license.should == { :type => 'MIT' }
