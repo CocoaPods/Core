@@ -435,7 +435,12 @@ module Pod
         @consumer.public_header_files.should == ['include/**/*']
       end
 
-      it 'returns the public headers files' do
+      it 'returns the project headers files' do
+        @spec.project_header_files = ['project/**/*']
+        @consumer.project_header_files.should == ['project/**/*']
+      end
+
+      it 'returns the private headers files' do
         @spec.private_header_files = ['private/**/*']
         @consumer.private_header_files.should == ['private/**/*']
       end

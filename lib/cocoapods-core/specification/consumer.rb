@@ -168,6 +168,10 @@ module Pod
       #
       spec_attr_accessor :public_header_files
 
+      # @return [Array<String>] the project headers of the Pod.
+      #
+      spec_attr_accessor :project_header_files
+
       # @return [Array<String>] the private headers of the Pod.
       #
       spec_attr_accessor :private_header_files
