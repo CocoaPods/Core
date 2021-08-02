@@ -415,6 +415,11 @@ module Pod
         @spec.attributes_hash['public_header_files'].should == ['include/**/*']
       end
 
+      it 'allows to specify the project headers files' do
+        @spec.project_header_files = ['project/**/*']
+        @spec.attributes_hash['project_header_files'].should == ['project/**/*']
+      end
+
       it 'allows to specify the private headers files' do
         @spec.private_header_files = ['private/**/*']
         @spec.attributes_hash['private_header_files'].should == ['private/**/*']

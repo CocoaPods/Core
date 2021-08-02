@@ -4,6 +4,10 @@
 
 ##### Enhancements
 
+* Add `project_header_files` DSL to specifications.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#692](https://github.com/CocoaPods/Core/pull/692)
+
 * Add support for `on_demand_resources` DSL.  
   [JunyiXie](https://github.com/JunyiXie)
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)

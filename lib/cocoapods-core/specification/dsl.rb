@@ -1259,6 +1259,32 @@ module Pod
 
       #------------------#
 
+      # @!method project_header_files=(project_header_files)
+      #
+      #   A list of file patterns that should be used to mark project headers.
+      #
+      #   ---
+      #
+      #   These patterns are matched against the public headers (or all the
+      #   headers if no public headers have been specified) to exclude those
+      #   headers which should not be exposed to the user project and which
+      #   should not be used to generate the documentation. When the library
+      #   is built, these headers will _not_ appear in the build directory.
+      #
+      #
+      #   @example
+      #
+      #     spec.project_header_files = 'Headers/Project/*.h'
+      #
+      #   @param  [String, Array<String>] project_header_files
+      #           the project headers of the Pod.
+      #
+      attribute :project_header_files,
+                :container => Array,
+                :file_patterns => true
+
+      #------------------#
+
       # @!method private_header_files=(private_header_files)
       #
       #   A list of file patterns that should be used to mark private headers.
@@ -1271,7 +1297,7 @@ module Pod
       #   should not be used to generate the documentation. When the library
       #   is built, these headers will appear in the build directory.
       #
-      #   Header files that are not listed as neither public nor private will
+      #   Header files that are not listed as neither public nor project or private will
       #   be treated as private, but in addition will not appear in the build
       #   directory at all.
       #
