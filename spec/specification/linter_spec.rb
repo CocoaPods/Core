@@ -658,26 +658,6 @@ module Pod
 
       #------------------#
 
-      it 'accepts valid vendored_libraries' do
-        @spec.vendored_libraries = 'libCoconut.a'
-        @linter.lint
-        @linter.results.should.be.empty?
-      end
-
-      it 'checks the file name extension of vendored_libraries' do
-        @spec.vendored_libraries = 'libSomething'
-        result_should_include('`libSomething` does not match the expected static library name format `lib[name].a`', 'vendored_libraries')
-        @linter.results.map(&:type).should == [:warning]
-      end
-
-      it 'check the file name prefix of vendored_libraries' do
-        @spec.vendored_libraries = 'something.a'
-        result_should_include('`something.a` does not match the expected static library name format `lib[name].a`', 'vendored_libraries')
-        @linter.results.map(&:type).should == [:warning]
-      end
-
-      #------------------#
-
       it 'checks if the compiler flags disable warnings' do
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
         result_should_include('warnings', 'disabled', 'compiler_flags')
