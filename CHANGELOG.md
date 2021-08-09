@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.11.0.beta.1 (2021-08-09)
+
+##### Enhancements
+
 * Add `project_header_files` DSL to specifications.  
   [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
   [#692](https://github.com/CocoaPods/Core/pull/692)
