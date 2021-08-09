@@ -463,6 +463,12 @@ module Pod
       end
     end
 
+    # @return [Hash] The on demand resources value.
+    #
+    def on_demand_resources
+      attributes_hash['on_demand_resources'] || {}
+    end
+
     # @return [Hash] The scheme value.
     #
     def scheme

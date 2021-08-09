@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Extend `on_demand_resources` DSL to allow the ability to specify a category.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#697](https://github.com/CocoaPods/Core/pull/697)
 
 ##### Bug Fixes
 
