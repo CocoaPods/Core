@@ -8,7 +8,10 @@
 
 ##### Bug Fixes
 
-* None.  
+* The `PODS` entry in the Podfile.lock now excludes dependencies that are not explicitly declared
+  in entries for subspecs (including app & test specs)  
+  [Eric Amorde](https://github.com/amorde)
+  [#696](https://github.com/CocoaPods/Core/pull/696)
 
 
 ## 1.11.0.beta.1 (2021-08-09)
