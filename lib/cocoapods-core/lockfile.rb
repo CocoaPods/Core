@@ -457,7 +457,7 @@ module Pod
         pods_and_deps_merged = specs.reduce({}) do |result, spec|
           name = spec.to_s
           result[name] ||= []
-          result[name].concat(spec.all_dependencies.map(&:to_s))
+          result[name].concat(spec.dependencies.map(&:to_s))
           result
         end
 
