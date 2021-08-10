@@ -463,25 +463,37 @@ module Pod
 
       it 'returns the on demand resources specified as a string wrapped in an array' do
         @spec.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
-        @consumer.on_demand_resources.should == { 'Maps' => ['MapView/Map/Resources/*.png'] }
+        @consumer.on_demand_resources.should == { 'Maps' => { :paths => ['MapView/Map/Resources/*.png'], :category => :download_on_demand } }
       end
 
       it 'returns the on demand resources specified as an array wrapped in an array' do
         @spec.on_demand_resources = { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
-        @consumer.on_demand_resources.should == { 'Levels' => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png] }
+        @consumer.on_demand_resources.should == {
+          'Levels' => { :paths => %w[Levels/Level1/Resources/*.png Levels/Level2/Resources/*.png], :category => :download_on_demand },
+        }
       end
 
       it 'handles multi-platform on demand resources' do
         @spec.ios.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
-        @consumer.on_demand_resources.should == { 'Maps' => ['MapView/Map/Resources/*.png'] }
+        @consumer.on_demand_resources.should == { 'Maps' => { :paths => ['MapView/Map/Resources/*.png'], :category => :download_on_demand } }
       end
 
-      it 'merges multi platform on demand resources  if needed' do
+      it 'handles on demand resources with categories' do
+        @spec.on_demand_resources = { 'Maps' => { :paths => 'MapView/Map/Resources/*.png', :category => :initial_install } }
+        @consumer.on_demand_resources.should == { 'Maps' => { :paths => ['MapView/Map/Resources/*.png'], :category => :initial_install } }
+      end
+
+      it 'handles on demand resources with keys and values as strings' do
+        @spec.on_demand_resources = { 'Maps' => { 'paths' => 'MapView/Map/Resources/*.png', 'category' => 'initial_install' } }
+        @consumer.on_demand_resources.should == { 'Maps' => { :paths => ['MapView/Map/Resources/*.png'], :category => :initial_install } }
+      end
+
+      it 'merges multi platform on demand resources if needed' do
         @spec.on_demand_resources = { 'Maps' => 'MapView/Map/Resources/*.png' }
-        @spec.ios.on_demand_resources = { 'Maps-iOS' => 'MapView/Map/iOS/Resources/*.png' }
+        @spec.ios.on_demand_resources = { 'Maps-iOS' => ['MapView/Map/iOS/Resources/*.png'] }
         @consumer.on_demand_resources.should == {
-          'Maps' => ['MapView/Map/Resources/*.png'],
-          'Maps-iOS' => ['MapView/Map/iOS/Resources/*.png'],
+          'Maps' => { :paths => ['MapView/Map/Resources/*.png'], :category => :download_on_demand },
+          'Maps-iOS' => { :paths => ['MapView/Map/iOS/Resources/*.png'], :category => :download_on_demand },
         }
       end
 

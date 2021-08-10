@@ -554,6 +554,26 @@ module Pod
 
       #------------------#
 
+      it 'checks on demand resources category is a valid value' do
+        @spec.on_demand_resources = {
+          'Level1' => { :paths => 'File1.png', :category => :unknown },
+          'Level2' => 'File2.png',
+          'Level3' => ['File3.png'],
+          'Level4' => { :paths => 'File4.png', :category => :weird },
+        }
+        results.count.should == 2
+        results[0].attribute_name.should == 'on_demand_resources'
+        results[0].type.should == :error
+        results[0].message.should == 'Invalid on demand resources category value `unknown`. ' \
+          'Available options are `download_on_demand, prefetched, initial_install`.'
+        results[1].attribute_name.should == 'on_demand_resources'
+        results[1].type.should == :error
+        results[1].message.should == 'Invalid on demand resources category value `weird`. ' \
+          'Available options are `download_on_demand, prefetched, initial_install`.'
+      end
+
+      #------------------#
+
       it 'accepts valid scheme values' do
         @spec.scheme = { :launch_arguments => ['Arg1'], :environment_variables => { 'Key1' => 'Val1' },
                          :code_coverage => true }

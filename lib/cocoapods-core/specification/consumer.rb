@@ -471,13 +471,21 @@ module Pod
       # @param  [String, Array, Hash] value.
       #         The value of the attribute as specified by the user.
       #
-      # @return [Hash] the on demand resources1.
+      # @return [Hash] the on demand resources.
       #
       def _prepare_on_demand_resources(value)
         result = {}
         if value
           value.each do |key, patterns|
-            result[key] = [*patterns].compact
+            case patterns
+            when String, Array
+              result[key] = { :paths => [*patterns].compact, :category => :download_on_demand }
+            when Hash
+              patterns = Specification.convert_keys_to_symbol(patterns, :recursive => false)
+              result[key] = { :paths => [*patterns[:paths]].compact, :category => patterns.fetch(:category, :download_on_demand).to_sym }
+            else
+              raise StandardError, "Unknown on demand resource value type `#{patterns}`."
+            end
           end
         end
         result
