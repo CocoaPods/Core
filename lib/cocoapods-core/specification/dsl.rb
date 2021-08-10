@@ -1374,8 +1374,9 @@ module Pod
       #
       #   @note
       #
-      #   Tags specified by pods are always managed by CocoaPods. If a tag is renamed or deleted then CocoaPods will
-      #   delete the tag within the targets the pod was integrated into.
+      #   Tags specified by pods are _always_ managed by CocoaPods. If a tag is renamed, changed or deleted then
+      #   CocoaPods will update the tag within the targets the pod was integrated into. It is highly recommended not to
+      #   share the same tags for your project as the ones used by the pods your project consumes.
       #
       #   @example
       #
@@ -1383,12 +1384,22 @@ module Pod
       #     'Tag1' => 'file1.png'
       #   }
       #
+      #   @example
+      #
       #   s.on_demand_resources = {
       #     'Tag1' => ['file1.png', 'file2.png']
       #   }
       #
+      #   @example
+      #
       #   s.on_demand_resources = {
       #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :download_on_demand }
+      #   }
+      #
+      #   @example
+      #
+      #   s.on_demand_resources = {
+      #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :initial_install }
       #   }
       #
       #   @param  [Hash{String=>String}, Hash{String=>Array<String>}, Hash{String=>Hash}] on_demand_resources
