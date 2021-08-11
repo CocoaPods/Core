@@ -181,6 +181,18 @@ module Pod
           results.first.attribute_name.should.include?('File Patterns')
         end
 
+        it 'checks if any file patterns are absolute for on demand resources' do
+          @spec.on_demand_resources = {
+            'Tag1' => { :paths => '/Resources', :category => :download_on_demand },
+            'Tag2' => '/MyResources',
+          }
+          results = @analyzer.analyze
+          results.count.should.be.equal(1)
+          expected = 'patterns must be relative'
+          results.first.message.should.include?(expected)
+          results.first.attribute_name.should.include?('File Patterns')
+        end
+
         it 'checks if a specification is empty' do
           consumer = Specification::Consumer
           consumer.any_instance.stubs(:source_files).returns([])

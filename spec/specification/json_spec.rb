@@ -347,6 +347,25 @@ module Pod
         ]
       end
 
+      it 'can load on demand resources from a hash' do
+        hash = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'on_demand_resources' => {
+            'Tag1' => { :paths => 'Tag1Resources/*', :category => :download_on_demand },
+            'Tag2' => ['Tag2Resources/*'],
+            'Tag3' => 'Tag3Resources/bear.png*',
+          },
+        }
+        result = Specification.from_hash(hash)
+        result.on_demand_resources.count.should.equal 3
+        result.on_demand_resources.should == {
+          'Tag1' => { :paths => 'Tag1Resources/*', :category => :download_on_demand },
+          'Tag2' => ['Tag2Resources/*'],
+          'Tag3' => 'Tag3Resources/bear.png*',
+        }
+      end
+
       it 'can load default subspecs from hash' do
         hash = {
           'name' => 'BananaLib',
@@ -443,6 +462,17 @@ module Pod
         result.script_phases.should == [
           { :name => 'Hello World', :script => 'echo "Hello World"', :execution_position => :any },
         ]
+      end
+
+      it 'can load on demand resources from json' do
+        json = '{"on_demand_resources":{"tag1":{"paths":"Tag1Resources/*","category":"download_on_demand"},"tag2":"Tag2Resources/*","tag3":["Tag3Resources/*"]}}'
+        result = Specification.from_json(json)
+        result.on_demand_resources.count.should.equal 3
+        result.on_demand_resources.should == {
+          'tag1' => { 'paths' => 'Tag1Resources/*', 'category' => 'download_on_demand' },
+          'tag2' => 'Tag2Resources/*',
+          'tag3' => ['Tag3Resources/*'],
+        }
       end
 
       it 'loads script phase execution position from json' do

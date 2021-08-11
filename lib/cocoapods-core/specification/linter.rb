@@ -434,6 +434,17 @@ module Pod
         end
       end
 
+      # Performs validations related to the `on_demand_resources` attribute.
+      #
+      def _validate_on_demand_resources(h)
+        h.values.each do |value|
+          unless Specification::ON_DEMAND_RESOURCES_CATEGORY_KEYS.include?(value[:category])
+            results.add_error('on_demand_resources', "Invalid on demand resources category value `#{value[:category]}`. " \
+              "Available options are `#{Specification::ON_DEMAND_RESOURCES_CATEGORY_KEYS.join(', ')}`.")
+          end
+        end
+      end
+
       # Performs validation related to the `scheme` attribute.
       #
       def _validate_scheme(s)

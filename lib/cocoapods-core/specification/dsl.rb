@@ -1361,26 +1361,52 @@ module Pod
 
       #------------------#
 
+      # The keys accepted by the category attribute for each on demand resource entry.
+      #
+      ON_DEMAND_RESOURCES_CATEGORY_KEYS = [:download_on_demand, :prefetched, :initial_install].freeze
+
       # @!method on_demand_resources=(on_demand_resources)
       #
-      #   A hash of on_demand_resources that should be copied into the target bundle. Resources specified here
-      #   will automatically become part of the resources build phase of the target.
+      #   A hash of on demand resources that should be copied into the target bundle. Resources specified here
+      #   will automatically become part of the resources build phase of the target this pod is integrated into.
+      #
+      #   If no category is specified then `:download_on_demand` is used as the default.
+      #
+      #   @note
+      #
+      #   Tags specified by pods are _always_ managed by CocoaPods. If a tag is renamed, changed or deleted then
+      #   CocoaPods will update the tag within the targets the pod was integrated into. It is highly recommended not to
+      #   share the same tags for your project as the ones used by the pods your project consumes.
       #
       #   @example
       #
       #   s.on_demand_resources = {
-      #       'Tag1' => 'file1.png'
+      #     'Tag1' => 'file1.png'
       #   }
+      #
+      #   @example
       #
       #   s.on_demand_resources = {
-      #       'Tag1' => ['file1.png', 'file2.png']
+      #     'Tag1' => ['file1.png', 'file2.png']
       #   }
       #
-      #   @param  [Hash{String=>String}, Hash{String=>Array<String>}] on_demand_resources
-      #           The on_demand_resources shipped with the Pod.
+      #   @example
+      #
+      #   s.on_demand_resources = {
+      #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :download_on_demand }
+      #   }
+      #
+      #   @example
+      #
+      #   s.on_demand_resources = {
+      #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :initial_install }
+      #   }
+      #
+      #   @param  [Hash{String=>String}, Hash{String=>Array<String>}, Hash{String=>Hash}] on_demand_resources
+      #           The on demand resources shipped with the Pod.
       #
       attribute :on_demand_resources,
-                :types => [String, Array],
+                :types => [String, Array, Hash],
                 :container => Hash,
                 :file_patterns => true,
                 :singularize => true
