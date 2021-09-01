@@ -1380,27 +1380,27 @@ module Pod
       #
       #   @example
       #
-      #   s.on_demand_resources = {
-      #     'Tag1' => 'file1.png'
-      #   }
+      #     s.on_demand_resources = {
+      #       'Tag1' => 'file1.png'
+      #     }
       #
       #   @example
       #
-      #   s.on_demand_resources = {
-      #     'Tag1' => ['file1.png', 'file2.png']
-      #   }
+      #     s.on_demand_resources = {
+      #       'Tag1' => ['file1.png', 'file2.png']
+      #     }
       #
       #   @example
       #
-      #   s.on_demand_resources = {
-      #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :download_on_demand }
-      #   }
+      #     s.on_demand_resources = {
+      #       'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :download_on_demand }
+      #     }
       #
       #   @example
       #
-      #   s.on_demand_resources = {
-      #     'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :initial_install }
-      #   }
+      #     s.on_demand_resources = {
+      #       'Tag1' => { :paths => ['file1.png', 'file2.png'], :category => :initial_install }
+      #     }
       #
       #   @param  [Hash{String=>String}, Hash{String=>Array<String>}, Hash{String=>Hash}] on_demand_resources
       #           The on demand resources shipped with the Pod.
