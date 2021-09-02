@@ -292,6 +292,12 @@ module Pod
               should == 'company-pods'
           end
 
+          it 'supports ssh URls without .git' do
+            url = 'git@ssh.dev.azure.com:v3/aa-aaaaa/aaa_aaa_aaaaa/aaa-aaa-aaaaa'
+            @sources_manager.send(:name_for_url, url).
+              should == 'azure-v3-aa-aaaaa-aaa_aaa_aaaaa-aaa-aaa-aaaaa'
+          end
+
           it 'appends a number to the name if the base name dir exists' do
             url = 'https://github.com/segiddins/banana.git'
             Pathname.any_instance.stubs(:exist?).

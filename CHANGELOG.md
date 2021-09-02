@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Update repo regex to better handle ssh URLs.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#702](https://github.com/CocoaPods/Core/issues/702)
 
 
 ## 1.11.0 (2021-09-01)
