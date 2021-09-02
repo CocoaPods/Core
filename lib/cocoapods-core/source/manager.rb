@@ -461,7 +461,7 @@ module Pod
           # SCP-style URLs for private git repos
           url = valid_scp_url[url]
           base = base_from_host_and_path[url.host, url.path]
-        when %r{(?:git|ssh|https?|[a-z0-9_-]+@([-\w.]+)):(\/\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$}i
+        when %r{(?:git|ssh|https?|[a-z0-9_-]+@([-\w.]+)):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$}i
           # Additional SCP-style URLs for private git repos
           host, _, path = Regexp.last_match.captures
           base = base_from_host_and_path[host, path]
