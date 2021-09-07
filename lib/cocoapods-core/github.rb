@@ -85,7 +85,7 @@ module Pod
     # @param [String] commit
     #        The current HEAD commit.
     #
-    # @return [Bool] Whether the repository has been updated since the commit.
+    # @return [Boolean] Whether the repository has been updated since the commit.
     #
     def self.modified_since_commit(url, commit)
       return true unless repo_id = normalized_repo_id(url)

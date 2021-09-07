@@ -41,7 +41,7 @@ module Pod
       # Lints the specification adding a {Result} for any failed check to the
       # {#results} object.
       #
-      # @return [Bool] whether the specification passed validation.
+      # @return [Boolean] whether the specification passed validation.
       #
       def lint
         @results = Results.new

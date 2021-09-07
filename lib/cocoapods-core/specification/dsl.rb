@@ -374,7 +374,7 @@ module Pod
       #     @param  [Hash] git
       #     @option git [String] :git git source URI
       #     @option git [String] :tag version tag
-      #     @option git [Bool] :submodules Whether to checkout submodules
+      #     @option git [Boolean] :submodules Whether to checkout submodules
       #     @option git [String] :branch branch name
       #     @option git [String] :commit commit hash
       #
@@ -530,7 +530,7 @@ module Pod
       #
       #     spec.static_framework = true
       #
-      #   @param [Bool] flag
+      #   @param [Boolean] flag
       #          Indicates, that if use_frameworks! is specified, the
       #          pod should include a static library framework.
       #
@@ -548,7 +548,7 @@ module Pod
       #
       #     spec.deprecated = true
       #
-      #   @param [Bool] flag
+      #   @param [Boolean] flag
       #          whether the library has been deprecated.
       #
       root_attribute :deprecated,
@@ -1677,7 +1677,7 @@ module Pod
       #
       #     test_spec.requires_app_host = true
       #
-      #   @param [Bool] flag
+      #   @param [Boolean] flag
       #          whether a test specification requires an app host to run tests.
       #
       attribute :requires_app_host,

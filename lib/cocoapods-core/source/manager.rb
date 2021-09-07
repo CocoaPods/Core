@@ -81,7 +81,7 @@ module Pod
         source_dir(Pod::TrunkSource::TRUNK_REPO_NAME)
       end
 
-      # @return [Bool] Checks if the master repo is usable.
+      # @return [Boolean] Checks if the master repo is usable.
       #
       # @note   Note this is used to automatically setup the master repo if
       #         needed.
@@ -108,7 +108,7 @@ module Pod
       # @param  [String] query
       #         The search term.
       #
-      # @param  [Bool] full_text_search
+      # @param  [Boolean] full_text_search
       #         Whether the search should be limited to the name of the Pod or
       #         should include also the author, the summary, and the
       #         description.

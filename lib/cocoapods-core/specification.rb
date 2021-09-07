@@ -34,10 +34,10 @@ module Pod
     # @param  [String] name
     #         the name of the specification.
     #
-    # @param [Bool] test_specification
+    # @param [Boolean] test_specification
     #        Whether the specification is a test specification
     #
-    # @param [Bool] app_specification
+    # @param [Boolean] app_specification
     #        Whether the specification is an app specification
     #
     def initialize(parent = nil, name = nil, test_specification = false, app_specification: false)
@@ -74,12 +74,12 @@ module Pod
     #
     attr_accessor :subspecs
 
-    # @return [Bool] If this specification is a test specification.
+    # @return [Boolean] If this specification is a test specification.
     #
     attr_accessor :test_specification
     alias_method :test_specification?, :test_specification
 
-    # @return [Bool] If this specification is an app specification.
+    # @return [Boolean] If this specification is an app specification.
     #
     attr_accessor :app_specification
     alias_method :app_specification?, :app_specification
@@ -94,7 +94,7 @@ module Pod
     #         go. This is used by the installer to group specifications by root
     #         spec.
     #
-    # @return [Bool] Whether the specifications are equal.
+    # @return [Boolean] Whether the specifications are equal.
     #
     def ==(other)
       other.is_a?(self.class) &&
@@ -223,13 +223,13 @@ module Pod
       parent ? parent.root : self
     end
 
-    # @return [Bool] whether the specification is root.
+    # @return [Boolean] whether the specification is root.
     #
     def root?
       parent.nil?
     end
 
-    # @return [Bool] whether the specification is a subspec.
+    # @return [Boolean] whether the specification is a subspec.
     #
     def subspec?
       !parent.nil?
@@ -252,7 +252,7 @@ module Pod
 
     # @!group Dependencies & Subspecs
 
-    # @return [Bool] If this specification is a library specification.
+    # @return [Boolean] If this specification is a library specification.
     #
     # @note a library specification is a specification that is not of type app or test.
     #
@@ -260,7 +260,7 @@ module Pod
       !app_specification? && !test_specification?
     end
 
-    # @return [Bool] If this specification is not a library specification.
+    # @return [Boolean] If this specification is not a library specification.
     #
     # @note see #library_specification?
     #
@@ -419,7 +419,7 @@ module Pod
     # @param  [Symbol, String] configuration
     #         the configuration to check against.
     #
-    # @return [Bool] whether the dependency is whitelisted or not.
+    # @return [Boolean] whether the dependency is whitelisted or not.
     #
     def dependency_whitelisted_for_configuration?(dependency, configuration)
       inherited = -> { root? ? true : parent.dependency_whitelisted_for_configuration?(dependency, configuration) }
@@ -488,7 +488,7 @@ module Pod
 
     # @!group DSL helpers
 
-    # @return [Bool] whether the specification should use a directory as its
+    # @return [Boolean] whether the specification should use a directory as its
     #         source.
     #
     def local?
@@ -496,7 +496,7 @@ module Pod
       false
     end
 
-    # @return     [Bool] whether the specification is supported in the given
+    # @return     [Boolean] whether the specification is supported in the given
     #             platform.
     #
     # @overload   supported_on_platform?(platform)

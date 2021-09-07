@@ -121,19 +121,19 @@ module Pod
                               end
     end
 
-    # @return [Bool] whether the dependency points to a subspec.
+    # @return [Boolean] whether the dependency points to a subspec.
     #
     def subspec_dependency?
       @name.include?('/')
     end
 
-    # @return [Bool] whether the dependency points to an external source.
+    # @return [Boolean] whether the dependency points to an external source.
     #
     def external?
       !@external_source.nil?
     end
 
-    # @return [Bool] whether the dependency points to a local path.
+    # @return [Boolean] whether the dependency points to a local path.
     #
     def local?
       if external_source
@@ -183,7 +183,7 @@ module Pod
     # @note   This is used by the Lockfile to check if a stored dependency is
     #         still compatible with the Podfile.
     #
-    # @return [Bool] whether the dependency is compatible with the given one.
+    # @return [Boolean] whether the dependency is compatible with the given one.
     #
     def compatible?(other)
       return false unless name == other.name
@@ -194,7 +194,7 @@ module Pod
       end
     end
 
-    # @return [Bool] whether the dependency is equal to another taking into
+    # @return [Boolean] whether the dependency is equal to another taking into
     #         account the loaded specification, the head options and the
     #         external source.
     #
@@ -275,7 +275,7 @@ module Pod
 
     # Whether the dependency has any pre-release requirements
     #
-    # @return [Bool] Whether the dependency has any pre-release requirements
+    # @return [Boolean] Whether the dependency has any pre-release requirements
     #
     def prerelease?
       return @prerelease if defined?(@prerelease)
@@ -291,7 +291,7 @@ module Pod
     # @param  [String, Version] version
     #         The proposed version.
     #
-    # @return [Bool] Whether the dependency is satisfied.
+    # @return [Boolean] Whether the dependency is satisfied.
     #
     def match?(name, version)
       return false unless self.name == name

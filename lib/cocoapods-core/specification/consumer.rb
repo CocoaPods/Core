@@ -68,7 +68,7 @@ module Pod
       #
       spec_attr_accessor :name
 
-      # @return [Bool] Whether the source files of the specification require to
+      # @return [Boolean] Whether the source files of the specification require to
       #         be compiled with ARC.
       #
       spec_attr_accessor :requires_arc
@@ -143,7 +143,7 @@ module Pod
 
       # @!group Test Support
 
-      # @return [Bool] Whether this test specification requires an app host.
+      # @return [Boolean] Whether this test specification requires an app host.
       #
       spec_attr_accessor :requires_app_host
       alias_method :requires_app_host?, :requires_app_host

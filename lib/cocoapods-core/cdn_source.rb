@@ -222,7 +222,7 @@ module Pod
     # @param  [String] query
     #         the search term. Can be a regular expression.
     #
-    # @param  [Bool] full_text_search
+    # @param  [Boolean] full_text_search
     #         performed using Algolia
     #
     # @note   full text search requires to load the specification for each pod,
@@ -246,7 +246,7 @@ module Pod
     # Check update dates for all existing files.
     # Does not download non-existing specs, since CDN-backed repo is updated live.
     #
-    # @param  [Bool] show_output
+    # @param  [Boolean] show_output
     #
     # @return  [Array<String>] Always returns empty array, as it cannot know
     #          everything that actually changed.
