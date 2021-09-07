@@ -121,14 +121,14 @@ module Pod
       end
     end
 
-    # @return [Bool] whether the podfile should generate a BridgeSupport
+    # @return [Boolean] whether the podfile should generate a BridgeSupport
     #         metadata document.
     #
     def generate_bridge_support?
       get_hash_value('generate_bridge_support')
     end
 
-    # @return [Bool] whether the -fobjc-arc flag should be added to the
+    # @return [Boolean] whether the -fobjc-arc flag should be added to the
     #         OTHER_LD_FLAGS.
     #
     def set_arc_compatibility_flag?
@@ -154,7 +154,7 @@ module Pod
     # @param  [Pod::Installer] installer
     #         the installer that is performing the installation.
     #
-    # @return [Bool] whether a pre install callback was specified and it was
+    # @return [Boolean] whether a pre install callback was specified and it was
     #         called.
     #
     def pre_install!(installer)
@@ -171,7 +171,7 @@ module Pod
     # @param  [Pod::Installer] installer
     #         the installer that is performing the installation.
     #
-    # @return [Bool] whether a pre integrate callback was specified and it was
+    # @return [Boolean] whether a pre integrate callback was specified and it was
     #         called.
     #
     def pre_integrate!(installer)
@@ -188,7 +188,7 @@ module Pod
     # @param  [Pod::Installer] installer
     #         the installer that is performing the installation.
     #
-    # @return [Bool] whether a post install callback was specified and it was
+    # @return [Boolean] whether a post install callback was specified and it was
     #         called.
     #
     def post_install!(installer)
@@ -205,7 +205,7 @@ module Pod
     # @param  [Pod::Installer] installer
     #         the installer that is performing the installation.
     #
-    # @return [Bool] whether a post install callback was specified and it was
+    # @return [Boolean] whether a post install callback was specified and it was
     #         called.
     #
     def post_integrate!(installer)

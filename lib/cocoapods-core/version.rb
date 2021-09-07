@@ -73,7 +73,7 @@ module Pod
       @prerelease = comparable_version =~ /[a-zA-Z\-]/
     end
 
-    # @return [Bool] Whether a string representation is correct.
+    # @return [Boolean] Whether a string representation is correct.
     #
     def self.correct?(version)
       version.to_s =~ ANCHORED_VERSION_PATTERN
@@ -86,7 +86,7 @@ module Pod
     SEMVER_PATTERN = "[0-9]+(\\.[0-9]+(\\.[0-9]+(-[0-9A-Za-z\\-\\.]+)?#{METADATA_PATTERN}?)?)?"
     ANCHORED_SEMANTIC_VERSION_PATTERN = /\A\s*(#{SEMVER_PATTERN})*\s*\z/
 
-    # @return [Bool] Whether the version conforms to the Semantic Versioning
+    # @return [Boolean] Whether the version conforms to the Semantic Versioning
     #         specification (2.0.0-rc.1).
     #
     # @note   This comparison is lenient.

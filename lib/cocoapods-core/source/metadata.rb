@@ -64,7 +64,7 @@ module Pod
       # @param  [Pathname] dir
       #         The directory where the source is stored.
       #
-      # @return [Bool] whether the source is compatible.
+      # @return [Boolean] whether the source is compatible.
       #
       def compatible?(version)
         bin_version  = Gem::Version.new(version)

@@ -41,7 +41,7 @@ module Pod
         (children + children.map(&:recursive_children)).flatten
       end
 
-      # @return [Bool] Whether the target definition is root.
+      # @return [Boolean] Whether the target definition is root.
       #
       def root?
         parent.is_a?(Podfile) || parent.nil?
@@ -96,7 +96,7 @@ module Pod
         pod_dependencies.concat(podspec_dependencies)
       end
 
-      # @return [Bool] Whether the target definition has at least one
+      # @return [Boolean] Whether the target definition has at least one
       #         dependency, excluding inherited ones.
       #
       def empty?
@@ -211,7 +211,7 @@ module Pod
       # @note   A target is always `exclusive` if the `platform` does
       #         not match the parent's `platform`.
       #
-      # @return [Bool] whether is exclusive.
+      # @return [Boolean] whether is exclusive.
       #
       def exclusive?
         if root?
@@ -310,7 +310,7 @@ module Pod
 
       #--------------------------------------#
       #
-      # @return [Bool] whether the target definition should inhibit warnings
+      # @return [Boolean] whether the target definition should inhibit warnings
       #         for a single pod. If inhibit_all_warnings is true, it will
       #         return true for any asked pod.
       #
@@ -329,7 +329,7 @@ module Pod
       # Sets whether the target definition should inhibit the warnings during
       # compilation for all pods.
       #
-      # @param  [Bool] flag
+      # @param  [Boolean] flag
       #         Whether the warnings should be suppressed.
       #
       # @return [void]
@@ -343,7 +343,7 @@ module Pod
       # @param  [String] pod_name
       #         Name of the pod for which the warnings will be inhibited or not.
       #
-      # @param  [Bool] should_inhibit
+      # @param  [Boolean] should_inhibit
       #         Whether the warnings should be inhibited or not for given pod.
       #
       # @return [void]
@@ -406,7 +406,7 @@ module Pod
         set_hash_value('uses_frameworks', value.to_hash)
       end
 
-      # @return [Bool] whether the target definition pods should be built as frameworks.
+      # @return [Boolean] whether the target definition pods should be built as frameworks.
       #
       def uses_frameworks?
         if internal_hash['uses_frameworks'].nil?
@@ -474,7 +474,7 @@ module Pod
       # @note   Build configurations are case compared case-insensitively in
       #         CocoaPods.
       #
-      # @return [Bool] flag
+      # @return [Boolean] flag
       #         Whether the pod should be linked with the target
       #
       def pod_whitelisted_for_configuration?(pod_name, configuration_name)
@@ -557,7 +557,7 @@ module Pod
         end
       end
 
-      # @return [Bool] whether the target definition should use modular headers
+      # @return [Boolean] whether the target definition should use modular headers
       #         for a single pod. If use_modular_headers! is true, it will
       #         return true for any asked pod.
       #
@@ -575,7 +575,7 @@ module Pod
 
       # Sets whether the target definition should use modular headers for all pods.
       #
-      # @param  [Bool] flag
+      # @param  [Boolean] flag
       #         Whether the warnings should be suppressed.
       #
       # @return [void]
@@ -589,7 +589,7 @@ module Pod
       # @param  [String] pod_name
       #         Name of the pod for which modular headers will be used.
       #
-      # @param  [Bool] flag
+      # @param  [Boolean] flag
       #         Whether modular headers should be used.
       #
       # @return [void]

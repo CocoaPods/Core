@@ -50,7 +50,7 @@ module Pod
     #
     attr_accessor :defined_in_file
 
-    # @return [Bool] Whether the Podfiles are equal.
+    # @return [Boolean] Whether the Podfiles are equal.
     #
     def ==(other)
       other && to_hash == other.to_hash

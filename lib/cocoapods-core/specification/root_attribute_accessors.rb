@@ -185,14 +185,14 @@ module Pod
           command.strip_heredoc.chomp if command
         end
 
-        # @return [Bool] Indicates, that if use_frameworks! is specified, the
+        # @return [Boolean] Indicates, that if use_frameworks! is specified, the
         #         framework should include a static library.
         #
         def static_framework
           attributes_hash['static_framework']
         end
 
-        # @return [Bool] Whether the Pod has been deprecated.
+        # @return [Boolean] Whether the Pod has been deprecated.
         #
         def deprecated
           attributes_hash['deprecated']
@@ -205,7 +205,7 @@ module Pod
           attributes_hash['deprecated_in_favor_of']
         end
 
-        # @return [Bool] Wether the pod is deprecated either in favor of some other
+        # @return [Boolean] Wether the pod is deprecated either in favor of some other
         #         pod or simply deprecated.
         #
         def deprecated?

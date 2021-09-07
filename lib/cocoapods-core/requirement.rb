@@ -90,7 +90,7 @@ module Pod
     end
 
     #
-    # @return [Bool] true if this pod has no requirements.
+    # @return [Boolean] true if this pod has no requirements.
     #
     def none?
       if @requirements.size == 1

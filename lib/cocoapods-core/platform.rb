@@ -140,7 +140,7 @@ module Pod
     # one if they have the same name and the other platform has a minor or
     # equal deployment target.
     #
-    # @return [Bool] whether the platform supports another platform.
+    # @return [Boolean] whether the platform supports another platform.
     #
     def supports?(other)
       other = Platform.new(other)
@@ -191,7 +191,7 @@ module Pod
       end
     end
 
-    # @return [Bool] whether the platform requires legacy architectures for
+    # @return [Boolean] whether the platform requires legacy architectures for
     #         iOS.
     #
     def requires_legacy_ios_archs?
@@ -202,7 +202,7 @@ module Pod
       end
     end
 
-    # @return [Bool] whether the platform supports dynamic frameworks.
+    # @return [Boolean] whether the platform supports dynamic frameworks.
     #
     def supports_dynamic_frameworks?
       if name == :ios

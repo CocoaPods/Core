@@ -115,42 +115,42 @@ module Pod
         #
         attr_reader :osx_default
 
-        # @return [Bool] whether the specification should be considered invalid
+        # @return [Boolean] whether the specification should be considered invalid
         #         if a value for the attribute is not specified.
         #
         def required?
           @required
         end
 
-        # @return [Bool] whether the attribute should be specified only on the
+        # @return [Boolean] whether the attribute should be specified only on the
         #         root specification.
         #
         def root_only?
           @root_only
         end
 
-        # @return [Bool] whether the attribute should be specified only on
+        # @return [Boolean] whether the attribute should be specified only on
         #         test specifications.
         #
         def test_only?
           @spec_types == [:test]
         end
 
-        # @return [Bool] whether the attribute is multi-platform and should
+        # @return [Boolean] whether the attribute is multi-platform and should
         #         work in conjunction with #{PlatformProxy}.
         #
         def multi_platform?
           @multi_platform
         end
 
-        # @return [Bool] whether there should be a singular alias for the
+        # @return [Boolean] whether there should be a singular alias for the
         #         attribute writer.
         #
         def singularize?
           @singularize
         end
 
-        # @return [Bool] whether the attribute describes file patterns.
+        # @return [Boolean] whether the attribute describes file patterns.
         #
         # @note   This is mostly used by the linter.
         #
@@ -158,7 +158,7 @@ module Pod
           @file_patterns
         end
 
-        # @return [Bool] defines whether the attribute reader should join the
+        # @return [Boolean] defines whether the attribute reader should join the
         # values with the parent.
         #
         # @note   Attributes stored in wrappers are always inherited.

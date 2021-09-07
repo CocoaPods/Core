@@ -290,7 +290,7 @@ module Pod
     # @param  [String] query
     #         the search term. Can be a regular expression.
     #
-    # @param  [Bool] full_text_search
+    # @param  [Boolean] full_text_search
     #         whether the search should be limited to the name of the Pod or
     #         should include also the author, the summary, and the description.
     #
@@ -343,7 +343,7 @@ module Pod
 
     # Updates the local clone of the source repo.
     #
-    # @param  [Bool] show_output
+    # @param  [Boolean] show_output
     #
     # @return  [Array<String>] changed_spec_paths
     #          Returns the list of changed spec paths.
