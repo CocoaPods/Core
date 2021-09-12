@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.11.1 (2021-09-12)
 
 ##### Enhancements
 
