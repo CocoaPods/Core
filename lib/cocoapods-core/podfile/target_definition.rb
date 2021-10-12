@@ -545,7 +545,7 @@ module Pod
           end
           if parent_hash['for_pods']
             # Remove pods that are set to use modular headers inside parent if they are set to not use modular headers inside current target.
-            parent_hash['for_pods'] -= Array(raw_hash['for_pods'])
+            parent_hash['for_pods'] -= Array(raw_hash['not_for_pods'])
           end
           if raw_hash['all']
             # Clean pods that are set to not use modular headers inside parent if use_modular_headers! was set.
@@ -934,7 +934,7 @@ module Pod
           end
           if parent_hash['for_pods']
             # Remove pods that are set to inhibit inside parent if they are set to not inhibit inside current target.
-            parent_hash['for_pods'] -= Array(inhibit_hash['for_pods'])
+            parent_hash['for_pods'] -= Array(inhibit_hash['not_for_pods'])
           end
           if inhibit_hash['all']
             # Clean pods that are set to not inhibit inside parent if inhibit_all_warnings! was set.
