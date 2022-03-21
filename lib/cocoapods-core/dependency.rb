@@ -99,11 +99,13 @@ module Pod
       end
       @name = name
       @requirement = Requirement.create(requirements)
+      @specific_requirement ||= nil
+      @external_source ||= nil
     end
 
     # @return [Version] whether the dependency points to a specific version.
     #
-    attr_accessor :specific_version
+    attr_reader :specific_version
 
     # @return [Requirement] the requirement of this dependency (a set of
     #         one or more version restrictions).
