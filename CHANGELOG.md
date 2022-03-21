@@ -10,7 +10,7 @@
 
 * Fix warnings in `dependency.rb`.  
   [Nick Cooke](https://github.com/ncooke3)
-  [#719](https://github.com/CocoaPods/Core/pull/719)
+  [#720](https://github.com/CocoaPods/Core/pull/720)
 
 
 ## 1.11.3 (2022-03-11)
