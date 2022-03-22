@@ -173,7 +173,11 @@ module Pod
     # @return [String] the root name
     #
     def self.root_name(full_name)
-      full_name.split('/', 2).first
+      if index = full_name.index('/')
+        full_name.slice(0, index)
+      else
+        full_name
+      end
     end
 
     # Returns the module name of a specification
