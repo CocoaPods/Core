@@ -195,7 +195,7 @@ module Pod
       # they are specified for a dependency match. This behaviour can be altered
       # for a specific dependency by specifying the source with the dependency:
       #
-      #     pod 'PonyDebugger', :source => 'https://github.com/CocoaPods/Specs.git'
+      #     pod 'PonyDebugger', :source => 'https://cdn.cocoapods.org/'
       #
       # In this case only the specified source will be searched for the dependency
       # and any global sources ignored.
@@ -870,7 +870,7 @@ module Pod
       # @example  Specifying to first use the Artsy repository and then the CocoaPods Master Repository
       #
       #           source 'https://github.com/artsy/Specs.git'
-      #           source 'https://github.com/CocoaPods/Specs.git'
+      #           source 'https://cdn.cocoapods.org/'
       #
       # @return   [void]
       #
