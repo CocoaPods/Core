@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Extend `scheme` DSL to allow specifying running tests in parallel.  
+  [Dimitris Koutsogiorgas](https://github.com/dnkoutso)
+  [#722](https://github.com/CocoaPods/Core/pull/722)
 
 ##### Bug Fixes
 
