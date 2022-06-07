@@ -596,6 +596,11 @@ module Pod
         result_should_include('scheme', 'Expected a boolean for key `code_coverage`.')
       end
 
+      it 'checks scheme parallelizable key type' do
+        @spec.scheme = { :parallelizable => 1 }
+        result_should_include('scheme', 'Expected a boolean for key `parallelizable`.')
+      end
+
       #------------------#
 
       it 'accepts valid frameworks' do
