@@ -576,7 +576,8 @@ module Pod
 
       it 'accepts valid scheme values' do
         @spec.scheme = { :launch_arguments => ['Arg1'], :environment_variables => { 'Key1' => 'Val1' },
-                         :code_coverage => true }
+                         :code_coverage => true, :parallelizable => true, :build_configurations => { 'Debug' => 'Debug'}
+                       }
         @linter.lint
         @linter.results.should.be.empty
       end
@@ -599,6 +600,11 @@ module Pod
       it 'checks scheme parallelizable key type' do
         @spec.scheme = { :parallelizable => 1 }
         result_should_include('scheme', 'Expected a boolean for key `parallelizable`.')
+      end
+
+      it 'checks scheme build_configurations key type' do
+        @spec.scheme = { :build_configurations => [] }
+        result_should_include('scheme', 'Expected a hash for key `build_configurations`.')
       end
 
       #------------------#

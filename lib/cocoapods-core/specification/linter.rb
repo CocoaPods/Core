@@ -465,6 +465,9 @@ module Pod
           if s.key?(:parallelizable) && ![true, false].include?(s[:parallelizable])
             results.add_error('scheme', 'Expected a boolean for key `parallelizable`.')
           end
+          if s.key?(:build_configurations) && !s[:build_configurations].is_a?(Hash)
+            results.add_error('scheme', 'Expected a hash for key `build_configurations`.')
+          end
         end
       end
 
