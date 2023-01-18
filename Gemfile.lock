@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     cocoapods-core (1.11.3)
-      activesupport (>= 5.0, < 7)
+      activesupport (>= 5.0, < 8)
       addressable (~> 2.8)
       algoliasearch (~> 1.0)
       concurrent-ruby (~> 1.1)
@@ -127,4 +127,4 @@ DEPENDENCIES
   webrick (~> 1.7.0)
 
 BUNDLED WITH
-   2.2.3
+   2.3.9
