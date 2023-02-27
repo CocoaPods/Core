@@ -56,10 +56,17 @@ module Pod
     #
     # @return [Specification] the specification
     #
-    def self.from_json(json)
+    def self.from_json(json, path="")
       require 'json'
-      hash = JSON.parse(json)
-      from_hash(hash)
+      begin
+        hash = JSON.parse(json)
+        from_hash(hash)
+      rescue JSON::ParserError => e
+        if path != ""
+          raise e.class, "Failed to parse JSON at file: '#{path}'.\n\n#{e.message}"
+        else raise
+        end
+      end      
     end
 
     # Configures a new specification from the given hash.
