@@ -1,6 +1,6 @@
 # CocoaPods Core
 
-[![Build Status](https://github.com/CocoaPods/Core/workflows/Specs/badge.svg)](https://github.com/CocoaPods/Core/actions)
+[![Build Status](https://github.com/CocoaPods/Core/workflows/Specs/badge.svg)](https://github.com/CocoaPods/Core/actions/workflows/Specs.yml)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/91a2d70b9ed977815c66/test_coverage)](https://codeclimate.com/github/CocoaPods/Core/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/91a2d70b9ed977815c66/maintainability)](https://codeclimate.com/github/CocoaPods/Core/maintainability)
 
@@ -25,7 +25,7 @@ files.
 $ [sudo] gem install cocoapods-core
 ```
 
-The `cocoapods-core` gem requires Ruby 2.0.0 or later.
+The `cocoapods-core` gem requires Ruby 2.6.0 or later.
 
 ## Collaborate
 
