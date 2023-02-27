@@ -1718,7 +1718,7 @@ module Pod
                 :types => [String],
                 :spec_types => [:test]
 
-      SCHEME_KEYS = [:launch_arguments, :environment_variables, :code_coverage, :parallelizable].freeze
+      SCHEME_KEYS = [:launch_arguments, :environment_variables, :code_coverage, :parallelizable, :build_configurations].freeze
 
       # @!method scheme=(flag)
       #
