@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.12.0 (2023-02-27)
+
+##### Enhancements
+
 * Extend `scheme` DSL to enable `build_configurations`.  
   [Nikita Krasnov](https://github.com/krasich74)
   [#731](https://github.com/CocoaPods/Core/pull/731)
