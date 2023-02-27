@@ -1,6 +1,6 @@
 # CocoaPods Core
 
-[![Build Status](https://img.shields.io/github/workflow/status/CocoaPods/Core/Specs)](https://github.com/CocoaPods/Core/workflows/Specs/badge.svg)
+[![Build Status](https://github.com/CocoaPods/Core/workflows/Specs/badge.svg)](https://github.com/CocoaPods/Core/actions)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/91a2d70b9ed977815c66/test_coverage)](https://codeclimate.com/github/CocoaPods/Core/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/91a2d70b9ed977815c66/maintainability)](https://codeclimate.com/github/CocoaPods/Core/maintainability)
 
