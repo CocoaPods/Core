@@ -1,6 +1,6 @@
 # CocoaPods Core Changelog
 
-## Master
+## 1.12.0 (2023-02-27)
 
 ##### Enhancements
 
