@@ -14,7 +14,7 @@ module Pod
     #
     # An example of a more complex Podfile can be:
     #
-    #     platform :ios, '9.0'
+         platform :ios, '9.0'
     #     inhibit_all_warnings!
     #
     #     target 'MyApp' do
