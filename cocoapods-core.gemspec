@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'typhoeus', '~> 1.0'
   s.add_runtime_dependency 'netrc', '~> 0.11'
   s.add_runtime_dependency 'addressable', '~> 2.8'
-  s.add_runtime_dependency 'public_suffix', '~> 4.0'
+  s.add_runtime_dependency 'public_suffix', '~> 5.0'
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
