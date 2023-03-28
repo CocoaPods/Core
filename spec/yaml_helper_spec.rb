@@ -39,6 +39,21 @@ module Pod
         YAMLHelper.load_string(result).should == value
       end
 
+      it 'converts strings that look like YAML timestamps' do
+        {
+          # https://yaml.org/type/timestamp.html
+          '2001-12-15T02:59:43.1Z' => "'2001-12-15T02:59:43.1Z'",
+          '2001-12-14t21:59:43.10-05:00' => "'2001-12-14t21:59:43.10-05:00'",
+          '2001-12-14 21:59:43.10 -5' => "'2001-12-14 21:59:43.10 -5'",
+          '2001-12-15 2:59:43.10' => "'2001-12-15 2:59:43.10'",
+          '2002-12-14' => "'2002-12-14'",
+        }.each do |given, expected|
+          converted = YAMLHelper.convert(given)
+          converted[0..-2].should == expected
+          YAMLHelper.load_string("---\n#{converted}").should == given
+        end
+      end
+
       it 'converts weird strings' do
         {
           'true' => "'true'",
@@ -176,14 +191,16 @@ module Pod
         YAMLHelper.load_string(result).should == value
       end
 
-      it 'handles objects of unknown classes' do
+      it 'raises an Informative error when it encounters a disallowed class' do
         value = Pathname.new('a-path')
         result = YAMLHelper.convert(value)
         result.should == <<-EOT.strip_heredoc
           !ruby/object:Pathname
           path: a-path
         EOT
-        YAMLHelper.load_string(result).should == value
+        should.raise Informative do
+          YAMLHelper.load_string(result)
+        end
       end
     end
 
