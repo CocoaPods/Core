@@ -11,6 +11,17 @@
 * None.  
 
 
+## 1.12.1 (2023-04-18)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.12.0 (2023-02-27)
 
 ##### Enhancements
