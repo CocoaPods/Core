@@ -54,7 +54,7 @@ module Pod
       # @return [Hash, Array] the Ruby YAML representaton
       #
       def load_string(yaml_string, file_path = nil)
-        YAML.load(yaml_string)
+        YAML.safe_load(yaml_string, :permitted_classes => [Date, Time, Symbol])
       rescue
         if yaml_has_merge_error?(yaml_string)
           raise Informative, yaml_merge_conflict_msg(yaml_string, file_path)
@@ -284,6 +284,17 @@ module Pod
         'true', 'True', 'TRUE', 'false', 'False', 'FALSE', # bool
         'yes', 'Yes', 'YES', 'no', 'No', 'NO', # yes/no
         'on', 'On', 'ON', 'off', 'Off', 'OFF', # no/off
+        Regexp.new(%{
+          [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] # (ymd)
+         |[0-9][0-9][0-9][0-9] # (year)
+          -[0-9][0-9]? # (month)
+          -[0-9][0-9]? # (day)
+          ([Tt]|[ \t]+)[0-9][0-9]? # (hour)
+          :[0-9][0-9] # (minute)
+          :[0-9][0-9] # (second)
+          (\.[0-9]*)? # (fraction)
+          (([ \t]*)(Z|[-+][0-9][0-9]?(:[0-9][0-9])?))? # (time zone)
+        }, Regexp::EXTENDED), # https://yaml.org/type/timestamp.html
         /[-+]?[0-9]+/, # base 10 int
         /00[0-7]+/, # base 8 int
         /0x[0-9a-fA-F]+/, # base 16 int
