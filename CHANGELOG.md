@@ -222,8 +222,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Raise macOS default deployment target to avoid a warning in Xcode 12
+  [Marc Haisenko](https://github.com/DarkDust)
+  [CocoaPods#9884](https://github.com/CocoaPods/CocoaPods/issues/9884)
 
 ## 1.9.3 (2020-05-29)
 

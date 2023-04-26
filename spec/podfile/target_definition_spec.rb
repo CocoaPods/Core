@@ -627,7 +627,7 @@ module Pod
         @parent.platform.should == Pod::Platform.new(:ios, '4.3')
 
         @parent.set_platform(:osx)
-        @parent.platform.should == Pod::Platform.new(:osx, '10.6')
+        @parent.platform.should == Pod::Platform.new(:osx, '10.9')
       end
 
       it 'raises if the specified platform is unsupported' do

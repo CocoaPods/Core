@@ -611,7 +611,7 @@ module Pod
 
       #--------------------------------------#
 
-      PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.6', :tvos => '9.0', :watchos => '2.0' }.freeze
+      PLATFORM_DEFAULTS = { :ios => '4.3', :osx => '10.9', :tvos => '9.0', :watchos => '2.0' }.freeze
 
       # @return [Platform] the platform of the target definition.
       #
