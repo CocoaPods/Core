@@ -331,6 +331,13 @@ module Pod
     def subspec_by_name(relative_name, raise_if_missing = true, include_non_library_specifications = false)
       if relative_name.nil? || relative_name == base_name
         self
+      elsif base_name.nil?
+        if raise_if_missing
+          raise Informative, "Trying to access a `#{relative_name}` " \
+          "specification from `#{defined_in_file}`, which has no contents."
+        else
+          return nil
+        end
       elsif relative_name.downcase == base_name.downcase
         raise Informative, "Trying to access a `#{relative_name}` " \
           "specification from `#{base_name}`, which has a different case."
