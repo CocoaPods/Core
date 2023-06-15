@@ -599,6 +599,24 @@ module Pod
           result.swift_versions.map(&:to_s).should == %w(3.2 4.0 4.1)
           result.swift_version.to_s.should == '4.1'
         end
+
+        describe 'Swift Package Manger dependencies' do
+          it 'writes spm dependency' do
+            @spec.spm_dependency(
+              :url => 'http://github.com/foo/foo',
+              :requirement => {:kind => 'upToNextMajorVersion', :minimumVersion => '1.0.0'},
+              :products => ['Foo'],
+            )
+            hash = @spec.to_hash
+            hash['spm_dependencies'].should == [
+              {
+                :url => 'http://github.com/foo/foo',
+                :requirement => {:kind => 'upToNextMajorVersion', :minimumVersion => '1.0.0'},
+                :products => ['Foo'],
+              },
+            ]
+          end
+        end
       end
     end
   end
