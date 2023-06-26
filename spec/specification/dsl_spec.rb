@@ -169,6 +169,16 @@ module Pod
         e.message.should.match /declared only per platform/
       end
 
+      it 'allows to specify visionOS as supported platform' do
+        @spec.platform = :visionos
+        @spec.attributes_hash['platforms'].should == { 'visionos' => nil }
+      end
+
+      it 'allows to specify a deployment target for the visionOS platform' do
+        @spec.visionos.deployment_target = '1.0'
+        @spec.attributes_hash['platforms']['visionos'].should == '1.0'
+      end
+
       it 'allows to specify watchOS as supported platform' do
         @spec.platform = :watchos
         @spec.attributes_hash['platforms'].should == { 'watchos' => nil }

@@ -82,7 +82,7 @@ module Pod
         @linter.lint
         @linter.results.count.should == 1
         @linter.results.first.platforms.map(&:to_s).sort.should ==
-          %w(ios osx tvos watchos)
+          %w(ios osx tvos visionos watchos)
       end
 
       before do
