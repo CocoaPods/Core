@@ -4,7 +4,9 @@
 
 ##### Enhancements
 
-* None.  
+* Add `visionOS` as a new platform.
+  [Gabriel Donadel](https://github.com/gabrieldonadel)
+  [Core#745](https://github.com/CocoaPods/Core/pull/745)
 
 ##### Bug Fixes
 
