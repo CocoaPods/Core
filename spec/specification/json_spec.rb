@@ -14,6 +14,7 @@ module Pod
             'osx' => nil,
             'ios' => nil,
             'tvos' => nil,
+            'visionos'=> nil,
             'watchos' => nil,
           },
         }
@@ -53,6 +54,7 @@ module Pod
             'osx' => nil,
             'ios' => nil,
             'tvos' => nil,
+            'visionos'=> nil,
             'watchos' => nil,
           },
         }

@@ -87,6 +87,14 @@ module Pod
       new :tvos
     end
 
+    # Convenience method to initialize a visionOS platform.
+    #
+    # @return [Platform] a visionOS platform.
+    #
+    def self.visionos
+      new :visionos
+    end
+
     # Convenience method to initialize a watchOS platform.
     #
     # @return [Platform] a watchOS platform.
@@ -100,7 +108,7 @@ module Pod
     # @return [Array<Platform>] list of platforms.
     #
     def self.all
-      [ios, osx, watchos, tvos]
+      [ios, osx, watchos, visionos, tvos]
     end
 
     # Checks if a platform is equivalent to another one or to a symbol
@@ -239,6 +247,7 @@ module Pod
       when :osx then 'macOS'
       when :watchos then 'watchOS'
       when :tvos then 'tvOS'
+      when :visionos then 'visionOS'
       else symbolic_name.to_s
       end
     end
