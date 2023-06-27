@@ -102,7 +102,7 @@ module Pod
         code = response.status_code
         code != 304
       rescue
-        puts "Failed to verify if #{repod_id} specs repo remote has been modified since commit #{commit} via /GET request to #{request_url}, continuing repo update..".yellow
+        puts "Failed to verify if #{repo_id} specs repo remote has been modified since commit #{commit} via /GET request to #{request_url}, continuing repo update..".yellow
       end
     end
 
