@@ -467,7 +467,7 @@ module Pod
     end
 
     def unchanged_github_repo?
-      return unless url =~ /github\.com[:\/]CocoaPods\/CocoaPods\.git/
+      return unless url =~ /github.com/
       !GitHub.modified_since_commit(url, git_commit_hash)
     end
 
