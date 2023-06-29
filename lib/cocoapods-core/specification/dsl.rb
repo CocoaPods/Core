@@ -735,6 +735,12 @@ module Pod
                                        Array(configurations_option.delete(:configurations)).map { |c| c.to_s.downcase }
                                      end
 
+        virtual_option = version_requirements.find { |option| option.is_a?(Hash) && option.key?(:virtual) }
+        is_virtual         =         if virtual_option
+                                      version_requirements.delete(virtual_option)
+                                      (virtual_option&.delete(:virtual)&.to_s&.downcase == 'true') || false
+                                     end
+
         dependency_options = version_requirements.reject { |req| req.is_a?(String) }
         dependency_options.each do |dependency_option|
           if dependency_option.is_a?(Hash)
@@ -751,8 +757,7 @@ module Pod
         end
 
         #store dependency to virtual_dependencies if has :virtual
-        virtual_option = (configurations_option&.delete(:virtual)&.to_s&.downcase == 'true') || false
-        if virtual_option == 'true'
+        if is_virtual
           attributes_hash['virtual_dependencies'] ||= {}
           attributes_hash['virtual_dependencies'][name] = version_requirements
         else
