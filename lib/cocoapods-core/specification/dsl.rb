@@ -666,6 +666,22 @@ module Pod
                 :container => Hash,
                 :inherited => true
 
+      #-----------------------------------------------------------------------#
+
+      #   if define virtual to 'ture', the virtual_dependencies will save it instead of dependencies；
+
+      # # @Target
+      #   This is to create a new virtual dependency that will be updated to the virtual dependency 
+      #   when pod install/update without affecting the component label push
+
+      #-----------------------------------------------------------------------#
+
+      # # @example
+      #   spec.ios.dependency 'MBProgressHUD', '~> 0.5', :virtual => 'true'
+      attribute :virtual_dependencies,
+                :container => Hash,
+                :inherited => true
+
       # Any dependency on other Pods or to a ‘sub-specification’.
       #
       # ---
@@ -734,8 +750,15 @@ module Pod
           raise Informative, "Unsupported version requirements. #{version_requirements.inspect} is not valid."
         end
 
-        attributes_hash['dependencies'] ||= {}
-        attributes_hash['dependencies'][name] = version_requirements
+        #store dependency to virtual_dependencies if has :virtual
+        virtual_option = (configurations_option&.delete(:virtual)&.to_s&.downcase == 'true') || false
+        if virtual_option == 'true'
+          attributes_hash['virtual_dependencies'] ||= {}
+          attributes_hash['virtual_dependencies'][name] = version_requirements
+        else
+          attributes_hash['dependencies'] ||= {}
+          attributes_hash['dependencies'][name] = version_requirements
+        end
 
         unless whitelisted_configurations.nil?
           if (extras = whitelisted_configurations - %w(debug release)) && !extras.empty?
