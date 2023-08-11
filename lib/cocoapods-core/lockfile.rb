@@ -496,8 +496,8 @@ module Pod
 
           value = specs.map { |s| s.root.name }
 
-          if output.has_key(key)
-            value.append(output[key])
+          if output.has_key?(key)
+            value = value + output[key]
           end
 
           if value.length > 0
