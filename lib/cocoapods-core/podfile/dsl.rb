@@ -455,6 +455,10 @@ module Pod
       # @option   options [String] :dependency_file
       #           specifies the dependency file to use for this script phase.
       #
+      # @option   options [String] :always_out_of_date
+      #           specifies whether or not this run script will be forced to
+      #           run even on incremental builds
+      #
       # @return   [void]
       #
       def script_phase(options)
