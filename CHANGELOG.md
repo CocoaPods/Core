@@ -8,6 +8,10 @@
   [Gabriel Donadel](https://github.com/gabrieldonadel)
   [#745](https://github.com/CocoaPods/Core/pull/745)
 
+* Extend `script_phase` DSL to support `always_out_of_date` attribute.  
+  [Alvar Hansen](https://github.com/alvarhansen)
+  [#750](https://github.com/CocoaPods/Core/pull/750)
+
 ##### Bug Fixes
 
 * None.  
