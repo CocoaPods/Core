@@ -7,7 +7,7 @@ gem 'activesupport', '>= 5.0', '< 7'
 
 group :development do
   gem 'bacon'
-  gem 'mocha', '< 1.5'
+  gem 'mocha'
   gem 'mocha-on-bacon'
   gem 'prettybacon'
   gem 'rake', '~> 12.0'
