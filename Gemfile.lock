@@ -36,7 +36,7 @@ GEM
       rexml
     ethon (0.16.0)
       ffi (>= 1.15.0)
-    ffi (1.15.5)
+    ffi (1.16.3)
     fuzzy_match (2.0.4)
     hashdiff (1.0.1)
     httpclient (2.8.3)
@@ -62,7 +62,7 @@ GEM
     netrc (0.11.0)
     notify (0.5.2)
     parallel (1.23.0)
-    parser (3.2.2.3)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     prettybacon (0.0.2)
@@ -79,14 +79,14 @@ GEM
       ffi (~> 1.0)
     rb-kqueue (0.2.8)
       ffi (>= 0.5.0)
-    regexp_parser (2.8.1)
+    regexp_parser (2.8.2)
     rexml (3.2.6)
-    rubocop (1.56.3)
+    rubocop (1.57.1)
       base64 (~> 0.1.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.2.3)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
@@ -103,14 +103,14 @@ GEM
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.4.2)
+    unicode-display_width (2.5.0)
     vcr (6.2.0)
     webmock (3.19.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.7.0)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
 
 PLATFORMS
   ruby
@@ -135,4 +135,4 @@ DEPENDENCIES
   webrick (~> 1.7.0)
 
 BUNDLED WITH
-   2.3.9
+   2.4.13
