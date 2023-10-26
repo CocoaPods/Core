@@ -8,8 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Fix a crash when running with specific versions of activesupport  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods#12116](https://github.com/CocoaPods/CocoaPods/issues/12116)
 
 ## 1.14.0 (2023-10-26)
 
