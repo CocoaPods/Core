@@ -8,8 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
-
+* Fix a bug when attempting to publish a Pod with `pod trunk push` in certain cases  
+  [Eric Amorde](https://github.com/amorde)
+  [#729](https://github.com/CocoaPods/Core/pull/759)
 
 ## 1.14.1 (2023-10-26)
 
