@@ -21,6 +21,33 @@ module Pod
         JSON.parse(spec.to_json).should == expected
       end
 
+      it 'serializes tags with Pod::Version correctly' do
+        spec = Specification.new(nil, 'BananaLib') do |spec|
+          spec.version = '1.0'
+          spec.version.class.should == Pod::Version
+          spec.source = {
+            :git => 'https://github.com/CocoaPods/CocoaPodsExampleLibrary.git',
+            :tag => spec.version,
+          }
+        end
+        expected = {
+          'name' => 'BananaLib',
+          'version' => '1.0',
+          'source' => {
+            'git' => 'https://github.com/CocoaPods/CocoaPodsExampleLibrary.git',
+            'tag' => '1.0',
+          },
+          'platforms' => {
+            'osx' => nil,
+            'ios' => nil,
+            'tvos' => nil,
+            'visionos'=> nil,
+            'watchos' => nil,
+          },
+        }
+        JSON.parse(spec.to_json).should == expected
+      end
+
       it 'terminates the json representation with a new line' do
         spec = Specification.new(nil, 'BananaLib')
         spec.to_json.should.end_with "\n"
