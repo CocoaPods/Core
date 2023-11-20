@@ -31,5 +31,5 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bacon', '~> 1.1'
 
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 2.6'
 end

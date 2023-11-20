@@ -11,6 +11,31 @@
 * None.  
 
 
+## 1.14.3 (2023-11-19)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Revert minimum required Ruby version to 2.6 to support macOS system Ruby  
+  [Eric Amorde](https://github.com/amorde)
+  [#12122](https://github.com/CocoaPods/CocoaPods/issues/12122)
+
+
+## 1.14.2 (2023-10-27)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix a bug when attempting to publish a Pod with `pod trunk push` in certain cases  
+  [Eric Amorde](https://github.com/amorde)
+  [#729](https://github.com/CocoaPods/Core/pull/759)
+
 ## 1.14.1 (2023-10-26)
 
 ##### Enhancements

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cocoapods-core (1.14.1)
+    cocoapods-core (1.14.3)
       activesupport (>= 5.0, < 8)
       addressable (~> 2.8)
       algoliasearch (~> 1.0)
@@ -15,7 +15,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.1.1)
+    activesupport (7.1.2)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -40,7 +40,7 @@ GEM
     connection_pool (2.4.1)
     crack (0.4.5)
       rexml
-    drb (2.1.1)
+    drb (2.2.0)
       ruby2_keywords
     ethon (0.16.0)
       ffi (>= 1.15.0)
@@ -66,7 +66,7 @@ GEM
       metaclass (~> 0.0.1)
     mocha-on-bacon (0.2.3)
       mocha (>= 0.13.0)
-    mutex_m (0.1.2)
+    mutex_m (0.2.0)
     nap (1.1.0)
     netrc (0.11.0)
     notify (0.5.2)
@@ -109,7 +109,7 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    typhoeus (1.4.0)
+    typhoeus (1.4.1)
       ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
