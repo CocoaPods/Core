@@ -48,6 +48,12 @@ module Pod
         # Allow `Platform.new('macos')` to be equivalent to `Platform.macos`
         if input == 'macos'
           input = 'osx'
+        elsif input == 'xros'
+          # To address the issue of the mismatch between the platform: xros in the XCFramework and the platform:
+          # visionos in Cocoapods.
+          #
+          # This will ensure proper alignment between the platform information in the XCFramework and Cocoapods.
+          input = 'visionos'
         end
         @symbolic_name = input.to_sym
         target = target[:deployment_target] if target.is_a?(Hash)
