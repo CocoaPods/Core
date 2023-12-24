@@ -12,6 +12,10 @@
   [fnxpt](https://github.com/fnxpt)
   [#748](https://github.com/CocoaPods/Core/issues/748)
 
+* Fix a crash when calling Specification#subspec_by_name on a deprecated specification with no name  
+  [sagiwei](https://github.com/sagiwei)
+  [#742](https://github.com/CocoaPods/Core/pull/742)
+
 
 ## 1.14.3 (2023-11-19)
 
