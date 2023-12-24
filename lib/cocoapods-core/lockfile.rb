@@ -485,7 +485,8 @@ module Pod
       #           { "https://github.com/cocoapods/cocoapods.git" => ["Alamofire", "Moya"] }
       #
       def generate_spec_repos(spec_repos)
-        Hash[spec_repos.map do |source, specs|
+        output = Hash.new {|h, k| h[k] = Array.new(0)}
+        spec_repos.each do |source, specs|
           next unless source
           next if specs.empty?
           key = source.url || source.name
@@ -493,9 +494,18 @@ module Pod
           # save `trunk` as 'trunk' so that the URL itself can be changed without lockfile churn
           key = Pod::TrunkSource::TRUNK_REPO_NAME if source.name == Pod::TrunkSource::TRUNK_REPO_NAME
 
-          value = specs.map { |s| s.root.name }.uniq
-          [key, YAMLHelper.sorted_array(value)]
-        end.compact]
+          value = specs.map { |s| s.root.name }
+
+          if output.has_key?(key)
+            value = value + output[key]
+          end
+
+          if value.length > 0
+            output[key] = YAMLHelper.sorted_array(value.uniq)
+          end
+        end
+
+        output.compact
       end
 
       # Generates the information of the external sources.
