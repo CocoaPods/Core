@@ -8,6 +8,17 @@
 
 ##### Bug Fixes
 
+* None.  
+
+
+## 1.15.0 (2024-01-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
 * Fix an issue updating spec repos in Podfile.lock when the key already exists  
   [fnxpt](https://github.com/fnxpt)
   [#748](https://github.com/CocoaPods/Core/issues/748)
