@@ -30,15 +30,30 @@ module Pod
         @platform.name.should == :ios
       end
 
-      it 'can be initialized with a string symbolic name' do
-        platform = Platform.new('ios')
-        platform.name.should == :ios
-      end
+      it 'can be initialized with a string' do
+        Platform.new('MACOS').should == Platform.macos
+        Platform.new('macOS').should == Platform.macos
+        Platform.new('macos').should == Platform.macos
 
-      it 'can be initialized with a string representing macOS' do
-        platform = Platform.new('macos')
-        platform.name.should == :osx
-        platform.string_name.should == 'macOS'
+        Platform.new('iOS').should == Platform.ios
+        Platform.new('IOS').should == Platform.ios
+        Platform.new('ios').should == Platform.ios
+
+        Platform.new('tvos').should == Platform.tvos
+        Platform.new('tvOS').should == Platform.tvos
+        Platform.new('TVOS').should == Platform.tvos
+
+        Platform.new('watchOS').should == Platform.watchos
+        Platform.new('WATCHOS').should == Platform.watchos
+        Platform.new('watchos').should == Platform.watchos
+
+        Platform.new('visionos').should == Platform.visionos
+        Platform.new('VISIONOS').should == Platform.visionos
+        Platform.new('visionOS').should == Platform.visionos
+        # Recognizes xrOS
+        Platform.new('xros').should == Platform.visionos
+        Platform.new('XROS').should == Platform.visionos
+        Platform.new('xrOS').should == Platform.visionos
       end
 
       it 'exposes its name as string' do
@@ -83,7 +98,7 @@ module Pod
         Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end
 
-      it 'uses its name as its symbold version' do
+      it 'uses its name as its symbol version' do
         @platform.to_sym.should == :ios
       end
 
