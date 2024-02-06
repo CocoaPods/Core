@@ -11,6 +11,18 @@
 * None.  
 
 
+## 1.15.1 (2024-02-06)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Accept any casing for platform names in `Platform.new`.  
+  [Eric Amorde](https://github.com/amorde)
+  [#765](https://github.com/CocoaPods/Core/pull/765)
+
 ## 1.15.0 (2024-01-28)
 
 ##### Enhancements
