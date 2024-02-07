@@ -693,6 +693,13 @@ module Pod
         @spec.compiler_flags = '-some_flag', '-another -Wno_flags'
         result_should_include('warnings', 'disabled', 'compiler_flags')
       end
+
+      #------------------#
+
+      it 'check if spm dependency requirement upToNextMinorVersion has a minimumVersion key' do
+        @spec.spm_dependency(:url => 'https://github.com/foo/foo', :requirement => { :kind => 'upToNextMinorVersion' }, :products => ['Foo'])
+        result_should_include('missing key minimumVersion')
+      end
     end
 
     #--------------------------------------#
