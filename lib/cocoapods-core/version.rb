@@ -225,6 +225,9 @@ module Pod
 
           if comparison = lhs <=> rhs
             return comparison
+          else
+            return -1 if lhs.is_a?(Numeric) && rhs.is_a?(String)
+            return  1 if rhs.is_a?(Numeric) && lhs.is_a?(String)
           end
         end
       end

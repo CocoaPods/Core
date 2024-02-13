@@ -145,6 +145,9 @@ module Pod
 
         # Example from CocoaPods/CocoaPods#5718
         Version.new('1.0-beta.8').should.be < Version.new('1.0-beta.8a')
+
+        # Example from section 11.4.3 on semver.org
+        Version.new('1.0.0-beta.3rd.1').should.not.be >= Version.new('1.0.0-beta.ios17.1')
       end
     end
 
