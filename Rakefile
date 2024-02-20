@@ -50,11 +50,11 @@ begin
     end
 
     task :all do
-      title 'Running Unit Tests'
-      sh "bundle exec bacon #{specs('**')}"
-
       title 'Checking code style...'
       Rake::Task['rubocop'].invoke if RUBY_VERSION >= '1.9.3'
+
+      title 'Running Unit Tests'
+      sh "bundle exec bacon #{specs('**')}"
     end
   end
 
