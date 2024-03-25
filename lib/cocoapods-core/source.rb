@@ -111,7 +111,9 @@ module Pod
     #         stored.
     #
     def pod_path(name)
-      specs_dir.join(*metadata.path_fragment(name))
+      path = specs_dir.join(*metadata.path_fragment(name))
+      add_to_sparse_checkout(path) if sparse_checkout?
+      path
     end
 
     # @return [Pathname] The path at which source metadata is stored.
@@ -469,6 +471,49 @@ module Pod
     def unchanged_github_repo?
       return unless url =~ /github.com/
       !GitHub.modified_since_commit(url, git_commit_hash)
+    end
+
+    # @!group Sparse repo
+    #-------------------------------------------------------------------------#
+
+    def sparse_checkout_config_path
+      repo.join('.git/info/sparse-checkout')
+    end
+
+    def sparse_checkout?
+      if @is_sparse_checkout.nil?
+        @is_sparse_checkout = File.exist?(sparse_checkout_config_path)
+      end
+      @is_sparse_checkout
+    end
+
+    def sparse_checkout_patterns
+      @sparse_checkout_patterns ||= File.read(sparse_checkout_config_path).each_line.map(&:chomp).to_a if sparse_checkout?
+    end
+
+    def add_to_sparse_checkout(path)
+      relative_pod_path = path.relative_path_from(repo)
+
+      unless sparse_checkout_patterns.include?(relative_pod_path.to_s)
+        debug "Adding `#{relative_pod_path}` to sparse checkout file"
+        File.open(sparse_checkout_config_path, 'a') do |sparse|
+          sparse.puts relative_pod_path
+        end
+        @sparse_checkout_patterns = nil
+      end
+
+      repo_git(['checkout']) unless Dir.exist?(path)
+    end
+
+    # @!group Debugging
+    #-------------------------------------------------------------------------#
+
+    def debug(message)
+      if defined?(Pod::UI)
+        Pod::UI.message(message)
+      else
+        CoreUI.puts(message)
+      end
     end
 
     #-------------------------------------------------------------------------#
