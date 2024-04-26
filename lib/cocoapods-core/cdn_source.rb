@@ -282,14 +282,19 @@ module Pod
       # We use those because you can't get a directory listing from a CDN.
       index_file_name = index_file_name_for_fragment(fragment)
       download_file(index_file_name)
-      versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
-      @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
-        row = row.split('/')
-        pod = row.shift
-        versions = row
+      file_okay = local_file_okay?(index_file_name)
+      if file_okay
+        versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
+        @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
+          row = row.split('/')
+          pod = row.shift
+          versions = row
 
-        hash[pod] = versions
-        hash
+          hash[pod] = versions
+          hash
+        end
+      else
+        debug "CDN: #{name} Relative path: #{partial_url} not available in this source set"
       end
     end
 
