@@ -116,7 +116,7 @@ module Pod
       pod_path_actual = pod_path(name)
       pod_path_relative = relative_pod_path(name)
 
-      return nil if @version_arrays_by_fragment_by_name[fragment].nil? || @version_arrays_by_fragment_by_name[fragment][name].nil?
+      return nil if @version_arrays_by_fragment_by_name.dig(fragment, name).nil?
 
       concurrent_requests_catching_errors do
         loaders = []
