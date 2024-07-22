@@ -8,7 +8,7 @@ jobs:
         os: [ubuntu-20.04]
         ruby: [2.6, 2.7, 3.0.0, 3.2.2]
         include:
-          - os: macos-11
+          - os: macos-13
             ruby: system
 
     name: ${{ matrix.os }} / Ruby ${{ matrix.ruby }}
