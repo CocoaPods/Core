@@ -424,6 +424,7 @@ module Pod
       end
 
       it 'matches case' do
+        @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path: all_pods_versions_9_5_b\.txt not available in this source set/ }
         @source.expects(:debug).with { |cmd| cmd =~ /CDN: #{@source.name} Relative path downloaded: all_pods_versions_9_5_b\.txt, save ETag:/ }
         @source.search('bEacoNKIT').should.be.nil?
       end
