@@ -6,6 +6,7 @@ require 'cocoapods-core/specification/linter'
 require 'cocoapods-core/specification/root_attribute_accessors'
 require 'cocoapods-core/specification/set'
 require 'cocoapods-core/specification/json'
+require 'cocoapods-core/specification/spm_requirement'
 
 module Pod
   # The Specification provides a DSL to describe a Pod. A pod is defined as a
