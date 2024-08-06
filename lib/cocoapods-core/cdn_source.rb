@@ -10,6 +10,7 @@ module Pod
   class CDNSource < Source
     include Concurrent
 
+    MAX_CONCURRENCY = (ENV['COCOAPODS_CDN_MAX_CONCURRENCY'] || 200).to_i
     MAX_NUMBER_OF_RETRIES = (ENV['COCOAPODS_CDN_MAX_NUMBER_OF_RETRIES'] || 5).to_i
     # Single thread executor for all network activity.
     HYDRA_EXECUTOR = Concurrent::SingleThreadExecutor.new
@@ -489,7 +490,7 @@ module Pod
     end
 
     def queue_request(request)
-      @hydra ||= Typhoeus::Hydra.new
+      @hydra ||= Typhoeus::Hydra.new(max_concurrency: MAX_CONCURRENCY)
 
       # Queue the request into the Hydra (libcurl reactor).
       @hydra.queue(request)
