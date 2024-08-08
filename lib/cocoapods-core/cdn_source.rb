@@ -490,7 +490,7 @@ module Pod
     end
 
     def queue_request(request)
-      @hydra ||= Typhoeus::Hydra.new(max_concurrency: MAX_CONCURRENCY)
+      @hydra ||= Typhoeus::Hydra.new(:max_concurrency => MAX_CONCURRENCY)
 
       # Queue the request into the Hydra (libcurl reactor).
       @hydra.queue(request)
