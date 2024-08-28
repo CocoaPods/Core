@@ -326,6 +326,18 @@ module Pod
         end
       end
 
+      #--------------------------------------#
+      # 
+      # 
+      # @param  [String] pod_name
+      #         the anem of the pod to query build type for.
+      #
+      # @return [BuildType] The resolved build type for the pod.
+      #
+      def build_type_for_pod(pod_name)
+        raw_build_types_hash[pod_name] || build_type
+      end
+
       # Sets whether the target definition should inhibit the warnings during
       # compilation for all pods.
       #
@@ -361,6 +373,20 @@ module Pod
                    end
         raw_inhibit_warnings_hash[hash_key] ||= []
         raw_inhibit_warnings_hash[hash_key] << pod_name
+      end
+
+      # Set a custom build type for a specific pod.
+      #
+      # @param  [String] pod_name
+      #         Name of the pod for which the build type should be set.
+      #
+      # @param  [BuildType] build_type
+      #         The build type.
+      #
+      # @return [void]
+      #
+      def set_build_type_for_pod(pod_name, build_type)
+        raw_build_types_hash[pod_name] = build_type
       end
 
       #--------------------------------------#
@@ -710,6 +736,7 @@ module Pod
         parse_modular_headers(name, requirements)
         parse_configuration_whitelist(name, requirements)
         parse_project_name(name, requirements)
+        parse_build_type(name, requirements)
 
         if requirements && !requirements.empty?
           pod = { name => requirements }
@@ -824,6 +851,7 @@ module Pod
         inheritance
         abstract
         swift_version
+        build_types_hash
       ).freeze
 
       # @return [Hash] The hash representation of the target definition.
@@ -952,6 +980,11 @@ module Pod
       end
       private :raw_configuration_pod_whitelist
 
+      def raw_build_types_hash
+        get_hash_value('build_types_hash', {})
+      end
+      private :raw_build_types_hash
+
       # Returns the configuration_pod_whitelist hash
       #
       # @return [Hash<String, Array>] Hash with configuration name as key,
@@ -1061,6 +1094,32 @@ module Pod
         should_inhibit = options.delete(:inhibit_warnings)
         pod_name = Specification.root_name(name)
         set_inhibit_warnings_for_pod(pod_name, should_inhibit)
+
+        requirements.pop if options.empty?
+      end
+
+      # Removes :build from the requirements list, and adds
+      # the pod's name into internal hash for build type overrides.
+      #
+      # @param [String] name The name of the pod
+      #
+      # @param [Array] requirements
+      #        If :build is the only key in the hash, the hash
+      #        should be destroyed because it confuses Gem::Dependency.
+      #
+      # @return [void]
+      #
+      def parse_build_type(name, requirements)
+        options = requirements.last
+        return requirements unless options.is_a?(Hash)
+
+        build_type_raw = options.delete(:build)
+        return if build_type_raw.nil?
+
+        pod_name = Specification.root_name(name)
+        build_type_to_store = BuildType.new(:linkage => build_type_raw.fetch(:linkage, build_type.linkage), 
+                                            :packaging => build_type_raw.fetch(:packaging, build_type.packaging))
+        set_build_type_for_pod(pod_name, build_type_to_store)
 
         requirements.pop if options.empty?
       end
