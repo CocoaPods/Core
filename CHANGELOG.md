@@ -4,6 +4,17 @@
 
 ##### Enhancements
 
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.16.0 (2024-10-29)
+
+##### Enhancements
+
 * Add ability to configure max concurrency of CDN requests through environment variable.
   [maikelvdh](https://github.com/maikelvdh)
   [#773](https://github.com/CocoaPods/Core/pull/773)
