@@ -25,7 +25,7 @@
   [sagiwei](https://github.com/sagiwei)
   [#752](https://github.com/CocoaPods/Core/issues/752)
 
-* Fix crash when attempting to load non-existed CDN index shards on custom CDN repos.  
+* Fix crash when attempting to load nonexistent CDN index shards on custom CDN repos.  
   [santam85](https://github.com/santam85)
   [#771](https://github.com/CocoaPods/Core/pull/771)
 
