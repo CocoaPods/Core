@@ -11,6 +11,17 @@
 * None.  
 
 
+## 1.16.2 (2024-10-31)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.16.1 (2024-10-29)
 
 ##### Enhancements
