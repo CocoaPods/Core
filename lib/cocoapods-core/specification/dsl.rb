@@ -755,6 +755,34 @@ module Pod
 
       #------------------#
 
+      attribute :spm_dependencies,
+        :container => Array,
+        :inherited => true
+
+      # Dependency on Swift Manager Packages.
+      #
+      # ---
+      #
+      # Dependencies should specify versions requirements.
+      #
+      # @example
+      #   spec.spm_dependency(
+      #     :url => 'https://github.com/apple/swift-atomics.git',
+      #     :requirement' => {:kind => 'upToNextMajorVersion',  :minimumVersion => '1.1.0'},
+      #     :products' => ['Atomics']
+      #   )
+
+      def spm_dependency(url: , requirement:, products:)
+        attributes_hash['spm_dependencies'] ||= []
+        attributes_hash['spm_dependencies'] << {
+          :url => url,
+          :requirement => requirement,
+          :products => products,
+        }
+      end
+
+      #------------------#
+
       # @!method info_plist=(info_plist)
       #
       #   Key-Value pairs to add to the generated `Info.plist`.

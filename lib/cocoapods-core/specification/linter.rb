@@ -471,6 +471,28 @@ module Pod
         end
       end
 
+
+      # Performs validations related to the `spm_dependencies` attribute.
+      #
+      def _validate_spm_dependencies(s)
+        unless s.empty?
+          s.each do |spm_dependency|
+            if spm_dependency[:url].nil?
+              results.add_error('spm_dependencies', 'SPM dependencies should specify a url.')
+            end
+            if spm_dependency[:requirement].nil?
+              results.add_error('spm_dependencies', 'SPM dependencies should specify a requirement.')
+            end
+            if requirement_errors = SpmRequirement.validate(spm_dependency[:requirement])
+              results.add_error('spm_dependencies', requirement_errors)
+            end
+            if spm_dependency[:products].nil?
+              results.add_error('spm_dependencies', 'SPM dependencies should specify products.')
+            end
+          end
+        end
+      end
+
       # Performs validations related to github sources.
       #
       def perform_github_source_checks(s)
