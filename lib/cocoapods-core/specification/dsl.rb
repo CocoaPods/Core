@@ -583,7 +583,7 @@ module Pod
 
       # The names of the platforms supported by the specification class.
       #
-      PLATFORMS = [:osx, :ios, :tvos, :watchos].freeze
+      PLATFORMS = [:osx, :ios, :tvos, :visionos, :watchos].freeze
 
       # @todo This currently is not used in the Ruby DSL.
       #
@@ -1075,7 +1075,7 @@ module Pod
       SCRIPT_PHASE_REQUIRED_KEYS = [:name, :script].freeze
 
       SCRIPT_PHASE_OPTIONAL_KEYS = [:shell_path, :input_files, :output_files, :input_file_lists, :output_file_lists,
-                                    :show_env_vars_in_log, :execution_position, :dependency_file].freeze
+                                    :show_env_vars_in_log, :execution_position, :dependency_file, :always_out_of_date].freeze
 
       EXECUTION_POSITION_KEYS = [:before_compile, :after_compile, :before_headers, :after_headers, :any].freeze
 
@@ -1878,6 +1878,17 @@ module Pod
       #
       def tvos
         PlatformProxy.new(self, :tvos)
+      end
+
+      # Provides support for specifying visionOS attributes.
+      #
+      # @example
+      #   spec.visionos.source_files = 'Classes/visionos/**/*.{h,m}'
+      #
+      # @return [PlatformProxy] the proxy that will set the attributes.
+      #
+      def visionos
+        PlatformProxy.new(self, :visionos)
       end
 
       # Provides support for specifying watchOS attributes.

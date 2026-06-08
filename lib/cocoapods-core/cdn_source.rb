@@ -10,6 +10,7 @@ module Pod
   class CDNSource < Source
     include Concurrent
 
+    MAX_CONCURRENCY = (ENV['COCOAPODS_CDN_MAX_CONCURRENCY'] || 200).to_i
     MAX_NUMBER_OF_RETRIES = (ENV['COCOAPODS_CDN_MAX_NUMBER_OF_RETRIES'] || 5).to_i
     # Single thread executor for all network activity.
     HYDRA_EXECUTOR = Concurrent::SingleThreadExecutor.new
@@ -116,7 +117,7 @@ module Pod
       pod_path_actual = pod_path(name)
       pod_path_relative = relative_pod_path(name)
 
-      return nil if @version_arrays_by_fragment_by_name[fragment][name].nil?
+      return nil if @version_arrays_by_fragment_by_name.dig(fragment, name).nil?
 
       concurrent_requests_catching_errors do
         loaders = []
@@ -282,14 +283,19 @@ module Pod
       # We use those because you can't get a directory listing from a CDN.
       index_file_name = index_file_name_for_fragment(fragment)
       download_file(index_file_name)
-      versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
-      @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
-        row = row.split('/')
-        pod = row.shift
-        versions = row
+      file_okay = local_file_okay?(index_file_name)
+      if file_okay
+        versions_raw = local_file(index_file_name, &:to_a).map(&:chomp)
+        @version_arrays_by_fragment_by_name[fragment] = versions_raw.reduce({}) do |hash, row|
+          row = row.split('/')
+          pod = row.shift
+          versions = row
 
-        hash[pod] = versions
-        hash
+          hash[pod] = versions
+          hash
+        end
+      else
+        debug "CDN: #{name} Relative path: #{index_file_name} not available in this source set"
       end
     end
 
@@ -484,7 +490,7 @@ module Pod
     end
 
     def queue_request(request)
-      @hydra ||= Typhoeus::Hydra.new
+      @hydra ||= Typhoeus::Hydra.new(:max_concurrency => MAX_CONCURRENCY)
 
       # Queue the request into the Hydra (libcurl reactor).
       @hydra.queue(request)

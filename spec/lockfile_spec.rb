@@ -617,6 +617,39 @@ module Pod
           spec_repos_data.should == { 'trunk' => %w(a b C) }
         end
       end
+
+      describe '#generate_spec_repos_with_duplicated_source' do
+        it 'merges specs if sources have same key' do
+          spec_repos = {
+            Source.new(fixture('spec-repos/trunk')) => [
+              Specification.new do |s|
+                s.name = 'a'
+                s.version = '1.0'
+              end,
+              Specification.new do |s|
+                s.name = 'b'
+                s.version = '1.0'
+              end,
+              Specification.new do |s|
+                s.name = 'C'
+                s.version = '1.0'
+              end,
+            ],
+            Source.new(fixture('spec-repos/trunk')) => [
+              Specification.new do |s|
+                s.name = 'd'
+                s.version = '1.0'
+              end,
+              Specification.new do |s|
+                s.name = 'E'
+                s.version = '1.0'
+              end,
+            ],
+          }
+          spec_repos_data = Lockfile.send(:generate_spec_repos, spec_repos)
+          spec_repos_data.should == { 'trunk' => %w(a b C d E) }
+        end
+      end
     end
   end
 end

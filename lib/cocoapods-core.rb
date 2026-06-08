@@ -14,6 +14,9 @@ module Pod
   require 'pathname'
   require 'cocoapods-core/vendor'
 
+  require 'active_support'
+  require 'active_support/core_ext'
+
   autoload :Version,        'cocoapods-core/version'
   autoload :Requirement,    'cocoapods-core/requirement'
   autoload :Dependency,     'cocoapods-core/dependency'

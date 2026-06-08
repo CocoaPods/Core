@@ -11,6 +11,152 @@
 * None.  
 
 
+## 1.16.2 (2024-10-31)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.16.1 (2024-10-29)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.16.0 (2024-10-29)
+
+##### Enhancements
+
+* Add ability to configure max concurrency of CDN requests through environment variable.
+  [maikelvdh](https://github.com/maikelvdh)
+  [#773](https://github.com/CocoaPods/Core/pull/773)
+
+##### Bug Fixes
+
+* Fix an issue comparing mixed numeric and string prerelease version segments.  
+  [sagiwei](https://github.com/sagiwei)
+  [#752](https://github.com/CocoaPods/Core/issues/752)
+
+* Fix crash when attempting to load nonexistent CDN index shards on custom CDN repos.  
+  [santam85](https://github.com/santam85)
+  [#771](https://github.com/CocoaPods/Core/pull/771)
+
+
+## 1.15.2 (2024-02-06)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.15.1 (2024-02-06)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Accept any casing for platform names in `Platform.new`.  
+  [Eric Amorde](https://github.com/amorde)
+  [#765](https://github.com/CocoaPods/Core/pull/765)
+
+## 1.15.0 (2024-01-28)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix an issue updating spec repos in Podfile.lock when the key already exists  
+  [fnxpt](https://github.com/fnxpt)
+  [#748](https://github.com/CocoaPods/Core/issues/748)
+
+* Fix a crash when calling Specification#subspec_by_name on a deprecated specification with no name  
+  [sagiwei](https://github.com/sagiwei)
+  [#742](https://github.com/CocoaPods/Core/pull/742)
+
+
+## 1.14.3 (2023-11-19)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Revert minimum required Ruby version to 2.6 to support macOS system Ruby  
+  [Eric Amorde](https://github.com/amorde)
+  [#12122](https://github.com/CocoaPods/CocoaPods/issues/12122)
+
+
+## 1.14.2 (2023-10-27)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix a bug when attempting to publish a Pod with `pod trunk push` in certain cases  
+  [Eric Amorde](https://github.com/amorde)
+  [#729](https://github.com/CocoaPods/Core/pull/759)
+
+## 1.14.1 (2023-10-26)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* Fix a crash when running with specific versions of activesupport  
+  [Eric Amorde](https://github.com/amorde)
+  [CocoaPods#12116](https://github.com/CocoaPods/CocoaPods/issues/12116)
+
+## 1.14.0 (2023-10-26)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
+* None.  
+
+
+## 1.13.0 (2023-09-22)
+
+##### Enhancements
+
+* Add `visionOS` as a new platform.  
+  [Gabriel Donadel](https://github.com/gabrieldonadel)
+  [#745](https://github.com/CocoaPods/Core/pull/745)
+
+* Extend `script_phase` DSL to support `always_out_of_date` attribute.  
+  [Alvar Hansen](https://github.com/alvarhansen)
+  [#750](https://github.com/CocoaPods/Core/pull/750)
+
+##### Bug Fixes
+
+* None.  
+
+
 ## 1.12.1 (2023-04-18)
 
 ##### Enhancements

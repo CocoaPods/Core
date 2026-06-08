@@ -45,11 +45,19 @@ module Pod
         @symbolic_name = input.name
         @deployment_target = input.deployment_target
       else
-        # Allow `Platform.new('macos')` to be equivalent to `Platform.macos`
-        if input == 'macos'
-          input = 'osx'
-        end
-        @symbolic_name = input.to_sym
+        input = input.to_s.downcase
+
+        name = case input
+               when 'macos'
+                 # Allow `Platform.new('macos')` to be equivalent to `Platform.macos`
+                 'osx'
+               when 'xros'
+                 # Compatibility with older references to 'xrOS'
+                 'visionos'
+               else
+                 input
+               end
+        @symbolic_name = name.to_sym
         target = target[:deployment_target] if target.is_a?(Hash)
         @deployment_target = Version.create(target)
       end
@@ -87,6 +95,14 @@ module Pod
       new :tvos
     end
 
+    # Convenience method to initialize a visionOS platform.
+    #
+    # @return [Platform] a visionOS platform.
+    #
+    def self.visionos
+      new :visionos
+    end
+
     # Convenience method to initialize a watchOS platform.
     #
     # @return [Platform] a watchOS platform.
@@ -100,7 +116,7 @@ module Pod
     # @return [Array<Platform>] list of platforms.
     #
     def self.all
-      [ios, osx, watchos, tvos]
+      [ios, osx, watchos, visionos, tvos]
     end
 
     # Checks if a platform is equivalent to another one or to a symbol
@@ -239,6 +255,7 @@ module Pod
       when :osx then 'macOS'
       when :watchos then 'watchOS'
       when :tvos then 'tvOS'
+      when :visionos then 'visionOS'
       else symbolic_name.to_s
       end
     end

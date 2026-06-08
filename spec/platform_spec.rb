@@ -7,10 +7,12 @@ module Pod
         Platform.ios.should == Platform.new(:ios)
         Platform.osx.should == Platform.new(:osx)
         Platform.tvos.should == Platform.new(:tvos)
+        Platform.visionos.should == Platform.new(:visionos)
         Platform.watchos.should == Platform.new(:watchos)
         Platform.all.should.include? Platform.new(:ios)
         Platform.all.should.include? Platform.new(:osx)
         Platform.all.should.include? Platform.new(:tvos)
+        Platform.all.should.include? Platform.new(:visionos)
         Platform.all.should.include? Platform.new(:watchos)
       end
 
@@ -28,21 +30,37 @@ module Pod
         @platform.name.should == :ios
       end
 
-      it 'can be initialized with a string symbolic name' do
-        platform = Platform.new('ios')
-        platform.name.should == :ios
-      end
+      it 'can be initialized with a string' do
+        Platform.new('MACOS').should == Platform.macos
+        Platform.new('macOS').should == Platform.macos
+        Platform.new('macos').should == Platform.macos
 
-      it 'can be initialized with a string representing macOS' do
-        platform = Platform.new('macos')
-        platform.name.should == :osx
-        platform.string_name.should == 'macOS'
+        Platform.new('iOS').should == Platform.ios
+        Platform.new('IOS').should == Platform.ios
+        Platform.new('ios').should == Platform.ios
+
+        Platform.new('tvos').should == Platform.tvos
+        Platform.new('tvOS').should == Platform.tvos
+        Platform.new('TVOS').should == Platform.tvos
+
+        Platform.new('watchOS').should == Platform.watchos
+        Platform.new('WATCHOS').should == Platform.watchos
+        Platform.new('watchos').should == Platform.watchos
+
+        Platform.new('visionos').should == Platform.visionos
+        Platform.new('VISIONOS').should == Platform.visionos
+        Platform.new('visionOS').should == Platform.visionos
+        # Recognizes xrOS
+        Platform.new('xros').should == Platform.visionos
+        Platform.new('XROS').should == Platform.visionos
+        Platform.new('xrOS').should == Platform.visionos
       end
 
       it 'exposes its name as string' do
         Platform.ios.string_name.should == 'iOS'
         Platform.osx.string_name.should == 'macOS'
         Platform.tvos.string_name.should == 'tvOS'
+        Platform.visionos.string_name.should == 'visionOS'
         Platform.watchos.string_name.should == 'watchOS'
       end
 
@@ -50,6 +68,7 @@ module Pod
         Platform.ios.safe_string_name.should == 'iOS'
         Platform.osx.safe_string_name.should == 'macOS'
         Platform.tvos.safe_string_name.should == 'tvOS'
+        Platform.visionos.safe_string_name.should == 'visionOS'
         Platform.watchos.safe_string_name.should == 'watchOS'
       end
 
@@ -69,15 +88,17 @@ module Pod
       it 'presents an accurate string representation' do
         @platform.to_s.should == 'iOS'
         Platform.new(:osx).to_s.should == 'macOS'
+        Platform.new(:visionos).to_s.should == 'visionOS'
         Platform.new(:watchos).to_s.should == 'watchOS'
         Platform.new(:tvos).to_s.should == 'tvOS'
         Platform.new(:ios, '5.0.0').to_s.should == 'iOS 5.0.0'
         Platform.new(:osx, '10.7').to_s.should == 'macOS 10.7'
+        Platform.new(:visionos, '1.0').to_s.should == 'visionOS 1.0'
         Platform.new(:watchos, '2.0').to_s.should == 'watchOS 2.0'
         Platform.new(:tvos, '9.0').to_s.should == 'tvOS 9.0'
       end
 
-      it 'uses its name as its symbold version' do
+      it 'uses its name as its symbol version' do
         @platform.to_sym.should == :ios
       end
 
@@ -110,6 +131,7 @@ module Pod
       it 'returns whether it requires legacy iOS architectures' do
         Platform.new(:ios, '4.0').requires_legacy_ios_archs?.should.be.true
         Platform.new(:ios, '5.0').requires_legacy_ios_archs?.should.be.false
+        Platform.new(:visionos, '1.0').requires_legacy_ios_archs?.should.be.false
         Platform.new(:watchos, '2.0').requires_legacy_ios_archs?.should.be.false
         Platform.new(:tvos, '9.0').requires_legacy_ios_archs?.should.be.false
       end
@@ -138,6 +160,11 @@ module Pod
           Platform.new(:ios, '7.0').should.not.supports_dynamic_frameworks
           Platform.new(:ios, '8.0').should.supports_dynamic_frameworks
           Platform.new(:ios, '8.1').should.supports_dynamic_frameworks
+        end
+
+        it 'supports dynamic frameworks on visionOS' do
+          Platform.visionos.should.supports_dynamic_frameworks
+          Platform.new(:visionos, '1.0').should.supports_dynamic_frameworks
         end
 
         it 'supports dynamic frameworks on watchOS' do

@@ -418,6 +418,15 @@ module Pod
         @spec.subspec_by_name('Pod/Subspec/Subsubspec/Missing', false).should.be.nil?
       end
 
+      describe 'deprecated podspec' do
+        it 'returns nil for an empty deprecated spec' do
+          @spec = Spec.new do |s|
+            s.deprecated_in_favor_of = 'SomeOtherSpec'
+          end
+          @spec.subspec_by_name('subspec', false).should.be.nil?
+        end
+      end
+
       it 'returns the default subspecs' do
         spec = @spec.dup
         spec.default_subspecs = 'Subspec1', 'Subspec2'

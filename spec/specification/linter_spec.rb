@@ -82,7 +82,7 @@ module Pod
         @linter.lint
         @linter.results.count.should == 1
         @linter.results.first.platforms.map(&:to_s).sort.should ==
-          %w(ios osx tvos watchos)
+          %w(ios osx tvos visionos watchos)
       end
 
       before do
@@ -543,7 +543,7 @@ module Pod
         @spec.script_phases = { :name => 'Hello World', :script => 'echo "Hello World"', :unknown => 'unknown' }
         result_should_include('script_phases', 'Unrecognized option(s) `unknown` in script phase `Hello World`. ' \
           'Available options are `name, script, shell_path, input_files, output_files, input_file_lists, ' \
-          'output_file_lists, show_env_vars_in_log, execution_position, dependency_file`.')
+          'output_file_lists, show_env_vars_in_log, execution_position, dependency_file, always_out_of_date`.')
       end
 
       it 'checks script phases include a valid execution position value' do

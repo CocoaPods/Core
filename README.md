@@ -34,7 +34,7 @@ All CocoaPods development happens on GitHub, there is a repository for
 specs](https://github.com/CocoaPods/Specs). Contributing patches or Pods is
 really easy and gratifying.
 
-Follow [@CocoaPods](http://twitter.com/CocoaPods) to get up to date
+Follow [@CocoaPods](http://x.com/CocoaPods) to get up to date
 information about what's going on in the CocoaPods world.
 
 ## License
