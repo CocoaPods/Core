@@ -112,11 +112,15 @@ module Pod
       end
 
       it 'maintains correct order of keys across versions' do
+        # json < 2.8.0 renders empty arrays and objects across multiple
+        # lines, newer versions render them compactly as [] / {}, so
+        # normalize empty collections before comparing.
+        normalize = ->(s) { s.gsub(/\[\s+\]/, '[]').gsub(/\{\s+\}/, '{}') }
         %w(14 15 16 17 18).each do |version|
           json = File.read(File.expand_path("../../fixtures/CannonPodder#{version}.podspec.json", __FILE__))
           loaded_spec = Specification.from_json(json)
           new_json = loaded_spec.to_pretty_json
-          new_json.should.equal json
+          normalize.call(new_json).should.equal normalize.call(json)
         end
       end
     end

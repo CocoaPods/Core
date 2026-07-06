@@ -35,9 +35,7 @@
         ]
       },
       "dependencies": {
-        "OCMock": [
-
-        ]
+        "OCMock": []
       }
     }
   ]

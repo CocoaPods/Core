@@ -14,6 +14,8 @@ module Pod
   require 'pathname'
   require 'cocoapods-core/vendor'
 
+  # Fix for crash when importing certain activesupport versions
+  require 'logger'
   require 'active_support'
   require 'active_support/core_ext'
 
