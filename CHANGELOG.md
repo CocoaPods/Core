@@ -8,6 +8,17 @@
 
 ##### Bug Fixes
 
+* None.  
+
+
+## 1.17.0 (2026-07-06)
+
+##### Enhancements
+
+* None.  
+
+##### Bug Fixes
+
 * Fix a crash when running with certain activesupport versions.  
   [Eric Amorde](https://github.com/amorde)
   [#781](https://github.com/CocoaPods/Core/pull/781)
