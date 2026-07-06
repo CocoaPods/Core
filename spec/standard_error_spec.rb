@@ -39,7 +39,24 @@ module Pod
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
       @err.stubs(:underlying_exception).returns(syntax_error)
       File.stubs(:read).returns(code)
-      @err.message.should == if Pod::Version.new(RUBY_VERSION) >= Pod::Version.new('2.7.0')
+      expected = if Pod::Version.new(RUBY_VERSION) >= Pod::Version.new('3.4.0')
+        <<-MSG.strip_heredoc
+
+[!] Invalid `Three20.podspec` file: syntax errors found
+  1 | puts 'hi'
+> 2 | puts())
+    |       ^ unexpected ')', ignoring it
+    |       ^ unexpected ')', expecting end-of-input
+  3 | puts 'bye'\n.
+
+ #  from #{@dsl_path.expand_path}:2
+ #  -------------------------------------------
+ #  puts 'hi'
+ >  puts())
+ #  puts 'bye'
+ #  -------------------------------------------
+        MSG
+      elsif Pod::Version.new(RUBY_VERSION) >= Pod::Version.new('2.7.0')
                                <<-MSG.strip_heredoc
 
         [!] Invalid `Three20.podspec` file: syntax error, unexpected ')', expecting end-of-input
@@ -66,7 +83,10 @@ module Pod
          #  puts 'bye'
          #  -------------------------------------------
         MSG
-                             end
+                 end
+        # Ruby colorizes the syntax error snippet when running in a TTY, so
+        # strip ANSI escape sequences to keep the comparison TTY-agnostic.
+        @err.message.gsub(/\e\[[0-9;]*m/, '').should == expected
     end
 
     it 'uses the passed-in contents' do
