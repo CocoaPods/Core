@@ -8,7 +8,9 @@
 
 ##### Bug Fixes
 
-* None.  
+* Fix a crash when running with certain activesupport versions.  
+  [Eric Amorde](https://github.com/amorde)
+  [#781](https://github.com/CocoaPods/Core/pull/781)
 
 
 ## 1.16.2 (2024-10-31)
