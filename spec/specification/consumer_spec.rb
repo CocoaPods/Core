@@ -602,6 +602,30 @@ module Pod
 
     #-------------------------------------------------------------------------#
 
+    describe 'SPM Dependencies' do
+      before do
+        @spec = Spec.new do |s|
+          s.name = 'Pod'
+          s.spm_dependency(
+            :url => "https://github.com/apple/example-package-fisheryates.git",
+            :requirement => { :kind => "upToNextMajorVersion", :minimumVersion => "1.0.0" }, 
+            :products => ["FisherYates"],
+          )
+        end
+        @consumer = Specification::Consumer.new(@spec, :ios)
+      end
+
+      it 'returns the spm_dependencies with SpmRequirement' do
+        @consumer.spm_dependencies.should == [{
+          :url => "https://github.com/apple/example-package-fisheryates.git",
+          :requirement => Specification::SpmRequirement.new({ :kind => "upToNextMajorVersion", :minimumVersion => "1.0.0" }),
+          :products => ["FisherYates"],
+          }]
+      end
+    end
+
+    #-------------------------------------------------------------------------#
+
     describe 'Private helpers' do
       before do
         @spec = Spec.new do |s|
