@@ -50,6 +50,8 @@ begin
     end
 
     task :all do
+      puts "\033[0;32mUsing #{`ruby --version`}\033[0m"
+
       title 'Running Unit Tests'
       sh "bundle exec bacon #{specs('**')}"
 
