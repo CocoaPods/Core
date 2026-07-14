@@ -411,6 +411,24 @@ module Pod
         target.dependencies.sort_by(&:name).should == expected_dependencies
       end
 
+      it 'implicitly reuses an external source' do
+        podfile = Podfile.new do
+          target 'A' do
+            pod 'RestKit', :git => 'https://github.com/RestKit/RestKit.git'
+          end
+
+          target 'B' do
+            pod 'RestKit'
+          end
+        end
+
+        expected_dependencies = [
+          Dependency.new('RestKit', :git => 'https://github.com/RestKit/RestKit.git'),
+        ]
+        podfile.target_definitions['A'].dependencies.sort_by(&:name).should == expected_dependencies
+        podfile.target_definitions['B'].dependencies.sort_by(&:name).should == expected_dependencies
+      end
+
       it 'raises if no name is specified for a Pod' do
         lambda do
           Podfile.new do
