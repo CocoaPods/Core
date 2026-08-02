@@ -306,6 +306,35 @@ module Pod
         current_target_definition.store_pod(name, *requirements)
       end
 
+      def git_package(url, *requirements)
+        unless url
+          raise StandardError, 'A git package requires an URL.'
+        end
+
+        options = requirements.last
+        unless options.is_a?(Hash)
+          options = {}
+          requirements << options
+        end
+        options[:source] = url
+
+        name = options.delete(:name) || url.gsub(/.git$/, '').gsub(%r{^/}, '').split('/').last
+
+        unless name 
+          raise StandardError, "Could not infer pod name from '#{url}' and no `:name` was specified."
+        end
+
+        current_target_definition.store_pod(name, *requirements)
+      end
+
+      def github_package(url_fragment, *requirements)
+        unless url_fragment
+          raise StandardError, 'A GitHub package requires an URL fragment, e.g. `username/reponame`.'
+        end
+
+        git_package("https://github.com/#{url_fragment}", *requirements)
+      end
+
       # Use just the dependencies of a Pod defined in the given podspec file.
       # If no arguments are passed the first podspec in the root of the Podfile
       # is used. It is intended to be used by the project of a library. Note:
