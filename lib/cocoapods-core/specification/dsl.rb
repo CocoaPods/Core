@@ -666,6 +666,22 @@ module Pod
                 :container => Hash,
                 :inherited => true
 
+      #-----------------------------------------------------------------------#
+
+      #   if define virtual to 'ture', the virtual_dependencies will save it instead of dependencies；
+
+      # # @Target
+      #   This is to create a new virtual dependency that will be updated to the virtual dependency 
+      #   when pod install/update without affecting the component label push
+
+      #-----------------------------------------------------------------------#
+
+      # # @example
+      #   spec.ios.dependency 'MBProgressHUD', '~> 0.5', :virtual => 'true'
+      attribute :virtual_dependencies,
+                :container => Hash,
+                :inherited => true
+
       # Any dependency on other Pods or to a ‘sub-specification’.
       #
       # ---
@@ -719,6 +735,12 @@ module Pod
                                        Array(configurations_option.delete(:configurations)).map { |c| c.to_s.downcase }
                                      end
 
+        virtual_option = version_requirements.find { |option| option.is_a?(Hash) && option.key?(:virtual) }
+        is_virtual         =         if virtual_option
+                                      version_requirements.delete(virtual_option)
+                                      (virtual_option&.delete(:virtual)&.to_s&.downcase == 'true') || false
+                                     end
+
         dependency_options = version_requirements.reject { |req| req.is_a?(String) }
         dependency_options.each do |dependency_option|
           if dependency_option.is_a?(Hash)
@@ -734,8 +756,14 @@ module Pod
           raise Informative, "Unsupported version requirements. #{version_requirements.inspect} is not valid."
         end
 
-        attributes_hash['dependencies'] ||= {}
-        attributes_hash['dependencies'][name] = version_requirements
+        #store dependency to virtual_dependencies if has :virtual
+        if is_virtual
+          attributes_hash['virtual_dependencies'] ||= {}
+          attributes_hash['virtual_dependencies'][name] = version_requirements
+        else
+          attributes_hash['dependencies'] ||= {}
+          attributes_hash['dependencies'][name] = version_requirements
+        end
 
         unless whitelisted_configurations.nil?
           if (extras = whitelisted_configurations - %w(debug release)) && !extras.empty?
