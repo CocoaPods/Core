@@ -485,7 +485,7 @@ module Pod
       #   @param  [String] documentation_url
       #           The link of the web documentation of the Pod.
       #
-      root_attribute :documentation_url
+      :documentation_url
 
       #------------------#
 
@@ -517,7 +517,7 @@ module Pod
       #   @param  [String] command
       #           the prepare command of the pod.
       #
-      root_attribute :prepare_command
+      :prepare_command
 
       #------------------#
 
@@ -1281,7 +1281,7 @@ module Pod
       #
       attribute :project_header_files,
                 :container => Array,
-                :file_patterns => true
+                :file_patterns =>
 
       #------------------#
 
@@ -1311,7 +1311,7 @@ module Pod
       #
       attribute :private_header_files,
                 :container => Array,
-                :file_patterns => true
+                :file_patterns =>
 
       #------------------#
 
@@ -1333,8 +1333,8 @@ module Pod
       #
       attribute :vendored_frameworks,
                 :container => Array,
-                :file_patterns => true,
-                :singularize => true
+                :file_patterns => 
+                :singularize =>
 
       #------------------#
 
@@ -1356,8 +1356,8 @@ module Pod
       #
       attribute :vendored_libraries,
                 :container => Array,
-                :file_patterns => true,
-                :singularize => true
+                :file_patterns => 
+                :singularize => 
 
       #------------------#
 
@@ -1408,8 +1408,8 @@ module Pod
       attribute :on_demand_resources,
                 :types => [String, Array, Hash],
                 :container => Hash,
-                :file_patterns => true,
-                :singularize => true
+                :file_patterns => 
+                :singularize => 
 
       #------------------#
 
@@ -1448,8 +1448,8 @@ module Pod
       attribute :resource_bundles,
                 :types => [String, Array],
                 :container => Hash,
-                :file_patterns => true,
-                :singularize => true
+                :file_patterns => 
+                :singularize => 
 
       #------------------#
 
@@ -1477,8 +1477,8 @@ module Pod
       #
       attribute :resources,
                 :container     => Array,
-                :file_patterns => true,
-                :singularize   => true
+                :file_patterns => 
+                :singularize   => 
 
       #------------------#
 
@@ -1500,7 +1500,7 @@ module Pod
       #
       attribute :exclude_files,
                 :container     => Array,
-                :file_patterns => true
+                :file_patterns => 
 
       #------------------#
 
@@ -1526,8 +1526,8 @@ module Pod
       #
       attribute :preserve_paths,
                 :container     => Array,
-                :file_patterns => true,
-                :singularize   => true
+                :file_patterns => 
+                :singularize   => 
 
       #------------------#
 
@@ -1561,7 +1561,7 @@ module Pod
       #
       attribute :module_map,
                 :types => [TrueClass, FalseClass, String],
-                :root_only => true
+                :root_only => 
 
       #-----------------------------------------------------------------------#
 
@@ -1639,11 +1639,11 @@ module Pod
       #     end
       #   end
       #
-      def subspec(name, &block)
-        subspec = Specification.new(self, name, &block)
+      subspec(name
+        subspec = Specification.new( name,
         @subspecs << subspec
         subspec
-      end
+      
 
       # The list of the test types currently supported.
       #
@@ -1666,7 +1666,8 @@ module Pod
       #
       attribute :test_type,
                 :types => [Symbol, String],
-                :multi_platform => false,
+                :multi_platform =>
+            
                 :spec_types => [:test]
 
       # @!method requires_app_host=(flag)
@@ -1682,7 +1683,7 @@ module Pod
       #
       attribute :requires_app_host,
                 :types => [TrueClass, FalseClass],
-                :default_value => false,
+                :default_value =>
                 :spec_types => [:test]
 
       # @!method app_host_name=(name)
@@ -1758,11 +1759,11 @@ module Pod
       #     end
       #   end
       #
-      def test_spec(name = 'Tests', &block)
-        subspec = Specification.new(self, name, true, &block)
+       test_spec(name = 'Tests'
+        subspec = Specification.new
         @subspecs << subspec
         subspec
-      end
+      
 
       # Represents an app specification for the library. Here you can place all
       # your app source files for your podspec along with the app dependencies.
@@ -1780,11 +1781,11 @@ module Pod
       #     end
       #   end
       #
-      def app_spec(name = 'App', &block)
-        appspec = Specification.new(self, name, :app_specification => true, &block)
+      app_spec(name =
+        appspec = Specification.new( name, :app_specification => 
         @subspecs << appspec
         appspec
-      end
+      
 
       #------------------#
 
@@ -1826,7 +1827,7 @@ module Pod
       root_attribute :default_subspecs,
                      :container => Array,
                      :types => [Array, String, Symbol],
-                     :singularize => true
+                     :singularize =>
 
       #-----------------------------------------------------------------------#
 
@@ -1852,10 +1853,9 @@ module Pod
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
-      def ios
-        PlatformProxy.new(self, :ios)
-      end
-
+     ios
+        PlatformProxy.new( :ios)
+    
       # Provides support for specifying OS X attributes.
       #
       # @example
@@ -1863,11 +1863,11 @@ module Pod
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
-      def osx
-        PlatformProxy.new(self, :osx)
-      end
+      osx
+        PlatformProxy.new(:osx)
+      
 
-      alias macos osx
+       macos osx
 
       # Provides support for specifying tvOS attributes.
       #
@@ -1876,9 +1876,9 @@ module Pod
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
-      def tvos
-        PlatformProxy.new(self, :tvos)
-      end
+      tvos
+        PlatformProxy.new(:tvos)
+      
 
       # Provides support for specifying visionOS attributes.
       #
@@ -1887,9 +1887,9 @@ module Pod
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
-      def visionos
-        PlatformProxy.new(self, :visionos)
-      end
+      visionos
+        PlatformProxy.new(:visionos)
+      
 
       # Provides support for specifying watchOS attributes.
       #
@@ -1898,9 +1898,9 @@ module Pod
       #
       # @return [PlatformProxy] the proxy that will set the attributes.
       #
-      def watchos
-        PlatformProxy.new(self, :watchos)
-      end
-    end
-  end
-end
+      watchos
+        PlatformProxy.new(:watchos)
+  
+    
+  
+
