@@ -85,6 +85,74 @@ module Pod
         response = HTTP.validate_url('http://SOME-URL/foo')
         response.success?.should.be.true
       end
+
+      it 'returns nil for URLs that are not HTTP URLs' do
+        HTTP.validate_url('ftp://example.com/foo').should.be.nil
+        HTTP.validate_url('mailto:pods@example.com').should.be.nil
+      end
+
+      it 'returns nil when a network error occurs during validation' do
+        WebMock::API.stub_request(:head, /foo/).to_raise(OpenSSL::SSL::SSLError)
+
+        HTTP.validate_url('https://SOME-URL/foo').should.be.nil
+      end
+    end
+
+    describe 'Performing requests' do
+      it 'rejects a server certificate that is not trusted' do
+        key = OpenSSL::PKey::RSA.new(2048)
+        cert = OpenSSL::X509::Certificate.new
+        cert.version = 2
+        cert.serial = 1
+        cert.subject = cert.issuer = OpenSSL::X509::Name.parse('/CN=127.0.0.1')
+        cert.public_key = key.public_key
+        cert.not_before = Time.now - 60
+        cert.not_after = Time.now + 60
+        cert.sign(key, OpenSSL::Digest.new('SHA256'))
+
+        context = OpenSSL::SSL::SSLContext.new
+        context.cert = cert
+        context.key = key
+        tcp_server = TCPServer.new('127.0.0.1', 0)
+        server = OpenSSL::SSL::SSLServer.new(tcp_server, context)
+        thread = Thread.new do
+          begin
+            server.accept.close
+          rescue OpenSSL::SSL::SSLError
+            nil
+          end
+        end
+
+        WebMock.disable!
+        begin
+          url = "https://127.0.0.1:#{tcp_server.addr[1]}/"
+          exception = should.raise(OpenSSL::SSL::SSLError) do
+            HTTP.perform(:get, url)
+          end
+          exception.message.should.include 'certificate verify failed'
+        ensure
+          WebMock.enable!
+          thread.kill
+          thread.join
+          server.close
+        end
+      end
+
+      it 'uses the proxy configured for https' do
+        proxy_env = %w(https_proxy HTTPS_PROXY no_proxy NO_PROXY).map { |k| [k, ENV.delete(k)] }
+        ENV['https_proxy'] = 'http://user:pass@proxy.example:8080'
+        Net::HTTP.expects(:new).
+          with('example.com', 443, 'proxy.example', 8080, 'user', 'pass').
+          raises(SocketError)
+
+        begin
+          should.raise(SocketError) do
+            HTTP.perform(:get, 'https://example.com/')
+          end
+        ensure
+          proxy_env.each { |k, v| v ? ENV[k] = v : ENV.delete(k) }
+        end
+      end
     end
 
     #-------------------------------------------------------------------------#
