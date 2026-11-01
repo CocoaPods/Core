@@ -14,6 +14,7 @@
   OpenSSL uses (for example with `SSL_CERT_FILE`).
   Plugins that use `nap` must now depend on it directly.  
   [Matthew Mongeau](https://github.com/halogenandtoast)
+  [#785](https://github.com/CocoaPods/Core/pull/785)
 
 ##### Bug Fixes
 
