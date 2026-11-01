@@ -4,7 +4,16 @@
 
 ##### Enhancements
 
-* None.  
+* Replace the `nap` dependency with `Net::HTTP` from the standard library, as
+  nap's README now recommends. Requests use Net::HTTP's default certificate
+  verification against the system trust store, so `Pod::HTTP.validate_url`
+  returns `nil` for a URL whose certificate does not verify and the
+  `Pod::GitHub` helpers raise `OpenSSL::SSL::SSLError`. `validate_url` now
+  returns a `Pod::HTTP::Response`, and `no_proxy` is honoured.
+  If your network intercepts TLS, add its CA to the trust store your Ruby's
+  OpenSSL uses (for example with `SSL_CERT_FILE`).
+  Plugins that use `nap` must now depend on it directly.  
+  [Matthew Mongeau](https://github.com/halogenandtoast)
 
 ##### Bug Fixes
 

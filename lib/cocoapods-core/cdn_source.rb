@@ -1,5 +1,4 @@
 require 'cocoapods-core/source'
-require 'rest'
 require 'concurrent'
 require 'netrc'
 require 'addressable'

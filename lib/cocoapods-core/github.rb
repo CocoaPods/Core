@@ -89,7 +89,6 @@ module Pod
     #
     def self.modified_since_commit(url, commit)
       return true unless repo_id = normalized_repo_id(url)
-      require 'rest'
       request_url = "https://api.github.com/repos/#{repo_id}/commits/master"
       headers = {
         'User-Agent' => 'CocoaPods',
@@ -98,7 +97,7 @@ module Pod
       }
 
       begin
-        response = REST.get(request_url, headers)
+        response = HTTP.perform(:get, request_url, headers)
         code = response.status_code
         code != 304
       rescue
@@ -142,10 +141,9 @@ module Pod
     # @return [Array, Hash] The information of the resource as Ruby objects.
     #
     def self.peform_request(url)
-      require 'rest'
       require 'json'
       headers = { 'User-Agent' => 'CocoaPods' }
-      response = REST.get(url, headers)
+      response = HTTP.perform(:get, url, headers)
       body = JSON.parse(response.body)
       if response.ok?
         body
