@@ -8,7 +8,10 @@
 
 ##### Bug Fixes
 
-* None.  
+* Standardize podspec JSON serialization to Ruby 2.7+ behavior. This may result in checksum changes for
+  projects using Ruby 2.6 (macOS System Ruby).  
+  [Eric Amorde](https://github.com/amorde)
+  [#787](https://github.com/CocoaPods/Core/pull/787)
 
 
 ## 1.17.0 (2026-07-06)

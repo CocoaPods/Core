@@ -12,7 +12,12 @@ module Pod
       #
       def to_pretty_json(*a)
         require 'json'
-        JSON.pretty_generate(to_hash, *a) << "\n"
+        json = JSON.pretty_generate(to_hash, *a)
+        # json < 2.8 (the newest available on Ruby < 2.7) renders empty arrays
+        # as "[\n\n  ]" and empty hashes as "{\n  }", while newer versions render
+        # "[]" and "{}". Normalize to the compact form so the output, and the
+        # checksums derived from it, don't depend on the Ruby/json version.
+        json.gsub(/": \[\n\n\s*\]/, '": []').gsub(/": \{\n\s*\}/, '": {}') << "\n"
       end
 
       #-----------------------------------------------------------------------#
