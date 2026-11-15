@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.require_paths =  %w{ lib }
 
   s.add_runtime_dependency 'activesupport', '>= 5.0', '< 8'
-  s.add_runtime_dependency 'nap', '~> 1.0'
   s.add_runtime_dependency 'fuzzy_match', '~> 2.0.4'
   s.add_runtime_dependency 'algoliasearch', '~> 1.0'
   s.add_runtime_dependency 'concurrent-ruby', '~> 1.1'

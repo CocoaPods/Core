@@ -28,10 +28,9 @@ module Pod
     # @return [Array, Hash] The information of the resource as Ruby objects.
     #
     def self.peform_request(url)
-      require 'rest'
       require 'json'
       headers = { 'User-Agent' => "CocoaPods #{Pod::CORE_VERSION}" }
-      response = REST.get(url, headers)
+      response = HTTP.perform(:get, url, headers)
       body = JSON.parse(response.body)
       if response.ok?
         body
