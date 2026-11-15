@@ -1,6 +1,6 @@
 recipe :ruby
 
-Kicker::Recipes::Ruby.runner_bin = 'bacon --quiet'
+Kicker::Recipes::Ruby.runner_bin = 'rspec'
 
 process do |files|
   specs = files.take_and_map do |file|

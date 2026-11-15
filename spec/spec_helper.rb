@@ -8,9 +8,9 @@ $LOAD_PATH.unshift((ROOT + 'lib').to_s)
 $LOAD_PATH.unshift((ROOT + 'spec').to_s)
 
 require 'bundler/setup'
-require 'bacon'
-require 'mocha-on-bacon'
-require 'pretty_bacon'
+require 'rspec'
+require 'mocha/api'
+require 'spec_helper/bacon_compat'
 require 'cocoapods-core'
 
 # Helpers
@@ -81,21 +81,23 @@ module Pod
   end
 end
 
-# Configure Bacon
+# Configure RSpec
 #--------------------------------------#
 
-Bacon.summary_at_exit
+RSpec.configure do |config|
+  config.mock_with :mocha
 
-module Bacon
-  class Context
-    include SpecHelper::Fixture
+  # Only `expect` is enabled: RSpec's own `should` syntax would otherwise
+  # replace the bacon-style `should` provided by BaconCompat.
+  config.expect_with(:rspec) { |c| c.syntax = :expect }
 
-    old_run_requirement = instance_method(:run_requirement)
-    define_method(:run_requirement) do |description, spec|
-      ::Pod::CoreUI.output = ''
-      ::Pod::CoreUI.warnings = ''
-      old_run_requirement.bind(self).call(description, spec)
-    end
+  config.extend BaconCompat::GroupExtensions
+  config.include BaconCompat::ExampleExtensions
+  config.include SpecHelper::Fixture
+
+  config.before do
+    ::Pod::CoreUI.output = ''
+    ::Pod::CoreUI.warnings = ''
   end
 end
 
