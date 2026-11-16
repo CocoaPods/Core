@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'mocha', '< 1.5'
+  gem 'mocha', '~> 3.1.0'
   gem 'rake', '~> 12.0'
   gem 'rexml', '~> 3.2.5'
   gem 'rspec', '~> 3.13'

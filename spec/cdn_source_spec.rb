@@ -472,9 +472,9 @@ module Pod
       end
 
       it 'does not perform any heavy CDN operations if nothing was found' do
+        @source.expects(:download_file).never
         @source.expects(:download_file).with('AlgoliaSearch.yml').returns('AlgoliaSearch.yml')
         Algolia::Index.any_instance.stubs(:search).with('beacon', :attributesToRetrieve => 'name').returns('hits' => [])
-        @source.expects(:download_file).never
         expect(@source.search_by_name('beacon', true)).to eq([])
       end
     end

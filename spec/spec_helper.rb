@@ -96,4 +96,4 @@ RSpec.configure do |config|
   end
 end
 
-Mocha::Configuration.prevent(:stubbing_non_existent_method)
+Mocha.configure { |c| c.stubbing_non_existent_method = :prevent }
