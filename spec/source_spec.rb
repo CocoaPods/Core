@@ -84,7 +84,7 @@ module Pod
       it 'returns the specification for the given name and version' do
         spec = @source.specification('JSONKit', Version.new('1.4'))
         spec.name.should == 'JSONKit'
-        spec.version.should.to_s == '1.4'
+        spec.version.to_s.should == '1.4'
       end
     end
 
@@ -499,7 +499,7 @@ module Pod
         it 'returns the specification for the given name and version' do
           spec = @source.specification('JSONKit', Version.new('1.4'))
           spec.name.should == 'JSONKit'
-          spec.version.should.to_s == '1.4'
+          spec.version.to_s.should == '1.4'
         end
       end
 

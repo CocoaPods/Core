@@ -352,7 +352,7 @@ module Pod
       it 'returns the specification for the given name and version' do
         spec = @source.specification('BeaconKit', Version.new('1.0.5'))
         spec.name.should == 'BeaconKit'
-        spec.version.should.to_s == '1.0.5'
+        spec.version.to_s.should == '1.0.5'
       end
 
       it 'downloads specification again if file is not valid' do
@@ -361,7 +361,7 @@ module Pod
         FileUtils.touch(@path + 'Specs/2/0/9/BeaconKit/1.0.5/BeaconKit.podspec.json')
         spec = @source.specification('BeaconKit', Version.new('1.0.5'))
         spec.name.should == 'BeaconKit'
-        spec.version.should.to_s == '1.0.5'
+        spec.version.to_s.should == '1.0.5'
       end
 
       it 'does not attempt to access a version not in the version index' do

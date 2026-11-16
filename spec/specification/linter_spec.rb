@@ -12,6 +12,8 @@ module Pod
         @podspec_path = fixture(fixture_path)
       end
 
+      extend SpecHelper::TemporaryDirectory
+
       it 'can be initialized with a specification' do
         spec = Specification.from_file(@podspec_path)
         @linter = Specification::Linter.new(spec)
@@ -24,8 +26,6 @@ module Pod
         @linter.spec.name.should == 'BananaLib'
         @linter.file.should == @podspec_path
       end
-
-      extend SpecHelper::TemporaryDirectory
 
       it 'catches specification load errors' do
         podspec = 'Pod::Spec.new do |s|; error; end'
@@ -47,26 +47,11 @@ module Pod
         results.first.attribute_name.should.include?('spec')
       end
 
-      before do
-        fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.1/BananaLib.podspec'
-        @podspec_path = fixture(fixture_path)
-        @linter = Specification::Linter.new(@podspec_path)
-      end
-
-      it 'accepts a valid podspec' do
-        valid = @linter.lint
-        @linter.results.should.be.empty?
-        valid.should.be.true
-      end
-
-      describe 'with a spec loaded from json' do
+      describe 'with a valid podspec' do
         before do
           fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.1/BananaLib.podspec'
-          podspec_path = fixture(fixture_path)
-          podspec = Pod::Specification.from_file(podspec_path)
-          json = podspec.to_pretty_json
-          podspec = Pod::Specification.from_string(json, podspec_path.sub_ext('.podspec.json'))
-          @linter = Specification::Linter.new(podspec)
+          @podspec_path = fixture(fixture_path)
+          @linter = Specification::Linter.new(@podspec_path)
         end
 
         it 'accepts a valid podspec' do
@@ -74,34 +59,53 @@ module Pod
           @linter.results.should.be.empty?
           valid.should.be.true
         end
-      end
 
-      it 'compacts multi_platform attributes' do
-        @linter.spec.platform = nil
-        @linter.spec.source_files = '/Absolute'
-        @linter.lint
-        @linter.results.count.should == 1
-        @linter.results.first.platforms.map(&:to_s).sort.should ==
-          %w(ios osx tvos visionos watchos)
-      end
+        describe 'with a spec loaded from json' do
+          before do
+            fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.1/BananaLib.podspec'
+            podspec_path = fixture(fixture_path)
+            podspec = Pod::Specification.from_file(podspec_path)
+            json = podspec.to_pretty_json
+            podspec = Pod::Specification.from_string(json, podspec_path.sub_ext('.podspec.json'))
+            @linter = Specification::Linter.new(podspec)
+          end
 
-      before do
-        @linter.spec.name = nil
-        @linter.spec.summary = 'A short description of.'
-        @linter.lint
-      end
+          it 'accepts a valid podspec' do
+            valid = @linter.lint
+            @linter.results.should.be.empty?
+            valid.should.be.true
+          end
+        end
 
-      it 'returns the results of the lint' do
-        results = @linter.results.map { |r| r.type.to_s }.sort.uniq
-        results.should == %w(error warning)
-      end
+        it 'compacts multi_platform attributes' do
+          @linter.spec.platform = nil
+          @linter.spec.source_files = '/Absolute'
+          @linter.lint
+          @linter.results.count.should == 1
+          @linter.results.first.platforms.map(&:to_s).sort.should ==
+            %w(ios osx tvos visionos watchos)
+        end
 
-      it 'returns the errors results of the lint' do
-        @linter.errors.map(&:type).uniq.should == [:error]
-      end
+        describe 'with lint errors and warnings' do
+          before do
+            @linter.spec.name = nil
+            @linter.spec.summary = 'A short description of.'
+            @linter.lint
+          end
 
-      it 'returns the warnings results of the lint' do
-        @linter.warnings.map(&:type).should == [:warning]
+          it 'returns the results of the lint' do
+            results = @linter.results.map { |r| r.type.to_s }.sort.uniq
+            results.should == %w(error warning)
+          end
+
+          it 'returns the errors results of the lint' do
+            @linter.errors.map(&:type).uniq.should == [:error]
+          end
+
+          it 'returns the warnings results of the lint' do
+            @linter.warnings.map(&:type).should == [:warning]
+          end
+        end
       end
     end
 

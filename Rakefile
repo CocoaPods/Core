@@ -40,10 +40,6 @@ begin
   #-----------------------------------------------------------------------------#
 
   namespace :spec do
-    def specs(dir)
-      FileList["spec/#{dir}/*_spec.rb"].shuffle.join(' ')
-    end
-
     desc 'Automatically run specs for updated files'
     task :kick do
       exec 'bundle exec kicker -c'
@@ -53,7 +49,7 @@ begin
       puts "\033[0;32mUsing #{`ruby --version`}\033[0m"
 
       title 'Running Unit Tests'
-      sh "bundle exec bacon #{specs('**')}"
+      sh 'bundle exec rspec'
 
       title 'Checking code style...'
       Rake::Task['rubocop'].invoke if RUBY_VERSION >= '1.9.3'
@@ -62,18 +58,6 @@ begin
 
   desc 'Run all specs'
   task :spec => 'spec:all'
-
-  # Coverage
-  #-----------------------------------------------------------------------------#
-
-  desc 'Generates & opens the coverage report'
-  task :coverage do
-    title 'Generating Coverage Report'
-    sh "env GENERATE_COVERAGE=true bundle exec bacon --quiet #{specs('**')}"
-    title 'Opening Report'
-    puts 'Coverage report available at `coverage/index.html`'
-    sh 'open coverage/index.html'
-  end
 
   #-- RuboCop ----------------------------------------------------------------#
 

@@ -20,7 +20,10 @@ module SpecHelper
       temporary_directory.rmtree if temporary_directory.exist?
     end
 
+    # Bacon contexts are instances, so `extend` exposed these helpers to
+    # examples. RSpec groups are classes, so they need to be included too.
     def self.extended(base)
+      base.include(self)
       base.before do
         TemporaryDirectory.teardown_temporary_directory
         TemporaryDirectory.setup_temporary_directory
