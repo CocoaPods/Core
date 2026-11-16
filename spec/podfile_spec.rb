@@ -5,33 +5,33 @@ module Pod
     describe 'In general' do
       it 'stores the path of the file it is loaded from' do
         podfile = Podfile.from_file(fixture('Podfile'))
-        podfile.defined_in_file.should == fixture('Podfile')
+        expect(podfile.defined_in_file).to eq(fixture('Podfile'))
       end
 
       it 'returns the string representation' do
-        Podfile.new {}.to_s.should == 'Podfile'
+        expect(Podfile.new {}.to_s).to eq('Podfile')
       end
 
       it 'creates a default target definition if a block is provided' do
         podfile = Podfile.new {}
-        podfile.root_target_definitions.count.should == 1
-        podfile.root_target_definitions.first.name.should == 'Pods'
+        expect(podfile.root_target_definitions.count).to eq(1)
+        expect(podfile.root_target_definitions.first.name).to eq('Pods')
       end
 
       it 'names the default target definition as Pods' do
         podfile = Podfile.new {}
-        podfile.root_target_definitions.first.name.should == 'Pods'
+        expect(podfile.root_target_definitions.first.name).to eq('Pods')
       end
 
       it 'is equatable' do
-        Podfile.new.should == Podfile.new
+        expect(Podfile.new).to eq(Podfile.new)
 
-        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile'))
-        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile')).tap { |pf| pf.defined_in_file = Pathname('foo') }
-        Podfile.from_file(fixture('Podfile')).should == Podfile.from_file(fixture('Podfile.yaml'))
+        expect(Podfile.from_file(fixture('Podfile'))).to eq(Podfile.from_file(fixture('Podfile')))
+        expect(Podfile.from_file(fixture('Podfile'))).to eq(Podfile.from_file(fixture('Podfile')).tap { |pf| pf.defined_in_file = Pathname('foo') })
+        expect(Podfile.from_file(fixture('Podfile'))).to eq(Podfile.from_file(fixture('Podfile.yaml')))
 
-        Podfile.from_file(fixture('Podfile')).should.not == Podfile.new
-        Podfile.from_file(fixture('Podfile')).should.not == Podfile.from_ruby(fixture('Podfile'), fixture('Podfile').read.gsub(/pod '/, "pod 'A_"))
+        expect(Podfile.from_file(fixture('Podfile'))).not_to eq(Podfile.new)
+        expect(Podfile.from_file(fixture('Podfile'))).not_to eq(Podfile.from_ruby(fixture('Podfile'), fixture('Podfile').read.gsub(/pod '/, "pod 'A_")))
       end
 
       extend SpecHelper::TemporaryDirectory
@@ -45,11 +45,11 @@ module Pod
           Podfile.from_file(podfile_file)
         rescue DSLError => e
           raised = true
-          e.message.should.match %r{from .*/tmp/Podfile:3}
-          e.message.should.match /requires a name/
-          e.message.should.match /# Comment/
+          expect(e.message).to match(%r{from .*/tmp/Podfile:3})
+          expect(e.message).to match(/requires a name/)
+          expect(e.message).to match(/# Comment/)
         end
-        raised.should.be.true
+        expect(raised).to be(true)
       end
     end
 
@@ -69,41 +69,41 @@ module Pod
       end
 
       it 'returns the string representation' do
-        @podfile.to_s.should == 'Podfile'
+        expect(@podfile.to_s).to eq('Podfile')
       end
 
       it 'returns the target definitions' do
-        @podfile.target_definitions.count.should == 2
-        @podfile.target_definitions['Pods'].name.should == 'Pods'
-        @podfile.target_definitions['sub-target'].name.should == 'sub-target'
+        expect(@podfile.target_definitions.count).to eq(2)
+        expect(@podfile.target_definitions['Pods'].name).to eq('Pods')
+        expect(@podfile.target_definitions['sub-target'].name).to eq('sub-target')
       end
 
       it 'indicates if the pre install hook was executed' do
-        Podfile.new {}.pre_install!(:an_installer).should.be == false
+        expect(Podfile.new {}.pre_install!(:an_installer)).to eq(false)
         result = Podfile.new { pre_install { |_installer| } }.pre_install!(:an_installer)
-        result.should.be == true
+        expect(result).to eq(true)
       end
 
       it 'indicates if the pre integrate hook was executed' do
-        Podfile.new {}.pre_integrate!(:an_installer).should.be == false
+        expect(Podfile.new {}.pre_integrate!(:an_installer)).to eq(false)
         result = Podfile.new { pre_integrate { |_installer| } }.pre_integrate!(:an_installer)
-        result.should.be == true
+        expect(result).to eq(true)
       end
 
       it 'returns all dependencies of all targets combined' do
-        @podfile.dependencies.map(&:name).sort.should == %w(ASIHTTPRequest JSONKit Reachability SSZipArchive)
+        expect(@podfile.dependencies.map(&:name).sort).to eq(%w(ASIHTTPRequest JSONKit Reachability SSZipArchive))
       end
 
       it 'indicates if the post install hook was executed' do
-        Podfile.new {}.post_install!(:an_installer).should.be == false
+        expect(Podfile.new {}.post_install!(:an_installer)).to eq(false)
         result = Podfile.new { post_install { |_installer| } }.post_install!(:an_installer)
-        result.should.be == true
+        expect(result).to eq(true)
       end
 
       it 'indicates if the post integrate hook was executed' do
-        Podfile.new {}.post_integrate!(:an_installer).should.be == false
+        expect(Podfile.new {}.post_integrate!(:an_installer)).to eq(false)
         result = Podfile.new { post_integrate { |_installer| } }.post_integrate!(:an_installer)
-        result.should.be == true
+        expect(result).to eq(true)
       end
     end
 
@@ -111,63 +111,68 @@ module Pod
 
     describe 'Attributes' do
       it 'returns the workspace' do
-        Podfile.new do
+        podfile = Podfile.new do
           workspace 'MyWorkspace.xcworkspace'
-        end.workspace_path.should == 'MyWorkspace.xcworkspace'
+        end
+        expect(podfile.workspace_path).to eq('MyWorkspace.xcworkspace')
       end
 
       it 'appends the extension to the specified workspaces if needed' do
-        Podfile.new do
+        podfile = Podfile.new do
           workspace 'MyWorkspace'
-        end.workspace_path.should == 'MyWorkspace.xcworkspace'
+        end
+        expect(podfile.workspace_path).to eq('MyWorkspace.xcworkspace')
       end
 
       it 'returns whether the BridgeSupport metadata should be generated' do
-        Podfile.new {}.should.not.generate_bridge_support
-        Podfile.new { generate_bridge_support! }.should.generate_bridge_support
+        expect(Podfile.new {}.generate_bridge_support?).to be_falsey
+        expect(Podfile.new { generate_bridge_support! }.generate_bridge_support?).to be_truthy
       end
 
       it 'returns whether the ARC compatibility flag should be set' do
-        Podfile.new {}.should.not.set_arc_compatibility_flag
-        Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
+        expect(Podfile.new {}.set_arc_compatibility_flag?).to be_falsey
+        expect(Podfile.new { set_arc_compatibility_flag! }.set_arc_compatibility_flag?).to be_truthy
       end
 
       it 'returns the installation method' do
         name, options = Podfile.new {}.installation_method
-        name.should == 'cocoapods'
-        options.should == {}
+        expect(name).to eq('cocoapods')
+        expect(options).to eq({})
 
         name, options = Podfile.new { install! 'install-method', :option1 => 'value1', 'option2' => false }.installation_method
-        name.should == 'install-method'
-        options.should == { :option1 => 'value1', 'option2' => false }
+        expect(name).to eq('install-method')
+        expect(options).to eq({ :option1 => 'value1', 'option2' => false })
       end
 
       describe 'source' do
         it 'can have multiple sources' do
-          Podfile.new do
+          podfile = Podfile.new do
             source 'new_repo_1'
             source 'new_repo_2'
-          end.sources.size.should == 2
+          end
+          expect(podfile.sources.size).to eq(2)
 
-          Podfile.new do
+          podfile = Podfile.new do
             source 'new_repo_1'
             source 'new_repo_2'
             source 'master'
-          end.sources.size.should == 3
+          end
+          expect(podfile.sources.size).to eq(3)
         end
       end
 
       describe 'plugin' do
         it 'can have mutiple plugins' do
-          Podfile.new do
+          podfile = Podfile.new do
             plugin 'slather'
             plugin 'cocoapods-keys', :keyring => 'Eidolon'
-          end.plugins.should == {
+          end
+          expect(podfile.plugins).to eq({
             'slather' => {},
             'cocoapods-keys' => {
               'keyring' => 'Eidolon',
             },
-          }
+          })
         end
       end
     end
@@ -181,7 +186,7 @@ module Pod
           target 'App' do
           end
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             'name' => 'Pods',
             'abstract' => true,
@@ -192,7 +197,7 @@ module Pod
               },
             ],
           ],
-        }
+        })
       end
 
       it 'includes the podfile wide settings in the hash representation' do
@@ -202,7 +207,7 @@ module Pod
           set_arc_compatibility_flag!
           install! 'install-method', :option1 => 'value1', 'option2' => false
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [{ 'name' => 'Pods', 'abstract' => true }],
           'workspace' => 'MyApp.xcworkspace',
           'generate_bridge_support' => true,
@@ -214,7 +219,7 @@ module Pod
               'option2' => false,
             },
           },
-        }
+        })
       end
 
       it 'includes the targets definitions tree in the hash representation' do
@@ -227,7 +232,7 @@ module Pod
             end
           end
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             {
               'name' => 'Pods',
@@ -248,7 +253,7 @@ module Pod
               ],
             },
           ],
-        }
+        })
       end
 
       it 'returns the yaml representation' do
@@ -279,19 +284,18 @@ module Pod
           generate_bridge_support: true
           set_arc_compatibility_flag: true
         EOF
-        YAMLHelper.load_string(podfile.to_yaml).should ==
-          YAMLHelper.load_string(expected)
+        expect(YAMLHelper.load_string(podfile.to_yaml)).to eq(YAMLHelper.load_string(expected))
       end
 
       describe '#checksum' do
         it 'returns the checksum of the file in which it is defined' do
           podfile = Podfile.from_file(fixture('Podfile'))
-          podfile.checksum.should == 'c140d332c2d286f26b6439dc3570be477d1897b8'
+          expect(podfile.checksum).to eq('c140d332c2d286f26b6439dc3570be477d1897b8')
         end
 
         it 'returns a nil checksum if the podfile is not defined in a file' do
           podfile = Podfile.new
-          podfile.checksum.should.be.nil
+          expect(podfile.checksum).to be_nil
         end
       end
 
@@ -300,7 +304,7 @@ module Pod
           pod 'ASIHTTPRequest', :inhibit_warnings => true
           pod 'ObjectiveSugar'
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             'name' => 'Pods',
             'abstract' => true,
@@ -309,7 +313,7 @@ module Pod
             },
             'dependencies' => %w(ASIHTTPRequest ObjectiveSugar),
           ],
-        }
+        })
       end
 
       it 'excludes inhibit warnings per pod' do
@@ -317,7 +321,7 @@ module Pod
           pod 'ASIHTTPRequest', :inhibit_warnings => false
           pod 'ObjectiveSugar'
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             'name' => 'Pods',
             'abstract' => true,
@@ -326,7 +330,7 @@ module Pod
             },
             'dependencies' => %w(ASIHTTPRequest ObjectiveSugar),
           ],
-        }
+        })
       end
 
       it 'includes inhibit all warnings' do
@@ -334,7 +338,7 @@ module Pod
           pod 'ObjectiveSugar'
           inhibit_all_warnings!
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             'name' => 'Pods',
             'abstract' => true,
@@ -343,7 +347,7 @@ module Pod
               'all' => true,
             },
           ],
-        }
+        })
       end
 
       it 'includes build type' do
@@ -351,14 +355,14 @@ module Pod
           pod 'ObjectiveSugar'
           use_frameworks!
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'target_definitions' => [
             'name' => 'Pods',
             'abstract' => true,
             'dependencies' => ['ObjectiveSugar'],
             'uses_frameworks' => { :linkage => :dynamic, :packaging => :framework },
           ],
-        }
+        })
       end
 
       it 'includes the specified sources in the hash representation' do
@@ -366,7 +370,7 @@ module Pod
           source 'new_ASIHTTPRequest_source'
           pod 'ASIHTTPRequest'
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'sources' => %w(new_ASIHTTPRequest_source),
           'target_definitions' => [
             {
@@ -375,7 +379,7 @@ module Pod
               'dependencies' => %w(ASIHTTPRequest),
             },
           ],
-        }
+        })
       end
 
       it 'includes the specified plugins in the hash representation' do
@@ -384,7 +388,7 @@ module Pod
           plugin 'cocoapods-keys', :keyring => 'Eidolon'
           pod 'ASIHTTPRequest'
         end
-        podfile.to_hash.should == {
+        expect(podfile.to_hash).to eq({
           'plugins' => {
             'slather' => {},
             'cocoapods-keys' => {
@@ -398,7 +402,7 @@ module Pod
               'dependencies' => %w(ASIHTTPRequest),
             },
           ],
-        }
+        })
       end
     end
 
@@ -407,8 +411,8 @@ module Pod
     describe 'Class methods' do
       it 'can be initialized from a ruby DSL file' do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
-        ruby_podfile.target_definitions.keys.should == ['Pods']
-        ruby_podfile.dependencies.map(&:name).should == %w(SSZipArchive ASIHTTPRequest Reachability ASIWebPageRequest)
+        expect(ruby_podfile.target_definitions.keys).to eq(['Pods'])
+        expect(ruby_podfile.dependencies.map(&:name)).to eq(%w(SSZipArchive ASIHTTPRequest Reachability ASIWebPageRequest))
       end
 
       it 'can handle smartquotes in a ruby DSL file' do
@@ -416,8 +420,8 @@ module Pod
           pod “AFNetworking”, ‘~> 2.0’
         DSL
         podfile = Podfile.from_ruby(fixture('Podfile'), dsl)
-        podfile.dependencies.should == [Dependency.new('AFNetworking', '~> 2.0')]
-        CoreUI.warnings.should.match /smart quotes/
+        expect(podfile.dependencies).to eq([Dependency.new('AFNetworking', '~> 2.0')])
+        expect(CoreUI.warnings).to match(/smart quotes/)
       end
 
       it 'handles the `podfile` extension' do
@@ -437,42 +441,42 @@ module Pod
       it 'can be initialized from a YAML file' do
         ruby_podfile = Podfile.from_file(fixture('Podfile'))
         yaml_podfile = Podfile.from_file(fixture('Podfile.yaml'))
-        ruby_podfile.to_hash.should == yaml_podfile.to_hash
+        expect(ruby_podfile.to_hash).to eq(yaml_podfile.to_hash)
       end
 
       it 'can properly parse a boolean uses_frameworks value from a YAML file' do
         podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksBoolean.yaml'))
         target_definition = podfile.target_definitions['SampleApp']
-        target_definition.uses_frameworks?.should.be.true
-        target_definition.build_type.should == BuildType.dynamic_framework
+        expect(target_definition.uses_frameworks?).to be(true)
+        expect(target_definition.build_type).to eq(BuildType.dynamic_framework)
       end
 
       it 'can properly parse a hash uses_frameworks value from a YAML file' do
         podfile = Podfile.from_file(fixture('Podfile_UsesFrameworksHash.yaml'))
         target_definition = podfile.target_definitions['SampleApp']
-        target_definition.uses_frameworks?.should.be.true
-        target_definition.build_type.should == BuildType.dynamic_framework
+        expect(target_definition.uses_frameworks?).to be(true)
+        expect(target_definition.build_type).to eq(BuildType.dynamic_framework)
       end
 
       it "raises if the given initialization file doesn't exists" do
-        should.raise Informative do
+        expect do
           Podfile.from_file('Missing-file')
-        end.message.should.match /No Podfile exists/
+        end.to raise_error(Informative, /No Podfile exists/)
       end
 
       it 'raises if the given initialization file has an unsupported extension' do
         Pathname.any_instance.stubs(:exist?).returns(true)
         File.stubs(:open).returns('')
-        should.raise Informative do
+        expect do
           Podfile.from_file('Podfile.json')
-        end.message.should.match /Unsupported Podfile format/
+        end.to raise_error(Informative, /Unsupported Podfile format/)
       end
 
       it 'can be initialized from a hash' do
         fixture_podfile = Podfile.from_file(fixture('Podfile'))
         hash = fixture_podfile.to_hash
         podfile = Podfile.from_hash(hash)
-        podfile.to_hash.should == fixture_podfile.to_hash
+        expect(podfile.to_hash).to eq(fixture_podfile.to_hash)
       end
     end
 
@@ -482,22 +486,22 @@ module Pod
       it 'sets and retrieves a value in the internal hash' do
         podfile = Podfile.new
         podfile.send(:set_hash_value, 'generate_bridge_support', true)
-        podfile.send(:get_hash_value, 'generate_bridge_support').should.be.true
+        expect(podfile.send(:get_hash_value, 'generate_bridge_support')).to be(true)
       end
 
       it 'allows specifying a default value when fetching from the hash' do
         podfile = Podfile.new
 
-        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should == 'default'
+        expect(podfile.send(:get_hash_value, 'generate_bridge_support', 'default')).to eq('default')
 
         podfile.send(:set_hash_value, 'generate_bridge_support', true)
-        podfile.send(:get_hash_value, 'generate_bridge_support', 'default').should.be.true
+        expect(podfile.send(:get_hash_value, 'generate_bridge_support', 'default')).to be(true)
       end
 
       it 'raises if there is an attempt to access or set an unknown key in the internal hash' do
         podfile = Podfile.new
-        lambda { podfile.send(:set_hash_value, 'unknown', true) }.should.raise Pod::Podfile::StandardError
-        lambda { podfile.send(:get_hash_value, 'unknown') }.should.raise Pod::Podfile::StandardError
+        expect { podfile.send(:set_hash_value, 'unknown', true) }.to raise_error(Pod::Podfile::StandardError)
+        expect { podfile.send(:get_hash_value, 'unknown') }.to raise_error(Pod::Podfile::StandardError)
       end
     end
 
@@ -537,68 +541,68 @@ module Pod
 
       it 'adds dependencies outside of any explicit target block to the default target' do
         target = @podfile.target_definitions['Pods']
-        target.label.should == 'Pods'
-        target.dependencies.should == [Dependency.new('ASIHTTPRequest')]
+        expect(target.label).to eq('Pods')
+        expect(target.dependencies).to eq([Dependency.new('ASIHTTPRequest')])
       end
 
       it 'adds dependencies of the outer target to non-exclusive targets' do
         target = @podfile.target_definitions[:debug]
-        target.label.should == 'Pods-debug'
-        target.dependencies.sort_by(&:name).should == [
+        expect(target.label).to eq('Pods-debug')
+        expect(target.dependencies.sort_by(&:name)).to eq([
           Dependency.new('ASIHTTPRequest'),
           Dependency.new('SSZipArchive'),
-        ]
+        ])
       end
 
       it 'does not add dependencies of the outer target to exclusive targets' do
         target = @podfile.target_definitions[:test]
-        target.label.should == 'Pods-test'
-        target.dependencies.should == [Dependency.new('JSONKit')]
+        expect(target.label).to eq('Pods-test')
+        expect(target.dependencies).to eq([Dependency.new('JSONKit')])
       end
 
       it 'adds dependencies of the outer target to nested targets' do
         target = @podfile.target_definitions[:subtarget]
-        target.label.should == 'Pods-test-subtarget'
-        target.dependencies.should == [Dependency.new('Reachability'), Dependency.new('JSONKit')]
+        expect(target.label).to eq('Pods-test-subtarget')
+        expect(target.dependencies).to eq([Dependency.new('Reachability'), Dependency.new('JSONKit')])
       end
 
       it 'returns the platform of the target' do
-        @podfile.target_definitions['Pods'].platform.should == :ios
-        @podfile.target_definitions[:test].platform.should == :ios
-        @podfile.target_definitions[:osx_target].platform.should == :osx
+        expect(@podfile.target_definitions['Pods'].platform).to eq(:ios)
+        expect(@podfile.target_definitions[:test].platform).to eq(:ios)
+        expect(@podfile.target_definitions[:osx_target].platform).to eq(:osx)
       end
 
       it 'assigns a deployment target to the platforms if not specified' do
-        @podfile.target_definitions['Pods'].platform.deployment_target.to_s.should == '4.3'
-        @podfile.target_definitions[:test].platform.deployment_target.to_s.should == '4.3'
-        @podfile.target_definitions[:osx_target].platform.deployment_target.to_s.should == '10.6'
+        expect(@podfile.target_definitions['Pods'].platform.deployment_target.to_s).to eq('4.3')
+        expect(@podfile.target_definitions[:test].platform.deployment_target.to_s).to eq('4.3')
+        expect(@podfile.target_definitions[:osx_target].platform.deployment_target.to_s).to eq('10.6')
       end
 
       it "automatically marks a target as exclusive if the parent platform doesn't match" do
-        @podfile.target_definitions[:osx_target].should.be.exclusive
-        @podfile.target_definitions[:nested_osx_target].should.not.be.exclusive
+        expect(@podfile.target_definitions[:osx_target]).to be_exclusive
+        expect(@podfile.target_definitions[:nested_osx_target]).not_to be_exclusive
       end
 
       it 'inhibits warnings for any asked pod if inhibit_all_warnings! is called' do
-        @podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('SSZipArchive').should.not.be.true
-        @podfile.target_definitions[:test].inhibits_warnings_for_pod?('JSONKit').should.be.true
-        @podfile.target_definitions[:subtarget].inhibits_warnings_for_pod?('Reachability').should.be.true
+        expect(@podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('SSZipArchive')).not_to be(true)
+        expect(@podfile.target_definitions[:test].inhibits_warnings_for_pod?('JSONKit')).to be(true)
+        expect(@podfile.target_definitions[:subtarget].inhibits_warnings_for_pod?('Reachability')).to be(true)
       end
 
       it 'uses frameworks for any target if use_frameworks! is called' do
-        @podfile.target_definitions['Pods'].uses_frameworks?.should.not.be.true
-        @podfile.target_definitions[:test].uses_frameworks?.should.be.true
-        @podfile.target_definitions[:subtarget].uses_frameworks?.should.be.true
+        expect(@podfile.target_definitions['Pods'].uses_frameworks?).not_to be(true)
+        expect(@podfile.target_definitions[:test].uses_frameworks?).to be(true)
+        expect(@podfile.target_definitions[:subtarget].uses_frameworks?).to be(true)
       end
 
       it 'returns the Xcode project that contains the target to link with' do
         ['Pods', :debug, :test, :subtarget].each do |target_name|
           target = @podfile.target_definitions[target_name]
-          target.user_project_path.to_s.should == 'iOS Project.xcodeproj'
+          expect(target.user_project_path.to_s).to eq('iOS Project.xcodeproj')
         end
         [:osx_target, :nested_osx_target].each do |target_name|
           target = @podfile.target_definitions[target_name]
-          target.user_project_path.to_s.should == 'OSX Project.xcodeproj'
+          expect(target.user_project_path.to_s).to eq('OSX Project.xcodeproj')
         end
       end
     end

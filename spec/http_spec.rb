@@ -13,7 +13,7 @@ module Pod
         WebMock::API.stub_request(:head, /new-url/).to_return(:status => 200)
 
         resolved_url = HTTP.get_actual_url('http://SOME-URL/redirect/')
-        resolved_url.should == 'http://NEW-URL/'
+        expect(resolved_url).to eq('http://NEW-URL/')
       end
 
       it 'can resolve relative redirects' do
@@ -22,14 +22,14 @@ module Pod
         WebMock::API.stub_request(:head, /foo/).to_return(:status => 200)
 
         resolved_url = HTTP.get_actual_url('http://SOME-URL/redirect')
-        resolved_url.should == 'http://SOME-URL/foo'
+        expect(resolved_url).to eq('http://SOME-URL/foo')
       end
 
       it 'can successfully validate URLs' do
         WebMock::API.stub_request(:head, /foo/).to_return(:status => 200)
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.true
+        expect(response.success?).to be(true)
       end
 
       it 'is resilient to HEAD errors' do
@@ -37,7 +37,7 @@ module Pod
         WebMock::API.stub_request(:get, /foo/).to_return(:status => 200)
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.true
+        expect(response.success?).to be(true)
       end
 
       it 'reports failures when validating URLs' do
@@ -45,12 +45,12 @@ module Pod
         WebMock::API.stub_request(:get, /foo/).to_return(:status => 404)
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.false
+        expect(response.success?).to be(false)
       end
 
       it 'is resilient against exceptions during validation of URLs' do
         response = HTTP.validate_url('%&/(foo)')
-        response.should.be.nil
+        expect(response).to be_nil
       end
 
       it 'uses a browser user-agent to validate URLs' do
@@ -60,7 +60,7 @@ module Pod
           to_return(:status => 200, :body => '')
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.true
+        expect(response.success?).to be(true)
       end
 
       it 'uses GET with Range of 1 byte' do
@@ -70,7 +70,7 @@ module Pod
             to_return(:status => 200, :body => ' ')
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.true
+        expect(response.success?).to be(true)
       end
 
       it 'uses GET without Range if server rejects Range' do
@@ -83,18 +83,18 @@ module Pod
             to_return(:status => 200, :body => '')
 
         response = HTTP.validate_url('http://SOME-URL/foo')
-        response.success?.should.be.true
+        expect(response.success?).to be(true)
       end
 
       it 'returns nil for URLs that are not HTTP URLs' do
-        HTTP.validate_url('ftp://example.com/foo').should.be.nil
-        HTTP.validate_url('mailto:pods@example.com').should.be.nil
+        expect(HTTP.validate_url('ftp://example.com/foo')).to be_nil
+        expect(HTTP.validate_url('mailto:pods@example.com')).to be_nil
       end
 
       it 'returns nil when a network error occurs during validation' do
         WebMock::API.stub_request(:head, /foo/).to_raise(OpenSSL::SSL::SSLError)
 
-        HTTP.validate_url('https://SOME-URL/foo').should.be.nil
+        expect(HTTP.validate_url('https://SOME-URL/foo')).to be_nil
       end
     end
 
@@ -126,10 +126,9 @@ module Pod
         WebMock.disable!
         begin
           url = "https://127.0.0.1:#{tcp_server.addr[1]}/"
-          exception = should.raise(OpenSSL::SSL::SSLError) do
+          expect do
             HTTP.perform(:get, url)
-          end
-          exception.message.should.include 'certificate verify failed'
+          end.to raise_error(OpenSSL::SSL::SSLError, a_string_including('certificate verify failed'))
         ensure
           WebMock.enable!
           thread.kill
@@ -146,9 +145,9 @@ module Pod
           raises(SocketError)
 
         begin
-          should.raise(SocketError) do
+          expect do
             HTTP.perform(:get, 'https://example.com/')
-          end
+          end.to raise_error(SocketError)
         ensure
           proxy_env.each { |k, v| v ? ENV[k] = v : ENV.delete(k) }
         end

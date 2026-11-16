@@ -10,11 +10,11 @@ module Pod
     #-------------------------------------------------------------------------#
 
     it 'uses the correct repo name' do
-      @source.name.should == 'trunk'
+      expect(@source.name).to eq('trunk')
     end
 
     it 'uses the correct repo URL' do
-      @source.url.should == 'https://cdn.cocoapods.org/'
+      expect(@source.url).to eq('https://cdn.cocoapods.org/')
     end
 
     #-------------------------------------------------------------------------#

@@ -9,26 +9,26 @@ module Pod
     end
 
     it 'returns the type' do
-      @result.type.should == :error
+      expect(@result.type).to eq(:error)
     end
 
     it 'returns the attribute name' do
-      @result.attribute_name.should == 'test_attribute'
+      expect(@result.attribute_name).to eq('test_attribute')
     end
 
     it 'returns the message' do
-      @result.message.should == 'This is an error'
+      expect(@result.message).to eq('This is an error')
     end
 
     it 'can store the platforms that generated the result' do
       @result.platforms << :ios
-      @result.platforms.should == [:ios]
+      expect(@result.platforms).to eq([:ios])
     end
 
     it 'returns a string representation suitable for UI' do
-      @result.to_s.should == '[ERROR] [test_attribute] This is an error'
+      expect(@result.to_s).to eq('[ERROR] [test_attribute] This is an error')
       @result.platforms << :ios
-      @result.to_s.should == '[ERROR] [test_attribute] This is an error [iOS]'
+      expect(@result.to_s).to eq('[ERROR] [test_attribute] This is an error [iOS]')
     end
   end
 
@@ -39,26 +39,26 @@ module Pod
 
     it 'creates an error result' do
       @results.add_error('attribute', 'This is an error')
-      @results.count.should == 1
-      @results.first.type.should == :error
+      expect(@results.count).to eq(1)
+      expect(@results.first.type).to eq(:error)
     end
 
     it 'creates a warning result' do
       @results.add_warning('attribute', 'This is a warning')
-      @results.count.should == 1
-      @results.first.type.should == :warning
+      expect(@results.count).to eq(1)
+      expect(@results.first.type).to eq(:warning)
     end
 
     it 'prevents duplicate results with the same attribute' do
       @results.add_warning('attribute', 'I have duplicate warnings')
       @results.add_warning('attribute', 'I have duplicate warnings')
-      @results.count.should == 1
+      expect(@results.count).to eq(1)
     end
 
     it 'does not prevent duplicate results with different attributes' do
       @results.add_warning('attribute1', 'I have duplicate warnings')
       @results.add_warning('attribute2', 'I have duplicate warnings')
-      @results.count.should == 2
+      expect(@results.count).to eq(2)
     end
 
     it 'specifies the platform on the result when there is a consumer' do
@@ -67,13 +67,13 @@ module Pod
       linter = Specification::Linter.new(podspec_path)
       @results.consumer = Specification::Consumer.new(linter.spec, :ios)
       @results.add_warning('attribute', 'bad')
-      @results.first.platforms.first.should == :ios
+      expect(@results.first.platforms.first).to eq(:ios)
     end
 
     it 'specifies no platform when there is no consumer' do
       @results.consumer = nil
       @results.add_warning('attribute', 'bad')
-      @results.first.platforms.should == []
+      expect(@results.first.platforms).to eq([])
     end
   end
 end

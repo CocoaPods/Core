@@ -10,7 +10,6 @@ $LOAD_PATH.unshift((ROOT + 'spec').to_s)
 require 'bundler/setup'
 require 'rspec'
 require 'mocha/api'
-require 'spec_helper/bacon_compat'
 require 'cocoapods-core'
 
 # Helpers
@@ -87,12 +86,8 @@ end
 RSpec.configure do |config|
   config.mock_with :mocha
 
-  # Only `expect` is enabled: RSpec's own `should` syntax would otherwise
-  # replace the bacon-style `should` provided by BaconCompat.
   config.expect_with(:rspec) { |c| c.syntax = :expect }
 
-  config.extend BaconCompat::GroupExtensions
-  config.include BaconCompat::ExampleExtensions
   config.include SpecHelper::Fixture
 
   config.before do
@@ -101,4 +96,4 @@ RSpec.configure do |config|
   end
 end
 
-Mocha::Configuration.prevent(:stubbing_non_existent_method)
+Mocha.configure { |c| c.stubbing_non_existent_method = :prevent }

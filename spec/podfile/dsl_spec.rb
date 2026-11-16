@@ -8,9 +8,9 @@ module Pod
           pod 'ASIHTTPRequest'
           pod 'SSZipArchive', '>= 0.1'
         end
-        podfile.dependencies.size.should == 2
-        podfile.dependencies.find { |d| d.root_name == 'ASIHTTPRequest' }.should == Dependency.new('ASIHTTPRequest')
-        podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }.should == Dependency.new('SSZipArchive', '>= 0.1')
+        expect(podfile.dependencies.size).to eq(2)
+        expect(podfile.dependencies.find { |d| d.root_name == 'ASIHTTPRequest' }).to eq(Dependency.new('ASIHTTPRequest'))
+        expect(podfile.dependencies.find { |d| d.root_name == 'SSZipArchive' }).to eq(Dependency.new('SSZipArchive', '>= 0.1'))
       end
 
       describe 'whitelisting pods per configuration' do
@@ -20,8 +20,8 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.true
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release')).to be(true)
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug')).to be(true)
         end
 
         it 'allows to white-list a dependency on multiple build configuration' do
@@ -30,9 +30,9 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'App Store').should.be.true
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release')).to be(true)
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'App Store')).to be(true)
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug')).to be(false)
         end
 
         it 'allows to white-list a dependency on a build configuration' do
@@ -41,8 +41,8 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release')).to be(true)
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug')).to be(false)
         end
 
         it 'allows to white-list a dependency on a build configuration in a target block' do
@@ -53,8 +53,8 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release').should.be.true
-          target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug').should.be.false
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Release')).to be(true)
+          expect(target.pod_whitelisted_for_configuration?('PonyDebugger', 'Debug')).to be(false)
         end
       end
 
@@ -65,17 +65,17 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
         end
 
         it 'raises if :inhibit_warnings value is not a boolean' do
-          should.raise ArgumentError do
+          expect do
             podfile = Podfile.new do
               pod 'PonyDebugger', :inhibit_warnings => 'true'
             end
             target = podfile.target_definitions['Pods']
-            target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
-          end.message.should.match /should be a boolean/
+            expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
+          end.to raise_error(ArgumentError, /should be a boolean/)
         end
 
         it 'allows inhibiting warnings on a single dependency' do
@@ -84,7 +84,7 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows not inhibiting warnings on a single dependency' do
@@ -94,7 +94,7 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
         end
 
         it 'allows inhibiting warnings on a single dependency in a target block' do
@@ -105,7 +105,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows not inhibiting warnings on a single dependency in a target block' do
@@ -117,7 +117,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
         end
 
         it 'allows inhibiting warnings on a single dependency in a target block with inheritance' do
@@ -131,7 +131,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows inhibiting in parent and not inhibiting in child on a single dependency' do
@@ -145,10 +145,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
 
           target = podfile.target_definitions['Inherited']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
         end
 
         it 'allows not inhibiting in parent and inhibiting in child on a single dependency' do
@@ -162,10 +162,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['Inherited']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows not inhibiting a single dependency in parent and inhibiting all dependencies in child' do
@@ -180,10 +180,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['Inherited']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows not inhibiting a single dependency in grandparent and inhibiting all dependencies in grandchild' do
@@ -200,10 +200,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.false
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['InheritedLevelTwo']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
 
         it 'allows inhibiting all warnings in parent and child scopes' do
@@ -219,10 +219,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
 
           target = podfile.target_definitions['Inherited']
-          target.inhibits_warnings_for_pod?('PonyDebugger').should.be.true
+          expect(target.inhibits_warnings_for_pod?('PonyDebugger')).to be(true)
         end
       end
 
@@ -233,7 +233,7 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.project_name_for_pod('PonyDebugger').should == 'PonyProject'
+          expect(target.project_name_for_pod('PonyDebugger')).to eq('PonyProject')
         end
       end
 
@@ -244,17 +244,17 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
         end
 
         it 'raises if :modular_headers value is not a boolean' do
-          should.raise ArgumentError do
+          expect do
             podfile = Podfile.new do
               pod 'PonyDebugger', :modular_headers => 'true'
             end
             target = podfile.target_definitions['Pods']
-            target.build_pod_as_module?('PonyDebugger').should.be.true
-          end.message.should.match /should be a boolean/
+            expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
+          end.to raise_error(ArgumentError, /should be a boolean/)
         end
 
         it 'allows modular headers on a single dependency' do
@@ -263,7 +263,7 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
 
         it 'allows not modular headers on a single dependency' do
@@ -273,7 +273,7 @@ module Pod
           end
 
           target = podfile.target_definitions['Pods']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
         end
 
         it 'allows modular headers on a single dependency in a target block' do
@@ -284,7 +284,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
 
         it 'allows not modular headers on a single dependency in a target block' do
@@ -296,7 +296,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
         end
 
         it 'allows modular headers on a single dependency in a target block with inheritance' do
@@ -310,7 +310,7 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
 
         it 'allows modular headers in parent and not using them in child on a single dependency' do
@@ -324,10 +324,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
 
           target = podfile.target_definitions['Inherited']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
         end
 
         it 'allows not using modular headers in parent and using modular headers in child on a single dependency' do
@@ -341,10 +341,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['Inherited']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
 
         it 'allows not using modular headers a single dependency in parent and using modular headers all dependencies in child' do
@@ -359,10 +359,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['Inherited']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
 
         it 'allows not using modular headers a single dependency in grandparent and using modular headers all dependencies in grandchild' do
@@ -379,10 +379,10 @@ module Pod
           end
 
           target = podfile.target_definitions['App']
-          target.build_pod_as_module?('PonyDebugger').should.be.false
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(false)
 
           target = podfile.target_definitions['InheritedLevelTwo']
-          target.build_pod_as_module?('PonyDebugger').should.be.true
+          expect(target.build_pod_as_module?('PonyDebugger')).to be(true)
         end
       end
 
@@ -396,8 +396,8 @@ module Pod
           Dependency.new('RestKit/CoreData', '~> 0.24.0'),
           Dependency.new('RestKit/Networking', '~> 0.24.0'),
         ]
-        target.dependencies.sort_by(&:name).should == expected_dependencies
-        target.pod_whitelisted_for_configuration?('RestKit', 'Release').should.be.true
+        expect(target.dependencies.sort_by(&:name)).to eq(expected_dependencies)
+        expect(target.pod_whitelisted_for_configuration?('RestKit', 'Release')).to be(true)
 
         podfile = Podfile.new do
           pod 'RestKit/Subspec', :subspecs => %w(CoreData Networking/Subspec), :git => 'https://github.com/RestKit/RestKit.git'
@@ -408,25 +408,25 @@ module Pod
           Dependency.new('RestKit/Subspec/CoreData', :git => 'https://github.com/RestKit/RestKit.git'),
           Dependency.new('RestKit/Subspec/Networking/Subspec', :git => 'https://github.com/RestKit/RestKit.git'),
         ]
-        target.dependencies.sort_by(&:name).should == expected_dependencies
+        expect(target.dependencies.sort_by(&:name)).to eq(expected_dependencies)
       end
 
       it 'raises if no name is specified for a Pod' do
-        lambda do
+        expect do
           Podfile.new do
             pod
           end
-        end.should.raise Podfile::StandardError
+        end.to raise_error(Podfile::StandardError)
       end
 
       it 'raises if an inlide podspec is specified' do
-        lambda do
+        expect do
           Podfile.new do
             pod do |s|
               s.name = 'mypod'
             end
           end
-        end.should.raise Podfile::StandardError
+        end.to raise_error(Podfile::StandardError)
       end
 
       it 'it can use use the dependencies of a podspec' do
@@ -435,7 +435,7 @@ module Pod
           platform :ios
           podspec :path => banalib_path
         end
-        podfile.dependencies.map(&:name).should == %w(monkey AFNetworking SDWebImage)
+        expect(podfile.dependencies.map(&:name)).to eq(%w(monkey AFNetworking SDWebImage))
       end
 
       it 'it can use use the dependencies of a podspec\'s subspec' do
@@ -444,7 +444,7 @@ module Pod
           platform :ios
           podspec :path => banalib_path, :subspec => 'GreenBanana'
         end
-        podfile.dependencies.map(&:name).should == %w(monkey AFNetworking)
+        expect(podfile.dependencies.map(&:name)).to eq(%w(monkey AFNetworking))
       end
 
       it 'allows specifying a child target definition' do
@@ -453,7 +453,7 @@ module Pod
             pod 'OCMock'
           end
         end
-        podfile.target_definitions[:tests].name.should == :tests
+        expect(podfile.target_definitions[:tests].name).to eq(:tests)
       end
     end
 
@@ -467,17 +467,17 @@ module Pod
             platform :osx, '10.8'
           end
         end
-        podfile.target_definitions['Pods'].platform.should == Platform.new(:ios, '6.0')
-        podfile.target_definitions[:osx_target].platform.should == Platform.new(:osx, '10.8')
+        expect(podfile.target_definitions['Pods'].platform).to eq(Platform.new(:ios, '6.0'))
+        expect(podfile.target_definitions[:osx_target].platform).to eq(Platform.new(:osx, '10.8'))
       end
 
       it 'does not allow specifying a platform twice' do
-        should.raise(Podfile::StandardError) do
+        expect do
           Podfile.new do
             platform :ios, '6.0'
             platform :ios, '9.0'
           end
-        end.message.should == 'The target `Pods` already has a platform set.'
+        end.to raise_error(Podfile::StandardError, 'The target `Pods` already has a platform set.')
       end
 
       it 'allows specifying whether the target is exclusive' do
@@ -486,7 +486,7 @@ module Pod
             inherit!(:none)
           end
         end
-        podfile.target_definitions['Pods'].should.be.exclusive
+        expect(podfile.target_definitions['Pods']).to be_exclusive
       end
 
       it 'is not exclusive by default' do
@@ -494,7 +494,7 @@ module Pod
           target 'Pods' do
           end
         end
-        podfile.target_definitions['Pods'].should.not.be.exclusive
+        expect(podfile.target_definitions['Pods']).not_to be_exclusive
       end
 
       it 'allows specifying whether the target is abstract' do
@@ -503,7 +503,7 @@ module Pod
             abstract!
           end
         end
-        podfile.target_definitions['App'].should.be.abstract
+        expect(podfile.target_definitions['App']).to be_abstract
       end
 
       it 'is not abstract by default' do
@@ -511,7 +511,7 @@ module Pod
           target 'App' do
           end
         end
-        podfile.target_definitions['App'].should.not.be.abstract
+        expect(podfile.target_definitions['App']).not_to be_abstract
       end
 
       it 'allows specifying an abstract target' do
@@ -519,7 +519,7 @@ module Pod
           abstract_target 'App' do
           end
         end
-        podfile.target_definitions['App'].should.be.abstract
+        expect(podfile.target_definitions['App']).to be_abstract
       end
 
       describe 'inheritance' do
@@ -531,42 +531,42 @@ module Pod
                 inherit! mode
               end
             end
-            podfile.target_definitions['App'].inheritance.should == mode
+            expect(podfile.target_definitions['App'].inheritance).to eq(mode)
           end
         end
 
         it 'raises when specifying an unknown mode' do
-          should.raise(Informative) do
+          expect do
             Podfile.new do
               target 'App' do
                 inherit! 'foo'
               end
             end
-          end.message.should == 'Unrecognized inheritance option `foo` specified for target `App`.'
+          end.to raise_error(Informative, 'Unrecognized inheritance option `foo` specified for target `App`.')
         end
       end
 
       it 'raises if unrecognized keys are passed during the initialization of a target' do
-        should.raise Informative do
+        expect do
           Podfile.new do
             target 'Pods', :unrecognized => true do
             end
           end
-        end
+        end.to raise_error(Informative)
       end
 
       it 'allows specifying the user Xcode project for a Target definition' do
         podfile = Podfile.new { project 'App.xcodeproj' }
-        podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
+        expect(podfile.target_definitions['Pods'].user_project_path).to eq('App.xcodeproj')
       end
 
       it 'allows specifying the build configurations of a user project' do
         podfile = Podfile.new do
           project 'App.xcodeproj', 'Mac App Store' => :release, 'Test' => :debug
         end
-        podfile.target_definitions['Pods'].build_configurations.should == {
+        expect(podfile.target_definitions['Pods'].build_configurations).to eq({
           'Mac App Store' => :release, 'Test' => :debug
-        }
+        })
       end
 
       it 'allows to inhibit all the warnings of a Target definition' do
@@ -574,12 +574,12 @@ module Pod
           pod 'ObjectiveRecord'
           inhibit_all_warnings!
         end
-        podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('ObjectiveRecord').should.be.true
+        expect(podfile.target_definitions['Pods'].inhibits_warnings_for_pod?('ObjectiveRecord')).to be(true)
       end
 
       it 'defaults to not use frameworks for a Target definition' do
         podfile = Podfile.new { pod 'ObjectiveRecord' }
-        podfile.target_definitions['Pods'].uses_frameworks?.should.be.false
+        expect(podfile.target_definitions['Pods'].uses_frameworks?).to be(false)
       end
 
       it 'allows to use frameworks for a Target definition' do
@@ -587,7 +587,7 @@ module Pod
           pod 'ObjectiveRecord'
           use_frameworks!
         end
-        podfile.target_definitions['Pods'].uses_frameworks?.should.be.true
+        expect(podfile.target_definitions['Pods'].uses_frameworks?).to be(true)
       end
     end
 
@@ -595,19 +595,19 @@ module Pod
 
     describe 'Workspace' do
       it 'specifies the Xcode workspace to use' do
-        Podfile.new do
+        expect(Podfile.new do
           workspace 'MyWorkspace.xcworkspace'
-        end.workspace_path.should == 'MyWorkspace.xcworkspace'
+        end.workspace_path).to eq('MyWorkspace.xcworkspace')
       end
 
       it 'specifies that BridgeSupport metadata should be generated' do
-        Podfile.new {}.should.not.generate_bridge_support
-        Podfile.new { generate_bridge_support! }.should.generate_bridge_support
+        expect(Podfile.new {}.generate_bridge_support?).to be_falsey
+        expect(Podfile.new { generate_bridge_support! }.generate_bridge_support?).to be_truthy
       end
 
       it 'specifies that ARC compatibility flag should be generated' do
-        Podfile.new {}.should.not.set_arc_compatibility_flag
-        Podfile.new { set_arc_compatibility_flag! }.should.set_arc_compatibility_flag
+        expect(Podfile.new {}.set_arc_compatibility_flag?).to be_falsey
+        expect(Podfile.new { set_arc_compatibility_flag! }.set_arc_compatibility_flag?).to be_truthy
       end
     end
 
@@ -621,7 +621,7 @@ module Pod
             yielded = installer
           end
         end.pre_install!(:an_installer)
-        yielded.should == :an_installer
+        expect(yielded).to eq(:an_installer)
       end
 
       it 'stores a block that will be called with the Installer instance once installation is finished' do
@@ -631,11 +631,11 @@ module Pod
             yielded = installer
           end
         end.post_install!(:an_installer)
-        yielded.should == :an_installer
+        expect(yielded).to eq(:an_installer)
       end
 
       it 'raises when post_install is called multiple times' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             target 'App' do
               post_install do |installer|
@@ -645,7 +645,7 @@ module Pod
               end
             end
           end
-        end.message.should == 'Specifying multiple `post_install` hooks is unsupported.'
+        end.to raise_error(Informative, 'Specifying multiple `post_install` hooks is unsupported.')
       end
     end
 
@@ -656,24 +656,24 @@ module Pod
         podfile = Podfile.new do
           install! 'method'
         end
-        podfile.installation_method.should == ['method', {}]
+        expect(podfile.installation_method).to eq(['method', {}])
       end
 
       it 'allows specifying a custom installation method with options' do
         podfile = Podfile.new do
           install! 'method', 'option' => 'value'
         end
-        podfile.installation_method.should == ['method', { 'option' => 'value' }]
+        expect(podfile.installation_method).to eq(['method', { 'option' => 'value' }])
       end
 
       it 'raises when specifying an installation method outside of root' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             target 'App' do
               install! 'method'
             end
           end
-        end.message.should == 'The installation method can only be set at the root level of the Podfile.'
+        end.to raise_error(Informative, 'The installation method can only be set at the root level of the Podfile.')
       end
     end
 
@@ -697,22 +697,22 @@ module Pod
         ENV['BUNDLE_BIN_PATH'] = nil
         ENV['BUNDLE_GEMFILE'] = nil
         ENV['BUNDLER_VERSION'] = nil
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             ensure_bundler!
           end
-        end.message.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+        end.to raise_error(Informative, "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`")
         restore_bundler_environment
       end
 
       it 'prints warning when a bundler env variable not found' do
         stash_bundler_environment
         ENV['BUNDLE_GEMFILE'] = nil
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             ensure_bundler!
           end
-        end.message.should == "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`"
+        end.to raise_error(Informative, "CocoaPods was invoked from Global Gemset.\nPlease re-run using: `bundle exec pod #{ARGV.join(' ')}`")
         restore_bundler_environment
       end
 
@@ -725,7 +725,7 @@ module Pod
           ensure_bundler!
         end
         restore_bundler_environment
-        CoreUI.warnings.should.be.empty
+        expect(CoreUI.warnings).to be_empty
       end
 
       it 'prints version warning when version argument fails match' do
@@ -733,11 +733,11 @@ module Pod
         ENV['BUNDLE_GEMFILE'] = 'mock argument'
         ENV['BUNDLE_BIN_PATH'] = 'another mock argument'
         ENV['BUNDLER_VERSION'] = '1.17.1'
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             ensure_bundler! '2.0.0'
           end
-        end.message.should == 'The installed Bundler version: 1.17.1 does not match the required version: 2.0.0'
+        end.to raise_error(Informative, 'The installed Bundler version: 1.17.1 does not match the required version: 2.0.0')
         restore_bundler_environment
       end
 
@@ -750,7 +750,7 @@ module Pod
           ensure_bundler! '~> 2.0.0'
         end
         restore_bundler_environment
-        CoreUI.warnings.should.be.empty
+        expect(CoreUI.warnings).to be_empty
       end
 
       it 'skips version check with missing bundle version (edge case)' do
@@ -762,17 +762,17 @@ module Pod
           ensure_bundler! '2.0.0'
         end
         restore_bundler_environment
-        CoreUI.warnings.should.be.empty
+        expect(CoreUI.warnings).to be_empty
       end
 
       it 'raises with ensure_bundler! outside of root' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             target 'App' do
               ensure_bundler!
             end
           end
-        end.message.should == 'The Ensure Bundler check can only be set at the root level of the Podfile.'
+        end.to raise_error(Informative, 'The Ensure Bundler check can only be set at the root level of the Podfile.')
       end
     end
 
@@ -780,38 +780,38 @@ module Pod
 
     describe 'Deprecations' do
       it 'raises when using the #link_with method' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             link_with 'App'
           end
-        end.message.should == 'The specification of `link_with` in the Podfile is now unsupported, please use target blocks instead.'
+        end.to raise_error(Informative, 'The specification of `link_with` in the Podfile is now unsupported, please use target blocks instead.')
       end
 
       it 'warns when using the #xcodeproj method' do
         podfile = Podfile.new { xcodeproj 'App.xcodeproj', 'Test' => :debug }
-        podfile.target_definitions['Pods'].user_project_path.should == 'App.xcodeproj'
-        podfile.target_definitions['Pods'].build_configurations.should == { 'Test' => :debug }
-        CoreUI.warnings.should == '`xcodeproj` was renamed to `project`. Please update your Podfile accordingly.'
+        expect(podfile.target_definitions['Pods'].user_project_path).to eq('App.xcodeproj')
+        expect(podfile.target_definitions['Pods'].build_configurations).to eq({ 'Test' => :debug })
+        expect(CoreUI.warnings).to eq('`xcodeproj` was renamed to `project`. Please update your Podfile accordingly.')
       end
     end
 
     describe 'script phases' do
       it 'raises when adding a script phase to the root target definition' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             script_phase :name => 'PhaseName', :script => 'echo "Hello World"'
           end
-        end.message.should == 'Script phases can only be added within target definitions.'
+        end.to raise_error(Informative, 'Script phases can only be added within target definitions.')
       end
 
       it 'raises when adding a script phase to an abstract target' do
-        should.raise(Informative) do
+        expect do
           Podfile.new do
             abstract_target 'AbstractTarget' do
               script_phase :name => 'PhaseName', :script => 'echo "Hello World"'
             end
           end
-        end.message.should == 'Script phases cannot be added to abstract targets.'
+        end.to raise_error(Informative, 'Script phases cannot be added to abstract targets.')
       end
     end
 

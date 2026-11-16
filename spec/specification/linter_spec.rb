@@ -2,6 +2,8 @@ require File.expand_path('../../spec_helper', __FILE__)
 
 module Pod
   describe Specification::Linter do
+    extend SpecHelper::TemporaryDirectory
+
     before do
       WebMock::API.stub_request(:head, /banana-corp.local/).to_return(:status => 200)
     end
@@ -12,27 +14,25 @@ module Pod
         @podspec_path = fixture(fixture_path)
       end
 
-      extend SpecHelper::TemporaryDirectory
-
       it 'can be initialized with a specification' do
         spec = Specification.from_file(@podspec_path)
         @linter = Specification::Linter.new(spec)
-        @linter.spec.name.should == 'BananaLib'
-        @linter.file.should == @podspec_path
+        expect(@linter.spec.name).to eq('BananaLib')
+        expect(@linter.file).to eq(@podspec_path)
       end
 
       it 'can be initialized with a path' do
         @linter = Specification::Linter.new(@podspec_path)
-        @linter.spec.name.should == 'BananaLib'
-        @linter.file.should == @podspec_path
+        expect(@linter.spec.name).to eq('BananaLib')
+        expect(@linter.file).to eq(@podspec_path)
       end
 
       it 'catches specification load errors' do
         podspec = 'Pod::Spec.new do |s|; error; end'
         path = SpecHelper.temporary_directory + 'BananaLib.podspec'
         File.open(path, 'w') { |f| f.write(podspec) }
-        lambda { Specification.from_file(path) }.should.raise Pod::DSLError
-        lambda { Specification::Linter.new(path) }.should.not.raise
+        expect { Specification.from_file(path) }.to raise_error(Pod::DSLError)
+        expect { Specification::Linter.new(path) }.not_to raise_error
       end
 
       it 'includes an error indicating that the specification could not be loaded' do
@@ -42,9 +42,9 @@ module Pod
         linter = Specification::Linter.new(path)
         linter.lint
         results = linter.results
-        results.count.should == 1
-        results.first.message.should.match /spec.*could not be loaded/
-        results.first.attribute_name.should.include?('spec')
+        expect(results.count).to eq(1)
+        expect(results.first.message).to match(/spec.*could not be loaded/)
+        expect(results.first.attribute_name).to include('spec')
       end
 
       describe 'with a valid podspec' do
@@ -56,8 +56,8 @@ module Pod
 
         it 'accepts a valid podspec' do
           valid = @linter.lint
-          @linter.results.should.be.empty?
-          valid.should.be.true
+          expect(@linter.results).to be_empty
+          expect(valid).to be(true)
         end
 
         describe 'with a spec loaded from json' do
@@ -72,8 +72,8 @@ module Pod
 
           it 'accepts a valid podspec' do
             valid = @linter.lint
-            @linter.results.should.be.empty?
-            valid.should.be.true
+            expect(@linter.results).to be_empty
+            expect(valid).to be(true)
           end
         end
 
@@ -81,9 +81,8 @@ module Pod
           @linter.spec.platform = nil
           @linter.spec.source_files = '/Absolute'
           @linter.lint
-          @linter.results.count.should == 1
-          @linter.results.first.platforms.map(&:to_s).sort.should ==
-            %w(ios osx tvos visionos watchos)
+          expect(@linter.results.count).to eq(1)
+          expect(@linter.results.first.platforms.map(&:to_s).sort).to eq(%w(ios osx tvos visionos watchos))
         end
 
         describe 'with lint errors and warnings' do
@@ -95,21 +94,21 @@ module Pod
 
           it 'returns the results of the lint' do
             results = @linter.results.map { |r| r.type.to_s }.sort.uniq
-            results.should == %w(error warning)
+            expect(results).to eq(%w(error warning))
           end
 
           it 'returns the errors results of the lint' do
-            @linter.errors.map(&:type).uniq.should == [:error]
+            expect(@linter.errors.map(&:type).uniq).to eq([:error])
           end
 
           it 'returns the warnings results of the lint' do
-            @linter.warnings.map(&:type).should == [:warning]
+            expect(@linter.warnings.map(&:type)).to eq([:warning])
           end
         end
       end
     end
 
-    shared 'Linter' do
+    shared_examples 'Linter' do
       before do
         @podspec_path = fixture(@fixture_path)
         @linter = Specification::Linter.new(@podspec_path)
@@ -137,13 +136,13 @@ module Pod
           end
         end
 
-        matched.should.satisfy("Expected #{values.inspect} " \
+        expect(matched).to satisfy("Expected #{values.inspect} " \
                 "but none of those results matched:\n" \
                 "#{results.map(&:to_s)}") do |m|
           m.count > 0
         end
 
-        matched.should.satisfy("Expected #{values.inspect} " \
+        expect(matched).to satisfy("Expected #{values.inspect} " \
                 "found matches:\n"  \
                 "#{matched.map(&:to_s)}\n" \
                 "but unexpected results appeared:\n" \
@@ -160,7 +159,7 @@ module Pod
         @fixture_path = 'spec-repos/test_repo/Specs/BananaLib/1.0/BananaLib.podspec'
       end
 
-      behaves_like 'Linter'
+      include_examples 'Linter'
 
       #------------------#
 
@@ -236,7 +235,7 @@ module Pod
       it 'passes a specification whose module name is a valid C99 identifier' do
         @spec.stubs(:module_name).returns('_')
         @linter.lint
-        @linter.results.count.should == 0
+        expect(@linter.results.count).to eq(0)
       end
 
       it 'fails a specification whose module name is not a valid C99 identifier' do
@@ -249,7 +248,7 @@ module Pod
       it 'passes a specification with a module map' do
         @spec.module_map = 'module.modulemap'
         @linter.lint
-        @linter.results.count.should == 0
+        expect(@linter.results.count).to eq(0)
       end
 
       #------------------#
@@ -288,7 +287,7 @@ module Pod
         linter.lint
         results = linter.results
         test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
-        test_type_error.message.should.include?('The test type `unknown` is not supported.')
+        expect(test_type_error.message).to include('The test type `unknown` is not supported.')
       end
 
       it 'checks the test type value is correct using a JSON podspec' do
@@ -304,7 +303,7 @@ module Pod
         linter.lint
         results = linter.results
         test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
-        test_type_error.should.be.nil
+        expect(test_type_error).to be_nil
       end
 
       it 'checks the test type value is correctly set in a subspec using 1.3.0 JSON podspec' do
@@ -315,7 +314,7 @@ module Pod
         linter.lint
         results = linter.results
         test_type_error = results.find { |result| result.to_s.downcase.include?('test_type') }
-        test_type_error.should.be.nil
+        expect(test_type_error).to be_nil
       end
 
       #------------------#
@@ -334,7 +333,7 @@ module Pod
         @spec.app_host_name = 'BananaLib/App'
         @spec.dependency 'BananaLib/App'
         @linter.lint
-        @linter.results.should.be.empty?
+        expect(@linter.results).to be_empty
       end
 
       it 'fails a test spec requiring an app host from a pod that isn\'t required' do
@@ -350,7 +349,7 @@ module Pod
         @spec.requires_app_host = true
         @spec.app_host_name = 'Foo/App'
         @linter.lint
-        @linter.results.should.be.empty?
+        expect(@linter.results).to be_empty
       end
 
       #------------------#
@@ -373,7 +372,7 @@ module Pod
       it 'does not crash when there is a description but no summary' do
         @spec.stubs(:description).returns('sample.')
         @spec.stubs(:summary).returns(nil)
-        lambda { @linter.lint }.should.not.raise
+        expect { @linter.lint }.not_to raise_error
       end
 
       #------------------#
@@ -403,7 +402,7 @@ module Pod
       it 'checks whether the license file has an allowed extension' do
         @spec.stubs(:license).returns(:type => 'MIT', :file => 'MIT.txt')
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       it 'checks whether the license file has a disallowed extension' do
@@ -414,7 +413,7 @@ module Pod
       it 'allows license files without a file extension' do
         @spec.stubs(:license).returns(:type => 'MIT', :file => 'LICENSE')
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       #------------------#
@@ -422,7 +421,7 @@ module Pod
       it 'allows a local git URL as source' do
         @spec.stubs(:source).returns(:git => 'file:///tmp/d20131009-82757-1tztajd', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       it 'checks for the example source' do
@@ -472,19 +471,19 @@ module Pod
       it 'checks that Github repositories end in .git (for compatibility)' do
         @spec.stubs(:source).returns(:git => 'https://github.com/repo', :tag => '1.0')
         result_should_include('Github', '.git')
-        @linter.results.first.type.should == :warning
+        expect(@linter.results.first.type).to eq(:warning)
       end
 
       it 'does not warn for Github repositories with OAuth authentication' do
         @spec.stubs(:source).returns(:git => 'https://TOKEN:x-oauth-basic@github.com/COMPANY/REPO.git', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       it 'does not warn for local repositories with spaces' do
         @spec.stubs(:source).returns(:git => '/Users/kylef/Projects X', :tag => '1.0')
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       it 'warns for SSH repositories' do
@@ -565,15 +564,15 @@ module Pod
           'Level3' => ['File3.png'],
           'Level4' => { :paths => 'File4.png', :category => :weird },
         }
-        results.count.should == 2
-        results[0].attribute_name.should == 'on_demand_resources'
-        results[0].type.should == :error
-        results[0].message.should == 'Invalid on demand resources category value `unknown`. ' \
-          'Available options are `download_on_demand, prefetched, initial_install`.'
-        results[1].attribute_name.should == 'on_demand_resources'
-        results[1].type.should == :error
-        results[1].message.should == 'Invalid on demand resources category value `weird`. ' \
-          'Available options are `download_on_demand, prefetched, initial_install`.'
+        expect(results.count).to eq(2)
+        expect(results[0].attribute_name).to eq('on_demand_resources')
+        expect(results[0].type).to eq(:error)
+        expect(results[0].message).to eq('Invalid on demand resources category value `unknown`. ' \
+          'Available options are `download_on_demand, prefetched, initial_install`.')
+        expect(results[1].attribute_name).to eq('on_demand_resources')
+        expect(results[1].type).to eq(:error)
+        expect(results[1].message).to eq('Invalid on demand resources category value `weird`. ' \
+          'Available options are `download_on_demand, prefetched, initial_install`.')
       end
 
       #------------------#
@@ -583,7 +582,7 @@ module Pod
                          :code_coverage => true, :parallelizable => true, :build_configurations => { 'Debug' => 'Debug'}
                        }
         @linter.lint
-        @linter.results.should.be.empty
+        expect(@linter.results).to be_empty
       end
 
       it 'checks scheme launch arguments key type' do
@@ -617,7 +616,7 @@ module Pod
         @spec.frameworks = %w(AddressBook Audio-Frameworks)
         @linter.lint
         results = @linter.results
-        results.should.be.empty
+        expect(results).to be_empty
       end
 
       it 'checks that frameworks do not end with a .framework extension' do
@@ -652,7 +651,7 @@ module Pod
         )
         @linter.lint
         results = @linter.results
-        results.should.be.empty
+        expect(results).to be_empty
       end
 
       it 'checks that libraries do not end with a .a extension' do
@@ -688,7 +687,7 @@ module Pod
         @spec.deprecated_in_favor_of = @spec.name + '_other'
         @linter.lint
         results = @linter.results
-        results.should.be.empty
+        expect(results).to be_empty
       end
 
       #------------------#
@@ -706,7 +705,7 @@ module Pod
         @fixture_path = 'lint_podspec/RestKit.podspec'
       end
 
-      behaves_like 'Linter'
+      include_examples 'Linter'
 
       before do
         @subspec = @spec.subspecs.first

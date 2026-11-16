@@ -128,31 +128,31 @@ module Pod
 
       it 'stores the initialization hash' do
         lockfile = Lockfile.new(YAMLHelper.load_string(Sample.yaml))
-        lockfile.internal_data.should == YAMLHelper.load_string(Sample.yaml)
+        expect(lockfile.internal_data).to eq(YAMLHelper.load_string(Sample.yaml))
       end
 
       it 'loads from a file' do
         File.open(@tmp_path, 'w') { |f| f.write(Sample.yaml) }
         lockfile = Lockfile.from_file(@tmp_path)
-        lockfile.internal_data.should == YAMLHelper.load_string(Sample.yaml)
+        expect(lockfile.internal_data).to eq(YAMLHelper.load_string(Sample.yaml))
       end
 
       it "returns nil if it can't find the initialization file" do
         lockfile = Lockfile.from_file(temporary_directory + 'Podfile.lock_not_existing')
-        lockfile.should.nil?
+        expect(lockfile).to be_nil
       end
 
       it 'returns the file in which is defined' do
         File.open(@tmp_path, 'w') { |f| f.write(Sample.yaml) }
         lockfile = Lockfile.from_file(@tmp_path)
-        lockfile.defined_in_file.should == @tmp_path
+        expect(lockfile.defined_in_file).to eq(@tmp_path)
       end
 
       it "raises if the provided YAML doesn't returns a hash" do
         File.open(@tmp_path, 'w') { |f| f.write('value') }
-        should.raise Informative do
+        expect do
           Lockfile.from_file(@tmp_path)
-        end.message.should.match /Invalid Lockfile/
+        end.to raise_error(Informative, /Invalid Lockfile/)
       end
 
       #--------------------------------------#
@@ -166,54 +166,54 @@ module Pod
           platform :ios
           pod 'BananaLib', '~>1.0'
         end
-        @lockfile.should == @lockfile
-        @lockfile.should.not == Lockfile.generate(podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
+        expect(@lockfile).to eq(@lockfile)
+        expect(@lockfile).not_to eq(Lockfile.generate(podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source))
       end
 
       it 'returns the list of the names of the  installed pods' do
-        @lockfile.pod_names.should == %w(BananaLib JSONKit monkey)
+        expect(@lockfile.pod_names).to eq(%w(BananaLib JSONKit monkey))
       end
 
       it 'returns the versions of a given pod' do
-        @lockfile.version('BananaLib').should == Version.new('1.0')
-        @lockfile.version('JSONKit').should == Version.new('1.4')
-        @lockfile.version('monkey').should == Version.new('1.0.8')
+        expect(@lockfile.version('BananaLib')).to eq(Version.new('1.0'))
+        expect(@lockfile.version('JSONKit')).to eq(Version.new('1.4'))
+        expect(@lockfile.version('monkey')).to eq(Version.new('1.0.8'))
       end
 
       it 'returns the versions of a given pod handling the case in which the root spec was not stored' do
         @lockfile.stubs(:pod_versions).returns('BananaLib/Subspec' => Version.new(1.0))
-        @lockfile.version('BananaLib').should == Version.new('1.0')
+        expect(@lockfile.version('BananaLib')).to eq(Version.new('1.0'))
       end
 
       it 'returns the spec repo of a given pod' do
-        @lockfile.spec_repo('BananaLib').should == 'trunk'
-        @lockfile.spec_repo('JSONKit').should.be.nil
-        @lockfile.spec_repo('monkey').should == 'trunk'
+        expect(@lockfile.spec_repo('BananaLib')).to eq('trunk')
+        expect(@lockfile.spec_repo('JSONKit')).to be_nil
+        expect(@lockfile.spec_repo('monkey')).to eq('trunk')
       end
 
       it 'returns the checksum for the given Pod' do
-        @lockfile.checksum('BananaLib').should == 'd46ca864666e216300a0653de197668b12e732a1'
+        expect(@lockfile.checksum('BananaLib')).to eq('d46ca864666e216300a0653de197668b12e732a1')
       end
 
       it 'returns the dependencies used for the last installation' do
         json_dep = Dependency.new('JSONKit')
         json_dep.external_source = { :podspec => 'path/JSONKit.podspec' }
-        @lockfile.dependencies.should == [
+        expect(@lockfile.dependencies).to eq([
           Dependency.new('BananaLib', '~>1.0'),
           json_dep,
-        ]
+        ])
       end
 
       it 'returns the spec repo sources' do
-        @lockfile.pods_by_spec_repo.should == Hash[Sample.specs_by_source.map do |source, specs|
+        expect(@lockfile.pods_by_spec_repo).to eq(Hash[Sample.specs_by_source.map do |source, specs|
           next unless source.name == 'trunk'
           ['trunk', specs.map(&:name)]
-        end.compact]
+        end.compact])
       end
 
       it 'returns the spec repo sources when that section is missing' do
         @lockfile = Lockfile.new({})
-        @lockfile.pods_by_spec_repo.should == {}
+        expect(@lockfile.pods_by_spec_repo).to eq({})
       end
 
       it 'only includes root names in spec repo sources' do
@@ -223,31 +223,31 @@ module Pod
                                                                                                                 s.subspec 'Core'
                                                                                                                 s.subspec 'NotCore'
                                                                                                               end.recursive_subspecs)
-        @lockfile.pods_by_spec_repo.should == {
+        expect(@lockfile.pods_by_spec_repo).to eq({
           'trunk' => %w(foo),
-        }
+        })
       end
 
       it 'includes the external source information in the generated dependencies' do
         dep = @lockfile.dependencies.find { |d| d.name == 'JSONKit' }
-        dep.external_source.should == { :podspec => 'path/JSONKit.podspec' }
+        expect(dep.external_source).to eq({ :podspec => 'path/JSONKit.podspec' })
       end
 
       it 'returns the dependency that locks the pod with the given name to the installed version' do
         json_dep = Dependency.new('JSONKit', '1.4')
         json_dep.external_source = { :podspec => 'path/JSONKit.podspec' }
         result = @lockfile.dependencies_to_lock_pod_named('JSONKit')
-        result.should == [json_dep]
+        expect(result).to eq([json_dep])
       end
 
       it 'raises if there is a request for a locking dependency for a not stored Pod' do
-        should.raise StandardError do
+        expect do
           @lockfile.dependencies_to_lock_pod_named('Missing')
-        end.message.should.match /without a known dependency/
+        end.to raise_error(StandardError, /without a known dependency/)
       end
 
       it 'returns the version of CocoaPods which generated the lockfile' do
-        @lockfile.cocoapods_version.should == Version.new(CORE_VERSION)
+        expect(@lockfile.cocoapods_version).to eq(Version.new(CORE_VERSION))
       end
     end
 
@@ -281,12 +281,12 @@ module Pod
           pod 'JSONKit'
           pod 'TTTAttributedLabel'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => [],
           :removed => [],
           :unchanged => %w(BlocksKit JSONKit),
           :added => ['TTTAttributedLabel'],
-        }
+        })
       end
 
       it 'detects a removed Pod' do
@@ -294,12 +294,12 @@ module Pod
           platform :ios
           pod 'BlocksKit'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => [],
           :removed => ['JSONKit'],
           :unchanged => ['BlocksKit'],
           :added => [],
-        }
+        })
       end
 
       it 'detects Pods whose version changed' do
@@ -308,12 +308,12 @@ module Pod
           pod 'BlocksKit'
           pod 'JSONKit', '> 1.4'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
           :added => [],
-        }
+        })
       end
 
       it "it doesn't mark as changed Pods whose version changed but is still compatible with the Podfile" do
@@ -322,12 +322,12 @@ module Pod
           pod 'BlocksKit'
           pod 'JSONKit', '> 1.0'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => [],
           :removed => [],
           :unchanged => %w(BlocksKit JSONKit),
           :added => [],
-        }
+        })
       end
 
       it 'detects Pods whose external source changed' do
@@ -336,30 +336,32 @@ module Pod
           pod 'BlocksKit'
           pod 'JSONKit', :git => 'example1.com'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
           :added => [],
-        }
+        })
         @lockfile = Lockfile.generate(podfile, @specs, @checkout_options, @specs_by_source)
         podfile = Podfile.new do
           platform :ios
           pod 'BlocksKit'
           pod 'JSONKit', :git => 'example2.com'
         end
-        @lockfile.detect_changes_with_podfile(podfile).should == {
+        expect(@lockfile.detect_changes_with_podfile(podfile)).to eq({
           :changed => ['JSONKit'],
           :removed => [],
           :unchanged => ['BlocksKit'],
           :added => [],
-        }
+        })
       end
     end
 
     #-------------------------------------------------------------------------#
 
     describe 'Serialization' do
+      extend SpecHelper::TemporaryDirectory
+
       before do
         @lockfile = Lockfile.generate(Sample.podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
       end
@@ -368,7 +370,7 @@ module Pod
         path = SpecHelper.temporary_directory + 'Podfile.lock'
         @lockfile.write_to_disk(path)
         loaded = Lockfile.from_file(path)
-        loaded.should == @lockfile
+        expect(loaded).to eq(@lockfile)
       end
 
       it "won't write to disk if the equivalent lockfile is already there" do
@@ -379,7 +381,7 @@ module Pod
         @lockfile.stubs(:to_yaml).returns("---\nhi: ./hi\n")
         path.expects(:open).with('w').never
         @lockfile.write_to_disk(path)
-        path.read.should == old_yaml
+        expect(path.read).to eq(old_yaml)
       end
 
       it 'overwrites a different lockfile' do
@@ -390,19 +392,19 @@ module Pod
         @lockfile = Lockfile.new('COCOAPODS' => '0.0.0')
         @lockfile.write_to_disk(path)
 
-        @lockfile.should == Lockfile.from_file(path)
+        expect(@lockfile).to eq(Lockfile.from_file(path))
       end
 
       it 'fix strange quotation marks in lockfile' do
         yaml_string = Sample.quotation_marks_yaml
         yaml_string = yaml_string.tr("'", '')
         yaml_string = yaml_string.tr('"', '')
-        yaml_string.should == Sample.yaml
+        expect(yaml_string).to eq(Sample.yaml)
       end
 
       it 'generates a hash representation' do
         hash = @lockfile.to_hash
-        hash.should == {
+        expect(hash).to eq({
           'PODS' => [
             { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
             'JSONKit (1.4)', 'monkey (1.0.8)'],
@@ -413,23 +415,22 @@ module Pod
           'SPEC CHECKSUMS' => { 'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1', 'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949' },
           'PODFILE CHECKSUM' => 'podfile_checksum',
           'COCOAPODS' => CORE_VERSION,
-        }
+        })
       end
 
       it 'handles when the podfile has no checksum' do
         podfile = Sample.podfile
         podfile.stubs(:checksum).returns(nil)
         @lockfile = Lockfile.generate(podfile, Sample.specs, Sample.checkout_options, Sample.specs_by_source)
-        @lockfile.to_hash.should.not.key?('PODFILE CHECKSUM')
+        expect(@lockfile.to_hash).not_to have_key('PODFILE CHECKSUM')
       end
 
       it 'generates an ordered YAML representation' do
-        @lockfile.to_yaml.should == Sample.yaml
+        expect(@lockfile.to_yaml).to eq(Sample.yaml)
       end
 
       it 'generates a valid YAML representation' do
-        YAMLHelper.load_string(@lockfile.to_yaml).should ==
-          YAMLHelper.load_string(Sample.yaml)
+        expect(YAMLHelper.load_string(@lockfile.to_yaml)).to eq(YAMLHelper.load_string(Sample.yaml))
       end
 
       it 'serializes correctly external dependencies' do
@@ -452,8 +453,8 @@ module Pod
         }
         specs_by_source = { TrunkSource.new(fixture('spec-repos/trunk')) => specs.select { |s| s.name == 'monkey' } }
         lockfile = Lockfile.generate(podfile, specs, checkout_options, specs_by_source)
-        lockfile.internal_data['DEPENDENCIES'][0].should == 'BananaLib (from `www.example.com`, tag `1.0`)'
-        lockfile.internal_data['EXTERNAL SOURCES']['BananaLib'].should == { :git => 'www.example.com', :tag => '1.0' }
+        expect(lockfile.internal_data['DEPENDENCIES'][0]).to eq('BananaLib (from `www.example.com`, tag `1.0`)')
+        expect(lockfile.internal_data['EXTERNAL SOURCES']['BananaLib']).to eq({ :git => 'www.example.com', :tag => '1.0' })
       end
 
       describe 'when the Podfile is empty' do
@@ -462,7 +463,7 @@ module Pod
         end
 
         it 'generates a lockfile with only the version' do
-          @lockfile.to_yaml.should == "COCOAPODS: #{CORE_VERSION}\n"
+          expect(@lockfile.to_yaml).to eq("COCOAPODS: #{CORE_VERSION}\n")
         end
       end
     end
@@ -475,38 +476,38 @@ module Pod
       end
 
       it 'stores the information of the installed pods and of their dependencies' do
-        @lockfile.internal_data['PODS'].should == [
+        expect(@lockfile.internal_data['PODS']).to eq([
           { 'BananaLib (1.0)' => ['monkey (< 1.0.9, ~> 1.0.1)'] },
           'JSONKit (1.4)',
           'monkey (1.0.8)',
-        ]
+        ])
       end
 
       it 'stores the information of the dependencies of the Podfile' do
-        @lockfile.internal_data['DEPENDENCIES'].should == [
+        expect(@lockfile.internal_data['DEPENDENCIES']).to eq([
           'BananaLib (~> 1.0)', 'JSONKit (from `path/JSONKit.podspec`)'
-        ]
+        ])
       end
 
       it 'stores the information of the external sources' do
-        @lockfile.internal_data['EXTERNAL SOURCES'].should == {
+        expect(@lockfile.internal_data['EXTERNAL SOURCES']).to eq({
           'JSONKit' => { :podspec => 'path/JSONKit.podspec' },
-        }
+        })
       end
 
       it 'stores the checksum of the specifications' do
-        @lockfile.internal_data['SPEC CHECKSUMS'].should == {
+        expect(@lockfile.internal_data['SPEC CHECKSUMS']).to eq({
           'BananaLib' => 'd46ca864666e216300a0653de197668b12e732a1',
           'JSONKit' => '92ae5f71b77c8dec0cd8d0744adab79d38560949',
-        }
+        })
       end
 
       it 'store the version of the CocoaPods Core gem' do
-        @lockfile.internal_data['COCOAPODS'].should == CORE_VERSION
+        expect(@lockfile.internal_data['COCOAPODS']).to eq(CORE_VERSION)
       end
 
       it 'it includes all the information that it is expected to store' do
-        @lockfile.internal_data.should == YAMLHelper.load_string(Sample.yaml)
+        expect(@lockfile.internal_data).to eq(YAMLHelper.load_string(Sample.yaml))
       end
     end
 
@@ -528,9 +529,9 @@ module Pod
             end,
           ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
-          pods_data.should == [
+          expect(pods_data).to eq([
             { 'BananaLib (1.0)' => ['monkey (< 1.0.9)', 'tree (~> 1.0.1)'] },
-          ]
+          ])
         end
 
         it 'sort pods by lowercase' do
@@ -551,11 +552,11 @@ module Pod
             end,
           ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
-          pods_data.should == [
+          expect(pods_data).to eq([
             { 'a (1.0)' => ['monkey (< 1.0.9)'] },
             'b (1.0)',
             { 'C (1.0)' => ['tree (~> 1.0.1)'] },
-          ]
+          ])
         end
 
         it 'sorts dependencies for the pod by lowercase' do
@@ -577,9 +578,9 @@ module Pod
             end,
           ]
           pods_data = Lockfile.send(:generate_pods_data, specs)
-          pods_data.should == [
+          expect(pods_data).to eq([
             { 'BananaLib (1.0)' => ['a (< 1.0.9)', 'b (< 1.0.8)', 'C (~> 1.0.1)'] },
-          ]
+          ])
         end
       end
 
@@ -591,7 +592,7 @@ module Pod
             pod 'C'
           end
           dependencies_data = Lockfile.send(:generate_dependencies_data, podfile)
-          dependencies_data.should == %w(a b C)
+          expect(dependencies_data).to eq(%w(a b C))
         end
       end
 
@@ -614,7 +615,7 @@ module Pod
             ],
           }
           spec_repos_data = Lockfile.send(:generate_spec_repos, spec_repos)
-          spec_repos_data.should == { 'trunk' => %w(a b C) }
+          expect(spec_repos_data).to eq({ 'trunk' => %w(a b C) })
         end
       end
 
@@ -647,7 +648,7 @@ module Pod
             ],
           }
           spec_repos_data = Lockfile.send(:generate_spec_repos, spec_repos)
-          spec_repos_data.should == { 'trunk' => %w(a b C d E) }
+          expect(spec_repos_data).to eq({ 'trunk' => %w(a b C d E) })
         end
       end
     end
