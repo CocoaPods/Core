@@ -11,37 +11,37 @@ module Pod
       end
 
       it 'returns the set used to initialize it' do
-        @presenter.set.class.should == Specification::Set
-        @presenter.set.name.should == 'JSONKit'
+        expect(@presenter.set.class).to eq(Specification::Set)
+        expect(@presenter.set.name).to eq('JSONKit')
       end
 
       it 'returns the name' do
-        @presenter.name.should == 'JSONKit'
+        expect(@presenter.name).to eq('JSONKit')
       end
 
       it 'returns the version' do
-        @presenter.version.should == Version.new('999.999.999')
+        expect(@presenter.version).to eq(Version.new('999.999.999'))
       end
 
       it 'returns all the version sorted from the highest to the lowest' do
-        @presenter.versions.map(&:to_s).should == ['999.999.999', '1.13', '1.5pre', '1.4']
-        @presenter.versions.last.class.should == Version
+        expect(@presenter.versions.map(&:to_s)).to eq(['999.999.999', '1.13', '1.5pre', '1.4'])
+        expect(@presenter.versions.last.class).to eq(Version)
       end
 
       it 'returns the versions by source' do
-        @presenter.versions_by_source.should == '999.999.999, 1.13, 1.4 [test_repo repo] - 1.5pre, 1.4 [trunk repo]'
+        expect(@presenter.versions_by_source).to eq('999.999.999, 1.13, 1.4 [test_repo repo] - 1.5pre, 1.4 [trunk repo]')
       end
 
       it 'returns the sources' do
-        @presenter.sources.should == %w(test_repo trunk)
+        expect(@presenter.sources).to eq(%w(test_repo trunk))
       end
 
       it 'returns the correct deprecation description' do
-        @presenter.deprecation_description.should.nil?
+        expect(@presenter.deprecation_description).to be_nil
         @presenter.spec.deprecated = true
-        @presenter.deprecation_description.should == '[DEPRECATED]'
+        expect(@presenter.deprecation_description).to eq('[DEPRECATED]')
         @presenter.spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
-        @presenter.deprecation_description.should == '[DEPRECATED in favor of NewMoreAwesomePod]'
+        expect(@presenter.deprecation_description).to eq('[DEPRECATED in favor of NewMoreAwesomePod]')
       end
     end
 
@@ -53,55 +53,55 @@ module Pod
       end
 
       it 'returns the specification' do
-        @presenter.spec.class.should == Specification
-        @presenter.spec.name.should == 'CocoaLumberjack'
+        expect(@presenter.spec.class).to eq(Specification)
+        expect(@presenter.spec.name).to eq('CocoaLumberjack')
       end
 
       it 'returns the specification authors' do
-        @presenter.authors.should == 'Robbie Hanson'
+        expect(@presenter.authors).to eq('Robbie Hanson')
         @presenter.spec.authors = ['Author 1', 'Author 2']
-        @presenter.authors.should == 'Author 1 and Author 2'
+        expect(@presenter.authors).to eq('Author 1 and Author 2')
         @presenter.spec.authors = ['Author 1', 'Author 2', 'Author 3']
-        @presenter.authors.should == 'Author 1, Author 2, and Author 3'
+        expect(@presenter.authors).to eq('Author 1, Author 2, and Author 3')
       end
 
       it 'returns the homepage' do
-        @presenter.homepage.should == 'https://github.com/CocoaLumberjack/CocoaLumberjack'
+        expect(@presenter.homepage).to eq('https://github.com/CocoaLumberjack/CocoaLumberjack')
       end
 
       it 'returns the description' do
-        @presenter.description.should == 'It is similar in concept to other popular ' \
+        expect(@presenter.description).to eq('It is similar in concept to other popular ' \
           'logging frameworks such as log4j, yet is designed specifically for '       \
           'objective-c, and takes advantage of features such as multi-threading, '    \
           'grand central dispatch (if available), lockless atomic operations, and '   \
-          'the dynamic nature of the objective-c runtime.'
+          'the dynamic nature of the objective-c runtime.')
       end
 
       it 'returns the summary' do
-        @presenter.summary.should == 'A fast & simple, yet powerful & flexible logging framework for Mac and iOS.'
+        expect(@presenter.summary).to eq('A fast & simple, yet powerful & flexible logging framework for Mac and iOS.')
       end
 
       it 'returns the source_url' do
-        @presenter.source_url.should == 'https://github.com/CocoaLumberjack/CocoaLumberjack.git'
+        expect(@presenter.source_url).to eq('https://github.com/CocoaLumberjack/CocoaLumberjack.git')
       end
 
       it 'returns the platform' do
-        @presenter.platform.should == 'iOS 8.0 - macOS 10.10 - tvOS 9.0 - watchOS 3.0'
+        expect(@presenter.platform).to eq('iOS 8.0 - macOS 10.10 - tvOS 9.0 - watchOS 3.0')
       end
 
       it 'returns the license' do
-        @presenter.license.should == 'BSD'
+        expect(@presenter.license).to eq('BSD')
       end
 
       it 'returns the subspecs' do
-        @presenter.subspecs.map(&:name).should == ['CocoaLumberjack/Core', 'CocoaLumberjack/Swift']
+        expect(@presenter.subspecs.map(&:name)).to eq(['CocoaLumberjack/Core', 'CocoaLumberjack/Swift'])
 
         set = Spec::Set.new('RestKit', @source)
         @presenter = Spec::Set::Presenter.new(set)
         subspecs = @presenter.subspecs
-        subspecs.last.class.should == Specification
-        subspecs.map(&:name).should == ['RestKit/Core', 'RestKit/ObjectMapping', 'RestKit/Network', 'RestKit/CoreData', 'RestKit/Testing',
-                                        'RestKit/Search', 'RestKit/Support', 'RestKit/CocoaLumberjack']
+        expect(subspecs.last.class).to eq(Specification)
+        expect(subspecs.map(&:name)).to eq(['RestKit/Core', 'RestKit/ObjectMapping', 'RestKit/Network', 'RestKit/CoreData', 'RestKit/Testing',
+                                        'RestKit/Search', 'RestKit/Support', 'RestKit/CocoaLumberjack'])
       end
     end
 
@@ -126,11 +126,11 @@ module Pod
       end
 
       it 'returns the GitHub stars' do
-        @presenter.github_stargazers.should == 7188
+        expect(@presenter.github_stargazers).to eq(7188)
       end
 
       it 'returns the GitHub forks' do
-        @presenter.github_forks.should == 1726
+        expect(@presenter.github_forks).to eq(1726)
       end
     end
   end

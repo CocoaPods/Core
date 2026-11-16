@@ -23,20 +23,20 @@ module Pod
       it 'converts a string' do
         value = 'Value'
         result = YAMLHelper.convert(value)
-        result.should == "Value\n"
+        expect(result).to eq("Value\n")
       end
 
       it 'converts a long string without adding line breaks' do
         value = 'a b' * 2000
         result = YAMLHelper.convert(value)
-        result.should == "#{value}\n"
+        expect(result).to eq("#{value}\n")
       end
 
       it 'coverts a string that looks like a float' do
         value = '1.2'
         result = YAMLHelper.convert(value)
-        result.should == "'1.2'\n"
-        YAMLHelper.load_string(result).should == value
+        expect(result).to eq("'1.2'\n")
+        expect(YAMLHelper.load_string(result)).to eq(value)
       end
 
       it 'converts strings that look like YAML timestamps' do
@@ -49,8 +49,8 @@ module Pod
           '2002-12-14' => "'2002-12-14'",
         }.each do |given, expected|
           converted = YAMLHelper.convert(given)
-          converted[0..-2].should == expected
-          YAMLHelper.load_string("---\n#{converted}").should == given
+          expect(converted[0..-2]).to eq(expected)
+          expect(YAMLHelper.load_string("---\n#{converted}")).to eq(given)
         end
       end
 
@@ -82,49 +82,49 @@ module Pod
           'monkey (< 1.0.9, ~> 1.0.1)' => 'monkey (< 1.0.9, ~> 1.0.1)',
         }.each do |given, expected|
           converted = YAMLHelper.convert(given)
-          converted[0..-2].should == expected
-          YAMLHelper.load_string("---\n#{converted}").should == given
+          expect(converted[0..-2]).to eq(expected)
+          expect(YAMLHelper.load_string("---\n#{converted}")).to eq(given)
         end
       end
 
       it 'converts a symbol' do
         value = :value
         result = YAMLHelper.convert(value)
-        result.should == ":value\n"
+        expect(result).to eq(":value\n")
       end
 
       it 'converts the true class' do
         result = YAMLHelper.convert(true)
-        result.should == "true\n"
+        expect(result).to eq("true\n")
       end
 
       it 'converts the false class' do
         result = YAMLHelper.convert(false)
-        result.should == "false\n"
+        expect(result).to eq("false\n")
       end
 
       it 'converts an array' do
         value = %w(Value_1 Value_2)
         result = YAMLHelper.convert(value)
-        result.should == "- Value_1\n- Value_2\n"
+        expect(result).to eq("- Value_1\n- Value_2\n")
       end
 
       it 'converts an array that contains an array' do
         value = [%w(Value_1 Value_2), %w(Value_3 Value_4)]
         result = YAMLHelper.convert(value)
-        result.should == "- - Value_1\n  - Value_2\n- - Value_3\n  - Value_4\n"
+        expect(result).to eq("- - Value_1\n  - Value_2\n- - Value_3\n  - Value_4\n")
       end
 
       it 'converts an hash' do
         value = { 'Key' => 'Value' }
         result = YAMLHelper.convert(value)
-        result.should == "Key: Value\n"
+        expect(result).to eq("Key: Value\n")
       end
 
       it 'converts an hash which contains an array as one of the values' do
         value = { 'Key' => %w(Value_1 Value_2) }
         result = YAMLHelper.convert(value)
-        result.should == <<-EOT.strip_heredoc
+        expect(result).to eq(<<-EOT.strip_heredoc)
         Key:
           - Value_1
           - Value_2
@@ -134,7 +134,7 @@ module Pod
       it 'converts an hash which contains an empty array as one of the values' do
         value = { 'Key' => [] }
         result = YAMLHelper.convert(value)
-        result.should == <<-YAML.strip_heredoc
+        expect(result).to eq(<<-YAML.strip_heredoc)
           Key:
             []
         YAML
@@ -143,7 +143,7 @@ module Pod
       it 'converts an array with contains an empty hash' do
         value = { 'Key' => [{}] }
         result = YAMLHelper.convert(value)
-        result.should == <<-YAML.strip_heredoc
+        expect(result).to eq(<<-YAML.strip_heredoc)
           Key:
             - {}
         YAML
@@ -152,7 +152,7 @@ module Pod
       it 'converts an hash which contains an array as one of the values' do
         value = { 'Key' => { 'Subkey' => %w(Value_1 Value_2) } }
         result = YAMLHelper.convert(value)
-        result.should == <<-EOT.strip_heredoc
+        expect(result).to eq(<<-EOT.strip_heredoc)
         Key:
           Subkey:
             - Value_1
@@ -170,7 +170,7 @@ module Pod
           %q('"' lotsa '"""'''" quotes) => %q('"' lotsa '"""'''" quotes),
         } }
         result = YAMLHelper.convert(value)
-        result.should == <<-EOT.strip_heredoc
+        expect(result).to eq(<<-EOT.strip_heredoc)
           Key:
             "\\n\\t  \\r\\t\\b\\r\\n  ": spaces galore
             "!abc": abc
@@ -179,28 +179,28 @@ module Pod
             '123': '123'
             "a # 'comment'?": "a # 'comment'?"
         EOT
-        YAMLHelper.load_string(result).should == value
+        expect(YAMLHelper.load_string(result)).to eq(value)
       end
 
       it 'handles nil' do
         value = { 'foo' => nil }
         result = YAMLHelper.convert(value)
-        result.should == <<-EOT.strip_heredoc
+        expect(result).to eq(<<-EOT.strip_heredoc)
           foo:
         EOT
-        YAMLHelper.load_string(result).should == value
+        expect(YAMLHelper.load_string(result)).to eq(value)
       end
 
       it 'raises an Informative error when it encounters a disallowed class' do
         value = Pathname.new('a-path')
         result = YAMLHelper.convert(value)
-        result.should == <<-EOT.strip_heredoc
+        expect(result).to eq(<<-EOT.strip_heredoc)
           !ruby/object:Pathname
           path: a-path
         EOT
-        should.raise Informative do
+        expect do
           YAMLHelper.load_string(result)
-        end
+        end.to raise_error(Informative)
       end
     end
 
@@ -208,41 +208,41 @@ module Pod
 
     describe 'Loading Strings' do
       it 'raises an Informative error when it encounters a merge conflict' do
-        should.raise Informative do
+        expect do
           YAMLHelper.load_string(@conflict_podfile_lock.read)
-        end.message.should.match /unable to continue due to merge conflicts/
+        end.to raise_error(Informative, /unable to continue due to merge conflicts/)
       end
 
       it 'raises error when encountering a non-merge conflict error' do
-        should.raise Exception do
+        expect do
           YAMLHelper.load_string(@bad_yaml_podfile_lock.read)
-        end
+        end.to raise_error(Exception)
       end
 
       it 'should not raise when there is no merge conflict' do
-        should.not.raise do
+        expect do
           YAMLHelper.load_string(@good_podfile_lock.read)
-        end
+        end.not_to raise_error
       end
     end
 
     describe 'Loading Files' do
       it 'raises an Informative error when it encounters a merge conflict' do
-        should.raise Informative do
+        expect do
           YAMLHelper.load_file(Pathname.new(@conflict_podfile_lock.path))
-        end.message.should.match /unable to continue due to merge conflicts/
+        end.to raise_error(Informative, /unable to continue due to merge conflicts/)
       end
 
       it 'raises error when it encounters a non-merge conflict error' do
-        should.raise Exception do
+        expect do
           YAMLHelper.load_file(Pathname.new(@bad_yaml_podfile_lock.path))
-        end
+        end.to raise_error(Exception)
       end
 
       it 'should not raise when there is no merge conflict' do
-        should.not.raise do
+        expect do
           YAMLHelper.load_file(Pathname.new(@good_podfile_lock.path))
-        end
+        end.not_to raise_error
       end
     end
 
@@ -253,27 +253,27 @@ module Pod
         it 'sorts an array according to its string representation' do
           values = %w(JSONKit BananaLib)
           result = YAMLHelper.send(:sorted_array, values)
-          result.should == %w(BananaLib JSONKit)
+          expect(result).to eq(%w(BananaLib JSONKit))
         end
 
         it 'sorts an array containing strings and hashes according to its string representation' do
           values = ['JSONKit', 'BananaLib', { 'c_hash_key' => 'a_value' }]
           result = YAMLHelper.send(:sorted_array, values)
-          result.should == ['BananaLib', { 'c_hash_key' => 'a_value' }, 'JSONKit']
+          expect(result).to eq(['BananaLib', { 'c_hash_key' => 'a_value' }, 'JSONKit'])
         end
 
         it 'sorts an array with a given hint' do
           values = %w(non-hinted second first)
           hint = %w(first second hinted-missing)
           result = YAMLHelper.send(:sorted_array_with_hint, values, hint)
-          result.should == %w(first second non-hinted)
+          expect(result).to eq(%w(first second non-hinted))
         end
 
         it 'sorts an array with a given nil hint' do
           values = %w(JSONKit BananaLib)
           hint = nil
           result = YAMLHelper.send(:sorted_array_with_hint, values, hint)
-          result.should == %w(BananaLib JSONKit)
+          expect(result).to eq(%w(BananaLib JSONKit))
         end
       end
 
@@ -281,25 +281,25 @@ module Pod
         it 'returns the empty string if a nil value is passed' do
           value = nil
           result = YAMLHelper.send(:sorting_string, value)
-          result.should == ''
+          expect(result).to eq('')
         end
 
         it 'sorts strings ignoring case' do
           value = 'String'
           result = YAMLHelper.send(:sorting_string, value)
-          result.should == 'string'
+          expect(result).to eq('string')
         end
 
         it 'sorts symbols ignoring case' do
           value = :Symbol
           result = YAMLHelper.send(:sorting_string, value)
-          result.should == 'symbol'
+          expect(result).to eq('symbol')
         end
 
         it 'sorts arrays using the first element ignoring case' do
           value = %w(String_2 String_1)
           result = YAMLHelper.send(:sorting_string, value)
-          result.should == 'string_2'
+          expect(result).to eq('string_2')
         end
 
         it 'sorts a hash using first key in alphabetical order' do
@@ -308,7 +308,7 @@ module Pod
             :key_1 => 'a_value',
           }
           result = YAMLHelper.send(:sorting_string, value)
-          result.should == 'key_1'
+          expect(result).to eq('key_1')
         end
       end
     end
@@ -321,8 +321,8 @@ module Pod
         value = YAMLHelper.load_string(podfile_str)
         sorted_keys = ['PODS', 'DEPENDENCIES', 'SPEC CHECKSUMS', 'COCOAPODS']
         result = YAMLHelper.convert_hash(value, sorted_keys, "\n\n")
-        YAMLHelper.load_string(result).should == value
-        result.should == podfile_str
+        expect(YAMLHelper.load_string(result)).to eq(value)
+        expect(result).to eq(podfile_str)
       end
     end
 

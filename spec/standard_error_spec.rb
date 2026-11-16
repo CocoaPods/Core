@@ -18,7 +18,7 @@ module Pod
     end
 
     it 'returns a properly formed message' do
-      @err.message.should == <<-MSG.strip_heredoc
+      expect(@err.message).to eq(<<-MSG.strip_heredoc)
 
         [!] Invalid podspec.
 
@@ -34,7 +34,8 @@ module Pod
     it 'parses syntax error messages for well-formed messages' do
       code = "puts 'hi'\nputs())\nputs 'bye'"
       # rubocop:disable Security/Eval
-      syntax_error = should.raise(SyntaxError) { eval(code, nil, @dsl_path.to_s) }
+      syntax_error = nil
+      expect { eval(code, nil, @dsl_path.to_s) }.to raise_error(SyntaxError) { |e| syntax_error = e }
       # rubocop:enable Security/Eval
       @err.stubs(:description).returns("Invalid `Three20.podspec` file: #{syntax_error.message}")
       @err.stubs(:underlying_exception).returns(syntax_error)
@@ -86,13 +87,13 @@ module Pod
                  end
         # Ruby colorizes the syntax error snippet when running in a TTY, so
         # strip ANSI escape sequences to keep the comparison TTY-agnostic.
-        @err.message.gsub(/\e\[[0-9;]*m/, '').should == expected
+        expect(@err.message.gsub(/\e\[[0-9;]*m/, '')).to eq(expected)
     end
 
     it 'uses the passed-in contents' do
       @err.stubs(:contents).returns("puts 'hi'\nputs 'there'\nputs 'bye'")
       File.expects(:exist?).never
-      @err.message.should == <<-MSG.strip_heredoc
+      expect(@err.message).to eq(<<-MSG.strip_heredoc)
 
         [!] Invalid podspec.
 
@@ -106,56 +107,56 @@ module Pod
     end
 
     it 'includes the given description in the message' do
-      @err.message.should.include?('Invalid podspec.')
+      expect(@err.message).to include('Invalid podspec.')
     end
 
     it 'includes the path of the dsl file in the message' do
-      @err.message.should.include?("from #{@dsl_path}")
+      expect(@err.message).to include("from #{@dsl_path}")
     end
 
     it 'includes in the message the contents of the line that raised the exception' do
-      @err.message.should.include?('error line')
+      expect(@err.message).to include('error line')
     end
 
     it 'is robust against a nil backtrace' do
       @err.underlying_exception.stubs(:backtrace => nil)
-      lambda { @err.message }.should.not.raise
+      expect { @err.message }.not_to raise_error
     end
 
     it 'is robust against a backtrace non including the path of the dsl file' do
       @err.underlying_exception.stubs(:backtrace).returns [
         "lib/cocoapods-core/specification.rb:41:in `initialize'",
       ]
-      lambda { @err.message }.should.not.raise
+      expect { @err.message }.not_to raise_error
     end
 
     it "is robust against a backtrace that doesn't include the line number of the dsl file that originated the error" do
       @err.underlying_exception.stubs(:backtrace).returns [@dsl_path.to_s]
-      lambda { @err.message }.should.not.raise
+      expect { @err.message }.not_to raise_error
     end
 
     it 'is against a nil path of the dsl file' do
       @err.stubs(:dsl_path => nil)
-      lambda { @err.message }.should.not.raise
+      expect { @err.message }.not_to raise_error
     end
 
     it 'is robust against non existing paths' do
       @err.stubs(:dsl_path => 'find_me_baby')
-      lambda { @err.message }.should.not.raise
+      expect { @err.message }.not_to raise_error
     end
 
     it 'can handle the first line of the dsl file' do
       @err.underlying_exception.stubs(:backtrace).returns ["#{@dsl_path}:1"]
-      lambda { @err.message }.should.not.raise
-      @err.message.should.include?('first line')
-      @err.message.should.not.include?('last line')
+      expect { @err.message }.not_to raise_error
+      expect(@err.message).to include('first line')
+      expect(@err.message).not_to include('last line')
     end
 
     it 'can handle the last line of the dsl file' do
       @err.underlying_exception.stubs(:backtrace).returns ["#{@dsl_path}:3"]
-      lambda { @err.message }.should.not.raise
-      @err.message.should.not.include?('first line')
-      @err.message.should.include?('last line')
+      expect { @err.message }.not_to raise_error
+      expect(@err.message).not_to include('first line')
+      expect(@err.message).to include('last line')
     end
   end
 end

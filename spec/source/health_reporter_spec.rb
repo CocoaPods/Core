@@ -18,42 +18,42 @@ module Pod
           names << name
         end
         @reporter.analyze
-        names.should.include?('BananaLib')
+        expect(names).to include('BananaLib')
       end
 
       it 'analyzes all the specifications of a repo' do
         @reporter.analyze
-        @reporter.report.analyzed_paths.count.should == 14
+        expect(@reporter.report.analyzed_paths.count).to eq(14)
       end
 
       it 'is robust against malformed specifications' do
         @reporter.analyze
         errors = @reporter.report.pods_by_error.keys.join(' - ')
-        errors.should.match /Faulty_spec.podspec.*could not be loaded/
+        expect(errors).to match(/Faulty_spec.podspec.*could not be loaded/)
       end
 
       it 'lints the specifications' do
         @reporter.analyze
         errors = @reporter.report.pods_by_error.keys.join(' - ')
-        errors.should.match /Missing required attribute/
+        expect(errors).to match(/Missing required attribute/)
       end
 
       it 'checks the path of the specifications' do
         @reporter.analyze
         errors = @reporter.report.pods_by_error.keys.join("\n")
-        errors.should.match /Incorrect path/
+        expect(errors).to match(/Incorrect path/)
       end
 
       it 'checks if requires_arc has the string value of true or false' do
         @reporter.analyze
         warnings = @reporter.report.pods_by_warning.keys.join("\n")
-        warnings.should.match /true is considered to be the name of a file/
+        expect(warnings).to match(/true is considered to be the name of a file/)
       end
 
       it 'checks for any stray specifications' do
         @reporter.analyze
         errors = @reporter.report.pods_by_error.keys.join("\n")
-        errors.should.match /Stray spec/
+        expect(errors).to match(/Stray spec/)
       end
     end
 

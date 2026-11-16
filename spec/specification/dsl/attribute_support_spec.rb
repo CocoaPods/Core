@@ -15,39 +15,39 @@ module Pod
     #-------------------------------------------------------------------------#
 
     it 'stores the attributes' do
-      TestClass.attributes.keys.sort_by(&:to_s).should == [
+      expect(TestClass.attributes.keys.sort_by(&:to_s)).to eq([
         :test_attribute, :test_root_attribute
-      ]
+      ])
     end
 
     it 'declares a root attribute' do
       attr = TestClass.attributes[:test_root_attribute]
-      attr.class.should == Specification::DSL::Attribute
+      expect(attr.class).to eq(Specification::DSL::Attribute)
     end
 
     it 'declares root attributes with the `root_only` option' do
       attr = TestClass.attributes[:test_root_attribute]
-      attr.should.be.root_only?
+      expect(attr).to be_root_only
     end
 
     it 'declares root attributes without the `multi_platform` option' do
       attr = TestClass.attributes[:test_root_attribute]
-      attr.should.not.be.multi_platform?
+      expect(attr).not_to be_multi_platform
     end
 
     it 'declares a normal attribute' do
       attr = TestClass.attributes[:test_attribute]
-      attr.class.should == Specification::DSL::Attribute
+      expect(attr.class).to eq(Specification::DSL::Attribute)
     end
 
     it 'declares normal attributes without the `root_only` option' do
       attr = TestClass.attributes[:test_attribute]
-      attr.should.not.be.root_only?
+      expect(attr).not_to be_root_only
     end
 
     it 'declares root attributes with the `multi_platform` option by default' do
       attr = TestClass.attributes[:test_attribute]
-      attr.should.be.multi_platform?
+      expect(attr).to be_multi_platform
     end
 
     #-------------------------------------------------------------------------#

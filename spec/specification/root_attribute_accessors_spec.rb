@@ -13,101 +13,101 @@ module Pod
     end
 
     it 'returns the name of the specification' do
-      @spec.name.should == 'Pod'
-      @spec.subspecs.first.name.should == 'Pod/Subspec'
+      expect(@spec.name).to eq('Pod')
+      expect(@spec.subspecs.first.name).to eq('Pod/Subspec')
     end
 
     it 'returns the base name of the specification' do
-      @spec.base_name.should == 'Pod'
-      @spec.subspecs.first.base_name.should == 'Subspec'
+      expect(@spec.base_name).to eq('Pod')
+      expect(@spec.subspecs.first.base_name).to eq('Subspec')
     end
 
     it 'returns the version of the specification' do
-      @spec.version.should == Version.new('1.0')
+      expect(@spec.version).to eq(Version.new('1.0'))
     end
 
     it 'return the single swift version of the specification' do
       @spec.swift_versions = '3.2'
-      @spec.swift_versions.map(&:to_s).should == ['3.2']
+      expect(@spec.swift_versions.map(&:to_s)).to eq(['3.2'])
     end
 
     it 'return multiple swift versions of the specification' do
       @spec.swift_versions = %w(4.0 3.2 3.2)
-      @spec.swift_versions.map(&:to_s).should == %w(3.2 4.0)
+      expect(@spec.swift_versions.map(&:to_s)).to eq(%w(3.2 4.0))
     end
 
     it 'return uniq and sorted swift versions of the specification' do
       @spec.swift_versions = %w(4.0 3.2 3.2)
-      @spec.swift_versions.map(&:to_s).should == %w(3.2 4.0)
+      expect(@spec.swift_versions.map(&:to_s)).to eq(%w(3.2 4.0))
     end
 
     it 'return swift version of the specification' do
       @spec.swift_versions = %w(3.2 4.0)
-      @spec.swift_version.should == Version.new('4.0')
+      expect(@spec.swift_version).to eq(Version.new('4.0'))
     end
 
     it 'returns the cocoapods version requirement of the specification' do
       @spec.cocoapods_version = '>= 0.36'
-      @spec.cocoapods_version.should == Requirement.new('>= 0.36')
+      expect(@spec.cocoapods_version).to eq(Requirement.new('>= 0.36'))
     end
 
     it 'memoizes the version to allow to set it to head' do
-      @spec.version.should.equal? @spec.version
+      expect(@spec.version).to be(@spec.version)
     end
 
     it 'returns the version version of the root specification for subspecs' do
-      @spec.subspecs.first.version.should == Version.new('1.0')
+      expect(@spec.subspecs.first.version).to eq(Version.new('1.0'))
     end
 
     it 'returns the authors' do
       hash = { 'Darth Vader' => 'darthvader@darkside.com',
                'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }
       @spec.authors = hash
-      @spec.authors.should == hash
+      expect(@spec.authors).to eq(hash)
     end
 
     it 'supports the author attribute specified as an array' do
       @spec.authors = 'Darth Vader', 'Wookiee'
-      @spec.authors.should == { 'Darth Vader' => nil, 'Wookiee' => nil }
+      expect(@spec.authors).to eq({ 'Darth Vader' => nil, 'Wookiee' => nil })
     end
 
     it 'supports the author attribute specified as a string' do
       @spec.authors = 'Darth Vader'
-      @spec.authors.should == { 'Darth Vader' => nil }
+      expect(@spec.authors).to eq({ 'Darth Vader' => nil })
     end
 
     it 'supports the author attribute specified as an array of strings and hashes' do
       @spec.authors = ['Darth Vader',
                        { 'Wookiee' => 'wookiee@aggrrttaaggrrt.com' }]
-      @spec.authors.should == {
+      expect(@spec.authors).to eq({
         'Darth Vader' => nil,
         'Wookiee' => 'wookiee@aggrrttaaggrrt.com',
-      }
+      })
     end
 
     it 'returns the social media url' do
       @spec.social_media_url = 'www.example.com'
-      @spec.social_media_url.should == 'www.example.com'
+      expect(@spec.social_media_url).to eq('www.example.com')
     end
 
     it 'returns the readme' do
       @spec.readme = 'www.example.com'
-      @spec.readme.should == 'www.example.com'
+      expect(@spec.readme).to eq('www.example.com')
     end
 
     it 'returns the changelog' do
       @spec.changelog = 'www.example.com'
-      @spec.changelog.should == 'www.example.com'
+      expect(@spec.changelog).to eq('www.example.com')
     end
 
     it 'supports the license attribute specified as a string' do
       @spec.license = 'MIT'
-      @spec.license.should == { :type => 'MIT' }
+      expect(@spec.license).to eq({ :type => 'MIT' })
     end
 
     it 'supports the license attribute specified as a hash' do
       @spec.license = { 'type' => 'MIT', 'file' => 'MIT-LICENSE' }
-      @spec.license.should == { :type => 'MIT', :file => 'MIT-LICENSE' }
+      expect(@spec.license).to eq({ :type => 'MIT', :file => 'MIT-LICENSE' })
     end
 
     it 'strips indentation from the license text' do
@@ -116,26 +116,26 @@ module Pod
         Line2
       DOC
       @spec.license = { 'type' => 'MIT', 'text' => text }
-      @spec.license[:text].should == "Line1\nLine2\n"
+      expect(@spec.license[:text]).to eq("Line1\nLine2\n")
     end
 
     it 'returns the empty hash if not license information has been specified' do
-      @spec.license.should == {}
+      expect(@spec.license).to eq({})
     end
 
     it 'returns the homepage' do
       @spec.homepage = 'www.example.com'
-      @spec.homepage.should == 'www.example.com'
+      expect(@spec.homepage).to eq('www.example.com')
     end
 
     it 'returns the source' do
       @spec.source = { :git => 'www.example.com/repo.git' }
-      @spec.source.should == { :git => 'www.example.com/repo.git' }
+      expect(@spec.source).to eq({ :git => 'www.example.com/repo.git' })
     end
 
     it 'returns the summary' do
       @spec.summary = 'A library that describes the meaning of life.'
-      @spec.summary.should == 'A library that describes the meaning of life.'
+      expect(@spec.summary).to eq('A library that describes the meaning of life.')
     end
 
     it 'returns the summary stripping indentation' do
@@ -143,7 +143,7 @@ module Pod
         A quick brown fox.
       DESC
       @spec.summary = summary
-      @spec.summary.should == 'A quick brown fox.'
+      expect(@spec.summary).to eq('A quick brown fox.')
     end
 
     it 'returns the description stripping indentation' do
@@ -152,17 +152,17 @@ module Pod
         Line2
       DESC
       @spec.description = desc
-      @spec.description.should == "Line1\nLine2"
+      expect(@spec.description).to eq("Line1\nLine2")
     end
 
     it 'returns the screenshots' do
       @spec.screenshots = ['www.example.com/img1.png', 'www.example.com/img2.png']
-      @spec.screenshots.should == ['www.example.com/img1.png', 'www.example.com/img2.png']
+      expect(@spec.screenshots).to eq(['www.example.com/img1.png', 'www.example.com/img2.png'])
     end
 
     it 'support the specification of the attribute as a string' do
       @spec.screenshot = 'www.example.com/img1.png'
-      @spec.screenshots.should == ['www.example.com/img1.png']
+      expect(@spec.screenshots).to eq(['www.example.com/img1.png'])
     end
 
     it 'returns the prepare command stripping the indentation' do
@@ -170,43 +170,43 @@ module Pod
         ruby prepare_script.rb
       DESC
       @spec.prepare_command = command
-      @spec.prepare_command.should == 'ruby prepare_script.rb'
+      expect(@spec.prepare_command).to eq('ruby prepare_script.rb')
     end
 
     it 'returns whether the Pod should build a static framework' do
       @spec.static_framework = true
-      @spec.static_framework.should == true
+      expect(@spec.static_framework).to eq(true)
     end
 
     it 'returns whether the Pod has been deprecated' do
       @spec.deprecated = true
-      @spec.deprecated.should == true
+      expect(@spec.deprecated).to eq(true)
     end
 
     it 'returns the name of the Pod that this one has been deprecated in favor of' do
       @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
-      @spec.deprecated_in_favor_of.should == 'NewMoreAwesomePod'
+      expect(@spec.deprecated_in_favor_of).to eq('NewMoreAwesomePod')
     end
 
     it 'it returns wether it is deprecated either by deprecated or deprecated_in_favor_of' do
       @spec.deprecated = true
-      @spec.deprecated?.should == true
+      expect(@spec.deprecated?).to eq(true)
       @spec.deprecated = false
 
       @spec.deprecated_in_favor_of = 'NewMoreAwesomePod'
-      @spec.deprecated?.should == true
+      expect(@spec.deprecated?).to eq(true)
       @spec.deprecated_in_favor_of = nil
 
-      @spec.deprecated?.should == false
+      expect(@spec.deprecated?).to eq(false)
     end
 
     it 'returns the custom module map file, if specified' do
       @spec.module_map = 'module.modulemap'
-      @spec.module_map.should == 'module.modulemap'
+      expect(@spec.module_map).to eq('module.modulemap')
     end
 
     it 'returns the correct requires_arc value, if specified' do
-      @spec.requires_arc.should == true
+      expect(@spec.requires_arc).to eq(true)
     end
   end
 end
