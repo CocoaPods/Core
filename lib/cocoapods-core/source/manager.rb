@@ -315,7 +315,10 @@ module Pod
                         TrunkSource.new(key)
                       when (key + '.url').exist?
                         CDNSource.new(key)
+                      when key.join('.git', '.specs').exist? || Dir[key.join('*.podspec')].count > 0
+                        SingleSource.new(key)
                       else
+                        require 'pry'; binding.pry
                         Source.new(key)
                       end
         end
