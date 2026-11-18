@@ -292,6 +292,19 @@ module Pod
       #
       #     pod 'JSONKit', :podspec => 'https://example.com/JSONKit.podspec'
       #
+      # ### Use a previously defined external source.
+      #
+      # If a dependency was already defined using an external source, reuse that definition:
+      #
+      #     target 'TargetA' do
+      #       # define an external source for `JSONKit`
+      #       pod 'JSONKit', :podspec => 'https://example.com/JSONKit.podspec'
+      #     end
+      #
+      #     target 'TargetB' do
+      #       # reuse the previous external source for `JSONKit`
+      #       pod 'JSONKit'
+      #     end
       #
       # @note       This method allow a nil name and the raises to be more
       #             informative.
@@ -301,6 +314,18 @@ module Pod
       def pod(name = nil, *requirements)
         unless name
           raise StandardError, 'A dependency requires a name.'
+        end
+
+        if requirements.empty? || requirements.last.is_a?(Hash)
+          theoretical_dependency = Dependency.new(name, requirements.last)
+          if theoretical_dependency.external_source.nil?
+            previously_defined_dependency = dependencies.find do |dependency|
+              dependency.root_name == theoretical_dependency.root_name && dependency.external_source
+            end
+            if previously_defined_dependency
+              requirements = [previously_defined_dependency.external_source]
+            end
+          end
         end
 
         current_target_definition.store_pod(name, *requirements)

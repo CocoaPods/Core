@@ -174,7 +174,7 @@ module Pod
       # @return [String] the inheritance mode for this target definition.
       #
       def inheritance
-        get_hash_value('inheritance', 'complete')
+        get_hash_value('inheritance') || 'complete'
       end
 
       # Sets the inheritance mode for this target definition.
@@ -907,7 +907,7 @@ module Pod
         unless HASH_KEYS.include?(key)
           raise StandardError, "Unsupported hash key `#{key}`"
         end
-        internal_hash[key] = base_value if internal_hash[key].nil?
+        internal_hash[key] ||= base_value unless base_value.nil?
         internal_hash[key]
       end
 
