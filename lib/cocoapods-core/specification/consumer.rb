@@ -229,6 +229,12 @@ module Pod
       #
       def dependencies
         value = value_for_attribute(:dependencies)
+
+        # install/update will contain virtual_dependencies!!
+        if $*.first == "update" || $*.first == "install"
+          value_virtual = value_for_attribute(:virtual_dependencies)
+          value = value.merge(value_virtual) if value_virtual      
+        end
         value.map do |name, requirements|
           Dependency.new(name, requirements)
         end
